@@ -1,8 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Sample startup file to invoke yatex-mode with outline-minor mode.
 ;;; (C)1993 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Tue May  4 22:02:41 1993 on figaro
-;;; $Id$
+;;; Last modified Wed Apr 28 04:25:16 1993 on 98fa
 
 ;;;
 ;; outline-minor-mode(使用しない場合は不要です)

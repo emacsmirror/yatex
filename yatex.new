@@ -2,6 +2,13 @@
 	Yet Another tex-mode for Emacs
 	yatex.el 各バージョンの変更点について。
 
+1.43:	環境のネストに応じたインデント(変数YaTeX-environment-indentで指定)。
+	数式環境記号補完モード(yatexmth)添付。
+	modify-mode の値で開き括弧の動作を決定する。
+	LaTeX error 発生ファイルの検出の確実化。
+	\ref のラベルをバッファ中の\labelを検索してメニュー形式で補完。
+	タイプセットなどでウィンドウ利用の最適化。
+
 1.42:	fill-paragraph と、(un)comment-paragraph の適正化。
 	[prefix] k での削除範囲の適正化。
 	YaTeX-end-environment などで verb(atim)中のbegin/endは数えない。

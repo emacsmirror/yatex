@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
-;;; yatexprc.el rev.1.42
+;;; yatexprc.el rev.1.43
 ;;; (c)1993 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Tue May  4 21:49:59 1993 on figaro
+;;; Last modified Sat Sep 18 04:12:18 1993 on 98fa
 ;;; $Id$
 
 (require 'yatex)
@@ -12,6 +12,18 @@
 )
 (defvar YaTeX-typeset-buffer "*YaTeX-typesetting*"
   "Process buffer for jlatex")
+
+(defvar YaTeX-typeset-buffer-syntax nil
+  "*Syntax table for typesetting buffer")
+
+(if YaTeX-typeset-buffer-syntax nil
+  (setq YaTeX-typeset-buffer-syntax
+	(make-syntax-table (standard-syntax-table)))
+  (modify-syntax-entry ?\{ "w" YaTeX-typeset-buffer-syntax)
+  (modify-syntax-entry ?\} "w" YaTeX-typeset-buffer-syntax)
+  (modify-syntax-entry ?\[ "w" YaTeX-typeset-buffer-syntax)
+  (modify-syntax-entry ?\] "w" YaTeX-typeset-buffer-syntax)
+)
 
 (defun YaTeX-typeset (command buffer)
   "Execute jlatex (or other) to LaTeX typeset."
@@ -34,23 +46,28 @@
 			     command))
       (set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)))
   (setq current-TeX-buffer (buffer-name))
-  (other-window 1)
-  (use-local-map YaTeX-typesetting-mode-map)
-  (setq mode-name "typeset")
-  (if YaTeX-typeset-process ; if process is running (maybe on UNIX)
-      (cond ((boundp 'MULE)
-	     (set-current-process-coding-system
-	      YaTeX-latex-message-code YaTeX-coding-system))
-	    ((boundp 'NEMACS)
-	     (set-kanji-process-code YaTeX-latex-message-code))))
-  (message "Type SPC to continue.")
-  (goto-char (point-max))
-  (if (eq system-type 'ms-dos) (message "Done.")
-    (while (bobp) (message "Invoking process. wait...") (sleep-for 1))
-    (insert (message " ")))
-  (if (bolp) (forward-line -1))
-  (recenter -1)
-  (other-window -1)
+  (let ((window (selected-window)))
+    (select-window (get-buffer-window buffer))
+    ;;(other-window 1)
+    (use-local-map YaTeX-typesetting-mode-map)
+    (set-syntax-table YaTeX-typeset-buffer-syntax)
+    (setq mode-name "typeset")
+    (if YaTeX-typeset-process ; if process is running (maybe on UNIX)
+	(cond ((boundp 'MULE)
+	       (set-current-process-coding-system
+		YaTeX-latex-message-code YaTeX-coding-system))
+	      ((boundp 'NEMACS)
+	       (set-kanji-process-code YaTeX-latex-message-code))))
+    (message "Type SPC to continue.")
+    (goto-char (point-max))
+    (if (eq system-type 'ms-dos) (message "Done.")
+      (while (bobp) (message "Invoking process. wait...") (sleep-for 1))
+      (insert (message " ")))
+    (if (bolp) (forward-line -1))
+    (recenter -1)
+    (select-window window)
+  ;;(other-window -1)
+    )
 )
 
 (defun YaTeX-typeset-sentinel (proc mes)
@@ -58,21 +75,17 @@
          ;; buffer killed
          (set-process-buffer proc nil))
         ((memq (process-status proc) '(signal exit))
-         (let* ((obuf (current-buffer)))
+         (let* ((obuf (current-buffer)) (pbuf (process-buffer proc))
+		(owin (selected-window)) win)
            ;; save-excursion isn't the right thing if
            ;;  process-buffer is current-buffer
            (unwind-protect
                (progn
                  ;; Write something in *typesetting* and hack its mode line
-		 (if (equal (current-buffer) (process-buffer proc))
-		     nil
-		   (other-window 1)
-		   (switch-to-buffer (process-buffer proc))
-		   (goto-char (point-max))
-		   (recenter -3)
-		   (other-window -1))
+		 (YaTeX-pop-to-buffer pbuf)
 		 (set-buffer (process-buffer proc))
                  (goto-char (point-max))
+		 (recenter -3)
                  (insert ?\n "latex typesetting " mes)
                  (forward-char -1)
                  (insert " at " (substring (current-time-string) 0 -5) "\n")
@@ -90,6 +103,7 @@
              ;; Force mode line redisplay soon
              (set-buffer-modified-p (buffer-modified-p))
 	     )
+	   (select-window owin)
 	   (set-buffer obuf))))
 )
 
@@ -208,14 +222,19 @@ action want to be done, A:Add list, R:Replace list, %:comment-out list."
     (put 'dvi2-command 'region nil))
 )
 
-(defun YaTeX-bibtex-buffer ()
+(defun YaTeX-call-command-on-file (base-cmd buffer)
+  (YaTeX-save-buffers)
+  (YaTeX-typeset
+   (read-string "Call command: "
+		(concat base-cmd " " (YaTeX-get-preview-file-name)))
+   buffer)
+)
+
+(defun YaTeX-bibtex-buffer (cmd)
   "Pass the bibliography data of editing file to bibtex."
   (interactive)
   (YaTeX-save-buffers)
-  (YaTeX-typeset
-   (read-string "BibTeX command: "
-		(concat bibtex-command " " (YaTeX-get-preview-file-name)))
-   "*YaTeX-bibtex*" )
+  (YaTeX-call-command-on-file cmd "*YaTeX-bibtex*" )
 )
 
 (defun YaTeX-kill-typeset-process (proc)
@@ -269,11 +288,12 @@ PROC should be process identifier."
   "Visit previous error.  The reason why not NEXT-error is to
 avoid make confliction of line numbers by editing."
   (interactive)
-  (let ((cur-buf (buffer-name))
-	YaTeX-error-line error-buffer)
+  (let ((cur-buf (buffer-name)) (cur-win (selected-window))
+	YaTeX-error-line typeset-win error-buffer error-win)
     (if (null (get-buffer YaTeX-typeset-buffer))
 	(message "There is no output buffer of typesetting.")
-      (pop-to-buffer YaTeX-typeset-buffer)
+      (YaTeX-pop-to-buffer YaTeX-typeset-buffer)
+      (setq typeset-win (selected-window))
       (if (eq system-type 'ms-dos)
 	  (if (search-backward latex-dos-emergency-message nil t)
 	      (progn (goto-char (point-max))
@@ -289,37 +309,33 @@ avoid make confliction of line numbers by editing."
 	      (beginning-of-line)
 	      (setq error-regexp latex-warning-regexp))))
       (if (re-search-backward error-regexp nil t)
-	  (save-restriction
-	    (set-mark-command nil)
-	    (end-of-line)
-	    (narrow-to-region (point) (mark))
-	    (goto-char (point-min))
-	    (re-search-forward "[0-9]")
-	    (forward-char -1)
-	    (set-mark (point))
-	    (skip-chars-forward "0-9")
-	    (narrow-to-region (point) (mark))
-	    (goto-char (point-min))
-	    (setq YaTeX-error-line (read (current-buffer))))
+	  (setq YaTeX-error-line
+		(string-to-int
+		 (buffer-substring
+		  (progn (goto-char (match-beginning 0))
+			 (skip-chars-forward "^0-9")
+			 (point))
+		  (progn (skip-chars-forward "0-9") (point)))))
 	(message "No more error on %s" cur-buf)
-	(ding)
-	)
-      (setq error-buffer (YaTeX-get-error-file cur-buf))
-      (other-window -1)
-      (switch-to-buffer cur-buf)
-      (if (null YaTeX-error-line)
+	(ding))
+      (setq error-buffer (YaTeX-get-error-file cur-buf)); arg. is default buf.
+      (setq error-win (get-buffer-window error-buffer))
+      (select-window cur-win)
+      (if (or (null YaTeX-error-line) (equal 0 YaTeX-error-line))
 	  nil
 	;; if warning or error found
-	(YaTeX-switch-to-buffer error-buffer)
+	(if error-win (select-window error-win)
+	  (YaTeX-switch-to-buffer error-buffer)
+	  (setq error-win (selected-window)))
 	(goto-line YaTeX-error-line)
 	(message "latex error or warning in '%s' at line: %d"
 		 error-buffer YaTeX-error-line)
-	(other-window 1)
+	(select-window typeset-win)
 	(skip-chars-backward "[0-9]")
 	(recenter (/ (window-height) 2))
 	(sit-for 3)
 	(forward-char -1)
-	(other-window -1)
+	(select-window error-win)
 	)))
 )
 
@@ -372,10 +388,11 @@ avoid make confliction of line numbers by editing."
   (interactive)
   (if (null (get-buffer YaTeX-typeset-buffer))
       (message "No typeset buffer found.")
-    (pop-to-buffer YaTeX-typeset-buffer)
-    (goto-char (point-max))
-    (recenter -1)
-    (other-window -1))
+    (let ((win (selected-window)))
+      (YaTeX-pop-to-buffer YaTeX-typeset-buffer)
+      (goto-char (point-max))
+      (recenter -1)
+      (select-window win)))
 )
 
 (defun YaTeX-get-error-file (default)
@@ -589,6 +606,12 @@ in Emacs-Lisp program)."
 			(y-or-n-p (format "Save %s" (buffer-name buf))))
 		   (save-buffer buf)))
 	    (buffer-list)))
+)
+
+(defun YaTeX-pop-to-buffer (buffer &optional win)
+  (if (setq win (get-buffer-window buffer))
+      (select-window win)
+    (pop-to-buffer buffer))
 )
 
 (provide 'yatexprc)

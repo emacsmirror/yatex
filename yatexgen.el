@@ -2,7 +2,7 @@
 ;;; Generate add-in functions for YaTeX.
 ;;; yatexgen.el rev.1(beta2)
 ;;; (c)1991-1993 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Tue May  4 21:51:23 1993 on figaro
+;;; Last modified Mon Sep 20 17:55:13 1993 on gloria
 ;;; $Id$
 
 (require 'yatex)
