@@ -1,32 +1,35 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; comment/uncomment region for emacs.
-;;; comment.el rev.0.0
-;;; (c ) 1992 by Hirose Yuuji.(yuuji@ae.keio.ac.jp)
-;;; Last modified Sat Jan 29 16:55:22 1994 on gloria
+;;; comment.el rev.0.1
+;;; (c) 1992 by Hirose Yuuji.(yuuji@ae.keio.ac.jp)
+;;; Last modified Sat Nov 19 23:58:40 1994 on figaro
+
+;;; Rename `comment-region' to `comment-out-region' for standard
+;;; Emacs-19 function.
 
 (provide 'comment)
 
-(defvar current-comment-prefix "> "
-  "default prefix string")
+(defvar current-comment-prefix "> " "*Default prefix string")
 
-(defun cite-region nil
+(defun cite-region (beg end)
   (save-excursion
-    (if (< (point) (mark)) (exchange-point-and-mark))
+    (goto-char (max beg end))
     (if (bolp)
 	(forward-line -1))
     (if (string= string "") (setq string current-comment-prefix)
       (setq current-comment-prefix string))
     (save-restriction 
-      (narrow-to-region (point) (mark))
+      (narrow-to-region (min beg end) (point))
       (goto-char (point-min))
+      (message "%s" string)
       (while (re-search-forward "^" nil t)
-	(message "%s" string)
 	(replace-match string))
       ))
 )
 
-(defun comment-region (string &optional once)
-  "Inserts STRING at the beginning of every line in the region.
+(defun comment-out-region (string &optional beg end once)
+  "Inserts STRING at the beginning of every line in the region specified
+BEG and END.
 Called interactively, STRING defaults to comment-start (or '> ' if
 none is defined) unless a prefix argument is given, in which case it
 prompts for a string.  Optional second argument ONCE is only for
@@ -38,14 +41,13 @@ compatibility for uncomment-region.  It has no means now."
 		      (format "(default \"%s\")" current-comment-prefix
 			      " ")
 		      ": "))
-	   current-comment-prefix
-	   )))
+	   current-comment-prefix)))
   (if (not (stringp string)) (setq string current-comment-prefix))
-  (cite-region)
+  (cite-region (or beg (region-beginning)) (or end (region-end)))
 )
 
 
-(defun uncomment-region (string &optional once)
+(defun uncomment-region (string &optional beg end once)
   "Deletes STRING from the beginning of every line in the region.
 Called interactively, STRING defaults to comment-start (or '> ' if
 none is defined) unless a prefix argument is given, in which case it
@@ -58,15 +60,11 @@ deletion to first occurance of STRING on each line."
 		      (format "(default \"%s\")" current-comment-prefix
 			      " ")
 		      ": "))
-	   current-comment-prefix
-	   )))
+	   current-comment-prefix)))
   (if (not (stringp string)) (setq string current-comment-prefix))
   (save-excursion
-    (if (< (point) (mark)) (exchange-point-and-mark))
-;    (if (bolp)
-;         (forward-line -1))
     (save-restriction 
-      (narrow-to-region (point) (mark))
+      (narrow-to-region (or beg (region-beginning)) (or end (region-end)))
       (goto-char (point-min))
       (while (re-search-forward (concat "^" string) nil t)
 	(replace-match "")
@@ -84,6 +82,5 @@ deletion to first occurance of STRING on each line."
 	 ))
        (ins-tail (car (cdr (insert-file-contents filename)))))
     (save-excursion
-      (push-mark (+ (point) ins-tail))
-      (cite-region)))
+      (cite-region (point) (+ (point) ins-tail))))
 )
