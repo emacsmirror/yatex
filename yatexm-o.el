@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Sample startup file to invoke yatex-mode with outline-minor mode.
 ;;; (c )1993 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Wed May  4 19:44:53 1994 on 98fa
+;;; Last modified Mon Jan 29 21:38:26 1996 on pajero
 
 ;;;
 ;; outline-minor-mode(使用しない場合は不要です)
@@ -12,10 +12,11 @@
 (setq  default-outline-regexp "[*\^l]+")
 (make-variable-buffer-local 'outline-level-function)
 (setq-default outline-level-function 'outline-level-default)
-(defvar LaTeX-outline-regexp
+(setq LaTeX-outline-regexp
   (concat "[ \t]*" (regexp-quote "\\")
 	  "\\(appendix\\|documentstyle\\|part\\|chapter\\|section\\|"
-	  "subsection\\|subsubsection\\|paragraph\\|subparagraph\\)"))
+	  "subsection\\|subsubsection\\|paragraph\\|subparagraph\\)"
+          "\\*?[ \t]*[[{]"))
 
 ;;;
 ;; yatex-mode
@@ -32,6 +33,9 @@
   '(lambda ()
      (setq-default outline-prefix-char (concat YaTeX-prefix "\C-o"));;@
      (require 'min-out)						    ;;@
-     (define-key outline-minor-keymap "\C-?" 'hide-subtree)	    ;;@
+     ;;auctex 付属の min-out.el の場合これ↓
+     ;(define-key outline-minor-keymap "\C-?" 'hide-subtree)	    ;;@
+     ;;Emacs 付属の outline.el の場合これ↓
+     (define-key outline-mode-prefix-map "\C-?" 'hide-subtree)
      (YaTeX-define-begend-key "ba" "abstract")
      ))

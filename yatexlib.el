@@ -2,7 +2,7 @@
 ;;; YaTeX library of general functions.
 ;;; yatexlib.el
 ;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Apr 28 16:17:44 1995 on VFR
+;;; Last modified Thu Feb  1 22:34:57 1996 on nsr
 ;;; $Id$
 
 ;;;###autoload
@@ -369,4 +369,11 @@ If no such window exist, switch to buffer BUFFER."
   (or (featurep 'windows) (error "Why don't you use `windows.el'?"))
   (win-switch-to-window 1 (- last-command-char win:base-key)))
 
+(defun bcf-and-exit ()
+  "Byte compile rest of argument and kill-emacs."
+  (if command-line-args-left
+      (progn
+	(mapcar 'byte-compile-file command-line-args-left)
+	(kill-emacs))))
+	
 (provide 'yatexlib)

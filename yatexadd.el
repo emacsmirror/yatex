@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.13
 ;;; (c )1991-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Nov  6 14:30:25 1995 on inspire
+;;; Last modified Thu Dec 21 21:47:34 1995 on supra
 ;;; $Id$
 
 ;;;
@@ -51,14 +51,9 @@ YaTeX-make-begin-end."
 		hline "\\hline"))))
 
     (setq rule (read-string "rule format: " rule))
+    (setq single-command "hline")
 
-    (message "Dont forget to remove null line at the end of tabular.")
-    (format "%s%s{%s}%s"
-	    width loc rule
-	    (if (and (boundp 'region-mode) region-mode)
-		""		;do nothing in region-mode
-	      (format "\n%s\n%s \\\\ \\hline\n%s\n\\\\ %s"
-		      hline and and hline))))
+    (format "%s%s{%s}" width loc rule))
 )
 (fset 'YaTeX:tabular* 'YaTeX:tabular)
 (defun YaTeX:array ()
@@ -293,6 +288,16 @@ YaTeX-make-begin-end."
 (fset 'YaTeX:item\[\] 'YaTeX:item)
 (fset 'YaTeX:subitem 'YaTeX:item)
 (fset 'YaTeX:subsubitem 'YaTeX:item)
+
+(defun YaTeX:linebreak ()
+  (let (obl)
+    (message "Break strength 0,1,2,3,4 (default: 4): ")
+    (setq obl (char-to-string (read-char)))
+    (if (string-match "[0-4]" obl)
+	(concat "[" obl "]")
+      ""))
+)
+(fset 'YaTeX:pagebreak 'YaTeX:linebreak)
 
 ;;;
 ;;Subroutine

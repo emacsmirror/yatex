@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sun Dec  3 03:29:56 1995 on inspire
+;;; Last modified Wed Dec 20 22:32:21 1995 on supra
 ;;; $Id$
 
 ;;; とりあえず hilit19 を使っている時に色が付くようにして
@@ -263,11 +263,11 @@ Assumes PATTERN begins with `{'."
   '(
     ;; comments
     (YaTeX-19-region-comment "\\([^\\]\\|^\\)\\(%\\).*$" comment)
-    
+
     (YaTeX-19-region-section-type "\\\\footnote\\(mark\\|text\\)?{" keyword)
     ("\\\\[a-z]+box" 0 keyword)
     (YaTeX-19-region-section-type "\\\\\\(v\\|h\\)space\\(\*\\)?{" keyword)
-    
+
     ;; (re-)define new commands/environments/counters
     (YaTeX-19-region-section-type
      "\\\\\\(re\\)?new\\(environment\\|command\\|theorem\\){" defun)
@@ -299,8 +299,10 @@ Assumes PATTERN begins with `{'."
     ;; formulas
     ("[^\\]\\\\("  "\\\\)" formula)                   ; \( \)
     ("[^\\]\\\\\\[" "\\\\\\]" formula)                ; \[ \]
-    ("\\\\begin{\\(eqn\\|equation\\)" "\\\\end{\\(eqn\\|equation\\)" formula)
-    ("[^\\$]\\($\\($[^$]*\\$\\|[^$]*\\)\\$\\)" 1 formula) ; '$...$' or '$$...$$'
+    ("\\\\begin{\\(eqn\\|equation\\|x?x?align\\|split\\|multiline\\|gather\\)"
+     "\\\\end{\\(eqn\\|equation\\|x?x?align\\|split\\|multiline\\|gather\\).*}"
+     formula)
+    ("[^\\$]\\($\\($[^$]*\\$\\|[^$]*\\)\\$\\)" 1 formula); '$...$' or '$$...$$'
 
     ;; things that bring in external files
     ("\\\\\\(include\\|input\\|bibliography\\){" "}" include)
@@ -316,9 +318,8 @@ Assumes PATTERN begins with `{'."
     ;; things that do some sort of cross-reference
     (YaTeX-19-region-section-type
      "\\\\\\(\\(no\\)?cite\\|\\(page\\)?ref\\|label\\|index\\|glossary\\){"
-     crossref)
-    )
-  "*Hiliting pattern alist for LaTeX text.")
+     crossref))
+"*Hiliting pattern alist for LaTeX text.")
 
 ;;(defvar YaTeX-hilit-pattern-adjustment-default nil)
 ;; ↑いらなくなった。
@@ -505,9 +506,9 @@ WARNING, This code is not perfect."
 ;;;       formula 'khaki
 ;;;       label 'yellow-underlined))
 (and YaTeX-emacs-19
-     (eval-when-compile
-       (if (and (boundp 'window-system) window-system)
-	   (require 'hilit19)
-	 (error "Byte compile this file on window system! Not `-nw'!"))))
+     (boundp 'byte-compile-current-file)
+     (if (and (boundp 'window-system) window-system)
+	 (require 'hilit19)
+       (error "Byte compile this file on window system! Not `-nw'!")))
 
 (provide 'yatex19)

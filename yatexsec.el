@@ -2,7 +2,7 @@
 ;;; YaTeX sectioning browser.
 ;;; yatexsec.el
 ;;; (c ) 1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Jan 24 23:19:14 1995 on VFR
+;;; Last modified Thu Jan 11 01:07:53 1996 on VFR
 ;;; $Id$
 
 (defvar YaTeX-sectioning-level
@@ -69,28 +69,79 @@ This must be the heighest number in YaTeX-sectioning-level.")
   "Key map used in YaTeX-sectioning-buffer.")
 (if YaTeX-sectioning-buffer-map nil
   (setq YaTeX-sectioning-buffer-map (make-sparse-keymap))
-  (define-key YaTeX-sectioning-buffer-map " "
-    'YaTeX-sectioning-buffer-jump)
+  (define-key YaTeX-sectioning-buffer-map " "	'YaTeX-sectioning-buffer-jump)
+  (define-key YaTeX-sectioning-buffer-map "."	'YaTeX-sectioning-buffer-show)
   (define-key YaTeX-sectioning-buffer-map (concat YaTeX-prefix "\C-c")
     'YaTeX-sectioning-buffer-jump)
+  (define-key YaTeX-sectioning-buffer-map "u"	'YaTeX-shift-section-up)
+  (define-key YaTeX-sectioning-buffer-map "d"	'YaTeX-shift-section-down)
+  (define-key YaTeX-sectioning-buffer-map "U"   'YaTeX-shift-section-up-region)
+  (define-key YaTeX-sectioning-buffer-map "D" 'YaTeX-shift-section-down-region)
+  (define-key YaTeX-sectioning-buffer-map "s"	'YaTeX-sync-section-buffer)
+  (define-key YaTeX-sectioning-buffer-map "n"
+    'YaTeX-sectioning-buffer-next-line)
+  (define-key YaTeX-sectioning-buffer-map "p"
+    'YaTeX-sectioning-buffer-prev-line)
+  (define-key YaTeX-sectioning-buffer-map "h"  'describe-mode)
+  (define-key YaTeX-sectioning-buffer-map "o"  'other-window)
+  (define-key YaTeX-sectioning-buffer-map "-"  'shrink-window)
+  (define-key YaTeX-sectioning-buffer-map "+"  'enlarge-window)
+  (define-key YaTeX-sectioning-buffer-map "\C-_" 'YaTeX-shift-section-undo)
+  (and YaTeX-emacs-19 (boundp 'window-system) (eq window-system 'x)
+       (define-key YaTeX-sectioning-buffer-map [?\C-/]
+	 'YaTeX-shift-section-undo))
   (YaTeX-sectioning-map-hide YaTeX-sectioning-buffer-map)
 )
 
+(defun YaTeX-sectioning-mode ()
+  "Mode for browsing document's sectioning structure.
+\\[YaTeX-shift-section-up]	Shift up a sectioning command
+\\[YaTeX-shift-section-down]	Shift down a sectioning command
+\\[YaTeX-shift-section-up-region]	Shift up sectioning commands in region
+\\[YaTeX-shift-section-down-region]	Shift down sectioning commands in region
+\\[YaTeX-shift-section-undo]	Undo changes of shifting
+\\[YaTeX-sync-section-buffer]	Synchronize sectioning buffer with source
+\\[YaTeX-sectioning-buffer-next-line]	Next line
+\\[YaTeX-sectioning-buffer-prev-line]	Previous line
+\\[YaTeX-sectioning-buffer-jump]	Previous line
+\\[YaTeX-sectioning-buffer-show]	Show curresponding source line
+"
+  (interactive)
+  (setq major-mode 'YaTeX-sectioning-mode
+	mode-name "sectioning")
+  (use-local-map YaTeX-sectioning-buffer-map)
+)
+
 (defvar YaTeX-sectioning-buffer-parent nil)
-(defun YaTeX-sectioning-buffer-jump ()
+(defun YaTeX-sectioning-buffer-jump-internal (&optional keep)
+  (let (ptn (p (point)))		;save-excursion is NG because
+    (beginning-of-line)		;this function should switch buffer
+    (if (re-search-forward YaTeX-sectioning-regexp)
+	(progn (setq ptn (buffer-substring
+			  (1- (match-beginning 0))
+			  (progn (skip-chars-forward "^}") (1+ (point)))))
+	       (goto-char p)
+	       (YaTeX-showup-buffer YaTeX-sectioning-buffer-parent nil t)
+	       (goto-char (point-max))
+	       (search-backward ptn)
+	       (if keep (goto-buffer-window YaTeX-sectioning-buffer))
+	       (current-buffer))
+      nil))
+)
+(defun YaTeX-sectioning-buffer-jump (&optional keep)
+  "Goto corresponding sectioning unit with current line in the next window.
+If optional argument KEEP is non-nil, only shows the line."
   (interactive)
   (if (and YaTeX-sectioning-buffer-parent
 	   (get-buffer YaTeX-sectioning-buffer-parent))
-      (let (ptn)
-	(beginning-of-line)
-	(if (re-search-forward YaTeX-sectioning-regexp)
-	    (progn (setq ptn (buffer-substring
-			      (1- (match-beginning 0))
-			      (progn (skip-chars-forward "^}") (1+ (point)))))
-		   (YaTeX-showup-buffer YaTeX-sectioning-buffer-parent nil t)
-		   (goto-char (point-max))
-		   (search-backward ptn))
-	  (message "No line number expression."))))
+      (YaTeX-sectioning-buffer-jump-internal keep)
+    (message "No line number expression."))
+)
+
+(defun YaTeX-sectioning-buffer-show ()
+  "Show corresponding sectioning unit with current line."
+  (interactive)
+  (YaTeX-sectioning-buffer-jump-internal t)
 )
 
 (defun YaTeX-sectioning-hide-under (n)
@@ -232,6 +283,9 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 			 "\\(" YaTeX-sectioning-regexp "\\)\\*?{"))
 	(cb (current-buffer)))
     (save-excursion
+      (set-buffer (get-buffer-create YaTeX-sectioning-buffer))
+      (setq buffer-read-only nil)
+      (set-buffer cb)
       (YaTeX-showup-buffer YaTeX-sectioning-buffer) ;show buffer
       (goto-char (point-min))
       (with-output-to-temp-buffer YaTeX-sectioning-buffer
@@ -251,6 +305,7 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 	  (princ "\n")))
       (set-buffer YaTeX-sectioning-buffer)
       (make-local-variable 'YaTeX-sectioning-buffer-parent)
+      (YaTeX-sectioning-mode)
       (use-local-map YaTeX-sectioning-buffer-map)
       (setq YaTeX-sectioning-buffer-parent cb)
       (if (numberp selective-display)
@@ -258,15 +313,17 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
       YaTeX-sectioning-buffer))
 )
 
+(defvar YaTeX-pending-undo nil)
 (defun YaTeX-section-overview ()
   "Show section overview.  Return the nearest sectioning command."
   (interactive)
   (let ((cw (selected-window)) (ln (count-lines (point-min) (point)))
 	(pattern "(line:\\([0-9]+\\))")
-	(secbuf YaTeX-sectioning-buffer) (command ""))
+	secbuf (command ""))
     (save-excursion
       (setq secbuf (YaTeX-colloect-sections))
       (YaTeX-showup-buffer secbuf nil t)
+      (set-buffer secbuf)
       (goto-char (point-max))
       (while (re-search-backward pattern nil t)
 	(if (< ln (string-to-int (YaTeX-match-string 1))) nil
@@ -278,6 +335,8 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 	  (insert "  <<--")
 	  (setq pattern (concat "HackyRegexp" "ForFailure"))))
       (set-buffer-modified-p nil)
+      (setq buffer-read-only t buffer-undo-list nil)
+      (make-local-variable 'YaTeX-pending-undo)
       (forward-line 1)
       (if (eobp) (recenter -1) (recenter -3))
       (select-window cw)
@@ -297,4 +356,145 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
   (forward-char -1)
 )
 
+(defun YaTeX-shifted-section (sc n)
+  "Get SC's N-shifted sectioning command."
+  (let (lv)
+    (setq lv (- (cdr (assoc sc YaTeX-sectioning-level)) n)
+	  lv (max (min YaTeX-sectioning-max-level lv) 0))
+    (car (nth lv YaTeX-sectioning-level)))
+)
+
+(defun YaTeX-shift-section-up (n)
+  "Shift sectioning command down by level N."
+  (interactive "p")
+  (let ((cb (current-buffer)) sc nsc lv)
+    (if (and YaTeX-sectioning-buffer-parent
+	     (get-buffer YaTeX-sectioning-buffer-parent)
+	     (save-excursion
+	       (or (= (char-after (point)) ?\\ )
+		   (skip-chars-backward "^\\\\" (point-beginning-of-line)))
+	       (YaTeX-on-section-command-p YaTeX-sectioning-regexp)))
+	(save-excursion
+	  (or (buffer-name (get-buffer YaTeX-sectioning-buffer-parent))
+	      (error "This buffer is obsolete."))
+	  (setq nsc (YaTeX-shifted-section (YaTeX-match-string 1) n))
+	  (YaTeX-sectioning-buffer-jump-internal)
+	  (undo-boundary)
+	  (goto-char (match-beginning 0))
+	  (skip-chars-forward "\\\\")
+	  (delete-region
+	   (point) (progn (skip-chars-forward "^*{") (point)))
+	  (insert nsc)
+	  (undo-boundary)
+	  ;; Return to *Sectioning Lines* buffer
+	  (select-window (get-buffer-window cb))
+	  (beginning-of-line)
+	  (let (buffer-read-only)
+	    (delete-region
+	     (point) (progn (skip-chars-forward " \t") (point)))
+	    (indent-to-column (cdr (assoc nsc YaTeX-sectioning-level)))
+	    (skip-chars-forward "^\\\\")
+	    (delete-region
+	     (1+ (point)) (progn (skip-chars-forward "^*{") (point)))
+	    (insert nsc)
+	    (undo-boundary))
+	  (set-buffer-modified-p nil)
+	  (setq YaTeX-pending-undo pending-undo-list)
+	  )))
+)
+(defun YaTeX-shift-section-down (n)
+  "Shift sectioning command down by level N."
+  (interactive "p")
+  (YaTeX-shift-section-up (- n))
+)
+(defun YaTeX-shift-section-undo (arg)
+  "Undo YaTeX-shift-section-up/down."
+  (interactive "p")
+  (and YaTeX-sectioning-buffer-parent
+       (get-buffer YaTeX-sectioning-buffer-parent)
+       (equal (current-buffer) (get-buffer YaTeX-sectioning-buffer))
+       (let ((cb (current-buffer))
+	     (lc (if (eq last-command 'YaTeX-shift-section-undo) 'undo t)))
+	 (let ((pending-undo-list YaTeX-pending-undo)
+	       buffer-read-only (last-command lc))
+	   (undo arg)
+	   (setq YaTeX-pending-undo pending-undo-list))
+	 (YaTeX-showup-buffer YaTeX-sectioning-buffer-parent)
+	 (goto-buffer-window YaTeX-sectioning-buffer-parent)
+	 (undo-boundary)
+	 (let ((last-command lc)
+	       (pending-undo-list
+		(if (eq lc 'undo) YaTeX-pending-undo pending-undo-list)))
+	   (undo arg)
+	   (setq YaTeX-pending-undo pending-undo-list))
+	 (goto-buffer-window cb)
+	 (setq this-command 'YaTeX-shift-section-undo)))
+)
+(defun YaTeX-sync-section-buffer ()
+  "Synchronize *Sectioning Lines* buffer with parent buffer."
+  (interactive)
+  (if (and YaTeX-sectioning-buffer-parent
+	   (get-buffer YaTeX-sectioning-buffer-parent))
+      (let ((cb (current-buffer)) (p (point)))
+	(set-buffer (get-buffer YaTeX-sectioning-buffer-parent))
+	(YaTeX-section-overview)
+	(switch-to-buffer cb)
+	(goto-char p)))
+)
+(defun YaTeX-shift-section-up-region (beg end n)
+  "Shift sectioning commands in region down by level N."
+  (interactive "r\np")
+  (or YaTeX-sectioning-buffer-parent
+      (get-buffer YaTeX-sectioning-buffer-parent)
+      (error "Can't find corresponding LaTeX buffer"))
+  (save-excursion
+    (goto-char beg)
+    (let ((cb (current-buffer)) nsc from to repllist (e (make-marker)))
+      (set-marker e end)
+      (while (progn (skip-chars-forward "^\\\\") (< (point) e))
+	(YaTeX-on-section-command-p YaTeX-sectioning-regexp)
+	(setq from (YaTeX-match-string 0)
+	      nsc (YaTeX-shifted-section (YaTeX-match-string 1) n))
+	(goto-char (match-beginning 0))
+	(let (buffer-read-only)
+	  (delete-region (point) (progn (beginning-of-line) (point)))
+	  (indent-to-column (cdr (assoc nsc YaTeX-sectioning-level)))
+	  (delete-region
+	   (1+ (point)) (progn (skip-chars-forward "^*{") (point)))
+	  (insert nsc))
+	(YaTeX-on-section-command-p YaTeX-sectioning-regexp)
+	(setq to (YaTeX-match-string 0)
+	      repllist (cons (cons from to) repllist))
+	(forward-line 1))
+      (YaTeX-showup-buffer YaTeX-sectioning-buffer-parent)
+      (goto-buffer-window YaTeX-sectioning-buffer-parent)
+      (save-excursion
+	(goto-char (point-max))
+	(undo-boundary)
+	(while repllist
+	  (if (search-backward (car (car repllist)) nil t)
+	      (progn
+		(goto-char (match-beginning 0))	;confirm
+		(delete-region (point) (match-end 0))
+		(insert (cdr (car repllist)))
+		(goto-char (match-beginning 0))))
+	  (setq repllist (cdr repllist))))
+      (goto-buffer-window cb)))
+)
+(defun YaTeX-shift-section-down-region (beg end n)
+  "Shift sectioning commands in region down by level N."
+  (interactive "r\np")
+  (YaTeX-shift-section-up-region beg end (- n))
+)
+(defun YaTeX-sectioning-buffer-next-line (n)
+  "Move to next line in *Sectioning Lines* buffer."
+  (interactive "p")
+  (forward-line n)
+  (skip-chars-forward " \t%")
+)
+(defun YaTeX-sectioning-buffer-prev-line (n)
+  "Move to previous line in *Sectioning Lines* buffer."
+  (interactive "p")
+  (YaTeX-sectioning-buffer-next-line (- n))
+)
 (provide 'yatexsec)

@@ -51,6 +51,7 @@
 	◆プリントアウト		[prefix] tl
 	◆プリントアウト(全ページ)	C-u [prefix] tl
 	◆プレビューア起動		[prefix] tp
+	◆xdvi上で文字列サーチ		[prefix] ts	※※
 	◆lpq起動			[prefix] tq
 	◆jlatex起動(領域指定)		[prefix] tr
 
@@ -58,6 +59,7 @@
 	は覚えなくて構いません。
 
 	  ※は、MS-DOS では無効です。
+	  ※※は、-remote 機能付きの xdvi でのみ有効です。
 
 	  [prefix] tr の領域指定は、文書中の、 %#BEGIN と書いてある行か
 	ら、%#END と書いてある行までです。%#END を省略すると、%#BEGINか

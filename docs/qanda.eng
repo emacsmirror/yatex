@@ -52,9 +52,11 @@
 ============
 *I accidentally learned in a wrong LaTeX command.
 	
-	There should  be a line with the  wrong  command in the .yatexrc
-	file in you home or current directory.   Erase that line, do M-x
-	eval-current-buffer and save the results with C-x C-s.
+	There should be  a line with  the wrong command in the  .yatexrc
+	file in your home or current directory.  Erase or fix that line,
+	and save the results with C-x C-s, then kill  buffer with C-x k.
+	Once you make sure the current buffer is your LaTeX source, type
+	M-x YaTeX-reload-dictionary.
 
 *I can't comment out the region.
 	
@@ -294,6 +296,16 @@
 	yatexhks.el   will  be read  in     at   the end  of     YaTeX's
 	initialization, so you can overwrite definitions in yatexadd.el.
 	
+*Can I make intelligent newline work for my `mylist' environment?
+	
+	Yes.  See the section  `Intelligent newline' in the info manual.
+	But if you want the same as the  intelligent newline for itemize
+	environment which inserts  simply `\item', the following code is
+	efficient.
+	
+	(fset 'YaTeX-intelligent-newline-mylist
+	      'YaTeX-intelligent-newline-itemize)
+	
 [ETC]
 =====
 *Mailing lists?
@@ -314,6 +326,16 @@
 	adding new feathers to  Wild Bird.  BTW,  if you haven't guessed
 	it yet, yes, this mailing  list is in  Japanese.  But give us  a
 	try anyway.  You're always welcome.
+	
+*How to get the up-to-date information on YaTeX?
+	
+	If you can access WWW, try to see;
+	http://www.comp.ae.keio.ac.jp/~yuuji/yatex/
+	And if  you trace the link  of `yatex-current', you  can get the
+	really latest version of YaTeX.  Since it collects the elisps in
+	the author's source directory, what  you'll get may contain some
+	errors.  The author   cannot    respond to  your  query    about
+	yatex-current.
 	
 *Help, help HELP!!
 	

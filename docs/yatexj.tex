@@ -38,6 +38,7 @@
 * Intelligent newline::         おまかせ改行
 * Changing mode of YaTeX::      野鳥動作モード変更
 * Online help::                 LaTeXオンラインヘルプ
+* Inclusion hierarchy browser::  ファイル分割階層構造の表示
 * Cooperation with other packages::  他パッケージとの連携
 * Customizations::              カスタマイズ
 * Etc::                         その他
@@ -49,6 +50,7 @@
 latexコマンド起動
 
 * Calling typesetter::          タイプセッタ起動
+* Calling previewer::           プレヴューア起動
 * Print out::                   プリントアウト用コマンドの起動
 
 %#記法
@@ -74,7 +76,7 @@ latexコマンド起動
 section型補完
 
 * 2個以上の引数をとる section型コマンド::  
-* Enclose region-type command::  
+* Enclose section-type command::  括り補完
 * Recursive completion::        再帰補完
 * view-sectioning::             セクション区切りのアウトライン表示
 
@@ -267,10 +269,13 @@ LaTeXソースの編集中、次のキー入力により、jlatex などのタイプセットプログラ
         @dots{} プレヴューア起動
 @item [prefix] t l
         @dots{} lpr(プリントアウト用)コマンド起動
+@item [prefix] t s
+        @dots{} xdvi -remote でのサーチ
 @end table
 
 @menu
 * Calling typesetter::          タイプセッタ起動
+* Calling previewer::           プレヴューア起動
 * Print out::                   プリントアウト用コマンドの起動
 @end menu
 
@@ -312,6 +317,17 @@ LaTeXソースの編集中、次のキー入力により、jlatex などのタイプセットプログラ
 合にはメインファイルの documentstyle が自動的に選択されます。指定領域は、
 メインファイルのあるディレクトリの@file{texput.tex}という臨時ファイルに出
 力されますので、上書きには注意してください。
+
+@node Calling previewer, Print out, Calling typesetter, Invocation
+@comment  node-name,  next,  previous,  up
+@section プレヴューア起動
+  @kbd{[prefix] t p} によりプレヴューアの起動ができます。さらに、もしあな
+たが、-remote 機能つきのxdviを利用している場合は @kbd{[prefix] t s} を押す
+ことによりカーソル位置の文字列を検索してそのページを表示するようにすでに起
+動中のxdviに命令を送ります。これにより、現在編集中の箇所のタイプセット結果
+を即座に見ることができます。なお、-remote 機能付きの xdvi は
+@code{ftp://ftp.ae.keio.ac.jp/pub/text/xdvi/xdvi-remote}
+などから入手することができます。
 
 @node Print out,  , Calling typesetter, Invocation
 @comment  node-name,  next,  previous,  up
@@ -635,6 +651,10 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 入力の手間が省けます。内部テーブルに存在しない環境名を入力した時はユーザ専
 用のテーブルに登録され、さらにそのテーブルを自動的に、ユーザ辞書(デフォル
 トでは @file{~/.yatexrc})に保存します。
+
+さらに、特定の環境を補完入力した時にはその環境で必ず用いられるエントリを自
+動挿入します(例: @code{itemize}環境における@code{\item}など)。挿入されたエ
+ントリが不要な場合にはundoによって消去して下さい。
 @cindex ユーザ辞書[ゆうさししよ]
 
 @subsection 既に書いたテキストを環境で括る
@@ -727,12 +747,12 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 
 @menu
 * 2個以上の引数をとる section型コマンド::  
-* Enclose region-type command::  
+* Enclose section-type command::  括り補完
 * Recursive completion::        再帰補完
 * view-sectioning::             セクション区切りのアウトライン表示
 @end menu
 
-@node 2個以上の引数をとる section型コマンド, Enclose region-type command, section型補完, section型補完
+@node 2個以上の引数をとる section型コマンド, Recursive completion, section型補完, section型補完
 @comment  node-name,  next,  previous,  up
 @subsection 2個以上の引数をとる section型コマンド
 @cindex 引数[ひきすう]
@@ -766,15 +786,14 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 @cindex 引数の個数を変える[ひきすうのこすうをかえる]
 
 
-@node Enclose region-type command, Recursive completion, 2個以上の引数をとる section型コマンド, section型補完
-@comment  node-name,  next,  previous,  up
+@node Enclose section-type command, Recursive completion, 2個以上の引数をとる section型コマンド, section型補完
 @subsection 既に書いたテキストを括る
 @cindex 括る[くくる]
 
   また、起動コマンドの@kbd{s}を大文字に変えて起動すると、あらかじめ書
 いた文章を section 型コマンドの第一引数として括ります。
 
-@node Recursive completion, view-sectioning, Enclose region-type command, section型補完
+@node Recursive completion, view-sectioning, 2個以上の引数をとる section型コマンド, section型補完
 @comment  node-name,  next,  previous,  up
 @subsection 再帰補完
 @cindex 再帰補完[さいきほかん]
@@ -790,14 +809,46 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 @cindex アウトライン[あうとらいん]
 
   通常のsection型補完の時にミニバッファで@kbd{C-v}を押すと現在存在するセク
-ション区切りコマンド全てを一覧表示します(「<<--」のついている行がもっとも
-近いセクション区切り)。この時ミニバッファで@kbd{C-p}, @kbd{C-n} を押すと
-@samp{part}, @samp{chapter}, ..., @samp{subparagraph} のコマンドが論理階層
-の高さにしたがって上下します。また、@kbd{C-v}, @kbd{M-v} を押すとセクショ
-ン区切り一覧バッファがスクロールし、数字の@kbd{0}～@kbd{7}を押すとある高さ
-以上のセクション区切りだけを選んで表示します(実際にやって見れば分かります)。
-この一覧バッファにカーソルを移しスペースを押すと、該当するセクション区切り
-のある本文中の場所にジャンプします。
+ション区切りコマンド全てを @code{*Sectioning Lines*}というバッファに一覧表
+示します(「<<--」のついている行がもっとも近いセクション区切り)。この時ミニ
+バッファで@kbd{C-p}, @kbd{C-n} を押すと@samp{part}, @samp{chapter}, ...,
+@samp{subparagraph} のコマンドが論理階層の高さにしたがって上下します。また、
+@kbd{C-v}, @kbd{M-v} を押すとセクション区切り一覧バッファがスクロールし、
+数字の@kbd{0}～@kbd{7}を押すとある高さ以上のセクション区切りだけを選んで表
+示します(実際にやって見れば分かります)。
+
+@code{*Sectioning Lines*}バッファは、
+@table @kbd
+@item M-x YaTeX-section-overview
+        @dots{} セクション区切り一覧バッファを生成
+@end table
+@cindex セクション区切り一覧バッファ[せくしよんくきりいちらんはつは]
+で作成することができます。このバッファをを選択し任意の行でスペースを押すと、
+該当するセクション区切りのある本文中の場所にジャンプします。さらに、同バッ
+ファで @kbd{u} を押すと、ソーステキストの対応するセクションコマンドが一階
+層上がり(例: subsection が section に変わる)、@kbd{d}を押すと一階層下がり
+ます。@code{*Sectioning Lines*}バッファにあるセクション区切りの行をマーク
+しておいて@kbd{U}を押すとリジョン内のものに対応するソーステキストのセクショ
+ンコマンドすべてが一階層上がり、@kbd{D}を押すと下がります。セクション区切
+り一覧バッファで利用できるキーコマンドには以下のものがあります。
+
+@table @kbd
+@item SPC
+        @dots{} 対応するソース行へジャンプ
+@item .
+        @dots{} 対応するソース行を表示
+@item u
+        @dots{} カーソル位置に対応するセクションコマンドを一階層上げる
+@item d
+        @dots{} カーソル位置に対応するセクションコマンドを一階層下げる
+@item U
+        @dots{} マークしたセクションコマンドを一階層上げる
+@item D
+        @dots{} マークしたセクションコマンドを一階層上げる
+@item 0～6
+        @dots{} レベル n 以下のセクションコマンドを隠して表示
+@end table
+
 @cindex 論理階層[ろんりかいそう]
 @cindex セクション区切り[せくしよんくきり]
 @cindex ジャンプ[しやんふ]
@@ -1305,16 +1356,21 @@ universal-argument (@kbd{C-u}) を打った後で@kbd{[prefix] k}をタイプすると、
   itemize 環境中にある@code{\item}の項目(文章)が複数行に渡る場合に、項
 目の先頭を桁揃えしたい場合には、
 
+@c @table @kbd
+@c @item [prefix] i
+@c         @dots{} itemの桁揃え
+@c @end table
+
 @table @kbd
-@item [prefix] i
-        @dots{} itemの桁揃え
+@item M-q
+        @dots{} 桁揃え
 @end table
 
 @cindex NTT-jTeX[えぬていいていいしえいてつく]
 @noindent 
-によって、その item のインデントの深さに応じて fill されます。なお、NTT
-jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
-て下さい。
+によって、その item のインデントの深さに応じて fill されます。なお、古い
+NTT jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセッ
+トして下さい。
 
 @cindex YaTeX-item-regexp
   このとき、変数@code{YaTeX-item-regexp}の値(標準では @code{"\\\\item"})を
@@ -1324,44 +1380,37 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 
 @lisp
         (setq YaTeX-item-regexp
-              "\\(\\\\item\\)\\|\\(\\\\underlineitem\\)")
+              "\\(\\\\\\(sub\\)*item\\)\\|\\(\\\\underlineitem\\)")
 @end lisp
 
 @noindent 
 この変数の指定の仕方がよく分からない場合は、独自の項目列挙コマンドの名前を
 @code{@code{"\item"}で始まるものにして下さい(例えば"\itembf"})。
 
-  @kbd{[prefix] i} では@code{\item} を「ハングインデント」に整形します。も
-し@code{\item}とその説明用パラグラフを切り離す時は通常の
-@kbd{M-q}(他のモードではfill-paragraphが割り当てられている)を使ってくださ
-い。(つまり以下のような場合:)
+野鳥の @kbd{M-q} では @code{\item} を環境に応じて以下のように「ハングイン
+デント」します。
 
 @example
-ハングインデント:
+itemize, enumerate環境:
        >\item[ほげほげ] 英語では、特に意味のない単語を `foo' であらわしま
        >                すが、これの日本語版ともいえる単語が「ほげほげ」
        >                です。
-通常インデント:
-       > \item へろへろ
-       >
-       >       「ほげほげ」をでたらめが単語として使った時に、第2のでたら
-       >       めな単語として「へろへろ」が使われることが多いようです。
+description環境:
+       > \item[へろへろ] 「ほげほげ」をでたらめが単語として使った時に、第
+       >            2のでたらめな単語として「へろへろ」が使われることが多
+       >            いようです。
 @end example
-
-  上の通常インデントの場合、説明パラグラフのインデントは \item の見出しと
-同じ深さとする必要があります。ただし、@kbd{M-q}を行の最初の非空白文字の位
-置で押すことにより深さを変えることができます(後述)。
 
 @section パラグラフの桁揃え
 @cindex パラグラフの桁揃え[はらくらふのけたそろえ]
 @cindex M-q
 
-  パラグラフの桁揃え(fill)は、基本的に通常通り機能しますが、verbatim環境や、
-tabular環境など桁揃えをすると悲惨な状況になるような環境中では機能しません。
-また、\verb で括ってあるものは決して行分割されません(変数 
-@code{YaTeX-verb-regexp} で制御) )。さらに、一時的にインデントの深さを変え
-てある箇所では、そのインデントの先頭で@kbd{M-q}を押すことにより 
-fill-prefix をいちいち変更しなくて桁揃えができます。
+  itemize環境以外でのパラグラフの桁揃え(fill)は、基本的に他のモードと同じ
+ように機能しますが、verbatim環境や、tabular環境など桁揃えをすると悲惨な状
+況になるような環境中では機能しません。また、\verb で括ってあるものは決して
+行分割されません(変数 @code{YaTeX-verb-regexp} で制御) )。さらに、一時的に
+インデントの深さを変えてある箇所では、そのインデントの先頭で@kbd{M-q}を押
+すことにより fill-prefix をいちいち変更しなくて桁揃えができます。
 
 
 @node Includeonly, What column, Filling, Top
@@ -1443,7 +1492,8 @@ fill-prefix をいちいち変更しなくて桁揃えができます。
 @cindex &入力[&にゅうりょく]
 @cindex prefix &
 
-  tabular[*], array, itemize, enumerate, tabbing 環境で
+  tabular[*], array, itemize, enumerate, tabbing 環境をbegin型補完で入力し
+た時、または各環境内で
 
 @table @kbd
 @item ESC RET
@@ -1451,10 +1501,11 @@ fill-prefix をいちいち変更しなくて桁揃えができます。
 @end table
 
 @noindent 
-を押すと、その環境に応じた行エントリを次の行に挿入します。例えば、tabular
-環境では、その環境のカラム数に対応した個数の @code{&} に加え、行末の 
-@code{\\} を入れます。この時それ以前に @code{\hline} があればそれも付け加
-えます。環境とそれに応じて自動入力するものの対応は以下のようになります。
+を押すと、その環境に応じた行エントリを次の行に挿入します(begin型補完時に自
+動挿入されたエントリが不要な場合は undo によって消去できます)。例えば、
+tabular環境では、その環境のカラム数に対応した個数の @code{&} に加え、行末
+の @code{\\} を入れます。この時それ以前に @code{\hline} があればそれも付け
+加えます。環境とそれに応じて自動入力するものの対応は以下のようになります。
 
 @itemize
 @item @code{tabular}, @code{tabular*}, @code{array}
@@ -1478,8 +1529,8 @@ fill-prefix をいちいち変更しなくて桁揃えができます。
 します。定義した関数は、現在の行に改行を挿入した直後の行頭の位置で呼ばれま
 す。関数 @code{YaTeX-indent-line} を呼ぶと現在の環境のネストに応じた深さに
 インデントされるので、これを呼んでから何かを挿入するようなコードを書くとよ
-いでしょう。関数 @code{YaTeX-intelligent-newline-itemize} の定義などを参考
-にしてください。
+いでしょう。@file{yatexenv.el}内の関数 
+@code{YaTeX-intelligent-newline-itemize} の定義などを参考にしてください。
 
 @node Changing mode of YaTeX, Online help, Intelligent newline, Top
 @comment  node-name,  next,  previous,  up
@@ -1705,10 +1756,6 @@ prefix キーの直後のキーバインドで@kbd{英字}のものを@kbd{C-英字}に変更
 本文を書く時の行頭に挿入する接頭辞すなわち fill-prefix (@code{""(nil)})
 @end defvar
 
-@defvar YaTeX-open-lines
-\begin{環境}と\end{環境}のあいだの空白行数 (0)
-@end defvar
-
 @defvar YaTeX-user-completion-table
 学習したLa@TeX{}コマンド保存ファイル名(@code{"~/.yatexrc"})
 @end defvar
@@ -1891,6 +1938,10 @@ Non-nil に設定するとsection型コマンドの引数入力時、アドイン関数がなければ
 色付けが有効な時の、@code{\subparagraph} の色を @code{\chapter} の濃度の何
 %薄くしたものにするか(@code{'(15 40)}。@code{YaTeX-hilit-sectioning-face}
 の項参照。
+@end defvar
+
+@defvar YaTeX-use-AMS-LaTeX
+AMS-LaTeX を使用する場合は @code{t} に設定する(@code{nil})。
 @end defvar
 
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables

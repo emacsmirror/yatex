@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Nov  2 19:35:16 1995 on inspire
+;;; Last modified Fri Feb  2 02:09:57 1996 on supra
 ;;; $Id$
 
 (require 'yatex)
@@ -350,7 +350,9 @@ PROC should be process identifier."
   (interactive
    (list
     (read-string-with-history
-     "Preview command: " dvi2-command 'YaTeX-preview-command-history)
+     "Preview command: "
+     (or (YaTeX-get-builtin "PREVIEW") dvi2-command)
+     'YaTeX-preview-command-history)
     (read-string-with-history
      "Preview file[.dvi]: "
      (if (get 'dvi2-command 'region)
@@ -384,6 +386,32 @@ PROC should be process identifier."
 	(message
 	 (concat "Starting " preview-command
 		 " to preview " preview-file))))))
+)
+
+(defvar YaTeX-xdvi-remote-program "xdvi")
+(defun YaTeX-xdvi-remote-search (&optional region-mode)
+  "Search string at the point on xdvi -remote window.
+Non-nil for optional argument REGION-MODE specifies the search string
+by region."
+  (interactive "P")
+  (let ((pb " *xdvi*") str proc)
+    (save-excursion
+      (if region-mode
+	  (setq str (buffer-substring (region-beginning) (region-end)))
+	(setq str (buffer-substring
+		   (point)
+		   (progn (skip-chars-forward "^\n\\\\}") (point)))))
+      (message "Searching `%s'..." str)
+      (if (boundp 'MULE)
+	  (define-program-coding-system
+	    (regexp-quote pb) (regexp-quote YaTeX-xdvi-remote-program)
+	    *euc-japan*))
+      (setq proc
+	    (start-process
+	     "xdvi" pb YaTeX-xdvi-remote-program
+	     "-remote"  (format "SloppySearch(%s) " str)
+	     (concat (YaTeX-get-preview-file-name) ".dvi")))
+      (message "Searching `%s'...Done" str)))
 )
 
 (defun YaTeX-set-virtual-error-position (file-sym line-sym)

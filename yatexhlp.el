@@ -2,7 +2,7 @@
 ;;; YaTeX helper with LaTeX commands and macros.
 ;;; yatexhlp.el
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Jan 23 10:17:11 1995 on pajero
+;;; Last modified Tue Dec 26 00:02:02 1995 on inspire
 ;;; $Id$
 
 (let ((help-file (concat "YATEXHLP."
@@ -261,6 +261,7 @@ as a help file."
 ;;;###autoload
 (defun YaTeX-apropos (key)
   (interactive "sLaTeX apropos (regexp): ")
+  (if (string= "" key) (error "Nothing to show"))
   (or (YaTeX-apropos-file key YaTeX-help-file)
       (YaTeX-apropos-file key YaTeX-help-file-private t)
       (message "No matches found."))

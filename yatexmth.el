@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el rev.4
 ;;; (c )1993-1995 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Wed Aug 16 12:45:55 1995 on inspire
+;;; Last modified Thu Feb  1 13:04:16 1996 on supra
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -439,11 +439,16 @@ This value is appended with YaTeX-verbatim-environments.")
 (defun YaTeX-math-get-sign (list)
   (YaTeX-math-gets (car (cdr-safe (cdr-safe list))))
 )
-
 (defun YaTeX-in-math-mode-p ()
   "If current position is supposed to be in LaTeX-math-mode, return t."
   (or (YaTeX-quick-in-environment-p
-       '("math" "eqnarray" "equation" "eqnarray*" "displaymath"))
+       (append
+	'("math" "eqnarray" "equation" "eqnarray*" "displaymath");LaTeX
+	(if YaTeX-use-AMS-LaTeX
+	    ;; And math modes of AMS-LaTeX
+	    '("align" "align*" "split" "multline" "multline*" "gather"
+	      "gather*" "aligned*" "gathered" "gathered*" "alignat"
+	      "alignat*" "xalignat" "xalignat*" "xxalignat" "xxalignat*"))))
       (let*((p (point)) (nest 0) me0
 	    (delim (concat YaTeX-sectioning-regexp "\\|^$\\|^\C-l"))
 	    (boundary
@@ -473,7 +478,7 @@ This value is appended with YaTeX-verbatim-environments.")
 	   (t (catch 'dollar
 		(while ;(search-backward "$" boundary t);little bit fast.
 		    (YaTeX-re-search-active-backward ;;;;;; Too slow???
-		     "\\$" YaTeX-comment-prefix boundary t)
+		     "\\$" (concat "[^\\\\]" YaTeX-comment-prefix) boundary t)
 		  (cond
 		   ((equal (char-after (1- (point))) ?$) ; $$ equation $$
 		    (backward-char 1)

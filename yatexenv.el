@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c ) 1994, 1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu May 18 11:52:05 1995 on inspire
+;;; Last modified Fri Feb  2 03:47:14 1996 on supra
 ;;; $Id$
 
 ;;;
@@ -116,18 +116,23 @@ Return the list of (No.ofCols PointEndofFormat)"
   (let*((p (point)) (format (YaTeX-tabular-parse-format tabular*))
 	(cols (car format)) (beg (car (cdr format)))
 	space hline)
-    (setq hline (search-backward "\\hline" beg t))
+    (cond
+     ((search-backward "&" beg t)
+      (goto-char p)
+      (setq hline (search-backward "\\hline" beg t))
+      (setq space (if (search-backward "\t&" beg t) "\t" " "))
+      (goto-char p))
+     (t ;;(insert "\\hline\n")
+	(setq space " ")))
     (goto-char p)
-    (setq space (if (search-backward "\t&" beg t) "\t" " "))
-    (goto-char p)
-    (YaTeX-indent-line)
-    (setq p (point))
     (while (> (1- cols) 0)
       (insert "&" space)
       (setq cols (1- cols)))
     (insert "\\\\")
     (if hline (insert " \\hline"))
-    (goto-char p))
+    (goto-char p)
+    (YaTeX-indent-line)
+)
 )
 
 (defun YaTeX-intelligent-newline-tabular* ()
@@ -160,17 +165,17 @@ Return the list of (No.ofCols PointEndofFormat)"
 	      (insert "\\>\t")
 	      (setq tabcount (1- tabcount))))
 	  (forward-char 2))
-      (insert "\\=")))
+      (insert "\\= \\\\")
+      (forward-char -5)))
 )
 
 ;;;
 ;; Functions for itemize/enumerate/list environments
 ;;;
 
-(defvar YaTeX-item-for-insert "\\item ")
 (defun YaTeX-intelligent-newline-itemize ()
   "Insert '\\item '."
-  (insert YaTeX-item-for-insert)
+  (insert "\\item ")
   (YaTeX-indent-line)
 )
 (fset 'YaTeX-intelligent-newline-enumerate 'YaTeX-intelligent-newline-itemize)
@@ -199,6 +204,7 @@ Return the list of (No.ofCols PointEndofFormat)"
     (setq func (intern-soft (concat "YaTeX-intelligent-newline-" env)))
     (end-of-line)
     (newline)
+    (undo-boundary)
     (if (and env func (fboundp func))
 	(funcall func)))
 )

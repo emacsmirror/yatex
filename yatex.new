@@ -1,5 +1,32 @@
 	What's new in YaTeX
-	yatex.el 各バージョンの変更点について
+	野鳥 - 各バージョンの変更点について
+
+1.61	AMS-LaTeX 対応
+	xdvi -remote によるサーチに対応 [prefix] t s
+	begin型補完終了直後に自動的におまかせ改行を実行するようにした
+	yahtmlで <p>, <br> が行末にある時に fill-paragraph した時のバグ修正
+	htmlタグそのものではなく、意味を表す文字列で補完できるようにした
+	yahtml で [prefix] g を <img src=..> の上で押したらViewer(xv)を起動
+	するようにし、<a href="http://外部リンク">の上で押したらnetscape
+	を起動(またはプロセスコントロール)するようにした
+	yahtml に [preix] t (野鳥でいうタイプセットメニュー)を設け、
+	[prefix] t b でカレントファイルをWWWブラウザで見られるようにした
+	[prefix] t r で Netscape に reload コマンドを送れるようにした
+	html の括り補完をまともにした
+	yahtml-indent-line を作成。リスティング環境のインデントのみ少し
+	まともにした
+	yahtml におまかせ改行を追加
+	html <a> の補完を、http:// で始まっていればヒストリからの補完、/ 
+	で始まっていればWWWサーバ内のURL名補完、いずれでもなければUNIXファ
+	イルシステムでのファイル名補完となるようにした
+	html3 この期に及んでまだ未調査。だれかおしえてー
+	\pagebreak, \linebreak のアドイン関数の追加
+	セクション区切りアウトライン表示のバッファで u, d を押すことによ
+	り、対応するセクションコマンドのレベルを上げる/下げる。U, D を押
+	すと領域内のセクションコマンドを一括シフト
+	変数 YaTeX-open-lines を廃止
+	[prefix] i の YaTeX-fill-item を廃止
+	$$ 中に \% があった場合の数式モード終了判定ミスを修正
 
 1.60	LaTeX2e 対応
 	documentclass パラメータを修正し、ASCII 版 jLaTeX2e に対応

@@ -8,7 +8,7 @@
 ;;; named `yatexhks.el'.  The file `yatexhks.el' will be automatically
 ;;; loaded at the end of loading `yatex.el'.
 
-;Private definitions begins from here.
+;Private definitions begin from here.
 
 (define-key YaTeX-user-extensional-map "0"
   '(lambda () (interactive) (YaTeX-make-section nil nil nil "part")))
