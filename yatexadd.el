@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.9
 ;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Jun 27 17:00:19 1994 on figaro
+;;; Last modified Mon Jul 25 00:04:43 1994 on figaro
 ;;; $Id$
 
 ;;;
@@ -236,6 +236,11 @@ YaTeX-make-begin-end."
     (concat quote-char contents quote-char))
 )
 (fset 'YaTeX:verb* 'YaTeX:verb)
+
+(defun YaTeX:footnotemark ()
+  (setq section-name "footnotetext")
+  nil
+)
 
 ;;;
 ;;Subroutine
