@@ -233,7 +233,7 @@ notations in the source text.
 * Editing %# notation::         
 @end menu
 
-@node Changing typesetter, Static region for typesetting,  , %# notation
+@node Changing typesetter, Static region for typesetting, %# notation, %# notation
 @comment  node-name,  next,  previous,  up
 @section To change the `latex' command or to split a source text.
 @cindex typesetter
@@ -410,7 +410,7 @@ kinds of completion type, begin-type, section-type, large-type, etc...
 * Greek letters completion::    
 @end menu
 
-@node Begin-type completion, Section-type completion,  , Completion
+@node Begin-type completion, Section-type completion, Completion, Completion
 @comment  node-name,  next,  previous,  up
 @section Begin-type completion
 @cindex begin-type completion
@@ -622,7 +622,7 @@ minibuffer.
 * view-sectioning::             
 @end menu
 
-@node view-sectioning,  ,  , Section-type completion
+@node view-sectioning,  , Section-type completion, Section-type completion
 @comment  node-name,  next,  previous,  up
 @subsection view-sectioning
 @cindex view sectioning
@@ -1017,35 +1017,32 @@ for Emacs-Lisp, name  a newcommand  for  `itemize' beginning  with
 
 @node Local dictionaries, Updation of @code{\includeonly}, Filling an item, Top
 @comment  node-name,  next,  previous,  up
-@chapter Local dictionaries: For nervous users
+@chapter Local dictionaries
 @cindex local dictionaries
 @cindex nervous users
 
-  If you have had the experience that you couldn't concentrate on editing
-because you typed miss-spelled word on completion and the registration of
-the wrong word to @file{.yatexrc} weighed on your mind.  Or if you have
-thought that you want YaTeX not to register a local newcommand which goes
-only in current text, into the standard user completion dictionary;
-@file{.yatexrc}.  Write this in your @file{~/.emacs}.
+  Tables for completion consist of three dictionaries; `standard
+dictionary' built in @file{yatex.el}, `user dictionary' for your common
+private commands, and `local dictionary' that is effective in a certain
+directory.
+
+  When you input the command unknown to YaTeX at a completion in the
+minibuffer, YaTeX asks you with the following prompt;
+
+@example
+  `foo' is not in table. Register into: U)serTable L)ocal N)one
+@end example
+
+@noindent 
+In this menu, typing `u' updates your `user dictionary', `l' updates your
+local dictionary, and `n' updates no dictionary and throws the word away.
+
+  If you find this switching feature meaningless and bothersome, put the
+next expression into your @file{~/.emacs}
 
 @lisp
- 	(setq YaTeX-nervous t)
+ 	(setq YaTeX-nervous nil)
 @end lisp
-
-  In addition to `standard table' built in yatex.el and `user table' which
-is always saved into @file{~/.yatexrc}, the statement above allows you to
-use `temporary table' for completion.  When you enter a word which is
-never seen in these tables, you can select the table in which you want to
-save the word; `user table'(UserTable), `temporary table'(TempTable) or
-discard it(None).
-
-  But you may want to complete newcommand semi-permanently that is defined
-in rather large text as graduation thesis, even if the newcommand is a
-local declaration.  After setting @code{YaTeX-nervous} to @code{t}, make
-an empty file named @file{.yatexrc} (the same name as your user
-dictionary).  YaTeX will use it as the local dictionary to keep the
-contents of temporary completion table.  This local dictionary will be
-loaded only when you edit the file which exists in the same directory.
 
 @node Updation of @code{\includeonly}, What column?, Local dictionaries, Top
 @comment  node-name,  next,  previous,  up
@@ -1253,7 +1250,7 @@ add-in functions.
 * Add-in functions::            
 @end menu
 
-@node Lisp variables, Add-in functions,  , Customizations
+@node Lisp variables, Add-in functions, Customizations, Customizations
 @comment  node-name,  next,  previous,  up
 @section Lisp variables
 @cindex customizable variables
@@ -1279,7 +1276,7 @@ that variable to 1 instead of @code{t}).
 * Hook file::                   
 @end menu
 
-@node All customizable variables, Sample definitions,  , Lisp variables
+@node All customizable variables, Sample definitions, Lisp variables, Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection All customizable variables
 @cindex all customizable variables

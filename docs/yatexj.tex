@@ -30,7 +30,7 @@
 * Cursor jump - カーソルジャンプ::  
 * Modifying/Deleting - 変更/削除::  
 * Filling item - itemの桁揃え::  
-* Local dictionary - ローカル辞書(神経質な人へ)::  
+* Local dictionary - ローカル辞書::  
 * Includeonly - 勝手にincludeonly::  
 * Where am I? - 今はどこ?::     
 * Intelligent newline - おまかせ改行::  
@@ -151,7 +151,7 @@
 * Print out - プリントアウト用コマンドの起動::  
 @end menu
 
-@node Calling typesetter - タイプセッタ起動, Print out - プリントアウト用コマンドの起動,  , Invocation - 外部コマンドの起動
+@node Calling typesetter - タイプセッタ起動, Print out - プリントアウト用コマンドの起動, Invocation - 外部コマンドの起動, Invocation - 外部コマンドの起動
 @comment  node-name,  next,  previous,  up
 @section タイプセッタ起動
 @cindex タイプセッタ起動
@@ -219,7 +219,7 @@
 * Editing %# notation - %#記法の編集::  
 @end menu
 
-@node Changing typesetter - タイプセット用コマンドの変更, Splitting input files - 入力ファイル分割,  , %#記法
+@node Changing typesetter - タイプセット用コマンドの変更, Splitting input files - 入力ファイル分割, %#記法, %#記法
 @comment  node-name,  next,  previous,  up
 @section タイプセット用コマンド変更
 
@@ -426,7 +426,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 * Greek letter completion - ギリシャ文字補完::  
 @end menu
 
-@node begin型補完, section型補完,  , Completion - 補完入力
+@node begin型補完, section型補完, Completion - 補完入力, Completion - 補完入力
 @comment  node-name,  next,  previous,  up
 @section begin型補完
 @cindex begin型補完[beginがたほかん]
@@ -604,7 +604,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 * view-sectioning - セクション区切りのアウトライン表示::  
 @end menu
 
-@node 2個以上の引数をとる section型コマンド, Input argument without copletion - 引数入力時に補完しない,  , section型補完
+@node 2個以上の引数をとる section型コマンド, Input argument without copletion - 引数入力時に補完しない, section型補完, section型補完
 @comment  node-name,  next,  previous,  up
 @subsection 2個以上の引数をとる section型コマンド
 @cindex 引数[ひきすう]
@@ -1072,7 +1072,7 @@ universal-argument (@kbd{C-u}) を打った後で@kbd{[prefix] k}をタイプすると、
 	        ↑(カーソル位置)
 @end example
 
-@node Filling item - itemの桁揃え, Local dictionary - ローカル辞書(神経質な人へ), Modifying/Deleting - 変更/削除, Top
+@node Filling item - itemの桁揃え, Local dictionary - ローカル辞書, Modifying/Deleting - 変更/削除, Top
 @comment  node-name,  next,  previous,  up
 @chapter itemの桁揃え
 @cindex itemの桁揃え[itemのけたぞろえ]
@@ -1107,41 +1107,42 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 この変数の指定の仕方がよく分からない場合は、独自の項目列挙コマンドの名前を
 @code{@code{"\item"}で始まるものにして下さい(例えば"\itembf"})。
 
-@node Local dictionary - ローカル辞書(神経質な人へ), Includeonly - 勝手にincludeonly, Filling item - itemの桁揃え, Top
+@node Local dictionary - ローカル辞書, Includeonly - 勝手にincludeonly, Filling item - itemの桁揃え, Top
 @comment  node-name,  next,  previous,  up
-@chapter 神経質な人へ
+@chapter ローカル辞書
 @cindex ローカル辞書[ろーかるじしょ]
-@cindex 神経質な人へ[しんけいしつなひとへ]
 @cindex .yatexrc
 @cindex へんなたんご[へんなたんご]
 
-  補完入力で間違った単語を入れてしまい、@file{.yatexrc} に変な単語が記録さ
-れるのが気になってしまって、もはや編集に集中できないあなた。学習させたコマ
-ンドは、今書いている文書中で定義しているローカルなものなので、やはり標準の 
-@file{.yatexrc} には保存して欲しくない、と思ったことのあるあなた。そんなあ
-なたは、@file{~/.emacs} に次の一行を足してください。
+  補完入力用の候補は三種類の辞書から構成されています。一つは
+@file{yatex.el}に組み込まれた「標準辞書」、もう一つはユーザが個人的に常用
+するコマンドを保存する「ユーザ辞書」、そしてもうひとつはあるディレクトリで
+のみ有効なコマンドを保存する「ローカル辞書」です。
+
+  補完入力時に新しい単語を入れた場合に、その単語をどの辞書に入れるか聞いて
+来ます。
+
+@example
+  `foo' is not in table. Register into: U)serTable L)ocal N)one
+@end example
+
+@noindent 
+というプロンプトに対し、@kbd{u}と答えると「ユーザ辞書」を、@kbd{l}と答える
+とローカル辞書を更新することになり、@kbd{n}と答えると新たな単語を学習せず
+に捨てることになります。
+
+  もし、ローカル辞書の機能はいらず、全てユーザ辞書の更新のみでよいと言う場
+合には@file{~/.emacs}などで、
 
 @lisp
- 	(setq YaTeX-nervous t)
+ 	(setq YaTeX-nervous nil)
 @end lisp
 @cindex YaTeX-nervous
 
-  通常の、@file{yatex.el} に組み込まれた「標準テーブル」と 
-@file{~/.yatexrc} に保存される「ユーザテーブル」に加え、「一時テーブル」が
-使えるようになります。これら補完テーブルにない単語を入れた時に、ユーザテー
-ブル(UserTable)、その日だけ有効な一時テーブルに保存するか(TempTable)、覚え
-ずに捨てる(None)かが選べるようになります。
+@noindent 
+として下さい。
 
-  ところが、卒論などのように長期に渡って書く大きなものになると、その論文で
-定義しているローカルなコマンドであっても「その日だけ」ではなく、その論文を
-書いている間は補完してもらいたいものです。そんなときは、上記の変数
-@code{YaTeX-nervous} を@code{t}にセットしたうえで、その論文を置いているディ
-レクトリに@file{.yatexrc}(ユーザ辞書と同じ名前で中身は空)を作ってください。
-すると、そのファイルをローカル辞書として一時テーブルの内容を保存するために
-用います。以後、このローカル辞書の存在するディレクトリのファイルを編集する
-時のみ、その辞書に含まれる補完候補が有効になります。
-
-@node Includeonly - 勝手にincludeonly, Where am I? - 今はどこ?, Local dictionary - ローカル辞書(神経質な人へ), Top
+@node Includeonly - 勝手にincludeonly, Where am I? - 今はどこ?, Local dictionary - ローカル辞書, Top
 @comment  node-name,  next,  previous,  up
 @chapter 勝手にincludeonly
 @cindex 勝手にincludeonly[かってにincludeonly]
@@ -1341,7 +1342,7 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 * Add-in functions - 付加関数(アドイン関数)::  
 @end menu
 
-@node Lisp variables - lisp 変数, Add-in functions - 付加関数(アドイン関数),  , Customizations - カスタマイズ
+@node Lisp variables - lisp 変数, Add-in functions - 付加関数(アドイン関数), Customizations - カスタマイズ, Customizations - カスタマイズ
 @comment  node-name,  next,  previous,  up
 @section lisp 変数
 @cindex prefixキー変更[prefixきーへんこう]
@@ -1362,7 +1363,7 @@ C-英字…}に変わります(ただし、begin型 large型補完の大文字起動によるリジョ
 * Hook file - hook用ファイル::  
 @end menu
 
-@node All customizable variables - カスタマイズ変数一覧, Sample definitions - カスタマイズ変数設定例,  , Lisp variables - lisp 変数
+@node All customizable variables - カスタマイズ変数一覧, Sample definitions - カスタマイズ変数設定例, Lisp variables - lisp 変数, Lisp variables - lisp 変数
 @comment  node-name,  next,  previous,  up
 @subsection カスタマイズ変数一覧
 @cindex カスタマイズ変数一覧[かすたまいずへんすういちらん]
@@ -1470,7 +1471,7 @@ item化コマンドの正規表現(@code{"\\\\(sub\\)*item"})
 
 @item YaTeX-nervous
 
-ローカル辞書を用いる時 @code{t} (@code{nil})
+ローカル辞書を用いる時 @code{t} (@code{t})
 
 @item YaTeX-sectioning-regexp
 
