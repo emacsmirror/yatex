@@ -595,6 +595,9 @@ eqnarray* 環境は数式番号を出力しないほかはeqnarray環境と同じである。
 
   list環境の体裁を制御する変数には以下のものがある(括弧内は既定値)。
 水平方向:
+<refer list環境の体裁を制御する変数>
+
+list環境の体裁を制御する変数
 \labelwidth	itemのラベルの幅
 \labelsep	ラベルの右端と最初のアイテムのテキストとの間隔
 \leftmargin	list環境内での左マージン
@@ -611,12 +614,17 @@ eqnarray* 環境は数式番号を出力しないほかはeqnarray環境と同じである。
 \itemsep	連続するitemどうしの間隔
 \parsep		一つのitem内でのパラグラフどうしの間隔
 
+
 itemize
 \begin{itemize} \item アイテム1 ... \item アイテムn \end{itemize}
 項目を列挙するための環境。
 最大4つまでネストできる。
 各レベルのitemの頭につく記号は、\labelitemi, \labelitemii,
 \labelitemiii, \labelitemiv で制御される。
+
+itemize環境の体裁を制御する変数には以下のものがある。
+<refer list環境の体裁を制御する変数>
+
 
 enumerate
 \begin{enumerate} \item アイテム1 ... \item アイテムn \end{enumerate}
@@ -632,10 +640,17 @@ eqnarray* 環境は数式番号を出力しないほかはeqnarray環境と同じである。
 \def\labelenumii{(\theenumii)}
 とすると \ref値が 3a などのように設定される。
 
+enumerate環境の体裁を制御する変数には以下のものがある。
+<refer list環境の体裁を制御する変数>
+
 item
 \item			\item[LABEL]
 itemize, enumerate, description 環境などで項目を開始する。
 [LABEL]を指定するとラベルとしてLABELを出力する。
+
+description
+\begin{description} \item[見出し単語] 説明 ... \end{description}
+[見出し単語]を見出しとする
 
 subitem
 \subitem 項目
@@ -1039,12 +1054,14 @@ abbrv	著者のファーストネーム、発行月、書籍名が省略される
 \footnote{NOTE}
 NOTEという内容の脚注を生成する。
 \footnote[NUM]{NOTE} とすると、番号をNUMで指定できる。
+脚注がうまく出力されないような場所では \footnotemark と \footnotetext を
+組み合わせて出力する。
 fragile
 
 footnotemark
 \footnotemark[NUM]
 脚注番号のみ出力する時に使う。tabbing環境のように、脚注が出力されないと
-ころで、footnotetextと組み合わせて使う。[NUM]は省略可。
+ころで、\footnotetext と組み合わせて使う。[NUM]は省略可。
 
 footnotetext
 \footnotetext[NUM]{TEXT}
@@ -1125,10 +1142,12 @@ pt		ポイント(72.27pt=1インチ)
 \twocolumn[STRING]
 改頁したあと二段組みでの組版を開始する。
 [STRING]を指定すると、STRINGを二段ぶち抜きのタイトルとして出力。
+→onecolumn
 
 onecolumn
 \onecolumn
 改頁したあとで一段組みでの組版を開始する。
+→twocolumn
 
 topnewpage
 \topnewpage{BOX}
