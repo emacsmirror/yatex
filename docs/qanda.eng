@@ -366,11 +366,12 @@
 	and it's  implementation to Vz Editor; LaiTeX  (Thunder Bird, by
 	KATSURAGAWA Naoki), implementation  to Wz Editor; HackTeX (Swan,
 	by TAKENAKA  Hiroshi), implementation to  Hidemaru Editor; HiTeX
-	(Flying  Bird, by YASUDA  Haruyuki) is  "fj Wild  Bird Society".
+	(Flying  Bird, by YASUDA  Haruyuki), implementation to xyzzy;
+	KaTeX (by MAEDA Manabu) is  "fj Wild  Bird Society".
 	Send a mail like
 	
 		To: yatex@yatex.org
-		Subject: append
+		Subject: subscribe
 		-----
 		Hi!
 		My name is yuuji.

@@ -5,9 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Do people really read this INFO?
-@c Still not finished
-@c Last modified Sat Dec  2 13:55:01 2000 on buell
+@c Last modified Fri Mar  1 16:16:59 2002 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -389,7 +387,8 @@ setq to t if you always want @code{</p>} after @code{</p>}. @code{nil}
 @end defvar
 
 @defvar yahtml-p-prefered-env-regexp
-Elements that @code{<p>} will be automatically inserted. @code{^\(body\|dl\)}
+Elements that @code{<p>} will be automatically inserted.
+(@code{"^\\(body\\|dl\\|blockquote\\)"})
 @end defvar
 
 @defvar yahtml-template-file
@@ -461,11 +460,15 @@ Use font-lock to fontify buffer or not
 (@code{(featurep 'font-lock)})
 @end defvar
 
-@defvar yahtml-hilit19
+@defvar yahtml-use-hilit19
 Use hilit19 to highlight buffer or not
 (@code{(featurep 'hilit19)})
 @end defvar
 
+@defvar yahtml-indentation-boundary
+Boundary regexp for indentation calculation.
+(@code{"^\\s *<h[1-3]>"})
+@end defvar
 
 @node Hook variables,  , All customizable variables, Customizations
 @comment  node-name,  next,  previous,  up
