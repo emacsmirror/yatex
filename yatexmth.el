@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX interface for math-mode.
 ;;; yatexmth.el rev.2
-;;; (c )1993 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Jan 29 16:55:03 1994 on gloria
+;;; (c )1993-1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
+;;; Last modified Sat Apr 23 02:26:57 1994 on pajero
 ;;; $Id$
 
 ;;; [Customization guide]

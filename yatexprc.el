@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c )1993 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Jan 29 16:54:54 1994 on gloria
+;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Sat Apr 23 02:34:07 1994 on pajero
 ;;; $Id$
 
 (require 'yatex)
@@ -15,6 +15,9 @@
 
 (defvar YaTeX-typeset-buffer-syntax nil
   "*Syntax table for typesetting buffer")
+
+(defvar YaTeX-current-TeX-buffer nil
+  "Keeps the buffer on which recently typeset run.")
 
 (if YaTeX-typeset-buffer-syntax nil
   (setq YaTeX-typeset-buffer-syntax
@@ -34,7 +37,7 @@
 	;; if tex command is halting.
 	(YaTeX-kill-typeset-process YaTeX-typeset-process))
     (YaTeX-visit-main t);;execution directory
-    ;;Select under-most window if there are more than 2 windows and
+    ;;Select lower-most window if there are more than 2 windows and
     ;;typeset buffer not seen.
     (YaTeX-showup-buffer
      buffer (function (lambda (x) (nth 3 (window-edges x)))))
@@ -50,7 +53,7 @@
 	      (start-process "LaTeX" buffer shell-file-name "-c"
 			     command))
 	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)))
-    (setq current-TeX-buffer (buffer-name))
+    (setq YaTeX-current-TeX-buffer (buffer-name))
     (select-window (get-buffer-window buffer))
     (use-local-map YaTeX-typesetting-mode-map)
     (set-syntax-table YaTeX-typeset-buffer-syntax)
@@ -264,7 +267,6 @@ PROC should be process identifier."
   (interactive
    (list (read-string "Preview command: " dvi2-command)
 	 (read-string "Preview file[.dvi]: "
-		      ;;(substring (buffer-name) 0 -4)
 		      (if (get 'dvi2-command 'region)
 			  (substring YaTeX-texput-file
 				     0 (rindex YaTeX-texput-file ?.))
@@ -287,85 +289,74 @@ PROC should be process identifier."
 )
 
 (defun YaTeX-prev-error ()
-  "Visit previous error.  The reason why not NEXT-error is to
-avoid making confliction of line numbers by editing."
+  "Visit previous typeset error.
+  To avoid making confliction of line numbers by editing, jump to
+error or warning lines in reverse order."
   (interactive)
   (let ((cur-buf (buffer-name)) (cur-win (selected-window))
-	YaTeX-error-line typeset-win error-buffer error-win)
+	error-line typeset-win error-buffer error-win)
     (if (null (get-buffer YaTeX-typeset-buffer))
-	(message "There is no output buffer of typesetting.")
-      (YaTeX-pop-to-buffer YaTeX-typeset-buffer)
-      (setq typeset-win (selected-window))
-      (if YaTeX-dos
-	  (if (search-backward latex-dos-emergency-message nil t)
-	      (progn (goto-char (point-max))
-		     (setq error-regexp latex-error-regexp))
-	    (beginning-of-line)
-	    (forward-char -1)
-	    (setq error-regexp latex-warning-regexp))
-	(if YaTeX-typeset-process      ; if jlatex on UNIX
-	    (if (eq (process-status YaTeX-typeset-process) 'run)
-		(progn
-		  (goto-char (point-max))
-		  (setq error-regexp latex-error-regexp))
-	      (beginning-of-line)
-	      (setq error-regexp latex-warning-regexp))))
-      (if (re-search-backward error-regexp nil t)
-	  (setq YaTeX-error-line
-		(string-to-int
-		 (buffer-substring
-		  (progn (goto-char (match-beginning 0))
-			 (skip-chars-forward "^0-9")
-			 (point))
-		  (progn (skip-chars-forward "0-9") (point)))))
-	(message "No more errors on %s" cur-buf)
-	(ding))
-      (setq error-buffer (YaTeX-get-error-file cur-buf)); arg. is default buf.
-      (setq error-win (get-buffer-window error-buffer))
+	(error "There is no typesetting buffer."))
+    (YaTeX-pop-to-buffer YaTeX-typeset-buffer)
+    (setq typeset-win (selected-window))
+    (if (re-search-backward
+	 (concat "\\(" latex-error-regexp "\\)\\|\\("
+		 latex-warning-regexp "\\)")
+	 nil t)
+	nil
       (select-window cur-win)
-      (if (or (null YaTeX-error-line) (equal 0 YaTeX-error-line))
-	  nil
-	;; if warning or error found
-	(if error-win (select-window error-win)
-	  (select-window (get-lru-window))
-	  (YaTeX-switch-to-buffer error-buffer)
-	  (setq error-win (selected-window)))
-	(goto-line YaTeX-error-line)
-	(message "latex error or warning in '%s' at line: %d"
-		 error-buffer YaTeX-error-line)
-	(select-window typeset-win)
-	(skip-chars-backward "[0-9]")
-	(recenter (/ (window-height) 2))
-	(sit-for 3)
-	(forward-char -1)
-	(select-window error-win)
-	)))
+      (error "No more erros on %s" cur-buf))
+    (goto-char (match-beginning 0))
+    (skip-chars-forward "^0-9" (match-end 0))
+    (setq error-line
+	  (string-to-int
+	   (buffer-substring
+	    (point)
+	    (progn (skip-chars-forward "0-9" (match-end 0)) (point))))
+	  error-buffer (YaTeX-get-error-file cur-buf)
+	  error-win (get-buffer-window error-buffer))
+    (if (or (null error-line) (equal 0 error-line))
+	(error "Can't detect error position."))
+    (select-window cur-win)
+    (cond
+     (error-win (select-window error-win))
+     ((eq (get-lru-window) typeset-win)
+      (YaTeX-switch-to-buffer error-buffer))
+     (t (select-window (get-lru-window))
+	(YaTeX-switch-to-buffer error-buffer)))
+    (setq error-win (selected-window))
+    (goto-line error-line)
+    (message "LaTeX %s in `%s' on line: %d."
+	     (if (match-beginning 1) "error" "warning")
+	     error-buffer error-line)
+    (select-window typeset-win)
+    (skip-chars-backward "0-9")
+    (recenter (/ (window-height) 2))
+    (sit-for 3)
+    (goto-char (match-beginning 0))
+    (select-window error-win))
 )
 
 (defun YaTeX-jump-error-line ()
   "Jump to corresponding line on latex command's error message."
   (interactive)
-  (let ((p (point))
-	(end (progn (end-of-line) (point)))
-	(begin (progn (beginning-of-line)(point))))
-    (if (null (re-search-forward "l[ ines]*\\.*[1-9][0-9]*" end t))
-	(if (save-excursion (end-of-line) (eobp))
-	    (progn (goto-char p) (insert (this-command-keys)))
-	  (message "No line number expression"))
+  (let (error-line error-file error-buf)
+    (save-excursion
+      (beginning-of-line)
+      (setq error-line (re-search-forward "l[ ines]*\\.\\([1-9][0-9]*\\)"
+					  (point-end-of-line) t)))
+    (if (null error-line)
+	(if (eobp) (insert (this-command-keys))
+	  (error "No line number expression."))
       (goto-char (match-beginning 0))
-      (re-search-forward "[1-9][0-9]*" end t)
-      (save-restriction
-	(let ((error-line
-	       (string-to-int (buffer-substring (match-beginning 0)
-						(match-end 0))))
-	      (error-file (YaTeX-get-error-file current-TeX-buffer)))
-	  ;;(goto-char (match-beginning 0))
-	  (other-window -1)
-	  (message "errors in %s" error-file)
-	  ;(switch-to-buffer current-TeX-buffer)
-	  (if (not (YaTeX-switch-to-buffer error-file))
-	      (error "%s is not found in this directory."))
-	  (goto-line error-line)))))
+      (setq error-line (string-to-int
+			(buffer-substring (match-beginning 1) (match-end 1)))
+	    error-file (YaTeX-get-error-file YaTeX-current-TeX-buffer)
+	    error-buf (YaTeX-switch-to-buffer error-file t))
+      (if (null error-buf)
+	  (error "`%s' is not found in this directory." error-file))
+      (YaTeX-showup-buffer error-buf nil t)
+      (goto-line error-line)))
 )
 
 (defun YaTeX-send-string ()
@@ -425,7 +416,7 @@ avoid making confliction of line numbers by editing."
       
 (defun YaTeX-put-nonstopmode ()
   (if YaTeX-need-nonstop
-      (if (re-search-backward "\\nonstopmode{}" (point-min) t)
+      (if (re-search-backward "\\\\nonstopmode{}" (point-min) t)
 	  nil                    ;if already written in text then do nothing
 	(save-excursion
 	  (YaTeX-visit-main t)
@@ -453,7 +444,9 @@ avoid making confliction of line numbers by editing."
 	 (fname (if (> rin -1) (substring latex-cmd (1+ rin)) ""))
 	 (period))
     (if (string= fname "")
-	(setq fname (substring (buffer-name) 0 -4))
+	(setq fname (substring (file-name-nondirectory
+				(buffer-file-name))
+			       0 -4))
       (setq period (rindex fname ?.))
       (setq fname (substring fname 0 (if (eq -1 period) nil period)))
       ))
@@ -461,21 +454,24 @@ avoid making confliction of line numbers by editing."
 
 (defun YaTeX-get-latex-command (&optional switch)
   "Specify the latex-command name and its argument.
-If there is a line which begins by string: \"%#!\", the following
+If there is a line which begins with string: \"%#!\", the following
 strings are assumed to be the latex-command and arguments.  The
 default value of latex-command is:
-	tex-command (buffer-name)
+	tex-command FileName
 and if you write \"%#!jlatex\" in the beginning of certain line.
-	\"jlatex \" (buffer-name)
+	\"jlatex \" FileName
 will be the latex-command,
 and you write \"%#!jlatex main.tex\" on some line and argument SWITCH
-is t, then
+is non-nil, then
 	\"jlatex main.tex\"
 will be given to the shell."
-  (let*
-      ((default-command
-	 (concat tex-command " "
-		 (if switch (buffer-name) ""))));default value
+  (let*((target (file-name-nondirectory
+		 (or YaTeX-parent-file
+		     (save-excursion
+		       (YaTeX-visit-main t)
+		       (buffer-file-name)))))
+	(default-command
+	  (concat tex-command " " (if switch target ""))));default value
     (save-excursion
       (goto-char (point-min))
       (if (null (re-search-forward "^%#!" (point-max) t))
@@ -486,16 +482,16 @@ will be given to the shell."
 	  (let ((s (point)))
 	    (skip-chars-forward "^ 	" (point-end-of-line)) ;Skip command
 	    (skip-chars-forward " 	" (point-end-of-line))
-	    ;(setq YaTeX-latex-command (buffer-substring s (point)))
 	    (cond
 	     ((null switch)
 	      (buffer-substring s (point)))
 	     ((eolp)			 ;Only return command name
-	      (concat (buffer-substring s (point)) " " (buffer-name)))
+	      (concat (buffer-substring s (point)) " "
+		      (file-name-nondirectory
+		       (or YaTeX-parent-file (buffer-file-name)))))
 	     (t(end-of-line)		   ;Change entire command name
 	       (buffer-substring s (point))) ;including arguments.
-	    ))
-	))))
+	    ))))))
 )
 
 (defun YaTeX-lpr (arg)
@@ -542,26 +538,42 @@ page range description."
 
 (defun YaTeX-main-file-p ()
   "Return if current buffer is main LaTeX source."
-  (string-match (concat "^" (YaTeX-get-preview-file-name) ".tex")(buffer-name))
+  (cond
+   ((YaTeX-get-builtin "!")
+    (string-match
+     (concat "^" (YaTeX-get-preview-file-name) ".tex")(buffer-name)))
+   (t
+    (save-excursion
+      (let ((latex-main-id (concat "^\\s *" YaTeX-ec-regexp "documentstyle")))
+	(or (re-search-backward latex-main-id nil t)
+	    (re-search-forward latex-main-id nil t))))))
 )
 
 (defun YaTeX-visit-main (&optional setbuf)
   "Switch to buffer main LaTeX source.  Use set-buffer instead of
-switch-to-buffer if optional second argument SETBUF is t(Use it only
+switch-to-buffer if the optional second argument SETBUF is t(Use it only
 in Emacs-Lisp program)."
   (interactive)
-  (let ((main-file (YaTeX-get-preview-file-name)))
-    (if (string-match (concat "^" main-file ".tex") (buffer-name))
+  (let (main-file)
+    (if (YaTeX-get-builtin "!")
+	(setq main-file (concat (YaTeX-get-preview-file-name) ".tex")))
+    (if YaTeX-parent-file
+	(setq main-file YaTeX-parent-file))
+    (if (YaTeX-main-file-p)
 	(if (interactive-p) (message "I think this is main LaTeX source.") nil)
       (cond
-       ((YaTeX-switch-to-buffer (setq main-file (concat main-file ".tex"))
-				setbuf))
-       ((and (file-exists-p (setq main-file (concat "../" main-file)))
+       ((and (interactive-p) main-file (get-buffer-window main-file))
+	(select-window (get-buffer-window main-file)))
+       ((and main-file (YaTeX-switch-to-buffer main-file setbuf)))
+       ((and main-file
+	     (file-exists-p (setq main-file (concat "../" main-file)))
 	     (y-or-n-p (concat (expand-file-name main-file)
 			       " is main file?:")))
 	(YaTeX-switch-to-buffer main-file setbuf))
-       (t (find-file (read-file-name "Enter your main text: " nil nil 1)))
-	)))
+       (t (setq main-file (read-file-name "Enter your main text: " nil nil 1))
+	  (setq YaTeX-parent-file main-file)
+	  (find-file main-file))
+       )))
   nil
 )
 
@@ -605,22 +617,32 @@ in Emacs-Lisp program)."
     (pop-to-buffer buffer))
 )
 
-(defun YaTeX-showup-buffer (buffer &optional func)
+(defun YaTeX-showup-buffer (buffer &optional func select)
   "Make BUFFER show up in certain window (but current window)
 that gives the maximum value by the FUNC.  FUNC should take an argument
-of its window object"
-  (or (get-buffer-window buffer)
-      (< (length (YaTeX-window-list)) 3)
-      (let ((window (selected-window)) (list (YaTeX-window-list)) win w (x 0))
-	(while list
-	  (setq w (car list))
-	    (if (and (not (eq window w))
-		     (> (funcall func w) x))
-		(setq win w x (funcall func w)))
-	    (setq list (cdr list)))
-	(select-window win)
-	(switch-to-buffer buffer)
-	(select-window window)))
+of its window object.  Non-nil for optional third argument SELECT selects
+that window."
+  (or (and (get-buffer-window buffer)
+	   (progn (if select (select-window (get-buffer-window buffer))) t))
+      (cond
+       ((> (length (YaTeX-window-list)) 2)
+	(let ((window (selected-window))
+	      (list (YaTeX-window-list)) win w (x 0))
+	  (if func
+	      (while list
+		(setq w (car list))
+		(if (and (not (eq window w))
+			 (> (funcall func w) x))
+		    (setq win w x (funcall func w)))
+		(setq list (cdr list)))
+	    (setq win (get-lru-window)))
+	  (select-window win)
+	  (switch-to-buffer buffer)
+	  (or select (select-window window))))
+       ((= (length (YaTeX-window-list)) 2)
+	(other-window 1)
+	(switch-to-buffer buffer))
+       (t nil)))
 )
 
 (defun YaTeX-window-list ()

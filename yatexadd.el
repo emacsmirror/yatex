@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.6
-;;; (c )1991-1993 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Jan 29 16:55:09 1994 on gloria
+;;; yatexadd.el rev.7
+;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Sat Apr 23 02:26:47 1994 on pajero
 ;;; $Id$
 
 (provide 'yatexadd)
@@ -151,6 +151,17 @@
       (if (string= bndry "$") (setq bndry "\\infty"))
       (concat ULchar "{" bndry "}")))
 )
+
+(defun YaTeX:verb ()
+  "Enclose \\verb's contents with the same characters."
+  (let ((quote-char (read-string "Quoting char: " "|"))
+	(contents (read-string "Quoted contents: ")))
+    (concat quote-char contents quote-char))
+)
+
+;;;
+;;Subroutine
+;;;
 
 (defun YaTeX:check-completion-type (type)
   "Check valid completion type."

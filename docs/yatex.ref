@@ -23,6 +23,7 @@
 	◆large型補完(領域指定)		[prefix] L
 	◆maketitle型補完		[prefix] m
 	◆section型補完			[prefix] s
+	◆section型補完(領域指定)	[prefix] S
 	◆随時補完			[prefix] SPC
 
 	  即時begin型補完の、環境名の頭文字の対応については、yatex.doc を
@@ -101,8 +102,8 @@
 
 	◆コマンド削除			[prefix] k
 
-	  \begin{}, \end{} のペア、または %#BEGIN, %#END のペアを一挙に削
-	除します。
+	  \begin{}, \end{} のペア、%#BEGIN, %#END のペア、括弧のペア、ま
+	たはsection型コマンドを一挙に削除します。
 
 	◆領域を()で括る		[prefix] )
 	◆領域を{}で括る		[prefix] }
@@ -114,10 +115,9 @@
 
 	◆%# 記法の編集			[prefix] %
 
-								   広瀬雄二
-							yuuji@ae.keio.ac.jp
-							pcs39334(ASCII-NET)
-
+							       広瀬雄二
+						    yuuji@ae.keio.ac.jp
+						pcs39334@asciinet.or.jp
 
 Local variables:
 mode: text
