@@ -2,6 +2,13 @@
 	Yet Another tex-mode for Emacs
 	yatex.el 各バージョンの変更点について。
 
+1.38:	YaTeX-nervous が t の時、一時的、またはカレントディレクトリでのみ
+	有効なテンポラリ辞書が利用可能。
+	section型補完に引数の数も埋め込み、これも学習する。
+	lprフォーマットに %f,%t がないときは、From,To を聞かない。
+	\includeonlyで指定した二つ目以降のファイルへもジャンプ可能に。
+	[prefix] i の桁揃え時に検索するitemの正規表現を指定可能にした。
+
 1.37:	YaTeX-kill-* の、%#BEGIN/%#END対応。
 	対応する環境へのジャンプで、ネストした環境を正しく検出。
 	verbatim 環境では " は " のまま入力。
