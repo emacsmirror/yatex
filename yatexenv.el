@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c ) 1994-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jan 24 18:00:38 1997 on supra
+;;; Last modified Mon Apr  7 15:19:05 1997 on crx
 ;;; $Id$
 
 ;;;
@@ -199,8 +199,9 @@ Return the list of (No.ofCols PointEndofFormat)"
 `\\> \\> \\'	for tabbing environemnt,
 `& & \\ \hline'	for tabular environment."
   (interactive "P")
-  (let*((env (YaTeX-inner-environment))
-	func)
+  (let*(env func)
+    (end-of-line)
+    (setq env (YaTeX-inner-environment))
     (if arg (setq env (YaTeX-read-environment "For what environment? ")))
     (setq func (intern-soft (concat "YaTeX-intelligent-newline-" env)))
     (end-of-line)

@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c ) 1994-1997 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jan 24 18:03:01 1997 on supra
+;;; Last modified Mon Apr  7 16:58:32 1997 on crx
 ;;; $Id$
 
 ;;;[Installation]
@@ -115,7 +115,7 @@ normal and region mode.  To customize yahtml, user should use this function."
   (yahtml-define-begend-key-normal key env map)
   (if YaTeX-inhibit-prefix-letter nil
     (yahtml-define-begend-region-key
-     (concat (upcase (substring key 0 1)) (substring key 1)) env)))
+     (concat (upcase (substring key 0 1)) (substring key 1)) env map)))
 
 
 (if yahtml-mode-map nil
@@ -146,8 +146,10 @@ normal and region mode.  To customize yahtml, user should use this function."
     (YaTeX-define-key ")" 'YaTeX-insert-parens-region map)
     (YaTeX-define-key "s" 'yahtml-insert-form map)
     (YaTeX-define-key "l" 'yahtml-insert-tag map)
+    (YaTeX-define-key "L" 'yahtml-insert-tag-region map)
     (YaTeX-define-key "m" 'yahtml-insert-single map)
-    (YaTeX-define-key "n" '(lambda () (interactive) (if yahtml-prefer-upcases (insert "<BR>")(insert "<br>"))) map)
+    (YaTeX-define-key "n" '(lambda () (interactive) (insert (if yahtml-prefer-upcases "<BR>" "<br>"))) map)
+    (YaTeX-define-key "-" '(lambda () (interactive) (insert (if yahtml-prefer-upcases "<HR>" "<hr>") "\n")) map)
     (if YaTeX-no-begend-shortcut
 	(progn
 	  (YaTeX-define-key "B" 'yahtml-insert-begend-region map)
@@ -188,11 +190,11 @@ normal and region mode.  To customize yahtml, user should use this function."
 
 (defvar yahtml-paragraph-start
   (concat
-   "^$\\|<!--\\|^[ \t]*</?\\(h[1-6]\\|p\\|d[ldt]\\|[bhtd][rdh]\\|li\\|body\\|html\\|head\\|title\\|ul\\|ol\\|dl\\|pre\\|table\\|center\\)\\b")
+   "^$\\|<!--\\|^[ \t]*</?\\(h[1-6]\\|p\\|d[ldt]\\|[bhtd][rdh]\\|li\\|body\\|html\\|head\\|title\\|ul\\|ol\\|dl\\|pre\\|table\\|center\\|blockquote\\)\\b")
   "*Regexp of html paragraph separater")
 (defvar yahtml-paragraph-separate
   (concat
-   "^$\\|<!--\\|^[ \t]*</?\\(h[1-6]\\|p\\|[bhtd][ldt]\\|li\\|body\\|html\\|head\\|title\\|ul\\|ol\\|dl\\|pre\\|table\\|center\\|!--\\)\\b")
+   "^$\\|<!--\\|^[ \t]*</?\\(h[1-6]\\|p\\|[bhtd][ldt]\\|li\\|body\\|html\\|head\\|title\\|ul\\|ol\\|dl\\|pre\\|table\\|center\\|blockquote\\|!--\\)\\b")
   "*Regexp of html paragraph separater")
 (defvar yahtml-syntax-table nil
   "*Syntax table for typesetting buffer")
@@ -200,8 +202,8 @@ normal and region mode.  To customize yahtml, user should use this function."
 (if yahtml-syntax-table nil
   (setq yahtml-syntax-table
 	(make-syntax-table (standard-syntax-table)))
-  (modify-syntax-entry ?\< "(" yahtml-syntax-table)
-  (modify-syntax-entry ?\> ")" yahtml-syntax-table)
+  (modify-syntax-entry ?\< "(>" yahtml-syntax-table)
+  (modify-syntax-entry ?\> ")<" yahtml-syntax-table)
   (modify-syntax-entry ?\n " " yahtml-syntax-table)
 )
 (defvar yahtml-command-regexp "[A-Za-z0-9]+"
@@ -221,7 +223,8 @@ normal and region mode.  To customize yahtml, user should use this function."
     ("DefinitionList" . "dl")
     ("Preformatted" . "pre")
     ("table") ("tr") ("th") ("td")
-    ("h1") ("h2") ("h3") ("h4") ("h5") ("h6")))
+    ("h1") ("h2") ("h3") ("h4") ("h5") ("h6")
+    ("p")))
 
 (defvar yahtml-itemizing-regexp
   "\\(ul\\|ul\\|dl\\)"
@@ -258,9 +261,14 @@ normal and region mode.  To customize yahtml, user should use this function."
 
 (defvar yahtml-prefer-upcases nil)
 
+;(defvar yahtml-struct-name-regexp
+;  "\\<\\(h[1-6]\\|[uod]l\\|html\\|body\\|title\\|head\\|table\\|t[rhd]\\|pre\\|a\\|form\\|select\\|center\\|blockquote\\)\\b")
 (defvar yahtml-struct-name-regexp
-  "\\<\\(h[1-6]\\|[uod]l\\|html\\|body\\|title\\|head\\|table\\|t[rhd]\\|pre\\|a\\|form\\|select\\)\\b")
-
+  (concat
+   "\\<\\("
+   (mapconcat (function (lambda (x) (car x))) yahtml-typeface-table "\\|")
+   "\\)\\b")
+  "Regexp of structure beginning.")
 
 (defun yahtml-mode ()
   (interactive)
@@ -610,7 +618,7 @@ If optional argument FILE is specified collect labels in FILE."
 	      "\"")))))
 
 (defvar yahtml-parameters-completion-alist
-  '(("align" ("top") ("middle") ("bottom"))
+  '(("align" ("top") ("middle") ("bottom") ("left") ("right") ("center"))
     ("src" . file)
     ("method" ("POST") ("GET"))))
 
@@ -665,6 +673,12 @@ If optional argument FILE is specified collect labels in FILE."
 (defun yahtml:dt ()
   (setq yahtml-last-single-cmd "dd") "")
 
+(defun yahtml:p ()
+  (let ((alg (yahtml-read-parameter "align")))
+    (if (string< "" alg)
+	(setq alg (concat "align=" alg)
+	      alg (if yahtml-prefer-upcases (upcase alg) (downcase alg)))
+      "")))
 
 (defvar yahtml-input-types
   '(("text") ("password") ("checkbox") ("radio") ("submit")
@@ -735,6 +749,11 @@ If optional argument FILE is specified collect labels in FILE."
 	(message "No mark set now"))
     (insert (format "<%s%s>" tag (yahtml-addin tag)))
     (save-excursion (insert (format "</%s>" tag)))))
+
+(defun yahtml-insert-tag-region (&optional tag)
+  "Call yahtml-insert-tag with region mode."
+  (interactive)
+  (yahtml-insert-tag t tag))
 
 (defun yahtml-insert-single (cmd)
   "Insert <CMD>."
@@ -1158,7 +1177,7 @@ This function should be able to treat white spaces in value, but not yet."
 (defun yahtml-fill-paragraph (arg)
   (interactive "P")
   (let*((case-fold-search t) (p (point))
-	(e (or (yahtml-inner-environment-but "^a\\b" t) "html"))
+	(e (or (yahtml-inner-environment-but "^\\(a\\|p\\)\\b" t) "html"))
 	(prep (string-match "^pre$" e))
 	(ps1 (if prep (default-value 'paragraph-start)
 	       paragraph-start))
@@ -1195,12 +1214,13 @@ This function should be able to treat white spaces in value, but not yet."
 ;;; 
 (defun yahtml-indent-line ()
   (interactive)
-  (let ((envs "[uod]l\\|table\\|t[rhd]\\|select")
-	(itms "<\\(dt\\|dd\\|li\\|t[rdh]\\|option\\)>")
+  (let ((envs "[uod]l\\|table\\|t[rhd]\\|select\\|blockquote")
+	(itms "<\\(dt\\|dd\\|li\\|t[rdh]\\|option\\)\\b")
 	inenv p col peol (case-fold-search t))
     (save-excursion
       (beginning-of-line)
-      (setq inenv (or (yahtml-inner-environment-but "^a\\b" t) "html")
+      (setq inenv (or (yahtml-inner-environment-but "^\\(a\\|p\\)\\b" t)
+		      "html")
 	    col (get 'YaTeX-inner-environment 'indent)
 	    p (get 'YaTeX-inner-environment 'point)
 	    op))
@@ -1224,7 +1244,9 @@ This function should be able to treat white spaces in value, but not yet."
 		    (setq op (point))
 		    (goto-char p)
 		    (re-search-forward itms op t)
-		    (goto-char (match-end 0))
+		    ;(goto-char (match-end 0))
+		    (skip-chars-forward "^>")
+		    (skip-chars-forward ">")
 		    (skip-chars-forward " \t")
 		    (setq col (current-column)))))
 	    (YaTeX-reindent col))

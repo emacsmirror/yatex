@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs.
-;;; yatex.el rev. 1.63
+;;; yatex.el rev. 1.64
 ;;; (c )1991-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jan 24 17:57:14 1997 on supra
+;;; Last modified Tue Apr  8 05:07:31 1997 on crx
 ;;; $Id$
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 ;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 (require 'comment)
-(defconst YaTeX-revision-number "1.63"
+(defconst YaTeX-revision-number "1.64"
   "Revision number of running yatex.el"
 )
 
@@ -478,6 +478,9 @@ and region mode.  To customize YaTeX, user should use this function."
   ;(suppress-keymap YaTeX-typesetting-mode-map t)
   (define-key YaTeX-typesetting-mode-map " " 'YaTeX-jump-error-line)
   (define-key YaTeX-typesetting-mode-map "\C-m" 'YaTeX-send-string)
+  (define-key YaTeX-typesetting-mode-map "1" 'delete-other-windows)
+  (define-key YaTeX-typesetting-mode-map "0" 'delete-window)
+  (define-key YaTeX-typesetting-mode-map "q" 'delete-window)
 )
 
 (defvar YaTeX-section-completion-map nil
@@ -725,6 +728,8 @@ more features are available and they are documented in the manual.
 ;;autoload from yatexhie.el
 (autoload 'YaTeX-display-hierarchy "yatexhie"
   "YaTeX document hierarchy browser" t)
+(autoload 'YaTeX-display-hierarchy-directly "yatexhie"
+  "Same as YaTeX-display-hierarchy.  Call from mouse." t)
 
 ;; autoload from yahtml.el
 (autoload 'yahtml-inner-environment-but "yahtml" "yahtml internal func." t)
@@ -1627,7 +1632,7 @@ fj–ì’¹‚Ì‰ï‚Å•·‚±‚¤!
   '(("\\\\epsfile{[^},]*file=\\(\\([^,} ]*/\\)?[^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 1)
     ("\\\\epsfig{[^},]*fi\\(le\\|gure\\)=\\(\\([^,} ]*/\\)?[^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 2)
     ("\\\\postscriptbox{[^}]*}{[^}]*}{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 1)
-    ("\\\\\\(epsfbox\\|includegraphics\\){\\(\\([^,} ]*/\\)?[^} ]+\\)\\(\\.e?ps\\)?}" 2)
+    ("\\\\\\(epsfbox\\|includegraphics\\){\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 2)
     ("\\\\\\(psbox\\)\\(\\[[^]]+\\]\\)?{\\(\\([^,} ]*/\\)?[^} ]+\\)\\(\\.e?ps\\)}" 3) ;\psbox[options...]{hoge.eps} (97/1/11)
     )
   "See the documentation of YaTeX-processed-file-regexp-alist."
@@ -1820,8 +1825,8 @@ even if on `%#' notation."
   (cond
    ((YaTeX-goto-corresponding-label arg))
    ((YaTeX-goto-corresponding-environment))
-   ((YaTeX-goto-corresponding-file arg))
    ((YaTeX-goto-corresponding-file-processor arg))
+   ((YaTeX-goto-corresponding-file arg))
    ((YaTeX-goto-corresponding-BEGIN-END))
    ((and (string-match
 	  YaTeX-equation-env-regexp	;to delay loading
@@ -1962,7 +1967,7 @@ to most recent sectioning command."
 		;;append `^%' to head of paragraph delimiter.
 		(paragraph-start
 		 (concat
-		  "^$\\|^%\\(" YaTeX-paragraph-delimiter "\\)"))
+		  "^$\\|^%\\(" YaTeX-paragraph-separate "\\)"))
 		(paragraph-separate paragraph-start))
 	    (mark-paragraph)
 	    (if (not (bobp)) (forward-line 1))
@@ -2533,7 +2538,7 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 		      (progn (setq p (point)) (insert YaTeX-comment-prefix)))
 		  (forward-line 1))
 		(goto-char p)
-		(delete-char 1)		;remove last inserted `%'
+		(if (looking-at "%") (delete-char 1)) ;remove last inserted `%'
 		)))))))
 )
 
@@ -2556,7 +2561,8 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
 ;	 (string-match
 ;	  "^[Pp][Rr][Ee]" (yahtml-inner-environment-but "^[Aa]\\b" t)))
 ;    (yahtml-indent-new-commnet-line))
-   ((YaTeX-in-math-mode-p) nil)		;1996/12/30
+   ((and (eq major-mode 'yatex-mode)	;1997/2/4
+	 (YaTeX-in-math-mode-p)) nil)		;1996/12/30
    (t (let (fill-prefix)
 	(apply 'YaTeX-saved-indent-new-comment-line (if soft (list soft))))))
 )

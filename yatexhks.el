@@ -10,6 +10,9 @@
 
 ;Private definitions begin from here.
 
+;;97/1/27
+(define-key YaTeX-user-extensional-map "v" 'YaTeX-section-overview)
+;;initial version
 (define-key YaTeX-user-extensional-map "0"
   '(lambda () (interactive) (YaTeX-make-section nil nil nil "part")))
 (define-key YaTeX-user-extensional-map "1"

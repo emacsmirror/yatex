@@ -2,7 +2,7 @@
 ;;; YaTeX sectioning browser.
 ;;; yatexsec.el
 ;;; (c ) 1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Jan 11 01:07:53 1996 on VFR
+;;; Last modified Mon Feb 17 11:26:44 1997 on supra
 ;;; $Id$
 
 (defvar YaTeX-sectioning-level
@@ -86,6 +86,7 @@ This must be the heighest number in YaTeX-sectioning-level.")
   (define-key YaTeX-sectioning-buffer-map "o"  'other-window)
   (define-key YaTeX-sectioning-buffer-map "-"  'shrink-window)
   (define-key YaTeX-sectioning-buffer-map "+"  'enlarge-window)
+  (define-key YaTeX-sectioning-buffer-map "q"  'delete-window)
   (define-key YaTeX-sectioning-buffer-map "\C-_" 'YaTeX-shift-section-undo)
   (and YaTeX-emacs-19 (boundp 'window-system) (eq window-system 'x)
        (define-key YaTeX-sectioning-buffer-map [?\C-/]

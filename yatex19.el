@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c )1994-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jan 24 18:00:49 1997 on supra
+;;; Last modified Fri Feb 14 13:52:54 1997 on supra
 ;;; $Id$
 
 ;;; Ç∆ÇËÇ†Ç¶Ç∏ hilit19 ÇégÇ¡ÇƒÇ¢ÇÈéûÇ…êFÇ™ïtÇ≠ÇÊÇ§Ç…ÇµÇƒ
@@ -297,6 +297,14 @@ Assumes PATTERN begins with `{'."
     (YaTeX-19-region-section-type
      "\\\\caption\\(\\[[^]]*\\]\\)?{" label)
 
+    ;; things that do some sort of cross-reference
+    (YaTeX-19-region-section-type
+     "\\\\\\(\\(no\\)?cite\\|\\(page\\)?ref\\|label\\|index\\|glossary\\){"
+     crossref)
+
+    ;; things that bring in external files
+    ("\\\\\\(include\\|input\\|bibliography\\){" "}" include)
+
     ;; formulas
     ("[^\\]\\\\("  "\\\\)" formula)                   ; \( \)
     ("[^\\]\\\\\\[" "\\\\\\]" formula)                ; \[ \]
@@ -305,21 +313,13 @@ Assumes PATTERN begins with `{'."
      formula)
     ("[^\\$]\\($\\($[^$]*\\$\\|[^$]*\\)\\$\\)" 1 formula); '$...$' or '$$...$$'
 
-    ;; things that bring in external files
-    ("\\\\\\(include\\|input\\|bibliography\\){" "}" include)
-
-    ;; "wysiwyg" emphasis -- these don't work with nested expressions
+    ;; "wysiwyg" emphasis -- these don't work on nested expressions
     (YaTeX-19-region-large-type "{\\\\\\(em\\|it\\|sl\\)"  italic)
     (YaTeX-19-region-large-type "{\\\\bf" bold)
     ;;;(YaTeX-19-region-large-type "{\\\\tt" tt)
     ;;;("\\\\begin{verbatim" "\\\\end{verbatim" tt)
 
-    ("``" "''" string)
-
-    ;; things that do some sort of cross-reference
-    (YaTeX-19-region-section-type
-     "\\\\\\(\\(no\\)?cite\\|\\(page\\)?ref\\|label\\|index\\|glossary\\){"
-     crossref))
+    ("``" "''" string))
 "*Hiliting pattern alist for LaTeX text.")
 
 ;;(defvar YaTeX-hilit-pattern-adjustment-default nil)

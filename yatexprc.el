@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jan 24 17:59:44 1997 on supra
+;;; Last modified Mon Jan 27 10:22:06 1997 on crx
 ;;; $Id$
 
 (require 'yatex)
@@ -390,7 +390,7 @@ PROC should be process identifier."
 	(send-string-to-terminal "\e[2J\e[>5h") ;CLS & hide cursor
 	(call-process shell-file-name "con" "*dvi-preview*" nil
 		      YaTeX-shell-command-option
-		      (concat preview-command preview-file))
+		      (concat preview-command " " preview-file))
 	(send-string-to-terminal "\e[>5l") ;show cursor
 	(redraw-display))
        (t				;if UNIX

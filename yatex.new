@@ -1,6 +1,13 @@
 	What's new in YaTeX
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.64	yahtmlを起動するとYaTeXで [prefix] Bc が<center>などになってしま
+	うのを修正。
+	NTT-jTeX が t のときにfillがうまく行かないことがあるのを修正。
+	YaTeX-uncomment-paragraph を修正。
+	yahtmlで文章中に$があるとauto-indentが効かなくなるのを修正。
+	yatexで\end行でIntelligent newlineした時のバグを修正。
+
 1.63	数式モードに入ったら漢字モードをOFFにするようにした(本来1.62)
 	yahtmlで [prefix] t j で(j)weblintを呼ぶようにした。
 	yahtmlのブラウザ起動は、[prefix] t p に変更。
