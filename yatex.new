@@ -1,6 +1,13 @@
 	What's new in YaTeX
 	yatex.el 各バージョンの変更点について
 
+1.56	[prefix] d の YaTeX-display-hierarchy を追加。
+	変数 indent-line-function に YaTeX-indent-line を設定した。
+	YaTeX-generate-simple の修正(1.51から今まで全然動かなかったのに…)。
+	NTT-jTeX を利用する時に文書をインデントしても良いように 
+	auto-fill や fill-paragraph を調整した。
+	maketitle 型コマンドが [] で終わっている時にはカーソルを括弧内に。
+
 1.55	{}の上で [prefix] k した時に直前のコマンドが maketitle 型辞書に
 	属していれば {} のみ(フォント指定子があればそれも)を消すようにした。
 	新単語入力時に、N)one を選ぶと、そのEmacsでのみ有効にするように

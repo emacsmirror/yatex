@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in function generator.
-;;; yatexgen.el rev.4
-;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sun Dec 11 05:38:35 1994 on VFR
+;;; yatexgen.el rev.5
+;;; (c )1991-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Sun Jan 22 23:15:34 1995 on landcruiser
 ;;; $Id$
 
 (require 'yatex)
@@ -141,6 +141,11 @@ Send bug report to me."
 
 (defvar YaTeX-generate-message-height
   10 "Window height of YaTeX-generate-message-buffer")
+
+;; Do you need learning for generated function?
+;; If you need, please tell me (yuuji@ae.keio.ac.jp)
+;;(defvar YaTeX-generate-variables-for-learning nil)
+;;(defvar YaTeX-generate-current-completion-table nil)
 
 ;;;
 ;Generate mode.
@@ -437,7 +442,7 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
 	(insert cand "\n"))
       (kill-buffer buf)))
     ;;(set-buffer cb)
-    (concat cands ")"))
+    (setq YaTeX-generate-current-completion-table (concat cands ")")))
 )
 (defun YaTeX-generate-corresponding-paren (left)
   (cond
@@ -457,19 +462,27 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
    ")\n")
 )
 (defun YaTeX-generate-create-completing-read (&optional nth)
-  (concat
-   "(completing-read \""
-   (read-string (if nth (format "Prompt for argument#%d: " nth) "Prompt: "))
-   ": \"\n"
-   (format "'%s\n" (YaTeX-generate-read-completion-table))
-   "nil "
-   (format "%s)" (y-or-n-p "Require match? ")))
+  (prog1
+      (concat
+       "(completing-read \""
+       (read-string
+	(if nth (format "Prompt for argument#%d: " nth) "Prompt: "))
+       ": \"\n"
+       (format "'%s\n" (YaTeX-generate-read-completion-table))
+       "nil "
+       (format "%s)" (y-or-n-p "Require match? ")))
+    (if nil ;;;(y-or-n-p "Do you need learning for this completion?")
+	(setq YaTeX-generate-variables-for-learning
+	      (cons
+	       (cons (format "YaTeX-%s-%d" command (or nth 0))
+		     YaTeX-generate-current-completion-table)
+	       YaTeX-generate-variables-for-learning))))
 )
 (defun YaTeX-generate-create-read-file-name (&optional nth)
   (concat
    "(read-file-name \""
    (read-string (if nth (format "Prompt for argument#%d: " nth) "Prompt: "))
-   ": \" "" nil t \"\")\n")
+   ": \" "" \"\" t \"\")\n")
 )
 (defun YaTeX-generate-create-read-oneof (&optional nth readpos)
   (concat
@@ -491,24 +504,23 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
 	 (cond
 	  ;;Read string
 	  ((eq type 'string)
-	   (concat \"\" (setq leftp (read-string "Left parenthesis: " "{"))
-		   \""\n"
+	   (concat "\"" (setq leftp (read-string "Left parenthesis: " "("))
+		   "\"\n"
 		   (YaTeX-generate-create-read-string)
-		   \"\" (YaTeX-generate-corresponding-paren leftp) \"\"
-		   ))
-	  
+		   "\"" (YaTeX-generate-corresponding-paren leftp) "\"")
+	   )
 	  ;;Completing-read
 	  ((eq type 'completion)
-	   (concat \"\" (setq leftp (read-string "Left parenthesis: " "{"))
-		   \""\n"
+	   (concat "\"" (setq leftp (read-string "Left parenthesis: " "{"))
+		   "\"\n"
 		   (YaTeX-generate-create-completing-read)
-		   \"\" (YaTeX-generate-corresponding-paren leftp) \"\")
+		   "\"" (YaTeX-generate-corresponding-paren leftp) "\"")
 	   )
 	  ((eq type 'file)
-	   (concat \"\" (setq leftp (read-string "Left parenthesis: " "{"))
-		   \""\n"
+	   (concat "\"" (setq leftp (read-string "Left parenthesis: " "("))
+		   "\"\n"
 		   (YaTeX-generate-create-read-file-name)
-		   \"\" (YaTeX-generate-corresponding-paren leftp) \"\")
+		   "\"" (YaTeX-generate-corresponding-paren leftp) "\"")
 	   )
 	  ((eq type 'oneof)
 	   (YaTeX-generate-create-read-oneof nil t)
@@ -521,7 +533,6 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
 		   "    (concat \"[\" op \"]\")\n"
 		   "  \"\"))\n")
 	   )
-	  
 	  ((eq type 'coord)
 	   (concat "(YaTeX:read-coordinates \""
 		   (read-string "Prompt for coordinates: ")
@@ -576,13 +587,13 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
 (defun YaTeX-generate-simple (&optional command)
   "Simple but requiring some elisp knowledge add-in generator."
   (interactive)
+  (setq YaTeX-generate-variables-for-learning nil)
   (or command
       (setq command
 	    (completing-read
 	     (format "Making add-in function for (default %s): " section-name)
 	     (append
 	      section-table user-section-table tmp-section-table
-	      article-table user-article-table
 	      env-table     user-env-table     tmp-env-table
 	      singlecmd-table user-singlecmd-table tmp-singlecmd-table)
 	     nil nil)

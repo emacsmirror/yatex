@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
-;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Dec 19 02:55:36 1994 on VFR
+;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Sun Jan 22 23:15:56 1995 on landcruiser
 ;;; $Id$
 
 ;;; とりあえず hilit19 を使っている時に色が付くようにして
@@ -91,6 +91,11 @@ where
 (YaTeX-19-define-sub-menu
  YaTeX-mode-map [menu-bar yatex]
  '(what "What column in tabular" YaTeX-what-column))
+
+;; Document hierarchy  ------------------------------------------------------
+(YaTeX-19-define-sub-menu
+ YaTeX-mode-map [menu-bar yatex]
+ '(hier "Display document hierarchy" YaTeX-display-hierarchy-directly))
 
 ;; Jump cursor ---------------------------------------------------------------
 (define-key YaTeX-mode-map [menu-bar yatex jump]
@@ -214,9 +219,9 @@ Default value is equal to latex-mode's one.")
    '("\\\\\\(re\\)?new\\(environment\\|command\\){" "}" define)
    '("\\\\new\\(length\\|theorem\\|counter\\){" "}" define)
    ;;セクションコマンドが単なるキーワードってことはないでしょう。
-   (list
-    (concat "\\\\\\(" YaTeX-sectioning-regexp "\\){") "}"
-    'sectioning)
+   ;;(list
+    ;;(concat "\\\\\\(" YaTeX-sectioning-regexp "\\){") "}"
+    ;;'sectioning)
    ;;eqnarray などの数式環境が入ってないみたい…
    '("\\\\begin{\\(eqnarray\\*?\\|equation\\*?\\)}"
      "\\\\end{\\(eqnarray\\*?\\|equation\\*?\\)}"
@@ -227,9 +232,54 @@ Default value is equal to latex-mode's one.")
 (defvar YaTeX-hilit-sectioning-face
   '(yellow/dodgerblue yellow/cornflowerblue)
   "*Hilightening face for sectioning unit.  '(FaceForLight FaceForDark)")
+(defvar YaTeX-sectioning-patterns-alist nil
+  "Hilightening patterns for sectioning units.")
 (defvar YaTeX-hilit-singlecmd-face
   '(slateblue2 aquamarine)
   "*Hilightening face for maketitle type.  '(FaceForLight FaceForDark)")
+
+;;; セクションコマンドを、構造レベルの高さに応じて色の濃度を変える
+;;; 背景が黒でないと何が嬉しいのか分からないに違いない.
+(let*((sectface
+       (car (if (eq hilit-background-mode 'dark) 
+		(cdr YaTeX-hilit-sectioning-face)
+	      YaTeX-hilit-sectioning-face)))
+      (sectcol (symbol-name sectface))
+      sect-pat-alist)
+  (if (string-match "/" sectcol)
+      (let (colorvalue fR fG fB bR bG bB list pat fg bg level from face)
+	(require 'yatexsec)
+	(setq fg (substring sectcol 0 (string-match "/" sectcol))
+	      bg (substring sectcol (1+ (string-match "/" sectcol)))
+	      colorvalue (x-color-values fg)
+	      fR (/ (nth 0 colorvalue) 256)
+	      fG (/ (nth 1 colorvalue) 256)
+	      fB (/ (nth 2 colorvalue) 256)
+	      colorvalue (x-color-values bg)
+	      bR (/ (nth 0 colorvalue) 256)
+	      bG (/ (nth 1 colorvalue) 256)
+	      bB (/ (nth 2 colorvalue) 256)
+	      list YaTeX-sectioning-level)
+	(while list
+	  (setq pat (concat YaTeX-ec-regexp (car (car list)) "\\*?{")
+		level (cdr (car list))
+		fg (format "hex-%02x%02x%02x"
+			   (- fR (/ (* level fR) 40))	;40 musn't be constant
+			   (- fG (/ (* level fG) 40))
+			   (- fB (/ (* level fB) 40)))
+		bg (format "hex-%02x%02x%02x"
+			   (- bR (/ (* level bR) 15))	;20 musn't be constant
+			   (- bG (/ (* level bG) 15))
+			   (- bB (/ (* level bB) 15)))
+		from (intern (format "sectioning-%d" level))
+		face (intern (concat fg "/" bg)))
+	  (hilit-translate from face)
+	  (setq sect-pat-alist
+		(cons (list pat "}" face)
+		      sect-pat-alist))
+	  (setq list (cdr list)))
+	(setq YaTeX-sectioning-patterns-alist sect-pat-alist))))
+
 (defun YaTeX-19-collect-macro ()
   (cond
    ((and (featurep 'hilit19) (fboundp 'hilit-translate))
@@ -246,7 +296,7 @@ Default value is equal to latex-mode's one.")
 	       ((eq hilit-background-mode 'dark) (car (cdr table)))
 	       (t nil))))))
       (hilit-translate
-       sectioning (funcall get-face YaTeX-hilit-sectioning-face)
+       ;;sectioning (funcall get-face YaTeX-hilit-sectioning-face)
        macro (funcall get-face YaTeX-hilit-singlecmd-face)))
     (setq hilit-patterns-alist		;Remove at first.
 	  (delq 'yatex-mode hilit-patterns-alist)
@@ -254,6 +304,7 @@ Default value is equal to latex-mode's one.")
 	  (cons
 	   (cons 'yatex-mode
 		 (append
+		  YaTeX-sectioning-patterns-alist
 		  YaTeX-hilit-pattern-adjustment-private
 		  YaTeX-hilit-pattern-adjustment-default
 		  YaTeX-hilit-patterns-alist

@@ -775,9 +775,10 @@ tabbing環境におけるタブ位置操作コマンドは以下の通り(nは1から):
 \pushtabs それまで用いていたタブストップ位置を全てpush
 \poptabs  それまで用いていたタブストップ位置を全てpop. \pushtabs と 
 	\poptabs は必ず対になっていなければならない. 入れ子可
-\aX	Xは = か ' か `   tabbing環境でない通常のアクセントは
+\aX	
+Xは = か ' か `   tabbing環境でない通常のアクセントは
 	\a= \a' \a` で表わす
-\kill	現在行のテキストは出力せずタブ設定だけ解釈する
+\kill	Without outputting text, parse tabbing definition.
 
 array
 \begin{array}{PREAMBLE} C1 & C2 & .. & Cn \\ D1 ... \end{array}
@@ -856,7 +857,7 @@ Tabular environment cannot spread across pages.  `supertabular.sty'
 allow this.
 
 tabular*
-\begin{tabular*}{幅}{プリアンブル} ... \end{tabular*}
+\begin{tabular*}{WIDTH}{PREAMBLE} ... \end{tabular*}
 Make tabular environment with specifying its width.
 To fill this width, use \extracolsep{} of preamble as below:
 \begin{tabular*}{10em}[b]{|c@{\extracolsep{\fill}}|c|c|}

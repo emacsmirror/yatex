@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Wed Dec 14 16:58:15 1994 on 98fa
+;;; (c )1993-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Sun Jan 22 23:14:44 1995 on landcruiser
 ;;; $Id$
 
 (require 'yatex)
@@ -142,8 +142,8 @@
 )
 
 (defun YaTeX-typeset-region ()
-  "Paste the region to the file `texput.tex' and execute jlatex (or other)
-to LaTeX typeset.  The region is specified by the rule:
+  "Paste the region to the file `texput.tex' and execute typesetter.
+The region is specified by the rule:
 	(1)If keyword `%#BEGIN' is found in the upper direction from (point).
 	  (1-1)if the keyword `%#END' is found after `%#BEGIN',
 		->Assume the text between `%#BEGIN' and `%#END' as region.
@@ -161,7 +161,7 @@ operation to the region."
 	 (cmd (concat (YaTeX-get-latex-command nil) " " texput))
 	 (buffer (current-buffer)) opoint preamble (subpreamble "") main
 	 (hilit-auto-highlight nil)	;for Emacs19 with hilit19
-	 reg-begin reg-end)
+	 reg-begin reg-end lineinfo)
 
       (save-excursion
 	(if (search-backward "%#BEGIN" nil t)
@@ -173,8 +173,10 @@ operation to the region."
 		  (setq reg-end (match-beginning 0)
 			end "END ---")
 		(setq reg-end (point-max))))
-	  (setq typeout "=== Region from (point) to (mark) ===")
-	  (setq reg-begin (point) reg-end (mark)))
+	  (setq typeout "=== Region from (point) to (mark) ==="
+		reg-begin (point) reg-end (mark)))
+	(goto-char (min reg-begin reg-end))
+	(setq lineinfo (count-lines (point-min) (point-end-of-line)))
 	(goto-char (point-min))
 	(while (search-forward "%#REQUIRE" nil t)
 	  (setq subpreamble
@@ -201,12 +203,14 @@ operation to the region."
 		 "\\begin{document}")))
       (goto-char opoint)
       ;;(set-buffer buffer)		;for clarity
-      (set-buffer (find-file-noselect texput))
+      (let ((hilit-auto-highlight nil))
+	(set-buffer (find-file-noselect texput)))
       ;;(find-file YaTeX-texput-file)
       (erase-buffer)
       (if YaTeX-need-nonstop
 	  (insert "\\nonstopmode{}\n"))
       (insert preamble "\n" subpreamble "\n")
+      (setq lineinfo (list (count-lines 1 (point-end-of-line)) lineinfo))
       (insert-buffer-substring buffer reg-begin reg-end)
       (insert "\\typeout{" typeout end "}\n") ;Notice the selected method.
       (insert "\n\\end{document}\n")
@@ -215,7 +219,10 @@ operation to the region."
       (set-buffer main)		;return to parent file or itself.
       (YaTeX-typeset cmd YaTeX-typeset-buffer)
       (switch-to-buffer buffer)		;for Emacs-19
-      (put 'dvi2-command 'region t)))
+      (put 'dvi2-command 'region t)
+      (put 'dvi2-command 'file buffer)
+      (put 'dvi2-command 'offset lineinfo)
+      ))
 )
 
 (defun YaTeX-typeset-buffer ()
@@ -379,6 +386,17 @@ PROC should be process identifier."
 		 " to preview " preview-file))))))
 )
 
+(defun YaTeX-set-virtual-error-position (file-sym line-sym)
+  "Replace the value of FILE-SYM, LINE-SYM by virtual error position."
+  (cond
+   ((and (get 'dvi2-command 'region)
+	 (> (symbol-value line-sym) (car (get 'dvi2-command 'offset))))
+    (set file-sym (get 'dvi2-command 'file))
+    (set line-sym
+	 (+ (- (apply '- (get 'dvi2-command 'offset)))
+	    (symbol-value line-sym)
+	    -1)))))
+
 (defun YaTeX-prev-error ()
   "Visit previous typeset error.
   To avoid making confliction of line numbers by editing, jump to
@@ -404,10 +422,11 @@ error or warning lines in reverse order."
 	   (buffer-substring
 	    (point)
 	    (progn (skip-chars-forward "0-9" (match-end 0)) (point))))
-	  error-buffer (YaTeX-get-error-file cur-buf)
-	  error-win (get-buffer-window error-buffer))
+	  error-buffer (YaTeX-get-error-file cur-buf))
     (if (or (null error-line) (equal 0 error-line))
 	(error "Can't detect error position."))
+    (YaTeX-set-virtual-error-position 'error-buffer 'error-line)
+    (setq error-win (get-buffer-window error-buffer))
     (select-window cur-win)
     (cond
      (error-win (select-window error-win))
@@ -442,12 +461,13 @@ error or warning lines in reverse order."
       (goto-char (match-beginning 0))
       (setq error-line (string-to-int
 			(buffer-substring (match-beginning 1) (match-end 1)))
-	    error-file (YaTeX-get-error-file YaTeX-current-TeX-buffer)
-	    error-buf (YaTeX-switch-to-buffer error-file t))
+	    error-file (YaTeX-get-error-file YaTeX-current-TeX-buffer))
+      (YaTeX-set-virtual-error-position 'error-file 'error-line)
+      (setq error-buf (YaTeX-switch-to-buffer error-file t)))
       (if (null error-buf)
 	  (error "`%s' is not found in this directory." error-file))
       (YaTeX-showup-buffer error-buf nil t)
-      (goto-line error-line)))
+      (goto-line error-line))
 )
 
 (defun YaTeX-send-string ()
@@ -585,7 +605,7 @@ will be given to the shell."
 page range description."
   (interactive "P")
   (let*((cmd (or (YaTeX-get-builtin "LPR") dviprint-command-format))
-	from to (lbuffer "*dvi-printing*"))
+	from to (lbuffer "*dvi-printing*") dir)
     (setq
      cmd 
      (YaTeX-replace-format
@@ -616,10 +636,12 @@ page range description."
 	   'YaTeX-lpr-command-history))
     (save-excursion
       (YaTeX-visit-main t) ;;change execution directory
+      (setq dir default-directory)
       (YaTeX-showup-buffer
        lbuffer (function (lambda (x) (nth 3 (window-edges x)))))
       (set-buffer (get-buffer-create lbuffer))
       (erase-buffer)
+      (cd dir)				;for 19
       (cond
        (YaTeX-dos
 	(call-process shell-file-name "con" "*dvi-printing*" nil
@@ -636,6 +658,8 @@ page range description."
 (defun YaTeX-main-file-p ()
   "Return if current buffer is main LaTeX source."
   (cond
+   (YaTeX-parent-file
+    (eq (get-file-buffer YaTeX-parent-file) (current-buffer)))
    ((YaTeX-get-builtin "!")
     (string-match (YaTeX-guess-parent (YaTeX-get-builtin "!")) (buffer-name)))
    (t

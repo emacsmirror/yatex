@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.11
-;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Dec 19 03:07:01 1994 on landcruiser
+;;; yatexadd.el rev.12
+;;; (c )1991-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Sun Jan 22 23:15:48 1995 on landcruiser
 ;;; $Id$
 
 ;;;
@@ -285,6 +285,11 @@ YaTeX-make-begin-end."
     (if (string= label "") ""
       (concat "[" label "]")))
 )
+
+(defun YaTeX:item () " ")
+(fset 'YaTeX:item\[\] 'YaTeX:item)
+(fset 'YaTeX:subitem 'YaTeX:item)
+(fset 'YaTeX:subsubitem 'YaTeX:item)
 
 ;;;
 ;;Subroutine

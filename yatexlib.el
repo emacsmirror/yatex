@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX library of general functions.
 ;;; yatexlib.el
-;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Wed Dec 21 05:58:06 1994 on landcruiser
+;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Sun Jan 22 23:15:03 1995 on landcruiser
 ;;; $Id$
 
 ;;;###autoload
@@ -46,17 +46,19 @@ See also YaTeX-search-active-forward."
   "Switch to buffer if buffer exists, find file if not.
 Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
   (interactive "Fswitch to file: ")
-  (let (buf)
-    (if (setq buf (get-file-buffer file))
-	(progn
-	  (funcall (if setbuf 'set-buffer 'switch-to-buffer)
-		   (get-file-buffer file))
-	  buf)
-      (if (file-exists-p file)
-	  (or ;find-file returns nil but set current-buffer...
-	   (funcall (if setbuf 'find-file-noselect 'find-file) file)
-	   (current-buffer))
-	(message "%s was not found in this directory." file)
+  (if (bufferp file) (setq file (buffer-file-name file)))
+  (let (buf (hilit-auto-highlight (not setbuf)))
+    (cond
+     ((setq buf (get-file-buffer file))
+      (funcall (if setbuf 'set-buffer 'switch-to-buffer)
+	       (get-file-buffer file))
+      buf)
+     ((or YaTeX-create-file-prefix-g (file-exists-p file))
+      (or ;find-file returns nil but set current-buffer...
+       (if setbuf (set-buffer (find-file-noselect file))
+	 (find-file file))
+       (current-buffer)))
+     (t (message "%s was not found in this directory." file)
 	nil)))
 )
 
@@ -64,11 +66,14 @@ Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
 (defun YaTeX-switch-to-buffer-other-window (file)
   "Switch to buffer if buffer exists, find file if not."
   (interactive "Fswitch to file: ")
-  (if (get-file-buffer file)
-      (progn (switch-to-buffer-other-window (get-file-buffer file)) t)
-    (if (file-exists-p file)
-	(progn (find-file-other-window file) t)
-      (message "%s was not found in this directory." file)
+  (if (bufferp file) (setq file (buffer-file-name file)))
+  (cond
+   ((get-file-buffer file)
+    (switch-to-buffer-other-window (get-file-buffer file))
+    t)
+   ((or YaTeX-create-file-prefix-g (file-exists-p file))
+    (find-file-other-window file) t)
+   (t (message "%s was not found in this directory." file)
       nil))
 )
 
@@ -293,6 +298,7 @@ See documentation of YaTeX-minibuffer-complete."
 (defun goto-buffer-window (buffer)
   "Select window which is bound to BUFFER.
 If no such window exist, switch to buffer BUFFER."
+  (interactive "BGoto buffer: ")
   (if (stringp buffer)
       (setq buffer (or (get-file-buffer buffer) (get-buffer buffer))))
   (if (get-buffer buffer)

@@ -1,14 +1,14 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
-;;; yatexmth.el rev.2
-;;; (c )1993-1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Dec  2 17:03:30 1994 on VFR
+;;; yatexmth.el rev.3
+;;; (c )1993-1995 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
+;;; Last modified Sun Jan 22 23:14:51 1995 on landcruiser
 ;;; $Id$
 
 ;;; [Customization guide]
 ;;;
 ;;;	  By default,  you can use two  completion  groups in YaTeX math
-;;;	mode, `;' for mathematical signs and `/' for greek letters.  But
+;;;	mode, `;' for mathematical signs and `:' for greek letters.  But
 ;;;	you  can add other completion groups   by defining the  alist of
 ;;;	`prefix  key'    vs   `completion   list'    into  the  variable
 ;;;	YaTeX-math-key-list-private.  If  you wish  to    accomplish the
@@ -50,7 +50,7 @@
 
 ;;; 【イメージ補完の追加方法】
 ;;;
-;;;	  標準のイメージ補完では、「;」で始まる数式記号補完と、「/」で始
+;;;	  標準のイメージ補完では、「;」で始まる数式記号補完と、「:」で始
 ;;;	まるギリシャ文字補完が使用可能ですが、これ以外の文字で始まる補完
 ;;;	シリーズも定義することができます。例えば、「,」で始まる次のよう
 ;;;	な補完シリーズを定義する場合を考えてみます。
@@ -108,7 +108,7 @@
 (YaTeX-setq-math-sym YaTeX-image-flat		"ｂ"		"♭")
 (YaTeX-setq-math-sym YaTeX-image-sqrt		"√"		"√")
 
-(setq
+(defvar
  YaTeX-math-sign-alist-default
  '(
    ;frequently used
@@ -258,15 +258,15 @@
    ("D"		"diamondsuit"	"/\\\n\\/")
    ("H"		"heartsuit"	"<^^>\n \\/")
    ("S"		"spadesuit"	" /\\\n<++>\n /\\")
-
-   ))
+   )
+ "Default LaTeX-math-command alist.")
 
 (defvar YaTeX-math-sign-alist-private nil
   "*User definable key vs LaTeX-math-command alist.")
 
 (defvar YaTeX-math-quit-with-strict-match nil
   "*T for quitting completion as soon as strict-match is found.")
-(setq YaTeX-math-sign-alist
+(defvar YaTeX-math-sign-alist
       (append YaTeX-math-sign-alist-private YaTeX-math-sign-alist-default))
 
 ;;(defun YaTeX-math-alist2array (alist array)
@@ -278,7 +278,7 @@
 ;;	 array))
 ;;)
 
-(setq YaTeX-greek-key-alist-default
+(defvar YaTeX-greek-key-alist-default
   '(
     ("a"	"alpha"		("a" "α"))
     ("b"	"beta"		("|>\n|>\n|" "β"))
@@ -326,19 +326,18 @@
     ("W"	"Omega"		("(~)\n~ ~" "Ω"))
     ("f" "foo")
     )
-)
+  "Default LaTeX-math-command alist.")
 
 (defvar YaTeX-greek-key-alist-private nil
   "*User definable key vs LaTeX-math-command alist.")
 
-(setq YaTeX-greek-key-alist
+(defvar YaTeX-greek-key-alist
       (append YaTeX-greek-key-alist-private YaTeX-greek-key-alist-default))
 
 ;;(mapcar (function (lambda (x) (YaTeX-math-alist2array x)))
 ;;	YaTeX-math-key-list)
 
-(setq YaTeX-math-indicator
-  "KEY\tLaTeX sequence\t\tsign")
+(defvar YaTeX-math-indicator "KEY\tLaTeX sequence\t\tsign")
 
 (defvar YaTeX-math-need-image t
   "*T for displaying pseudo image momentarily.")
@@ -585,14 +584,15 @@ at least you get to read the beginning."
 	  (setq buffer-file-name name)
 	  (set-buffer-modified-p modified)))))
 
-(defun YaTeX-math-insert-sequence (&optional force)
+(defun YaTeX-math-insert-sequence (&optional force initial)
   "Insert math-mode sequence with image completion."
   (interactive "P")
-  (let*((key "") regkey str  last-char list i
+  (let*((key (or initial "")) regkey str  last-char list i
 	(case-fold-search nil) match sign
 	(this-key (char-to-string last-command-char))
 	(alist (symbol-value (cdr (assoc this-key YaTeX-math-key-list))))
 	(n (length alist)) (beg (point)) result)
+    (if initial (insert YaTeX-ec (car (cdr (assoc initial alist)))))
     (setq result
 	  (catch 'complete
 	    (if (and (not force)
@@ -669,7 +669,7 @@ at least you get to read the beginning."
       (message "Abort."))
      ((eq result 'escape)
       (delete-region beg (point))
-      (insert this-key))
+      (call-interactively (global-key-binding this-key)))
      ((eq result 'select)
       (message "Done."))
      ((eq result 'exit)
@@ -680,6 +680,21 @@ at least you get to read the beginning."
       (setq key (concat "^" (regexp-quote (substring key 0 -1))))
       (insert (YaTeX-math-show-menu key)))))
 )
+
+;; ----- Change image completion types -----
+(defun YaTeX-math-member-p (item)
+  "Check if ITEM is a member of image completion.
+If so return the cons of its invocation key and image-string."
+  (let ((lists YaTeX-math-key-list) list)
+    (catch 'found
+      (while lists
+	(setq list (symbol-value (cdr (car lists))))
+	(while list
+	  (if (string= item (nth 1 (car list)))
+	      (throw 'found (cons (car (car lists)) (nth 0 (car list)))))
+	  (setq list (cdr list)))
+	(setq lists (cdr lists))))))
+
 ;;
 (provide 'yatexmth)
 

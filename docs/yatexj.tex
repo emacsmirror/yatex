@@ -22,6 +22,7 @@
 
 @menu
 * Intro::                       はじめに
+* Termnology::                  マニュアル参照上の注意
 * Main features::               主な機能
 * Installation::                インストール
 * Invocation::                  プロセス起動
@@ -35,6 +36,7 @@
 * Includeonly::                 勝手に includeonly
 * What column::                 カラム位置ガイド
 * Intelligent newline::         おまかせ改行
+* Changing mode of YaTeX::      野鳥動作モード変更
 * Online help::                 LaTeXオンラインヘルプ
 * Cooperation with other packages::  他パッケージとの連携
 * Customizations::              カスタマイズ
@@ -94,7 +96,7 @@ lisp 変数
 * Hook file::                   hook用ファイル
 @end menu
 
-@node Intro, Main features, Top, Top
+@node Intro, Termnology, Top, Top
 @comment  node-name,  next,  previous,  up
 @chapter はじめに
 @cindex Demacs
@@ -110,7 +112,45 @@ lisp 変数
 
   English manual @xref{Top, , , yatexe,YaTeX English info}
 
-@node Main features, Installation, Intro, Top
+@node Termnology, Main features, Intro, Top
+@comment  node-name,  next,  previous,  up
+@chapter 本マニュアル参照上の注意
+
+  本マニュアルでは以下の表記を用います。
+
+@itemize @bullet
+@item
+begin型コマンド
+
+@code{\begin@{環境@} ～ \end@{環境@}}という形式のLaTeXコマンドを指します。
+begin型コマンドを補完入力することをbegin型補完と呼びます。
+
+@item
+section型コマンド
+
+@code{\section@{タイトル@}}や@code{\mbox@{内容@}}のように
+引数を取るLaTeXコマンドを指します。
+
+@item
+maketitle型コマンド
+
+@code{\maketitle}や@code{\tableofcontents}のように引数を取らないLaTeXコマ
+ンドを指します。
+
+@item
+large型コマンド
+
+@code{@{\large ...@}} や @code{@{\tt ...@}} のようなフォント/サイズ指定子
+を指します。
+
+@item @kbd{[prefix]}
+
+野鳥の機能を呼び出すためのプリフィクスキー。デフォルトでは@kbd{C-c}に割り
+当てられているので、特に変更していない場合本マニュアルの @kbd{[prefix]} と
+いう表記は、@kbd{C-c} と読み換えてください。
+@end itemize
+
+@node Main features, Installation, Termnology, Top
 @comment  node-name,  next,  previous,  up
 @chapter 主な機能
 
@@ -135,7 +175,7 @@ lisp 変数
 @item 一括コメントアウト/アンコメントアウト
         (@kbd{C-c >}, @kbd{C-c <}, @kbd{C-c ,}, @kbd{C-c .})
 @item アクセント記号/数式環境用コマンド/ギリシャ文字の入力支援
-        (@kbd{C-c a}, @code{;}, @code{/})
+        (@kbd{C-c a}, @kbd{;}, @kbd{/})
 @item tabular/array環境のカラム位置ガイド
 @item 標準的 La@TeX{} コマンドのオンラインヘルプ(@kbd{C-c ?}, @kbd{C-c /})
 @end itemize
@@ -148,6 +188,7 @@ lisp 変数
 @cindex .emacs
 @cindex auto-mode-alist
 @cindex autoload
+@section 野鳥起動のための設定
 
   ~/.emacsに下の2項目を加えます。
 
@@ -171,6 +212,32 @@ lisp 変数
 ロードされます。野鳥が正常に起動できたときはモードラインの表示が「やてふ」
 に変わります。
 
+@section タイプセッタ/プレヴューア環境の設定
+
+  利用する外部プログラムに関する以下の変数を確認し、必要なら正しい値に変更
+します。
+@table @code
+@item tex-command
+        @dots{} 起動するタイプセッタのコマンド名
+@item dvi2-command
+        @dots{} 起動するプレヴューアのコマンド名
+@item NTT-jTeX
+        @dots{} NTT jTeX を使用するなら t
+@item YaTeX-kanji-code
+        @dots{} 文書を作成する時の漢字コード
+@item dviprint-command-format
+        @dots{} ファイルの印刷に使われるコマンド列の書式
+@item makeindex-command
+        @dots{} makeindexコマンド
+@end table
+
+これらを変更する場合は、やはり@file{~/.emacs}にて、たとえば
+@lisp
+(setq tex-command "bigjlatex")
+@end lisp
+のようにしてください。どのような値をセットすれば良いかについては、
+@ref{All customizable variables}を参照してください。
+
 
 @node Invocation, %#notation , Installation, Top
 @comment  node-name,  next,  previous,  up
@@ -182,10 +249,8 @@ lisp 変数
 @cindex jlatex
 @cindex プリントアウト[ふりんとあうと]
 
- yatex-mode の prefix キーは、標準状態で @kbd{C-c} (Ctrlキーを押しながらc)
-です。以下、標準のキー割当の場合、@kbd{[prefix]} は @kbd{C-c} と読み換えて
-下さい。まず、次のキー入力により、jlatex などのタイプセットプログラム(以後
-タイプセッタと呼ぶ)、プレヴューアなどの起動ができます。
+LaTeXソースの編集中、次のキー入力により、jlatex などのタイプセットプログラ
+ム(以後タイプセッタと呼ぶ)、プレヴューアなどの起動ができます。
 
 @table @kbd
 @item [prefix] t j
@@ -236,29 +301,35 @@ lisp 変数
 ラーの表示されている行にカーソルを合わせスペースキーを押すと La@TeX{} 
 ソースの対応する行にジャンプします。
 
-  なお、領域指定のタイプセットでは、単一ファイルの La@TeX{} ソースの編集時
-にはそのファイルの documentstyle が、別ファイルから include している場合に
-はメインファイルの documentstyle が自動的に選択されます。指定領域は、メイ
-ンファイルのあるディレクトリの@file{texput.tex}という臨時ファイルに出力さ
-れますので、上書きには注意してください。領域の指定方法は@ref{%#記法}の項を
-参照してください。
+@subsection 領域タイプセット
+
+  ポイントとマークの間、あるいはテキスト中に埋め込んだ @code{%#BEGIN} と
+@code{%#END}の間の領域(@ref{%#記法})だけを切り取ってタイプセットすることが
+できます。この場合の documentstyle は、単一ファイルの La@TeX{} ソースの編
+集時にはそのファイルの documentstyle が、別ファイルから include している場
+合にはメインファイルの documentstyle が自動的に選択されます。指定領域は、
+メインファイルのあるディレクトリの@file{texput.tex}という臨時ファイルに出
+力されますので、上書きには注意してください。
 
 @node Print out,  , Calling typesetter, Invocation
 @comment  node-name,  next,  previous,  up
 @section プリントアウト
 
-  プリントアウトする時は、出力開始/終了ページを聞いてきますが、こ
-れを省略したい時は、universal-argument をつけて下さい。
+  @kbd{[prefix] t l}を押してプリントアウトを指示すると、出力開始/終了ペー
+ジを聞いてくるので、それぞれに答えます。これを省略したい時は、
+universal-argument をつけ、
 
 @cindex 出力開始ページ[しゆつりよくかいしへえし]
 @cindex 出力終了ページ[しゆつりよくしゆうりようへえし]
-
 
 @table @kbd
 @item C-u [prefix] t l
         @dots{} ページ確認省略lpr起動
 @end table
 @cindex ページ確認省略lpr起動[へえしかくにんしようりやくlprきとう]
+
+@noindent
+のように起動してください。
 
 @node %#notation , Completion, Invocation, Top
 @comment  node-name,  next,  previous,  up
@@ -817,7 +888,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 @end table
 
 @noindent 
-        とすることで、現在開いている環境名で \end{} が補われます。
+とすることで、現在開いている環境名で \end{} が補われます。
 
 @node Accent mark completion, Image completion, end補完, Completion
 @comment  node-name,  next,  previous,  up
@@ -873,7 +944,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
   主に数式モードで使用される、矢印やΣなどの記号を擬似的に表現するキー入力
 で、La@TeX{} コマンドを入力できます。これは野鳥自身の「数式モード」でのみ
 動作します。野鳥はカーソルが@TeX{}の数式環境の中にある時に@kbd{;}や、
-@kbd{/}に特殊な機能を持たせます。
+@kbd{:}に特殊な機能を持たせます。
 
   さて、例えば、←(leftarrow)をASCII文字だけで表現する場合、一般的には「<-」
 のようにしますが、これを利用して、数式記号イメージ入力モードで 
@@ -936,16 +1007,16 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 @comment  node-name,  next,  previous,  up
 @section ギリシャ文字補完
 @cindex ギリシャ文字補完[きりしやもしほかん]
-@cindex /
+@cindex :
 
-  もう一つ、数式環境中で@kbd{/}を押すとギリシャ文字入力モードに入ります。
-@kbd{/}を押した直後に@kbd{a}を押すと@code{\alpha}が、@kbd{g} を押すと 
+  もう一つ、数式環境中で@kbd{:}を押すとギリシャ文字入力モードに入ります。
+@kbd{:}を押した直後に@kbd{a}を押すと@code{\alpha}が、@kbd{g} を押すと 
 @code{\gamma}が、などアルファベットに対応したギリシャ文字が挿入されます。
-操作方法は;の数式記号補完とまったく同じです。まずは@kbd{/}の直後に
+操作方法は;の数式記号補完とまったく同じです。まずは@kbd{:}の直後に
 TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 ください。
 
-  @kbd{;}と@kbd{/}を数式環境中で押しているにもかかわらず、イメージ補完が働
+  @kbd{;}と@kbd{:}を数式環境中で押しているにもかかわらず、イメージ補完が働
 かない場合は、@kbd{C-u ;}のように universal-argument をつけてキーを押すこ
 とにより、強制的にイメージ補完に入ることができます。また、この時にどのよう
 な状態で数式環境内判定に失敗したかをご連絡下さい。
@@ -984,11 +1055,6 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 
 @noindent 
 として下さい。
-
-@cindex 変な単語[へんなたんこ]
-  もし、綴の間違ったものなど、変な単語が学習されてしまった場合は
-
-
 
 @node Commenting out, Cursor jump, Local dictionary, Top
 @comment  node-name,  next,  previous,  up
@@ -1182,6 +1248,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 @item section型コマンドの引数
 @item section型コマンドのオプションパラメータ([]で囲まれたもの)
 @item large型コマンド
+@item (イメージ補完で入力可能な)数式モード専用のmaketitle型コマンド
 @end itemize
 
   変えたいsection型コマンドの引数がさらに La@TeX{} コマンドを含む場合は、
@@ -1275,13 +1342,13 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 通常インデント:
        > \item へろへろ
        >
-       > 「ほげほげ」をでたらめが単語として使った時に、第2のでたらめな
-       > 単語として「へろへろ」が使われることが多いようです。
+       >       「ほげほげ」をでたらめが単語として使った時に、第2のでたら
+       >       めな単語として「へろへろ」が使われることが多いようです。
 @end example
 
-  上の通常インデントの場合、説明パラグラフのインデントは \item と同じ深さ
-とする必要があります。ただし、@kbd{M-q}を行の最初の非空白文字の位置で押す
-ことにより深さを変えることができます(後述)。
+  上の通常インデントの場合、説明パラグラフのインデントは \item の見出しと
+同じ深さとする必要があります。ただし、@kbd{M-q}を行の最初の非空白文字の位
+置で押すことにより深さを変えることができます(後述)。
 
 @section パラグラフの桁揃え
 @cindex パラグラフの桁揃え[はらくらふのけたそろえ]
@@ -1367,7 +1434,7 @@ fill-prefix をいちいち変更しなくて桁揃えができます。
 す。もし項目名として別のものを表示して欲しい場合は、行頭を@code{%}にしてダ
 ミーの項目並びを作っておくと良いでしょう。
 
-@node Intelligent newline, Online help, What column, Top
+@node Intelligent newline, Changing mode of YaTeX, What column, Top
 @comment  node-name,  next,  previous,  up
 @chapter おまかせ改行
 @cindex おまかせ改行[おまかせかいぎょう]
@@ -1412,7 +1479,37 @@ fill-prefix をいちいち変更しなくて桁揃えができます。
 いでしょう。関数 @code{YaTeX-intelligent-newline-itemize} の定義などを参考
 にしてください。
 
-@node Online help, Cooperation with other packages, Intelligent newline, Top
+@node Changing mode of YaTeX, Online help, Intelligent newline, Top
+@comment  node-name,  next,  previous,  up
+@chapter 野鳥の動作モード切り替え
+@cindex モード切り替え[もーときりかえ]
+@cindex prefix w
+
+@table @kbd
+@item [prefix] w
+        @dots{} 野鳥動作モード切り替えメニュー
+@end table
+
+@noindent
+で野鳥自身の動作を決定する以下のモードを切り替えます。
+
+@itemize @bullet
+@item 修正モード
+@item 野鳥数式モード
+@end itemize
+
+修正モードは、開き括弧入力時の処理をコントロールし、修正モードONの時は開き
+括弧の入力は開き括弧のみの入力になり、修正モードOFFの時は開き括弧の入力だ
+けで閉じ括弧まで入力します。デフォルト(起動時)の設定は@emph{OFF}です。
+
+  野鳥数式モードは、変数 @code{YaTeX-auto-math-mode} が @code{nil} の時の
+み有効で、このとき@kbd{;}や@kbd{:}を押した時(@ref{Image completion}参照)に、
+どのようなイメージ補完を機能させるか、通常のキーとして機能させるかを手動で
+切り替えます。自動判定が遅いマシンでは@code{YaTeX-auto-math-mode}
+@code{nil}にセットし、野鳥数式モードを手動で切り替えると良いでしょう。
+
+
+@node Online help, Cooperation with other packages, Changing mode of YaTeX, Top
 @comment  node-name,  next,  previous,  up
 @chapter オンラインヘルプ
 @cindex オンラインヘルプ[おんらいんへるふ]
@@ -1579,6 +1676,10 @@ dviファイルの印刷に使われるコマンド式(@code{"dvi2ps %f %t %s | lpr"})
 @defvar dviprint-to-format
 @code{%t} に相当する終了ページ指定書式、@code{%e}が終了ページ番号に変わる
 (@code{"-t %e"})
+@end defvar
+
+@defvar makeindex-command
+makeindexコマンド(@code{"makeindex"} (MS-DOSでは@code{"makeind"}))
 @end defvar
 
 @defvar section-name
@@ -1777,6 +1878,9 @@ fill を抑止する環境名のリスト(@code{'("verbatim" "tabular")})
   苦情、希望、バグ報告、感想等は歓迎いたします。
 連絡は yuuji@@ae.keio.ac.jp または、
 pcs39334@@asciinet.or.jp まで(1995年3月現在)。
+継続的に使用してくださる方はメイリングリスト「fj野鳥の会」に
+是非加入してください。加入方法については本パッケージの @file{docs/qanda}
+ファイルの「その他」の章を御覧ください。
 
 仕様は、予告なく確実に(気分次第で)変更されます:-p。
 

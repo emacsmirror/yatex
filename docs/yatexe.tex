@@ -135,7 +135,7 @@ Language Enhancement to GNU Emacs), and latex on DOS.
 @item Blanket commenting out or uncommenting
         (@kbd{C-c >}, @kbd{C-c <}, @kbd{C-c ,}, @kbd{C-c .})
 @item Easy input of accent mark, math-mode's commands and Greek letters
-        (@kbd{C-c a}, @kbd{;}, @kbd{/})
+        (@kbd{C-c a}, @kbd{;}, @kbd{:})
 @item Online help for the popular La@TeX{} commands
       (@kbd{C-c ?}, @kbd{C-c /})(English help is not yet supported)
 @end itemize
@@ -792,7 +792,7 @@ TeX's  math environment  are completed by  key  sequences  which
 imitate the  corresponding symbols graphically.  This completion
 only works in the math environment.  YaTeX automatically detects
 whether the  cursor  located  in math environment  or  not,  and
-change the behavior of key strokes @kbd{;} and @kbd{/}.
+change the behavior of key strokes @kbd{;} and @kbd{:}.
 
   By the way, we often express the leftarrow mark by `<-' for example.
 Considering such image, you can write @code{\leftarrow} by typing @kbd{<-}
@@ -842,19 +842,19 @@ Emacs-Lisp variable @code{YaTeX-math-sign-alist-private}.  See also
 @comment  node-name,  next,  previous,  up
 @section Greek letters completion
 @cindex Greek letters completion
-@cindex /
+@cindex :
 
   Math-mode of YaTeX provides another image completion, Greek letters
-completion in the same method.  After prefix @kbd{/}, typing @kbd{a} makes
+completion in the same method.  After prefix @kbd{:}, typing @kbd{a} makes
 @code{\alpha}, @kbd{b} makes @code{\beta} and @kbd{g} makes @code{\gamma}
 and so on.  First, type @kbd{/TAB} to know all the correspondence of
 alphabets v.s. Greek letters.
 
-  If you will find @kbd{;} or @kbd{/} doesn't work in correct position of
+  If you will find @kbd{;} or @kbd{:} doesn't work in correct position of
 math environment, it may be a bug of YaTeX.  Please send me a bug report
 with the configuration of your text, and avoid it temporarily by typing
-@kbd{;} or @kbd{/} after universal-argument(@kbd{C-u}) which forces
-@kbd{;} and @kbd{/} to work as math-prefix.
+@kbd{;} or @kbd{:} after universal-argument(@kbd{C-u}) which forces
+@kbd{;} and @kbd{:} to work as math-prefix.
 
 @node Local dictionaries, Commenting out, Completion, Top
 @comment  node-name,  next,  previous,  up
@@ -1065,6 +1065,8 @@ change the followings.
 @item Argument of section-type commands
 @item Optional parameters (enclosed by []) of section-type commands
 @item Font/size designators
+@item Math-mode's maketitle-type commands that can be inputted with
+image completion
 @end itemize
 
   Typing @kbd{[prefix] c} on one of above objects you want to change
@@ -1157,11 +1159,11 @@ Normal indentation:
        >
        > \item bar
        >
-       > When the word `for' is used as an arbitrarily word, `bar' 
-       > is bound to follow it.
+       >       When the word `for' is used as an arbitrarily word, `bar' 
+       >       is bound to follow it.
 @end example
 
-  Note that the indent depth of the @code{\item} and its descriptive
+  Note that the indent depth of an @code{\item} word and its descriptive
 paragraph are the same in latter case.  If you want to use different
 depth, invoke fill-paragraph at the beginning of non-whitespace
 character(see below).
@@ -2031,7 +2033,11 @@ redistribute this software freely but with NO warranty to anything
 as a result  of using this  software.   However, any  reports  and
 suggestions are  welcome as  long as I   feel  interests in   this
 software.   My possible  e-mail address is  `yuuji@@ae.keio.ac.jp'.
-(up to Mar.1995 at least)
+(up to Mar.1995 at least)  And there is mailing list for YaTeX.
+Although the common language is Japanese, questions in English will be
+welcome.  To join the ML, send the mail whose subject is `append' to
+the address `yatex-control@@harvest.jaist.ac.jp'.  If you have some
+question, please ask to `yatex-request@@harvest.jaist.ac.jp'.
 
   The specification of this software will be surely modified
 (depending on my feelings) without notice :-p.
