@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.5
-;;; (c)1991-1993 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Wed Oct  6 03:40:30 1993 on 98fa
+;;; yatexadd.el rev.6
+;;; (c )1991-1993 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Sat Jan 29 16:55:09 1994 on gloria
 ;;; $Id$
 
 (provide 'yatexadd)
@@ -166,6 +166,10 @@
 ;; take an argument ARGP that specify the argument position.
 ;; If argument position is out of range, nil should be returned,
 ;; else nil should NOT be returned.
+
+;;
+; Label selection
+;;
 (defvar YaTeX-label-menu-other
   (if YaTeX-japan "':他のバッファのラベル\n" "':LABEL IN OTHER BUFFER.\n"))
 (defvar YaTeX-label-menu-any
@@ -316,6 +320,35 @@
       (YaTeX::ref argp)))
     )
 )
+
+;;
+; completion for the arguments of \newcommand
+;;
+(defun YaTeX::newcommand (&optional argp)
+  (cond
+   ((= argp 1)
+    (let ((command (read-string "Define newcommand: " "\\")))
+      (put 'YaTeX::newcommand 'command (substring command 1))
+      command))
+   ((= argp 2)
+    (let ((argc
+	   (string-to-int (read-string "Number of arguments(Default 0): ")))
+	  (def (read-string "Definition: "))
+	  (command (get 'YaTeX::newcommand 'command)))
+      ;;!!! It's illegal to insert string in the add-in function !!!
+      (if (> argc 0) (insert (format "[%d]" argc)))
+      (if (and (stringp command)
+	       (string< "" command)
+	       (y-or-n-p "Update user completion table?"))
+	  (YaTeX-update-table
+	   (if (> argc 1) (list command argc) (list command))
+	   'section-table 'user-section-table 'tmp-section-table))
+      (message "")
+      def				;return command name
+      ))
+   (t ""))
+)
+
 
 ;;;
 ;; global subroutines

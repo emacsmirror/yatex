@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
-;;; yatexprc.el rev.1.44
-;;; (c)1993 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Oct 25 17:48:39 1993 on figaro
+;;; yatexprc.el
+;;; (c )1993 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Sat Jan 29 16:54:54 1994 on gloria
 ;;; $Id$
 
 (require 'yatex)
@@ -35,11 +35,11 @@
 	(YaTeX-kill-typeset-process YaTeX-typeset-process))
     (YaTeX-visit-main t);;execution directory
     ;;Select under-most window if there are more than 2 windows and
-    ;;typeset buffer isn't seen.
+    ;;typeset buffer not seen.
     (YaTeX-showup-buffer
      buffer (function (lambda (x) (nth 3 (window-edges x)))))
     (with-output-to-temp-buffer buffer
-      (if (eq system-type 'ms-dos)	;if MS-DOS
+      (if YaTeX-dos			;if MS-DOS
 	  (progn
 	    (message (concat "Typesetting " (buffer-name) "..."))
 	    (YaTeX-put-nonstopmode)
@@ -63,7 +63,7 @@
 	       (set-kanji-process-code YaTeX-latex-message-code))))
     (message "Type SPC to continue.")
     (goto-char (point-max))
-    (if (eq system-type 'ms-dos) (message "Done.")
+    (if YaTeX-dos (message "Done.")
       (insert (message " "))
       (set-marker (process-mark YaTeX-typeset-process) (1- (point))))
     (if (bolp) (forward-line -1))
@@ -95,7 +95,7 @@
                        (concat ": "
                                (symbol-name (process-status proc))))
 		 (message "latex typesetting done.")
-                 ;; If buffer and mode line will show that the process
+                 ;; If buffer and mode line shows that the process
                  ;; is dead, we can delete it now.  Otherwise it
                  ;; will stay around until M-x list-processes.
                  (delete-process proc)
@@ -173,7 +173,7 @@ operation to the region."
   "Typeset whole buffer.  If %#! usage says other buffer is main text,
 visit main buffer to confirm if its includeonly list contains current
 buffer's file.  And if it doesn't contain editing text, ask user which
-action want to be done, A:Add list, R:Replace list, %:comment-out list."
+action wants to be done, A:Add list, R:Replace list, %:comment-out list."
   (interactive)
   (YaTeX-save-buffers)
   (let*((me (substring (buffer-name) 0 (rindex (buffer-name) ?.)))
@@ -242,7 +242,7 @@ action want to be done, A:Add list, R:Replace list, %:comment-out list."
   "Kill process PROC after sending signal to PROC.
 PROC should be process identifier."
   (cond
-   ((eq system-type 'ms-dos)
+   (YaTeX-dos
     (error "MS-DOS can't have concurrent process."))
    ((or (null proc) (not (eq (process-status proc) 'run)))
     (error "No typesetting process."))
@@ -254,16 +254,16 @@ PROC should be process identifier."
   "Execute some command on buffer.  Not a official function."
   (save-excursion
     (with-output-to-temp-buffer buffer
-      (if (eq system-type 'ms-dos)
+      (if YaTeX-dos
 	  (call-process shell-file-name nil buffer nil "/c " command)
-	(start-process "system" buffer shell-file-name "-c " command))))
+	(start-process "system" buffer shell-file-name "-c" command))))
 )
 
 (defun YaTeX-preview (preview-command preview-file)
   "Execute xdvi (or other) to tex-preview."
   (interactive
    (list (read-string "Preview command: " dvi2-command)
-	 (read-string "Prefiew file[.dvi]: "
+	 (read-string "Preview file[.dvi]: "
 		      ;;(substring (buffer-name) 0 -4)
 		      (if (get 'dvi2-command 'region)
 			  (substring YaTeX-texput-file
@@ -274,10 +274,11 @@ PROC should be process identifier."
   (save-excursion
     (YaTeX-visit-main t)
     (with-output-to-temp-buffer "*dvi-preview*"
-      (if (eq system-type 'ms-dos)
-	  (progn (send-string-to-terminal "\e[2J")	;if MS-DOS
+      (if YaTeX-dos			;if MS-DOS
+	  (progn (send-string-to-terminal "\e[2J\e[>5h") ;CLS & hide cursor
 		 (call-process shell-file-name "con" "*dvi-preview*" nil
 			       "/c " dvi2-command preview-file)
+		 (send-string-to-terminal "\e[>5l") ;show cursor
 		 (redraw-display))
 	(start-process "preview" "*dvi-preview*" shell-file-name "-c"
 		       (concat dvi2-command " " preview-file)) ;if UNIX
@@ -287,7 +288,7 @@ PROC should be process identifier."
 
 (defun YaTeX-prev-error ()
   "Visit previous error.  The reason why not NEXT-error is to
-avoid make confliction of line numbers by editing."
+avoid making confliction of line numbers by editing."
   (interactive)
   (let ((cur-buf (buffer-name)) (cur-win (selected-window))
 	YaTeX-error-line typeset-win error-buffer error-win)
@@ -295,7 +296,7 @@ avoid make confliction of line numbers by editing."
 	(message "There is no output buffer of typesetting.")
       (YaTeX-pop-to-buffer YaTeX-typeset-buffer)
       (setq typeset-win (selected-window))
-      (if (eq system-type 'ms-dos)
+      (if YaTeX-dos
 	  (if (search-backward latex-dos-emergency-message nil t)
 	      (progn (goto-char (point-max))
 		     (setq error-regexp latex-error-regexp))
@@ -317,7 +318,7 @@ avoid make confliction of line numbers by editing."
 			 (skip-chars-forward "^0-9")
 			 (point))
 		  (progn (skip-chars-forward "0-9") (point)))))
-	(message "No more error on %s" cur-buf)
+	(message "No more errors on %s" cur-buf)
 	(ding))
       (setq error-buffer (YaTeX-get-error-file cur-buf)); arg. is default buf.
       (setq error-win (get-buffer-window error-buffer))
@@ -342,7 +343,7 @@ avoid make confliction of line numbers by editing."
 )
 
 (defun YaTeX-jump-error-line ()
-  "Jump corresponding line on latex command's error message."
+  "Jump to corresponding line on latex command's error message."
   (interactive)
   (let ((p (point))
 	(end (progn (end-of-line) (point)))
@@ -497,18 +498,6 @@ will be given to the shell."
 	))))
 )
 
-(defun YaTeX-replace-format (string format repl)
-  "In STRING, replace first appearance of FORMAT to REPL as if
-function `format' does.  FORMAT does not contain `%'"
-  (let ((beg (or (string-match (concat "^\\(%" format "\\)") string)
-		 (string-match (concat "[^%]\\(%" format "\\)") string)))
-	(len (length format)))
-    (if (null beg) string ;no conversion
-      (concat
-       (substring string 0 (match-beginning 1)) repl
-       (substring string (match-end 1)))))
-)
-
 (defun YaTeX-lpr (arg)
   "Print out.  If prefix arg ARG is non nil, call print driver without
 page range description."
@@ -542,7 +531,7 @@ page range description."
     (save-excursion
       (YaTeX-visit-main t) ;;change execution directory
       (with-output-to-temp-buffer "*dvi-printing*"
-	(if (eq system-type 'ms-dos)
+	(if YaTeX-dos
 	    (call-process shell-file-name "con" "*dvi-printing*" nil
 			  "/c " cmd)
 	  (start-process "print" "*dvi-printing*" shell-file-name "-c" cmd)

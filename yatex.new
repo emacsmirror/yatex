@@ -2,6 +2,16 @@
 	Yet Another tex-mode for Emacs
 	yatex.el 各バージョンの変更点について。
 
+1.45:	comment-region を begin/end 行で起動した時にメッセージを出す。
+	yatexmth:イメージ補完で複数の補完テーブルが使えるようにし、
+	/で始まるギリシャ文字補完を追加。
+	YaTeX-mark-evrironment を追加。
+	[prefix] % の %#記法編集メニューを追加。
+	dviout起動時(DOS)にカーソルを消すようにした。
+	section型コマンドの引数入力時に section/large/maketitle 型補完を
+	再帰的に利用できるようにした。
+	yatexaddの引数型付加関数に第二引数以後の処理が行かないバグを修正。
+
 1.44:	タイプセットプログラムの起動処理を高速化。
 	エラージャンプのウィンドウ利用の最適化。
 	数式モード/修正モードのモードライン表示修正。
