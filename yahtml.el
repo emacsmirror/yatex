@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
-;;; (c ) 1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp, pcs39334@ascii-net]
-;;; Last modified Sat Jan 29 16:58:00 1994 on gloria
+;;; (c ) 1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp, pcs39334@asciinet.or.jp]
+;;; Last modified Sat Apr 23 02:27:54 1994 on pajero
 ;;; This is sample hack definition for HTML.
 ;;;
 ;;; [Purely tentative version]

@@ -2,6 +2,9 @@
 	Yet Another tex-mode for Emacs
 	yatex.el 各バージョンの変更点について。
 
+1.47	YaTeX-quick-in-environment-p と YaTeX-get-latex-command の
+	バグフィクス。
+
 1.46	リジョン指定つき section 型補完の追加。
 	[prefix] k で section 型コマンドの削除、対応する括弧の削除。
 	エラー行ジャンプの適正化。

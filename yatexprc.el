@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Apr 23 02:34:07 1994 on pajero
+;;; Last modified Mon Apr 25 12:13:17 1994 on alto
 ;;; $Id$
 
 (require 'yatex)
@@ -464,34 +464,23 @@ will be the latex-command,
 and you write \"%#!jlatex main.tex\" on some line and argument SWITCH
 is non-nil, then
 	\"jlatex main.tex\"
+
 will be given to the shell."
-  (let*((target (file-name-nondirectory
-		 (or YaTeX-parent-file
-		     (save-excursion
-		       (YaTeX-visit-main t)
-		       (buffer-file-name)))))
-	(default-command
-	  (concat tex-command " " (if switch target ""))));default value
-    (save-excursion
-      (goto-char (point-min))
-      (if (null (re-search-forward "^%#!" (point-max) t))
-	  default-command
-	(skip-chars-forward "%#! 	")
-	(if (eolp)
-	    default-command
-	  (let ((s (point)))
-	    (skip-chars-forward "^ 	" (point-end-of-line)) ;Skip command
-	    (skip-chars-forward " 	" (point-end-of-line))
-	    (cond
-	     ((null switch)
-	      (buffer-substring s (point)))
-	     ((eolp)			 ;Only return command name
-	      (concat (buffer-substring s (point)) " "
-		      (file-name-nondirectory
-		       (or YaTeX-parent-file (buffer-file-name)))))
-	     (t(end-of-line)		   ;Change entire command name
-	       (buffer-substring s (point))) ;including arguments.
-	    ))))))
+  (let (magic command target)
+    (setq parent
+	  (cond
+	   (YaTeX-parent-file YaTeX-parent-file)
+	   (t (save-excursion
+		(YaTeX-visit-main t)
+		(file-name-nondirectory (buffer-file-name)))))
+	  magic (YaTeX-get-builtin "!"))
+    (cond
+     (magic
+      (cond
+       (switch (if (string-match "\\s " magic) magic
+		 (concat magic " " parent)))
+       (t (concat (substring magic 0 (string-match "\\s " magic)) " "))))
+     (t (concat tex-command " " parent))))
 )
 
 (defun YaTeX-lpr (arg)
@@ -540,8 +529,7 @@ page range description."
   "Return if current buffer is main LaTeX source."
   (cond
    ((YaTeX-get-builtin "!")
-    (string-match
-     (concat "^" (YaTeX-get-preview-file-name) ".tex")(buffer-name)))
+    (string-match (YaTeX-guess-parent (YaTeX-get-builtin "!")) (buffer-name)))
    (t
     (save-excursion
       (let ((latex-main-id (concat "^\\s *" YaTeX-ec-regexp "documentstyle")))
@@ -550,13 +538,13 @@ page range description."
 )
 
 (defun YaTeX-visit-main (&optional setbuf)
-  "Switch to buffer main LaTeX source.  Use set-buffer instead of
-switch-to-buffer if the optional second argument SETBUF is t(Use it only
-in Emacs-Lisp program)."
+  "Switch buffer to main LaTeX source.
+Use set-buffer instead of switch-to-buffer if the optional second argument
+SETBUF is t(Use it only from Emacs-Lisp program)."
   (interactive)
-  (let (main-file)
-    (if (YaTeX-get-builtin "!")
-	(setq main-file (concat (YaTeX-get-preview-file-name) ".tex")))
+  (let (b-in main-file)
+    (if (setq b-in (YaTeX-get-builtin "!"))
+	(setq main-file (YaTeX-guess-parent b-in)))
     (if YaTeX-parent-file
 	(setq main-file YaTeX-parent-file))
     (if (YaTeX-main-file-p)
@@ -577,6 +565,19 @@ in Emacs-Lisp program)."
   nil
 )
 
+
+(defun YaTeX-guess-parent (command-line)
+  (setq command-line
+	(if (string-match ".*\\s " command-line)
+	    (substring command-line (match-end 0))
+	  (file-name-nondirectory (buffer-file-name)))
+	command-line
+	(concat (if (string-match "\\(.*\\)\\." command-line)
+		    (substring command-line (match-beginning 1) (match-end 1))
+		  command-line)
+		".tex"))
+)
+
 (defun YaTeX-visit-main-other-window ()
   "Switch to buffer main LaTeX source in other window."
   (interactive)
@@ -589,7 +590,8 @@ in Emacs-Lisp program)."
   "Read source built-in command of %# usage."
   (save-excursion
     (goto-char (point-min))
-    (if (and (search-forward (concat "%#" key) nil t)
+    (if (and (re-search-forward
+	      (concat "^" (regexp-quote (concat "%#" key))) nil t)
 	     (not (eolp)))
 	(buffer-substring
 	 (progn (skip-chars-forward " 	" (point-end-of-line))(point))
