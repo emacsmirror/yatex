@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el rev.2
 ;;; (c )1993-1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Jul 14 22:42:05 1994 on figaro
+;;; Last modified Tue Oct 11 22:57:43 1994 on figaro
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -214,7 +214,7 @@
    ("==>"	"Longrightarrow" "==>")
    ("<->"	"leftrightarrow" ("<->"		"©¨"))
    ("<-->"	"longleftrightarrow" ("<---->"	"©--¨"))
-   ("<=>"	"leftrightarrow" "<=>")
+   ("<=>"	"Leftrightarrow" "<=>")
    ("<==>"	"Longleftrightarrow" "<==>")
    ("^|"	"uparrow"	("^\n|" "ª"))
    ("\C-p"	"uparrow"	("^\n|" "ª"))

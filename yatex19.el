@@ -1,13 +1,15 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Sep 17 12:53:23 1994 on figaro
+;;; Last modified Fri Sep 23 04:30:27 1994 on figaro
 ;;; $Id$
 
 ;;; とりあえず hilit19 を使っている時に色が付くようにして
 ;;; メニューバーでごにょごにょできるようにしただけ。
 ;;; いったい誰がメニューバー使ってLaTeXソース書くんだろうか?
 ;;; まあいいや練習練習。後ろの方にちょっとコメントあり。
+
+(require 'yatex)
 
 (defun YaTeX-19-define-sub-menu (map vec &rest bindings)
   "Define sub-menu-item in MAP at vector VEC as BINDINGS.
@@ -111,7 +113,7 @@ where
  '(comment	"Comment region or environment" YaTeX-comment-region)
  '(uncomment	"Unomment region or environment" YaTeX-uncomment-region)
  '(commentp	"Comment paragraph" YaTeX-comment-paragraph)
- '(uncommentp	"Unomment paragraph" YaTeX-uncomment-paragraph)
+ '(uncommentp	"Uncomment paragraph" YaTeX-uncomment-paragraph)
  '(sepcom	"--"	nil)
 )
 
@@ -139,7 +141,7 @@ where
   (cons "Section-type region(long name)"
 	(make-sparse-keymap "Enclose region with section-type macro")))
 (define-key YaTeX-mode-map [menu-bar yatex section]
-  (cons "Sectio-type(long name)"
+  (cons "Section-type(long name)"
 	(make-sparse-keymap "Section-type macro")))
 (let ((sorted-section
        (sort
@@ -214,12 +216,23 @@ where
     'sectioning))
   "Adjustment for hilit19's LaTeX hilit pattern.")
 (defvar YaTeX-hilit-sectioning-face
-  'yellow/cornflowerblue)
+  '(yellow/dodgerblue yellow/cornflowerblue))
+(defvar YaTeX-hilit-singlecmd-face
+  '(slateblue2 aquamarine))
 (defun YaTeX-19-collect-macro ()
   (cond
    ((and (featurep 'hilit19) (fboundp 'hilit-translate))
-    (hilit-translate sectioning YaTeX-hilit-sectioning-face)
-    (setq hilit-patterns-alist		;Remove at the first time.
+    (let ((get-face
+	   (function
+	    (lambda (table)
+	      (cond
+	       ((eq hilit-background-mode 'light) (car table))
+	       ((eq hilit-background-mode 'dark) (car (cdr table)))
+	       (t nil))))))
+      (hilit-translate
+       sectioning (funcall get-face YaTeX-hilit-sectioning-face)
+       macro (funcall get-face YaTeX-hilit-singlecmd-face)))
+    (setq hilit-patterns-alist		;Remove at first.
 	  (delq 'yatex-mode hilit-patterns-alist)
 	  hilit-patterns-alist
 	  (cons
@@ -235,7 +248,15 @@ where
 			     (append user-section-table tmp-section-table)
 			     "\\|")
 			    "\\){")
-		    "}" 'keyword))))
+		    "}" 'keyword)
+		   (list
+		    (concat "\\\\\\("
+			    (mapconcat
+			     (function (lambda (s) (regexp-quote (car s))))
+			     (append user-singlecmd-table tmp-singlecmd-table)
+			     "\\|")
+			    "\\)")
+		    0 'macro))))
 	   hilit-patterns-alist)))))
 (YaTeX-19-collect-macro)
 (defun YaTeX-hilit-recenter (arg)

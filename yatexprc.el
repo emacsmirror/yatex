@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Sep 16 01:50:36 1994 on figaro
+;;; Last modified Thu Oct 20 16:48:41 1994 on figaro
 ;;; $Id$
 
 (require 'yatex)
@@ -31,46 +31,60 @@
 (defun YaTeX-typeset (command buffer)
   "Execute jlatex (or other) to LaTeX typeset."
   (interactive)
-  (let ((window (selected-window)))
-    (if (and YaTeX-typeset-process
-	     (eq (process-status YaTeX-typeset-process) 'run))
-	;; if tex command is halting.
-	(YaTeX-kill-typeset-process YaTeX-typeset-process))
-    (YaTeX-visit-main t);;execution directory
-    ;;Select lower-most window if there are more than 2 windows and
-    ;;typeset buffer not seen.
-    (YaTeX-showup-buffer
-     buffer (function (lambda (x) (nth 3 (window-edges x)))))
-    (with-output-to-temp-buffer buffer
-      (if YaTeX-dos			;if MS-DOS
-	  (progn
-	    (message (format "Calling `%s'..." command))
-	    (YaTeX-put-nonstopmode)
-	    (call-process shell-file-name
-			  nil buffer nil "/c" command)
-	    (YaTeX-remove-nonstopmode))
-	(setq YaTeX-typeset-process	;if UNIX
-	      (start-process "LaTeX" buffer shell-file-name "-c"
-			     command))
+  (save-excursion
+    (let ((p (point)) (window (selected-window)) execdir)
+      (if (and YaTeX-typeset-process
+	       (eq (process-status YaTeX-typeset-process) 'run))
+	  ;; if tex command is halting.
+	  (YaTeX-kill-typeset-process YaTeX-typeset-process))
+      (YaTeX-visit-main t);;execution directory
+      (setq execdir default-directory)
+      ;;Select lower-most window if there are more than 2 windows and
+      ;;typeset buffer not seen.
+      (YaTeX-showup-buffer
+       buffer (function (lambda (x) (nth 3 (window-edges x)))))
+      (set-buffer (get-buffer-create buffer))
+      (setq default-directory execdir)
+      (cd execdir)
+      (erase-buffer)
+      (cond
+       (YaTeX-dos			;if MS-DOS
+	(YaTeX-put-nonstopmode)
+	(call-process shell-file-name nil buffer nil "/c" command)
+	(YaTeX-remove-nonstopmode))
+       (t				;if UNIX
+	(set-process-buffer
+	 (setq YaTeX-typeset-process
+	       (start-process "LaTeX" buffer shell-file-name "-c" command))
+	 (get-buffer buffer))
 	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)))
-    (setq YaTeX-current-TeX-buffer (buffer-name))
-    (select-window (get-buffer-window buffer))
-    (use-local-map YaTeX-typesetting-mode-map)
-    (set-syntax-table YaTeX-typeset-buffer-syntax)
-    (setq mode-name "typeset")
-    (if YaTeX-typeset-process		; if process is running (maybe on UNIX)
-	(cond ((boundp 'MULE)
-	       (set-current-process-coding-system
-		YaTeX-latex-message-code YaTeX-coding-system))
-	      ((boundp 'NEMACS)
-	       (set-kanji-process-code YaTeX-latex-message-code))))
-    (goto-char (point-max))
-    (if YaTeX-dos (message "Done.")
-      (insert " ")
-      (set-marker (process-mark YaTeX-typeset-process) (1- (point))))
-    (if (bolp) (forward-line -1))
-    (recenter -1)
-    (select-window window))
+      (message (format "Calling `%s'..." command))
+      (setq YaTeX-current-TeX-buffer (buffer-name))
+      (use-local-map YaTeX-typesetting-mode-map)
+      (set-syntax-table YaTeX-typeset-buffer-syntax)
+      (setq mode-name "typeset")
+      (if YaTeX-typeset-process		; if process is running (maybe on UNIX)
+	  (cond ((boundp 'MULE)
+		 (set-current-process-coding-system
+		  YaTeX-latex-message-code YaTeX-coding-system))
+		((boundp 'NEMACS)
+		 (set-kanji-process-code YaTeX-latex-message-code))))
+      (if YaTeX-dos (message "Done.")
+	(insert " ")
+	(set-marker (process-mark YaTeX-typeset-process) (1- (point))))
+      (if (bolp) (forward-line -1))	;what for?
+      (if YaTeX-emacs-19
+	  (let ((win (get-buffer-window buffer t)) owin)
+	    (select-frame (window-frame win))
+	    (setq owin (selected-window))
+	    (select-window win)
+	    (goto-char (point-max))
+	    (recenter -1)
+	    (select-window owin))
+	(select-window (get-buffer-window buffer))
+	(goto-char (point-max))
+	(recenter -1))
+      (select-window window)))
 )
 
 (defun YaTeX-typeset-sentinel (proc mes)
@@ -99,7 +113,9 @@
                  (setq mode-line-process
                        (concat ": "
                                (symbol-name (process-status proc))))
-		 (message "latex typesetting done.")
+		 (message "latex typesetting %s."
+			  (if (eq (process-status proc) 'exit)
+			      "done" "ceased"))
                  ;; If buffer and mode line shows that the process
                  ;; is dead, we can delete it now.  Otherwise it
                  ;; will stay around until M-x list-processes.
@@ -135,6 +151,7 @@ operation to the region."
 	((end "") typeout ;Type out message that tells the method of cutting.
 	 (cmd (concat (YaTeX-get-latex-command nil) " " YaTeX-texput-file))
 	 (buffer (current-buffer)) opoint preamble (subpreamble "") main
+	 (hilit-auto-highlight nil)	;for Emacs19 with hilit19
 	 reg-begin reg-end)
 
       (save-excursion
@@ -282,10 +299,13 @@ PROC should be process identifier."
   (save-excursion
     (YaTeX-showup-buffer
      buffer (function (lambda (x) (nth 3 (window-edges x)))))
-    (with-output-to-temp-buffer buffer
-      (if YaTeX-dos
-	  (call-process shell-file-name nil buffer nil "/c " command)
-	(start-process "system" buffer shell-file-name "-c" command))))
+    (set-buffer (get-buffer-create buffer))
+    (erase-buffer)
+    (if YaTeX-dos
+	(call-process shell-file-name nil buffer nil "/c " command)
+      (set-process-buffer
+       (start-process "system" buffer shell-file-name "-c" command)
+       (get-buffer buffer))))
 )
 
 (defvar YaTeX-preview-command-history nil
@@ -313,18 +333,23 @@ PROC should be process identifier."
     (let ((pbuffer "*dvi-preview*"))
       (YaTeX-showup-buffer
        pbuffer (function (lambda (x) (nth 3 (window-edges x)))))
-      (with-output-to-temp-buffer pbuffer
-	(if YaTeX-dos			;if MS-DOS
-	    (progn (send-string-to-terminal "\e[2J\e[>5h") ;CLS & hide cursor
-		   (call-process shell-file-name "con" "*dvi-preview*" nil
-				 "/c " preview-command preview-file)
-		   (send-string-to-terminal "\e[>5l") ;show cursor
-		   (redraw-display))
-	  (start-process "preview" "*dvi-preview*" shell-file-name "-c"
-			 (concat preview-command " " preview-file)) ;if UNIX
-	  (message
-	   (concat "Starting " preview-command
-		   " to preview " preview-file))))))
+      (set-buffer (get-buffer-create pbuffer))
+      (erase-buffer)
+      (cond
+       (YaTeX-dos			;if MS-DOS
+	(send-string-to-terminal "\e[2J\e[>5h") ;CLS & hide cursor
+	(call-process shell-file-name "con" "*dvi-preview*" nil
+		      "/c " preview-command preview-file)
+	(send-string-to-terminal "\e[>5l") ;show cursor
+	(redraw-display))
+       (t				;if UNIX
+	(set-process-buffer
+	 (start-process "preview" "*dvi-preview*" shell-file-name "-c"
+			(concat preview-command " " preview-file))
+	 (get-buffer pbuffer))
+	(message
+	 (concat "Starting " preview-command
+		 " to preview " preview-file))))))
 )
 
 (defun YaTeX-prev-error ()
@@ -382,7 +407,7 @@ error or warning lines in reverse order."
   (let (error-line error-file error-buf)
     (save-excursion
       (beginning-of-line)
-      (setq error-line (re-search-forward "l[ ines]*\\.\\([1-9][0-9]*\\)"
+      (setq error-line (re-search-forward "l[ ines]*\\.?\\([1-9][0-9]*\\)"
 					  (point-end-of-line) t)))
     (if (null error-line)
 	(if (eobp) (insert (this-command-keys))
@@ -423,9 +448,11 @@ error or warning lines in reverse order."
       (message "No typeset buffer found.")
     (let ((win (selected-window)))
       (YaTeX-showup-buffer YaTeX-typeset-buffer nil t)
-      (goto-char (point-max))
-      (forward-line -1)
-      (recenter -1)
+      ;; Next 3 lines are obsolete because YaTeX-typesetting-buffer is
+      ;; automatically scrolled up at typesetting.
+      ;;(goto-char (point-max))
+      ;;(forward-line -1)
+      ;;(recenter -1)
       (select-window win)))
 )
 
@@ -563,14 +590,18 @@ page range description."
       (YaTeX-visit-main t) ;;change execution directory
       (YaTeX-showup-buffer
        lbuffer (function (lambda (x) (nth 3 (window-edges x)))))
-      (with-output-to-temp-buffer lbuffer
-	(if YaTeX-dos
-	    (call-process shell-file-name "con" "*dvi-printing*" nil
-			  "/c " cmd)
-	  (start-process "print" "*dvi-printing*" shell-file-name "-c" cmd)
-	  (message (concat "Starting " cmd " to printing "
-			   (YaTeX-get-preview-file-name))))
-    )))
+      (set-buffer (get-buffer-create lbuffer))
+      (erase-buffer)
+      (cond
+       (YaTeX-dos
+	(call-process shell-file-name "con" "*dvi-printing*" nil "/c " cmd))
+       (t
+	(set-process-buffer
+	 (start-process "print" "*dvi-printing*" shell-file-name "-c" cmd)
+	 (get-buffer lbuffer))
+	(message (concat "Starting " cmd " to printing "
+			 (YaTeX-get-preview-file-name)))))
+    ))
 )
 
 (defun YaTeX-main-file-p ()

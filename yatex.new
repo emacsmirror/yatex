@@ -1,6 +1,12 @@
 	Yet Another tex-mode for Emacs
 	yatex.el 各バージョンの変更点について。
 
+1.52	外部プロセス用テンポラリバッファが別frameにある時には現frameにテ
+	ンポラリバッファをpopupしないようにした。
+	Hilightening に独自のタグを導入し、reverseVideo がON/OFFの時両方
+	に対応した。
+	Emacs-19で新単語の更新がうまくいかなかったのを直した。
+
 1.51	メニューバーへのメニュー登録。
 	YaTeX-fill-item(C-c C-i) と YaTeX-indent-line (C-i)が賢くなった。
 	hilit19をロードしておくとセクション区切りが目立つように色が付く。

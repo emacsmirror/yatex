@@ -2,7 +2,7 @@
 ;;; YaTeX library of general functions.
 ;;; yatexlib.el
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Sep 16 01:50:34 1994 on figaro
+;;; Last modified Mon Oct 10 22:14:14 1994 on VFR
 ;;; $Id$
 
 ;;;###autoload
@@ -123,9 +123,25 @@ corresponding real arguments ARGS."
 that gives the maximum value by the FUNC.  FUNC should take an argument
 of its window object.  Non-nil for optional third argument SELECT selects
 that window."
-  (or (and (get-buffer-window buffer)
-	   (progn (if select (select-window (get-buffer-window buffer)))
-		  t))
+  (or (and (if YaTeX-emacs-19
+	       (get-buffer-window buffer t)
+	     (get-buffer-window buffer))
+	   (progn
+	     (if select
+		 (cond
+		  (YaTeX-emacs-19
+		   (let ((frame (window-frame (get-buffer-window buffer t))))
+		     (select-frame frame)
+		     (focus-frame frame)
+		     (set-mouse-position frame 0 0)
+		     (raise-frame frame)
+		     (select-window (get-buffer-window buffer))
+		     (if (and (featurep 'windows)
+			      (win:frame-window frame))
+			 (win:adjust-window))))
+		  (t
+		   (select-window (get-buffer-window buffer)))))
+	     t))
       (let ((window (selected-window))
 	    (wlist (YaTeX-window-list)) win w (x 0))
 	(cond
@@ -147,6 +163,8 @@ that window."
 	  (or select (select-window window)))
 	 (t				;if one-window
 	  (cond
+	   ((and YaTeX-emacs-19 (get-buffer-window buffer t))
+	    nil)			;if found in other frame
 	   (YaTeX-default-pop-window-height
 	    (split-window
 	     (selected-window)
@@ -182,7 +200,7 @@ defined as OLDDEF. In other words, OLDDEF is replaced with NEWDEF
 where ever it appears."
   (mapcar
    (function (lambda (key) (define-key keymap key newdef)))
-   (where-is-internal olddef))
+   (where-is-internal olddef keymap))
 )
 
 ;;;###autoload
