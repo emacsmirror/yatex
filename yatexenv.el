@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c ) 1994-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Apr  7 15:19:05 1997 on crx
+;;; Last modified Wed Jun 25 21:30:45 1997 on domani
 ;;; $Id$
 
 ;;;
@@ -188,6 +188,12 @@ Return the list of (No.ofCols PointEndofFormat)"
   (YaTeX-indent-line)
 )
 
+(defun YaTeX-intelligent-newline-thebibliography ()
+  "Insert '\\bibitem '."
+  (YaTeX-indent-line)
+  (YaTeX-make-section nil nil nil "bibitem")
+  (YaTeX-indent-line)
+)
 
 ;;;
 ;; Intelligent newline

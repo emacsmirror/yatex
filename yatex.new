@@ -1,6 +1,27 @@
 	What's new in YaTeX
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.65	yahtmlのお任せ改行のバグフィクス。
+	a, body, img タグのオプション引数入力アドインの強化。
+	section型マクロの第一引数が改行によって分断されていても正しく
+	hilitするようにした。
+	yahtmlの行インデント関数の高速化。カレント行がタグで始まらないと
+	きは直前の非空行のインデントを真似するようにした。副作用あるかも。
+	thebibliography環境でitemize系インデントが効いていなかったのを修正。
+	GNU Emacs 20 対応(by竹中さん&me)。
+	XEmacs 20 対応。
+	yahtmlパッケージの独立性強化。
+	[prefix] k で環境を消したときはkill-ringに追加するようにした。
+	yahtml-hate-too-deep-indentation がtのときにインデントが浅くなり
+	すぎるのを修正。
+	href 補完の http:// ヒストリを .mosaic-global-history から取るの
+	を廃止し、ユーザ辞書に登録するようにした。
+	yahtmlの [prefix] p で <p></p> が出るようにした。
+	yahtmlのおまかせ改行で、yahtml-p-prefered-env-regexp にマッチす
+	るタグ環境内のときは<p></p>を自動挿入するようにした。
+	YaTeX-fill-prefix, yahtml-fill-prefix(新設)のデフォルトをnilに。
+	YaTeX-template-file, yahtml-template-file を新規ファイルに挿入。
+
 1.64	yahtmlを起動するとYaTeXで [prefix] Bc が<center>などになってしま
 	うのを修正。
 	NTT-jTeX が t のときにfillがうまく行かないことがあるのを修正。
@@ -20,14 +41,14 @@
 	\のあとに{を入れたときは\}を入れるようにした。
 	yahtmlでブラウザにIEを指定したときの不具合を修正。
 
-1.62	\ref の引数が二行に渡る時行末に%を付けるようにした
-	yahtmlでおまかせ改行が不必要に起動するのを修正
-	href の補完文字列に # が含まれる時は name を補完
+1.62	\ref の引数が二行に渡る時行末に%を付けるようにした。
+	yahtmlでおまかせ改行が不必要に起動するのを修正。
+	href の補完文字列に # が含まれる時は name を補完。
 	\epsfile{file=foo.eps} などで [prefix] g した場合、foo.epsの元絵
-	を編集しているお絵書きソフトを起動するようにした
-	yahtmlで [prefix] a で &lt などが入るようにした
-	verbatim環境の [prefix] g がうまく飛ばなかったのを修正
-	sectionのオプション引数をつけた時の色づけが無効だったのを修正
+	を編集しているお絵書きソフトを起動するようにした。
+	yahtmlで [prefix] a で &lt などが入るようにした。
+	verbatim環境の [prefix] g がうまく飛ばなかったのを修正。
+	sectionのオプション引数をつけた時の色づけが無効だったのを修正。
 
 1.61	AMS-LaTeX 対応
 	xdvi -remote によるサーチに対応 [prefix] t s

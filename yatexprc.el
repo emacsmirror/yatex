@@ -2,10 +2,11 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Jan 27 10:22:06 1997 on crx
+;;; Last modified Thu Dec 11 16:16:21 1997 on crx
 ;;; $Id$
 
-(require 'yatex)
+;(require 'yatex)
+(require 'yatexlib)
 
 (defvar YaTeX-typeset-process nil
   "Process identifier for jlatex"
@@ -24,6 +25,18 @@
       (if YaTeX-dos "/c" "-c"))
   "Shell option for command execution.")
 
+(defvar YaTeX-latex-message-code
+  (cond
+   (YaTeX-dos (cdr (assq 1 YaTeX-kanji-code-alist)))
+   ((and YaTeX-emacs-20 (member 'undecided (coding-system-list))
+	 'undecided))
+   ((featurep 'mule)
+    (or (and (boundp '*autoconv*) *autoconv*)
+	(and (fboundp 'coding-system-list) 'automatic-conversion)))
+   ((boundp 'NEMACS)
+    (cdr (assq (if YaTeX-dos 1 2) YaTeX-kanji-code-alist))))
+  "Process coding system for LaTeX.")
+
 (if YaTeX-typeset-buffer-syntax nil
   (setq YaTeX-typeset-buffer-syntax
 	(make-syntax-table (standard-syntax-table)))
@@ -38,7 +51,10 @@
   (interactive)
   (save-excursion
     (let ((p (point)) (window (selected-window)) execdir (cb (current-buffer))
-	  (map YaTeX-typesetting-mode-map))
+	  (map YaTeX-typesetting-mode-map)
+	  (outcode
+	   (cond ((eq major-mode 'yatex-mode) YaTeX-coding-system)
+		 ((eq major-mode 'yahtml-mode) yahtml-coding-system))))
       (if (and YaTeX-typeset-process
 	       (eq (process-status YaTeX-typeset-process) 'run))
 	  ;; if tex command is halting.
@@ -57,12 +73,9 @@
       (cd execdir)
       (erase-buffer)
       (cond
-       (YaTeX-dos			;if MS-DOS
-	;(YaTeX-put-nonstopmode)
+       ((not (fboundp 'start-process)) ;YaTeX-dos;if MS-DOS
 	(call-process
-	 shell-file-name nil buffer nil YaTeX-shell-command-option command)
-	;(YaTeX-remove-nonstopmode)
-	)
+	 shell-file-name nil buffer nil YaTeX-shell-command-option command))
        (t				;if UNIX
 	(set-process-buffer
 	 (setq YaTeX-typeset-process
@@ -76,9 +89,15 @@
       (set-syntax-table YaTeX-typeset-buffer-syntax)
       (setq mode-name modename)
       (if YaTeX-typeset-process		;if process is running (maybe on UNIX)
-	  (cond ((boundp 'MULE)
+	  (cond ((fboundp 'set-current-process-coding-system)
 		 (set-current-process-coding-system
-		  YaTeX-latex-message-code YaTeX-coding-system))
+		  YaTeX-latex-message-code outcode))
+		((fboundp 'set-process-coding-system)
+		 (set-process-coding-system
+		  YaTeX-typeset-process YaTeX-latex-message-code outcode))
+		(YaTeX-emacs-20
+		 (set-buffer-process-coding-system
+		  YaTeX-latex-message-code outcode))
 		((boundp 'NEMACS)
 		 (set-kanji-process-code YaTeX-latex-message-code))))
       (if YaTeX-dos (message "Done.")
@@ -213,7 +232,7 @@ operation to the region."
 	(set-buffer (find-file-noselect texput)))
       ;;(find-file YaTeX-texput-file)
       (erase-buffer)
-      (if YaTeX-need-nonstop
+      (if (and (eq major-mode 'yatex-mode) YaTeX-need-nonstop)
 	  (insert "\\nonstopmode{}\n"))
       (insert preamble "\n" subpreamble "\n")
       (setq lineinfo (list (count-lines 1 (point-end-of-line)) lineinfo))
@@ -340,7 +359,7 @@ PROC should be process identifier."
       (setq default-directory df)
       (cd df))
     (erase-buffer)
-    (if YaTeX-dos
+    (if (not (fboundp 'start-process))
 	(call-process
 	 shell-file-name nil buffer nil YaTeX-shell-command-option command)
       (if (and (get-buffer-process buffer)
@@ -386,7 +405,7 @@ PROC should be process identifier."
       (setq default-directory dir)	;for 18
       (cd dir)				;for 19
       (cond
-       (YaTeX-dos			;if MS-DOS
+       ((not (fboundp 'start-process))	;if MS-DOS
 	(send-string-to-terminal "\e[2J\e[>5h") ;CLS & hide cursor
 	(call-process shell-file-name "con" "*dvi-preview*" nil
 		      YaTeX-shell-command-option
@@ -573,7 +592,7 @@ error or warning lines in reverse order."
 )
       
 (defun YaTeX-put-nonstopmode ()
-  (if (and YaTeX-need-nonstop (eq major-mode 'yatex-mode))
+  (if (and (eq major-mode 'yatex-mode) YaTeX-need-nonstop)
       (if (re-search-backward "\\\\nonstopmode{}" (point-min) t)
 	  nil                    ;if already written in text then do nothing
 	(save-excursion
@@ -585,7 +604,7 @@ error or warning lines in reverse order."
 )
 
 (defun YaTeX-remove-nonstopmode ()
-  (if (and YaTeX-need-nonstop (eq major-mode 'yatex-mode)) ;for speed
+  (if (and (eq major-mode 'yatex-mode) YaTeX-need-nonstop) ;for speed
       (save-excursion
 	(YaTeX-visit-main t)
 	(goto-char (point-min))
@@ -692,7 +711,7 @@ page range description."
       (erase-buffer)
       (cd dir)				;for 19
       (cond
-       (YaTeX-dos
+       ((not (fboundp 'start-process))
 	(call-process shell-file-name "con" "*dvi-printing*" nil
 		      YaTeX-shell-command-option cmd))
        (t

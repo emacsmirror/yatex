@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c )1994-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Feb 14 13:52:54 1997 on supra
+;;; Last modified Sun Dec 14 21:51:14 1997 on firestorm
 ;;; $Id$
 
 ;;; とりあえず hilit19 を使っている時に色が付くようにして
@@ -9,146 +9,117 @@
 ;;; いったい誰がメニューバー使ってLaTeXソース書くんだろうか?
 ;;; まあいいや練習練習。後ろの方にちょっとコメントあり。
 ;;; 真中辺にあるけど、hilit19.el 対応の方は結構本気。
+;;; とかいってるうちに hilit19 って obsolete になってしまった…
 
-(require 'yatex)
+;(require 'yatex)
 
-(defun YaTeX-19-define-sub-menu (map vec &rest bindings)
-  "Define sub-menu-item in MAP at vector VEC as BINDINGS.
-BINDINGS is a form with optional length: (symbol title binding).
-When you defined menu-bar keymap such like:
-  (define-key foo-map [menu-bar foo] (make-sparse-keymap \"foo menu\"))
-and you want to define sub menu for `foo menu' as followings.
-  foo ->  menu1  (calling function `func1')
-          menu2  (doing interactive call `(func2 ...)'
-Call this function like this:
-  (YaTeX-19-define-sub-menu foo-map [menu-bar foo]
-   '(m1 \"Function 1\" func1)
-   '(m2 \"Function 2\" (lambda () (interactive) (func2 ...))))
-where
-  `m1' and `m2' are the keymap symbol for sub-menu of `[menu-bar foo].
-  `Funtion 1' and `Function 2' are the title strings for sub-menu.
-"
-  (let ((i 0) (vec2 (make-vector (1+ (length vec)) nil)))
-    (while (< i (length vec))
-      (aset vec2 i (aref vec i))
-      (setq i (1+ i)))
-    (setq bindings (reverse bindings))
-    (mapcar
-     (function
-      (lambda (bind)
-	(aset vec2 (1- (length vec2)) (car bind)) ;set menu-symbol
-	(define-key map vec2
-	  (cons (car (cdr bind))
-		(car (cdr (cdr bind)))))))
-     bindings)))
-
-;; Menu for Typeset relating processes ----------------------------------------
+(defvar YaTeX-mode-menu-map (make-sparse-keymap "YaTeX"))
+(defvar YaTeX-mode-menu-map-process (make-sparse-keymap "Process"))
 (define-key YaTeX-mode-map [menu-bar yatex]
-  (cons "YaTeX" (make-sparse-keymap "YaTeX")))
-(define-key YaTeX-mode-map [menu-bar yatex process]
-  (cons "Process" (make-sparse-keymap "Process")))
-(YaTeX-19-define-sub-menu
- YaTeX-mode-map [menu-bar yatex process]
- '(buffer "LaTeX" (lambda () (interactive) (YaTeX-typeset-menu nil ?j)))
- '(kill "Kill LaTeX" (lambda () (interactive) (YaTeX-typeset-menu nil ?k)))
- '(bibtex "BibTeX" (lambda () (interactive) (YaTeX-typeset-menu nil ?b)))
- '(makeindex "makeindex" (lambda () (interactive) (YaTeX-typeset-menu nil ?i)))
- '(preview "Preview" (lambda () (interactive) (YaTeX-typeset-menu nil ?p)))
- '(lpr "lpr" (lambda () (interactive) (YaTeX-typeset-menu nil ?l)))
- '(lpq "lpq" (lambda () (interactive) (YaTeX-typeset-menu nil ?q)))
-)
+  (cons "YaTeX" YaTeX-mode-menu-map))
+(YaTeX-define-menu
+ 'YaTeX-mode-menu-map-process
+ (nreverse
+ '((buffer "LaTeX" . (lambda () (interactive) (YaTeX-typeset-menu nil ?j)))
+   (kill "Kill LaTeX" . (lambda () (interactive) (YaTeX-typeset-menu nil ?k)))
+   (bibtex "BibTeX" . (lambda () (interactive) (YaTeX-typeset-menu nil ?b)))
+   (mindex "makeindex" . (lambda () (interactive) (YaTeX-typeset-menu nil ?i)))
+   (preview "Preview" . (lambda () (interactive) (YaTeX-typeset-menu nil ?p)))
+   (lpr "lpr" . (lambda () (interactive) (YaTeX-typeset-menu nil ?l)))
+   (lpq "lpq" . (lambda () (interactive) (YaTeX-typeset-menu nil ?q))))))
+(defvar YaTeX-mode-menu-map-modes (make-sparse-keymap "Modes"))
+(YaTeX-define-menu
+ 'YaTeX-mode-menu-map-modes
+ (delq nil
+       (nreverse
+	(list
+	 (if YaTeX-auto-math-mode nil
+	   (cons 'math (cons "Toggle math-mode"
+			     '(lambda () (interactive)
+				(YaTeX-switch-mode-menu nil ?t)))))
+	 (cons 'mod (cons "Toggle Modify Mode"
+			  '(lambda () (interactive)
+			     (YaTeX-switch-mode-menu nil ?m))))))))
+(defvar YaTeX-mode-menu-map-percent (make-sparse-keymap "percent"))
+(YaTeX-define-menu
+ 'YaTeX-mode-menu-map-percent
+ (nreverse
+  '((!		"Change LaTeX typesetter(%#!)"
+		. (lambda () (interactive) (YaTeX-%-menu nil nil ?!)))
+    (begend	"Set %#BEGIN-%#END on region"
+		. (lambda () (interactive) (YaTeX-%-menu nil nil ?b)))
+    (lpr 	"Change LPR format"
+		. (lambda () (interactive) (YaTeX-%-menu nil nil ?l))))))
 
-;; Help for LaTeX ------------------------------------------------------------
-(YaTeX-19-define-sub-menu
- YaTeX-mode-map [menu-bar yatex]
- '(sephelp	"--")
- '(help		"Help on LaTeX commands" YaTeX-help)
- '(apropos	"Apropos on LaTeX commands" YaTeX-apropos))
+(defvar YaTeX-mode-menu-map-jump (make-sparse-keymap "jump"))
+(YaTeX-define-menu
+ 'YaTeX-mode-menu-map-jump
+ (nreverse
+ '((corres     "Goto corersponding position" . YaTeX-goto-corresponding-*)
+   (main      "Visit main source"
+	      . (lambda () (interactive) (YaTeX-visit-main)))
+   (main-other "Visit main source other window"
+	       . YaTeX-visit-main-other-window))))
 
-;; Switch modes --------------------------------------------------------------
-(define-key YaTeX-mode-map [menu-bar yatex switch]
-  (cons "Switching YaTeX's modes" (make-sparse-keymap "modes")))
-(or YaTeX-auto-math-mode
-    (define-key YaTeX-mode-map [menu-bar yatex switch math]
-      '("Toggle math mode" . (lambda () (interactive)
-			       (YaTeX-switch-mode-menu nil ?t)))))
-(define-key YaTeX-mode-map [menu-bar yatex switch mod]
-  '("Toggle modify mode" . (lambda () (interactive)
-			     (YaTeX-switch-mode-menu nil ?m))))
+(defvar YaTeX-mode-menu-map-comment (make-sparse-keymap "comment"))
+(YaTeX-define-menu
+ 'YaTeX-mode-menu-map-comment
+ (nreverse
+  '((comment	"Comment region or environment" . YaTeX-comment-region)
+    (uncomment	"Unomment region or environment" . YaTeX-uncomment-region)
+    (commentp	"Comment paragraph" . YaTeX-comment-paragraph)
+    (uncommentp	"Uncomment paragraph" . YaTeX-uncomment-paragraph))))
 
-;; % menu --------------------------------------------------------------------
-(define-key YaTeX-mode-map [menu-bar yatex percent]
-  (cons "Edit %# notation" (make-sparse-keymap "Edit %# notation")))
-(YaTeX-19-define-sub-menu
- YaTeX-mode-map [menu-bar yatex percent]
- '(!		"Change LaTeX typesetter(%#!)"
-	(lambda () (interactive) (YaTeX-%-menu nil nil ?!)))
- '(begend	"Set %#BEGIN-%#END on region"
-	(lambda () (interactive) (YaTeX-%-menu nil nil ?b)))
- '(lpr 		"Change LPR format"
-	(lambda () (interactive) (YaTeX-%-menu nil nil ?l))))
+(YaTeX-define-menu
+ 'YaTeX-mode-menu-map
+ (nreverse
+  (list
+   ;; Change/Kill/Fill -------------------------------------------------------
+   (cons (list 'chg "Change") (cons "Change macros"  'YaTeX-change-*))
+   (cons (list 'kill "Kill") (cons "Kill macros"  'YaTeX-kill-*))
+   (cons (list 'fill "Fill") (cons "Fill \\item"  'YaTeX-fill-item))
+   (cons (list 'nl "Newline") (cons "Newline"  'YaTeX-intelligent-newline))
+   ;; ========================================================================
+   (cons (list 'sep1 "---") (cons "---" nil))
+   ;; Comment/Uncomment ------------------------------------------------------
+   (cons (list 'comment "comment") (cons "Comment region or environment"
+					 'YaTeX-comment-region))
+   (cons (list 'uncomment "uncomment") (cons "Uncomment region or environment"
+					     'YaTeX-uncomment-region))
+   (cons (list 'commentp "commentp") (cons "Comment paragraph"
+					   'YaTeX-comment-paragraph))
+   (cons (list 'uncommentp "uncommentp") (cons "Uncomment paragraph"
+					       'YaTeX-uncomment-paragraph))
+   ;; ========================================================================
+   (cons (list 'sep2 "---") (cons "---" nil))
+   ;; Jump cursor ------------------------------------------------------------
+   (cons (list 'jump "jump") (cons "Jump Cursor" YaTeX-mode-menu-map-jump))
+   ;; Document hierarchy  ---------------------------------------------------
+   (cons (list 'hier "hier") (cons "Display Document hierarchy"
+				    'YaTeX-display-hierarchy))
+   ;; What position ----------------------------------------------------------
+   (cons (list 'col "column") (cons "What column in tabular"
+				    'YaTeX-what-column))
+   ;; % menu -----------------------------------------------------------------
+   (cons (list 'percent "percent") (cons "Edit %# notation"
+				   YaTeX-mode-menu-map-percent))
+   ;; Switch modes -----------------------------------------------------------
+   (cons (list 'mode "mode") (cons "Switching YaTeX's modes"
+				   YaTeX-mode-menu-map-modes))
+   ;; ========================================================================
+   (cons (list 'sep "---") (cons "---" nil))
+   ;; Help for LaTeX ---------------------------------------------------------
+   (cons (list 'ap "apr") (cons "Apropos on LaTeX commands" 'YaTeX-apropos))
+   (cons (list 'help "help") (cons "Help on LaTeX commands" 'YaTeX-help))
+   ;; Menu for Typeset relating processes ------------------------------------
+   (cons (list 'process "Process menu")
+	 (cons "Process" YaTeX-mode-menu-map-process)))
+))
 
-;; What position -------------------------------------------------------------
-(YaTeX-19-define-sub-menu
- YaTeX-mode-map [menu-bar yatex]
- '(what "What column in tabular" YaTeX-what-column))
-
-;; Document hierarchy  ------------------------------------------------------
-(YaTeX-19-define-sub-menu
- YaTeX-mode-map [menu-bar yatex]
- '(hier "Display document hierarchy" YaTeX-display-hierarchy-directly))
-
-;; Jump cursor ---------------------------------------------------------------
-(define-key YaTeX-mode-map [menu-bar yatex jump]
-  (cons "Jump cursor"
-	 (make-sparse-keymap "Jump cursor")))
-(YaTeX-19-define-sub-menu
- YaTeX-mode-map [menu-bar yatex jump]
- '(corres     "Goto corersponding position" YaTeX-goto-corresponding-*)
- '(main	      "Visit main source" (lambda () (interactive) (YaTeX-visit-main)))
- '(main-other "Visit main source other window" YaTeX-visit-main-other-window)
- )
-
-;; ===========================================================================
-(define-key YaTeX-mode-map [menu-bar yatex sepcom]
-  '("---" . nil))
-
-;; Comment/Uncomment ---------------------------------------------------------
-(YaTeX-19-define-sub-menu
- YaTeX-mode-map [menu-bar yatex]
- '(comment	"Comment region or environment" YaTeX-comment-region)
- '(uncomment	"Unomment region or environment" YaTeX-uncomment-region)
- '(commentp	"Comment paragraph" YaTeX-comment-paragraph)
- '(uncommentp	"Uncomment paragraph" YaTeX-uncomment-paragraph)
- '(sepcom	"--"	nil)
-)
-
-
-;; ===========================================================================
-;; Change/Kill/Fill
-(YaTeX-19-define-sub-menu
- YaTeX-mode-map [menu-bar yatex]
- '(change	"Change macros"	YaTeX-change-*)
- '(kill 	"Kill macros"	YaTeX-kill-*)
- '(fillitem	"Fill \\item"	YaTeX-fill-item)
- '(newline	"Newline"	YaTeX-intelligent-newline)
- '(sepchg	"--" nil)
-)
-
-;; Menu for completions ------------------------------------------------------
-
-
-;;;(YaTeX-19-define-sub-menu
-;;; YaTeX-mode-map [menu-bar yatex]
-;;; '(secr "Section-type command on region" YaTeX-make-section-region)
-;;; '(sec  "Section-type command" YaTeX-make-section))
-
-(define-key YaTeX-mode-map [menu-bar yatex sectionr]
-  (cons "Section-type region(long name)"
-	(make-sparse-keymap "Enclose region with section-type macro")))
-(define-key YaTeX-mode-map [menu-bar yatex section]
-  (cons "Section-type(long name)"
-	(make-sparse-keymap "Section-type macro")))
+;; Make section-type commands menu -------------------------------------------
+(defvar YaTeX-mode-menu-map-sectionr
+      (make-sparse-keymap "Enclose region with section-type macro"))
+(defvar YaTeX-mode-menu-map-section (make-sparse-keymap "Section-type macro"))
 (let ((sorted-section
        (sort
 	(delq nil
@@ -157,56 +128,91 @@ where
 				      (car s))))
 		      (append section-table user-section-table)))
 	'string<)))
-  (apply 'YaTeX-19-define-sub-menu
-	 YaTeX-mode-map [menu-bar yatex section]
-	 (mapcar (function (lambda (secname)
-			     (list (intern secname) secname
-				   (list 'lambda ()
-					 (list 'interactive)
-					 (list 'YaTeX-make-section
-					       nil nil nil secname)))))
-		 sorted-section))
-  (apply 'YaTeX-19-define-sub-menu
-	 YaTeX-mode-map [menu-bar yatex sectionr]
-	 (mapcar (function (lambda (secname)
-			     (list (intern secname) secname
-				   (list 'lambda ()
-					 (list 'interactive)
-					 (list 'YaTeX-make-section
-					       nil
-					       (list 'region-beginning)
-					       (list 'region-end)
-					       secname)))))
-		 sorted-section)))
+  (YaTeX-define-menu
+   'YaTeX-mode-menu-map-section
+   (mapcar
+    (function (lambda (secname)
+		(cons (intern secname)
+		      (cons secname
+			    (list 'lambda ()
+				  (list 'interactive)
+				  (list 'YaTeX-make-section
+					nil nil nil
+					secname))))))
+    sorted-section))
+  (YaTeX-define-menu
+   'YaTeX-mode-menu-map-sectionr
+   (mapcar 
+    (function (lambda (secname)
+		(cons (intern secname)
+		      (cons secname
+			    (list 'lambda ()
+				  (list 'interactive)
+				  (list 'YaTeX-make-section
+					nil
+					(list 'region-beginning)
+					(list 'region-end)
+					secname))))))
+    sorted-section)))
 
-(define-key YaTeX-mode-map [menu-bar yatex envr]
-  (cons "Environment region" (make-sparse-keymap "Environment region")))
-(define-key YaTeX-mode-map [menu-bar yatex env]
-  (cons "Environment" (make-sparse-keymap "Environment")))
-(let (prev envname)
-  (mapcar
-   (function
-    (lambda (envalist)
-      (setq envname (car envalist))
-      (define-key-after
-	(lookup-key YaTeX-mode-map [menu-bar yatex env])
-	(vector (intern envname))
-	(cons envname
-	      (list 'lambda () (list 'interactive)
-		    (list 'YaTeX-insert-begin-end
-			  envname nil)))
-	prev)
-      (define-key-after
-	(lookup-key YaTeX-mode-map [menu-bar yatex envr])
-	(vector (intern envname))
-	(cons envname
-	      (list 'lambda () (list 'interactive)
-		    (list 'YaTeX-insert-begin-end
-			  envname t)))
-	prev)
-      (setq prev (intern envname))))
-   (sort (append env-table user-env-table)
-	 '(lambda (x y) (string< (car x) (car y))))))
+(YaTeX-define-menu
+ 'YaTeX-mode-menu-map
+ (nreverse
+  (list
+   (cons '(sectionr "Section-type (long name)")
+	 (cons "Section type" YaTeX-mode-menu-map-section))
+   (cons '(section "Section-type region (long name)")
+	 (cons "Section type region (long name)"
+	       YaTeX-mode-menu-map-sectionr)))))
+
+;; Make large-type commands menu ---------------------------------------------
+(defvar YaTeX-mode-menu-map-envr (make-sparse-keymap "Environment region"))
+(defvar YaTeX-mode-menu-map-env (make-sparse-keymap "Environment"))
+
+(let ((sorted-env
+       (sort
+	(mapcar (function (lambda (s) (car s)))
+		(append env-table user-env-table))
+	'string<)))
+  (YaTeX-define-menu
+   'YaTeX-mode-menu-map-env
+   (mapcar
+    (function (lambda (envname)
+		(cons (intern envname)
+		      (cons envname
+			    (list 'lambda ()
+				  (list 'interactive)
+				  (list 'YaTeX-insert-begin-end
+					envname nil))))))
+    sorted-env))
+  (YaTeX-define-menu
+   'YaTeX-mode-menu-map-envr
+   (mapcar 
+    (function (lambda (envname)
+		(cons (intern envname)
+		      (cons envname
+			    (list 'lambda ()
+				  (list 'interactive)
+				  (list 'YaTeX-insert-begin-end
+					envname t))))))
+    sorted-env)))
+(YaTeX-define-menu
+ 'YaTeX-mode-menu-map
+ (nreverse
+  (list
+   (cons '(envr "Environment")
+	 (cons "Environment" YaTeX-mode-menu-map-env))
+   (cons '(env "Environment region")
+	 (cons "Environment region"
+	       YaTeX-mode-menu-map-envr)))))
+
+(and (featurep 'xemacs)
+     (add-hook 'yatex-mode-hook
+	       '(lambda ()
+		  (or (assoc "YaTeX" current-menubar)
+		      (progn
+			(set-buffer-menubar (copy-sequence current-menubar))
+			(add-submenu nil YaTeX-mode-menu-map))))))
 
 ;; Other key bindings for window-system
 ;(YaTeX-define-key [?\C- ] 'YaTeX-do-completion)
@@ -225,10 +231,10 @@ where
   "Return list of starting and end point of section-type commands of PATTERN."
   (if (re-search-forward pattern nil t)
       (let ((m0 (match-beginning 0)) cmd (argc 1))
-	(setq cmd (substring (YaTeX-match-string 0) 1 -1)
+	(setq cmd (substring (YaTeX-match-string 0) 1)
 	      argc (or (car (cdr (YaTeX-lookup-table cmd 'section))) argc))
 	(cons m0
-	      (progn (skip-chars-backward "^{") (forward-char -2)
+	      (progn ;(skip-chars-backward "^{") (forward-char -2)
 		     (while (> argc 0)
 		       (skip-chars-forward "^{")
 		       (forward-list 1)
@@ -264,23 +270,23 @@ Assumes PATTERN begins with `{'."
     ;; comments
     (YaTeX-19-region-comment "\\([^\\]\\|^\\)\\(%\\).*$" comment)
 
-    (YaTeX-19-region-section-type "\\\\footnote\\(mark\\|text\\)?{" keyword)
+    (YaTeX-19-region-section-type "\\\\footnote\\(mark\\|text\\)?\\>" keyword)
     ("\\\\[a-z]+box" 0 keyword)
-    (YaTeX-19-region-section-type "\\\\\\(v\\|h\\)space\\(\*\\)?{" keyword)
+    (YaTeX-19-region-section-type "\\\\\\(v\\|h\\)space\\>" keyword)
 
     ;; (re-)define new commands/environments/counters
     (YaTeX-19-region-section-type
-     "\\\\\\(re\\)?new\\(environment\\|command\\|theorem\\|length\\|counter\\){"
+     "\\\\\\(re\\)?new\\(environment\\|command\\|theorem\\|length\\|counter\\)\\>"
      defun)
     (YaTeX-19-region-section-type
-     "\\\\textbf{" bold)
+     "\\\\textbf\\>" bold)
 
     ;; various declarations/definitions
     (YaTeX-19-region-section-type
-     "\\\\\\(set\\|setto\\|addto\\)\\(length\\|width\\|counter\\){"
+     "\\\\\\(set\\|setto\\|addto\\)\\(length\\|width\\|counter\\)\\>"
      define)
     (YaTeX-19-region-section-type
-     "\\\\\\(title\\|author\\|date\\|thanks\\){" define)
+     "\\\\\\(title\\|author\\|date\\|thanks\\)\\>" define)
 
     ("\\\\document\\(style\\|class\\)\\(\\[.*\\]\\)?{" "}" decl)
     ("\\\\\\(begin\\|end\\|nofiles\\|includeonly\\){" "}" decl)
@@ -295,11 +301,11 @@ Assumes PATTERN begins with `{'."
     ;;this should be customized by YaTeX-item-regexp
     ("\\\\\\(sub\\)*item\\b\\(\\[[^]]*\\]\\)?" 0 label)
     (YaTeX-19-region-section-type
-     "\\\\caption\\(\\[[^]]*\\]\\)?{" label)
+     "\\\\caption\\(\\[[^]]*\\]\\)?\\>" label)
 
     ;; things that do some sort of cross-reference
     (YaTeX-19-region-section-type
-     "\\\\\\(\\(no\\)?cite\\|\\(page\\)?ref\\|label\\|index\\|glossary\\){"
+     "\\\\\\(\\(no\\)?cite\\|\\(page\\)?ref\\|label\\|index\\|glossary\\)\\>"
      crossref)
 
     ;; things that bring in external files
@@ -373,7 +379,9 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 		list YaTeX-sectioning-level)
 	  (while list
 	    (setq pat (concat YaTeX-ec-regexp (car (car list))
-			      "\\*?\\(\\[[^]]*\\]\\)?{")
+			      ;"\\*?\\(\\[[^]]*\\]\\)?\\>"
+			      "\\>"
+			      )
 		  level (cdr (car list))
 		  fg (format "hex-%02x%02x%02x"
 			     (- fR (/ (* level fR fmin) lm 100))
@@ -416,7 +424,7 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 			       (lambda (s) (regexp-quote (car s))))
 			      sect
 			      "\\|")
-			     "\\){")))
+			     "\\)\\>")))
       (if (setq single (append user-singlecmd-table tmp-singlecmd-table))
 	  (setq single (concat "\\\\\\("
 			       (mapconcat
@@ -511,6 +519,7 @@ WARNING, This code is not perfect."
 ;;;       formula 'khaki
 ;;;       label 'yellow-underlined))
 (and YaTeX-emacs-19
+     (not (featurep 'xemacs))
      (boundp 'byte-compile-current-file)
      (if (and (boundp 'window-system) window-system)
 	 (require 'hilit19)

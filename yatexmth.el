@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
-;;; yatexmth.el rev.4
+;;; yatexmth.el
 ;;; (c )1993-1997 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jan 24 18:00:08 1997 on supra
+;;; Last modified Tue Nov 25 12:33:05 1997 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -211,6 +211,7 @@
    ("->"	"rightarrow"	("->"		"Å®"))
    ("\C-f"	"rightarrow"	("->"		"Å®"))
    ("-->"	"longrightarrow" ("-->"		"--Å®"))
+   ("=>"	"Rightarrow"	"=>")
    ("==>"	"Longrightarrow" "==>")
    ("<->"	"leftrightarrow" ("<->"		"Å©Å®"))
    ("<-->"	"longleftrightarrow" ("<---->"	"Å©--Å®"))

@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.13
 ;;; (c )1991-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jan 24 18:00:45 1997 on supra
+;;; Last modified Wed Jun 25 21:21:13 1997 on domani
 ;;; $Id$
 
 ;;;
@@ -138,6 +138,11 @@ YaTeX-make-begin-end."
 (defun YaTeX:minipage ()
   (concat (YaTeX:read-position "cbt")
 	  "{" (read-string "Width: ") "}")
+)
+
+(defun YaTeX:thebibliography ()
+  (setq section-name "bibitem")
+  ""
 )
 
 ;;;
@@ -282,7 +287,7 @@ YaTeX-make-begin-end."
 )
 
 (defun YaTeX:bibitem ()
-  (let ((label (read-string "Citation label: ")))
+  (let ((label (read-string "Citation label for bibitem: ")))
     (if (string= label "") ""
       (concat "[" label "]")))
 )

@@ -277,6 +277,7 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 )
 
 (defvar YaTeX-sectioning-buffer "*Sectioning lines*")
+(defvar YaTeX-sectioning-indent 1)
 (defun YaTeX-colloect-sections ()
   "Collect all the lines which contains sectioning command."
   (let ((cw (selected-window)) level indent begp (prevp 1) (prevl 1)
@@ -296,7 +297,7 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 		begp (match-beginning 0))
 	  ;;(beginning-of-line)
 	  ;;(skip-chars-forward " \t")
-	  (setq indent (format "%%%ds" level))
+	  (setq indent (format "%%%ds" (* level YaTeX-sectioning-indent)))
 	  (princ (format indent ""))
 	  (if (YaTeX-on-comment-p) (princ "%"))
 	  (princ (buffer-substring begp (progn (forward-list 1) (point))))
@@ -393,7 +394,8 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 	  (let (buffer-read-only)
 	    (delete-region
 	     (point) (progn (skip-chars-forward " \t") (point)))
-	    (indent-to-column (cdr (assoc nsc YaTeX-sectioning-level)))
+	    (indent-to-column (* (cdr (assoc nsc YaTeX-sectioning-level))
+				 YaTeX-sectioning-indent))
 	    (skip-chars-forward "^\\\\")
 	    (delete-region
 	     (1+ (point)) (progn (skip-chars-forward "^*{") (point)))

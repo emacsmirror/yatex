@@ -5,6 +5,9 @@
 
 @iftex
 @c @syncodeindex fn cp
+@c いつも忘れるのでここに書いとくか。
+@c ノードいじったら C-l C-u C-e
+@c メニュー増やしたら C-l C-u C-m
 @syncodeindex vr cp
 @end iftex
 
@@ -14,7 +17,7 @@
 @subtitle Yet Another tex-mode for emacs
 @title 『野鳥』
 @subtitle // YaTeX //
-@author @copyright{} 1991-1996 by    HIROSE, Yuuji [yuuji@@ae.keio.ac.jp]
+@author @copyright{} 1991-1997 by    HIROSE, Yuuji [yuuji@@ae.keio.ac.jp]
 @end titlepage
 
 @node Top, Intro, (dir), (dir)
@@ -227,7 +230,9 @@ large型コマンド
 @item dvi2-command
         @dots{} 起動するプレヴューアのコマンド名
 @item NTT-jTeX
-        @dots{} NTT jTeX を使用するなら t
+        @dots{} 改行+インデントによって、タイプセット後の字間が空いてしま
+        うのを抑制する場合にtにする(古いNTT-jTeXで顕著に現れる)。具体的には、
+        fillするときに各行の終わりに%を付加するようになる。
 @item YaTeX-kanji-code
         @dots{} 文書を作成する時の漢字コード
 @item dviprint-command-format
@@ -1247,7 +1252,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 いる拡張子を「ファイル名」の後ろに足したファイルが存在するか順次調べて、存
 在した場合car部に入っているコマンドを起動する。
 @item
-以上どれかにマッチしなければあきる。
+以上どれかにマッチしなければあきらめる。
 @end enumerate
 
 
@@ -1865,7 +1870,9 @@ jlatex コマンドの出力するメッセージの漢字コード.タイプセットバッファ
 @end defvar
 
 @defvar NTT-jTeX
-NTT-j@TeX{}使用時は@code{t}にする (@code{nil})
+古いNTT-j@TeX{}使用時のようにインデントした行の先頭と前の行の
+(タイプセット後の)字間が空いてしまうのを嫌う場合は@code{t}にする
+(@code{nil})
 @end defvar
 
 @defvar YaTeX-item-regexp
@@ -1974,6 +1981,10 @@ Non-nil に設定するとsection型コマンドの引数入力時、アドイン関数がなければ
 
 @defvar YaTeX-use-AMS-LaTeX
 AMS-LaTeX を使用する場合は @code{t} に設定する (@code{nil})
+@end defvar
+
+@defvar YaTeX-template-file
+新規ファイル作成時に自動挿入するファイル名 (@code{~/work/template.tex})
 @end defvar
 
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
