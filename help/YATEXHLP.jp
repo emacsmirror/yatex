@@ -60,8 +60,24 @@ NAMEという長さコマンドを新たに宣言する。
 \parindent	\baselineskip	\baselinestretch \parskip
 \columnsep	\columnseprule	\mathindent
 
-settowidth{\NAME}{TEXT}
+settowidth
+\settowidth{\NAME}{TEXT}
 \hbox{TEXT}の出力結果と同じ幅に長さ\NAME をセットする。
+文書中のある文字列と同じ長さを持つ長さコマンドを作る場合は次のようにする。
+\newlength{\somelength}
+\settowidth{\somelength}{この文字列と同じ長さ}
+たとえば表を作るときに、特定の列を最大の長さを持つ文字列とおなじ
+幅に合わせたいときに便利である。
+ { \newlength{\maxwidth}
+   \settowidth{\maxwidth}{This is Max width!}
+   \begin{tabular}{l|p{\maxwidth}}
+    \hline
+    その1 & This short \\
+    その2 & This is Max width! \\ \hline
+   \end{tabular}
+ }
+すると右側の列が "This is Max width!" と同じ幅になる。表全体を
+{}で括っているのは長さコマンド \maxwidth の通用範囲を局所的にするためである。
 
 evensidemargin
 \setlength{\evensidemargin}{長さ}
@@ -1438,6 +1454,10 @@ jaybirdさん(asciinet, bekkoame)
 松田茂樹さん(千葉大)
 	AMS LaTeX用のいくつかの関数、YaTeX-change-parentheses などを作成
 	して頂きました。
+
+安宅 正之さん(東京理科大)
+	かな漢字変換自動OFF機能の T-Code 対応パッチを送って頂きました。
+
 yatex
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))
 <refer YaTeX>
