@@ -1,11 +1,12 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs.
-;;; yatex.el rev.1.28
+;;; yatex.el rev.1.32
 ;;; (c)1991 by Hirose Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Jul 20 21:46:13 1992 on figaro
+;;; Last modified Tue Nov 17 01:01:12 1992 on 98fa
 
 (provide 'yatex-mode)
-(defconst YaTeX-revision-number "1.28"
+(require 'comment)
+(defconst YaTeX-revision-number "1.32"
   "Revision number of running yatex.el"
 )
 
@@ -51,8 +52,7 @@ correctly set."
 command stops at this error message with line number of LaTeX source text."
 )
 (defvar latex-dos-emergency-message
-  ;;"Emergency stop"      ;<- for Micro tex, ASCII-pTeX 1.6
-  "No pages of output."   ;<- for ASCII-pTeX 1.7
+  "Emergency stop"      ;<- for Micro tex, ASCII-pTeX 1.6
   "Because Demacs (GNU Emacs on DOS) cannot have pararell process, the
 latex command which is stopping on a LaTeX error, is terminated by Demacs.
 Many latex command on DOS display some message when it is terminated by
@@ -69,7 +69,7 @@ process."
 	("author") ("documentstyle") ("pagestyle")
 	("documentstyle[10pt]") ("documentstyle[11pt]")
 	("documentstyle[12pt]")
-	("item[]") ("title") ("chapter") ("part") ("paragraph")
+	("title") ("chapter") ("part") ("paragraph")
 	("subparagraph") ("underline") ("label") ("footnote")
 	("hspace*") ("vspace*") ("bibliography") ("bibitem[]") ("cite[]")
 	("nocite") ("input") ("include") ("includeonly") ("mbox") ("hbox")
@@ -117,7 +117,7 @@ process."
 	("sigma") ("varsigma") ("tau") ("upsilon") ("phi") ("varphi")
 	("chi") ("psi") ("omega") ("Gamma") ("Delta") ("Theta") ("Lambda")
 	("Xi") ("Pi") ("Sigma") ("Upsilon") ("Phi") ("Psi") ("Omega")
-	("LaTeX") ("TeX")
+	("LaTeX") ("TeX") ("item[]") 
 ))
 (defvar user-singlecmd-table nil)
 
@@ -213,10 +213,20 @@ process."
   (define-key YaTeX-mode-map (concat YaTeX-prefix "BQ")
     '(lambda () (interactive)
        (YaTeX-insert-begin-end "quotation" t)))
+  (define-key YaTeX-mode-map (concat YaTeX-prefix ".")
+    'YaTeX-comment-paragraph)
+  (define-key YaTeX-mode-map (concat YaTeX-prefix ",")
+    'YaTeX-uncomment-paragraph)
+  (define-key YaTeX-mode-map (concat YaTeX-prefix ">")
+    '(lambda () (interactive) (comment-region "%")))
+  (define-key YaTeX-mode-map (concat YaTeX-prefix "<")
+    '(lambda () (interactive) (uncomment-region "%")))
   (define-key YaTeX-mode-map (concat YaTeX-prefix "b ")
     'YaTeX-make-begin-end)
   (define-key YaTeX-mode-map (concat YaTeX-prefix "B ")
     'YaTeX-make-begin-end-region)
+  (define-key YaTeX-mode-map (concat YaTeX-prefix "e")
+    'YaTeX-end-environment)
   (define-key YaTeX-mode-map (concat YaTeX-prefix "s")
     'YaTeX-make-section)
   (define-key YaTeX-mode-map (concat YaTeX-prefix "l")
@@ -225,12 +235,14 @@ process."
     'YaTeX-make-fontsize-region)
   (define-key YaTeX-mode-map (concat YaTeX-prefix "m")
     'YaTeX-make-singlecmd)
+  (define-key YaTeX-mode-map (concat YaTeX-prefix "g")
+    'YaTeX-goto-corresponding-environment)
   (define-key YaTeX-mode-map (concat YaTeX-prefix "\C-m")
     '(lambda () (interactive) (YaTeX-insert-string "\\\\")))
   (if (eq system-type 'ms-dos)
       (define-key YaTeX-mode-map (concat YaTeX-prefix "\^L")
 	'(lambda () (interactive)
-	   (set-screen-height 24) (recenter))))
+	   (set-screen-height YaTeX-saved-screen-height) (recenter))))
 )
 
 (if YaTeX-compilation-mode-map nil
@@ -277,7 +289,7 @@ and yatex-mode starts.")
 	fill-prefix YaTeX-fill-prefix)
   (use-local-map YaTeX-mode-map)
   (if (eq system-type 'ms-dos)
-      (set-screen-height 24))
+	(setq YaTeX-saved-screen-height (screen-height)))
   (if YaTeX-user-table-has-read nil
     (YaTeX-read-user-completion-table)
     (setq YaTeX-user-table-has-read t))
@@ -337,6 +349,51 @@ you can put REGION into that environment between \\begin and \\end."
   "Call YaTeX-make-begin-end with ARG to specify region mode."
   (interactive)
   (YaTeX-make-begin-end t)
+)
+
+(defun YaTeX-end-environment ()
+  "Close opening environment"
+  (interactive)
+  (let ((curp (point))
+	(s)(env nil)(nest 0))
+    (save-excursion
+      (while
+	  (and
+	   (>= nest 0)
+	   (re-search-backward
+	    "^[^\\%]*\\(\\\\begin{.*}\\)\\|\\(\\\\end{.*}\\)" (point-min) t))
+	(setq nest (if (re-search-forward "begin{" (match-end 0) t)
+		       (1- nest) (1+ nest))))
+      (if (>= nest 0)
+	  (message "No premature environment")
+	(goto-char (match-end 0))
+	(setq s (point))
+	(skip-chars-forward "0-9_A-z")
+	(setq env (buffer-substring s (point)))
+	;;(recursive-edit)
+	))
+    (if (null env) nil
+      (save-excursion
+	(if (and (re-search-forward "^[^\\%]*\\\\end{.*}" (point-max) t)
+		 (progn (goto-char (match-beginning 0))
+			(re-search-forward env (match-end 0) t)))
+	    (if (y-or-n-p
+		 (concat "Environment `" env
+			 "' was already closed. Force close?"))
+		nil
+	      (setq env nil))))
+      (message "")			;Erase (y or n) message.
+      (if (null env) nil
+	(insert "\\end{" env "}")
+	(setq curp (point))
+	(goto-char s)
+	(if (pos-visible-in-window-p)
+	    (sit-for 1)
+	  (message (concat "Matches \\begin{" env
+			   (format "} at line %d"
+				   (count-lines (point-min) s)))))
+	(goto-char curp)))
+    )
 )
 
 (defun YaTeX-make-section (arg)
@@ -633,7 +690,8 @@ completion begins.")
   (interactive
    (list (read-string "Preview command: " dvi2-command)
 	 (read-string "Prefiew file[.dvi]: "
-		      (substring (buffer-name) 0 -4)
+		      ;;(substring (buffer-name) 0 -4)
+		      (YaTeX-get-preview-file-name)	;ver 1.31
 	 )))
   (setq dvi2-command preview-command)
   (with-output-to-temp-buffer "*dvi-preview*"
@@ -748,6 +806,18 @@ avoid make confliction of line numbers by editing."
 	(widen)))
 )
 
+(defun YaTeX-get-preview-file-name ()
+  "Get file name to preview by inquiring YaTeX-get-latex-command"
+  (let* ((latex-cmd (YaTeX-get-latex-command))
+	 (fname (substring latex-cmd (1+ (rindex latex-cmd ? ))))
+	 (period))
+    (if (eq fname "")
+	(setq fname (substring (buffer-name) 0 -4))
+      (setq period (rindex fname ?.))
+      (setq fname (substring fname 0 (if (eq -1 period) nil period)))
+      ))
+)
+
 (defun YaTeX-get-latex-command ()
   "Specify the latex-command name and its argument.
 If there is a line which begins by string: \"%#!\", the following
@@ -779,6 +849,51 @@ will be given to the shell."
 	      (buffer-substring s (point)) ;including arguments.
 	    ))
 	))))
+)
+
+(defun YaTeX-goto-corresponding-environment ()
+  "Go to corresponding begin/end enclosure."
+  (interactive)
+  (beginning-of-line)
+  (if (not (re-search-forward
+	    "\\(begin{\\)\\|\\(end{\\)" (point-end-of-line) t))
+      (error "No environment declaration"))
+  (let ((p  (point) env)
+	(m0 (match-beginning 0))
+	(m1 (match-beginning 1))
+	(m2 (match-beginning 2)))
+    (if (not (re-search-forward "}" (point-end-of-line) t))
+	(error "Unterminated brackets for begin/end"))
+    (setq env (buffer-substring p (match-beginning 0))) ;get current env
+    (cond
+     ((equal m0 m1)		;if begin{xxx}
+      (re-search-forward (concat "end{" env "}")))
+     ((equal m0 m2)		;if end{xxx}
+      (re-search-backward (concat "begin{" env "}")))
+     )
+    (beginning-of-line)
+    );let
+)
+
+(defun YaTeX-comment-paragraph ()
+  "Comment out current paragraph."
+  (interactive)
+  (save-excursion
+    (mark-paragraph)
+    (if (not (bobp)) (forward-line 1))
+    (comment-region "%"))
+)
+
+(defun YaTeX-uncomment-paragraph ()
+  "Uncomment current paragraph."
+  (interactive)
+  (save-excursion
+    (let ((prefix fill-prefix))
+      (setq fill-prefix "")
+      (mark-paragraph)
+      (if (not (bobp)) (forward-line 1))
+      (uncomment-region "%")
+      (setq fill-prefix prefix)))
 )
 
 (defun YaTeX-read-user-completion-table ()
@@ -837,6 +952,38 @@ will be given to the shell."
   (message "")
 )
 
+;; --------------- General sub functions ---------------
+
+;(defun index (string char)
+;  (let ((pos 0)(len (1- (length string)))(index -1))
+;    (while (<= pos len)
+;      (cond
+;       ((= (aref string pos) char)
+;	(setq index pos) (setq pos len))
+;       (t (setq pos (1+ pos))))
+;      )
+;    index)
+;)
+
+(defun rindex (string char)
+  (let ((pos (1- (length string)))(index -1))
+    (while (>= pos 0)
+      (cond
+       ((= (aref string pos) char)
+	(setq index pos) (setq pos -1))
+       (t (setq pos (1- pos))))
+      )
+    index)
+)
+
+(defun point-beginning-of-line ()
+  (save-excursion (beginning-of-line)(point))
+)
+
+(defun point-end-of-line ()
+  (save-excursion (end-of-line)(point))
+)
+
 (defun append-to-hook (hook hook-list)
   "Add hook-list to certain emacs's hook correctly.
 Argument hook-list is the list of function int the form to be called
@@ -883,13 +1030,18 @@ Call this function with argument as next example,
 ; 1.23 | 92/ 1/ 8 | Enable latex and preview command on DOS.
 ; 1.24 |     1/ 9 | Add YaTeX-save-table to kill-emacs-hook automatically.
 ; 1.25 |     1/16 | YaTeX-do-completion (prefix+SPC) and argument
-;      |          | acceptable YaTeX-make-section work. Put region into
+;      |          | acceptable YaTeX-make-section works. Put region into
 ;      |          | \begin...\end by calling YaTeX-make-begin-end with ARG.
 ;      |          | append-kill-emacs-hook was revised to append-to-hook.
 ; 1.26 |     1/18 | Region mode is added to {\large }. Default fontsize.
-; 1.27 |     1/21 | Default name on completing-read,
+; 1.27 |     1/21 | Default name on completing-read.
 ; 1.28 |     7/ 2 | Add \nonstopmode{} automatically on DOS.
 ;      |     7/20 | %#! usage to specify latex command and its arguments.
+;      |          | Change default fill-prefix from TAB to null string.
+; 1.29 |     7/21 | Add YaTeX-end-environment.
+; 1.30 |     9/26 | Support project 30 lines(other than 25 lines).
+; 1.31 |    10/28 | Variable argument for previewer from %#! usage.
+; 1.32 |    10/16 | YaTeX-goto-corresponding-environment.
 ;------+----------+---------------------------------------------------------
 ;
 ;----------------------------- End of yatex.el -----------------------------

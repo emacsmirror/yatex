@@ -1,8 +1,17 @@
 
-		Yet Another tex-mode for Emacs. 
-		yatex.el $@3F%P!<%8%g%s$NJQ99E@(J
+	Yet Another tex-mode for Emacs
+	yatex.el Šeƒo[ƒWƒ‡ƒ“‚Ì•ÏX“_‚É‚Â‚¢‚ÄB
 
-1.28:	%#! $@$K$h$j!"5/F0$9$k(J latex $@%3%^%s%I$r;XDj$G$-$k$h$&$K$7$?!#(J
-	$@%G%U%)%k%H$N(J fill-prefix $@$r(J "" (null strings) $@$K$7$?!#(J
+1.32:	ƒŠƒWƒ‡ƒ“/ƒpƒ‰ƒOƒ‰ƒt‚ðƒRƒƒ“ƒgƒAƒEƒg‚·‚é‹@”\‚ð’Ç‰Á
+	‘Î‰ž‚·‚é \begin{}/\end{} ŠÔ‚ÅƒWƒƒƒ“ƒv‚·‚é‹@”\‚ð’Ç‰Á
 
-1.27:	$@@5<0%j%j!<%9(J
+1.31:	Previewer ‚É“n‚·ƒfƒtƒHƒ‹ƒg‚Ìƒtƒ@ƒCƒ‹–¼‚à %#! ‚ÉŽw’è‚µ‚½‚à‚Ì‚ðŽg—p
+
+1.30:	30sŒv‰æ‚É‘Î‰ž(—v‚·‚é‚És”‰Â•Ï‚É‚µ‚½)
+
+1.29:	Œ»ÝŠJ‚¢‚Ä‚¢‚éŠÂ‹«–¼‚ð•Â‚¶‚é YaTeX-end-environment ‚ð’Ç‰Á
+
+1.28:	%#! ‚É‘±‚­ƒRƒ}ƒ“ƒh–¼‚ð latex ƒRƒ}ƒ“ƒh‚Æ‚µ‚ÄŽÀs‚·‚é‚æ‚¤‚É‚µ‚½
+	fill-prefix ‚ð null ‚É‚µ‚½B
+
+1.27:	Å‰‚Ì³Ž®ƒŠƒŠ[ƒX”Å
