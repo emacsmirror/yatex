@@ -39,8 +39,10 @@ package:
 ci:
 	ci -r$(VERSION) -sRel -f $(RCSFILE)
 	ci -u$(VERSION) makefile
+
 co:
 	co $(RCSFILE)
+
 co-l:
 	co -l $(RCSFILE)
 
