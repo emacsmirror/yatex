@@ -1,12 +1,12 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs.
-;;; yatex.el rev.1.32
+;;; yatex.el rev.1.33
 ;;; (c)1991 by Hirose Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Nov 17 01:01:12 1992 on 98fa
+;;; Last modified Sun Nov 29 16:04:57 1992 on 98fa
 
 (provide 'yatex-mode)
 (require 'comment)
-(defconst YaTeX-revision-number "1.32"
+(defconst YaTeX-revision-number "1.33"
   "Revision number of running yatex.el"
 )
 
@@ -29,17 +29,24 @@ You can select favorite prefix key by setq in your ~/.emacs."
   "fill-prefix used for auto-fill-mode.
 The defalut value is single TAB."
 )
-(defvar YaTeX-user-completion-table "~/.yatexrc"
+(defvar YaTeX-comment-prefix "%"
+  "TeX comment prefix."
+)
+(defvar YaTeX-user-completion-table
+  (if (eq system-type 'ms-dos) "~/_yatexrc"
+    "~/.yatexrc")
   "Default filename in which user completion table is saved."
 )
 (defvar tex-command "jlatex"
   "Default command for compiling LaTeX text."
 )
 (defvar dvi2-command		;previewer command for your site
-  (concat
-   "xdvi -geo +0+0 -s 4 -display "
-   (getenv "DISPLAY"))
-  "Default previewer command including its option.
+  (if (eq system-type 'ms-dos)
+      "dviout"
+    (concat
+     "xdvi -geo +0+0 -s 4 -display "
+     (getenv "DISPLAY")))
+    "Default previewer command including its option.
 This default value is for X window system.  If you want to use this
 default, you have to make sure the environment variable DISPLAY is
 correctly set."
@@ -117,7 +124,7 @@ process."
 	("sigma") ("varsigma") ("tau") ("upsilon") ("phi") ("varphi")
 	("chi") ("psi") ("omega") ("Gamma") ("Delta") ("Theta") ("Lambda")
 	("Xi") ("Pi") ("Sigma") ("Upsilon") ("Phi") ("Psi") ("Omega")
-	("LaTeX") ("TeX") ("item[]") 
+	("LaTeX") ("TeX") ("item[]")
 ))
 (defvar user-singlecmd-table nil)
 
@@ -126,129 +133,102 @@ process."
 ;; Create new key map: YaTeX-mode-map
 ;; Do not change this section.
 ;;;
+(defvar YaTeX-inhibit-prefix-letter nil
+  "Switch which determin whether inhibit yatex.el from defining
+key sequence \"C-c letter\" or not."
+)
 (defvar YaTeX-mode-map nil
   "Keymap used in YaTeX mode."
 )
-(defvar YaTeX-compilation-mode-map nil
-  "Keymap userd in YaTeX compilation buffer."
+(defvar YaTeX-typesetting-mode-map nil
+  "Keymap userd in YaTeX typesetting buffer."
+)
+(defvar YaTeX-prefix-map nil
+  "Keymap used when YaTeX-prefix key pushed."
 )
 
 ;---------- Define deafult key bindings on YaTeX mode map ----------
+(defun YaTeX-define-key (key binding)
+  "Define key on YaTeX-prefix-map"
+  (if YaTeX-inhibit-prefix-letter
+      (let ((c (aref key 0)))
+	(cond
+	 ((and (>= c ?a) (<= c ?z)) (aset key 0 (1+ (- c ?a))))
+	 ((and (>= c ?A) (<= c ?Z)) (aset key 0 (1+ (- c ?A))))
+	 (t nil))))
+  (define-key YaTeX-prefix-map key binding)
+)
+(defun YaTeX-define-begend-key (key env)
+  "Define short cut YaTeX-make-begin-end key."
+  (YaTeX-define-key
+   key
+   (list 'lambda '(arg) '(interactive "P")
+	 (list 'YaTeX-insert-begin-end env 'arg)))
+)
+(defun YaTeX-define-begend-region-key (key env)
+  "Define short cut YaTeX-make-begin-end-region key."
+  (YaTeX-define-key key (list 'lambda nil '(interactive)
+			      (list 'YaTeX-insert-begin-end env t)))
+)
 ;;;
 ;; Define key table
 ;;;
 (if YaTeX-mode-map 
     nil
-  (global-unset-key (concat YaTeX-prefix "b"))
   (setq YaTeX-mode-map (make-sparse-keymap))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "tj")
-    'YaTeX-compile)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "tx")
-    'YaTeX-preview)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "tv")
-    'YaTeX-view-error)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "tb")
-    '(lambda () (interactive) (YaTeX-insert-string "\\")))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "'")
-    'YaTeX-prev-error)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix " ")
-    'YaTeX-do-completion)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "v")
-    'YaTeX-version)
-
+  (setq YaTeX-prefix-map (make-sparse-keymap))
   (define-key YaTeX-mode-map "\"" 'YaTeX-insert-quote)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "{")
-    'YaTeX-insert-braces)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "}")
-    'YaTeX-insert-braces-region)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "d")
-    'YaTeX-insert-dollar)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "\\")
-    '(lambda () (interactive) (YaTeX-insert-string "$\\backslash$")))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "bd")
-    '(lambda (arg) (interactive "P")
-       (YaTeX-insert-begin-end "document" arg)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "Bd")
-    '(lambda () (interactive)
-       (YaTeX-insert-begin-end "document" t)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "bD")
-    '(lambda (arg) (interactive "P")
-       (YaTeX-insert-begin-end "description" arg)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "BD")
-    '(lambda () (interactive)
-       (YaTeX-insert-begin-end "description" t)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "be")
-    '(lambda (arg) (interactive "P")
-       (YaTeX-insert-begin-end "enumerate" arg)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "Be")
-    '(lambda () (interactive)
-       (YaTeX-insert-begin-end "enumerate" t)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "bi")
-    '(lambda (arg) (interactive "P")
-       (YaTeX-insert-begin-end "itemize" arg)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "Bi")
-    '(lambda () (interactive)
-       (YaTeX-insert-begin-end "itemize" t)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "bt")
-    '(lambda (arg) (interactive "P")
-       (YaTeX-insert-begin-end "tabbing" arg)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "Bt")
-    '(lambda () (interactive)
-       (YaTeX-insert-begin-end "tabbing" t)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "bT")
-    '(lambda (arg) (interactive "P")
-       (YaTeX-insert-begin-end "tabular" arg)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "BT")
-    '(lambda () (interactive)
-       (YaTeX-insert-begin-end "tabular" t)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "bq")
-    '(lambda (arg) (interactive "P")
-       (YaTeX-insert-begin-end "quote" arg)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "Bq")
-    '(lambda () (interactive)
-       (YaTeX-insert-begin-end "quote" t)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "bQ")
-    '(lambda (arg) (interactive "P")
-       (YaTeX-insert-begin-end "quotation" arg)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "BQ")
-    '(lambda () (interactive)
-       (YaTeX-insert-begin-end "quotation" t)))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix ".")
-    'YaTeX-comment-paragraph)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix ",")
-    'YaTeX-uncomment-paragraph)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix ">")
-    '(lambda () (interactive) (comment-region "%")))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "<")
-    '(lambda () (interactive) (uncomment-region "%")))
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "b ")
-    'YaTeX-make-begin-end)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "B ")
-    'YaTeX-make-begin-end-region)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "e")
-    'YaTeX-end-environment)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "s")
-    'YaTeX-make-section)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "l")
-    'YaTeX-make-fontsize)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "L")
-    'YaTeX-make-fontsize-region)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "m")
-    'YaTeX-make-singlecmd)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "g")
-    'YaTeX-goto-corresponding-environment)
-  (define-key YaTeX-mode-map (concat YaTeX-prefix "\C-m")
+  (define-key YaTeX-mode-map YaTeX-prefix YaTeX-prefix-map)
+  (YaTeX-define-key "t" 'YaTeX-typeset-menu)
+  (define-key YaTeX-prefix-map "'" 'YaTeX-prev-error)
+  (define-key YaTeX-prefix-map " " 'YaTeX-do-completion)
+  (YaTeX-define-key "v" 'YaTeX-version)
+
+  (define-key YaTeX-prefix-map "{" 'YaTeX-insert-braces)
+  (define-key YaTeX-prefix-map "}" 'YaTeX-insert-braces-region)
+  (YaTeX-define-key "d" 'YaTeX-insert-dollar)
+  (YaTeX-define-key
+   "\\" '(lambda () (interactive) (YaTeX-insert-string "$\\backslash$")))
+  (YaTeX-define-begend-region-key "Bd" "document")
+  (YaTeX-define-begend-key "bd" "document")
+  (YaTeX-define-begend-region-key "BD" "description")
+  (YaTeX-define-begend-key "bD" "description")
+  (YaTeX-define-begend-region-key  "Be" "enumerate")
+  (YaTeX-define-begend-key  "be" "enumerate")
+  (YaTeX-define-begend-region-key  "Bi" "itemize")
+  (YaTeX-define-begend-key  "bi" "itemize")
+  (YaTeX-define-begend-region-key  "Bt" "tabbing")
+  (YaTeX-define-begend-key  "bt" "tabbing")
+  (YaTeX-define-begend-region-key  "BT" "tabular")
+  (YaTeX-define-begend-key  "bT" "tabular")
+  (YaTeX-define-begend-region-key  "Bq" "quote")
+  (YaTeX-define-begend-key  "bq" "quote")
+  (YaTeX-define-begend-region-key  "BQ" "quotation")
+  (YaTeX-define-begend-key  "bQ" "quotation")
+  (YaTeX-define-key "." 'YaTeX-comment-paragraph)
+  (YaTeX-define-key "," 'YaTeX-uncomment-paragraph)
+  (YaTeX-define-key ">" 'YaTeX-comment-region)
+  (YaTeX-define-key "<" 'YaTeX-uncomment-region)
+  (YaTeX-define-key "B " 'YaTeX-make-begin-end-region)
+  (YaTeX-define-key "b " 'YaTeX-make-begin-end)
+  (YaTeX-define-key "e" 'YaTeX-end-environment)
+  (YaTeX-define-key "s" 'YaTeX-make-section)
+  (YaTeX-define-key "L" 'YaTeX-make-fontsize-region)
+  (YaTeX-define-key "l" 'YaTeX-make-fontsize)
+  (YaTeX-define-key "m" 'YaTeX-make-singlecmd)
+  (YaTeX-define-key "g" 'YaTeX-goto-corresponding-environment)
+  (YaTeX-define-key "\C-m"
     '(lambda () (interactive) (YaTeX-insert-string "\\\\")))
   (if (eq system-type 'ms-dos)
-      (define-key YaTeX-mode-map (concat YaTeX-prefix "\^L")
+      (define-key YaTeX-prefix-map "\^L"
 	'(lambda () (interactive)
 	   (set-screen-height YaTeX-saved-screen-height) (recenter))))
 )
 
-(if YaTeX-compilation-mode-map nil
-  (setq YaTeX-compilation-mode-map (make-keymap))
-  (suppress-keymap YaTeX-compilation-mode-map t)
-  (define-key YaTeX-compilation-mode-map " "
+(if YaTeX-typesetting-mode-map nil
+  (setq YaTeX-typesetting-mode-map (make-keymap))
+  (suppress-keymap YaTeX-typesetting-mode-map t)
+  (define-key YaTeX-typesetting-mode-map " "
     'YaTeX-jump-error-line)
 )
 
@@ -261,6 +241,9 @@ process."
 (defvar single-command "maketitle")	;Initial LaTeX single command
 (defvar YaTeX-user-table-has-read nil
   "Flag that means whether user completion table has read or not."
+)
+(defvar YaTeX-user-table-modified nil
+  "Flag that means whether user completion table has modified or not."
 )
 (defvar yatex-mode-hook nil
   "List of functions to be called after .tex file is read
@@ -276,6 +259,7 @@ and yatex-mode starts.")
   (setq major-mode 'YaTeX-mode)
   (setq mode-name "‚â‚Ä‚Ó‚à[‚Ç")
   (turn-on-auto-fill)
+  (make-local-variable 'dvi2-command)
   (make-local-variable 'kanji-display-code)
   (make-local-variable 'kanji-fileio-code)
   (if (eq system-type 'ms-dos)
@@ -315,14 +299,6 @@ and yatex-mode starts.")
     (previous-line (+ 2 YaTeX-open-lines)))
 )
 
-(defun YaTeX-exist-completion-table (elm table)
-  "Return nil, if single list element:elm was
-not found in possible completion table."
-  (while (not (or (null table) (equal elm (car table))))
-    (setq table (cdr table)))
-  table
-)
-
 (defun YaTeX-make-begin-end (arg)
   "Make LaTeX environment command of \\begin{env.} ... \\end{env.}
 by completing read.
@@ -339,9 +315,9 @@ you can put REGION into that environment between \\begin and \\end."
     (if (string= env "")
 	(setq env env-name))
     (setq env-name env)
-    (if (not (YaTeX-exist-completion-table
-	      (list env-name) (append user-env-table env-table)))
-	(setq user-env-table (cons (list env-name) user-env-table)))
+    (if (not (assoc env-name (append user-env-table env-table))) ;if not exist
+	(setq user-env-table (cons (list env-name) user-env-table)
+	    YaTeX-user-table-modified t))
     (YaTeX-insert-begin-end env-name arg))
 )
 
@@ -355,24 +331,26 @@ you can put REGION into that environment between \\begin and \\end."
   "Close opening environment"
   (interactive)
   (let ((curp (point))
-	(s)(env nil)(nest 0))
+	s env (nest 0))
     (save-excursion
       (while
 	  (and
 	   (>= nest 0)
 	   (re-search-backward
-	    "^[^\\%]*\\(\\\\begin{.*}\\)\\|\\(\\\\end{.*}\\)" (point-min) t))
-	(setq nest (if (re-search-forward "begin{" (match-end 0) t)
-		       (1- nest) (1+ nest))))
+	    "\\(\\\\begin{\\).*}\\|\\(\\\\end{\\).*}" (point-min) t))
+	(if (re-search-backward "^[ 	]*%" (point-beginning-of-line) t)
+	    nil	;ignore TeX comment usage.
+	  (setq nest (if (eq (match-beginning 0) (match-beginning 1))
+			 (1- nest) (1+ nest)))))
       (if (>= nest 0)
 	  (message "No premature environment")
-	(goto-char (match-end 0))
+	(goto-char (match-end 1))
 	(setq s (point))
-	(skip-chars-forward "0-9_A-z")
+	(skip-chars-forward "^}")
 	(setq env (buffer-substring s (point)))
 	;;(recursive-edit)
 	))
-    (if (null env) nil
+    (if (not env) nil
       (save-excursion
 	(if (and (re-search-forward "^[^\\%]*\\\\end{.*}" (point-max) t)
 		 (progn (goto-char (match-beginning 0))
@@ -381,18 +359,17 @@ you can put REGION into that environment between \\begin and \\end."
 		 (concat "Environment `" env
 			 "' was already closed. Force close?"))
 		nil
-	      (setq env nil))))
+	      (error "end environment aborted."))))
       (message "")			;Erase (y or n) message.
-      (if (null env) nil
-	(insert "\\end{" env "}")
-	(setq curp (point))
-	(goto-char s)
-	(if (pos-visible-in-window-p)
-	    (sit-for 1)
-	  (message (concat "Matches \\begin{" env
-			   (format "} at line %d"
+      (insert "\\end{" env "}")
+      (setq curp (point))
+      (goto-char s)
+      (if (pos-visible-in-window-p)
+	  (sit-for 1)
+	(message (concat "Matches \\begin{" env
+			 (format "} at line %d"
 				   (count-lines (point-min) s)))))
-	(goto-char curp)))
+      (goto-char curp))
     )
 )
 
@@ -421,10 +398,10 @@ You can complete symbol at LaTeX command and 1st argument."
 			 (append user-article-table article-table)
 			 nil nil)))
     (setq section-name section)
-    (if (not (YaTeX-exist-completion-table
-	      (list section-name) (append user-section-table section-table)))
+    (if (not (assoc section-name (append user-section-table section-table)))
 	(setq user-section-table
-	      (cons (list section-name) user-section-table)))
+	      (cons (list section-name) user-section-table)
+	      YaTeX-user-table-modified t))
     (insert "\\" section-name "{" title "}")
     (let ((j 2))
       (while (<= j arg)
@@ -457,11 +434,10 @@ into {\\xxx } braces.
     (if (string= fontsize "")
 	(setq fontsize fontsize-name))
     (setq fontsize-name fontsize)
-    (if (not (YaTeX-exist-completion-table
-	      (list fontsize-name)
-	      (append user-fontsize-table fontsize-table)))
+    (if (not (assoc fontsize-name (append user-fontsize-table fontsize-table)))
 	(setq user-fontsize-table
-	    (cons (list fontsize-name) user-fontsize-table)))
+	      (cons (list fontsize-name) user-fontsize-table)
+	      YaTeX-user-table-modified t))
     (if arg
 	(save-excursion
 	  (if (> (point) (mark)) (exchange-point-and-mark))
@@ -487,11 +463,11 @@ into {\\xxx } braces.
   (if (string= single "")
       (setq single single-command))
   (setq single-command single)
-  (if (not (YaTeX-exist-completion-table
-	    (list single-command)
-	    (append user-singlecmd-table singlecmd-table)))
+  (if (not (assoc single-command
+		  (append user-singlecmd-table singlecmd-table)))
       (setq user-singlecmd-table
-	    (cons (list single-command) user-singlecmd-table)))
+	    (cons (list single-command) user-singlecmd-table)
+	    YaTeX-user-table-modified t))
   (insert "\\" single-command " ")
 )
 
@@ -604,7 +580,7 @@ completion begins.")
 	   YaTeX-revision-number))
 )
 
-(defun YaTeX-compile-sentinel (proc mes)
+(defun YaTeX-typeset-sentinel (proc mes)
   (cond ((null (buffer-name (process-buffer proc)))
          ;; buffer killed
          (set-process-buffer proc nil))
@@ -614,10 +590,10 @@ completion begins.")
            ;;  process-buffer is current-buffer
            (unwind-protect
                (progn
-                 ;; Write something in *compilation* and hack its mode line
+                 ;; Write something in *typesetting* and hack its mode line
                  (set-buffer (process-buffer proc))
                  (goto-char (point-max))
-                 (insert ?\n "jlatex compilation " mes)
+                 (insert ?\n "jlatex typesetting " mes)
                  (forward-char -1)
                  (insert " at "
                          (substring (current-time-string) 0 -5))
@@ -631,7 +607,7 @@ completion begins.")
                  ;; will stay around until M-x list-processes.
                  (delete-process proc)
 		 )
-             (setq YaTeX-compilation-process nil)
+             (setq YaTeX-typesetting-process nil)
              ;; Force mode line redisplay soon
              (set-buffer-modified-p (buffer-modified-p))
 	     )
@@ -639,49 +615,50 @@ completion begins.")
 )))
 )
 
-(defvar YaTeX-compilation-process nil
+(defvar YaTeX-typesetting-process nil
   "Process identifier for jlatex"
 )
 
-(defun YaTeX-compile ()
-  "Execute jlatex (or other) to LaTeX compile."
+(defun YaTeX-typeset ()
+  "Execute jlatex (or other) to LaTeX typeset."
   (interactive)
-  (if YaTeX-compilation-process
-   (if (eq (process-status YaTeX-compilation-process) 'run)
-	(progn (interrupt-process YaTeX-compilation-process)
+  (if YaTeX-typesetting-process
+   (if (eq (process-status YaTeX-typesetting-process) 'run)
+	(progn (interrupt-process YaTeX-typesetting-process)
 	       (sit-for 1)
-	       (delete-process YaTeX-compilation-process))
+	       (delete-process YaTeX-typesetting-process))
       nil) nil)
 ;  (compile1 (concat tex-command " " (buffer-name))
-;	    "TeX error" "*TeX compilation*")
-  (setq YaTeX-compilation-process nil)
+;	    "TeX error" "*TeX typesetting*")
+  (setq YaTeX-typesetting-process nil)
   (if (eq system-type 'ms-dos)				;if MS-DOS
-      (with-output-to-temp-buffer "*YaTeX-compilation*"
+      (with-output-to-temp-buffer "*YaTeX-typesetting*"
 	(message (concat "Compiling " (buffer-name) "..."))
 	(YaTeX-put-nonstopmode)
 	(basic-save-buffer)
 	(call-process shell-file-name
 		      nil
-		      "*YaTeX-compilation*" nil
+		      "*YaTeX-typesetting*" nil
 		      "/c" (YaTeX-get-latex-command))
-		      ;;;"/c " tex-command (buffer-name) )
 	(YaTeX-remove-nonstopmode))
-    (setq YaTeX-compilation-process			;if UNIX
-	  (with-output-to-temp-buffer "*YaTeX-compilation*"
+    (setq YaTeX-typesetting-process			;if UNIX
+	  (with-output-to-temp-buffer "*YaTeX-typesetting*"
 	    (basic-save-buffer)
-	    (start-process "LaTeX" "*YaTeX-compilation*" shell-file-name "-c"
+	    (start-process "LaTeX" "*YaTeX-typesetting*" shell-file-name "-c"
 			   (YaTeX-get-latex-command))
-			   ;;;tex-command (buffer-name) "")
 	    ))
-    (set-process-sentinel YaTeX-compilation-process 'YaTeX-compile-sentinel))
+    (set-process-sentinel YaTeX-typesetting-process 'YaTeX-typeset-sentinel))
   (setq current-TeX-buffer (buffer-name))
   (other-window 1)
-  (use-local-map YaTeX-compilation-mode-map)
+  (use-local-map YaTeX-typesetting-mode-map)
   (set-kanji-process-code YaTeX-kanji-code)
   (message "Type SPC to continue.")
   (goto-char (point-max))
   (sit-for 30)
   (read-char)	;hit any key
+  (if (not (= (window-start) (point-min)))
+      (while (eq (point) (point-max))
+	(scroll-down 1)))
   (other-window -1)
 )
 
@@ -712,9 +689,9 @@ avoid make confliction of line numbers by editing."
   (interactive)
   (setq cur-buf (buffer-name)
 	YaTeX-error-line nil)
-  (if (null (get-buffer "*YaTeX-compilation*"))
-      (message "There is no output buffer of compilation.")
-    (pop-to-buffer "*YaTeX-compilation*")
+  (if (null (get-buffer "*YaTeX-typesetting*"))
+      (message "There is no output buffer of typesetting.")
+    (pop-to-buffer "*YaTeX-typesetting*")
     (if (eq system-type 'ms-dos)
 	(if (search-backward latex-dos-emergency-message nil t)
 	    (progn (goto-char (point-max))
@@ -722,8 +699,8 @@ avoid make confliction of line numbers by editing."
 	  (beginning-of-line)
 	  (forward-char -1)
 	  (setq error-regexp latex-warning-regexp))
-      (if YaTeX-compilation-process      ; if jlatex on UNIX
-	  (if (eq (process-status YaTeX-compilation-process) 'run)
+      (if YaTeX-typesetting-process      ; if jlatex on UNIX
+	  (if (eq (process-status YaTeX-typesetting-process) 'run)
 	      (progn
 		(goto-char (point-max))
 		(setq error-regexp latex-error-regexp)))
@@ -806,6 +783,18 @@ avoid make confliction of line numbers by editing."
 	(widen)))
 )
 
+(defun YaTeX-typeset-menu ()
+  "Typeset, preview, visit error and miscellaneous convinient menu."
+  (interactive)
+  (message "J)latex P)review V)iewerror")
+  (let ((c (read-char)))
+    (cond
+     ((= c ?j) (YaTeX-typeset))
+     ((= c ?p) (call-interactively 'YaTeX-preview))
+     ((= c ?v) (YaTeX-view-error))
+     ((= c ?b) (YaTeX-insert-string "\\"))))
+)
+
 (defun YaTeX-get-preview-file-name ()
   "Get file name to preview by inquiring YaTeX-get-latex-command"
   (let* ((latex-cmd (YaTeX-get-latex-command))
@@ -838,7 +827,7 @@ will be given to the shell."
       (if (null (re-search-forward "^%#!" (point-max) t))
 	  default-command
 	(skip-chars-forward "%#! 	")
-	(if (eolp)
+	(if (eolp)1z
 	    default-command
 	  (let ((s (point)))
 	    (skip-chars-forward "A-z")	;Skip command name
@@ -854,46 +843,110 @@ will be given to the shell."
 (defun YaTeX-goto-corresponding-environment ()
   "Go to corresponding begin/end enclosure."
   (interactive)
-  (beginning-of-line)
-  (if (not (re-search-forward
-	    "\\(begin{\\)\\|\\(end{\\)" (point-end-of-line) t))
+  (if (not (YaTeX-on-begin-end-p))
       (error "No environment declaration"))
-  (let ((p  (point) env)
+  (let ((p  (match-end 0) env)
 	(m0 (match-beginning 0))
 	(m1 (match-beginning 1))
 	(m2 (match-beginning 2)))
-    (if (not (re-search-forward "}" (point-end-of-line) t))
+    (if (not
+	 (save-excursion
+	   (goto-char p)
+	   (search-forward "}" (point-end-of-line) t)))
 	(error "Unterminated brackets for begin/end"))
     (setq env (buffer-substring p (match-beginning 0))) ;get current env
     (cond
      ((equal m0 m1)		;if begin{xxx}
-      (re-search-forward (concat "end{" env "}")))
+      (search-forward (concat "end{" env "}")))
      ((equal m0 m2)		;if end{xxx}
-      (re-search-backward (concat "begin{" env "}")))
+      (search-backward (concat "begin{" env "}")))
      )
     (beginning-of-line)
     );let
+)
+
+(defun YaTeX-comment-region ()
+  "Comment out region by '%'. If you call this function on the 'begin{}' or
+'end{}' line, it comments out whole environment"
+  (interactive)
+  (if (not (YaTeX-on-begin-end-p))
+      (comment-region YaTeX-comment-prefix)
+    (YaTeX-comment-uncomment-env 'comment-region))
+)
+
+(defun YaTeX-uncomment-region ()
+  "Uncomment out region by '%'."
+  (interactive)
+  (if (not (YaTeX-on-begin-end-p))
+      (uncomment-region YaTeX-comment-prefix)
+    (YaTeX-comment-uncomment-env 'uncomment-region))
+)
+
+(defun YaTeX-comment-uncomment-env (func)
+  "Comment or uncomment out one LaTeX environment switching function by FUNC."
+  (save-excursion
+    (if (eq (match-beginning 0) (match-beginning 2)) ; if on the '\end{}' line
+	(YaTeX-goto-corresponding-environment)) ; goto '\begin{}' line
+    (beginning-of-line)
+    (push-mark)
+    (YaTeX-goto-corresponding-environment)
+    (forward-line 1)
+    (funcall func YaTeX-comment-prefix t) ; t makes uncomment once
+    (pop-mark)
+    )
+)
+
+(defun YaTeX-mark-environment ()
+  "Not implemented yet."
+)
+
+(defun YaTeX-on-begin-end-p ()
+  (save-excursion
+    (beginning-of-line)
+    (re-search-forward "\\(begin{\\)\\|\\(end{\\)" (point-end-of-line) t))
 )
 
 (defun YaTeX-comment-paragraph ()
   "Comment out current paragraph."
   (interactive)
   (save-excursion
-    (mark-paragraph)
-    (if (not (bobp)) (forward-line 1))
-    (comment-region "%"))
+    (if (YaTeX-on-begin-end-p)
+	(progn
+	  (beginning-of-line)
+	  (insert YaTeX-comment-prefix)
+	  (YaTeX-goto-corresponding-environment)
+	  (beginning-of-line)
+	  (insert YaTeX-comment-prefix))
+      (mark-paragraph)
+      (if (not (bobp)) (forward-line 1))
+      (comment-region "%")))
 )
 
 (defun YaTeX-uncomment-paragraph ()
   "Uncomment current paragraph."
   (interactive)
   (save-excursion
-    (let ((prefix fill-prefix))
-      (setq fill-prefix "")
-      (mark-paragraph)
-      (if (not (bobp)) (forward-line 1))
-      (uncomment-region "%")
-      (setq fill-prefix prefix)))
+    (if (YaTeX-on-begin-end-p)
+	(progn
+	  (YaTeX-remove-prefix YaTeX-comment-prefix t)
+	  (YaTeX-goto-corresponding-environment)
+	  (YaTeX-remove-prefix YaTeX-comment-prefix t))
+      (let ((prefix fill-prefix))
+	(setq fill-prefix "")
+	(mark-paragraph)
+	(if (not (bobp)) (forward-line 1))
+	(uncomment-region "%")
+	(setq fill-prefix prefix))))
+)
+
+(defun YaTeX-remove-prefix (prefix &optional once)
+  "Remove prefix on current line so far as prefix detected. But
+optional argument ONCE makes deletion once."
+  (interactive "sPrefix:")
+  (beginning-of-line)
+  (while (re-search-forward (concat "^" prefix) (point-end-of-line) t)
+    (replace-match "")
+    (if once (end-of-line)))
 )
 
 (defun YaTeX-read-user-completion-table ()
@@ -908,48 +961,51 @@ will be given to the shell."
 (defun YaTeX-save-table ()
   "Save personal completion table as dictionary."
   (interactive)
-  (message "Saving user table in %s" YaTeX-user-completion-table)
-  (find-file (expand-file-name YaTeX-user-completion-table))
-  (erase-buffer)
-;  (prin1-to-string user-section-table)
-  (insert "(setq user-section-table '(\n")
-  (mapcar '(lambda (s)
-	     (insert (prin1-to-string s))
-	     (insert "\n"))
-	  user-section-table)
-  (insert "))\n\n")
-
-  (insert "(setq user-article-table '(\n")
-  (mapcar '(lambda (s)
-	     (insert (prin1-to-string s))
-	     (insert "\n"))
-	  user-article-table)
-  (insert "))\n\n")
-
-  (insert "(setq user-env-table '(\n")
-  (mapcar '(lambda (s)
-	     (insert (prin1-to-string s))
-	     (insert "\n"))
-	  user-env-table)
-  (insert "))\n\n")
-
-  (insert "(setq user-fontsize-table '(\n")
-  (mapcar '(lambda (s)
-	     (insert (prin1-to-string s))
-	     (insert "\n"))
-	  user-fontsize-table)
-  (insert "))\n\n")
-
-  (insert "(setq user-singlecmd-table '(\n")
-  (mapcar '(lambda (s)
-	   (insert (prin1-to-string s))
-	   (insert "\n"))
-	user-singlecmd-table)
-  (insert "))\n")
-
-  (basic-save-buffer)
-  (kill-buffer (current-buffer))
-  (message "")
+  (if (not YaTeX-user-table-modified)
+      nil
+    (message "Saving user table in %s" YaTeX-user-completion-table)
+    (find-file (expand-file-name YaTeX-user-completion-table))
+    (erase-buffer)
+    ;;  (prin1-to-string user-section-table)
+    (insert "(setq user-section-table '(\n")
+    (mapcar '(lambda (s)
+	       (insert (prin1-to-string s))
+	       (insert "\n"))
+	    user-section-table)
+    (insert "))\n\n")
+    
+    (insert "(setq user-article-table '(\n")
+    (mapcar '(lambda (s)
+	       (insert (prin1-to-string s))
+	       (insert "\n"))
+	    user-article-table)
+    (insert "))\n\n")
+    
+    (insert "(setq user-env-table '(\n")
+    (mapcar '(lambda (s)
+	       (insert (prin1-to-string s))
+	       (insert "\n"))
+	    user-env-table)
+    (insert "))\n\n")
+    
+    (insert "(setq user-fontsize-table '(\n")
+    (mapcar '(lambda (s)
+	       (insert (prin1-to-string s))
+	       (insert "\n"))
+	    user-fontsize-table)
+    (insert "))\n\n")
+    
+    (insert "(setq user-singlecmd-table '(\n")
+    (mapcar '(lambda (s)
+	       (insert (prin1-to-string s))
+	       (insert "\n"))
+	    user-singlecmd-table)
+    (insert "))\n")
+    
+    (basic-save-buffer)
+    (kill-buffer (current-buffer))
+    (message "")
+    (setq YaTeX-user-table-modified nil))
 )
 
 ;; --------------- General sub functions ---------------
@@ -1041,7 +1097,13 @@ Call this function with argument as next example,
 ; 1.29 |     7/21 | Add YaTeX-end-environment.
 ; 1.30 |     9/26 | Support project 30 lines(other than 25 lines).
 ; 1.31 |    10/28 | Variable argument for previewer from %#! usage.
-; 1.32 |    10/16 | YaTeX-goto-corresponding-environment.
+; 1.32 |    11/16 | YaTeX-goto-corresponding-environment.
+;      |          | Comment out region/paragraph added.
+; 1.33 |    11/29 | Variable default value, on DOS and other OS.
+;      |          | make dvi2-command buffer local.  Change the behavior of
+;      |          | comment out region/paragraph on the \begin{} or \end{}
+;      |          | line.  Make faster YaTeX-end-environment. Add YaTeX-
+;      |          | define-key, YaTeX-define-begend-(region-)key.
 ;------+----------+---------------------------------------------------------
 ;
 ;----------------------------- End of yatex.el -----------------------------
