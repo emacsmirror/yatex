@@ -1,11 +1,11 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs.
-;;; yatex.el rev.1.27
+;;; yatex.el rev.1.28
 ;;; (c)1991 by Hirose Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Jun  4 20:03:06 1992 on figaro
+;;; Last modified Mon Jul 20 21:46:13 1992 on figaro
 
 (provide 'yatex-mode)
-(defconst YaTeX-revision-number "1.27"
+(defconst YaTeX-revision-number "1.28"
   "Revision number of running yatex.el"
 )
 
@@ -24,7 +24,7 @@ You can select favorite prefix key by setq in your ~/.emacs."
 (defvar YaTeX-open-lines 1
   "Blank lines between text and \??{??}"
 )
-(defvar YaTeX-fill-prefix "\t"
+(defvar YaTeX-fill-prefix ""
   "fill-prefix used for auto-fill-mode.
 The defalut value is single TAB."
 )
@@ -50,7 +50,9 @@ correctly set."
   "Regular expression of line number of latex error.  Perhaps your latex
 command stops at this error message with line number of LaTeX source text."
 )
-(defvar latex-dos-emergency-message "Emergency stop"
+(defvar latex-dos-emergency-message
+  ;;"Emergency stop"      ;<- for Micro tex, ASCII-pTeX 1.6
+  "No pages of output."   ;<- for ASCII-pTeX 1.7
   "Because Demacs (GNU Emacs on DOS) cannot have pararell process, the
 latex command which is stopping on a LaTeX error, is terminated by Demacs.
 Many latex command on DOS display some message when it is terminated by
@@ -240,13 +242,6 @@ process."
 
 ;---------- Customize as you like above ----------
 
-;---------- Kanji code selection ----------
-(if (eq system-type 'ms-dos)
-    (setq YaTeX-kanji-code 1)
-  (setq YaTeX-kanji-code 2))
-
-(setq kanji-display-code YaTeX-kanji-code
-      kanji-fileio-code  YaTeX-kanji-code)
 ;---------- Define other variable ----------
 (defvar env-name "document")		;Initial tex-environment completion
 (defvar section-name "documentstyle[12pt]") ;Initial tex-section completion
@@ -267,8 +262,15 @@ and yatex-mode starts.")
   (interactive)
   (kill-all-local-variables)
   (setq major-mode 'YaTeX-mode)
-  (setq mode-name "$@$d$F$U$b!<$I(J")
+  (setq mode-name "‚â‚Ä‚Ó‚à[‚Ç")
   (turn-on-auto-fill)
+  (make-local-variable 'kanji-display-code)
+  (make-local-variable 'kanji-fileio-code)
+  (if (eq system-type 'ms-dos)
+      (setq YaTeX-kanji-code 1)
+    (defvar YaTeX-kanji-code 2))
+  (setq kanji-display-code YaTeX-kanji-code
+	kanji-fileio-code  YaTeX-kanji-code)
   (make-local-variable 'fill-column)
   (make-local-variable 'fill-prefix)
   (setq fill-column 72
@@ -541,7 +543,7 @@ completion begins.")
   "Return string of the version of running YaTeX."
   (interactive)
   (message
-   (concat "Yet Another TeX mode $@!VLnD;!W(J Revision "
+   (concat "Yet Another TeX mode u–ì’¹v Revision "
 	   YaTeX-revision-number))
 )
 
@@ -587,7 +589,6 @@ completion begins.")
 (defun YaTeX-compile ()
   "Execute jlatex (or other) to LaTeX compile."
   (interactive)
-  (basic-save-buffer)
   (if YaTeX-compilation-process
    (if (eq (process-status YaTeX-compilation-process) 'run)
 	(progn (interrupt-process YaTeX-compilation-process)
@@ -600,12 +601,20 @@ completion begins.")
   (if (eq system-type 'ms-dos)				;if MS-DOS
       (with-output-to-temp-buffer "*YaTeX-compilation*"
 	(message (concat "Compiling " (buffer-name) "..."))
-	(call-process shell-file-name nil "*YaTeX-compilation*" nil
-		      "/c " tex-command (buffer-name) ))
+	(YaTeX-put-nonstopmode)
+	(basic-save-buffer)
+	(call-process shell-file-name
+		      nil
+		      "*YaTeX-compilation*" nil
+		      "/c" (YaTeX-get-latex-command))
+		      ;;;"/c " tex-command (buffer-name) )
+	(YaTeX-remove-nonstopmode))
     (setq YaTeX-compilation-process			;if UNIX
 	  (with-output-to-temp-buffer "*YaTeX-compilation*"
+	    (basic-save-buffer)
 	    (start-process "LaTeX" "*YaTeX-compilation*" shell-file-name "-c"
-			   (concat tex-command " "(buffer-name) ""))
+			   (YaTeX-get-latex-command))
+			   ;;;tex-command (buffer-name) "")
 	    ))
     (set-process-sentinel YaTeX-compilation-process 'YaTeX-compile-sentinel))
   (setq current-TeX-buffer (buffer-name))
@@ -671,7 +680,7 @@ avoid make confliction of line numbers by editing."
 	  (re-search-forward "[0-9]")
 	  (forward-char -1)
 	  (set-mark (point))
-	  (skip-chars-forward "[0-9]")
+	  (skip-chars-forward "0-9")
 	  (narrow-to-region (point) (mark))
 	  (goto-char (point-min))
 	  (setq YaTeX-error-line (read (current-buffer))))
@@ -716,6 +725,60 @@ avoid make confliction of line numbers by editing."
   (other-window 1)
   (goto-char (point-max))
   (other-window -1)
+)
+
+(defun YaTeX-put-nonstopmode ()
+  (if (boundp 'YaTeX-need-nonstop)
+      (if (re-search-backward "\\nonstopmode{}" (point-min) t)
+	  nil                    ;if already written in text then do nothing
+	(save-excursion
+	  (goto-char (point-min))
+	  (insert "\\nonstopmode{}%_YaTeX_%\n")))
+    )
+)
+
+(defun YaTeX-remove-nonstopmode ()
+  (if (boundp 'YaTeX-need-nonstop) ;for speed
+      (save-excursion
+	(goto-char (point-min))
+	(forward-line 1)
+	(narrow-to-region (point-min) (point))
+	(goto-char (point-min))
+	(delete-matching-lines "^\\\\nonstopmode\\{\\}%_YaTeX_%$")
+	(widen)))
+)
+
+(defun YaTeX-get-latex-command ()
+  "Specify the latex-command name and its argument.
+If there is a line which begins by string: \"%#!\", the following
+strings are assumed to be the latex-command and arguments.  The
+default value of latex-command is:
+	tex-command (buffer-name)
+and if you write \"%#!jlatex\" in the beginning of certain line.
+	\"jlatex \" (buffer-name)
+will be the latex-command,
+and you write \"%#!jlatex main.tex\"
+	\"jlatex main.tex\"
+will be given to the shell."
+  (let*
+      ((default-command
+	 (concat tex-command " " (buffer-name)))) ;default value
+    (save-excursion
+      (goto-char (point-min))
+      (if (null (re-search-forward "^%#!" (point-max) t))
+	  default-command
+	(skip-chars-forward "%#! 	")
+	(if (eolp)
+	    default-command
+	  (let ((s (point)))
+	    (skip-chars-forward "A-z")	;Skip command name
+	    ;(setq YaTeX-latex-command (buffer-substring s (point)))
+	    (if (eolp)			;Only change command name
+		(concat (buffer-substring s (point)) " " (buffer-name))
+	      (end-of-line)		   ;Change entire command name
+	      (buffer-substring s (point)) ;including arguments.
+	    ))
+	))))
 )
 
 (defun YaTeX-read-user-completion-table ()
@@ -825,6 +888,8 @@ Call this function with argument as next example,
 ;      |          | append-kill-emacs-hook was revised to append-to-hook.
 ; 1.26 |     1/18 | Region mode is added to {\large }. Default fontsize.
 ; 1.27 |     1/21 | Default name on completing-read,
+; 1.28 |     7/ 2 | Add \nonstopmode{} automatically on DOS.
+;      |     7/20 | %#! usage to specify latex command and its arguments.
 ;------+----------+---------------------------------------------------------
 ;
 ;----------------------------- End of yatex.el -----------------------------
