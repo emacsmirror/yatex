@@ -2,7 +2,7 @@
 ;;; YaTeX library of general functions.
 ;;; yatexlib.el
 ;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Feb 17 22:08:23 1995 on VFR
+;;; Last modified Fri Apr 28 16:17:44 1995 on VFR
 ;;; $Id$
 
 ;;;###autoload
@@ -316,8 +316,8 @@ If no such window exist, switch to buffer BUFFER."
 	  (and (featurep 'windows) (fboundp 'win:adjust-window)
 	       (win:adjust-window))))
        ((and (featurep 'windows) (fboundp 'win:get-buffer-window)
-	     (win:get-buffer-window buffer))
-	(win:switch-window (win:get-buffer-window buffer))
+	     (let ((w (win:get-buffer-window buffer)))
+	       (and w (win:switch-window w))))
 	(select-window (get-buffer-window buffer)))
        (t (switch-to-buffer buffer))))
 )

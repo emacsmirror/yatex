@@ -1,7 +1,21 @@
 	What's new in YaTeX
 	yatex.el 各バージョンの変更点について
 
-1.58	YaTeX-close-paren-always が 'never なら常に自動的に括弧を閉じない。
+1.59	%(コメント)のhilitのバグを修正。
+	tabular環境のお任せ改行で無限ループになることがあるのを回避。
+	アドイン関数が効かないバグを修正。
+	[prefix] i (YaTeX-fill-item) の不具合修正
+	`yatex19.el' をロードしているのを修正
+	italic フォントの使い方の説明を書いてみた (docs/qanda)
+
+1.58	数式環境専用コマンドを maketitle 型補完した時には自動的に$$で囲む。
+	[prefix] x でキーマップ YaTeX-user-extensional-map を呼び出す。この
+	キーマップにはユーザが好きなキーに好きな関数を定義できる。
+	section 型補完で maketitle 型のものも入れられるようにした(引数0個)。
+	YaTeX-close-paren-always が 'never なら常に自動的に括弧を閉じない。
+	YaTeX-skip-default-reader が non-nil なら section 型補完のデフォ
+	ルトの引数リーダを呼ばない。
+	YaTeX-simple-messages が non-nil なら簡素なメッセージで表示。
 	英語版のLaTeXヘルプも完備した。
 	fj.sourcesにポスト。
 

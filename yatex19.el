@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Feb  2 23:44:30 1995 on figaro
+;;; Last modified Mon May 15 15:50:04 1995 on inspire
 ;;; $Id$
 
 ;;; Ç∆ÇËÇ†Ç¶Ç∏ hilit19 ÇégÇ¡ÇƒÇ¢ÇÈéûÇ…êFÇ™ïtÇ≠ÇÊÇ§Ç…ÇµÇƒ
@@ -253,12 +253,16 @@ Assumes PATTERN begins with `{'."
 (defun YaTeX-19-region-comment (pattern)
   "Return list of comment start and end point."
   (if (re-search-forward pattern nil t)
-      (cons (match-beginning 1) (match-end 0))))
+      (cons (match-beginning 2) (match-end 0))))
+
+;;(make-face 'tt)
+;;(set-face-font 'tt "-schumacher-clean-medium-r-normal--*-*-*-*-*-*-*-*")
+;;(hilit-translate 'tt "white")
 
 (defvar YaTeX-hilit-patterns-alist
   '(
     ;; comments
-    (YaTeX-19-region-comment "[^\\]\\(%\\).*$" comment)
+    (YaTeX-19-region-comment "\\([^\\]\\|^\\)\\(%\\).*$" comment)
     
     (YaTeX-19-region-section-type "\\\\footnote\\(mark\\|text\\)?{" keyword)
     ("\\\\[a-z]+box" 0 keyword)
@@ -302,8 +306,10 @@ Assumes PATTERN begins with `{'."
     ("\\\\\\(include\\|input\\|bibliography\\){" "}" include)
 
     ;; "wysiwyg" emphasis -- these don't work with nested expressions
-    ;; ("{\\\\\\(em\\|it\\|sl\\)" "}" italic)
+    (YaTeX-19-region-large-type "{\\\\\\(em\\|it\\|sl\\)"  italic)
     (YaTeX-19-region-large-type "{\\\\bf" bold)
+    ;;;(YaTeX-19-region-large-type "{\\\\tt" tt)
+    ;;;("\\\\begin{verbatim" "\\\\end{verbatim" tt)
 
     ("``" "''" string)
 
@@ -360,7 +366,7 @@ Assumes PATTERN begins with `{'."
 			     (- fG (/ (* level fG) 40))
 			     (- fB (/ (* level fB) 40)))
 		  bg (format "hex-%02x%02x%02x"
-			     (- bR (/ (* level bR) 15)) ;20 musn't be constant
+			     (- bR (/ (* level bR) 15)) ;15 musn't be constant
 			     (- bG (/ (* level bG) 15))
 			     (- bB (/ (* level bB) 15)))
 		  from (intern (format "sectioning-%d" level))

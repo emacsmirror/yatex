@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el rev.4
 ;;; (c )1993-1995 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jan 27 23:57:40 1995 on VFR
+;;; Last modified Sat Feb 18 03:54:50 1995 on VFR
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -604,7 +604,8 @@ at least you get to read the beginning."
 		       (not YaTeX-math-mode)))
 		(throw 'complete 'escape));this tag should be exit, but...
 	    (while t
-	      (message "Sequence(TAB for menu): %s" key)
+	      (message "Sequence%s: %s"
+		       (if YaTeX-simple-messages "" "(TAB for menu)") key)
 	      (setq last-char (read-char)
 		    key (concat key (char-to-string last-char))
 		    i 0)
@@ -624,7 +625,8 @@ at least you get to read the beginning."
 		(setq key (substring key 0 -2))))
 	      
 	      (setq regkey (concat "^" (regexp-quote key)))
-	      (message "Sequence(TAB for menu): %s" key)
+	      (message "Sequence%s: %s"
+		       (if YaTeX-simple-messages "" "(TAB for menu)") key)
 	      (if
 		  (catch 'found
 		    ;;(1)input string strictly matches with alist

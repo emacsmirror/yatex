@@ -1870,6 +1870,15 @@ Non-nil に設定するとsection型コマンドの引数入力時、アドイン関数がなければ
 ミニバッファでの読み込みをせずに入力を完了させる。
 @end defvar
 
+@defvar YaTeX-create-file-prefix-g
+@code{\include}などで @kbd{prefix g}した時に、ジャンプ先が存在しないファイ
+ルであってもオープンする(@code{nil})。
+@end defvar
+
+@defvar YaTeX-simple-messages
+各種補完時のメッセージ出力を簡素化する(@code{nil})。
+@end defvar
+
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection カスタマイズ変数設定例

@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
-;;; (c ) 1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Feb  2 16:11:12 1995 on pajero
+;;; (c ) 1994, 1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Thu May 18 11:52:05 1995 on inspire
 ;;; $Id$
 
 ;;;
@@ -105,7 +105,9 @@ Return the list of (No.ofCols PointEndofFormat)"
 	 ((string-match (char-to-string elt) "p@") ;p or @ expression
 	  (setq cols (+ (if (eq elt ?p) 1 0) cols))
 	  (skip-chars-forward "^{" p)
-	  (forward-list 1))))
+	  (forward-list 1))
+	 (t (forward-char 1))		;unknown char
+	 ))
       (list cols (1+ eoform))))
 )
 ;; Insert &
