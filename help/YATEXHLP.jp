@@ -1,0 +1,534 @@
+oddsidemargin
+\setlength{\oddsidemargin}{2cm}
+右ページの左端から1インチ(2.54cm)の線と本文の距離
+
+pagestyle
+\pagestyle{スタイル}
+出力ページのヘッダとフッタのスタイルを決める。スタイルには以下のものがある:
+plain		標準スタイル. フッタにページ番号だけつける.
+empty		ヘッダにもフッタにも何も出力しない.
+headings	ヘッダにセクションに応じた見出しとページ番号をつけ
+		フッタには何も出力しない.
+myheadings	headingsのスタイルで、ヘッダの情報を \markbpth と
+		\markright で指定できる.
+
+pagenumbering
+\pagenumbering{スタイル}
+ページ番号のスタイルを決める。スタイルには以下のものがある:
+arabic		アラビア数字
+alph		小文字の英字
+Alph		大文字の英字
+roman		小文字のローマ数字
+Roman		大文字のローマ数字
+
+addtolength
+\addtolength{長さコマンド}{数値}
+第1引数の長さを第2に引数の数値を足す。
+代表的なスタイルパラメータについては \setlength の項を参照せよ。
+
+shortstack
+\shortstack[場所]{重ねて\\表示する\\内容}
+{}内の内容を\\で区切られた単位毎に積み重ねて表示する。
+[場所]は、l(左寄せ)、c(センタリング)、r(右寄せ)のいずれか。
+
+setlength
+\setlength{長さコマンド}{数値}
+第1引数の長さを第2に引数の数値に設定する。
+代表的なスタイルパラメータは以下の通り:
+(スタイルパラメータの変更はプリアンブルで行うこと)
+\evensidemargin	\footheight	\footskip	\headheight
+\headsep	\marginparsep	\marginparwidth	\oddsidemargin
+\textheight	\textwidth	\topmargin	\topskip
+\parindent	\baselineskip	\baselinestretch \parskip
+\columnsep	\columnseprule	\mathindent
+
+
+evensidemargin
+\setlength{\evensidemargin}{1em}
+左ページの左端から1インチ(2.54cm)の線と本文の距離
+
+footheight
+\setlength{\footheight}{1ex}
+フッタの高さ
+
+footskip
+\setlength{\footskip}{20pt}
+本文の箱の下端とフッタの距離
+
+headheight
+\addtolength{\headheight}{-1cm}
+ヘッダの高さ
+
+headsep
+\setlength{\headsep}{5mm}
+ヘッダと本文の間隔
+
+marginparsep
+\addtolength{\marginparsep}{3mm}
+傍注と本文の間隔
+
+marginparwidth
+\addtolength{\marginparwidth}{-1ex}
+傍注の幅
+
+oddsidemargin
+\addtolength{\oddsidemargin}{-1mm}
+右ページの左端から1インチ(2.54cm)の線と本文の距離
+
+textheight
+\addtolength{\textheight}{3em}
+本文の高さ
+
+textwidth
+\addtolength{\textwidth}{2em}
+本文の幅
+
+topmargin
+\addtolength{\topmargin}{1mm}
+ページ上端から1インチの線とヘッダの距離
+
+topskip
+\addtolength{\topskip}{-1mm}
+本文の箱の上端と一行目のテキストとの間隔
+
+parindent
+\setlength{\parindent}{20pt}
+\parindent	段落の先頭の字下げ幅.
+
+linewidth
+\addtolength{linewidth}{3em}
+\linewidth	行の幅.
+
+baselineskip
+\addtolength{baselineskip}{5pt}
+\baselineskip	行のベースライン間の最低限の高さ.
+
+baselinestretch
+\renewcommand{baselinestretch}{1.5}
+\baselinestretch \baselineskip に乗ずる係数.		(default=1)
+(* \setlengthなどではなく、\renewcommandで再定義する。)
+
+parskip
+\addtolength{parskip}{1ex}
+\parskip	段落前の垂直スペース.
+
+columnsep
+\addtolength{columnsep}{1pt}
+\columnsep	2段組みの時の段間の幅.
+
+columnseprule
+\addtolength{columnseprule}{10pt}
+\columnseprule	2段組みの時の段間の罫線の幅.		(default=0pt)
+
+mathindent
+\addtolength{mathindent}{2em}
+\mathindent	スタイルオプションで fleqn を指定した場合の、
+		左マージンからの数式の字下げ幅.
+
+section
+\section{セクション名}
+第一引数のセクション名でセクションの区切りを設定。
+
+LaTeX
+\LaTeX
+\LaTeX のロゴを表示。\LaTeX の定義は以下の通り。
+\def\LaTeX{{\rm L\kern-.36em\raise.3ex\hbox{\sc a}\kern-.15em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+protect
+\protect「fragileなコマンド」
+RTFM
+
+newcommand
+\newcommand{\コマンド名}[引数の数]{定義}
+「コマンド名」を「引数の数」個の引数を取る「定義」であるマクロとして定義
+する。定義中でn番目の引数は #n として参照する。
+	\newcommand{\foo}[1]{\underline{#1}}
+とすると \foo{bar} は \underline{bar} と展開される。したがってフォント指
+定子を含む場合newcommandの{}につられて、
+	\newcommand{\foo}[1]{\bf #1}
+とすると \foo{bar} がテキスト中で \bf bar と展開されてしまうので、
+	\newcommand{\foo}[1]{{\bf #1}}
+としなければならない。
+
+  「コマンド名」のマクロが既に定義されている場合はエラーとなる。再定義す
+る場合は、\renewcommandを使う。
+
+renewcommand
+\renewcommand{\コマンド名}[引数の数]{定義}
+\newcommandを参照。
+
+newenvironment
+\newenvironment{環境名}[引数の数]{定義1}{定義2}
+新たな環境を定義する。
+\begin{環境名}の時の展開内容を「定義1」に\end{環境名}の時の展開内容を
+「定義2」に記述する。
+	\newcommand{\環境名}{定義1} \def{\end環境名}{定義2}
+と同値。
+
+renewenvironment
+\renewenvironment{環境名}[引数の数]{定義1}{定義2}
+\newenvironmentを参照。
+
+typeout
+\typeout{メッセージ}
+タイプセット中に「メッセージ」を端末に出力する。
+
+typein
+\typein{メッセージ}	\typein[\マクロ]{メッセージ}
+タイプセット中に「メッセージ」をプロンプトに出し、入力した結果を実行する。
+第二の書式では、「\マクロ」を入力したものに定義する。
+
+par
+\par
+段落の区切りの役割をする。空行と同じ。
+
+everypar
+\everypar
+RTFM
+
+nopagebreak
+\nopagebreak[i]		(i = 0,1,2,3,4)
+改頁を強さiで抑制する([i]を省略すると4)。
+
+pagebreak
+\pagebreak[i]		(i = 0,1,2,3,4)
+改頁を強さiで促す([i]を省略すると4)。
+
+linebreak
+\linebreak[i]		(i = 0,1,2,3,4)
+改行を強さiで促す([i]を省略すると4)。
+
+nolinebreak
+\nolinebreak[i]		(i = 0,1,2,3,4)
+改行を強さiで抑制する([i]を省略すると4)。
+
+samepage
+\samepage
+改頁を禁止する。
+RTFM
+
+obeycr
+\obeycr
+<CR> を \\. に定義する。→\restorecr
+
+restorecr
+\restorecr
+\obeycrで変更した<CR>の定義を元に戻す。
+
+\
+\\		\\[長さ]
+(任意の場所で)改行する。段落中では、\newline と同じ。
+オプション引数の[長さ]を指定すると、次の行との間隔を
+\vspace{長さ}によって確保する。
+
+addvspace
+\addvspace{スキップ}
+縦方向の間隔に「スキップ」の値を足す。ただし
+\addvspace{S1} \addvspace{S2} と複数の値を同時に指定しても
+\addvspace{S1,S2のうち大きいほう} と同値になる。
+
+vspace
+\vspace{間隔}		\vspace*{間隔}
+垂直方向に「間隔」ぶんのスペースを足す。
+\vspace* はどんな場所でもスペースを足すが、\vspace はページの先頭や
+末尾でははたらかない。
+
+vspace*
+\vspace{間隔}		\vspace*{間隔}
+垂直方向に「間隔」ぶんのスペースを足す。
+\vspace* はどんな場所でもスペースを足すが、\vspace はページの先頭や
+末尾でははたらかない。
+
+hspace
+\hspace{間隔}		\hspace*{間隔}
+水平方向に「間隔」ぶんのスペースを足す。
+\hspace* はどんな場所でもスペースを足すが、\hspace は行の先頭や末尾では
+はたらかない。
+
+hspace*
+\hspace{間隔}		\hspace*{間隔}
+水平方向に「間隔」ぶんのスペースを足す。
+\hspace* はどんな場所でもスペースを足すが、\hspace は行の先頭や末尾では
+はたらかない。
+
+smallskip
+\smallskip
+垂直方向に小さな間隔を空ける。
+\def\smallskip{\vspace\smallskipamount}
+
+medskip
+\medskip
+垂直方向に中くらいの間隔を空ける。
+\def\medskip{\vspace\medskipamount}
+
+bigskip
+\bigskip
+垂直方向に大きな間隔を空ける。
+\def\bigskip{\vspace\bigskipamount}
+
+,
+\,
+狭いスペースを空ける。段落モード、LRモード、数式モードいずれでも利用可。
+クォートの中にクォートを書くときなどに用いる。
+例: ``\,`Foo', he said.''
+数式モードで使えるスペースには以下のものがある:
+	\:	少し広い
+	\!	負で狭い
+	\;	広い
+
+:
+$\:$
+少し広いスペース。数式モードのみ。
+
+!
+$\!$
+狭い負のスペース。数式モードのみ。
+
+;
+$\;$
+広いスペース。数式モードのみ。
+
+@whilenum
+\@whilenum TEST \do {BODY}  
+この辺あとで
+
+nofiles
+\nofiles
+プリアンブルで宣言すると、.aux, .idx, .lof, .lot, .toc ファイルの作成が
+抑制される。
+
+includeonly
+\includeonly{sub1}	\includeonly{sub1,sub3}
+\include{}で読み込むファイルのうち、実際に読み込み処理するものを指定する。
+(.texは省略可)
+\includeonlyの引数リストにないファイルはまったく処理されない、または前回
+以前に処理されている場合そこから全く変更がないものとして扱われる。
+
+include
+\include{FILE}
+\clearpage \input{FILE} \clearpage
+と同じはたらきをする。
+
+input
+\input{FILE}
+FILE.tex がそこにあるかのように処理を続ける。
+
+setcounter
+\setcounter{FOO}{VAL}
+カウンタFOOの値をVALに設定する。
+
+addtocounter
+\addtocounter{FOO}{VAL}
+カウンタFOOの値にVALを加える。
+
+newcounter
+\newcounter{COUNTER}[OLDCTR]
+新しいカウンタCOUNTERを設定する。
+オプション引数[OLDCTR]を指定すると、既存のカウンタOLDCTRの値が
+\stepcounter もしくは \addtocounter で変更されるたびにCOUNTERの値もリセッ
+トされる。
+
+value
+\value{COUNTER}
+COUNTERの値を返す。\protect を前置してはならない。
+
+stepcounter
+\stepcounter{FOO}
+カウンタFOOの値をインクリメントする。FOOに従うカウンタがあればそれらをリ
+セットする。
+
+refstepcounter
+\refstepcounter{FOO}
+カウンタFOOの値をインクリメントする。FOOに従うカウンタがあればそれらをリ
+セットする。\stepcounterとの違いは、\refstepcounter{FOO} の直後に 
+\label{hoge} があった場合に、\ref{hoge} の値が \value{FOO} を持つように
+「\ref値」を設定することである。
+
+arabic
+\arabic{COUNTER}
+アラビア数字でCOUNTERの値を出力。
+
+roman
+\roman{COUNTER}
+小文字のローマ数字でCOUNTERの値を出力。
+
+Roman
+\Roman{COUNTER}
+大文字のローマ数字でCOUNTERの値を出力。
+
+alph
+\alph{COUNTER}
+小文字の英字でCOUNTERの値を出力。
+
+Alph
+\Alph{COUNTER}
+大文字の英字でCOUNTERの値を出力。
+
+fnsymbol
+\fnsymbol{COUNTER}
+脚注シンボル(1 = *, 2 = \dagger, ...) でCOUNTERの値を出力。数式モードのみ。
+
+label
+\label{LABEL}
+ラベルLABELの値をその時の「\ref値」に設定する。
+この値は、\ref{LABEL}によって参照される。また\pageref{LABEL}により
+\label{LABEL}の存在するページ番号が参照される。
+「\ref値」とは \section などのセクションコマンド、enumerate環境での
+\item コマンド、theorem環境などによって設定される値である。例えば、
+enumerate環境中の \item の直後ではそのitemの番号が「\ref値」となり、
+そこにある \label{LABEL} はitemの番号をLABELにセットする。
+
+ref
+\ref{LABEL}
+\label{LABEL}で設定したLABELの値を参照する。
+本文中で設定されたラベルにたいしてはページ番号が、
+図表中で設定されたラベルは図表番号が、
+enumerateされたitemで設定されたラベルにたいしては、item番号が返される。
+
+pageref
+pageref{LABEL}
+\label{LABEL}の存在するページ番号を参照する。
+
+(
+\( 数式 \)
+文中数式を組む。
+\begin{math} 数式 \end{math}
+と同値。\( および \)は fragile.
+
+)
+\( x^2 = 4 \)
+文中数式を組む。
+\begin{math} 数式 \end{math}
+と同値。\( および \)は fragile.
+
+[
+ディスプレイ数式を組む。
+\[ 数式 \]
+\begin{displaymath} 数式 \end{displaymath}
+と同値。\[ および \]は fragile.
+
+)
+\[ 数式 \]
+ディスプレイ数式を組む。
+\begin{displaymath} 数式 \end{displaymath}
+と同値。\[ および \]は fragile.
+
+equation
+\begin{equation} 数式 \end{equation}
+番号つきの数式をdisplaymath環境で組む。
+
+eqnarray
+\begin{eqnarray} 方程式の並び \end{eqnarray}
+方程式の並びを3つの桁に整理して出力する。3つの桁は&記号によって、
+「左辺 & 等不等号 & 右辺」のように区切られる。例えば以下のようにする。
+\begin{eqnarray}
+ 3x + 2y & = & 4 \\
+  x - 4y & = & -5
+\end{eqnarray}
+eqnarray* 環境は数式番号を出力しないほかはeqnarray環境と同じである。
+
+eqnarray*
+\begin{eqnarray*} 方程式の並び \end{eqnarray*}
+数式番号を出力しないほかはeqnarray環境と同じである。
+
+frac
+\frac{分子}{分母}
+ 分子
+------   のような分数形式を組む。{分子 \over 分母} と同じ。
+ 分母
+
+sqrt
+\sqrt[N]{式}
+「式」のN乗根をあらわす数式。[N]を省略すると平方根。
+
+lefteqn
+\lefteqn{式}
+ディスプレイ数式モードにおいて、「式」が幅ゼロであるとみなして、左寄せす
+る。たとえばeqnarray環境において、左辺が長くなってしまう場合に、行を
+折り畳むために利用する。
+\begin{eqnarray}
+ \lefteqn{a_1 + a_2 + \cdots + a_n =} \\
+ 	&	&	a_1 + b_1 + \cdots + z_1 + \\
+ 	&	&	b_2 + c+2 + \cdost + z_2
+\end{eqnarray}
+
+center
+\begin{center} 内容 \end{center}
+「内容」を中央寄せする。各行は\\によって改行位置を指定する。
+→ \centering
+
+flushright
+\begin{flushright} 内容 \end{flushright}
+「内容」を右寄せする。各行は\\によって改行位置を指定する。
+→ \raggedright
+
+flushleft
+\begin{flushleft} 内容 \end{flushleft}
+「内容」を左寄せする。各行を\\によって改行位置を指定するとその位置で改行
+するが、指定しないと適当な行長のところで改行してくれる。
+→ \raggedleft
+
+centering
+\centering 
+段落をセンタリングして組版する。
+たとえば table環境、figura環境の先頭で宣言すると環境の終りまでをセンタリ
+ングして組む。
+
+raggedright
+\raggedright
+段落を右寄せして組版する。
+
+raggedleft
+\raggedleft
+段落を左寄せして組版する。
+
+verbatim
+\begin{verbatim} 内容 \end{verbatim}
+「内容」を固定幅フォントのタイプライタ書体で表示し、すべての文字を(TeXの
+シーケンスとしてではなく)そのまま解釈する。
+
+#「ばーばちむ」じゃなくて「ばーべいたむ」だ!
+
+verbatim*
+\begin{verbatim*} 内容 \end{verbatim*}
+通常のverbatim環境において、スペース文字を空白ではなく、TeXbook に載って
+いるスペース文字のように印字する。
+
+(註)こういう感じ→ |_|
+    (苦しい…)
+
+list
+\begin{list}{デフォルトラベル}{整形パラメータ} ... \end{list}
+リスト環境に入る。リスト環境では \item で指定された各項目を一定の字下げ
+で列挙する。第1引数には \item のオプション引数のラベルが省略された時のデ
+フォルトラベルを指定し、第2引数には各itemを置く時に処理されるパラメータ
+を指定する。
+例:
+\begin{list}%
+ {$\diamond$}
+ {\addtolength{\leftmargin}{4em}}
+ \item 第1引数には\verb|\item| にオプション引数をつけなかった時にふる、
+       デフォルトのラベルを与える。
+ \item 第2引数には各itemを置く時に処理されるパラメータを与える。
+ \item[*] のようにオプション引数をつけるとそれがラベルとなる。
+\end{list}
+
+  list環境の体裁を制御する変数には以下のものがある。
+水平方向:
+\labelwidth	\labelsep	\leftmargin	\rightmargin	\itemindent
+\linewidth	\listparindent
+垂直方向:
+\topsep		\partopsep	\itemsep	\parsep
+
+
+verb
+\verb#内容#
+\verbの直後に来る文字と、次にあらわれる同じ文字とのあいだに挟まれたもの
+を verbatim で表示する。\verb|foo| と \verb,foo, は同じ結果が得られる。
+
+
+
+newpage
+clearpage
+cleardoublepage
