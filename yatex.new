@@ -2,6 +2,39 @@
 	Yet Another tex-mode for Emacs
 	yatex.el 各バージョンの変更点について。
 
+1.37:	YaTeX-kill-* の、%#BEGIN/%#END対応。
+	対応する環境へのジャンプで、ネストした環境を正しく検出。
+	verbatim 環境では " は " のまま入力。
+	タイプセット時に未保存の .tex バッファのセーブを確認。
+	カレントファイルが、メインファイルの includeonly からもれている場
+	合には、確認後自動的に includeonly に追加。
+	[prefix] i の \item 項目の桁揃え(fill-prefix自動調整)追加。
+	[prefix] a のアクセント記号入力メニュー追加。
+	[prefix] 4^ で別ウィンドウでメインファイルを選択。
+	[prefix] tl で lpr メニュー。view-error の見直し。
+	Demacs でのタイプセット時には Hit Any Key を出さずに終了。
+	修論が終わった:-)。
+
+1.36:	リジョン指定のタイプセットのサポート。%#BEGINと%#ENDで囲まれた領域、
+	%#END が無ければ %#BEGIN 以降、両方なければマークとポイントの間を
+	texput.tex に保存し、jlatex を起動する。
+
+1.35:	[prefix] k でカーソル上にあるオブジェクトの消去。まずは、対応する
+	begin/end の消去(YaTeX-kill-environment)のみ。
+	[prefix] c でカーソル上にあるオブジェクトの変更。まずは、LaTeX の
+	環境名の変更(YaTeX-change-environment)のみ。
+	アドイン関数のサポート。まずは、begin型補完時に呼び出せる関数があ
+	るかチェック。
+	補完入力した位置を YaTeX-current-position-register に保存。
+	begin型補完を入力した位置と同じインデントで補完。
+
+1.34:	Mule 対応(漢字コード関係の見直し)。
+	[prefix] g を押した時の行の内容により、動作を変えるようにした。
+	YaTeX-prev-error で tex コマンドのログからどのファイルから出された
+	エラーか調べ、そのファイルに switch-to-buffer するようにした。
+	typeset 中に何かキーを押して、編集バッファに戻った場合、typeset が
+	終了したら自動的に、typeset バッファの一番下を表示するようにした。
+
 1.33:	コマンド名のデフォルト値を OS によって自動的に選択。
 	\begin{} \end{} の行でコメント操作したときの動作を変更。
 	dvi2-command をバッファローカルに。
