@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el rev.4
 ;;; (c )1993-1995 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Feb  1 13:04:16 1996 on supra
+;;; Last modified Tue Apr 23 23:17:24 1996 on inspire
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -254,7 +254,7 @@
    ("6"		"partial"	(" -+\n+-+\n+-+" YaTeX-image-partial))
    ("partial"	"partial"	(" -+\n+-+\n+-+" YaTeX-image-partial))
    ("round"	"partial"	(" -+\n+-+\n+-+" YaTeX-image-partial))
-   ("[]"	"box"		"[]")
+   ("[]"	"Box"		"[]")
    ("Diamond"	"Diamond"	"/\\\n\\/")
    ("3"		"triangle"	"/\\\n~~")
    ("C"		"clubsuit"	" o\no+o\n |")
@@ -522,7 +522,7 @@ This value is appended with YaTeX-verbatim-environments.")
 
 (defun YaTeX-math-show-menu (match-str)
   (save-window-excursion
-    (pop-to-buffer YaTeX-math-menu-buffer)
+    (YaTeX-showup-buffer YaTeX-math-menu-buffer nil t)
     (let ((maxcols (max 1 (/ (screen-width) YaTeX-math-sign-width)))
 	  (case-fold-search nil)
 	  (cols 0) (list alist) command)

@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Feb  2 02:09:57 1996 on supra
+;;; Last modified Fri Mar 29 00:15:35 1996 on inspire
 ;;; $Id$
 
 (require 'yatex)
@@ -328,15 +328,23 @@ PROC should be process identifier."
   (save-excursion
     (YaTeX-showup-buffer
      buffer (function (lambda (x) (nth 3 (window-edges x)))))
-    (set-buffer (get-buffer-create buffer))
+    (let ((df default-directory))		;preserve current buf's pwd
+      (set-buffer (get-buffer-create buffer))	;1.61.3
+      (setq default-directory df)
+      (cd df))
     (erase-buffer)
     (if YaTeX-dos
 	(call-process
 	 shell-file-name nil buffer nil YaTeX-shell-command-option command)
-      (set-process-buffer
-       (start-process
-	"system" buffer shell-file-name YaTeX-shell-command-option command)
-       (get-buffer buffer))))
+      (if (and (get-buffer-process buffer)
+	       (eq (process-status (get-buffer-process buffer)) 'run)
+	       (not
+		(y-or-n-p (format "Process %s is running. Continue?" buffer))))
+	  nil
+	(set-process-buffer
+	 (start-process
+	  "system" buffer shell-file-name YaTeX-shell-command-option command)
+	 (get-buffer buffer)))))
 )
 
 (defvar YaTeX-preview-command-history nil

@@ -14,7 +14,7 @@
 @subtitle Yet Another tex-mode for emacs
 @title Wild Bird
 @subtitle // YaTeX //
-@author @copyright{} 1991-1994 by    HIROSE, Yuuji [yuuji@@ae.keio.ac.jp]
+@author @copyright{} 1991-1996 by    HIROSE, Yuuji [yuuji@@ae.keio.ac.jp]
 @end titlepage
 
 @node Top, What is YaTeX?, (dir), (dir)
@@ -37,7 +37,7 @@
 * Changing and Deleting::       Changing/deleting certain unit of text
 * Filling::                     Filling an item or paragraph
 * Updation of includeonly::     Free from maintaining includeonly
-* What column?::                Guidance to tabular column
+* What column::                 Check what table-column the cursor belong
 * Intelligent newline::         Guess requisites of new line
 * Online help::                 On-line documentation of LaTeX
 * Browsing file hierarchy::     Walking through file hierarchy
@@ -133,7 +133,8 @@ Language Enhancement to GNU Emacs), and latex on DOS.
         (@kbd{C-c b}, @kbd{C-c s}, @kbd{C-c l}, @kbd{C-c m})
 @item Enclosing text into La@TeX{} environments or commands
       (@kbd{C-u} @var{AboveKeyStrokes})
-@item Displaying the structure of text at entering sectioning delimiters
+@item Displaying the structure of text at entering sectioning commands
+@item Lump shifting of sectioning commands (@ref{view-sectioning})
 @item Learning unknown/new La@TeX{} commands for the next completion
 @item Argument reading with a guide for complicated La@TeX{} commands
 @item Generating argument-readers for new/unsupported commands(@file{yatexgen})
@@ -1045,6 +1046,7 @@ that have relation each other.
 @itemize @bullet
 @item @code{\begin@{@}} <-> @code{\end@{@}}
 @item @code{%#BEGIN} <-> @code{%#END}
+@item On the image-including line -> corresponding viewer or drawing tool
 @item @code{\label@{@}} <-> @code{\ref@{@}}
 @item @code{\include(\input)} -> included file
 @item @code{\bibitem@{@}} <-> @code{\cite@{@}}
@@ -1069,6 +1071,36 @@ typically in the main text, YaTeX switches buffer to @file{chap1.tex}.
 do the same job as @kbd{[prefix] g} except it's done in other window.
 Note that this function doesn't work on @code{begin/end},
 @code{%#BEGIN/%#END} pairs because it is meaningless.
+
+@section{Invoking image processor}
+@cindex{Drawing tool invocation}
+
+`image-including line' described above means such lines as
+@code{\epsfile@{file=foo.ps@}}.  If you type @kbd{[prefix] g} on that
+line, YaTeX automatically searches source of `foo.ps' and invokes image
+viewer or drawing tool correspoinding to it.  For example; if you draw
+an image foo.obj with Tgif and enclose its product named foo.eps by
+@code{\epsfile} command.  Typing @kbd{[prefix] g} on @code{\epsfile} line
+make YaTeX invoke @code{tgif foo.obj}.  How a processor is choosen is as
+follows.
+
+@enumerate
+@item
+If there is an expression matching with one of the pattern
+defined in @code{YaTeX-processed-file-regexp-alist}, extract file name
+from regexp group surrounded by \\(\\).  (Which group corresponds is
+written in the cdr part of each list.)  If no matches were found, do
+nothing.
+@item
+If there is a pattern as `%PROCESSOR' which is defined in the variable
+@code{YaTeX-file-processor-alist}, call that processor giving the
+file name with corresponding extension.
+@item
+If not, check the existence of each file which is supplied the
+extension in the cdr part of each list of
+@code{YaTeX-file-processor-alist}.  If any, call the corresponding
+image viewer or drawing tool.
+@end enumerate
 
 @section Jump to main file
 
@@ -1250,7 +1282,7 @@ Besides, putting cursor on the first occurrence of non-whitespace
 character on a line changes the fill-prefix temporarily to the depth of
 the line.
 
-@node Updation of includeonly, What column?, Filling, Top
+@node Updation of includeonly, What column, Filling, Top
 @comment  node-name,  next,  previous,  up
 @chapter Updation of @code{\includeonly}
 @cindex includeonly
@@ -1282,7 +1314,7 @@ to @code{\includeonly} list, @kbd{r} to replace \@code{includeonly} list
 by the current file, and type @kbd{%} to comment out the
 @code{\includeonly} line.
 
-@node What column?, Intelligent newline, Updation of includeonly, Top
+@node What column, Intelligent newline, Updation of includeonly, Top
 @comment  node-name,  next,  previous,  up
 @chapter What column?
 @cindex what column
@@ -1320,7 +1352,7 @@ environment  as a row of column  headers, you  can  create a row of
 virtual column  headers by  putting  them  in the  first line  and
 commenting that line with @code{%}.
 
-@node Intelligent newline, Online help, What column?, Top
+@node Intelligent newline, Online help, What column, Top
 @comment  node-name,  next,  previous,  up
 @chapter Intelligent newline
 @cindex Intelligent newline

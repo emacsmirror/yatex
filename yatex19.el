@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Wed Dec 20 22:32:21 1995 on supra
+;;; Last modified Thu Mar 14 10:51:00 1996 on supra
 ;;; $Id$
 
 ;;; ‚Æ‚è‚ ‚¦‚¸ hilit19 ‚ğg‚Á‚Ä‚¢‚é‚ÉF‚ª•t‚­‚æ‚¤‚É‚µ‚Ä
@@ -281,7 +281,7 @@ Assumes PATTERN begins with `{'."
     (YaTeX-19-region-section-type
      "\\\\\\(title\\|author\\|date\\|thanks\\){" define)
 
-    ("\\\\documentstyle\\(\\[.*\\]\\)?{" "}" decl)
+    ("\\\\document\\(style\\|class\\)\\(\\[.*\\]\\)?{" "}" decl)
     ("\\\\\\(begin\\|end\\|nofiles\\|includeonly\\){" "}" decl)
     ("\\\\\\(raggedright\\|makeindex\\|makeglossary\\|maketitle\\)\\b" 0 decl)
     ("\\\\\\(pagestyle\\|thispagestyle\\|pagenumbering\\){" "}" decl)
@@ -368,7 +368,8 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 		lm YaTeX-sectioning-max-level
 		list YaTeX-sectioning-level)
 	  (while list
-	    (setq pat (concat YaTeX-ec-regexp (car (car list)) "\\*?{")
+	    (setq pat (concat YaTeX-ec-regexp (car (car list))
+			      "\\*?\\(\\[[^]]*\\]\\)?{")
 		  level (cdr (car list))
 		  fg (format "hex-%02x%02x%02x"
 			     (- fR (/ (* level fR fmin) lm 100))

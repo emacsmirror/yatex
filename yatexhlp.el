@@ -2,7 +2,7 @@
 ;;; YaTeX helper with LaTeX commands and macros.
 ;;; yatexhlp.el
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Dec 26 00:02:02 1995 on inspire
+;;; Last modified Mon Apr  1 03:34:23 1996 on NSR
 ;;; $Id$
 
 (let ((help-file (concat "YATEXHLP."
@@ -10,7 +10,7 @@
 			       (t "eng"))))
       (help-dir
        (cond
-	(YaTeX-emacs-19 (expand-file-name "../../site-lisp" exec-directory))
+	(YaTeX-emacs-19 (expand-file-name "../../site-lisp" doc-directory))
 	(t exec-directory))))
   (defvar YaTeX-help-file
     (expand-file-name help-file help-dir)
@@ -134,8 +134,8 @@ Where:	<DELIM> is the value of YaTeX-help-delimiter.
 		  (concat "^" (regexp-quote YaTeX-help-delimiter)) nil 1)
 		 (- (point) (length YaTeX-help-delimiter))))
       (YaTeX-showup-buffer
-       hbuf (function (lambda (x) (nth 3 (window-edges x)))))
-      (pop-to-buffer hbuf)
+       hbuf (function (lambda (x) (nth 3 (window-edges x)))) t)
+      (set-buffer hbuf)
       (if append (goto-char (point-max)) (erase-buffer))
       (insert YaTeX-help-synopsis "\n")
       (insert-buffer-substring hfbuf sb se)
@@ -191,8 +191,7 @@ Where:	<DELIM> is the value of YaTeX-help-delimiter.
   (let ((buf (get-buffer-create "**Description**"))
 	(conf (current-window-configuration)))
     (YaTeX-showup-buffer
-     buf (function (lambda (x) (nth 3 (window-edges x)))))
-    (pop-to-buffer buf)
+     buf (function (lambda (x) (nth 3 (window-edges x)))) t)
     (make-local-variable 'YaTeX-help-file-current)
     (make-local-variable 'YaTeX-help-command-current)
     (make-local-variable 'YaTeX-help-saved-config)

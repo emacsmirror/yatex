@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs.
-;;; yatex.el rev. 1.61
+;;; yatex.el rev. 1.62
 ;;; (c )1991-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Feb  2 03:47:10 1996 on supra
+;;; Last modified Thu May  2 00:13:21 1996 on supra
 ;;; $Id$
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 ;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 (require 'comment)
-(defconst YaTeX-revision-number "1.61"
+(defconst YaTeX-revision-number "1.62"
   "Revision number of running yatex.el"
 )
 
@@ -33,7 +33,7 @@
 ;; ** for your site, if needed.           **
 ;;;
 (defvar YaTeX-prefix "\C-c"
-  "*Prefix key to trigger YaTeX functions.
+  "*Prefix key to call YaTeX functions.
 You can select favorite prefix key by setq in your ~/.emacs."
 )
 (defvar YaTeX-environment-indent 1
@@ -152,9 +152,10 @@ And you will have the local dictionary."
   "*LaTeX sectioning commands regexp."
 )
 (defvar YaTeX-paragraph-start
-  (concat "^[ \t]*%\\|^[ \t]*$\\|^\C-l\\|\\\\\\\\$\\|^[ \t]*\\\\\\("
+  (concat "^[ \t]*%\\|^[ \t]*$\\|\\'\\|^\C-l\\|\\\\\\\\$\\|^[ \t]*\\\\\\("
 	  YaTeX-sectioning-regexp		;sectioning commands
 	  "\\|[A-z]*item\\|begin{\\|end{"	;special declaration
+	  "\\|newpage\\b\\|vspace\\b"
 	  "\\)")
   "*Paragraph starting regexp of common LaTeX source.  Use this value
 for YaTeX-uncomment-paragraph."
@@ -163,6 +164,7 @@ for YaTeX-uncomment-paragraph."
   (concat "^[ \t]*%\\|^[ \t]*$\\|^\C-l\\|\\\\\\\\$\\|^[ \t]*\\\\\\("
 	  YaTeX-sectioning-regexp		;sectioning commands
 	  "\\|begin{\\|end{"			;special declaration
+	  "\\|newpage\\b\\|vspace\\b"
 	  "\\)")
   "*Paragraph delimiter regexp of common LaTeX source.  Use this value
 for YaTeX-uncomment-paragraph."
@@ -298,7 +300,7 @@ If nil, use default pop-to-buffer."
      ;;("rightarrow") ("Rightarrow") ("leftarrow") ("Leftarrow")
      ("pagebreak") ("newpage") ("clearpage") ("cleardoublepage")
      ("footnotemark") ("verb") ("verb*")
-     ("linebreak") ("pagebreak")
+     ("linebreak") ("pagebreak") ("noindent") ("indent")
      ("left") ("right")
      )
    (if YaTeX-greek-by-maketitle-completion
@@ -691,6 +693,7 @@ more features are available and they are documented in the manual.
   "Visit main other window." t)
 (autoload 'YaTeX-main-file-p "yatexprc" "Check if the file is main." t)
 (autoload 'YaTeX-get-builtin "yatexprc" "Get %# built-in." t)
+(autoload 'YaTeX-system "yatexprc" "Call system command" t)
 
 ;;autoload from yatexmth.el
 (autoload 'YaTeX-math-insert-sequence "yatexmth" "Image input." t)
@@ -808,7 +811,9 @@ of 'YaTeX-inner-environment, which can be referred by
   (let*((nest 0)
 	(beg (YaTeX-replace-format-args
 	      (regexp-quote YaTeX-struct-begin)
-	      YaTeX-struct-name-regexp "" ""))
+	      YaTeX-struct-name-regexp
+	      (if (eq major-mode 'yahtml-mode) "\\s *.*" "")
+	      ""))
 	(end (YaTeX-replace-format-args
 	      (regexp-quote YaTeX-struct-end)
 	      YaTeX-struct-name-regexp "" ""))
@@ -817,7 +822,7 @@ of 'YaTeX-inner-environment, which can be referred by
 	(open
 	 (concat "^" (or (cdr (assq major-mode '((yahtml-mode . "<")))) "{")))
 	(close
-	 (concat "^" (or (cdr (assq major-mode '((yahtml-mode . ">")))) "}"))))
+	 (concat "^" (or (cdr(assq major-mode '((yahtml-mode . " >")))) "}"))))
     (save-excursion
       (if quick
 	  (setq bound
@@ -1184,7 +1189,8 @@ into {\\xxx } braces.
      ((YaTeX-jmode) (YaTeX-self-insert arg))
      ((not (YaTeX-closable-p)) (YaTeX-self-insert arg))
      ((save-excursion
-	(and (> (- (point) (point-min)) 6) (forward-char -6))
+	(and (> (- (point) (point-min)) 6)
+	     (condition-case () (forward-char -6) (error nil)))
 	(looking-at "\\\\left\\\\"))
       (insert "{\\right\\}")
       (forward-char -8))
@@ -1210,6 +1216,16 @@ into {\\xxx } braces.
 (defun YaTeX-jmode ()
   (or (and (boundp 'canna:*japanese-mode*) canna:*japanese-mode*)
       (and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*))
+)
+
+(defun YaTeX-jmode-off ()
+  (cond
+   ((and (boundp 'canna:*japanese-mode*) canna:*japanese-mode*)
+    (canna-toggle-japanese-mode))
+   ((and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*)
+    (egg:toggle-egg-mode-on-off))
+   ((and (fboundp 'skk-mode)) (skk-mode -1))
+   ((and (fboundp 'fep-force-off) (fep-force-off))))
 )
 
 (defun YaTeX-self-insert (arg)
@@ -1285,6 +1301,7 @@ into {\\xxx } braces.
       (insert "$")
     (insert "$$")
     (forward-char -1)
+    (YaTeX-jmode-off)
     (or YaTeX-auto-math-mode YaTeX-math-mode (YaTeX-toggle-math-mode 1)))
 )
 
@@ -1319,7 +1336,7 @@ Optional second argument CHAR is for non-interactive call from menu."
   (interactive "P")
   (message
    (concat "J)latex R)egion B)ibtex mk(I)ndex "
-	   (or YaTeX-dos "K)ill-latex ")
+	   (if (not YaTeX-dos) "K)ill-latex ")
 	   "P)review "
 	   (and (boundp 'window-system) window-system "S)earch ")
 	   "V)iewerr L)pr"))
@@ -1539,28 +1556,28 @@ Optional third argument NOERR causes no error for unballanced environment."
 	      nil)))))
 )
 
-(defun YaTeX-goto-corresponding-file (&optional other)
-  "Visit or switch buffer of corresponding file,
-looking at \\input or \\include or \includeonly on current line."
-  (if (not (YaTeX-on-includes-p)) nil
-    (let ((parent buffer-file-name) input-file)
-      (save-excursion
-	(if (search-forward "{" (point-end-of-line) t)
-	    nil
-	  (skip-chars-backward "^,{"))
-	(setq input-file
-	      (buffer-substring
-	       (point) (progn (skip-chars-forward "^ ,}") (point))))
-	(if (not (string-match "\\.\\(tex\\|sty\\)$" input-file))
-	    (setq input-file (concat input-file ".tex"))))
-      (cond
-       (other (YaTeX-switch-to-buffer-other-window input-file))
-       ((get-file-buffer input-file) (goto-buffer-window input-file))
-       (t (YaTeX-switch-to-buffer input-file)))
-      (or (YaTeX-get-builtin "!")
-	  YaTeX-parent-file
-	  (setq YaTeX-parent-file parent))))
-)
+;(defun YaTeX-goto-corresponding-file (&optional other)
+;  "Visit or switch buffer of corresponding file,
+;looking at \\input or \\include or \includeonly on current line."
+;  (if (not (YaTeX-on-includes-p)) nil
+;    (let ((parent buffer-file-name) input-file)
+;      (save-excursion
+;	(if (search-forward "{" (point-end-of-line) t)
+;	    nil
+;	  (skip-chars-backward "^,{"))
+;	(setq input-file
+;	      (buffer-substring
+;	       (point) (progn (skip-chars-forward "^ ,}") (point))))
+;	(if (not (string-match "\\.\\(tex\\|sty\\)$" input-file))
+;	    (setq input-file (concat input-file ".tex"))))
+;      (cond
+;       (other (YaTeX-switch-to-buffer-other-window input-file))
+;       ((get-file-buffer input-file) (goto-buffer-window input-file))
+;       (t (YaTeX-switch-to-buffer input-file)))
+;      (or (YaTeX-get-builtin "!")
+;	  YaTeX-parent-file
+;	  (setq YaTeX-parent-file parent))))
+;)
 
 (defun YaTeX-goto-corresponding-BEGIN-END ()
   (if (not (YaTeX-on-BEGIN-END-p)) nil
@@ -1572,6 +1589,121 @@ looking at \\input or \\include or \includeonly on current line."
 	(error "Corresponding %%#BEGIN/END not found."))
     (beginning-of-line)
     t)
+)
+
+(defvar YaTeX-processed-file-regexp-alist nil
+  "Alist of regexp of processed file regexp vs. its file name part;
+For example, if you include image file with `\\epsfile{file=FILE}' where
+`FILE' is processed file.  You might want to view FILE with other previewer
+such as ghostview, or want to preview its source which was drawn with
+other drawing tool, tgif for example.  Then you should set entire regexp
+of including expression and enclose its file name part with \\\\( and \\\\).
+
+ Ex. (\"\\\\\\\\epsfile{[^}]*file=\\\\([^,} ]+\\\\)\\\\(\\\\.e?ps\\\\)?[^}]*}\" 1)
+
+Where the first group surrounded by \\\\( and \\\\) is the file name part
+of expression.  So you should set 1 to second element.  And the first
+matching group is sent to (image) processor defined by the variable
+YaTeX-file-processor-alist. See also the documentation of
+YaTeX-file-processor-alist.
+
+↑じゃ良くわかんないすね。例えば tgif hoge.obj して hoge.eps を
+\\epsfile{file=hoge.eps} でインクルードしているとしよう。その行で
+\[prefix\] g を押した時に tgif を起動して欲しかったら、まず上のような
+正規表現を設定する。\\\\(と\\\\)で囲んだところがファイル名になるように
+注意する。でファイル名部分が何番目の\\\\(\\\\)になるかをリストの2番目に書く。
+すると、その部分が変数 YaTeX-file-processor-alist で定義された
+処理プログラムに渡される。というわけ。
+ん～やっぱりむずかしいね。分からない時は隣の Lisper に聞くか、
+fj野鳥の会で聞こう!
+")
+
+(defvar YaTeX-processed-file-regexp-alist-default
+  '(("\\\\epsfile{[^},]*file=\\([^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 1)
+    ("\\\\epsfig{[^},]*fi\\(le\\|gure\\)=\\([^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 2)
+    ("\\\\postscriptbox{[^}]*}{[^}]*}{\\([^} ]+\\)\\(\\.e?ps\\)?}" 1)
+    ("\\\\\\(epsfbox\\|includegraphics\\){\\([^} ]+\\)\\(\\.e?ps\\)?}" 2)
+    ("\\\\\\(include\\|input\\){\\([^},.]+\\)\\(\\.\\(tex\\|sty\\)\\)?}" 2 t)
+    )
+  "See the documentation of YaTeX-processed-file-regexp-alist."
+)
+
+(defvar YaTeX-file-processor-alist nil
+  "*Alist of files' processor vs. its extension;
+See also the documentation of YaTeX-processed-file-regexp-alist."
+)  
+(defvar YaTeX-file-processor-alist-default
+  '(("tgif" . ".obj")
+    ("ghostview" . ".ps")
+    ("ghostview" . ".eps")
+    (t . ".tex")
+    (t . ".sty")
+    (t . ""))
+  "See the documentation of YaTeX-file-processor-alist."
+)
+
+(defun YaTeX-goto-corresponding-file-processor (&optional other)
+  "Execute corresponding file processor."
+  (save-excursion
+    (or (looking-at YaTeX-ec-regexp)
+	(skip-chars-backward (concat "^" YaTeX-ec) (point-beginning-of-line)))
+    (let ((list (append YaTeX-processed-file-regexp-alist
+			YaTeX-processed-file-regexp-alist-default))
+	  (p (point)) flist file
+	  (peol (point-end-of-line)))
+      (setq flist (catch 'found
+		   (while list
+		     (goto-char p)
+		     (if (re-search-forward (car (car list)) peol t)
+			 (progn
+			   (setq file (YaTeX-match-string
+				       (car (cdr (car list)))))
+			   (throw 'found (cdr (car list)))))
+		     (setq list (cdr list)))))
+      (if flist				;if pattern and file name found
+	  (let*((plist (append YaTeX-file-processor-alist
+			       YaTeX-file-processor-alist-default))
+		(plist0 plist)
+		ext cmd src buf (alt (car (cdr flist))))
+	    (if (and (re-search-forward
+		      (concat YaTeX-comment-prefix "\\s *\\(.*\\)$") peol t)
+		     (assoc (setq cmd (YaTeX-match-string 1))
+			    YaTeX-file-processor-alist))
+		(setq src		;if processor is specified
+		      (concat file
+			      (cdr (assoc cmd YaTeX-file-processor-alist))))
+	      (while plist		;if processor is not specified
+		(setq ext (cdr (car plist)))
+		(if (file-exists-p (concat file ext))
+		      (setq cmd (car (car plist))
+			    src (concat file ext) plist nil))
+		(setq plist (cdr plist)))
+	      (if (and (null src) alt YaTeX-create-file-prefix-g)
+		  (setq cmd alt
+			src (concat file (cdr (assoc alt plist0))))))
+	    (if src		;if processor and src file found
+		(cond
+		 ((stringp cmd)
+		  (let ((buf (concat "* " cmd " " src " *")))
+		    (YaTeX-system (concat cmd " " src) buf)
+		    t))
+		 ((eq t cmd)
+		  (let ((parent buffer-file-name))
+		    (funcall
+		     (cond
+		      (other 'YaTeX-switch-to-buffer-other-window)
+		      ((get-file-buffer src) 'goto-buffer-window)
+		      (t 'YaTeX-switch-to-buffer))
+		     src)
+		    (or (YaTeX-get-builtin "!")
+			YaTeX-parent-file
+			(setq YaTeX-parent-file parent))
+		    t))
+		 ((symbolp cmd)
+		  (cond
+		   ((symbol-function cmd)
+		    (funcall cmd src)))
+		  t)))))))
 )
 
 (defun YaTeX-on-section-command-p (command)
@@ -1681,7 +1813,8 @@ even if on `%#' notation."
   (cond
    ((YaTeX-goto-corresponding-label arg))
    ((YaTeX-goto-corresponding-environment))
-   ((YaTeX-goto-corresponding-file))
+   ((YaTeX-goto-corresponding-file-processor arg))
+   ;;((YaTeX-goto-corresponding-file))
    ((YaTeX-goto-corresponding-BEGIN-END))
    ((and (string-match
 	  YaTeX-equation-env-regexp	;to delay loading
@@ -2172,7 +2305,8 @@ Default of POINT is (point)."
     (save-excursion
       (and point (goto-char point))
       (or (YaTeX-in-verb-p (point))
-	  (YaTeX-quick-in-environment-p YaTeX-verbatim-environments)))))
+	  (and (not (looking-at "\\\\end{verb"))
+	       (YaTeX-quick-in-environment-p YaTeX-verbatim-environments))))))
 )
 
 (defun YaTeX-in-environment-p (env)
@@ -2375,6 +2509,11 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 	  (goto-char (point-min))
 	  (forward-word 1)
 	  (beginning-of-line)
+	  (while (re-search-forward "\\\\\\(\\(page\\)?ref\\|cite\\){" nil t)
+	    (if (< (point-end-of-line)
+		   (save-excursion (forward-char -1) (forward-list 1) (point)))
+		(progn (end-of-line) (insert YaTeX-comment-prefix))))
+	  (goto-char (point-min))
 	  (if (and NTT-jTeX (looking-at "[ \t]"))
 	      (progn
 		(goto-char (point-min))
@@ -2384,7 +2523,7 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 		      (save-excursion
 			(backward-word 1)
 			(looking-at "\\sw+")) ;is not japanese string
-		      (progn (setq p (point)) (insert ?%)))
+		      (progn (setq p (point)) (insert YaTeX-comment-prefix)))
 		  (forward-line 1))
 		(goto-char p)
 		(delete-char 1)		;remove last inserted `%'
@@ -2560,8 +2699,21 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
 	  (setq depth (current-column))
 	  (YaTeX-goto-corresponding-environment)
 	  (YaTeX-reindent depth)))
-    (if (and NTT-jTeX
-	     (save-excursion (beginning-of-line) (looking-at "[ \t]")))
+    (if (or
+	 (and NTT-jTeX
+	      (save-excursion (beginning-of-line) (looking-at "[ \t]")))
+	 (save-excursion
+	   (beginning-of-line)
+	   (backward-char 1)
+	   (and
+	    (re-search-backward
+	     "\\\\\\(\\(page\\)?ref\\|cite\\){" (point-beginning-of-line) t)
+	    (goto-char (1- (match-end 0)))
+	    (> (save-excursion
+		 (condition-case ()
+		     (progn (forward-list 1) (point))
+		   (error (point-max))))
+	       (point-end-of-line)))))
 	(save-excursion
 	  (end-of-line)
 	  (let ((p (point)))

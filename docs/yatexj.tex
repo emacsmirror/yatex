@@ -14,7 +14,7 @@
 @subtitle Yet Another tex-mode for emacs
 @title 『野鳥』
 @subtitle // YaTeX //
-@author @copyright{} 1991-1994 by    HIROSE, Yuuji [yuuji@@ae.keio.ac.jp]
+@author @copyright{} 1991-1996 by    HIROSE, Yuuji [yuuji@@ae.keio.ac.jp]
 @end titlepage
 
 @node Top, Intro, (dir), (dir)
@@ -22,7 +22,7 @@
 
 @menu
 * Intro::                       はじめに
-* Termnology::                  マニュアル参照上の注意
+* Terminology::                  マニュアル参照上の注意
 * Main features::               主な機能
 * Installation::                インストール
 * Invocation::                  プロセス起動
@@ -98,7 +98,7 @@ lisp 変数
 * Hook file::                   hook用ファイル
 @end menu
 
-@node Intro, Termnology, Top, Top
+@node Intro, Terminology, Top, Top
 @comment  node-name,  next,  previous,  up
 @chapter はじめに
 @cindex Demacs
@@ -114,7 +114,7 @@ lisp 変数
 
   English manual @xref{Top, , , yatexe,YaTeX English info}
 
-@node Termnology, Main features, Intro, Top
+@node Terminology, Main features, Intro, Top
 @comment  node-name,  next,  previous,  up
 @chapter 本マニュアル参照上の注意
 
@@ -152,7 +152,7 @@ large型コマンド
 いう表記は、@kbd{C-c} と読み換えてください。
 @end itemize
 
-@node Main features, Installation, Termnology, Top
+@node Main features, Installation, Terminology, Top
 @comment  node-name,  next,  previous,  up
 @chapter 主な機能
 
@@ -167,6 +167,7 @@ large型コマンド
 @item 既に入力したテキストを環境やコマンド引数の中に取り込む括り補完
 (@kbd{C-u} +通常補完キー)
 @item セクション区切り入力時の文書構造アウトライン表示
+@item セクションコマンドの一括シフト (@ref{view-sectioning})
 @item 補完辞書の学習
 @item La@TeX{} の環境やコマンドに応じたガイド付き引数入力
 @item 野鳥にないガイド付き引数入力関数の自動生成(@file{yatexgen.el})
@@ -279,7 +280,7 @@ LaTeXソースの編集中、次のキー入力により、jlatex などのタイプセットプログラ
 * Print out::                   プリントアウト用コマンドの起動
 @end menu
 
-@node Calling typesetter, Print out, Invocation, Invocation
+@node Calling typesetter, Calling previewer, Invocation, Invocation
 @comment  node-name,  next,  previous,  up
 @section タイプセッタ起動
 @cindex タイプセッタ起動
@@ -329,7 +330,7 @@ LaTeXソースの編集中、次のキー入力により、jlatex などのタイプセットプログラ
 @code{ftp://ftp.ae.keio.ac.jp/pub/text/xdvi/xdvi-remote}
 などから入手することができます。
 
-@node Print out,  , Calling typesetter, Invocation
+@node Print out,  , Calling previewer, Invocation
 @comment  node-name,  next,  previous,  up
 @section プリントアウト
 
@@ -752,7 +753,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 * view-sectioning::             セクション区切りのアウトライン表示
 @end menu
 
-@node 2個以上の引数をとる section型コマンド, Recursive completion, section型補完, section型補完
+@node 2個以上の引数をとる section型コマンド, Enclose section-type command, section型補完, section型補完
 @comment  node-name,  next,  previous,  up
 @subsection 2個以上の引数をとる section型コマンド
 @cindex 引数[ひきすう]
@@ -793,7 +794,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
   また、起動コマンドの@kbd{s}を大文字に変えて起動すると、あらかじめ書
 いた文章を section 型コマンドの第一引数として括ります。
 
-@node Recursive completion, view-sectioning, 2個以上の引数をとる section型コマンド, section型補完
+@node Recursive completion, view-sectioning, Enclose section-type command, section型補完
 @comment  node-name,  next,  previous,  up
 @subsection 再帰補完
 @cindex 再帰補完[さいきほかん]
@@ -1193,11 +1194,12 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 します。対応関係が存在すると解釈されるコマンドには以下のものがあります。
 
 @itemize @bullet
-@item @code{\begin@{@}}←→@code{\end@{@}}
-@item @code{%#BEGIN}←→@code{%#END}
-@item @code{\label@{@}}←→@code{\ref@{@}}
-@item @code{\include(\input)}→対応するファイル
-@item @code{\bibitem@{@}}←→@code{\cite@{@}}
+@item @code{\begin@{@}} ←→ @code{\end@{@}}
+@item @code{%#BEGIN} ←→ @code{%#END}
+@item 画像ファイルの取り込みマクロ → 対応するviewer/お絵かきツール起動
+@item @code{\label@{@}} ←→ @code{\ref@{@}}
+@item @code{\include(\input)} → 対応するファイル
+@item @code{\bibitem@{@}} ←→ @code{\cite@{@}}
 @end itemize
 
   @code{\begin@{@}} か @code{\end@{@}} の行で@kbd{[prefix] g}を押すことに
@@ -1220,6 +1222,40 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 を押すと、対応するオブジェクトへのジャンプを別ウィンドウで行います。ただし、
 この機能は @code{begin/end}, @code{%#BEGIN/%#END} 間のジャンプに対しては
 (意味がないと思われるので)機能しないので注意してください。
+
+@section{お絵描きツール起動}
+@cindex お絵描きツール起動[おえかきつーるきとう]
+
+上記の「画像ファイルの取り込みマクロ」とは、例えば 
+@code{\epsfile@{file=foo@}} のような挿絵取り込みコマンドのことで、この行に
+カーソルを合わせて@kbd{[prefix] g}を押すとその画像ファイルの元となったファ
+イルを対応するお絵描きツールを起動してオープンします。起動するツールの判定
+は以下のようになされます。
+
+@enumerate
+@item
+カレント行が変数 @code{YaTeX-processed-file-regexp-alist} に定義さ
+れている正規表現のいずれかとマッチしたら、ファイル名に相当する部分を 
+\\(\\)から抜き出して覚えておく(何番目の\\(\\)かは変数の各リストの cdr 部に
+入れておく)。マッチしなければ何もしない。
+@item
+行末に、変数 @code{YaTeX-file-processor-alist} に登録されているコマンドが
+「%コマンド」 のように書いてあれば強制的に「コマンド ファイル名.拡張子」を
+起動。
+@item
+なければ、変数 @code{YaTeX-file-processor-alist} の各リストのcdr部に入って
+いる拡張子を「ファイル名」の後ろに足したファイルが存在するか順次調べて、存
+在した場合car部に入っているコマンドを起動する。
+@item
+以上どれかにマッチしなければあきる。
+@end enumerate
+
+
+変数 @code{YaTeX-file-processor-alist} と変数 
+@code{YaTeX-file-processor-alist} の設定方法についてはそれぞれの変数につい
+て describe-variable して説明を読んで下さい。うまく設定すると、画像ファイ
+ルにかぎらず、任意の形式のファイルを任意のプロセッサで処理するコマンドを簡
+単に呼び出すことができます。
 
 @section メインファイルへのジャンプ
 
@@ -1562,7 +1598,7 @@ tabular環境では、その環境のカラム数に対応した個数の @code{&} に加え、行末
 @code{nil}にセットし、野鳥数式モードを手動で切り替えると良いでしょう。
 
 
-@node Online help, Cooperation with other packages, Changing mode of YaTeX, Top
+@node Online help, Inclusion hierarchy browser, Changing mode of YaTeX, Top
 @comment  node-name,  next,  previous,  up
 @chapter オンラインヘルプ
 @cindex オンラインヘルプ[おんらいんへるふ]
@@ -1609,7 +1645,7 @@ tabular環境では、その環境のカラム数に対応した個数の @code{&} に加え、行末
 対する説明を書いたならばぜひ私までその説明をお送り下さい。次回の配布に含め
 たいと思います。
 
-@node Inclusion hierarchy browser
+@node Inclusion hierarchy browser, Cooperation with other packages, Online help, Top
 @comment  node-name,  next,  previous,  up
 @chapter インクルード構造ブラウザ
 @cindex インクルード構造[いんくるうとこうそう]
@@ -1676,7 +1712,7 @@ tabular環境では、その環境のカラム数に対応した個数の @code{&} に加え、行末
   ただし、隣のウィンドウのファイルの内容を表示する機能に関しては、対応する
 ファイルをクローズしてしまうとうまく働きませんのでご注意ください。
 
-@node Cooperation with other packages, Customizations, Online help, Top
+@node Cooperation with other packages, Customizations, Inclusion hierarchy browser, Top
 @comment  node-name,  next,  previous,  up
 @chapter 他パッケージとの連携
 @cindex  他パッケージとの連携[たはつけえしとのれんけい]

@@ -1,5 +1,14 @@
 	What's new in YaTeX
-	野鳥 - 各バージョンの変更点について
+	野鳥/yahtml - 各バージョンの変更点について
+
+1.62	\ref の引数が二行に渡る時行末に%を付けるようにした
+	yahtmlでおまかせ改行が不必要に起動するのを修正
+	href の補完文字列に # が含まれる時は name を補完
+	\epsfile{file=foo.eps} などで [prefix] g した場合、foo.epsの元絵
+	を編集しているお絵書きソフトを起動するようにした
+	yahtmlで [prefix] a で &lt などが入るようにした
+	verbatim環境の [prefix] g がうまく飛ばなかったのを修正
+	sectionのオプション引数をつけた時の色づけが無効だったのを修正
 
 1.61	AMS-LaTeX 対応
 	xdvi -remote によるサーチに対応 [prefix] t s

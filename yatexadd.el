@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.13
 ;;; (c )1991-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Dec 21 21:47:34 1995 on supra
+;;; Last modified Sat Apr 27 21:38:36 1996 on NSR
 ;;; $Id$
 
 ;;;
@@ -119,11 +119,16 @@ YaTeX-make-begin-end."
 )
 
 (defun YaTeX:equation ()
+  (YaTeX-jmode-off)
   (if (fboundp 'YaTeX-toggle-math-mode)
       (YaTeX-toggle-math-mode t))		;force math-mode ON.
 )
-(fset 'YaTeX:eqnarray 'YaTeX:equation)
-(fset 'YaTeX:displaymath 'YaTeX:equation)
+(mapcar '(lambda (f) (fset f 'YaTeX:equation))
+	'(YaTeX:eqnarray YaTeX:eqnarray* YaTeX:align YaTeX:align*
+	  YaTeX:split YaTeX:multline YaTeX:multline* YaTeX:gather YaTeX:gather*
+	  YaTeX:aligned* YaTeX:gathered YaTeX:gathered*
+	  YaTeX:alignat YaTeX:alignat* YaTeX:xalignat YaTeX:xalignat*
+	  YaTeX:xxalignat YaTeX:xxalignat*))
 
 (defun YaTeX:list ()
   "%\n{} %default label\n{} %formatting parameter"
@@ -418,7 +423,7 @@ YaTeX-make-begin-end."
 	    );with
 	  (goto-char p)
 	  (message "Collecting %s...Done" labelcmd)
-	  (pop-to-buffer YaTeX-label-buffer)
+	  (YaTeX-showup-buffer YaTeX-label-buffer nil t)
 	  (YaTeX::label-setup-key-map)
 	  (setq truncate-lines t)
 	  (setq buffer-read-only t)
@@ -479,7 +484,7 @@ YaTeX-make-begin-end."
 		 (buffer-name (car blist))))
 	(setq blist (cdr blist)))
       (princ (format "':{%s}" ff)))
-    (pop-to-buffer lbuf)
+    (YaTeX-showup-buffer lbuf nil t)
     (YaTeX::label-setup-key-map)
     (setq buffer-read-only t)
     (use-local-map YaTeX-label-select-map)

@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c ) 1994, 1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Feb  2 03:47:14 1996 on supra
+;;; Last modified Mon Apr 15 16:24:00 1996 on supra
 ;;; $Id$
 
 ;;;
@@ -47,6 +47,7 @@ When calling from a program, make sure to be in array/tabular environment."
 		     -1)))))
       (message "%s" n)
       (goto-char (1- beg))
+      (beginning-of-line)
       (setq j n)
       (while (> j 1)
 	(or (re-search-forward andptn p nil)

@@ -2,7 +2,7 @@
 ;;; YaTeX library of general functions.
 ;;; yatexlib.el
 ;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Feb  1 22:34:57 1996 on nsr
+;;; Last modified Fri Apr  5 17:56:43 1996 on supra
 ;;; $Id$
 
 ;;;###autoload
@@ -161,7 +161,9 @@ that window.  This function never selects minibuffer window."
 	    nil)			;if found in other frame
 	   (YaTeX-default-pop-window-height
 	    (split-window-calculate-height YaTeX-default-pop-window-height)
-	    (pop-to-buffer buffer)
+	    ;;(pop-to-buffer buffer)	;damn! emacs-19.30
+	    (select-window (next-window nil 1))
+	    (switch-to-buffer (get-buffer-create buffer))
 	    (or select (select-window window)))
 	   (t nil)))
 	 )))
@@ -170,19 +172,19 @@ that window.  This function never selects minibuffer window."
 ;;;###autoload
 (defun split-window-calculate-height (height)
   "Split current window wight specified HEIGHT.
-If HEIGHT is number, make new window that has HEIGHT lines.
-If HEIGHT is string, make new window that occupy HEIGT % of screen height.
+If HEIGHT is number, make a new window that has HEIGHT lines.
+If HEIGHT is string, make a new window that occupies HEIGT % of screen height.
 Otherwise split window conventionally."
-  (if (one-window-p)
+  (if (one-window-p t)
       (split-window
        (selected-window)
        (max
 	(min
 	 (- (screen-height)
-	    (if (numberp YaTeX-default-pop-window-height)
-		(+ YaTeX-default-pop-window-height 2)
+	    (if (numberp height)
+		(+ height 2)
 	      (/ (* (screen-height)
-		    (string-to-int YaTeX-default-pop-window-height))
+		    (string-to-int height))
 		 100)))
 	 (- (screen-height) window-min-height 1))
 	window-min-height)))

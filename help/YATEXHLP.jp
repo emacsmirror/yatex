@@ -6,10 +6,6 @@
 \addtolength{\floatsep}{長さ}
 floatとfloatの間隔。
 
-oddsidemargin
-\setlength{\oddsidemargin}{長さ}
-右ページの左端から1インチ(2.54cm)の線と本文の距離
-
 pagestyle
 \pagestyle{スタイル}
 出力ページのヘッダとフッタのスタイルを決める。スタイルには以下のものがある:
@@ -122,7 +118,7 @@ NAMEという長さコマンドを新たに宣言する。
 \baselineskip	行のベースライン間の最低限の高さ.
 
 baselinestretch
-\renewcommand{baselinestretch}{1.5}
+\renewcommand{\baselinestretch}{1.5}
 \baselinestretch \baselineskip に乗ずる係数.		(default=1)
 (* \setlengthなどではなく、\renewcommandで再定義する。)
 
@@ -458,7 +454,7 @@ pageref{LABEL}
 \begin{displaymath} 数式 \end{displaymath}
 と同値。\[ および \]は fragile.
 
-)
+]
 \[ 数式 \]
 ディスプレイ数式を組む。
 \begin{displaymath} 数式 \end{displaymath}
@@ -1394,6 +1390,11 @@ jaybirdさん(asciinet)
 葛西澄人さん(慶應大)
 	YaTeX-default-pop-window-height の原案を頂きました。
 	$ \% $ のような場合の数式モード終了判定のミスを指摘して頂きました。
+
+安藤利和(金沢工大)
+	野鳥を使うTipsをまとめた「あなたもわたしも野鳥の…」というWWWペー
+	ジを作成して下さいました。
+
 yatex
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))
 <refer YaTeX>

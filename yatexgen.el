@@ -2,7 +2,7 @@
 ;;; YaTeX add-in function generator.
 ;;; yatexgen.el rev.5
 ;;; (c )1991-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sun Jan 22 23:15:34 1995 on landcruiser
+;;; Last modified Thu Feb 15 01:44:24 1996 on nsr
 ;;; $Id$
 
 (require 'yatex)
@@ -450,7 +450,7 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
    ((equal left "[") "]")
    ((equal left "(") ")")
    ((equal left "<") ">")
-   ((equal left "\\begin{" "}"))
+   ((equal left "\\begin{") "}")
    (t left))
 )
 (defun YaTeX-generate-create-read-string (&optional nth)
