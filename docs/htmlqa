@@ -104,6 +104,17 @@
 	htmllintを使うとhtmllintに怒られないこと自体が目的となりがちです
 	が、わたしはそれは本末転倒であると思います。
 	
+・<a href="...">の途中で auto-fill されちゃうと悲しい
+	
+	使っているのがMule2(Emacs-19)以降なら auto-fill-inhibit-regexp
+	という変数でコントロールできます。 yahtml-mode-hook を使って以下
+	のように設定しましょう。
+	
+	(add-hook 'yahtml-mode-hook
+	          '(lambda ()
+		     (setq auto-fill-inhibit-regexp
+			   "^[       ]*\\(<a href\\|<img src=\\)")))
+	
 ■どうにかならんかなあ関連
 ・長い文書の下の方だとインデントがめちゃ遅いんだけど。
 	

@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c )1993-2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 31 21:57:44 2000 on firestorm
+;;; (c )1993-2003 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu May  1 22:37:31 2003 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -386,18 +386,20 @@ PROC should be process identifier."
 (defun YaTeX-get-paper-type ()
   "Search options in header and return a paper type, such as \"a4\", \"a4r\", etc."
   (save-excursion
+    (YaTeX-visit-main t)
     (goto-char (point-min))
-    (if (re-search-forward
-	 "^[ \t]*\\\\document\\(style\\|class\\)[ \t]*\\[\\([^]]*\\)\\]" nil t)
-	(let ((opts (YaTeX-split-string (YaTeX-match-string 2) "[ \t]*,[ \t]*")))
-	  (concat
-	   (catch 'found-paper
-	     (mapcar (lambda (pair)
-		       (if (member (car pair) opts)
-			   (throw 'found-paper (cdr pair))))
-		     YaTeX-paper-type-alist)
-	     YaTeX-default-paper-type)
-	   (if (member "landscape" opts) "r" ""))))))
+    (let ((opts
+	   (if (re-search-forward
+		"^[ \t]*\\\\document\\(style\\|class\\)[ \t]*\\[\\([^]]*\\)\\]" nil t)
+	       (YaTeX-split-string (YaTeX-match-string 2) "[ \t]*,[ \t]*"))))
+      (concat
+       (catch 'found-paper
+	 (mapcar (lambda (pair)
+		   (if (member (car pair) opts)
+		       (throw 'found-paper (cdr pair))))
+		 YaTeX-paper-type-alist)
+	 YaTeX-default-paper-type)
+       (if (member "landscape" opts) "r" "")))))
 
 (defvar YaTeX-preview-command-history nil
   "Holds minibuffer history of preview command.")

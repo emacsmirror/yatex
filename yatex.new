@@ -1,6 +1,16 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.71	=== yatex ===
+	fill-prefix を指定している場合、Emacs21で \item の auto-fill が
+	\item の深さにかかわらず fill-prefix になってしまうのを回避
+	\refのラベル補完で、既にlabel定義してあるものがカウンタと\label
+	両方が補完候補に出現していたのを修正。またenumerate環境内では
+	\itemとラベルが重複して候補に現れていたのを修正。
+	Emacsの背景色の定義がXリソースに全く無いときの不具合修正
+	[prefix] c で AMS-LaTeX の大括弧対の種類を変えられるようにした
+	[prefix] g で AMS-LaTeX の括弧対間でジャンプできるようにした
+
 1.70	Emacs21でmake-frameがエラーになることがあるのを回避
 	font-lock での Recenter が効かなくなるのを修正
 	(他、細かい修正がほとんど)

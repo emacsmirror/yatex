@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
-;;; (c )1994-2002 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed May 22 13:55:20 2002 on firestorm
+;;; (c )1994-2003 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Fri Feb 21 01:35:19 2003 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -18,15 +18,15 @@
    ((boundp 'frame-background-mode) frame-background-mode)
    ((fboundp 'get-frame-background-mode)
     (get-frame-background-mode (selected-frame)))
-   (if (face-background 'default)
-       (if (> (+ 32768 32768 32768)
-	      (apply '+
-		     (funcall (if (fboundp 'color-rgb-components)
-				  'color-rgb-components
-				'x-color-values)
-			      (face-background 'default))))
-	   'dark
-	 'light))
+   ((face-background 'default)
+    (if (> (+ 32768 32768 32768)
+	   (apply '+
+		  (funcall (if (fboundp 'color-rgb-components)
+			       'color-rgb-components
+			     'x-color-values)
+			   (face-background 'default))))
+	'dark
+      'light))
    (t nil)))
 
 (defvar YaTeX-mode-menu-map (make-sparse-keymap "YaTeX"))

@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
-;;; (c)1993-2000 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Tue Dec 19 11:03:51 2000 on buell
+;;; (c)1993-2003 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Sun Mar 30 19:56:00 2003 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -466,6 +466,10 @@ This value is appended with YaTeX-verbatim-environments.")
 (defun YaTeX-math-get-sign (list)
   (YaTeX-math-gets (car (cdr-safe (cdr-safe list))))
 )
+(defvar YaTeX-math-section-type-regexp
+  "eqn\\\\\\sw+\\b"
+  "*Regexp of section-type math-mode macro")
+
 (defun YaTeX-in-math-mode-p ()
   "If current position is supposed to be in LaTeX-math-mode, return t."
   (or (YaTeX-quick-in-environment-p
@@ -477,7 +481,7 @@ This value is appended with YaTeX-verbatim-environments.")
 	      "gather*" "aligned*" "gathered" "gathered*" "alignat"
 	      "equation*" "cases" 
 	      "alignat*" "xalignat" "xalignat*" "xxalignat" "xxalignat*"))))
-      (let*((p (point)) (nest 0) me0
+      (let*((p (point)) (nest 0) me0 r
 	    (delim (concat YaTeX-sectioning-regexp "\\|^$\\|^\C-l"))
 	    (boundary
 	     (save-excursion
@@ -502,6 +506,11 @@ This value is appended with YaTeX-verbatim-environments.")
 		      (if (= (preceding-char) ?\\ ) nil;;\\[5pt]
 			(setq nest (1- nest))))))
 		(if (< nest 0) (throw 'open t))))
+	    t)
+	   ((and (setq r (YaTeX-on-section-command-p
+			  YaTeX-math-section-type-regexp))
+		 (numberp r)
+		 (> r 0))
 	    t)
 	   (t (catch 'dollar
 		(while ;(search-backward "$" boundary t);little bit fast.
@@ -824,8 +833,9 @@ If so return the cons of its invocation key and image-string."
 	    (if (<= move (length (match-string 0)))
 		(match-string 0)))))))
 
-(defun YaTeX-goto-open-paren ()
-  "Jump to the exact position of open parenthesis"
+(defun YaTeX-goto-open-paren (&optional jumpto-co)
+  "Jump to the exact position of open parenthesis.
+If optional argument JUMPTO-CO is non-nil, goto corresponding parentheses."
   (interactive)
   (let ((paren)
 	(backslash-syntax (char-to-string (char-syntax ?\\))))
@@ -833,13 +843,29 @@ If so return the cons of its invocation key and image-string."
 	(if (string-match "(\\|{\\|\\[" paren (1- (length paren)))
 	    (progn
 	      (re-search-forward "(\\|{\\|\\[" (+ (point) (length paren)) t)
-	      (backward-char))
+	      (backward-char)
+	      (if jumpto-co
+		  (unwind-protect
+		      (progn
+			(modify-syntax-entry ?\\ " ")
+			(forward-list)
+			(backward-char))
+		    (modify-syntax-entry ?\\ backslash-syntax)))
+	      (point))
 	  (re-search-forward ")\\|}\\|\\]" (+ (point) (length paren)) t)
 	  (unwind-protect
 	      (progn
 		(modify-syntax-entry ?\\ " ")
-		(backward-list))
+		(backward-list)
+		(point))
 	    (modify-syntax-entry ?\\ backslash-syntax))))))
+
+;;;###autoload
+(defun YaTeX-goto-corresponding-paren ()
+  "Go to corresponding mathematical parentheses."
+  (if (YaTeX-on-parenthesis-p)
+      (YaTeX-goto-open-paren t)
+    nil))
 
 (defun YaTeX-change-parentheses ()
   "Change the size of parentheses, braces, and brackets of AMS-LaTeX."
@@ -855,6 +881,7 @@ If so return the cons of its invocation key and image-string."
 	   (length (+ mod-length paren-length)) ;; length of whole string
 	   (big-p t) ;; flag whether new modifier is "[Bb]ig+" or not.
 	   size ;; left, big, Big etc.
+	   type ;; parentheses type
 	   lr   ;; "l" or "r".
 	   char newsize newsize-length
 	   (backslash-syntax (char-to-string (char-syntax ?\\)))
@@ -876,7 +903,7 @@ If so return the cons of its invocation key and image-string."
       (while (not newsize)
 	(message (format (concat "Change from %s: "
 				 "l(big) L(Big) h(bigg) H(Bigg) "
-				 "r(left-right) n(NONE) ") size))
+				 "r(left-right) n(NONE) ( { [") size))
 	(setq char (read-char)
 	      newsize (cond ((char-equal char ?l) "\\big")
 			    ((char-equal char ?L) "\\Big")
@@ -884,28 +911,43 @@ If so return the cons of its invocation key and image-string."
 			    ((char-equal char ?H) "\\Bigg")
 			    ((char-equal char ?r)
 			     (setq big-p nil) "\\left")
+			    ((memq char '(?\( ?\)))
+			     (setq big-p nil type '("(" . ")")) "")
+			    ((memq char '(?\{ ?\}))
+			     (setq big-p nil type '("\\{" . "\\}")) "")
+			    ((memq char '(?\[ ?\]))
+			     (setq big-p nil type '("[" . "]")) "")
 			    ((char-equal char ?n)
 			     (setq big-p nil) "")
 			    (t nil))
 	      newsize-length (length newsize)))
       (YaTeX-goto-open-paren)
       (forward-char)
-      (delete-region (- (point) length) (- (point) paren-length))
-      (backward-char paren-length)
+      (cond
+       (type
+	(delete-region (point) (- (point) paren-length))
+	(save-excursion (insert (car type))))
+       (t
+	(delete-region (- (point) length) (- (point) paren-length))
+	(backward-char paren-length)))
       (insert-string newsize)
       (if big-p (insert ?l))
-      (forward-char (1- paren-length))
       (unwind-protect
 	  (progn
 	    (modify-syntax-entry ?\\ " ")
 	    (forward-list)
 	    (if (string= size "left-right") (setq length (1+ length)))
 	    (if (eq char ?r) (setq newsize "\\right"))
-	    (delete-region (- (point) length) (- (point) paren-length))
-	    (backward-char paren-length)
-	    (insert-string newsize)
-	    (if big-p (insert ?r))
-	    (forward-char paren-length)
+	    (cond
+	     (type
+	      (delete-region (point) (- (point) paren-length))
+	      (insert (cdr type)))
+	     (t
+	      (delete-region (- (point) length) (- (point) paren-length))
+	      (backward-char paren-length)
+	      (insert-string newsize)
+	      (if big-p (insert ?r))
+	      (forward-char paren-length)))
 	    (if (string= lr "l") (backward-list)))
 	(modify-syntax-entry ?\\ backslash-syntax))
       t)))

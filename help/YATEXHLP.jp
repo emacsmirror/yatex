@@ -1106,7 +1106,7 @@ alpha	"Foo94" のようなタグをつける
 abbrv	著者のファーストネーム、発行月、書籍名が省略される
 
 thebibliography
-\begin{thebibliography} \bibitem{アイテム}… \end{thebibliography}
+\begin{thebibliography}{LONGESTLABEL} \bibitem{アイテム}… \end{thebibliography}
 参考文献データの登録環境を開始する。
 データは \bibitem コマンドによって登録する。
 \bibitem コマンドの用法は以下の通り。
@@ -1114,9 +1114,10 @@ abbrv	著者のファーストネーム、発行月、書籍名が省略される
 
 bibitem
 \bibitem{NAME}			\bibitem[LABEL]{NAME}
-\bibitem{NAME}の書式では、NAMEで参照され、[1],[2] のような形で引用記号が
+\bibitem{NAME}の書式では、\cite{NAME}で参照され、[1],[2] のような形で引用記号が
 出力される、\bibitem[LABEL]{NAME}の書式では、\cite{NAME}で参照され、
 [LABEL] のような引用記号が出力される。
+LONGESTLABEL は、ラベルの最長を示すためのダミー文字列。
 
 cite
 \cite{NAME}			\cite[LABEL]{NAME}

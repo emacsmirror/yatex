@@ -1153,11 +1153,12 @@ alpha	gives tag like "Foo94"
 abbrv	omit the first name of author, publishing month, book title
 
 thebibliography
-\begin{thebibliography} \bibitem{ITEM},... \end{thebibliography}
+\begin{thebibliography}{LONGEST-LABEL} \bibitem{ITEM},... \end{thebibliography}
 The thebibliography environment is a list environment.  To save the
 use of an extra counter, it should use  enumiv  as the item counter.
 Instead of using \item, items in the bibliography are produced by the 
 \bibitem command.
+LONGEST-LABEL is a dummy string to notify the maximum width of label.
 ---
 <refer bibitem>
 

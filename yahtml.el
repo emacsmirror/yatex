@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c ) 1994-2002 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Wed May 22 13:55:01 2002 on firestorm
+;;; Last modified Thu Nov 21 17:55:40 2002 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.70"
@@ -36,6 +36,20 @@
 ;;; 	      '(("/home/yuuji/public_html" . "http://www.mynet/~yuuji")
 ;;; 		("/home/staff/yuuji/html" . "http://www.othernet/~yuuji")))
 ;;;      ;UNIXの絶対パスと対応するURLのリストを書いて下さい。
+;;; 
+;;; HTMLファイル漢字コードが正しく判別されるようにホームディレクトリに
+;;; .htaccess ファイルを作り以下のどれか1行を選んで書いて下さい。
+;;; 
+;;;	AddType "text/html; charset=Shift_JIS"	.html	(SJISの場合)
+;;;	AddType "text/html; charset=iso2022-jp"	.html	(JISの場合)
+;;;	AddType "text/html; charset=EUC-JP"	.html	(EUCの場合)
+;;; 
+;;; .htaccess が作れない場合は
+;;;	(setq yahtml-kanji-code 2)
+;;;	;HTMLファイルの漢字コードを変更する場合は 1=SJIS、2=JIS、3=EUC
+;;;	;で設定して下さい。デフォルトは 2 です。
+;;; 
+;;; を適切に書き換えて ~/.emacs に足して下さい。
 ;;; 
 ;;;[Commentary]
 ;;;
@@ -507,6 +521,7 @@ T for static indentation depth")
   (let*((fn (file-name-nondirectory (or buffer-file-name "")))
 	(ext (substring fn (or (string-match "\\.[a-z0-9]+$" fn) 0)))
 	(ptn (format "^\\s *AddType.*charset=\\(.*\\)\\%s$" ext))
+	(case-fold-search t)
 	line
 	charset)
     (if (setq line (yahtml-get-user-httpconf-entry ptn))
@@ -1506,7 +1521,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 (defun yahtml-insert-p (&optional arg)
   "Convenient function to insert <p></p>"
   (interactive "P")
-  (if arg (yahtml-insert-tag nil "p")
+  (if arg (yahtml-insert-tag arg "p")
     (save-excursion			;insert "/p" first to memorize "p"
       (yahtml-insert-single "/p"))	;in the last-completion variable
     (yahtml-insert-single "p")))

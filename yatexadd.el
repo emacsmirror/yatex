@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.14
-;;; (c )1991-2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Sep 29 23:17:06 2001 on duke
+;;; yatexadd.el rev.15
+;;; (c )1991-2003 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Mar 17 16:46:01 2003 on serow
 ;;; $Id$
 
 ;;;
@@ -144,7 +144,7 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:thebibliography ()
   (setq YaTeX-section-name "bibitem")
-  "")
+  (concat "{" (read-string "Longest label: ") "}"))
 
 ;;;
 ;;Sample functions for section-type command.
@@ -492,9 +492,14 @@ Make \\label{xx} if no label."
 	(forward-list 1)
 	(skip-chars-forward " \t\n")
 	;(setq boundary "[^\\]")
+	(setq inspoint (point))
 	(setq boundary
 	      (save-excursion
-		(if (YaTeX-re-search-active-forward "[^\\]" r-escape nil 1)
+		(if (YaTeX-re-search-active-forward
+		     (concat YaTeX-ec-regexp
+			     "\\(" YaTeX-sectioning-regexp "\\|"
+			     "begin\\|item\\)")
+		     r-escape nil 1)
 		    (match-beginning 0)
 		  (1- (point))))))
        ((looking-at "item\\s ")
@@ -506,7 +511,8 @@ Make \\label{xx} if no label."
 		     (concat YaTeX-ec-regexp "\\(item\\|begin\\|end\\)\\b")
 		     r-escape nil 1)
 		    (match-beginning 0)
-		  (1- (point))))))
+		  (1- (point))))
+	      inspoint boundary))
        ((looking-at "bibitem")
 	(setq labelholder "bibitem")	; label holder is bibitem itself
 	(setq boundary
@@ -515,7 +521,8 @@ Make \\label{xx} if no label."
 		     (concat YaTeX-ec-regexp "\\(bibitem\\|end\\)\\b")
 		     r-escape nil 1)
 		    (match-beginning 0)
-		  (1- (point))))))
+		  (1- (point))))
+	      inspoint boundary))
        ((string-match YaTeX::ref-mathenv-regexp
 		      (setq env (or (YaTeX-inner-environment t) "document")))
 	(setq mathp t)
@@ -526,7 +533,8 @@ Make \\label{xx} if no label."
 		     (concat YaTeX-ec-regexp "\\(\\\\\\|end{" env "}\\)")
 		     r-escape nil 1)
 		    (match-beginning 0)
-		  (1- (point))))))
+		  (1- (point))))
+	      inspoint boundary))
        ((looking-at "footnote\\s *{")
 	(skip-chars-forward "^{")	;move onto `{'
 	(setq boundary
@@ -535,11 +543,15 @@ Make \\label{xx} if no label."
 		    (forward-list 1)
 		  (error (error "\\\\footnote at point %s's brace not closed"
 				(point))))
-		(1- (point)))))
+		(1- (point)))
+	      inspoint boundary))
        ((looking-at "caption\\|\\(begin\\)")
 	(skip-chars-forward "^{")
-	(if (match-beginning 1) (forward-list 1))
+	;;;;;;(if (match-beginning 1) (forward-list 1))
+	;; caption can be treated as mathenv, is it right??
+	(forward-list 1)
 	;;(setq boundary (concat YaTeX-ec-regexp "\\(begin\\|end\\)\\b"))
+	(setq inspoint (point))
 	(setq boundary
 	      (save-excursion
 		(if (YaTeX-re-search-active-forward
@@ -566,7 +578,7 @@ Make \\label{xx} if no label."
 	     (forward-sexp 1) (1- (point))))
 	;;else make a label
 	;(goto-char (match-beginning 0))
-	(goto-char boundary)
+	(goto-char inspoint)
 	(skip-chars-backward " \t\n")
 	(save-excursion (setq newlabel (YaTeX::ref-generate-label)))
 	(delete-region (point) (progn (skip-chars-backward " \t") (point)))
@@ -578,7 +590,7 @@ Make \\label{xx} if no label."
 
 (defvar YaTeX::ref-labeling-regexp-alist
   '(("\\\\begin{java}{\\([^}]+\\)}" . 1)
-    ("\\\\elabel{\\([^}]+\\)}" . 1)))
+    ("\\\\label{\\([^}]+\\)}" . 1)))
 (defvar YaTeX::ref-labeling-regexp
   (mapconcat 'car YaTeX::ref-labeling-regexp-alist "\\|"))
 (defvar YaTeX::ref-mathenv-regexp
@@ -614,7 +626,7 @@ YaTeX-sectioning-levelの数値で指定.")
 			       (car s))))
 			YaTeX-sectioning-level))
 		 "\\|")
-		"\\|caption\\|footnote\\){"
+		"\\|caption\\(\\[[^]]+\\]\\)?\\|footnote\\){"
 		"\\|\\(begin{\\(" mathenvs "\\|" enums  "\\)\\)\\)")))
 	  (regexp (concat "\\(" counter
 			  "\\)\\|\\(" YaTeX::ref-labeling-regexp "\\)"))
@@ -706,15 +718,21 @@ YaTeX-sectioning-levelの数値で指定.")
 				   (skip-chars-backward " \t")
 				   (1- (point)))
 			  (point-end-of-line)))
-		       x))))
-
+		       x))
+		    (setq e0 (point-max))))
+		 ;;else, simple section-type counter
 		 ((= (char-after (1- (point))) ?{)
 		  (setq label (buffer-substring
 			       (match-beginning 0)
 			       (progn (forward-char -1)
 				      (forward-list 1)
 				      (point))))
-		  (funcall output label match-point))
+		  (funcall output label match-point)
+		  ;; Skip preceding label if exists
+		  (if (save-excursion
+			(skip-chars-forward "\t \n")
+			(looking-at YaTeX::ref-labeling-regexp))
+		      (setq e0 (match-end 0))))
 		 (t
 		  (skip-chars-forward " \t")
 		  (setq label (buffer-substring
@@ -728,7 +746,10 @@ YaTeX-sectioning-levelの数値で指定.")
 				     (1- (point)))
 				 (point-end-of-line))))
 		  (funcall output label match-point)
-		  ))
+		  (if (save-excursion
+			(skip-chars-forward "\t \n")
+			(looking-at YaTeX::ref-labeling-regexp))
+		      (setq e0 (match-end 0)))))
 		) ;;put label buffer
 	       ;;
 	       ;; if user defined label found
@@ -834,9 +855,13 @@ and print them to standard output."
 				      (point)))))))))
 	(setq files (cdr files))))))
 
+(defvar YaTeX::cite-bibitem-macro-regexp "bibitem\\|harvarditem"
+  "*Regexp of macro name of bibitem definition")
+
 (defun YaTeX::cite-collect-bibs-internal ()
   "Collect bibentry in the current buffer and print them to standard output."
-  (let ((ptn (concat YaTeX-ec-regexp "bibitem\\b"))
+  (let ((ptn (concat YaTeX-ec-regexp
+		     "\\(" YaTeX::cite-bibitem-macro-regexp "\\)\\b"))
 	(pcnt (regexp-quote YaTeX-comment-prefix)))
     (save-excursion
       (while (YaTeX-re-search-active-forward ptn pcnt nil t)
@@ -884,11 +909,22 @@ and print them to standard output."
 	      (YaTeX::cite-collect-bibs-internal)))
 	;;Now bbuf holds the list of bibitem
 	(set-buffer bbuf)
-	(YaTeX::ref argp "\\\\\\(bibitem\\)\\(\\[.*\\]\\)?" "cite"))))
-  
+	(YaTeX::ref
+	 argp 
+	 (concat "\\\\\\("
+		 YaTeX::cite-bibitem-macro-regexp
+		 "\\)\\(\\[.*\\]\\)?")
+	 "cite"))))
+
    (t nil)))
 
+;;; for AMS-LaTeX
 (and YaTeX-use-AMS-LaTeX (fset 'YaTeX::eqref 'YaTeX::ref))
+;;; for Harvard citation style
+(fset 'YaTeX::citeasnoun 'YaTeX::cite)
+(fset 'YaTeX::possessivecite 'YaTeX::cite)
+(fset 'YaTeX::citeyear 'YaTeX::cite)
+(fset 'YaTeX::citename 'YaTeX::cite)
 
 (defun YaTeX-yatex-buffer-list ()
   (save-excursion

@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c )1994-2002 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed May 22 13:55:31 2002 on firestorm
+;;; Last modified Wed Oct  2 23:35:33 2002 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -30,14 +30,16 @@
 (defvar YaTeX-kanji-code-alist
   (cond
    ((boundp '*junet*)
-    (list (cons
+    (list '(0 . *noconv*)
+	  (cons
 	   1
 	   (if YaTeX-dos (if (boundp '*sjis-dos*) *sjis-dos* *sjis*dos)
 	     *sjis*))
 	  '(2 . *junet*) '(3 . *euc-japan*)))
    (YaTeX-emacs-20
     ;;(cdr-safe(assq 'coding-system (assoc "Japanese" language-info-alist)))
-    (list (cons
+    (list '(0 . no-conversion)
+	  (cons
 	   1 (cond (YaTeX-dos 'shift_jis-dos)
 		   ((member 'shift_jis (coding-system-list)) 'shift_jis-unix)
 		   (t 'sjis)))
@@ -724,7 +726,7 @@ If no such window exist, switch to buffer BUFFER."
   (cond
    ((and (string< "19" emacs-version) (not (featurep 'xemacs)))
     (insert-file-contents file visit beg end))
-   ((string-match "unix" (symbol-name system-type))
+   ((string-match "unix\\|linux" (symbol-name system-type))
     (let ((default-process-coding-system
 	    (and (boundp '*noconv*) (list '*noconv*)))
 	  (file-coding-system (and (boundp '*noconv*) '*noconv*))
@@ -734,7 +736,7 @@ If no such window exist, switch to buffer BUFFER."
 		    (or (and (boundp 'shell-command-option)
 			     shell-command-option)
 			"-c")
-		    (format "head -c %d | tail -c +%d" end beg))))
+		    (format "dd bs=1 count=%d | tail -c +%d" end beg))))
     (t (insert-file-contents file))))
 
 (defun YaTeX-split-string (str &optional sep null)

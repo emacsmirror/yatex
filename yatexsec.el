@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX sectioning browser.
 ;;; yatexsec.el
-;;; (c ) 1994,1998,1999 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Dec 25 19:18:36 2000 on firestorm
+;;; (c ) 1994,1998,1999,2003 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Wed Mar  5 13:19:11 2003 on firestorm
 ;;; $Id$
 
 (defvar YaTeX-sectioning-level
@@ -115,20 +115,35 @@ This must be the heighest number in YaTeX-sectioning-level.")
 
 (defvar YaTeX-sectioning-buffer-parent nil)
 (defun YaTeX-sectioning-buffer-jump-internal (&optional keep)
-  (let (ptn (p (point)))		;save-excursion is NG because
-    (beginning-of-line)		;this function should switch buffer
+  (let ((p (point))		;save-excursion is NG because
+	ptn ln)			;this function should switch buffer
+    (beginning-of-line)
     (if (re-search-forward YaTeX-sectioning-regexp)
-	(progn (setq ptn (buffer-substring
-			  (1- (match-beginning 0))
-			  (progn (skip-chars-forward "^}") (1+ (point)))))
-	       (goto-char p)
-	       (YaTeX-showup-buffer YaTeX-sectioning-buffer-parent nil t)
-	       (goto-char (point-max))
-	       (search-backward ptn)
-	       (if keep (goto-buffer-window YaTeX-sectioning-buffer))
-	       (current-buffer))
-      nil))
-)
+	(progn
+	  (save-restriction
+	    (narrow-to-region (point-beginning-of-line) (point-end-of-line))
+	    (setq ptn (buffer-substring
+		       (1- (match-beginning 0))
+		       (progn (skip-chars-forward "^}") (1+ (point))))
+		  ln (buffer-substring
+		      (progn (search-forward "line:") (match-end 0))
+		      (progn (skip-chars-forward "0-9") (point)))))
+	  (goto-char p)
+	  (YaTeX-showup-buffer YaTeX-sectioning-buffer-parent nil t)
+	  (or
+	   (and ln (string< "" ln)
+		(progn
+		  (goto-line (max 1 (1- (string-to-int ln))))
+		  (and
+		   (search-forward ptn nil t)
+		   (goto-char (match-beginning 0)))))
+	   (progn
+	     (goto-char (point-max))
+	     (search-backward ptn)))
+	  (if keep (goto-buffer-window YaTeX-sectioning-buffer))
+	  (current-buffer))
+      nil)))
+
 (defun YaTeX-sectioning-buffer-jump (&optional keep)
   "Goto corresponding sectioning unit with current line in the next window.
 If optional argument KEEP is non-nil, only shows the line."

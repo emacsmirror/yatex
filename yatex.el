@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.70
-;;; (c )1991-2002 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed May 22 13:54:47 2002 on firestorm
+;;; yatex.el rev. 1.71
+;;; (c )1991-2003 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu May  1 22:36:40 2003 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -24,7 +24,7 @@
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.70"
+(defconst YaTeX-revision-number "1.71"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -607,7 +607,7 @@ more features are available and they are documented in the manual.
 	  '(dvi2-command fill-column fill-prefix
 	    tmp-env-table tmp-section-table tmp-fontsize-table
 	    tmp-singlecmd-table paragraph-start paragraph-separate
-	    YaTeX-math-mode indent-line-function
+	    YaTeX-math-mode indent-line-function comment-line-break-function
 	    comment-start comment-start-skip
 	    ))
   (cond ((boundp 'MULE)
@@ -632,8 +632,12 @@ more features are available and they are documented in the manual.
 	comment-end ""
 	comment-start-skip "[^\\\\]%+[ \t]*"
 	local-abbrev-table yatex-mode-abbrev-table)
+  (if (fboundp 'comment-indent-new-line) ;for Emacs21
+      (setq comment-line-break-function 'YaTeX-comment-line-break))
+
   (if (and YaTeX-use-font-lock (featurep 'font-lock))
       (progn
+	(require 'yatex19)
 	(YaTeX-font-lock-set-default-keywords)
 	(or  (featurep 'xemacs)
 	     (set (make-local-variable 'font-lock-defaults)
@@ -698,6 +702,7 @@ more features are available and they are documented in the manual.
 (autoload 'YaTeX-on-parenthesis-p "yatexmth" "Check if on math-parens" t)
 (autoload 'YaTeX-goto-open-paren "yatexmth" "Goto opening paren" t)
 (autoload 'YaTeX-change-parentheses "yatexmth" "Change corresponding parens" t)
+(autoload 'YaTeX-goto-corresponding-paren "yatexmth" "\bigl\bigr jumps" t)
 
 ;;autoload from yatexhlp.el
 (autoload 'YaTeX-help "yatexhlp" "YaTeX helper with LaTeX commands." t)
@@ -1356,7 +1361,8 @@ into {\\xxx } braces.
   (if (or (string-match YaTeX-array-env-regexp
 			(or (YaTeX-inner-environment t) "document"))
 	  (= (preceding-char) 92)
-	  (YaTeX-literal-p))
+	  (YaTeX-literal-p)
+	  (YaTeX-in-math-mode-p))
       (insert "&")
     (insert "\\&")))
 
@@ -1471,7 +1477,8 @@ search-last-string, you can repeat search the same label/ref by typing
       (setq scmd (cdr (assoc (YaTeX-match-string 1)
 			     '(("label" . "\\(page\\)?ref") ("ref" . "label")
 			       ("pageref" . "label")
-			       ("cite" . "bibitem") ("bibitem" . "cite")))))
+			       ("cite" . "bibitem\\(\\[[^]]+\\]\\)?")
+			       ("bibitem" . "cite\\(\\[[^]]+\\]\\)?")))))
       (goto-char (match-end 0))
       (let ((label (buffer-substring 
 		    (1- (point)) (progn (backward-list 1) (1+ (point))))))
@@ -1702,8 +1709,22 @@ Section command name is stored in match-data #1."
     (while (setq i (string-match "\\\\(" command i))
       (setq grouping (1+ grouping) i (+ i 2)))
     (save-excursion
-      (if (looking-at YaTeX-ec-regexp) nil
+      (if (looking-at (concat YaTeX-ec-regexp command)) nil
 	(catch 'found			;caught value has no meaning
+	  ;;(1) looking at current position
+	  (if (looking-at command)
+	      (progn
+		(while (and (not (bobp)) (looking-at command))
+		  (forward-char -1))
+		(throw 'found t)))
+	  ;;(2) search command directly
+	  (skip-chars-forward "^{}[]")
+	  (and (YaTeX-re-search-active-backward
+		(concat YaTeX-ec-regexp command) YaTeX-comment-prefix nil t)
+	       (>= p (match-beginning 0))
+	       (throw 'found (goto-char (match-beginning 0))))
+	  ;;(3) search token
+	  (goto-char p)
 	  (while t
 	    (if (bobp) (throw 'found nil))
 	    (cond
@@ -1756,7 +1777,18 @@ Call this function after YaTeX-on-section-command-p."
 
 (defun YaTeX-on-begin-end-p ()
   (save-excursion
-    (beginning-of-line)
+    (if (and (boundp 'in-leftright-p) in-leftright-p)
+	;; Dirty workaround for YaTeX-goto-corresponding-leftright 2003/3/28
+	(let ((md (match-data)))	; for safety
+	  (if (looking-at YaTeX-ec-regexp)
+	      nil			; stay here
+	    (cond
+	     ((looking-at "\\w")		(skip-chars-backward "A-Za-z"))
+	     ((looking-at "\\.()\\[\\]|")	(forward-char -1)))
+	    (if (equal (char-after (1- (point)))
+		       (string-to-char YaTeX-ec))
+		(forward-char -1))))
+      (beginning-of-line))
     (re-search-forward
      ;;"\\\\begin{\\([^}]+\\)}\\|\\\\end{\\([^}]+\\)}"
      (concat
@@ -1798,17 +1830,22 @@ even if on `%#' notation."
 (defun YaTeX-goto-corresponding-* (arg)
   "Parse current line and call suitable function."
   (interactive "P")
-  (cond
-   ((YaTeX-goto-corresponding-label arg))
-   ((YaTeX-goto-corresponding-environment))
-   ((YaTeX-goto-corresponding-file-processor arg))
-   ((YaTeX-goto-corresponding-file arg))
-   ((YaTeX-goto-corresponding-BEGIN-END))
-   ((and (string-match
-	  YaTeX-equation-env-regexp	;to delay loading
-	  (or (YaTeX-inner-environment t) "document"))
-	 (YaTeX-goto-corresponding-leftright)))
-   (t (message "I don't know where to go."))))
+  (let (mm)
+    (cond
+     ((YaTeX-goto-corresponding-label arg))
+     ((YaTeX-goto-corresponding-environment))
+     ((YaTeX-goto-corresponding-file-processor arg))
+     ((YaTeX-goto-corresponding-file arg))
+     ((YaTeX-goto-corresponding-BEGIN-END))
+     ((and (setq mm (YaTeX-in-math-mode-p))
+	   (YaTeX-goto-corresponding-leftright)))
+     ((and mm YaTeX-use-AMS-LaTeX
+	   (YaTeX-goto-corresponding-paren)))
+     ;;((and (string-match
+     ;;	  YaTeX-equation-env-regexp	;to delay loading
+     ;;	  (or (YaTeX-inner-environment t) "document"))
+     ;;	 (YaTeX-goto-corresponding-leftright)))
+     (t (message "I don't know where to go.")))))
 
 (defun YaTeX-goto-corresponding-*-other-window (arg)
   "Parse current line and call suitable function."
@@ -1836,11 +1873,11 @@ it comments out whole environment"
   "Uncomment out region by '%'."
   (interactive "P")
   (if (not (YaTeX-on-begin-end-p))
-      (uncomment-region
+      (uncomment-out-region
        (if alt-prefix (read-string "Remove prefix: ")
 	 YaTeX-comment-prefix)
        (region-beginning) (region-end) YaTeX-uncomment-once)
-    (YaTeX-comment-uncomment-env 'uncomment-region)))
+    (YaTeX-comment-uncomment-env 'uncomment-out-region)))
 
 (defun YaTeX-comment-uncomment-env (func)
   "Comment or uncomment out one LaTeX environment switching function by FUNC."
@@ -1893,7 +1930,7 @@ it comments out whole environment"
 		(paragraph-separate paragraph-start))
 	    (mark-paragraph)
 	    (if (not (bobp)) (forward-line 1))
-	    (uncomment-region "%" nil nil YaTeX-uncomment-once))
+	    (uncomment-out-region "%" nil nil YaTeX-uncomment-once))
 	(message "This line is not a comment line.")))))
 
 (defun YaTeX-remove-prefix (prefix &optional once)
@@ -2687,6 +2724,11 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
 		  (backward-word 1)
 		  (looking-at "\\sw+")) ;is not japanese string
 		(insert YaTeX-comment-prefix)))))))
+
+(defun YaTeX-comment-line-break (&optional soft)
+  "Call comment-indent-new-line and YaTeX-indent-line"
+  (comment-indent-new-line soft)
+  (YaTeX-indent-line))
 
 (defun YaTeX-latex2e-p ()
   (let ((b (current-buffer))

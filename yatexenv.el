@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
-;;; (c ) 1994-1997 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan 18 15:21:26 2001 on buell
+;;; (c ) 1994-2003 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sun Mar 30 19:25:47 2003 on firestorm
 ;;; $Id$
 
 ;;;
@@ -280,12 +280,11 @@ Return the list of (No.ofCols PointEndofFormat)"
 
 ;;;###autoload
 (defun YaTeX-goto-corresponding-leftright ()
-  "Go to corresponding \left or \right.
-Note that this function assumes the corresponding \left\right
-is on another line."
+  "Go to corresponding \left or \right."
   (let ((YaTeX-struct-begin "\\left%1")
 	(YaTeX-struct-end "\\right%1")
-	(YaTeX-struct-name-regexp "[][(){}\\.|]"))
+	(YaTeX-struct-name-regexp "[][(){}\\.|]")
+	(in-leftright-p t))
     (YaTeX-goto-corresponding-environment t)))
 
 ;;;
