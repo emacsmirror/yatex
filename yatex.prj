@@ -1,0 +1,14 @@
+//¡Œã‚ÌŠg’£—\’è//
+
+ysectionŒ^•âŠ®‚Ìˆø”‚ÌŒó•âz
+
+	(setq section-table
+	      '(("part" 0) ;...’i—ƒRƒ}ƒ“ƒh‚È‚Ç...
+		("documentstyle" 1 YaTeX:documentstyle)	;Œó•âƒVƒ“ƒ{ƒ‹
+		("setlength" 2 )))
+
+
+Local Variables:
+mode: text
+fill-prefix: "	"
+End:

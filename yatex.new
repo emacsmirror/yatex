@@ -2,6 +2,31 @@
 	Yet Another tex-mode for Emacs
 	yatex.el 各バージョンの変更点について。
 
+1.42:	fill-paragraph と、(un)comment-paragraph の適正化。
+	[prefix] k での削除範囲の適正化。
+	YaTeX-end-environment などで verb(atim)中のbegin/endは数えない。
+	LaTeX error 発生ファイルの検出の確実化。
+	begin型補完のインデントは必ず \begin の桁に合わせるようにした。
+	対応する \label{} または \ref{} へのジャンプ。
+
+1.41:	アドイン関数の自動作成モード追加。
+	アドイン関数のmaketitle型補完への対応と、現在の補完形式を変数
+	YaTeX-current-completion-type に記憶。
+	タイプセットバッファで jlatex に文字列を送る処理の完全化。
+
+1.40:	編集ファイルをサブディレクトリ毎に分けた場合に対応。
+	アドイン関数をsection型補完にも対応し、仕様を固めた。
+	領域指定のタイプセット直後のプレビューファイル候補は texput に。
+	プロセス処理関係の関数を別ファイルに分けた。
+	section型補完で、セクションタイトル(chapter, section, ...) は
+	read-string で読み込むようにした。また、引数0を付加することにより
+	明示的に read-string での読み込みを指定可能。
+	yatexadd.el が load-path 中にある場合のみ自動的にロードする。
+
+1.39:	編集しながらタイプセット画面をスクロール。
+	BibTeX 起動の追加。タイプセットプロセスの中断。
+	jlatex の ? プロンプトに対して、文字列を送れるようにした。
+
 1.38:	YaTeX-nervous が t の時、一時的、またはカレントディレクトリでのみ
 	有効なテンポラリ辞書が利用可能。
 	section型補完に引数の数も埋め込み、これも学習する。
