@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu May  5 17:33:04 1994 on 98fa
+;;; Last modified Fri May 13 01:22:54 1994 on 98fa
 ;;; $Id$
 
 (require 'yatex)
@@ -565,7 +565,7 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
     (if (setq b-in (YaTeX-get-builtin "!"))
 	(setq main-file (YaTeX-guess-parent b-in)))
     (if YaTeX-parent-file
-	(setq main-file YaTeX-parent-file))
+	(setq main-file (get-file-buffer YaTeX-parent-file)))
     (if (YaTeX-main-file-p)
 	(if (interactive-p) (message "I think this is main LaTeX source.") nil)
       (cond

@@ -21,15 +21,19 @@ Alph		大文字の英字
 roman		小文字のローマ数字
 Roman		大文字のローマ数字
 
-addtolength
-\addtolength{長さコマンド}{数値}
-第1引数の長さを第2に引数の数値を足す。
-代表的なスタイルパラメータについては \setlength の項を参照せよ。
-
 shortstack
 \shortstack[場所]{重ねて\\表示する\\内容}
 {}内の内容を\\で区切られた単位毎に積み重ねて表示する。
 [場所]は、l(左寄せ)、c(センタリング)、r(右寄せ)のいずれか。
+
+newlength
+\newlength{NAME}
+NAMEという長さコマンドを新たに宣言する。
+
+addtolength
+\addtolength{長さコマンド}{数値}
+第1引数の長さを第2に引数の数値を足す。
+代表的なスタイルパラメータについては \setlength の項を参照せよ。
 
 setlength
 \setlength{長さコマンド}{数値}
@@ -42,6 +46,8 @@ Roman		大文字のローマ数字
 \parindent	\baselineskip	\baselinestretch \parskip
 \columnsep	\columnseprule	\mathindent
 
+settowidth{\NAME}{TEXT}
+\hbox{TEXT}の出力結果と同じ幅に長さ\NAME をセットする。
 
 evensidemargin
 \setlength{\evensidemargin}{1em}
@@ -514,13 +520,315 @@ eqnarray* 環境は数式番号を出力しないほかはeqnarray環境と同じである。
  \item[*] のようにオプション引数をつけるとそれがラベルとなる。
 \end{list}
 
-  list環境の体裁を制御する変数には以下のものがある。
+  list環境の体裁を制御する変数には以下のものがある(括弧内は既定値)。
 水平方向:
-\labelwidth	\labelsep	\leftmargin	\rightmargin	\itemindent
-\linewidth	\listparindent
+\labelwidth	itemのラベルの幅
+\labelsep	ラベルの右端と最初のアイテムのテキストとの間隔
+\leftmargin	list環境内での左マージン
+\rightmargin	同右マージン (0pt)
+\itemindent	itemの直前に加えられるインデント幅 (0pt)
+\linewidth	一行の幅
+\listparindent	各パラグラフの先頭のインデント(ただし\itemの付いている先
+		頭のパラグラフを除く)(0pt)
+
 垂直方向:
-\topsep		\partopsep	\itemsep	\parsep
-
+\topsep		list環境に入る前のパラグラフと最初のitemとの間隔
+\partopsep	list環境で新しいパラグラフをはじめる時に\topsepに加えら
+		れる付加的な間隔
+\itemsep	連続するitemどうしの間隔
+\parsep		一つのitem内でのパラグラフどうしの間隔
+
+itemize
+\begin{itemize} \item アイテム1 ... \item アイテムn \end{itemize}
+項目を列挙するための環境。
+最大4つまでネストできる。
+各レベルのitemの頭につく記号は、\labelitemi, \labelitemii,
+\labelitemiii, \labelitemiv で制御される。
+
+enumerate
+\begin{enumerate} \item アイテム1 ... \item アイテムn \end{enumerate}
+項目を番号つきで列挙するための環境。
+最大4つまでネストできる。
+各レベルのitemの頭につく番号は、enumi, enumii, enumiii, enumiv
+が保持していて、各itemのラベルは、\labelenumi, ..., \labelenumiv
+で生成される。また、\p@enumN\theenumN は \ref値を設定する。
+(Nはレベルの深さ。\ref値については\refの説明を参照せよ)
+たとえば
+\def\theenumii{\alph{enumii}}
+\def\p@enumii{\theenumi\theenumii}
+\def\labelenumii{(\theenumii)}
+とすると \ref値が 3a などのように設定される。
+
+makebox
+\makebox[WID][POS]{オブジェクト}	\makebox(X,Y)[POS]{オブジェクト}
+第1の書式では、オブジェクトをWIDで指定した幅として、\hbox 内の
+POSで指定した場所配置する。POSにlを指定すると左寄せ、rを指定すると右寄せ、
+何も指定しないとセンタリングされる。
+第2の書式では、大きさ(X,Y)の(\unitlengthを基準とする)\hbox にオブジェク
+トを配置する。配置位置POSは第1の書式と同様。
+
+mbox
+\mbox{オブジェクト}
+\makebox{オブジェクト}と同じ。
+
+newsavebox
+\newsavebox{\CMD}
+新規のボックス保存用コマンドを定義する。\CMDは \savebox コマンドで
+ボックスを保存するために使う。\newsaveboxで宣言したコマンド名は
+常にグローバルとなる。
+
+savebox
+\savebox{\CMD}{テキスト}
+ボックスを組む内容である「テキスト」の結果を\CMDに保存する。
+「テキスト」は \makebox への引数と全く同じであるが、「テキスト」を
+処理した結果はその場に表示はしない。\usebox{\CMD}により処理したボックス
+が置かれる。
+
+sbox
+\sbox{\CMD}{テキスト}
+\saveboxと同じ。sboxはrobust, saveboxはfragile
+
+framebox
+\framebox{オブジェクト}
+「オブジェクト」に枠をつけて\makeboxと同様の処理をする。
+枠の線の太さは \framerule、オブジェクトとの間隔は \framesep で決まる。た
+だしpicture環境で \framebox(X,Y){オブジェクト}とした場合は、picture環境
+用の線の太さに従い、外枠とオブジェクトとの間隔は空けられない。
+
+fbox
+\fbox{オブジェクト}
+\framebox{オブジェクト}と同じ。
+\fboxはrobust, \frameboxはfragile
+
+parbox
+\parbox[POS]{WIDTH}{TEXT}
+TEXTをWIDThの幅で組んでボックスを作成する。ボックスの位置はPOSによって
+c : センタリング(デフォルト)
+b : ボックスの一番下の線が現テキストのラインに合う
+t : ボックスの一番上の線が現テキストのラインに合う
+のように決められる。\parboxではパラメータが以下のようにリセットされる。
+
+\parskip          = 0pt
+\linewidth        = \hsize
+\@totalleftmargin = 0pt
+\leftskip         = 0pt
+\rightskip        = 0pt
+\@rightskip       = 0pt
+\parfillskip      = 0pt plus 1fil
+\lineskip         = \normallineskip
+\baselineskip     = \normalbaselineskip
+
+minipage
+\begin{minipage}[pos]{WIDTH}  TEXT   \end{minipage}
+\parbox とほぼ同様WIDTHの幅のTEXTをボックスとして組む。ボックスの位置は
+POSによって
+c : センタリング(デフォルト)
+b : ボックスの一番下の線が現テキストのラインに合う
+t : ボックスの一番上の線が現テキストのラインに合う
+のように決められる。
+parboxと違い、TEXTは通常のパラグラフとして組まれる。
+
+rule
+\rule[RAISED]{WIDTH}{HEIGHT}
+幅 WIDTH x 高さ HEIGHT の罫線を作る。RAISEDが指定された場合、その分だけ
+上に上げられる。
+
+underline
+\underline{TEXT}
+TEXTに下線をつけて表示。
+
+raisebox
+\raisebox{DISTANCE}[HEIGHT][DEPTH]{BOX}
+BOXをDISTANCEだけ上げて組む。
+HEIGHT, DEPTH を指定すると、TeXから見たBOXの「高さ」と「深さ」
+(註:これらについてはTeXBookなどを参照のこと)
+を HEIGHT, DEPTH に指定する。
+
+tabbing
+\begin{tabbing} \= text1.1 \= text1.2 \\ \> text2.1 \> text2.2 \end{tabbing}
+桁揃えを行う環境を作る(入れ子不可)。例えば、
+\begin{tabbing}
+ \= 項目1 \hspace*{2em} \= 項目2 \hspace*{3em}	\= 項目3 \\
+ \> いろは		\> にほへ		\> とちり \+ \\
+ 			\> ぬるを		\> わかよ \\
+			\> たれそ \- \\
+ \> つねな		\> らむう		\> ゐのお
+\end{tabbing}
+上のtabbing環境は以下のように3つのタブ位置で組まれる。
+  (1番目)   (2番目)     (3番目)
+   いろは    にほへ      とちり
+             ぬるを      をかよ
+             たれそ
+   つねな    らむう      ゐのお
+        \2em/      \3em/
+tabbing環境におけるタブ位置操作コマンドは以下の通り(nは1から):
+\=	n番目のタブ位置を現在位置に設定しタブカウンタ(n)を1進める
+\\	改行してタブカウンタをリセットする(n=1)
+\>	位置をn番目のタブ位置に設定し、カウンタを1進める
+\+	次の行のタブカウンタの初期値に1加える \+ \\ とすると次の行の最初
+	の \> は2番目のタブ位置を示す. \+ を複数書くとその数だけタブカウ
+	ンタの初期値が増える
+\-	\+とは逆に、次の行のタブカウンタの初期値から1引く
+\<	一つ前のタブカウンタに戻ってそのタブ位置をセット. 行頭のみ
+\'	\'以降を通常のタブ位置より \tabbingsep 分だけ右寄せして出力
+\`	\`以降のテキストをすべて右寄せして出力
+\pushtabs それまで用いていたタブストップ位置を全てpush
+\poptabs  それまで用いていたタブストップ位置を全てpop. \pushtabs と 
+	\poptabs は必ず対になっていなければならない. 入れ子可
+\aX	Xは = か ' か `   tabbing環境でない通常のアクセントは
+	\a= \a' \a` で表わす
+\kill	現在行のテキストは出力せずタブ設定だけ解釈する
+
+array
+\begin{array}{プリアンブル} C1 & C2 & .. & Cn \\ D1 ... \end{array}
+(数式などによる)配列を作成する。行列などは array 環境で作成する。
+詳しい説明は tabular 環境を参照。
+
+tabular
+\begin{tabular}{プリアンブル} C1 & C2 & .. & Cn \\ D1 ... \end{tabular}
+表を作成する。
+【プリアンブル】
+c		カラムを一つ指定し、そのカラムをセンタリング
+l		カラムを一つ指定し、そのカラムを左寄せ
+r		カラムを一つ指定し、そのカラムを右寄せ
+@{表現}		「表現」をカラム毎に挿入する。これを指定すると
+		\arraycolsep や \tabcolsep のスペーシングは抑制される
+*{N}{PRE}	PREを N 回書いたのと同様の作用
+p{LEN}		そのカラムをLENの長さのparboxエントリとして作成する
+
+【array, tabular 環境で使えるコマンド】
+\multicolumn{N}{FORMAT}{ITEM}
+		現在のカラムを含めNこのカラムをFORMATに従ったITEMで埋める
+		FORMATはl,r,cのうち(最大)ひとつ
+\vline		そのカラムに縦線を引く. 縦線の位置はそのカラムに指定され
+		ている l, r, c によって決まる
+\hline		行間に水平線を引く. 環境の最初のエントリの直前、もしくは
+		\\ の直後に来なければならない. もし \hline を続けて指定
+		すると\doublerulesep 分の空白が空けられる(標準では罫線の
+		箱自体が分割されてしまう)
+\cline{i-j}	i番目からj番目のカラムに横線を引く. \hlineと同様
+\extracolsep{W}	@表現の中で用いると、幅Wのスペースをそれ以降の全てのカラ
+		ムの左側に加える
+
+
+
+以下の例を参照せよ。
+
+\LaTeX 表記					印刷形式
+\begin{array}{ccr}
+ x+y+z	& a_1	&  1 \\				x+y+z  a1    1
+ x+z	& a_2	&  21 \\			 x+z   a2   21
+ y	& a_3	&  321				  y    a3  321
+\end{array}
+
+\[ \left(
+ \begin{array}{cccc}
+  a_{11}  & a_{12}  & \dots & a_{1n} \\		/ a11 a12 ... a1n \
+  a_{21}  & a_{22}  & \dots & a_{2n} \\		| a21 a22 ... a2n |
+  \vdots  & \vdots  & \ddots& \vdots \\		|  :   :  \.   :  |
+  a_{n1}  & a_{n2}  & \dots & a_{nn}		\ an1 an2 ..: ann /
+ \end{array} 
+\right)\]
+
+array環境を \right( \left) で囲むと配列自体を大きな括弧で括る。同様に、
+\right\{ \left\} で配列を中括弧で、\right[ \left] で配列を大括弧で、
+\right| \left| で配列をノルム記号(絶対値記号)で括ることができる。
+\right の数と \left の数は必ず同じでなければならないが、\right( \left] 
+のように括弧の種類は違ってもよい。\right. のように . をつけると見えない
+括弧が出力される。
+
+\[ 答 \cdots \left\{					/
+	\begin{array}{ccc}				|  x = 5
+	 x & = & 5 \\				答 ... <
+   	 y & = & 3					|  y = 3
+	\end{array} \right. \]				\
+
+array環境を制御する変数には以下のものがある:
+\arraycolsep    : array環境の各カラム間の間隔の半分
+\tabcolsep      : tabular環境の各カラム間の間隔の半分
+\arrayrulewidth : 罫線の幅
+\doublerulesep  : array, tabular環境での隣接した罫線(二重罫線?)間の間隔
+\arraystretch   : \baselinestretch と同様行間スペースの比率を決める
+		  \renewcommandで再定義する
+
+tabular*
+\begin{tabular*}{幅}{プリアンブル} ... \end{tabular*}
+幅を指定してtabular環境を作成。
+この幅を充填するだけのスペースをプリアンブルの \extracolsep{} コマンドで
+確保する。
+\begin{tabular*}{10em}[b]{|c@{\extracolsep{\fill}}|c|c|}
+ \hline
+ a & b & c \\ \hline
+ 1 & 2 & 3
+\end{tabular*}
+tabular環境の説明を参照のこと。
+
+picture
+\begin{picture}(WIDTH,HEIGHT)(X,Y) ..contents.. \end{picture}
+幅WIDTH, 高さHEIGHT の描画ボックスを作成。このボックスの左下の座標は
+(X,Y) となる(省略すると(0,0))。これらの引数の数値を含め、picuture環境の
+数値は \unitlength に対する相対値であらわされる。\unitlength の既定値は
+1pt.
+今時picture環境じゃないと思うので用法しか書かないよーん。
+
+【コマンド】
+\put(X座標,Y座標){描画オブジェクト}
+\multiput(X座標,Y座標)(Xの増分,Yの増分){繰り返し回数}{描画オブジェクト}
+【描画オブジェクト】
+\makebox(X座標,Y座標)[POS]{テキスト}		(箱)
+\framebox(X座標,Y座標)[POS]{テキスト}		(枠付きの箱)
+\dashbox(X座標,Y座標)[POS]{テキスト}		(破線枠付きの箱)
+(以上POS = l, r, b, t)
+\line(ΔX,ΔY){水平方向の長さ}			(直線)
+\vector(ΔX,ΔY){水平方向の長さ}		(矢印)
+(ΔX,ΔY = ±1, ±2, ..., ±6 で互素, それぞれ基準は始点)
+\shortstack[POS]{一行\\二行\\三行}
+\circle{直径}					(円)
+\circle*{直径}					(塗り潰した円)
+(それぞれ基準は円の中心, 最大直径は40pt, 15pt)
+\oval(直径X,直径Y)[POS]				(楕円風 POS = l, r, t, b)
+\frame{描画オブジェクト}
+\thinlines, \thicklines				(細,太線を選ぶ)
+\linethickness{太さ}
+
+newtheorem
+\newtheorem{NAME}{TEXT}[COUNTER]	\newtheorem{NAME}[OLDNAME]{TEXT} 
+定理型の新しい環境「NAME」を定義する。
+TEXT	定理番号のキャプションとして出される文字列
+COUNTER	NAMEのカウンタの親となるカウンタ名. 通常section.
+第2の形式では OLDNAME と同じカウンタ形式を使うことを指示する。
+NAME環境のカウンタ形式は \theNAME コマンドを再定義する。これのデフォルトは
+\theCOUNTER.\arabic{NAME}
+
+title
+\title{タイトル}
+\maketitleコマンドで出力するタイトル名を設定する。
+
+author
+\author{著者名}
+\maketitleコマンドで出力する日付を設定する。
+複数の著者を書くときは \and で区切って名前を書く。
+
+date
+\date{日付}
+\maketitleコマンドで出力する著者名を設定する。
+\date を省略するとタイプセットした日の日付が出力される。
+
+thanks
+\thanks{脚注}
+タイトル中(\title, \author, \date)での脚注(謝辞や住所など)の出力を行う。
+
+maketitle
+\maketitle
+タイトルを出力する。document環境中で宣言されなければならない。
+
+part
+\part{第?部のタイトル}
+
+
+chapter
+\chapter{章のタイトル}
+
 
 verb
 \verb#内容#

@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.8
 ;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat May  7 06:09:39 1994 on pajero
+;;; Last modified Sun May 15 18:00:12 1994 on 98fa
 ;;; $Id$
 
 (provide 'yatexadd)
@@ -15,16 +15,26 @@
   "*Your favorite default rule format."
 )
 (defun YaTeX:tabular ()
-  "YaTeX add-in function for tabular environment."
-  (let (bars (rule "") (j 0) (loc (YaTeX:read-position "tb")))
-    (setq bars (string-to-int (read-string "Number of `|': ")))
+  "YaTeX add-in function for tabular environment.
+Notice that this function refers the let-variable `env' in
+YaTeX-make-begin-end."
+  (let ((width "") bars (rule "") (j 0) loc)
+    (if (string= env "tabular*")
+	(setq width (concat "{" (read-string "Width: ") "}")))
+    (setq loc (YaTeX:read-position "tb")
+	  bars (string-to-int (read-string "Number of `|': ")))
     (if (> bars 0)
 	(while (< j bars) (setq rule (concat rule "|")) (setq j (1+ j)))
       (setq rule YaTeX:tabular-default-rule))
     (setq rule (read-string "rule format: " rule))
 
     (message "")
-    (format "%s{%s}" loc rule))
+    (format "%s%s{%s}" width loc rule))
+)
+(fset 'YaTeX:tabular* 'YaTeX:tabular)
+(defun YaTeX:array ()
+  (concat (YaTeX:read-position "tb")
+	  "{" (read-string "Column format: ") "}")
 )
 
 (defun YaTeX:read-position (oneof)
@@ -82,6 +92,11 @@
 
 (defun YaTeX:list ()
   "%\n{} %default label\n{} %formatting parameter"
+)
+
+(defun YaTeX:minipage ()
+  (concat (YaTeX:read-position "cbt")
+	  "{" (read-string "Width: ") "}")
 )
 
 ;;;
@@ -356,9 +371,18 @@
       (if (and (stringp command)
 	       (string< "" command)
 	       (y-or-n-p "Update user completion table?"))
-	  (YaTeX-update-table
-	   (if (> argc 1) (list command argc) (list command))
-	   'section-table 'user-section-table 'tmp-section-table))
+	  (cond
+	   ((= argc 0)
+	    (YaTeX-update-table
+	     (list command)
+	     'singlecmd-table 'user-singlecmd-table 'tmp-singlecmd-table))
+	   ((= argc 1)
+	    (YaTeX-update-table
+	     (list command)
+	     'section-table 'user-section-table 'tmp-section-table))
+	   (t (YaTeX-update-table
+	       (list command argc)
+	       'section-table 'user-section-table 'tmp-section-table))))
       (message "")
       def				;return command name
       ))

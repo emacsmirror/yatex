@@ -1,6 +1,14 @@
 	Yet Another tex-mode for Emacs
 	yatex.el 各バージョンの変更点について。
 
+1.49	YaTeX::newcommand において \newcommand の引数0個の時は maketitle 
+	型用の辞書を更新するようにした。
+	テンポラリ辞書を格納する変数を buffer-local に。
+	YaTeX-nervous のデフォルト値を t にした。
+	ユーザが新規コマンドのテンポラリ辞書への追加を指示した時には、テ
+	ンポラリ辞書ファイルがなくても作成するようにした。
+	YaTeX-typeset-region の bug-fix.
+
 1.48	[prefix] ? の YaTeX-help でカーソル位置の LaTeX コマンドのヘルプ
 	が出るようにした(ヘルプ内容は未完成)。
 	begin 型補完全般でのインデント調整処理の改善。
