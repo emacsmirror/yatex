@@ -3,17 +3,29 @@
 %%
 %% C-u C-x $ shows only questions.  C-x $ shows all.
 %%
+-- New Item
+     *Can I use font-lock with yahtml?
 
 [Installation]
 ==============
 *Must I install YaTeX even if I don't use LaTeX?
 	
 	No.  Get the files starting with "yahtml" from
-	ftp://ftp.ae.keio.ac.jp/pub/emacs-lisp/text/yatex/
+	http://www.yatex.org/
 	and that's all you will need.
 
 [Customization]
 ==============
+*Can I use font-lock with yahtml?
+	
+	Yes.  Native font-lock  support started at yahtml-1.69.  All you
+	have to  do for font-lock-ing, is  to load font-lock beforehand.
+	If you had added such workaround as
+	
+		(put 'yahtml-mode 'font-lock-defaults 'another-html-mode)
+	
+	in hooks, please remove it!
+	
 *I usually use EUC, but need JIS coding on some files.
 	
 	Write
@@ -68,11 +80,14 @@
 	
 *Mailing lists?
 	
-	A  question, so  an answer.   The mailing  list for  YaTeX (Wild
-	Bird)  and it's  implementation to  Vz; Raicho  (by KATSURAGAWA,
-	Naoki),  implementation  to Wz  Editor;  HackTeX (by  TAKKENAKA,
-	Hiroshi),   implementation  to   Hidemaru;  HiTeX   (by  YASUDA,
-	Haruyuki) is "fj Wild Bird Society".  Send a mail like
+
+	A question, so an answer. The mailing list for YaTeX (Wild Bird)
+	and it's  implementation to Vz Editor; LaiTeX  (Thunder Bird, by
+	KATSURAGAWA Naoki), implementation  to Wz Editor; HackTeX (Swan,
+	by TAKENAKA  Hiroshi), implementation to  Hidemaru Editor; HiTeX
+	(Flying  Bird, by YASUDA  Haruyuki) is  "fj Wild  Bird Society".
+	Send a mail like
+
 	
 		To: yatex@yatex.org
 		Subject: append

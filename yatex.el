@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //野鳥//
-;;; yatex.el rev. 1.68
+;;; yatex.el rev. 1.69
 ;;; (c )1991-2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Apr  9 12:35:15 2000 on firestorm
+;;; Last modified Mon Dec 25 18:57:10 2000 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -24,7 +24,7 @@
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.6*"
+(defconst YaTeX-revision-number "1.69"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -59,7 +59,13 @@ YaTeX-current-position-register.")
 ;;'main-file	: switch tmp-dic according to main-file directory.
 ;;'directory	: switch tmp-dic dir by dir."
 ;;)
-(defvar tex-command (if YaTeX-japan "jlatex" "latex")
+(defvar YaTeX-use-LaTeX2e t "*Use LaTeX2e or not.  Nil meas latex 2.09")
+
+(defvar tex-command
+  (cond
+   (YaTeX-use-LaTeX2e "platex")
+   (YaTeX-japan "jlatex")
+   (t "latex"))
   "*Default command for typesetting LaTeX text.")
 
 (defvar bibtex-command (if YaTeX-japan "jbibtex" "bibtex")
@@ -129,8 +135,6 @@ put % after each line at filling.
 改行+インデントによって、タイプセット後の字間が空いてしまうのを抑制する場合に
 tにする(古いNTT-jTeXで顕著に現れる)。具体的には、fillするときに各行の終わりに
 %を付加する。")
-
-(defvar YaTeX-use-LaTeX2e t "*Use LaTeX2e or not.  Nil meas latex 2.09")
 
 
 (defvar YaTeX-item-regexp
@@ -206,8 +210,16 @@ Nil for removing only one commenting character at the beginning-of-line.")
   "*List of functions to be called at the end of yatex-mode initializations.")
 
 (defvar YaTeX-search-file-from-top-directory t
-  "*Non-nil means to search input-files from the directory where main file
-exists.")
+  "*Non-nil means to search input-files from the directory where main file exists.")
+
+(defvar YaTeX-use-font-lock (and (featurep 'font-lock)
+				 (fboundp 'x-color-values)
+				 (fboundp 'font-lock-fontify-region))
+  "*Use font-lock to fontify buffer or not.")
+
+(defvar YaTeX-use-hilit19 (and (featurep 'hilit19) (fboundp 'x-color-values)
+			       (fboundp 'hilit-translate))
+  "*Use hilit19 to highlight buffer or not.")
 
 ;;-- Math mode values --
 
@@ -240,7 +252,7 @@ exists.")
    '(("part") ("chapter") ("chapter*") ("section") ("section*")
      ("subsection") ("subsection*")
      ("subsubsection") ("paragraph") ("subparagraph")
-     ("author") ("thanks") ("documentstyle") ("pagestyle")
+     ("author") ("thanks") ("documentstyle") ("pagestyle") ("thispagestyle")
      ("title") ("underline") ("label") ("makebox")
      ("footnote") ("footnotetext") ("index")
      ("hspace*") ("vspace*") ("bibliography") ("bibitem") ("cite")
@@ -480,10 +492,12 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   (define-key YaTeX-recursive-map YaTeX-prefix YaTeX-prefix-map))
 
 ;---------- Define other variable ----------
-(defvar env-name "document" "*Initial tex-environment completion")
-(defvar section-name "documentstyle" "*Initial tex-section completion")
-(defvar fontsize-name "large" "*Initial fontsize completion")
-(defvar single-command "maketitle" "*Initial LaTeX single command")
+(defvar YaTeX-env-name "document" "*Initial tex-environment completion")
+(defvar YaTeX-section-name
+  (if YaTeX-use-LaTeX2e "documentclass" "documentstyle")
+  "*Initial tex-section completion")
+(defvar YaTeX-fontsize-name "large" "*Initial fontsize completion")
+(defvar YaTeX-single-command "maketitle" "*Initial LaTeX single command")
 (defvar YaTeX-kanji-code (if YaTeX-dos 1 2)
   "*File kanji code used by Japanese TeX.")
 
@@ -592,7 +606,11 @@ more features are available and they are documented in the manual.
   (cond ((boundp 'MULE)
 	 (set-file-coding-system  YaTeX-coding-system))
 	((and YaTeX-emacs-20 (boundp 'buffer-file-coding-system))
-	 (setq buffer-file-coding-system YaTeX-coding-system))
+	 (setq buffer-file-coding-system
+	       (or (and (fboundp 'set-auto-coding) buffer-file-name
+			(save-excursion
+			  (set-auto-coding buffer-file-name 2000)))
+		   YaTeX-coding-system)))
 	((featurep 'mule)
 	 (set-file-coding-system YaTeX-coding-system))
 	((boundp 'NEMACS)
@@ -607,6 +625,17 @@ more features are available and they are documented in the manual.
 	comment-end ""
 	comment-start-skip "[^\\\\]%+[ \t]*"
 	)
+  (if (boundp 'kill-buffer-hook)	;For Recent Emacs
+      (set (make-local-variable 'kill-buffer-hook)
+	   (cons 'YaTeX-kill-buffer-hook kill-buffer-hook)))
+  (if (and YaTeX-use-font-lock (featurep 'font-lock))
+      (progn
+	(YaTeX-font-lock-set-default-keywords)
+	(or  (featurep 'xemacs)
+	     (set (make-local-variable 'font-lock-defaults)
+		  (get 'yatex-mode 'font-lock-defaults)))
+	;;(font-lock-mode 1)
+	))
   (use-local-map YaTeX-mode-map)
   (set-syntax-table YaTeX-mode-syntax-table)
   (if YaTeX-dos (setq YaTeX-saved-screen-height (screen-height)))
@@ -756,18 +785,44 @@ you can put REGION into that environment between \\begin and \\end."
       ((mode (if arg " region" ""))
        (env
 	(YaTeX-read-environment
-	 (format "Begin environment%s(default %s): " mode env-name))))
+	 (format "Begin environment%s(default %s): " mode YaTeX-env-name))))
     (if (string= env "")
-	(setq env env-name))
-    (setq env-name env)
+	(setq env YaTeX-env-name))
+    (setq YaTeX-env-name env)
     (YaTeX-update-table
-     (list env-name) 'env-table 'user-env-table 'tmp-env-table)
-    (YaTeX-insert-begin-end env-name arg)))
+     (list YaTeX-env-name) 'env-table 'user-env-table 'tmp-env-table)
+    (YaTeX-insert-begin-end YaTeX-env-name arg)))
 
 (defun YaTeX-make-begin-end-region ()
   "Call YaTeX-make-begin-end with ARG to specify region mode."
   (interactive)
   (YaTeX-make-begin-end t))
+
+(defun YaTeX-guess-section-type ()
+  (if (eq major-mode 'yatex-mode)
+      (save-excursion
+	(cond
+	 ((save-excursion (not (search-backward YaTeX-ec nil t)))
+	  (if YaTeX-use-LaTeX2e "documentclass" "documentstyle"))
+	 ((progn (forward-char -1) (looking-at "表\\|図\\|式"))
+	  "ref")
+	 ((and (looking-at "[a-z \t]")
+	       (progn (skip-chars-backward "a-z \t")
+		      (looking-at "table\\|figure\\|formula")))
+	  "ref")
+	 ((save-excursion
+	    (skip-chars-backward "[^ア-ン]")
+	    (looking-at "プログラム\\|リスト"))
+	  "ref")
+	 ((YaTeX-re-search-active-backward
+	   (concat YaTeX-ec-regexp "begin{\\([^}]+\\)}")
+	   (regexp-quote YaTeX-comment-prefix)
+	   (save-excursion (forward-line -1) (point))
+	   t)
+	  (let ((env (YaTeX-match-string 1)))
+	    (cdr (assoc env
+			'(("table" . "caption"))))))
+	 ))))
 
 (defun YaTeX-make-section (arg &optional beg end cmd)
   "Make LaTeX \\section{} type command with completing read.
@@ -793,18 +848,23 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
   (unwind-protect
       (let*
 	  ((source-window (selected-window))
+	   guess
 	   (section
 	    (or cmd
-		(YaTeX-read-section
-		 (if YaTeX-simple-messages
-		     (format "Section-type (default %s): " section-name)
-		   (if (> (minibuffer-depth) 0)
-		       (format "%s???{} (default %s)%s: " YaTeX-ec section-name
-			       (format "[level:%d]" (minibuffer-depth)))
-		     (format "(C-v for view-section) %s???{%s} (default %s): "
-			     YaTeX-ec (if beg "region" "") section-name)))
-		 nil)))
-	   (section (if (string= section "") section-name section))
+		(progn
+		  (setq guess
+			(or (YaTeX-guess-section-type) YaTeX-section-name))
+		  (YaTeX-read-section
+		   (if YaTeX-simple-messages
+		       (format "Section-type (default %s): " guess)
+		     (if (> (minibuffer-depth) 0)
+			 (format "%s???{} (default %s)%s: "
+				 YaTeX-ec guess
+				 (format "[level:%d]" (minibuffer-depth)))
+		       (format "(C-v for view-section) %s???{%s} (default %s): "
+			       YaTeX-ec (if beg "region" "") guess)))
+		   nil))))
+	   (section (if (string= section "") guess section))
 	   (numarg	;; The number of section-type command's argument
 	    (or (and (numberp arg) arg)
 		(nth 1 (YaTeX-lookup-table section 'section))
@@ -813,21 +873,22 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 	   (addin-args (and arg-reader (fboundp arg-reader)))
 	   (title "")
 	   (j 1)
+	   (after-change-functions nil)	;inhibit font-locking temporarily
 	   (enable-recursive-minibuffers t));;let
-	(setq section-name section)
+	(setq YaTeX-section-name section)
 	(if beg
 	    (let ((e (make-marker)))
 	      (goto-char end)
 	      (insert "}")
 	      (set-marker e (point))
 	      (goto-char beg)
-	      (insert YaTeX-ec section-name "{")
+	      (insert YaTeX-ec YaTeX-section-name "{")
 	      (goto-char e)
 	      (set-marker e nil))
 	  (use-global-map YaTeX-recursive-map)
-	  (if (= numarg 0) (YaTeX-make-singlecmd section-name)
-	    (progn (insert YaTeX-ec section-name)
-		   (insert (YaTeX-addin section-name))))
+	  (if (= numarg 0) (YaTeX-make-singlecmd YaTeX-section-name)
+	    (progn (insert YaTeX-ec YaTeX-section-name)
+		   (insert (YaTeX-addin YaTeX-section-name))))
 	  (while (<= j numarg)
 	    (insert
 	     "{"
@@ -849,7 +910,8 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 	  (forward-char -1))
 	(while (string= (buffer-substring (- (point) 3) (1- (point))) "{}")
 	  (forward-char -2)))
-    (if (<= (minibuffer-depth) 0) (use-global-map global-map))))
+    (if (<= (minibuffer-depth) 0) (use-global-map global-map))
+    (insert "")))		;insert dummy string to fontify(Emacs20)
 
 (defun YaTeX-make-section-region (args beg end)
   "Call YaTeX-make-section with arguments to specify region mode."
@@ -868,33 +930,35 @@ into {\\xxx } braces.
 	  (or fontsize
 	      (YaTeX-read-fontsize
 	       (if YaTeX-simple-messages
-		   (format "Font or size (default %s): " fontsize-name)
-		 (format "{\\??? %s} (default %s)%s: " mode fontsize-name
+		   (format "Font or size (default %s): " YaTeX-fontsize-name)
+		 (format "{\\??? %s} (default %s)%s: " mode YaTeX-fontsize-name
 			 (if (> (minibuffer-depth) 0)
 			     (format "[level:%d]" (minibuffer-depth)) "")))
 	       nil nil))))
     (if (string= fontsize "")
-	(setq fontsize fontsize-name))
+	(setq fontsize YaTeX-fontsize-name))
     (setq YaTeX-current-completion-type 'large)
-    (setq fontsize-name fontsize)
+    (setq YaTeX-fontsize-name fontsize)
     (YaTeX-update-table
-     (list fontsize-name)
+     (list YaTeX-fontsize-name)
      'fontsize-table 'user-fontsize-table 'tmp-fontsize-table)
     (and YaTeX-use-LaTeX2e
 	 (YaTeX-latex2e-p)
-	 (setq fontsize (cdr (assoc fontsize-name LaTeX2e-fontstyle-alist)))
-	 (setq fontsize-name fontsize))
+	 (setq fontsize
+	       (cdr (assoc YaTeX-fontsize-name LaTeX2e-fontstyle-alist)))
+	 (setq YaTeX-fontsize-name fontsize))
     (if arg
 	(save-excursion
 	  (if (> (point) (mark)) (exchange-point-and-mark))
-	  (insert "{\\" fontsize-name " ")
+	  (insert "{\\" YaTeX-fontsize-name " ")
 	  (exchange-point-and-mark)
 	  (insert "}"))
-      (insert "{\\" fontsize-name " ")
+      (insert (concat "{\\" YaTeX-fontsize-name " }"))
+      (forward-char -1)
       (if YaTeX-current-position-register
 	  (point-to-register YaTeX-current-position-register))
       (save-excursion
-	(insert (YaTeX-addin fontsize-name) "}")))))
+	(insert (YaTeX-addin YaTeX-fontsize-name))))))
 
 (defun YaTeX-make-fontsize-region ()
   "Call function:YaTeX-make-fontsize with ARG to specify region mode."
@@ -908,21 +972,21 @@ into {\\xxx } braces.
   (interactive
    (list (YaTeX-cplread-with-learning
 	  (if YaTeX-simple-messages
-	      (format "maketitle-type (default %s): " single-command)
-	    (format "%s??? (default %s)%s: " YaTeX-ec single-command
+	      (format "maketitle-type (default %s): " YaTeX-single-command)
+	    (format "%s??? (default %s)%s: " YaTeX-ec YaTeX-single-command
 		    (if (> (minibuffer-depth) 0)
 			(format "[level:%d]" (minibuffer-depth)) "")))
 	  'singlecmd-table 'user-singlecmd-table 'tmp-singlecmd-table
 	  nil nil nil 'YaTeX-read-singlecmd-history)))
   (if (string= single "")
-      (setq single single-command))
-  (setq single-command single)
+      (setq single YaTeX-single-command))
+  (setq YaTeX-single-command single)
   (setq YaTeX-current-completion-type 'maketitle)
   (let ((dollar (and (not (YaTeX-in-math-mode-p))
-		     (YaTeX-math-member-p single-command)))
+		     (YaTeX-math-member-p YaTeX-single-command)))
 	p q)
     (if dollar (insert "$"))
-    (insert YaTeX-ec single-command)
+    (insert YaTeX-ec YaTeX-single-command)
     (setq p (point))
     (insert (YaTeX-addin single) YaTeX-singlecmd-suffix)
     (if dollar (insert "$"))
@@ -1122,6 +1186,8 @@ into {\\xxx } braces.
      ((fboundp 'skk-latin-mode)	(skk-latin-mode t))
      ((fboundp 'skk-mode-off)	(skk-mode-off))
      (t (j-mode-off))))
+   ((and (fboundp 'toggle-input-method) current-input-method)
+    (toggle-input-method))
    ((and (fboundp 'fep-force-off) (fep-force-off)))))
 
 (defun YaTeX-self-insert (arg)
@@ -1327,6 +1393,10 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?m) (YaTeX-switch-mode-menu arg))
      ((= c ?b) (YaTeX-insert-string "\\"))
      ((= c ?s) (YaTeX-xdvi-remote-search arg)))))
+
+(if (fboundp 'wrap-function-to-control-ime)
+    (wrap-function-to-control-ime 'YaTeX-typeset-menu t "P"))
+
 
 (defun YaTeX-%-menu (&optional beg end char)
   "Operate %# notation."
@@ -2042,8 +2112,7 @@ This function refers a local variable `source-window' in YaTeX-make-section"
 		      "Sectioning(Up=C-p, Down=C-n, Help=?): "
 		      YaTeX-sectioning-level (YaTeX-section-overview))))
       (select-window sw))
-    (if (eq (selected-window) (minibuffer-window))
-	(erase-buffer))
+    (YaTeX-minibuffer-erase)
     (insert sect)
     (exit-minibuffer)))
 
@@ -2698,14 +2767,21 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
 (provide 'yatex)
 (defvar yatex-mode-load-hook nil
   "*List of functions to be called when yatex.el is loaded.")
-(if (and YaTeX-emacs-19 window-system (not (featurep 'yatex19)))
+(if (and YaTeX-emacs-19 YaTeX-display-color-p (not (featurep 'yatex19)))
     (load "yatex19"))
 (load "yatexhks" t)
 
 ;;-------------------- Final hook jobs --------------------
 (substitute-all-key-definition
  'fill-paragraph 'YaTeX-fill-paragraph YaTeX-mode-map)
+(substitute-all-key-definition
+ 'kill-buffer 'YaTeX-kill-buffer yahtml-mode-map)
 (run-hooks 'yatex-mode-load-hook)
 
 ;; `History' was moved to ChangeLog
 ;----------------------------- End of yatex.el -----------------------------
+
+
+;;; Local variables: 
+;;; buffer-file-coding-system: sjis
+;;; End: 

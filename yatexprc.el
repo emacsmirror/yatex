@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c )1993-1999 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Dec 18 22:16:11 1999 on firestorm
+;;; (c )1993-2000 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Dec 25 19:18:19 2000 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -363,6 +363,40 @@ PROC should be process identifier."
 	  "system" buffer shell-file-name YaTeX-shell-command-option command)
 	 (get-buffer buffer))))))
 
+(defvar YaTeX-default-paper-type "a4"
+  "*Default paper type.")
+(defconst YaTeX-paper-type-alist
+  '(("a4paper" . "a4")
+    ("a5paper" . "a5")
+    ("b4paper" . "b4")
+    ("b5paper" . "b5"))
+  "Holds map of options and paper types.")
+(defconst YaTeX-dvips-paper-option-alist
+  '(("a4" . "-t a4")
+    ("a5" . "-t a5")
+    ("b4" . "-t b4")
+    ("b5" . "-t b5")
+    ("a4r" . "-t landscape"); Can't specify options, `-t a4' and `-t landscape', at the same time.
+    ("a5r" . "-t landscape")
+    ("b4r" . "-t landscape")
+    ("b5r" . "-t landscape"))
+  "Holds map of dvips options and paper types.")
+(defun YaTeX-get-paper-type ()
+  "Search options in header and return a paper type, such as \"a4\", \"a4r\", etc."
+  (save-excursion
+    (goto-char (point-min))
+    (if (re-search-forward
+	 "^[ \t]*\\\\document\\(style\\|class\\)[ \t]*\\[\\([^]]*\\)\\]" nil t)
+	(let ((opts (YaTeX-split-string (YaTeX-match-string 2) "[ \t]*,[ \t]*")))
+	  (concat
+	   (catch 'found-paper
+	     (mapcar (lambda (pair)
+		       (if (member (car pair) opts)
+			   (throw 'found-paper (cdr pair))))
+		     YaTeX-paper-type-alist)
+	     YaTeX-default-paper-type)
+	   (if (member "landscape" opts) "r" ""))))))
+
 (defvar YaTeX-preview-command-history nil
   "Holds minibuffer history of preview command.")
 (put 'YaTeX-preview-command-history 'no-default t)
@@ -375,7 +409,9 @@ PROC should be process identifier."
    (list
     (read-string-with-history
      "Preview command: "
-     (or (YaTeX-get-builtin "PREVIEW") dvi2-command)
+     (YaTeX-replace-format
+      (or (YaTeX-get-builtin "PREVIEW") dvi2-command)
+      "p" (concat "-paper " (YaTeX-get-paper-type)))
      'YaTeX-preview-command-history)
     (read-string-with-history
      "Preview file[.dvi]: "
@@ -677,6 +713,11 @@ page range description."
 	  ""
 	(YaTeX-replace-format dviprint-to-format "e" to)))
      )
+    (setq
+     cmd
+     (YaTeX-replace-format
+      cmd "p"
+      (cdr (assoc (YaTeX-get-paper-type) YaTeX-dvips-paper-option-alist))))
     (setq cmd
 	  (read-string-with-history
 	   "Edit command line: "

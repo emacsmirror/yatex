@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
-;;; (c )1993-1999 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Thu Sep 23 16:39:40 1999 on firestorm
+;;; (c)1993-2000 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Tue Dec 19 11:03:51 2000 on buell
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -406,7 +406,7 @@
 (defmacro YaTeX-math-japanese-sign (list)
   (list 'nth 1 list))
 
-(defvar YaTeX-math-cmd-regexp (concat (regexp-quote YaTeX-ec) "[A-z]"))
+(defvar YaTeX-math-cmd-regexp (concat (regexp-quote YaTeX-ec) "[A-z|]"))
 (defvar YaTeX-math-verbatim-environments
   '("alltt")
   "*List of environments in which LaTeX math mode is disabled.

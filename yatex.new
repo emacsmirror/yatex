@@ -1,6 +1,27 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.69	font-lock 対応(XEmacs, Emacs-20, Emacs-21 のみ)。
+	hilit19, font-lockを共存させている場合 YaTeX-use-hilit19 か、	
+	YaTeX-use-font-lock どちらか一方を Non-nil にする。
+	~/.emacs で (put 'yatex-mode 'font-lock-defaults ....) や
+	(put 'yahtml-mode 'font-lock-defaults ...)などを入れている人はその
+	設定を削り、(setq YaTeX-use-font-lock t) を入れてください。
+	Emacs-21(pretest version)で動くようにした。
+	kill-bufferしたときに親ファイルが出現するよう努力。
+	野鳥起動時の段階でEmacsに italic, bold フォントが登録されていれ
+	ば、それを積極的に利用するようにした。
+	=== yatex ===
+	section型補完のときに直前の文字列でデフォルト候補を変える機能を
+	試験的に入れてみた。
+	(Meadow)Typeset menu での IME OFF。
+	yatexmth, ;[TAB] 一覧の最初の \| が選択できなかったのを修正。
+	=== yahtml ===
+	XEmacsで img src での画像サイズ取得ができなかったのを修正。
+	[prefix] ESC で yahtml-mode に入る前の major-mode に復帰(メイルの
+	draftバッファでHTMLを書くために一時的にyahtmlを読んで元に戻るとき
+	に有効)。
+
 1.68	=== yatex ===
 	XEmacsでyatexgenが動かなくなったのに対処。
 	Windowsでのインストールが少し楽になるように makefile を修正。

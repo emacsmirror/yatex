@@ -5,9 +5,9 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Info‚Á‚ÄÅ‹ß“Ç‚Şl‚ª‘‚¦‚½‚ç‚µ‚¢
-@c ‚Ü‚¾‘‚«I‚í‚Á‚Ä‚¢‚Ü‚¹‚ñB
-@c Last modified Mon Nov 29 15:43:04 1999 on buell
+@c Info$B$C$F:G6aFI$`?M$,A}$($?$i$7$$(B
+@c $B$^$@=q$-=*$o$C$F$$$^$;$s!#(B
+@c Last modified Sat Dec  2 13:55:06 2000 on buell
 @syncodeindex vr cp
 @end iftex
 
@@ -15,7 +15,7 @@
 @sp 10
 @center
 @subtitle Yet Another html-mode for emacs
-@title wHTML‰®x
+@title $B!X(BHTML$B20!Y(B
 @subtitle // yahtml //
 @author @copyright{} 1994-1997 by    HIROSE, Yuuji [yuuji@@yatex.org]
 @end titlepage
@@ -24,49 +24,49 @@
 @comment  node-name,  next,  previous,  up
 
 @menu
-* Intro::                       ‚Í‚¶‚ß‚É
-* Installation::                ƒCƒ“ƒXƒg[ƒ‹
-* Command Invocation::          ŠO•”ƒRƒ}ƒ“ƒh‹N“®
-* Completion::                  •âŠ®“ü—Í
-* Jump::                        ƒJ[ƒ\ƒ‹ƒWƒƒƒ“ƒv
-* Changing and Deleting::       •ÏX‚Æíœ
-* CSS Support::                 ƒXƒ^ƒCƒ‹ƒV[ƒg•âŠ®
-* Customizations::              ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——
-* Copying::                     ‚Æ‚è‚ ‚Â‚©‚¢
-* Concept Index::               õˆø
+* Intro::                       $B$O$8$a$K(B
+* Installation::                $B%$%s%9%H!<%k(B
+* Command Invocation::          $B30It%3%^%s%I5/F0(B
+* Completion::                  $BJd40F~NO(B
+* Jump::                        $B%+!<%=%k%8%c%s%W(B
+* Changing and Deleting::       $BJQ99$H:o=|(B
+* CSS Support::                 $B%9%?%$%k%7!<%HJd40(B
+* Customizations::              $B%+%9%?%^%$%:JQ?t0lMw(B
+* Copying::                     $B$H$j$"$D$+$$(B
+* Concept Index::               $B:w0z(B
 
 @end menu
 
 @node Intro, Installation, Top, Top
 @comment  node-name,  next,  previous,  up
-@chapter ‚Í‚¶‚ß‚É
+@chapter $B$O$8$a$K(B
 @cindex Demacs
 @cindex Mule
 @cindex LaTeX
-@cindex HTML‰®[HTML‚â]
+@cindex HTML$B20(B[HTML$B$d(B]
 
-yahtml‚Í GNU Emacs ã‚Å HTML•¶‘‚ğì¬‚·‚é‚ÉA”ÉG‚ÈHTMLƒ^ƒO‚Ì“ü—Í‚ğ•â
-Š®‹@”\‚É‚æ‚Á‚ÄƒXƒ€[ƒY‚És‚¦‚é‚æ‚¤‚É‚·‚é‚¾‚¯‚Å‚È‚­Aweblint‚È‚Ç‚Ì\•¶ƒ`ƒFƒb
-ƒNƒvƒƒOƒ‰ƒ€AƒJ[ƒ\ƒ‹ˆÊ’u‚ÌURL‚âƒtƒ@ƒCƒ‹–¼‚ÉˆË‘¶‚µ‚½ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[
-ƒA‚Ì‹N“®‚È‚Ç‚ğ Emacs •ÒW‰æ–Ê’†‚©‚ç
-s‚¦‚é‚æ‚¤‚É‚·‚éƒpƒbƒP[ƒW‚Å‚·B
+yahtml$B$O(B GNU Emacs $B>e$G(B HTML$BJ8=q$r:n@.$9$k;~$K!"HK;($J(BHTML$B%?%0$NF~NO$rJd(B
+$B405!G=$K$h$C$F%9%`!<%:$K9T$($k$h$&$K$9$k$@$1$G$J$/!"(Bweblint$B$J$I$N9=J8%A%'%C(B
+$B%/%W%m%0%i%`!"%+!<%=%k0LCV$N(BURL$B$d%U%!%$%kL>$K0MB8$7$?%V%i%&%6(B/$B%$%a!<%8%t%e!<(B
+$B%"$N5/F0$J$I$r(B Emacs $BJT=82hLLCf$+$i(B
+$B9T$($k$h$&$K$9$k%Q%C%1!<%8$G$9!#(B
 
-(‚±‚ÌInfo‚Í–¢Š®¬‚Å‚·(__)c)
+($B$3$N(BInfo$B$OL$40@.$G$9(B(__)$B!D(B)
 
 @node Installation, Command Invocation, Intro, Top
 @comment  node-name,  next,  previous,  up
-@chapter ƒCƒ“ƒXƒg[ƒ‹
+@chapter $B%$%s%9%H!<%k(B
 @menu
-* yahtml‹N“®‚Ì‚½‚ß‚Ìİ’è::      
-* lintƒvƒƒOƒ‰ƒ€/ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[ƒAŠÂ‹«“™‚Ìİ’è::  
-* WWWƒy[ƒWŠÂ‹«—p•Ï”‚Ìİ’è::   
+* yahtml$B5/F0$N$?$a$N@_Dj(B::      
+* lint$B%W%m%0%i%`(B/$B%V%i%&%6(B/$B%$%a!<%8%t%e!<%"4D6-Ey$N@_Dj(B::  
+* WWW$B%Z!<%84D6-MQJQ?t$N@_Dj(B::   
 @end menu
 
-@node yahtml‹N“®‚Ì‚½‚ß‚Ìİ’è, lintƒvƒƒOƒ‰ƒ€/ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[ƒAŠÂ‹«“™‚Ìİ’è, Installation, Installation
-@section yahtml‹N“®‚Ì‚½‚ß‚Ìİ’è
+@node yahtml$B5/F0$N$?$a$N@_Dj(B, lint$B%W%m%0%i%`(B/$B%V%i%&%6(B/$B%$%a!<%8%t%e!<%"4D6-Ey$N@_Dj(B, Installation, Installation
+@section yahtml$B5/F0$N$?$a$N@_Dj(B
 
 
-@file{~/.emacs}‚É‰º‚Ì2€–Ú‚ğ‰Á‚¦‚Ü‚·B
+@file{~/.emacs}$B$K2<$N(B2$B9`L\$r2C$($^$9!#(B
 
 @lisp
 (setq auto-mode-alist
@@ -74,54 +74,54 @@ yahtml‚Í GNU Emacs ã‚Å HTML•¶‘‚ğì¬‚·‚é‚ÉA”ÉG‚ÈHTMLƒ^ƒO‚Ì“ü—Í‚ğ•â
 (autoload 'yahtml-mode "yahtml" "Yet Another HTML mode" t)
 @end lisp
 
-Ÿ‚Éyahtml‚É•K—v‚Èƒtƒ@ƒCƒ‹(@file{yahtml.el}, @file{yatexlib.el},
-@file{yatexprc.el}) ‚ğ’u‚­ƒfƒBƒŒƒNƒgƒŠ‚ğ load-path ‚É‰Á‚¦‚Ü‚·B‚½‚Æ‚¦‚ÎA 
-@file{~/src/emacs/yahtml}‚É’u‚­‚Ì‚Å‚ ‚ê‚ÎA
+$B<!$K(Byahtml$B$KI,MW$J%U%!%$%k(B(@file{yahtml.el}, @file{yatexlib.el},
+@file{yatexprc.el}) $B$rCV$/%G%#%l%/%H%j$r(B load-path $B$K2C$($^$9!#$?$H$($P!"(B 
+@file{~/src/emacs/yahtml}$B$KCV$/$N$G$"$l$P!"(B
 
 @lisp
 (setq load-path (cons (expand-file-name "~/src/emacs/yahtml") load-path))
 @end lisp
 
 @noindent 
-‚È‚Ç‚Æ‚µ‚Ü‚·B
+$B$J$I$H$7$^$9!#(B
 
-  ˆÈã‚Ìİ’è‚É‚æ‚èAŠg’£q‚ª .html ‚Å‚ ‚éƒtƒ@ƒCƒ‹‚ğ•ÒW‚·‚é‚Æ©“®“I‚É
-yahtml ‚ªƒ[ƒh‚³‚ê‚Ü‚·Byahtml‚ª³í‚É‹N“®‚Å‚«‚½‚Æ‚«‚Íƒ‚[ƒhƒ‰ƒCƒ“‚Ì•\¦‚ª
-uyahtmlv‚É•Ï‚í‚è‚Ü‚·B
+  $B0J>e$N@_Dj$K$h$j!"3HD%;R$,(B .html $B$G$"$k%U%!%$%k$rJT=8$9$k$H<+F0E*$K(B
+yahtml $B$,%m!<%I$5$l$^$9!#(Byahtml$B$,@5>o$K5/F0$G$-$?$H$-$O%b!<%I%i%$%s$NI=<($,(B
+$B!V(Byahtml$B!W$KJQ$o$j$^$9!#(B
 
-@node lintƒvƒƒOƒ‰ƒ€/ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[ƒAŠÂ‹«“™‚Ìİ’è, WWWƒy[ƒWŠÂ‹«—p•Ï”‚Ìİ’è, yahtml‹N“®‚Ì‚½‚ß‚Ìİ’è, Installation
-@section lintƒvƒƒOƒ‰ƒ€/ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[ƒAŠÂ‹«“™‚Ìİ’è
+@node lint$B%W%m%0%i%`(B/$B%V%i%&%6(B/$B%$%a!<%8%t%e!<%"4D6-Ey$N@_Dj(B, WWW$B%Z!<%84D6-MQJQ?t$N@_Dj(B, yahtml$B5/F0$N$?$a$N@_Dj(B, Installation
+@section lint$B%W%m%0%i%`(B/$B%V%i%&%6(B/$B%$%a!<%8%t%e!<%"4D6-Ey$N@_Dj(B
 
-—˜—p‚·‚éŠO•”ƒvƒƒOƒ‰ƒ€‚È‚Ç‚ÉŠÖ‚·‚éˆÈ‰º‚Ì•Ï”‚ğŠm”F‚µA•K—v‚È‚ç³‚µ‚¢’l‚É•Ï
-X‚µ‚Ü‚·(Š‡ŒÊ“à‚ÍƒfƒtƒHƒ‹ƒg’l)B
+$BMxMQ$9$k30It%W%m%0%i%`$J$I$K4X$9$k0J2<$NJQ?t$r3NG'$7!"I,MW$J$i@5$7$$CM$KJQ(B
+$B99$7$^$9(B($B3g8LFb$O%G%U%)%k%HCM(B)$B!#(B
 @table @code
 @item yahtml-www-browser
-        @dots{} ‹N“®‚·‚éƒuƒ‰ƒEƒU‚ÌƒRƒ}ƒ“ƒh–¼(netscape)
+        @dots{} $B5/F0$9$k%V%i%&%6$N%3%^%s%IL>(B(netscape)
 @item yahtml-image-viewer
-        @dots{} ‹N“®‚·‚é‰æ‘œƒrƒ…[ƒA‚ÌƒRƒ}ƒ“ƒh–¼(xv)
+        @dots{} $B5/F0$9$k2hA|%S%e!<%"$N%3%^%s%IL>(B(xv)
 @item yahtml-lint-program
-        @dots{} \•¶ƒ`ƒFƒbƒNƒvƒƒOƒ‰ƒ€‚ÌƒRƒ}ƒ“ƒh–¼(jweblint)
+        @dots{} $B9=J8%A%'%C%/%W%m%0%i%`$N%3%^%s%IL>(B(jweblint)
 @item yahtml-kanji-code
-        @dots{} htmlƒtƒ@ƒCƒ‹‚ÌŠ¿šƒR[ƒh
+        @dots{} html$B%U%!%$%k$N4A;z%3!<%I(B
 @end table
 
-@node WWWƒy[ƒWŠÂ‹«—p•Ï”‚Ìİ’è,  , lintƒvƒƒOƒ‰ƒ€/ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[ƒAŠÂ‹«“™‚Ìİ’è, Installation
-@section WWWƒy[ƒWŠÂ‹«—p•Ï”‚Ìİ’è
+@node WWW$B%Z!<%84D6-MQJQ?t$N@_Dj(B,  , lint$B%W%m%0%i%`(B/$B%V%i%&%6(B/$B%$%a!<%8%t%e!<%"4D6-Ey$N@_Dj(B, Installation
+@section WWW$B%Z!<%84D6-MQJQ?t$N@_Dj(B
 
-ƒz[ƒ€ƒy[ƒW‚Æ‚È‚éƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚éPATH–¼‚ÉŠÖ‚·‚é•Ï”‚ğİ’è‚µ‚Ü‚·B
+$B%[!<%`%Z!<%8$H$J$k%U%!%$%k$,B8:_$9$k(BPATH$BL>$K4X$9$kJQ?t$r@_Dj$7$^$9!#(B
 @table @code
 @item yahtml-path-url-alist
-        @dots{} ƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€ã‚ÌPATH–¼‚ÆAURL‚Ì‘Î‰•\
+        @dots{} $B%U%!%$%k%7%9%F%`>e$N(BPATH$BL>$H!"(BURL$B$NBP1~I=(B
 @item yahtml-directory-index
-        @dots{} URLw’è‚Åƒtƒ@ƒCƒ‹–¼‚ğÈ—ª‚µ‚½‚Æ‚«‚É•\¦‚³‚ê‚éƒCƒ“ƒfƒbƒNƒX
-                ƒtƒ@ƒCƒ‹–¼(NCSAŒnhttpd‚È‚ç @file{index.html}, CERNŒn‚È‚ç
-                @file{Welcome.html}‚ªˆê”Ê“I)
+        @dots{} URL$B;XDj$G%U%!%$%kL>$r>JN,$7$?$H$-$KI=<($5$l$k%$%s%G%C%/%9(B
+                $B%U%!%$%kL>(B(NCSA$B7O(Bhttpd$B$J$i(B @file{index.html}, CERN$B7O$J$i(B
+                @file{Welcome.html}$B$,0lHLE*(B)
 @end table
 
-•Ï” @code{yahtml-path-url-alist} ‚Ìİ’è—á‚ğ¦‚µ‚Ü‚·B—á‚¦‚ÎA©‘î‚Å‚ÍA
-@file{/home/yuuji/http/} ‚ª @code{http://localhost/~yuuji} ‚ÅQÆ‚Å‚«AE
-ê‚Å‚Í @file{/usr/home/yuuji/www/} ‚ª@code{http://www.keio.ac.jp/~yuuji/} 
-‚ÅQÆ‚Å‚«‚é‚æ‚¤‚É‚È‚Á‚Ä‚¢‚éê‡‚ÍˆÈ‰º‚Ì‚æ‚¤‚Éİ’è‚µ‚Ü‚·B
+$BJQ?t(B @code{yahtml-path-url-alist} $B$N@_DjNc$r<($7$^$9!#Nc$($P!"<+Bp$G$O!"(B
+@file{/home/yuuji/http/} $B$,(B @code{http://localhost/~yuuji} $B$G;2>H$G$-!"?&(B
+$B>l$G$O(B @file{/usr/home/yuuji/www/} $B$,(B@code{http://www.keio.ac.jp/~yuuji/} 
+$B$G;2>H$G$-$k$h$&$K$J$C$F$$$k>l9g$O0J2<$N$h$&$K@_Dj$7$^$9!#(B
 
 @lisp
 (setq yahtml-path-url-alist
@@ -129,38 +129,38 @@ yahtml ‚ªƒ[ƒh‚³‚ê‚Ü‚·Byahtml‚ª³í‚É‹N“®‚Å‚«‚½‚Æ‚«‚Íƒ‚[ƒhƒ‰ƒCƒ“‚Ì•\¦‚ª
         ("/usr/home/yuuj/www" . "http://www.keio.ac.jp/~yuuji")))
 @end lisp
 
-‚±‚Ì‘Î‰‘g‚Í‚¢‚­‚ç‚Å‚àİ’è‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+$B$3$NBP1~AH$O$$$/$i$G$b@_Dj$9$k$3$H$,$G$-$^$9!#(B
 
 @node Command Invocation, Completion, Installation, Top
 @comment  node-name,  next,  previous,  up
-@chapter ŠO•”ƒRƒ}ƒ“ƒh‹N“®
+@chapter $B30It%3%^%s%I5/F0(B
 
-HTMLƒtƒ@ƒCƒ‹•ÒW‚É‚©‚©‚í‚é‚¢‚­‚Â‚©‚ÌƒRƒ}ƒ“ƒh‚ğ‘¦À‚ÉŒÄ‚Ô‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+HTML$B%U%!%$%kJT=8$K$+$+$o$k$$$/$D$+$N%3%^%s%I$rB(:B$K8F$V$3$H$,$G$-$^$9!#(B
 @table @kbd
 @item [prefix] t j
-        @dots{} HTML\•¶ƒ`ƒFƒbƒJ(jweblint)‹N“®
+        @dots{} HTML$B9=J8%A%'%C%+(B(jweblint)$B5/F0(B
 @item [prefix] t p
-        @dots{} Œ»İ‚Ìƒy[ƒW‚ğ‘ÎÛ‚Æ‚µ‚½ƒuƒ‰ƒEƒU‹N“®
+        @dots{} $B8=:_$N%Z!<%8$rBP>]$H$7$?%V%i%&%65/F0(B
 @item [prefix] t r
-        @dots{} Œ»İ‚Ìƒy[ƒW‚ªƒuƒ‰ƒEƒU‚É•\¦‚³‚ê‚Ä‚¢‚é‚Æ‚«‚Ìreloadw’è
+        @dots{} $B8=:_$N%Z!<%8$,%V%i%&%6$KI=<($5$l$F$$$k$H$-$N(Breload$B;XDj(B
 @end table
 
 @node Completion, Jump, Command Invocation, Top
 @comment  node-name,  next,  previous,  up
-@chapter •âŠ®“ü—Í
+@chapter $BJd40F~NO(B
 
-u–ì’¹v‚Å—˜—p‚Å‚«‚éAubeginŒ^•âŠ®vAusectionŒ^•âŠ®vA
-ulargeŒ^•âŠ®vAumaketitleŒ^•âŠ®vAuƒAƒNƒZƒ“ƒg•âŠ®v
-‚Æ‘S‚­“¯‚¶ƒL[‘€ì‚Å‘Î‰‚·‚é
-HTMLƒ^ƒO‚Ì•âŠ®“ü—Í‚ª‚Å‚«‚Ü‚·B‚»‚ê‚¼‚ê‚ÌŒ^‚Ì•âŠ®‚Í‡‚ÉA
-u•¡”s‚É“n‚éƒ^ƒO“ü—ÍvAu‹ó—v‘fƒ^ƒO(img‚È‚Ç)‚Ì•âŠ®vA
-uˆês“à‚Å‚ÌŠJn/I—¹ƒ^ƒO‚Ì“ü—ÍvAu‹ó—v‘f‹ó‘®«ƒ^ƒO‚Ì“ü—ÍvA
-u•¶šQÆ“ü—Ív
-‚É
-‘Î‰‚µ‚Ä‚¢‚Ü‚·B‹ï‘Ì“I‚É‚Í
+$B!VLnD;!W$GMxMQ$G$-$k!"!V(Bbegin$B7?Jd40!W!"!V(Bsection$B7?Jd40!W!"(B
+$B!V(Blarge$B7?Jd40!W!"!V(Bmaketitle$B7?Jd40!W!"!V%"%/%;%s%HJd40!W(B
+$B$HA4$/F1$8%-!<A`:n$GBP1~$9$k(B
+HTML$B%?%0$NJd40F~NO$,$G$-$^$9!#$=$l$>$l$N7?$NJd40$O=g$K!"(B
+$B!VJ#?t9T$KEO$k%?%0F~NO!W!"!V6uMWAG%?%0(B(img$B$J$I(B)$B$NJd40!W!"(B
+$B!V0l9TFb$G$N3+;O(B/$B=*N;%?%0$NF~NO!W!"!V6uMWAG6uB0@-%?%0$NF~NO!W!"(B
+$B!VJ8;z;2>HF~NO!W(B
+$B$K(B
+$BBP1~$7$F$$$^$9!#6qBNE*$K$O(B
 
 @table @kbd
-@item [prefix] b (–ì’¹‚Ìbegin•âŠ®‚É‘Î‰)
+@item [prefix] b ($BLnD;$N(Bbegin$BJd40$KBP1~(B)
 @dots{}
 @example
 <ul>
@@ -168,122 +168,122 @@ HTMLƒ^ƒO‚Ì•âŠ®“ü—Í‚ª‚Å‚«‚Ü‚·B‚»‚ê‚¼‚ê‚ÌŒ^‚Ì•âŠ®‚Í‡‚ÉA
 @end example
 
 @noindent
-‚Ì‚æ‚¤‚ÉŠJnƒ^ƒO‚ÆI—¹ƒ^ƒO‚ğ“ñs‚É“n‚Á‚Ä‘‚«‚½‚¢ê‡‚Ì•âŠ®‚ğw‚µ‚Ü‚·B
-‚¨‚à‚ÉƒuƒƒbƒNŒ^ƒ^ƒO‚ª•âŠ®Œó•â‚ÉŠÜ‚Ü‚ê‚Ü‚·B
+$B$N$h$&$K3+;O%?%0$H=*N;%?%0$rFs9T$KEO$C$F=q$-$?$$>l9g$NJd40$r;X$7$^$9!#(B
+$B$*$b$K%V%m%C%/7?%?%0$,Jd408uJd$K4^$^$l$^$9!#(B
 
-@item [prefix] s (–ì’¹‚ÌsectionŒ^•âŠ®‚É‘Î‰)
+@item [prefix] s ($BLnD;$N(Bsection$B7?Jd40$KBP1~(B)
 @dots{}
 @example
 <img src="foo.gif" alt="photo">
 @end example
 
 @noindent
-‚Ì‚æ‚¤‚ÉI—¹ƒ^ƒO‚ğ‚½‚¸A‚©‚Â‘®«’l‚Ì‚İ‚Å‹@”\‚ğw’è‚·‚éƒ^ƒO‚ğ•âŠ®‚µ‚Ü‚·B
-•âŠ®Œó•â‚Æ‚µ‚Ä‚ÍAimg, input ‚ª‘¶İ‚µ‚Ü‚·B
+$B$N$h$&$K=*N;%?%0$r;}$?$:!"$+$DB0@-CM$N$_$G5!G=$r;XDj$9$k%?%0$rJd40$7$^$9!#(B
+$BJd408uJd$H$7$F$O!"(Bimg, input $B$,B8:_$7$^$9!#(B
 
-@item [prefix] l (–ì’¹‚ÌlargeŒ^•âŠ®‚É‘Î‰)
-@dots{} beginŒ^•âŠ®‚Æ‚Ù‚Ú“¯‚¶‚Å‚·‚ªA
+@item [prefix] l ($BLnD;$N(Blarge$B7?Jd40$KBP1~(B)
+@dots{} begin$B7?Jd40$H$[$\F1$8$G$9$,!"(B
 
 @example
-<big> ` </big>
+<big> $B!A(B </big>
 @end example
 
 @noindent
-‚Ì‚æ‚¤‚Éˆês“à‚ÉŠJn/I—¹ƒ^ƒO‚ğ“ü‚ê‚½‚¢‚Æ‚«‚É—˜—p‚µ‚Ü‚·B
+$B$N$h$&$K0l9TFb$K3+;O(B/$B=*N;%?%0$rF~$l$?$$$H$-$KMxMQ$7$^$9!#(B
 
-@item [prefix] m (–ì’¹‚ÌmaketitleŒ^•âŠ®‚É‘Î‰)
-@dots{} —v‘f‚à‘®«’l‚à‚½‚È‚¢ƒ^ƒO‚ğ•âŠ®“ü—Í‚µ‚Ü‚·B<br> 
-‚È‚Ç‚ª•âŠ®Œó•â‚É‘Š“–‚µ‚Ü‚·B
+@item [prefix] m ($BLnD;$N(Bmaketitle$B7?Jd40$KBP1~(B)
+@dots{} $BMWAG$bB0@-CM$b;}$?$J$$%?%0$rJd40F~NO$7$^$9!#(B<br> 
+$B$J$I$,Jd408uJd$KAjEv$7$^$9!#(B
 
-@item [prefix] a (–ì’¹‚ÌƒAƒNƒZƒ“ƒg•âŠ®‚É‘Î‰)
-@dots{} ƒGƒ“ƒeƒBƒeƒBQÆ‚É‚æ‚é•¶š•\‹L‚ğ“ü—Í‚·‚é‚Æ‚«‚É—p‚¢‚Ü‚·B
-ƒfƒtƒHƒ‹ƒg‚Å‚Í < (&lt;), > (&gt;), & (&amp;), " (&quot;), ' (&apos;),
-ƒuƒ‰ƒ“ƒN (&nbsp;) ‚Ì•âŠ®“ü—Í‚ªs‚¦‚Ü‚·B
+@item [prefix] a ($BLnD;$N%"%/%;%s%HJd40$KBP1~(B)
+@dots{} $B%(%s%F%#%F%#;2>H$K$h$kJ8;zI=5-$rF~NO$9$k$H$-$KMQ$$$^$9!#(B
+$B%G%U%)%k%H$G$O(B < (&lt;), > (&gt;), & (&amp;), " (&quot;), ' (&apos;),
+$B%V%i%s%/(B (&nbsp;) $B$NJd40F~NO$,9T$($^$9!#(B
 @end table
 
 @node Jump, Changing and Deleting, Completion, Top
 @comment  node-name,  next,  previous,  up
-@chapter ƒJ[ƒ\ƒ‹ƒWƒƒƒ“ƒv
-•¶‘’†‚Ì‚¢‚ë‚¢‚ë‚ÈêŠ‚Å
+@chapter $B%+!<%=%k%8%c%s%W(B
+$BJ8=qCf$N$$$m$$$m$J>l=j$G(B
 
 @table @kbd
 @item [prefix] g
-        @dots{} ‘Î‰‚·‚éƒIƒuƒWƒFƒNƒg‚ÉƒWƒƒƒ“ƒv
+        @dots{} $BBP1~$9$k%*%V%8%'%/%H$K%8%c%s%W(B
 @end table
 
 @noindent 
-‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èAƒJ[ƒ\ƒ‹ˆÊ’u‚ÌHTML\•¶‚É‘Î‰‚·‚éêŠ‚ÉƒWƒƒƒ“ƒv
-‚µ‚Ü‚·B‘Î‰ŠÖŒW‚ª‘¶İ‚·‚é‚Æ‰ğß‚³‚ê‚éƒRƒ}ƒ“ƒh‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
+$B$r2!$9$3$H$K$h$j!"%+!<%=%k0LCV$N(BHTML$B9=J8$KBP1~$9$k>l=j$K%8%c%s%W(B
+$B$7$^$9!#BP1~4X78$,B8:_$9$k$H2r<a$5$l$k%3%^%s%I$K$O0J2<$N$b$N$,$"$j$^$9!#(B
 
 @itemize @bullet
-@item @code{<TAG>} ©¨ @code{</TAG>}
-@item @code{<img src="‰æ‘œƒtƒ@ƒCƒ‹">} ¨ ‘Î‰‚·‚éviewer‹N“®
-@item @code{<a href="ƒŠƒ“ƒNæ">} ¨ ƒŠƒ“ƒNæ‚Ö‚Ìƒ|ƒCƒ“ƒgˆÚ“®
-@item @code{<applet code="ƒvƒƒOƒ‰ƒ€">} ¨ Javaƒ\[ƒXƒvƒƒOƒ‰ƒ€‚Ö‚ÌˆÚ“®
-@c @item @code{\include(\input)} ¨ ‘Î‰‚·‚éƒtƒ@ƒCƒ‹
+@item @code{<TAG>} $B"+"*(B @code{</TAG>}
+@item @code{<img src="$B2hA|%U%!%$%k(B">} $B"*(B $BBP1~$9$k(Bviewer$B5/F0(B
+@item @code{<a href="$B%j%s%/@h(B">} $B"*(B $B%j%s%/@h$X$N%]%$%s%H0\F0(B
+@item @code{<applet code="$B%W%m%0%i%`(B">} $B"*(B Java$B%=!<%9%W%m%0%i%`$X$N0\F0(B
+@c @item @code{\include(\input)} $B"*(B $BBP1~$9$k%U%!%$%k(B
 @end itemize
 
 @node Changing and Deleting, CSS Support, Jump, Top
 @comment  node-name,  next,  previous,  up
-@chapter •ÏX/íœ
+@chapter $BJQ99(B/$B:o=|(B
 
 @menu
-* ‘Îƒ^ƒO‚Ì•ÏX::                
-* •¶šQÆ‚Ö‚Ì•ÏX::            
-* ƒŠƒWƒ‡ƒ““à•¶š‚ÌURLencode::   
+* $BBP%?%0$NJQ99(B::                
+* $BJ8;z;2>H$X$NJQ99(B::            
+* $B%j%8%g%sFbJ8;z$N(BURLencode::   
 @end menu
 
-@node ‘Îƒ^ƒO‚Ì•ÏX, •¶šQÆ‚Ö‚Ì•ÏX, Changing and Deleting, Changing and Deleting
+@node $BBP%?%0$NJQ99(B, $BJ8;z;2>H$X$NJQ99(B, Changing and Deleting, Changing and Deleting
 @comment  node-name,  next,  previous,  up
-@section ‘Îƒ^ƒO‚Ì•ÏX
-•¶‘’†‚Ì‚¢‚ë‚¢‚ë‚ÈêŠ‚Å
+@section $BBP%?%0$NJQ99(B
+$BJ8=qCf$N$$$m$$$m$J>l=j$G(B
 
 @table @kbd
 @item [prefix] c
-        @dots{} ‘Î‰‚·‚éƒ^ƒO“™‚ğ•ÏX
+        @dots{} $BBP1~$9$k%?%0Ey$rJQ99(B
 @end table
 
 @noindent 
-‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èAƒJ[ƒ\ƒ‹ˆÊ’u‚ÌHTML\•¶‚É‰‚¶‚½
-‹Lq“à—e‚Ì•ÏX‚ğs‚¢‚Ü‚·BƒJ[ƒ\ƒ‹ˆÊ’u‚Æ•ÏX‚·‚é“à—e‚Ì
-‘Î‰‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚·B
+$B$r2!$9$3$H$K$h$j!"%+!<%=%k0LCV$N(BHTML$B9=J8$K1~$8$?(B
+$B5-=RFbMF$NJQ99$r9T$$$^$9!#%+!<%=%k0LCV$HJQ99$9$kFbMF$N(B
+$BBP1~$O0J2<$NDL$j$G$9!#(B
 
 @itemize @bullet
-@item @code{<TAG>}`@code{</TAG>}
-@dots{} @code{TAG} ‚Ì•ÏX
-@item @code{<img src="‰æ‘œƒtƒ@ƒCƒ‹" alt="photo">} ‚È‚Ç‚Ì‘®«’l
-@dots{} ‘®«’l‚Ì•ÏX
+@item @code{<TAG>}$B!A(B@code{</TAG>}
+@dots{} @code{TAG} $B$NJQ99(B
+@item @code{<img src="$B2hA|%U%!%$%k(B" alt="photo">} $B$J$I$NB0@-CM(B
+@dots{} $BB0@-CM$NJQ99(B
 @end itemize
 
-@node •¶šQÆ‚Ö‚Ì•ÏX, ƒŠƒWƒ‡ƒ““à•¶š‚ÌURLencode, ‘Îƒ^ƒO‚Ì•ÏX, Changing and Deleting
+@node $BJ8;z;2>H$X$NJQ99(B, $B%j%8%g%sFbJ8;z$N(BURLencode, $BBP%?%0$NJQ99(B, Changing and Deleting
 @comment  node-name,  next,  previous,  up
-@section •¶šQÆ‚Ö‚Ì•ÏX
-•¶š‚Æ‚µ‚Ä‚Ì < ‚â > ‚ğ•\Œ»‚·‚é‚Æ‚«‚ÍA•¶šQÆ‚ğ—p‚¢‚Ä
-&lt; ‚â &gt; ‚Æ•\‹L‚·‚é•K—v‚ª‚ ‚è‚Ü‚·‚ªA
-HTMLˆÈŠO‚Ìƒtƒ@ƒCƒ‹‚©‚ç‚±‚ê‚ç‚Ì•¶š‚ğŠÜ‚ŞƒeƒLƒXƒg‚ğ’£‚è‚ñ‚¾ê‡
-‚È‚Ç‚ÉA‚±‚ê‚ç‚Ì•¶š‚ğˆêŠ‡‚µ‚Ä•¶šQÆŒ`®‚É•ÏŠ·‚Å‚«‚Ü‚·B
+@section $BJ8;z;2>H$X$NJQ99(B
+$BJ8;z$H$7$F$N(B < $B$d(B > $B$rI=8=$9$k$H$-$O!"J8;z;2>H$rMQ$$$F(B
+&lt; $B$d(B &gt; $B$HI=5-$9$kI,MW$,$"$j$^$9$,!"(B
+HTML$B0J30$N%U%!%$%k$+$i$3$l$i$NJ8;z$r4^$`%F%-%9%H$rD%$j9~$s$@>l9g(B
+$B$J$I$K!"$3$l$i$NJ8;z$r0l3g$7$FJ8;z;2>H7A<0$KJQ49$G$-$^$9!#(B
 
 @table @kbd
 @item [prefix] ;
-        @dots{} w’è‚µ‚½—Ìˆæ‚Ì•¶šQÆ‚É’u‚«Š·‚¦‚é‚×‚«•¶š‚Ì’uŠ·
+        @dots{} $B;XDj$7$?NN0h$NJ8;z;2>H$KCV$-49$($k$Y$-J8;z$NCV49(B
 @item [prefix] :
-        @dots{} w’è‚µ‚½—Ìˆæ‚Ì•¶šQÆ‚ğQÆ•¶š‚»‚Ì‚à‚Ì‚É’uŠ·
-        ([prefix] ; ‚Ì‹t•ÏŠ·)
+        @dots{} $B;XDj$7$?NN0h$NJ8;z;2>H$r;2>HJ8;z$=$N$b$N$KCV49(B
+        ([prefix] ; $B$N5UJQ49(B)
 @end table
 
 
-@node ƒŠƒWƒ‡ƒ““à•¶š‚ÌURLencode,  , •¶šQÆ‚Ö‚Ì•ÏX, Changing and Deleting
+@node $B%j%8%g%sFbJ8;z$N(BURLencode,  , $BJ8;z;2>H$X$NJQ99(B, Changing and Deleting
 @comment  node-name,  next,  previous,  up
-@section ƒŠƒWƒ‡ƒ““à•¶š‚ÌURLencode
+@section $B%j%8%g%sFbJ8;z$N(BURLencode
 @table
  @item [prefix] #
-	@dots{} w’è‚µ‚½—Ìˆæ“à‚É URLencode ‚·‚×‚«•¶š‚ª‚ ‚ê‚Î‚»‚ê‚ç‚ğ
-        ƒGƒ“ƒR[ƒh•\‹L‚É’uŠ·B
+	@dots{} $B;XDj$7$?NN0hFb$K(B URLencode $B$9$Y$-J8;z$,$"$l$P$=$l$i$r(B
+        $B%(%s%3!<%II=5-$KCV49!#(B
 @end table
 
 @node CSS Support, Customizations, Changing and Deleting, Top
 @comment  node-name,  next,  previous,  up
-@chapter CSS(ƒXƒ^ƒCƒ‹ƒV[ƒg)ƒTƒ|[ƒg
+@chapter CSS($B%9%?%$%k%7!<%H(B)$B%5%]!<%H(B
 
 @menu
 * CSS-class completion::        
@@ -292,202 +292,229 @@ HTMLˆÈŠO‚Ìƒtƒ@ƒCƒ‹‚©‚ç‚±‚ê‚ç‚Ì•¶š‚ğŠÜ‚ŞƒeƒLƒXƒg‚ğ’£‚è‚ñ‚¾ê‡
 
 @node CSS-class completion, Reread CSS file, CSS Support, CSS Support
 @comment  node-name,  next,  previous,  up
-@section CSSƒNƒ‰ƒX–¼•âŠ®
-HTML‰®‚ÍCSS(Cascading Style Sheets)‚ÌƒNƒ‰ƒX–¼‚ğ•âŠ®“ü—Í‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
-ƒXƒ^ƒCƒ‹’è‹`‚Æ‚µ‚Ä
+@section CSS$B%/%i%9L>Jd40(B
+HTML$B20$O(BCSS(Cascading Style Sheets)$B$N%/%i%9L>$rJd40F~NO$9$k$3$H$,$G$-$^$9!#(B
+$B%9%?%$%kDj5A$H$7$F(B
 
 @display
  h1.foo, h2.foo @{ background-color: 0xffffff; @}
  h1.bar, h2.bar @{ font-size: 120%; @}
 @end display
 
-‚Ì‚æ‚¤‚È‚à‚Ì‚ª‚ ‚Á‚½ê‡‚ÉAh1‚Ü‚½‚Íh2ƒ^ƒO‚ğ [prefix] b ‚â [prefix] l ‚Å•â
-Š®“ü—Í‚µ‚½ê‡‚ÉA‚»‚ê‚ç‚É—LŒø‚È class –¼‚Å‚ ‚é foo, bar ‚ğŒó•â‚Æ‚µ‚Ä•âŠ®
-“ü—Í‚·‚é‚±‚Æ‚ª‰Â”\‚Å‚·B‚Ü‚½
+$B$N$h$&$J$b$N$,$"$C$?>l9g$K!"(Bh1$B$^$?$O(Bh2$B%?%0$r(B [prefix] b $B$d(B [prefix] l $B$GJd(B
+$B40F~NO$7$?>l9g$K!"$=$l$i$KM-8z$J(B class $BL>$G$"$k(B foo, bar $B$r8uJd$H$7$FJd40(B
+$BF~NO$9$k$3$H$,2DG=$G$9!#$^$?(B
 
 @display
  .caution @{ font-size: 120%; background-color: 0xc00000;@}
 @end display
 
-‚Ì‚æ‚¤‚È‘S‚Ä‚ÌƒGƒŒƒƒ“ƒg‚É“­‚­class‚ª’è‹`‚³‚ê‚Ä‚¢‚½ê‡‚ÍA‘S‚Ä‚Ìƒ^ƒO‚Ì•â
-Š®“ü—Í‚ÉclassQÆ“ü—Í‚ğ‹‚ß‚ç‚ê‚Ü‚·B‚±‚ê‚ª”Ï‚í‚µ‚¢ê‡‚ÍƒGƒŒƒƒ“ƒg–¼“ü
-—ÍŠm’è‚Ì‚Æ‚«‚ÉƒŠƒ^[ƒ“ƒL[(‚Ü‚½‚ÍC-m)‚Å‚Í‚È‚­AC-j‚ğ‰Ÿ‚¹‚Îclass•âŠ®“ü—Í‚ğ
-ƒLƒƒƒ“ƒZƒ‹‚Å‚«‚Ü‚·B‚½‚Æ‚¦‚Î
+$B$N$h$&$JA4$F$N%(%l%a%s%H$KF/$/(Bclass$B$,Dj5A$5$l$F$$$?>l9g$O!"A4$F$N%?%0$NJd(B
+$B40F~NO;~$K(Bclass$B;2>HF~NO$r5a$a$i$l$^$9!#$3$l$,HQ$o$7$$>l9g$O%(%l%a%s%HL>F~(B
+$BNO3NDj$N$H$-$K%j%?!<%s%-!<(B($B$^$?$O(BC-m)$B$G$O$J$/!"(BC-j$B$r2!$;$P(Bclass$BJd40F~NO$r(B
+$B%-%c%s%;%k$G$-$^$9!#$?$H$($P(B
 
 @display
- @kbd{[prefix] l}                    s“àƒ^ƒO•âŠ®‚ğ‹N“®
-    (‚Ü‚½‚Í@kbd{[prefix] l SPC})
- tt                                  <tt></tt>‚ğ‚¢‚ê‚½‚¢‚Ì‚Ått‚Æ“ü—Í
+ @kbd{[prefix] l}                    $B9TFb%?%0Jd40$r5/F0(B
+    ($B$^$?$O(B@kbd{[prefix] l SPC})
+ tt                                  <tt></tt>$B$r$$$l$?$$$N$G(Btt$B$HF~NO(B
  @kbd{C-m}
 @end display
 
-‚Æ‚µ‚½ê‡‚Í‘±‚¢‚Ä class= ‚Æ•âŠ®ƒvƒƒ“ƒvƒg‚ªo‚Ü‚·‚ªA
+$B$H$7$?>l9g$OB3$$$F(B class= $B$HJd40%W%m%s%W%H$,=P$^$9$,!"(B
 
 @display
- @kbd{[prefix] l}                    s“àƒ^ƒO•âŠ®‚ğ‹N“®
-    (‚Ü‚½‚Í@kbd{[prefix] l SPC})
- tt                                  <tt></tt>‚ğ‚¢‚ê‚½‚¢‚Ì‚Ått‚Æ“ü—Í
+ @kbd{[prefix] l}                    $B9TFb%?%0Jd40$r5/F0(B
+    ($B$^$?$O(B@kbd{[prefix] l SPC})
+ tt                                  <tt></tt>$B$r$$$l$?$$$N$G(Btt$B$HF~NO(B
  @kbd{C-j}
 @end display
 
-‚ÆÅŒã‚ğ @kbd{C-j} ‚Å“ü—Í‚µ‚½ê‡‚Í class •âŠ®ƒvƒƒ“ƒvƒg‚Ío‚Ü‚¹‚ñB
+$B$H:G8e$r(B @kbd{C-j} $B$GF~NO$7$?>l9g$O(B class $BJd40%W%m%s%W%H$O=P$^$;$s!#(B
 
 @node Reread CSS file,  , CSS-class completion, CSS Support
 @comment  node-name,  next,  previous,  up
-@section CSS’è‹`ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ’¼‚µ
-htmlƒtƒ@ƒCƒ‹‚ğ•ÒW’†‚ÉCSS’è‹`ƒtƒ@ƒCƒ‹‚ğC³‚µA’Ç‰Á‚µ‚½
-class‚ğ•âŠ®Œó•â‚Æ‚µ‚Ä’¼‚¿‚É“Ç‚İ‚Ü‚¹‚½‚¢ê‡‚ÍA
-@kbd{M-x yahtml-mode} ‚Æ‚µ‚ÄÄ‹N“®‚ğs‚Á‚Ä‚­‚¾‚³‚¢B
+@section CSS$BDj5A%U%!%$%k$NFI$_D>$7(B
+html$B%U%!%$%k$rJT=8Cf$K(BCSS$BDj5A%U%!%$%k$r=$@5$7!"DI2C$7$?(B
+class$B$rJd408uJd$H$7$FD>$A$KFI$_9~$^$;$?$$>l9g$O!"(B
+@kbd{M-x yahtml-mode} $B$H$7$F:F5/F0$r9T$C$F$/$@$5$$!#(B
 
 @node Customizations, Copying, CSS Support, Top
 @comment  node-name,  next,  previous,  up
-@chapter ƒJƒXƒ^ƒ}ƒCƒY
-@cindex ƒJƒXƒ^ƒ}ƒCƒY[‚©‚·‚½‚Ü‚¢‚·]
-@cindex ƒL[ƒAƒTƒCƒ“[‚«‚¢‚ ‚³‚¢‚ñ]
+@chapter $B%+%9%?%^%$%:(B
+@cindex $B%+%9%?%^%$%:(B[$B$+$9$?$^$$$9(B]
+@cindex $B%-!<%"%5%$%s(B[$B$-$$$"$5$$$s(B]
 
-yahtml‚Ì“®ì‚ğ§Œä‚·‚é•Ï”‚É‚Â‚¢‚Äà–¾‚µ‚Ü‚·B
+yahtml$B$NF0:n$r@)8f$9$kJQ?t$K$D$$$F@bL@$7$^$9!#(B
 
 @menu
-* All customizable variables::  ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——
-* Hook variables::              hook•Ï”
+* All customizable variables::  $B%+%9%?%^%$%:JQ?t0lMw(B
+* Hook variables::              hook$BJQ?t(B
 @end menu
 
 @node All customizable variables, Hook variables, Customizations, Customizations
 @comment  node-name,  next,  previous,  up
-@section ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——
+@section $B%+%9%?%^%$%:JQ?t0lMw(B
 
 @defvar yahtml-prefix
-yahtml-mode ’†‚ÌƒvƒŠƒtƒBƒNƒXƒL[ (@kbd{\C-c})
+yahtml-mode $BCf$N%W%j%U%#%/%9%-!<(B (@kbd{\C-c})
 @end defvar
 
 @defvar yahtml-image-viewer
-img‚ÅQÆ‚µ‚Ä‚¢‚é‰æ‘œƒtƒ@ƒCƒ‹‚ğ•\¦‚·‚é‚Æ‚«‚É‹N“®‚·‚éƒRƒ}ƒ“ƒh (xv)
+img$B$G;2>H$7$F$$$k2hA|%U%!%$%k$rI=<($9$k$H$-$K5/F0$9$k%3%^%s%I(B (xv)
 @end defvar
 
 @defvar yahtml-www-browser
-@kbd{[prefix]g} ‚ÅŠO•”ƒy[ƒW‚ğ•\¦‚·‚é‚Æ‚«‚É‹N“®‚·‚éƒuƒ‰ƒEƒU (netscape)
+@kbd{[prefix]g} $B$G30It%Z!<%8$rI=<($9$k$H$-$K5/F0$9$k%V%i%&%6(B (netscape)
 @end defvar
 
 @defvar yahtml-kanji-code
-ƒfƒtƒHƒ‹ƒg‚ÌŠ¿šƒR[ƒhB1=sjis, 2=jis, 3=euc (2)
-.htaccess ƒtƒ@ƒCƒ‹‚É
+$B%G%U%)%k%H$N4A;z%3!<%I!#(B1=sjis, 2=jis, 3=euc (2)
+.htaccess $B%U%!%$%k$K(B
 @quotation
  AddType "text/html; charset=xxx" .html
 @end quotation
-‚Ì‹Lq‚ª‚ ‚Á‚½ê‡‚Í‚»‚ê‚É]‚¤
+$B$N5-=R$,$"$C$?>l9g$O$=$l$K=>$&(B
 @end defvar
 
 @defvar yahtml-fill-column
-auto-fill‚·‚é‚Æ‚«‚ÌƒJƒ‰ƒ€” (72)
+auto-fill$B$9$k$H$-$N%+%i%`?t(B (72)
 @end defvar
 
 @defvar yahtml-fill-prefix
-yahtml-mode ŒÅ—L‚Ìfill-prefix (@code{nil})
+yahtml-mode $B8GM-$N(Bfill-prefix (@code{nil})
 @end defvar
 
 @defvar yahtml-path-url-alist
-OS‚Ìƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€ã‚Å‚Ìƒtƒ‹ƒpƒX–¼‚ÆA‚»‚ÌŠO•”ŒöŠJ‚ÌURL‚Ì‘Î‰•\B
+OS$B$N%U%!%$%k%7%9%F%`>e$G$N%U%k%Q%9L>$H!"$=$N30It8x3+;~$N(BURL$B$NBP1~I=!#(B
 @end defvar
 
 @defvar yahtml-directory-index
-ƒT[ƒoƒAƒNƒZƒXƒtƒ@ƒCƒ‹–¼‚ğÈ—ª‚µ‚½‚Æ‚«‚ÉƒfƒtƒHƒ‹ƒg‚ÅŠJ‚©‚ê‚é
-ƒCƒ“ƒfƒbƒNƒXƒtƒ@ƒCƒ‹‚Ì–¼‘OB‘½‚­‚Ìê‡ index.htmlB(@code{"index.html"})
+$B%5!<%P%"%/%;%9;~%U%!%$%kL>$r>JN,$7$?$H$-$K%G%U%)%k%H$G3+$+$l$k(B
+$B%$%s%G%C%/%9%U%!%$%k$NL>A0!#B?$/$N>l9g(B index.html$B!#(B(@code{"index.html"})
 @end defvar
 
 @defvar yahtml-lint-program
-HTML\•¶ƒ`ƒFƒbƒNƒvƒƒOƒ‰ƒ€B(@code{"jweblint"})
+HTML$B9=J8%A%'%C%/%W%m%0%i%`!#(B(@code{"jweblint"})
 @end defvar
 
 @defvar yahtml-hate-too-deep-indentation
-ƒlƒXƒg‚µ‚½—ñ‹“ŒnŠÂ‹«‚Å‚ÌƒCƒ“ƒfƒ“ƒg‚ª[‚·‚¬‚é‚Æ‚«‚Ét‚É‚·‚éB(@code{nil})
+$B%M%9%H$7$?Ns5s7O4D6-$G$N%$%s%G%s%H$,?<$9$.$k$H$-$K(Bt$B$K$9$k!#(B(@code{nil})
 @end defvar
 
 @defvar yahtml-always-/p
-@code{<p>} ‚ğ‚¢‚ê‚½‚ç•K‚¸ @code{</p>} ‚µ‚½‚¢lŒü‚¯B@code{nil}
+@code{<p>} $B$r$$$l$?$iI,$:(B @code{</p>} $B$7$?$$?M8~$1!#(B@code{nil}
 @end defvar
 
 @defvar yahtml-p-prefered-env-regexp
-©“®“I‚É @code{<p>} ‚ğ“ü‚ê‚Ä—~‚µ‚¢ŠÂ‹«B@code{^\(body\|dl\)}
+$B<+F0E*$K(B @code{<p>} $B$rF~$l$FM_$7$$4D6-!#(B@code{^\(body\|dl\)}
 @end defvar
 
 @defvar yahtml-template-file
-V‹KHTMLƒtƒ@ƒCƒ‹ì¬‚É©“®“I‚É‘}“ü‚µ‚Ä—~‚µ‚¢ƒtƒ@ƒCƒ‹–¼B
+$B?75,(BHTML$B%U%!%$%k:n@.;~$K<+F0E*$KA^F~$7$FM_$7$$%U%!%$%kL>!#(B
 @file{"~/http/template.html"}
 @end defvar
 
 @defvar yahtml-prefer-upcases
-ƒ^ƒO‚É‘å•¶š‚ğg‚¢‚½‚¢B@code{nil}
+$B%?%0$KBgJ8;z$r;H$$$?$$!#(B@code{nil}
 @end defvar
 
 @defvar yahtml-prefer-upcase-attributes
-‘®«w’èq‚É‘å•¶š‚ğg‚¢‚½‚¢B@code{nil}
+$BB0@-;XDj;R$KBgJ8;z$r;H$$$?$$!#(B@code{nil}
 @end defvar
 
 @defvar yahtml-server-type
-ApacheŒn‚ÌƒT[ƒo‚ğ—˜—p‚µ‚Ä‚¢‚éê‡‚Í 'apache ‚ğƒZƒbƒg‚·‚éB
-./.htaccess ‚ğQÆ‚·‚é‚©‚Ç‚¤‚©‚ğŒˆ’è‚·‚éB@code{'apache}
+Apache$B7O$N%5!<%P$rMxMQ$7$F$$$k>l9g$O(B 'apache $B$r%;%C%H$9$k!#(B
+./.htaccess $B$r;2>H$9$k$+$I$&$+$r7hDj$9$k!#(B@code{'apache}
 @end defvar
 
 @defvar yahtml-apache-access-file
-@code{yahtml-server-type} ‚ª @code{'apache} ‚Ì‚Æ‚«‚É
-ƒAƒNƒZƒX§ŒÀƒtƒ@ƒCƒ‹–¼‚ğw’èB@file{".htaccess"}
+@code{yahtml-server-type} $B$,(B @code{'apache} $B$N$H$-$K(B
+$B%"%/%;%9@)8B%U%!%$%kL>$r;XDj!#(B@file{".htaccess"}
 @end defvar
 
 @defvar yahtml-shell-command-option
-ƒVƒFƒ‹‚Å•ÊƒRƒ}ƒ“ƒh‚ğ‹N“®‚·‚é‚Æ‚«‚ÌƒIƒvƒVƒ‡ƒ“B
+$B%7%'%k$GJL%3%^%s%I$r5/F0$9$k$H$-$N%*%W%7%g%s!#(B
 @end defvar
 
 @defvar yahtml-translate-hyphens-when-comment-region
-—ÌˆæƒRƒƒ“ƒgƒAƒEƒg‚ğ‚·‚é‚Æ‚«‚ÉŠù‚É‘¶İ‚·‚éƒnƒCƒtƒ“‚ğ @code{&#45;} ‚É
-•ÏX‚·‚é‚©‚Ç‚¤‚©B(@code{t})
+$BNN0h%3%a%s%H%"%&%H$r$9$k$H$-$K4{$KB8:_$9$k%O%$%U%s$r(B @code{&#45;} $B$K(B
+$BJQ99$9$k$+$I$&$+!#(B(@code{t})
 @end defvar
 
 @defvar yahtml-entity-reference-chars-alist
-ƒGƒ“ƒeƒBƒeƒBQÆ(Entity Reference)‚Å‹Lq‚·‚×‚«•¶šŒQ‚ğ
- @code{'(?•¶š . "ƒGƒ“ƒeƒBƒeƒB•\‹L")}  ‚Æ‚¢‚¤Œ`®‚ğ—ñ‹“‚µ‚½
-alist‚Å•À‚×‚éBƒfƒtƒHƒ‹ƒg‚Å @code{<}, @code{>}, @code{&}, @code{'}, 
-@code{"} ‚É‘Î‚·‚éalist‚ªİ’è‚³‚ê‚Ä‚¢‚é‚Ì‚ÅA’Ç‰Á‚µ‚½‚¢•ª‚¾‚¯‚ğ‹Lq‚·‚ê‚Î—Ç
-‚¢Bcdr•” @code{"ƒGƒ“ƒeƒBƒeƒB•\‹L"} ‚ÍAæ“ª‚Ì @code{&} ‚Æ ––”ö‚Ì@code{;}
-‚ÍŠÜ‚ß‚¸‚É‘‚­B
+$B%(%s%F%#%F%#;2>H(B(Entity Reference)$B$G5-=R$9$Y$-J8;z72$r(B
+ @code{'(?$BJ8;z(B . "$B%(%s%F%#%F%#I=5-(B")}  $B$H$$$&7A<0$rNs5s$7$?(B
+alist$B$GJB$Y$k!#%G%U%)%k%H$G(B @code{<}, @code{>}, @code{&}, @code{'}, 
+@code{"} $B$KBP$9$k(Balist$B$,@_Dj$5$l$F$$$k$N$G!"DI2C$7$?$$J,$@$1$r5-=R$9$l$PNI(B
+$B$$!#(Bcdr$BIt(B @code{"$B%(%s%F%#%F%#I=5-(B"} $B$O!"@hF,$N(B @code{&} $B$H(B $BKvHx$N(B@code{;}
+$B$O4^$a$:$K=q$/!#(B
 @end defvar
 
 @defvar yahtml-faithful-to-htmllint
-\•¶ƒ`ƒFƒbƒJ‚Æ‚µ‚Ä htmllint ‚ğ—˜—p‚·‚éê‡‚¿‚å‚Á‚Æ‚µ‚½—]Œv‚È‹ó”’‚È‚Ç‚É
-‘Î‚µ‚Ä‚àŒx‚ğ¦‚·‚Ì‚ÅA‚±‚ê‚ğ‰ñ”ğ‚·‚é‚Æ‚«‚É‚Í‚±‚Ì•Ï”‚ğ@code{t}‚É
-‚·‚éB
+$B9=J8%A%'%C%+$H$7$F(B htmllint $B$rMxMQ$9$k>l9g$A$g$C$H$7$?M>7W$J6uGr$J$I$K(B
+$BBP$7$F$b7Y9p$r<($9$N$G!"$3$l$r2sHr$9$k$H$-$K$O$3$NJQ?t$r(B@code{t}$B$K(B
+$B$9$k!#(B
 @end defvar
 
+@defvar yahtml-use-css
+CSS$B$NJd405!G=$r;H$&$+$I$&$+(B (@code{t})
+@end defvar
+
+@defvar yahtml-image-inspection-bytes
+$B2hA|%U%!%$%k$N%5%$%:$rD4$Y$k$H$-$KFI$_9~$`%P%$%H?t(B (@code{10000})
+@end defvar
+
+@defvar yahtml:img-default-alt-format
+<img src...>$B$N(BALT$BB0@-$N%G%U%)%k%HJ8;zNs$N=q<0!#(B%x$B$O2hA|$NI}!"(B
+%y$B$O2hA|$N9b$5!"(B%s$B$O%U%!%$%k%5%$%:$KCV49$5$l$k(B (@code{"%xx%y(%sbytes)"})
+@end defvar
+
+@defvar yahtml-escape-chars
+href$BJd40$J$I$N$H$-$KM=LsJ8;z$r(BURL$B%(%s%3!<%I$9$k$+(B;
+'ask$B$N$H$-$O3NG'$7$F$+$iCV49$9$k(B (@code{'ask})
+@end defvar
+
+@defvar yahtml-use-font-lock
+$B%=!<%9$N?'$E$1%Q%C%1!<%8$H$7$F(B font-lock $B$rMxMQ$9$k$+(B
+(@code{(featurep 'font-lock)})
+@end defvar
+
+@defvar yahtml-hilit19
+$B%=!<%9$N?'$E$1%Q%C%1!<%8$H$7$F(B hilit19 $B$rMxMQ$9$k$+(B
+(@code{(featurep 'hilit19)})
+@end defvar
 
 @node Hook variables,  , All customizable variables, Customizations
 @comment  node-name,  next,  previous,  up
-@section hook•Ï”
+@section hook$BJQ?t(B
 
 
 @node Copying, Concept Index, Customizations, Top
 @comment  node-name,  next,  previous,  up
-@chapter æ‚èˆµ‚¢
+@chapter $B<h$j07$$(B
 
-  –{ƒvƒƒOƒ‰ƒ€‚ÍƒtƒŠ[ƒ\ƒtƒgƒEƒFƒA‚Å‚·B–{ƒvƒƒOƒ‰ƒ€‚ğg—p‚µ‚Ä¶‚¶‚½‚¢‚©‚È
-‚éŒ‹‰Ê‚É‘Î‚µ‚Ä‚àìÒ‚ÍÓ”C‚ğ•‰‚í‚È‚¢‚±‚Æ‚Æ‚µ‚Ü‚·B“]Ú“™‚ÉŠÖ‚µ‚Ä‚Í§ŒÀ‚¢‚½
-‚µ‚Ü‚¹‚ñBí¯“I‚Éˆµ‚Á‚Ä‚­‚¾‚³‚¢B‚Ü‚½Ag—p‚µ‚Ä‚¢‚é|‚ğƒƒCƒ‹‚Å‚¨’m‚ç‚¹‚¢
-‚½‚¾‚­‚ÆAìÒ‚ÍŠì‚ñ‚ÅƒTƒ|[ƒg‚É—ã‚Ş‚±‚Æ‚Å‚µ‚å‚¤B
+  $BK\%W%m%0%i%`$O%U%j!<%=%U%H%&%'%"$G$9!#K\%W%m%0%i%`$r;HMQ$7$F@8$8$?$$$+$J(B
+$B$k7k2L$KBP$7$F$b:n<T$O@UG$$rIi$o$J$$$3$H$H$7$^$9!#E>:\Ey$K4X$7$F$O@)8B$$$?(B
+$B$7$^$;$s!#>o<1E*$K07$C$F$/$@$5$$!#$^$?!";HMQ$7$F$$$k;]$r%a%$%k$G$*CN$i$;$$(B
+$B$?$@$/$H!":n<T$O4n$s$G%5%]!<%H$KNe$`$3$H$G$7$g$&!#(B
 
-  ‹êîAŠó–]AƒoƒO•ñAŠ´‘z“™‚ÍŠ½Œ}‚¢‚½‚µ‚Ü‚·B
-˜A—‚Í yuuji@@yatex.org ‚Ü‚Å(1999”N7ŒŒ»İ)B
-Œp‘±“I‚Ég—p‚µ‚Ä‚­‚¾‚³‚é•û‚ÍƒƒCƒŠƒ“ƒOƒŠƒXƒgufj–ì’¹‚Ì‰ïv‚É
-¥”ñ‰Á“ü‚µ‚Ä‚­‚¾‚³‚¢B‰Á“ü•û–@‚É‚Â‚¢‚Ä‚Í–{ƒpƒbƒP[ƒW‚Ì @file{docs/yahtmlqa}
-ƒtƒ@ƒCƒ‹‚Ìu‚»‚Ì‘¼v‚ÌÍ‚ğŒä——‚­‚¾‚³‚¢B
+  $B6l>p!"4uK>!"%P%0Js9p!"46A[Ey$O4?7^$$$?$7$^$9!#(B
+$BO"Mm$O(B yuuji@@yatex.org $B$^$G(B(2000$BG/(B12$B7n8=:_(B)$B!#(B
+$B7QB3E*$K;HMQ$7$F$/$@$5$kJ}$O%a%$%j%s%0%j%9%H!V(Bfj$BLnD;$N2q!W$K(B
+$B@'Hs2CF~$7$F$/$@$5$$!#2CF~J}K!$K$D$$$F$OK\%Q%C%1!<%8$N(B @file{docs/htmlqa}
+$B%U%!%$%k$N!V$=$NB>!W$N>O$r8fMw$/$@$5$$!#(B
 
-d—l‚ÍA—\‚È‚­ŠmÀ‚É(‹C•ªŸ‘æ‚Å)•ÏX‚³‚ê‚Ü‚·:-pB
+$B;EMM$O!"M=9p$J$/3N<B$K(B($B5$J,<!Bh$G(B)$BJQ99$5$l$^$9(B:-p$B!#(B
 
 @flushright
-L£—Y“ñ
+$B9-@%M:Fs(B
 @end flushright
 
 
 @node    Concept Index,  , Copying, Top
 @comment node-name, next, previous, up
-@unnumbered õˆø
+@unnumbered $B:w0z(B
 @printindex cp
 
 

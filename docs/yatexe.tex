@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Thu Mar 16 01:05:41 2000 on firestorm
+@c Last modified Fri Dec 22 09:50:10 2000 on buell
 @syncodeindex vr cp
 @end iftex
 
@@ -268,8 +268,7 @@ edit splitting files.
   @kbd{[prefix] t p} invokes the TeX previewer.  And if you are using
 xdvi-remote, which can be controled from other terminals, @kbd{[prefix] t
 s} enables you to search current string at the cursor on the running xdvi
-window.  You can get xdvi with `-remote feature' from;
-@code{ftp://ftp.ae.keio.ac.jp/pub/text/xdvi/xdvi-remote}.
+window.
 
 @node Printing out,  , Calling previewer, Typesetting
 @comment  node-name,  next,  previous,  up
@@ -1673,23 +1672,6 @@ End page format of above %t. %e will turn to @code{end} page (@code{"-t %e"})
 Default makeindex command (@code{"makeindex"} (@code{"makeind"} on MS-DOS))
 @end defvar
 
-@defvar section-name
-Initial default value at the first section-type completion 
-(@code{"documentstyle"})
-@end defvar
-
-@defvar env-name
-Initial default value at the first begin-type completion (@code{"document"})
-@end defvar
-
-@defvar fontsize-name
-Ditto of large-type (@code{"large"})
-@end defvar
-
-@defvar single-command
-Ditto of maketitle-type (@code{"maketitle"})
-@end defvar
-
 @defvar YaTeX-need-nonstop
 Put @code{\nonstopmode@{@}} or not (@code{nil})
 @end defvar
@@ -1828,6 +1810,27 @@ If you use LaTeX2e, set to @code{t} (@code{nil})
 File name which is automatically inserted at creation
 (@code{~/work/template.tex})
 @end defvar
+
+@defvar YaTeX-search-file-from-top-directory
+Non-nil means to search input-files from the directory where main file exists
+(@code{t})
+@end defvar
+
+@defvar YaTeX-use-font-lock
+Use font-lock to fontify buffer or not (@code{(featurep 'font-lock)}
+@end defvar
+
+@defvar YaTeX-use-hilit19
+Use hilit19 to highlight buffer or not (@code{(featurep 'hilit19)}
+@end defvar
+
+@defvar YaTeX-use-italic-bold
+YaTeX tries to search italic, bold fontsets or not
+(@code{t} if Emacs-20 or later).  This variable is effective only when
+font-lock is used.
+(@code{(featurep 'hilit19)}
+@end defvar
+
 
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
 @comment  node-name,  next,  previous,  up
@@ -2279,11 +2282,11 @@ redistribute this software freely but with NO warranty to anything
 as a result  of using this  software.   However, any  reports  and
 suggestions are  welcome as  long as I   feel  interests in   this
 software.   My possible  e-mail address is  `yuuji@@yatex.org'.
-(up to May.1999 at least)  And there is mailing list for YaTeX.
+(up to Dec.2000 at least)  And there is mailing list for YaTeX.
 Although the common language is Japanese, questions in English will be
 welcome.  To join the ML, send the mail whose subject is `append' to
-the address `yatex-control@@jaist.ac.jp'.  If you have some
-question, please ask to `yatex-request@@jaist.ac.jp'.
+the address `yatex@@yatex.org.  If you have some
+question, please ask to `yatex-admin@@yatex.org'.
 
   The specification of this software will be surely modified
 (depending on my feelings) without notice :-p.

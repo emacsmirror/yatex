@@ -7,7 +7,7 @@
 @c @syncodeindex fn cp
 @c Do people really read this INFO?
 @c Still not finished
-@c Last modified Mon Nov 29 16:01:00 1999 on buell
+@c Last modified Sat Dec  2 13:55:01 2000 on buell
 @syncodeindex vr cp
 @end iftex
 
@@ -184,7 +184,7 @@ attributes.  Possible completions are, <img>, <input>.
 @dots{} 
 
 @example
-<big> Å` </big>
+<big> $B!A(B </big>
 @end example
 
 @noindent
@@ -221,7 +221,7 @@ Recognized contexts are
 @item @code{<img src="image.file">} -> invoke viewer
 @item @code{<a href="link.to.somewhere">} -> move cursor to linked target
 @item @code{<applet code="program">} -> open Java source
-@c @item @code{\include(\input)} Å® ëŒâûÇ∑ÇÈÉtÉ@ÉCÉã
+@c @item @code{\include(\input)} $B"*(B $BBP1~$9$k%U%!%$%k(B
 @end itemize
 
 @node Changing and Deleting, CSS Support, Jump, Top
@@ -249,7 +249,7 @@ the content can be changed according to the context of the HTML document
 where the cursor is located.
 
 @itemize @bullet
-@item @code{<TAG>}Å`@code{</TAG>}
+@item @code{<TAG>}$B!A(B@code{</TAG>}
 @dots{} change @code{TAG} element name
 @item attributes such as @code{<img src="image.file" alt="photo">}
 @dots{} change attributes
@@ -436,6 +436,36 @@ When using htmllint to check syntax, it will complain about excess spaces.
 setq to @code{t} to avoid this.
 @end defvar
 
+@defvar yahtml-use-css
+Use style-sheet support or not (@code{t})
+@end defvar
+
+@defvar yahtml-image-inspection-bytes
+Number of bytes to inspect the image for geometry information (@code{10000})
+@end defvar
+
+@defvar yahtml:img-default-alt-format
+format of img entity's ALT attributes.
+%x: width, %y: height, %s: size in bytes, %c: first comment string,
+%f: filename (@code{"%xx%y(%sbytes)"})
+@end defvar
+
+@defvar yahtml-escape-chars
+When, completing href-s, Escape reserved characters to URL-encoding or not.
+Nil for never, t for everytime, and 'ask for inquiring
+at each reserved chars. (@code{'ask})
+@end defvar
+
+@defvar yahtml-use-font-lock
+Use font-lock to fontify buffer or not
+(@code{(featurep 'font-lock)})
+@end defvar
+
+@defvar yahtml-hilit19
+Use hilit19 to highlight buffer or not
+(@code{(featurep 'hilit19)})
+@end defvar
+
 
 @node Hook variables,  , All customizable variables, Customizations
 @comment  node-name,  next,  previous,  up
@@ -453,11 +483,11 @@ common sense.  Mail me your thoughts on this program and I will be more
 than willing to help.
 
 Complaints, requests, bug reports and comments are welcome.  Make contacts
-to yuuji@@yatex.orgÅ@(as of July 1999)
+to yuuji@@yatex.org$B!!(B(as of December 2000)
 
 If you like this program and use it on a regular basis, please join the
 mailing list "fj Wild Bird Society".  Procedures can be found in the "etc"
-section of @file{docs/yahtmlqa} in this package.
+section of @file{docs/htmlqa.eng} in this package.
 
 
 @flushright

@@ -1,7 +1,10 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c ) 1994-2000 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Wed Mar  1 23:28:22 2000 on firestorm
+;;; Last modified Mon Dec 25 18:56:49 2000 on firestorm
 ;;; $Id$
+
+(defconst yahtml-revision-number "1.69"
+  "Revision number of running yahtml.el")
 
 ;;;[Installation]
 ;;; 
@@ -135,6 +138,8 @@
 ;;;  * [prefix] :	指定したリジョン中で上と逆の変換をします。
 ;;;  * [prefix] #	指定したリジョン中で%エンコードの必要な文字が
 ;;;			あればそれらをエンコードします。
+;;;  * [prefix] ESC	yahtml-mode を抜け yahtml-mode に入る前に動作し
+;;;			ていたメジャーモードに戻ります。
 ;;; 
 ;;; [謝辞]
 ;;; 
@@ -221,8 +226,25 @@ Consult your site's WWW administrator.")
 %x: width, %y: height, %s: size in bytes, %c: first comment string,
 %f: filename")
 
-(defvar yahtml-use-hilit19 (featurep 'hilit19)
-  "*Use hilit19 to fontify buffer or not")
+(defvar yahtml-faithful-to-htmllint nil)
+(defvar yahtml-error-line-regexp
+  "^\\(.*\\)(\\([0-9]+\\)):\\|^line \\([0-9]+\\)"
+  "*Regexp of error position which is produced by lint program.")
+
+(defvar yahtml-translate-hyphens-when-comment-region t
+  "*Non-nil for translate hyphens to &#45; when comment-region")
+(defvar yahtml-escape-chars 'ask
+  "*Escape reserved characters to URL-encoding or not.
+Nil for never, t for everytime, and 'ask for inquiring
+at each reserved chars.")
+
+(defvar yahtml-use-font-lock (and (featurep 'font-lock)
+				  (fboundp 'font-lock-fontify-region))
+  "*Non-nil means to use font-lock to fontify buffer.")
+
+(defvar yahtml-use-hilit19 (and (featurep 'hilit19)
+				(not yahtml-use-font-lock))
+  "*Non-nil means to Use hilit19 to highlight buffer")
 
 ;;; --- customizable variable ends here ---
 (defvar yahtml-prefix-map nil)
@@ -231,7 +253,7 @@ Consult your site's WWW administrator.")
 (defvar yahtml-shell-command-option
   (or (and (boundp 'shell-command-option) shell-command-option)
       (if (eq system-type 'ms-dos) "/c" "-c")))
-
+(defvar yahtml-use-highlighting (or yahtml-use-font-lock yahtml-use-hilit19))
 
 (defun yahtml-define-begend-key-normal (key env &optional map)
   "Define short cut yahtml-insert-begend key."
@@ -276,10 +298,7 @@ normal and region mode.  To customize yahtml, user should use this function."
 	   (YaTeX-define-key "5^" 'yahtml-visit-main-other-frame map)
 	   (YaTeX-define-key "5g" 'yahtml-goto-corresponding-*-other-frame map)
 	   (YaTeX-define-key "55" 'YaTeX-switch-to-window map)))
-    (YaTeX-define-key "v" 'YaTeX-version map)
-    (YaTeX-define-key "}" 'YaTeX-insert-braces-region map)
-    (YaTeX-define-key "]" 'YaTeX-insert-brackets-region map)
-    (YaTeX-define-key ")" 'YaTeX-insert-parens-region map)
+    (YaTeX-define-key "v" 'yahtml-version map)
     (YaTeX-define-key "s" 'yahtml-insert-form map)
     (YaTeX-define-key "l" 'yahtml-insert-tag map)
     (YaTeX-define-key "L" 'yahtml-insert-tag-region map)
@@ -321,11 +340,12 @@ normal and region mode.  To customize yahtml, user should use this function."
     (YaTeX-define-key ":" 'yahtml-translate-reverse-region map)
     (YaTeX-define-key "#" 'yahtml-escape-chars-region map)
     ;;;;;(YaTeX-define-key "i" 'yahtml-fill-item map)
+    (YaTeX-define-key "\e" 'yahtml-quit map)
     )
-  (let ((keys (where-is-internal 'fill-paragraph global-map)))
-    (while keys
-      (define-key yahtml-mode-map (car keys) 'yahtml-fill-paragraph)
-      (setq keys (cdr keys)))))
+  (substitute-all-key-definition
+   'fill-paragraph 'yahtml-fill-paragraph yahtml-mode-map)
+  (substitute-all-key-definition
+   'kill-buffer 'YaTeX-kill-buffer yahtml-mode-map))
 
 (if yahtml-lint-buffer-map nil
   (setq yahtml-lint-buffer-map (make-keymap))
@@ -517,19 +537,27 @@ normal and region mode.  To customize yahtml, user should use this function."
 		  yahtml-directory-index
 		(list yahtml-directory-index)))))))
 
+(defvar yahtml-mode-old-mode nil)
 (defun yahtml-mode ()
   (interactive)
+  (kill-all-local-variables)
   (let ((coding (or (yahtml-dir-default-charset) yahtml-kanji-code)))
     (cond
      ((and YaTeX-emacs-20 (boundp 'buffer-file-coding-system))
-      (setq buffer-file-coding-system coding))
+      (setq buffer-file-coding-system
+	    (or (and (fboundp 'set-auto-coding) buffer-file-name
+		     (save-excursion (set-auto-coding buffer-file-name 2000)))
+		coding)))
      ((featurep 'mule)
       (set-file-coding-system coding))
      ((boundp 'NEMACS)
       (make-local-variable 'kanji-fileio-code)
       (setq kanji-fileio-code coding))))
+  (if (not (eq 'yahtml-mode major-mode))
+      (set (make-local-variable 'yahtml-mode-old-mode) major-mode))
   (setq major-mode 'yahtml-mode
-	mode-name "yahtml")
+	mode-name "yahtml"
+	YaTeX-current-file-name (file-name-nondirectory (buffer-file-name)))
   (mapcar
    (function (lambda (x)
 	       (make-local-variable (car x))
@@ -551,6 +579,19 @@ normal and region mode.  To customize yahtml, user should use this function."
      (comment-start-skip . comment-start)
      (indent-line-function . yahtml-indent-line)))
 
+  (if yahtml-use-font-lock
+      (progn
+	(yahtml-font-lock-set-default-keywords)
+	(or (featurep 'xemacs)
+	    (progn
+	      (set (make-local-variable 'font-lock-defaults)
+		   '(yahtml-font-lock-keywords nil t))
+	      ;;(font-lock-mode -1)
+	      (font-lock-mode 1) ;;Why should I fontify again???
+	      ;; in yatex-mode, there's no need to refontify...
+	      (font-lock-fontify-buffer)
+	      ))
+	))
   (set-syntax-table yahtml-syntax-table)
   (use-local-map yahtml-mode-map)
   (YaTeX-read-user-completion-table)
@@ -559,7 +600,29 @@ normal and region mode.  To customize yahtml, user should use this function."
   (and (= 0 (buffer-size)) (file-exists-p yahtml-template-file)
        (y-or-n-p (format "Insert %s?" yahtml-template-file))
        (insert-file-contents (expand-file-name yahtml-template-file)))
-  (run-hooks 'text-mode-hook 'yahtml-mode-hook))
+  (run-hooks 'text-mode-hook 'yahtml-mode-hook)
+
+  ;; This warning should be removed after a while(2000/12/2)
+  (let ((fld (or (and (local-variable-p 'font-lock-defaults (current-buffer))
+		      font-lock-defaults)
+		 (get 'yahtml-mode 'font-lock-defaults))))
+    (and fld (not (memq 'yahtml-font-lock-keywords fld))
+	 (YaTeX-warning-font-lock "yahtml"))))
+
+(defun yahtml-version ()
+  "Return string of the version of running yahtml."
+  (interactive)
+  (message
+   (concat "Yet Another HTML-mode "
+	   (if YaTeX-japan "「HTML屋」" "`yahtml'")
+	   " Revision "
+	   yahtml-revision-number)))
+
+(defun yahtml-quit ()
+  (interactive)
+  (and yahtml-mode-old-mode
+       (fboundp yahtml-mode-old-mode)
+       (funcall yahtml-mode-old-mode)))
 
 (defun yahtml-define-menu (keymap bindlist)
   (cond
@@ -817,8 +880,9 @@ If optional argument FILE is specified collect labels in FILE."
 (defun yahtml-complete-url ()
   "Complete external URL from history or local file name."
   (interactive)
-  (let ((p (point)) initial i2 cmpl path dir file listfunc beg labels)
-    (setq initial (buffer-string))
+  (let ((p (point)) initial i2 cmpl path dir file listfunc beg labels
+	(lim (YaTeX-minibuffer-begin)))
+    (setq initial (YaTeX-minibuffer-string))
     (cond
      ((string-match "^http:" initial)
       (setq cmpl (try-completion initial yahtml-urls)
@@ -849,7 +913,7 @@ If optional argument FILE is specified collect labels in FILE."
 	    listfunc (list 'lambda nil
 			   (list 'file-name-all-completions
 				 file dir))
-	    beg (save-excursion (skip-chars-backward "^/") (point)))))
+	    beg (save-excursion (skip-chars-backward "^/" lim) (point)))))
     (cond
      ((stringp cmpl)
       (if (string= initial cmpl)
@@ -868,11 +932,6 @@ If optional argument FILE is specified collect labels in FILE."
 	      (goto-char p)
 	      (insert " [Sole completion]"))
 	  (delete-region p (point-max))))))))
-
-(defvar yahtml-escape-chars 'ask
-  "*Escape reserved characters to URL-encoding or not.
-Nil for never, t for everytime, and 'ask for inquiring
-at each reserved chars.")
 
 ;
 ; Subject: [yatex:02849] Re: [yahtml] tilda in href tag
@@ -1096,6 +1155,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	  width height bytes depth comment
 	  (file-coding-system-alist (list (cons "." 'no-conversion))) ;20
 	  (file-coding-system-for-read (and (boundp '*noconv*) *noconv*)) ;19
+	  (coding-system-for-read 'no-conversion)
 	  (seekpoint 1)
 	  c1 c2 c3 c4 beg end
 	  (case-fold-search nil))
@@ -1506,10 +1566,11 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 		  (if (string-match "/$" file)
 		      (or (catch 'dirindex
 			    (mapcar
-			     (lambda (f)
-			       (if (file-exists-p (concat file f))
-				   (throw 'dirindex
-					  (setq file (concat file f)))))
+			     (function
+			      (lambda (f)
+				(if (file-exists-p (concat file f))
+				    (throw 'dirindex
+					   (setq file (concat file f))))))
 			     (yahtml-get-directory-index)))
 			  (setq file (concat file yahtml-directory-index))))
 		  (if (string-match "^/" file)
@@ -1888,23 +1949,22 @@ This function should be able to treat white spaces in value, but not yet."
   ))
 
 ;;; ---------- commenting ----------
-(defvar yahtml-translate-hyphens-when-comment-region t
-  "*Non-nil for translate hyphens to &#45; when comment-region")
 
 (defun yahtml-comment-region (&optional uncom)
   "Comment out region or environment."
   (interactive)
-  (let ((e (make-marker)) beg p)
+  (let ((e (make-marker)) be beg p)
     (cond
-     ((marker-position (set-marker e (yahtml-on-begend-p)))
+     (;(marker-position (set-marker e (yahtml-on-begend-p)))
+      (setq be (yahtml-on-begend-p))
       (save-excursion
 	(setq p (point))
-	(if (string-match "^/" e)
+	(if (string-match "^/" be)
 	    (setq beg (progn (forward-line 1) (point)))
 	  (setq beg (progn (beginning-of-line) (point))))
 	(goto-char p)
 	(yahtml-goto-corresponding-begend)
-	(if (string-match "^/" e)
+	(if (string-match "^/" be)
 	    (beginning-of-line)
 	  (forward-line 1))
 	(set-marker e (point))
@@ -2216,6 +2276,9 @@ This function should be able to treat white spaces in value, but not yet."
      ((string-match "r" c)
       (yahtml-browse-reload)))))
 
+(if (fboundp 'wrap-function-to-control-ime)
+    (wrap-function-to-control-ime 'yahtml-browse-menu t nil))
+
 (defvar yahtml-lint-buffer "*weblint*")
 
 (defun yahtml-lint-buffer (buf)
@@ -2327,7 +2390,6 @@ If no matches found in yahtml-path-url-alist, return raw file name."
       (if (string-match yahtml-p-prefered-env-regexp env)
 	  (yahtml-insert-p)))))
 
-(defvar yahtml-faithful-to-htmllint nil)
 (defun yahtml-intelligent-newline-ul ()
   (interactive)
   (yahtml-insert-single "li")
@@ -2409,9 +2471,6 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 
 
 ;;; ---------- jump to error line ----------
-(defvar yahtml-error-line-regexp
-  "^\\(.*\\)(\\([0-9]+\\)):"
-  "*Regexp of error position which is produced by lint program.")
 (defun yahtml-prev-error ()
   "Jump to previous error seeing lint buffer."
   (interactive)
@@ -2425,8 +2484,11 @@ If no matches found in yahtml-path-url-alist, return raw file name."
   (let ((p (point)) (e (point-end-of-line)))
     (end-of-line)
     (if (re-search-backward yahtml-error-line-regexp nil t)
-	(let ((f (YaTeX-match-string 1))
-	      (l (string-to-int (YaTeX-match-string 2))))
+	(let ((f (if (string= "" (YaTeX-match-string 1))
+		     YaTeX-current-file-name
+		   (YaTeX-match-string 1)))
+	      (l (string-to-int (or (YaTeX-match-string 2)
+				    (YaTeX-match-string 3)))))
 	  (if sit (sit-for 1))
 	  (forward-line -1)
 	  (YaTeX-showup-buffer (YaTeX-switch-to-buffer f t) nil t)
@@ -2481,8 +2543,10 @@ If no matches found in yahtml-path-url-alist, return raw file name."
   (save-excursion
     (goto-char (point-min))
     (set (make-local-variable 'yahtml-css-class-alist) nil)
-    (while (re-search-forward "<\\(style\\|link\\)" nil t)
-      (let ((b (match-beginning 0))(tag (YaTeX-match-string 1)) e href alist)
+    (let (b tag type e href alist)
+      (while (re-search-forward "<\\(style\\|link\\)" nil t)
+	(setq b (match-beginning 0)
+	      tag (YaTeX-match-string 1))
 	(cond
 	 ((string-match "style" tag)
 	  (goto-char b)
@@ -2494,6 +2558,8 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 		   (point) (progn (search-forward "</style>") (point))
 		   alist)))))
 	 ((and (string-match "link" tag)
+	       (stringp (setq type (yahtml-get-attrvalue "type")))
+	       (string-match "text/css" type)
 	       (setq href (yahtml-get-attrvalue "href"))
 	       (file-exists-p (yahtml-url-to-path href)))
 	    (setq alist
@@ -2525,21 +2591,26 @@ If no matches found in yahtml-path-url-alist, return raw file name."
     ("<!--#\\(include\\|exec\\|config\\|fsize\\|flastmod\\)" "-->" include)
     ;; string
     (hilit-string-find ?\\ string)
-    (yahtml-hilit-region-tag "\\(em\\|strong\\)" bold)
+    (yahtml-hilit-region-tag "<\\(em\\|strong\\|b\\)\\>" bold)
     ("</?[uod]l>" 0 decl)
     ("<\\(di\\|dt\\|li\\|dd\\)>" 0 label)
-    ("<a\\s +href" "</a>" crossref)
+    (yahtml-hilit-region-tag "<\\(i\\>\\)" italic)
+    ;("<a\\s +href" "</a>" crossref) ;good for hilit19, but odd for font-lock..
+    (yahtml-hilit-region-tag "<\\(a\\)\\s +href" crossref)
     (yahtml-hilit-region-tag-itself "</?\\sw+\\>" decl)
     ))
 
 (defun yahtml-hilit-region-tag (tag)
   "Return list of start/end point of <TAG> form."
-  (if (re-search-forward (concat "<" tag ">") nil t)
-      (let ((m0 (match-beginning 0)))
-	(skip-chars-forward " \t\n")
-	(cons (point)
-	      (progn (re-search-forward (concat "</" tag ">") nil t)
-		     (match-beginning 0))))))
+  (if (re-search-forward tag nil t)
+      (let ((m0 (match-beginning 0)) (e0 (match-end 0))
+	    (elm (YaTeX-match-string 1)))
+	(skip-chars-forward "^>")
+	(prog1
+	    (cons (1+ (point))
+		  (progn (re-search-forward (concat "</" elm ">") nil t)
+			 (match-beginning 0)))
+	  (goto-char e0)))))
 
 (defun yahtml-hilit-region-tag-itself (ptn)
   "Return list of start/end point of <tag options...> itself."
@@ -2554,6 +2625,57 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 	 (setq hilit-patterns-alist
 	       (cons (cons 'yahtml-mode yahtml-hilit-patterns-alist)
 		     hilit-patterns-alist))))
+;;;
+;; for font-lock
+;;;
+
+; <<STATIC KEYWORDS BELOW NOT USED>>
+;(defvar yahtml-font-lock-keywords
+;  '(
+;    ;; comments
+;    ("<!--\\s .* -->" . font-lock-comment-face)
+;    ;; include&exec
+;    ("<!--#\\(include\\|exec\\|config\\|fsize\\|flastmod\\).*-->"
+;     0 font-lock-include-face keep)
+;    ;; string
+;    ;(hilit-string-find ?\\ string)
+;    ;(yahtml-hilit-region-tag "\\(em\\|strong\\)" bold)
+;    ("</?[uod]l>" 0 font-lock-keyword-face)
+;    ("<\\(di\\|dt\\|li\\|dd\\)>" 0 font-lock-label-face)
+;    ("<a\\s +href=.*</a>" (0 font-lock-crossref-face keep))
+;    ;(yahtml-hilit-region-tag-itself "</?\\sw+\\>" decl)
+;    ("</?\\sw+\\>" (yahtml-fontify-to-tagend nil nil))
+;    )
+;  "*Defualt font-lock-keywords for yahtml-mode.")
+(defvar yahtml-font-lock-keywords
+  (YaTeX-convert-pattern-hilit2fontlock yahtml-hilit-patterns-alist)
+  "Default fontifying patterns for yahtml-mode")
+
+(defun yahtml-font-lock-set-default-keywords ()
+  (put 'yahtml-mode 'font-lock-defaults
+       '(yahtml-font-lock-keywords nil t)))
+
+(if yahtml-use-font-lock
+    (progn
+      (if (and (boundp 'hilit-mode-enable-list) hilit-mode-enable-list)
+	  ;;for those who use both hilit19 and font-lock
+	  (if (eq (car hilit-mode-enable-list) 'not)
+	      (or (member 'yahtml-mode hilit-mode-enable-list)
+		  (nconc hilit-mode-enable-list (list 'yahtml-mode)))
+	    (setq hilit-mode-enable-list
+		  (delq 'yahtml-mode hilit-mode-enable-list))))
+      (yahtml-font-lock-set-default-keywords)))
+
+;; (defun yahtml-fontify-to-tagend (lim)
+;;   "*Fontify any tag including < and >.
+;; This is invalid use of font-lock function.  Therefore
+;; this fontifying will loose effectiveness soon or later."
+;;   (let ((start (match-beginning 0))
+;; 	(end (progn (skip-chars-forward "^>") (1+ (point)))))
+;;     (or nil; (font-lock-any-faces-p start end)
+;; 	(font-lock-fillin-text-property
+;; 	 start end 'face 'font-lock font-lock-keyword-face)))
+;;   nil)
 
 (run-hooks 'yahtml-load-hook)
 (provide 'yahtml)
@@ -2562,4 +2684,5 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 ; fill-prefix: ";;; "
 ; paragraph-start: "^$\\|\\|;;;$"
 ; paragraph-separate: "^$\\|\\|;;;$"
+; buffer-file-coding-system: sjis
 ; End:

@@ -14,7 +14,7 @@
 	Copy yatexe to the info directory where your Emacs is installed,
 	and add the next line to the dir file of the same directory.
 	
-	* YaTeX: (yatexj). Yet Another tex-mode for Emacs. (Japanese).
+	* YaTeX-e: (yatexe). Yet Another tex-mode for Emacs. (English).
 
 	(After that, M-x info  [RET] m yatex  [RET]  will give you  Wild
 	Bird's manual.  Hitting ? will show how to use info)
@@ -267,14 +267,15 @@
 
 *Can't I use font-lock?
 	
-	The document says,  "pattern must be  specified  within a line".
-	So it seems you  can't chose a pattern  like from \begin to \end
-	that laps more than  one line.  But on  the other hand, multiple
-	line comments in C  seems to work  fine...   So what's the  real
-	story?   Anybody know   the  answer?  If so,  teach   me, or try
-	sending  a fan letter  to  our font-lock investigator-in-depress
-	Taguchi (tagu@ae.keio.ac.jp)
-
+	Since v1.69, YES on XEmacs-21, Emacs-21, Emacs-20.7.
+	
+	Before starting YaTeX, load font-lock to make it work.  However,
+	YaTeX makes   tricky   patterns  to  fontifying   logical   area
+	independent from  `line', changing  of font-lock's specification
+	in the future  will possibly disable YaTeX  from fontifying.  If
+	you are thinking of graduating from hilit19,  it might be better
+	to keep old setting about it...
+	
 *It's sooo slow when I click YaTeX on the menu bar.
 	
 	I  don't know  why.  Probably  a  problem with Emacs-19.  You'll
@@ -361,11 +362,12 @@
 =====
 *Mailing lists?
 	
-	A  question, so  an answer.   The mailing  list for  YaTeX (Wild
-	Bird)  and it's  implementation to  Vz; Raicho  (by KATSURAGAWA,
-	Naoki),  implementation  to Wz  Editor;  HackTeX (by  TAKKENAKA,
-	Hiroshi),   implementation  to   Hidemaru;  HiTeX   (by  YASUDA,
-	Haruyuki) is "fj Wild Bird Society".  Send a mail like
+	A question, so an answer. The mailing list for YaTeX (Wild Bird)
+	and it's  implementation to Vz Editor; LaiTeX  (Thunder Bird, by
+	KATSURAGAWA Naoki), implementation  to Wz Editor; HackTeX (Swan,
+	by TAKENAKA  Hiroshi), implementation to  Hidemaru Editor; HiTeX
+	(Flying  Bird, by YASUDA  Haruyuki) is  "fj Wild  Bird Society".
+	Send a mail like
 	
 		To: yatex@yatex.org
 		Subject: append

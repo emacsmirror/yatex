@@ -1,21 +1,24 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
-;;; (c )1994-1999 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Nov 26 09:56:09 1999 on firestorm
+;;; (c )1994-2000 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Dec 25 19:16:04 2000 on firestorm
 ;;; $Id$
-
-;;; とりあえず hilit19 を使っている時に色が付くようにして
-;;; メニューバーでごにょごにょできるようにしただけ。
-;;; いったい誰がメニューバー使ってLaTeXソース書くんだろうか?
-;;; まあいいや練習練習。後ろの方にちょっとコメントあり。
-;;; 真中辺にあるけど、hilit19.el 対応の方は結構本気。
-;;; とかいってるうちに hilit19 って obsolete になってしまった…
 
 ;(require 'yatex)
 
-(defvar YaTeX-use-hilit19 (and (featurep 'hilit19) (fboundp 'x-color-values)
-			       (fboundp 'hilit-translate))
-  "*Use hilit19 to fontify buffer or not.")
+(cond
+ (YaTeX-use-hilit19	(require 'hilit19))
+ (YaTeX-use-font-lock	(require 'font-lock)))
+
+(defvar YaTeX-use-highlighting (or YaTeX-use-font-lock YaTeX-use-hilit19)
+  "*Use highlighting buffer or not.")
+(defvar YaTeX-background-mode
+  (cond
+   ((boundp 'hilit-background-mode) hilit-background-mode)
+   ((boundp 'frame-background-mode) frame-background-mode)
+   ((fboundp 'get-frame-background-mode)
+    (get-frame-background-mode (selected-frame)))
+   (t nil)))
 
 (defvar YaTeX-mode-menu-map (make-sparse-keymap "YaTeX"))
 (defvar YaTeX-mode-menu-map-process (make-sparse-keymap "Process"))
@@ -226,6 +229,12 @@
 ;; メニューに比べてこっちは結構本気でやってます。
 ;; だって文書構造がとっても分かり易いんだもん。
 ;; みんなも hilit19.el を使おう!
+;; とかいってるうちに hilit19 って obsolete になってしまった…
+;; …ということで、hilit19 用のパターンを font-lock に変換する関数を
+;; 作成してなんとか font-lock にも対応(2000年12月)。
+;; しかし、font-lock は仕様が変わりやすい雰囲気でずっと動き続けるか
+;; どうかは不明。むしろ進化の止まったhilit19を使い続ける方が安心と
+;; 言えないこともないが世の流れは読めず……。
 ;;
 ;; さて、まずは対応する {} をピカピカ範囲とするような関数を作る。
 ;; これは hilit-LaTeX.el を参考にした。でも、ちゃんと section 型コマンドの
@@ -241,28 +250,38 @@
 	  (skip-chars-forward " \n\t*")
 	  (while (looking-at "\\[") (forward-list 1)) ;optionならスキップ
 	  (skip-chars-forward " \n\t")
-	  (if (looking-at "{")		;{}が始まるならちゃんとしたsection型
-	      (cons m0
-		    (progn ;(skip-chars-backward "^{") (forward-char -2)
-		      (while (> argc 0)
-			(skip-chars-forward "^{")
-			(forward-list 1)
-			(setq argc (1- argc)))
-		      (point)))
-	    ;{}でないならたぶん \verb 環境などにあるダミー
-	    (cons m0 e0))))))
+	  (prog1
+	      (if (looking-at "{")	;{}が始まるならちゃんとしたsection型
+		  (cons m0
+			(condition-case err
+			    (progn
+			      ;;(skip-chars-backward "^{") (forward-char -2)
+			      (while (> argc 0)
+				(skip-chars-forward "^{")
+				(forward-list 1)
+				(setq argc (1- argc)))
+			      (point))
+			  (error m0)))
+			;{}でないならたぶん \verb 環境などにあるダミー
+		(cons m0 e0))
+	    ;;move to re-search end not to make font-lock confused
+	    (goto-char e0))))))
 
 (defun YaTeX-19-region-large-type (pattern)
   "Return list of large-type contents.
 Assumes PATTERN begins with `{'."
   (if (re-search-forward pattern nil t)
-      (let ((m0 (match-beginning 0)))
+      (let ((m0 (match-beginning 0)) (e0 (match-end 0))p)
 	(goto-char m0)
 	(skip-chars-forward "^ \t\n")
 	(skip-chars-forward " \t\n")
-	(cons (point)
-	      (progn (goto-char m0) (forward-list 1)
-		     (1- (point)))))))
+	(prog1
+	    (cons (setq p (point))
+		  (condition-case err
+		      (progn (goto-char m0) (forward-list 1) (1- (point)))
+		    (error (1+ p))))
+	  ;;move to re-search end not to make font-lock confused
+	  (goto-char e0)))))
 
 ;; 些細なことだが % の前の文字もピカリとさせてしまうようで… >hilit19
 ;; ↓この関数は下の hilit-set-mode-patterns の "[^\\]\\(%\\).*$" に
@@ -328,7 +347,7 @@ Assumes PATTERN begins with `{'."
     ("\\\\begin{\\(eqn\\|equation\\|x?x?align\\|split\\|multline\\|gather\\)"
      "\\\\end{\\(eqn\\|equation\\|x?x?align\\|split\\|multline\\|gather\\).*}"
      formula)
-    ("[^\\$]\\($\\($[^$]*\\$\\|[^$]*\\)\\$\\)" 1 formula); '$...$' or '$$...$$'
+    ("\\([^\\$]\\|^\\)\\($\\($[^$]*\\$\\|[^$]*\\)\\$\\)" 2 formula); '$...$' or '$$...$$'
 
     ;; "wysiwyg" emphasis -- these don't work on nested expressions
     (YaTeX-19-region-large-type "{\\\\\\(em\\|it\\|sl\\)"  italic)
@@ -337,7 +356,7 @@ Assumes PATTERN begins with `{'."
     ;;;("\\\\begin{verbatim" "\\\\end{verbatim" tt)
 
     ("``" "''" string))
-"*Hiliting pattern alist for LaTeX text.")
+  "*Hiliting pattern alist for LaTeX text.")
 
 ;;(defvar YaTeX-hilit-pattern-adjustment-default nil)
 ;; ↑いらなくなった。
@@ -354,80 +373,126 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 (defvar YaTeX-sectioning-patterns-alist nil
   "Hilightening patterns for sectioning units.")
 (defvar YaTeX-hilit-singlecmd-face
-  '(slateblue2 aquamarine)
+  '("slateblue2" . "aquamarine")
   "*Hilightening face for maketitle type.  '(FaceForLight FaceForDark)")
 
 ;;; セクションコマンドを、構造レベルの高さに応じて色の濃度を変える
 ;;; 背景が黒でないと何が嬉しいのか分からないに違いない.
 ;;; もしかして白地の時は構造レベルに応じて色を明るくしたほうが良いのか?
+;;; ...どうやらそうでもないらしい。これでいいみたい(2000/12)。
 ;(if (fboundp 'win32-color-values)
 ;    (fset 'x-color-values 'win32-color-values))
 
+(defun YaTeX-19-create-face (sym fgcolor &optional bgcolor)
+  "Create face named SYM with face of FGCOLOR/BGCOLOR."
+  (cond
+   ((and YaTeX-use-font-lock (fboundp 'defface))
+    (custom-declare-face
+     sym
+     (list
+      (list (list
+	     '(class color)
+	     ;(list 'background YaTeX-background-mode)
+	     )
+	    (delq nil
+		  (append
+		   (list ':foreground fgcolor)
+		   (if bgcolor
+		       (list ':background bgcolor))
+		   ))
+	    )
+      (list t (list ':bold t ':underline t))
+      )
+     (format "Font lock face for %s" sym)
+      ':group 'font-lock-faces)
+    (set sym sym)
+    sym)
+   ((and YaTeX-use-hilit19 (and (fboundp 'hilit-translate)))
+    (let ((face (intern (concat fgcolor "/" bgcolor))))
+      (hilit-translate sym face)
+      face))))
+
 (cond
- (YaTeX-use-hilit19
-  (let*((sectface
-	 (car (if (eq hilit-background-mode 'dark)
-		  (cdr YaTeX-hilit-sectioning-face)
-		YaTeX-hilit-sectioning-face)))
-	(sectcol (symbol-name sectface))
-	sect-pat-alist)
-    (if (string-match "/" sectcol)
-	(let ((fmin (nth 0 YaTeX-hilit-sectioning-attenuation-rate))
-	      (bmin (nth 1 YaTeX-hilit-sectioning-attenuation-rate))
-	      colorvalue fR fG fB bR bG bB pat fg bg level from face list lm)
-	  (require 'yatexsec)
-	  (setq fg (substring sectcol 0 (string-match "/" sectcol))
-		bg (substring sectcol (1+ (string-match "/" sectcol)))
-		colorvalue (x-color-values fg)
-		fR (/ (nth 0 colorvalue) 256)
-		fG (/ (nth 1 colorvalue) 256)
-		fB (/ (nth 2 colorvalue) 256)
-		colorvalue (x-color-values bg)
-		bR (/ (nth 0 colorvalue) 256)
-		bG (/ (nth 1 colorvalue) 256)
-		bB (/ (nth 2 colorvalue) 256)
-		lm YaTeX-sectioning-max-level
-		list YaTeX-sectioning-level)
-	  (while list
-	    (setq pat (concat YaTeX-ec-regexp (car (car list))
-			      ;"\\*?\\(\\[[^]]*\\]\\)?\\>" ;改行はさむと駄目
-			      "\\>"
-			      )
-		  level (cdr (car list))
-		  fg (format "hex-%02x%02x%02x"
-			     (- fR (/ (* level fR fmin) lm 100))
-			     (- fG (/ (* level fG fmin) lm 100))
-			     (- fB (/ (* level fB fmin) lm 100)))
-		  bg (format "hex-%02x%02x%02x"
-			     (- bR (/ (* level bR bmin) lm 100))
-			     (- bG (/ (* level bG bmin) lm 100))
-			     (- bB (/ (* level bB bmin) lm 100)))
-		  from (intern (format "sectioning-%d" level))
-		  face (intern (concat fg "/" bg)))
-	    (hilit-translate from face)
-	    (setq sect-pat-alist
-		  (cons;;(list pat "}" face)
-		   (list 'YaTeX-19-region-section-type pat face)
-		   sect-pat-alist))
-	    (setq list (cdr list)))
-	  (setq YaTeX-sectioning-patterns-alist sect-pat-alist))))))
+ (YaTeX-use-highlighting
+  (cond
+   (window-system
+    (let*((sectface
+	   (car (if (eq YaTeX-background-mode 'dark)
+		    (cdr YaTeX-hilit-sectioning-face)
+		  YaTeX-hilit-sectioning-face)))
+	  (sectcol (symbol-name sectface))
+	  (fl YaTeX-use-font-lock)
+	  (form (if fl "#%02x%02x%02x" "hex-%02x%02x%02x"))
+	  sect-pat-alist)
+      (if (string-match "/" sectcol)
+	  (let ((fmin (nth 0 YaTeX-hilit-sectioning-attenuation-rate))
+		(bmin (nth 1 YaTeX-hilit-sectioning-attenuation-rate))
+		colorvalue fR fG fB bR bG bB pat fg bg level from face list lm)
+	    (require 'yatexsec)
+	    (setq fg (substring sectcol 0 (string-match "/" sectcol))
+		  bg (substring sectcol (1+ (string-match "/" sectcol)))
+		  colorvalue (x-color-values fg)
+		  fR (/ (nth 0 colorvalue) 256)
+		  fG (/ (nth 1 colorvalue) 256)
+		  fB (/ (nth 2 colorvalue) 256)
+		  colorvalue (x-color-values bg)
+		  bR (/ (nth 0 colorvalue) 256)
+		  bG (/ (nth 1 colorvalue) 256)
+		  bB (/ (nth 2 colorvalue) 256)
+		  lm YaTeX-sectioning-max-level
+		  list YaTeX-sectioning-level)
+	    (while list
+	      (setq pat (concat YaTeX-ec-regexp (car (car list))
+				;;"\\*?\\(\\[[^]]*\\]\\)?\\>" ;改行はさむと駄目
+				"\\>"
+				)
+		    level (cdr (car list))
+		    fg (format form
+			       (- fR (/ (* level fR fmin) lm 100))
+			       (- fG (/ (* level fG fmin) lm 100))
+			       (- fB (/ (* level fB fmin) lm 100)))
+		    bg (format form
+			       (- bR (/ (* level bR bmin) lm 100))
+			       (- bG (/ (* level bG bmin) lm 100))
+			       (- bB (/ (* level bB bmin) lm 100)))
+		    from (intern (format "YaTeX-sectioning-%d" level))
+		    ;;face (intern (concat fg "/" bg))
+		    )
+	      (setq face (YaTeX-19-create-face from fg bg))
+	      (setq sect-pat-alist
+		    (cons;;(list pat "}" face)
+		     (list 'YaTeX-19-region-section-type pat face)
+		     sect-pat-alist))
+	      (setq list (cdr list)))
+	    (setq YaTeX-sectioning-patterns-alist sect-pat-alist)))))
+   (t					;not window-system
+    (setq YaTeX-sectioning-patterns-alist
+	  (list
+	   (list
+	    (concat YaTeX-ec-regexp
+		    "\\(\\(sub\\)*\\(section\\|paragraph\\)\\|chapter"
+		    "\\|part\\){[^}]*}")
+	    0
+	    'define)))))))
 
 ;; ローカルなマクロを読み込んだ後 redraw すると
 ;; ローカルマクロを keyword として光らせる(keywordじゃまずいかな…)。
+(defvar hilit-patterns-alist nil)	;for absence of hilit19
+
 (defun YaTeX-19-collect-macros ()
   (cond
-   (YaTeX-use-hilit19
+   (YaTeX-use-highlighting
     (let ((get-face
 	   (function
 	    (lambda (table)
 	      (cond
-	       ((eq hilit-background-mode 'light) (car table))
-	       ((eq hilit-background-mode 'dark) (car (cdr table)))
+	       ((eq YaTeX-background-mode 'light) (car table))
+	       ((eq YaTeX-background-mode 'dark) (cdr table))
 	       (t nil)))))
 	  sect single)
-      (hilit-translate
+      (YaTeX-19-create-face ;;hilit-translate
        ;;sectioning (funcall get-face YaTeX-hilit-sectioning-face)
-       macro (funcall get-face YaTeX-hilit-singlecmd-face))
+       'macro (funcall get-face YaTeX-hilit-singlecmd-face))
       (if (setq sect (append user-section-table tmp-section-table))
 	  (setq sect (concat "\\\\\\("
 			     (mapconcat
@@ -468,10 +533,52 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
   (interactive "P")
   (YaTeX-19-collect-macros)
   (hilit-recenter arg))
-(if (fboundp 'hilit-recenter)		;Replace hilit-recenter with
-    (mapcar (function (lambda (key)	;YaTeX-hilit-recenter in yatex-mode
-			(define-key YaTeX-mode-map key 'YaTeX-hilit-recenter)))
-	    (where-is-internal 'hilit-recenter)))
+(defvar YaTeX-19-recenter-function
+  (cond
+   (YaTeX-use-hilit19	(cons 'YaTeX-hilit-recenter 'hilit-recenter))
+   (YaTeX-use-font-lock	(cons 'YaTeX-font-lock-recenter 'recenter))
+   (t nil)))
+
+(if YaTeX-19-recenter-function
+    (let ((k (where-is-internal (cdr YaTeX-19-recenter-function))))
+      (while k
+	(define-key YaTeX-mode-map (car k) (car YaTeX-19-recenter-function))
+	(setq k (cdr k)))))
+
+(defun YaTeX-font-lock-recenter (&optional arg)
+  (interactive "P")
+  (setq YaTeX-font-lock-keywords
+	(YaTeX-convert-pattern-hilit2fontlock
+	 (cdr (assq 'yatex-mode (YaTeX-19-collect-macros))))
+	font-lock-keywords nil)
+  ;(save-excursion
+   ; (font-lock-fontify-region (window-start) (window-end)))
+  (font-lock-mode -1)			;is stupid, but sure.
+  (font-lock-mode 1))
+
+(defvar YaTeX-font-lock-keywords nil
+  "Pattern-face alist of yahtml-mode for font-lock")
+
+(defun YaTeX-font-lock-set-default-keywords ()
+  (put 'yatex-mode 'font-lock-defaults
+       (list 'YaTeX-font-lock-keywords nil nil))
+  (setq YaTeX-font-lock-keywords
+	(YaTeX-convert-pattern-hilit2fontlock
+	 (cons nil
+	       (append YaTeX-sectioning-patterns-alist
+		       YaTeX-hilit-pattern-adjustment-private
+		       YaTeX-hilit-patterns-alist)))))
+
+(if YaTeX-use-font-lock
+    (progn
+      (if (and (boundp 'hilit-mode-enable-list) hilit-mode-enable-list)
+	  ;;for those who use both hilit19 and font-lock
+	  (if (eq (car hilit-mode-enable-list) 'not)
+	      (or (member 'yatex-mode hilit-mode-enable-list)
+		  (nconc hilit-mode-enable-list (list 'yatex-mode)))
+	    (setq hilit-mode-enable-list
+		  (delq 'yatex-mode hilit-mode-enable-list))))
+      (YaTeX-font-lock-set-default-keywords)))
 
 (defun YaTeX-switch-to-new-window ()
   (let ((c 0) (i 1) (free (make-string win:max-configs ? )))
@@ -517,8 +624,7 @@ WARNING, This code is not perfect."
       (switch-to-buffer b)
       (goto-char p))
      (t (switch-to-buffer-other-frame (buffer-name b))
-	(goto-char p))))
-)
+	(goto-char p)))))
 
 ;;; reverseVideo にして hilit-background-mode を 'dark
 ;;; にしている人は数式などが暗くなりすぎて見づらいかもしれない。
@@ -532,8 +638,19 @@ WARNING, This code is not perfect."
 (and YaTeX-emacs-19
      (not (featurep 'xemacs))
      (boundp 'byte-compile-current-file)
-     (if (and (boundp 'window-system) window-system)
-	 (require 'hilit19)
-       (error "Byte compile this file on window system! Not `-nw'!")))
+     byte-compile-current-file
+     (progn
+       (if YaTeX-emacs-20 (require 'font-lock))
+       (if (and (boundp 'window-system) window-system)
+	   (require 'hilit19)
+	 (error "Byte compile this file on window system! Not `-nw'!"))))
 
 (provide 'yatex19)
+
+
+; Local variables:
+; fill-prefix: ";;; "
+; paragraph-start: "^$\\|\\|;;;$"
+; paragraph-separate: "^$\\|\\|;;;$"
+; buffer-file-coding-system: sjis
+; End:

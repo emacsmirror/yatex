@@ -3,17 +3,27 @@
 %%
 %% C-u C-x $ とすると質問項目だけ表示されます。C-x $ で元に戻ります。
 %%
+(新項目: ・font-lockって使えますか?)
 
 
 ■インストール関連
 ・LaTeX使わないんだけど野鳥も入れなきゃダメですか?
 	
 	や、別にええっす。
-	ftp://ftp.ae.keio.ac.jp/pub/emacs-lisp/text/yatex/
+	http://www.yatex.org/ のソースアーカイブリンク
 	のなかに、"yahtml" で始まるファイルがあるので次からはそれを持っ
 	て来ればよござんす。
 	
 ■カスタマイズ関連
+・font-lockって使えますか?
+	
+	はい。yahtml-1.69から使えます。あらかじめ font-lock をロードしてお
+	きましょう。以前、yahtml が font-lock に対応する前に
+	
+		(put 'yahtml-mode 'font-lock-defaults 'another-html-mode)
+	
+	などを ~/.emacs に書いた人は、その設定を削除して下さい。
+	
 ・いつもは EUC にしてたまに JIS コードのファイルを作りたいんだけど。
 	
 	~/.emacs で
@@ -39,6 +49,51 @@
 	ただし、Emacs-20 や XEmacs の場合、漢字コードのシンボルの両端の*
 	は付きません。
 	
+・<META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=x-sjis">を
+  認識して漢字コードを設定して欲しいなー。
+	
+	文書の中にファイルのエンコード法を書いてもそもそもそのMETAなんちゃ
+	らを読めない可能性があるので charset をMETAで指定するのは本当に
+	期待した通りには機能しません。たとえば、多国語文書を書く必要が出
+	たとします。すると今のところUTF-7でエンコードするのが一番無難で
+	しょう。NetscapeでもIEでもUTF-7はちゃんと読むことができます。と
+	ういことで、ファイルを開いてブラウザがちゃんとUTF-7と認識するよ
+	うに、HTML文書の先頭に次のように書きました。
+	
+	<META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=utf-7">
+	
+	このように書いたものが 
+	http://www.yatex.org/charset/hello-meta.file にあります。
+	NetscapeとIEならUTF-7は読めるはずなので、どちらかでアクセスして
+	みましょう。読めますか? 読めませんね。IEの場合はUTF-7の部分を自
+	動判別するので、一見読めてるように見えますがtext/html とは解釈さ
+	れておらず、結局METAが判別できなかったことが分かります。つまり、
+	違うエンコード法を利用する場合、<META...> の部分さえもサーバに解
+	釈不能な状態になり得るので、文書の中にcharset指定を埋め込むのは
+	賢い方法ではありません。
+	
+	かわりに、上記で説明した .htaccess を利用しましょう。*.utf7 とい
+	う拡張子を持つファイルは、UTF-7 でエンコードしたHTML文書である、
+	という定義は、以下のように書けます。
+	
+		AddType "text/html; charset=utf-7"	.utf7
+	
+	.htaccess ファイルにこのように定義しておけば、無駄な<META～
+	charset～>など綴らなくてもしっかりとサーバがエンコーディングを理
+	解できます。このようにして書かれた UTF-7 のHTML文書が
+	http://www.yatex.org/charset/hello.utf7
+	にありますので、同じくNetscapeかIEで読んでみましょう。
+	
+	AddTypeは~/public_html などに置けばそれ以下の *.utf7 という拡張
+	子全てに適用できます。一個だけAddTypeを書くだけでいいのです。
+	
+	HTML屋では、気休め程度にしかならないMETAによるcharset指定を推奨
+	しない事を選びました。かわりに、もっと確実で簡単な .htaccess に
+	よるエンコーディング指定を推奨するために、そちらをサポートします。
+	
+	関係ありませんが今(2000年現在)では x-sjisじゃなくて、Shift_JIS 
+	と綴ることになってます:-p
+		
 ・<li>の直後に空白入るとhtmllintに怒られるから空白なしにしたいんだけど…
 	
 	それ、htmllintがやりすぎなんです。タグ直後の空白に対して文句いう
@@ -79,11 +134,11 @@
 ・メイリングリストはないんですか?
 	
 	っていう質問項目があるくらいだからあります。「yahtml」およびそのVz
-	への移植版「laihtml」(by katsura@prc.tsukuba.ac.jp)、Wzへの移植版
-	「hackhtml」(by lh57024@hongo.ecc.u-tokyo.ac.jp) に関する情報交換の
+	への移植版「laihtml」(by KATSURAGAWA, Naoki)、Wzへの移植版
+	「hackhtml」(by TAKENAKA, Hiroshi) に関する情報交換の
 	ためのメイリングリスト「fj野鳥の会」がそれです。
 	
-		To: yatex-control@jaist.ac.jp
+		To: yatex@yatex.org
 		Subject: append
 		-----
 		たぐでーし。明けましておめでとうございまーす。
@@ -119,4 +174,5 @@ Local Variables:
 mode: indented-text
 fill-column: 72
 fill-prefix: "	"
+buffer-file-coding-system: shift_jis-dos
 End:

@@ -2,16 +2,24 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c )1994-2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Apr  9 12:36:25 2000 on firestorm
+;;; Last modified Mon Dec 25 18:51:11 2000 on firestorm
 ;;; $Id$
 
 ;; General variables
 (defvar YaTeX-dos (memq system-type '(ms-dos windows-nt OS/2)))
 (defvar YaTeX-emacs-19 (>= (string-to-int emacs-version) 19))
 (defvar YaTeX-emacs-20 (>= (string-to-int emacs-version) 20))
+(defvar YaTeX-emacs-21 (>= (string-to-int emacs-version) 21))
 (defvar YaTeX-user-completion-table
   (if YaTeX-dos "~/_yatexrc" "~/.yatexrc")
   "*Default filename in which user completion table is saved.")
+
+(defvar YaTeX-display-color-p
+  (or (and (fboundp 'display-color-p) (display-color-p))
+      (and (fboundp 'device-class)
+	   (eq 'color (device-class (selected-device))))
+      window-system)  ; falls down lazy check..
+  "Current display's capability of expressing colors.")
 
 (defvar YaTeX-japan (or (boundp 'NEMACS) (boundp 'MULE) YaTeX-emacs-20)
   "Whether yatex mode is running on Japanese environment or not.")
@@ -54,6 +62,11 @@ If nil, use default pop-to-buffer.")
 (defvar YaTeX-nervous t
   "*If you are nervous about maintenance of yatexrc, set this value to T.
 And you will have the local dictionary.")
+
+(defvar YaTeX-use-italic-bold (string< "20" emacs-version)
+  "*Non-nil tries to find italic/bold fontset.
+This variable is effective when font-lock is used.
+\it, \bf 内部での日本語が□になってしまう場合はこれをnilにして下さい。")
 
 ;----------- work variables ----------------------------------------
 (defvar YaTeX-typesetting-mode-map nil
@@ -295,6 +308,7 @@ Optional sixth argument FUNC changes search-function."
 		 (and (eq major-mode 'yatex-mode)
 		      (YaTeX-in-verb-p (match-beginning 0)))
 		 (save-excursion
+		   (goto-char (match-beginning 0))
 		   (beginning-of-line)
 		   (re-search-forward cmntrx (match-beginning 0) t)))))
     (store-match-data md)
@@ -517,6 +531,19 @@ Otherwise split window conventionally."
 	  (setq wlist (cons win wlist))))
     wlist))
 
+(if YaTeX-emacs-21
+    ;; Emacs-21's next-window returns other frame's window even if called
+    ;; with argument ALL-FRAMES nil, when called from minibuffer context.
+    ;; Therefore, check frame identity here.
+    (defun YaTeX-window-list ()
+      (let*((curw (selected-window)) (win curw) (wlist (list curw))
+	    (curf (window-frame curw)))
+	(while (and (not (eq curw (setq win (next-window win))))
+		    (eq curf (window-frame win)))
+	  (or (eq win (minibuffer-window))
+	      (setq wlist (cons win wlist))))
+	wlist)))
+
 ;;;###autoload
 (defun substitute-all-key-definition (olddef newdef keymap)
   "Replace recursively OLDDEF with NEWDEF for any keys in KEYMAP now
@@ -544,53 +571,57 @@ the last field separated by those delimiters.
   If the symbol 'quick is bound and is 't, when the try-completion results
 in t, exit minibuffer immediately."
   (interactive)
-  (let ((md (match-data)) beg word compl
-	(quick (and (boundp 'quick) (eq quick t)))
-	(displist			;function to display completion-list
-	 (function
-	  (lambda ()
-	    (with-output-to-temp-buffer "*Completions*"
-	      (display-completion-list
-	       (all-completions word minibuffer-completion-table)))))))
-    (setq beg (if (and (boundp 'delim) (stringp delim))
-		  (save-excursion
-		    (skip-chars-backward (concat "^" delim))
-		    (point))
-		(point-min))
-	  word (buffer-substring beg (point-max))
-	  compl (try-completion word minibuffer-completion-table))
-    (cond
-     ((eq compl t)
-      (if quick (exit-minibuffer)
-	(let ((p (point)) (max (point-max)))
-	  (unwind-protect
-	      (progn
-		(goto-char max)
-		(insert " [Sole completion]")
-		(goto-char p)
-		(sit-for 1))
-	    (delete-region max (point-max))
-	    (goto-char p)))))
-     ((eq compl nil)
-      (ding)
-      (save-excursion
-	(let (p)
-	  (unwind-protect
-	      (progn
-		(goto-char (setq p (point-max)))
-		(insert " [No match]")
-		(goto-char p)
-		(sit-for 2))
-	    (delete-region p (point-max))))))
-     ((string= compl word)
-      (funcall displist))
-     (t (delete-region beg (point-max))
-	(insert compl)
-	(if quick
-	    (if (eq (try-completion compl minibuffer-completion-table) t)
-		(exit-minibuffer)
-	      (funcall displist)))))
-    (store-match-data md)))
+  (save-restriction
+    (narrow-to-region
+     (if (fboundp 'field-beginning) (field-beginning (point-max)) (point-min))
+     (point-max))
+    (let ((md (match-data)) beg word compl
+	  (quick (and (boundp 'quick) (eq quick t)))
+	  (displist ;function to display completion-list
+	   (function
+	    (lambda ()
+	      (with-output-to-temp-buffer "*Completions*"
+		(display-completion-list
+		 (all-completions word minibuffer-completion-table)))))))
+      (setq beg (if (and (boundp 'delim) (stringp delim))
+		    (save-excursion
+		      (skip-chars-backward (concat "^" delim))
+		      (point))
+		  (point-min))
+	    word (buffer-substring beg (point-max))
+	    compl (try-completion word minibuffer-completion-table))
+      (cond
+       ((eq compl t)
+	(if quick (exit-minibuffer)
+	  (let ((p (point)) (max (point-max)))
+	    (unwind-protect
+		(progn
+		  (goto-char max)
+		  (insert " [Sole completion]")
+		  (goto-char p)
+		  (sit-for 1))
+	      (delete-region max (point-max))
+	      (goto-char p)))))
+       ((eq compl nil)
+	(ding)
+	(save-excursion
+	  (let (p)
+	    (unwind-protect
+		(progn
+		  (goto-char (setq p (point-max)))
+		  (insert " [No match]")
+		  (goto-char p)
+		  (sit-for 2))
+	      (delete-region p (point-max))))))
+       ((string= compl word)
+	(funcall displist))
+       (t (delete-region beg (point-max))
+	  (insert compl)
+	  (if quick
+	      (if (eq (try-completion compl minibuffer-completion-table) t)
+		  (exit-minibuffer)
+		(funcall displist)))))
+      (store-match-data md))))
 
 (defun YaTeX-minibuffer-quick-complete ()
   "Set 'quick to 't and call YaTeX-minibuffer-complete.
@@ -691,12 +722,12 @@ If no such window exist, switch to buffer BUFFER."
 
 (defun YaTeX-insert-file-contents (file visit &optional beg end)
   (cond
-   ((string< "19" emacs-version)
+   ((and (string< "19" emacs-version) (not (featurep 'xemacs)))
     (insert-file-contents file visit beg end))
    ((string-match "unix" (symbol-name system-type))
     (let ((default-process-coding-system
-	    (and (boundp '*noconv*) (list *noconv*)))
-	  file-coding-system (and (boundp '*noconv*) *noconv*)
+	    (and (boundp '*noconv*) (list '*noconv*)))
+	  (file-coding-system (and (boundp '*noconv*) '*noconv*))
 	  kanji-fileio-code
 	  (default-process-kanji-code 0))
       (call-process shell-file-name file (current-buffer) nil
@@ -870,6 +901,16 @@ to most recent sectioning command."
       (end-of-line)
       (if (eobp) nil (forward-char 1)))))
 
+(defun YaTeX-kill-buffer (buffer)
+  "Make effort to show parent buffer after kill."
+  (interactive "bKill buffer: ")
+  (or (get-buffer buffer)
+      (error "No such buffer %s" buffer))
+  (let ((pf YaTeX-parent-file))
+    (kill-buffer buffer)
+    (and pf
+	 (get-file-buffer pf)
+	 (switch-to-buffer (get-file-buffer pf)))))
 
 ;;;VER2
 (defun YaTeX-insert-struc (what env)
@@ -921,6 +962,216 @@ See yatex19.el for example."
 	(define-key (symbol-value keymap) (vector (car bind)) (cdr bind))))
      bindlist))))
 
+;;;
+;; Emacs 21 compensational wrapper
+;;;
+(defun YaTeX-minibuffer-begin ()
+ (if (fboundp 'field-beginning)
+     (field-beginning (point-max))
+   (point-min)))
+
+(defun YaTeX-minibuffer-end ()
+ (if (fboundp 'field-end)
+     (field-end (point-max))
+   (point-max)))
+
+(defun YaTeX-minibuffer-string ()
+  (buffer-substring (YaTeX-minibuffer-begin) (YaTeX-minibuffer-end)))
+
+(defun YaTeX-minibuffer-erase ()
+  (if (eq (selected-window) (minibuffer-window))
+      (if (fboundp 'delete-field) (delete-field) (erase-buffer))))
+
+;;;
+;; hilit19 vs. font-lock
+;;;
+(defun YaTeX-convert-pattern-hilit2fontlock (h19pa)
+  "Convert hilit19's H19PA patterns alist to font-lock's one.
+This function is a makeshift for YaTeX and yahtml."
+  (let ((ignorecase (not (null (car h19pa))))
+	(palist (cdr h19pa))
+	flpa i newface
+	(mapping
+	 '((bold . YaTeX-font-lock-bold-face)
+	   (italic . YaTeX-font-lock-italic-face)
+	   (define . font-lock-function-name-face)
+	   (keyword . font-lock-keyword-face)
+	   (decl . YaTeX-font-lock-declaration-face)
+	   (label . YaTeX-font-lock-label-face)
+	   (crossref . YaTeX-font-lock-crossref-face)
+	   (include . YaTeX-font-lock-include-face)
+	   (formula . YaTeX-font-lock-formula-face)
+	   (string . ignore) (comment . ignore)
+	   )))
+    (while (setq i (car palist))
+      (setq newface (nth 2 i)
+	    newface (or (cdr (assq newface mapping)) newface))
+      (cond
+       ((eq newface 'ignore) nil)	;no translation
+       ((stringp (car i))		;hiliting by regexp
+	(setq flpa
+	      (cons
+	       (if (numberp (car (cdr i)))
+		   (list (car i)	;regexp
+			 (car (cdr i))	;matching group number
+			 newface t) ;'keep)	;keep is hilit19 taste
+		 (list
+		  (concat
+		   (car i)		;original regexp and..
+		   ;;"[^"
+		   ;;(regexp-quote (substring (car (cdr i)) 0 1))
+		   ;;"]+" ;for shortest match
+		   ".*"
+		   (car (cdr i)))
+		  0 (list 'quote newface) t)) ;;'keep))
+	       flpa)))
+       ((and (symbolp (car i)) (fboundp (car i)))
+	(setq flpa
+	      (cons
+	       (list (car (cdr i))	;regexp
+		     (list
+		      (list
+		       'lambda (list 'dummy)
+		       '(goto-char (match-beginning 0))
+		       '(remove-text-properties
+			 (point) (1+ (point))
+			 '(face nil font-lock-multiline nil))
+		       (list
+			'let (list '(e (match-end 0))
+				   (list 'm (list (car i) (car (cdr i)))))
+			(list
+			 'if 'm
+			 (list
+			  'YaTeX-font-lock-fillin
+			  (list 'car 'm)
+			  (list 'cdr 'm)
+			  (list 'quote 'face)
+			  (list 'quote 'font-lock)
+			  (list 'quote newface))
+			 '(goto-char e)
+			 ))
+		       nil)		;retun nil to cheat font-lock
+		      nil nil))		;pre-match, post-match both nil
+	       flpa))))
+      (setq palist (cdr palist)));while
+    (if (featurep 'xemacsp)
+	(nreverse flpa)
+      flpa)))
+
+(cond
+ ((featurep 'font-lock)
+  ;; In each defface, '(class static-color) is for Emacs-21 -nw
+  ;; '(class tty) is for XEmacs-21 -nw
+  (defface YaTeX-font-lock-label-face
+    '((((class static-color)) (:foreground "yellow" :underline t))
+      (((type tty)) (:foreground "yellow" :underline t))
+      (((class color) (background dark)) (:foreground "pink" :underline t))
+      (((class color) (background light)) (:foreground "red" :underline t))
+      (t (:bold t :underline t)))
+    "Font Lock mode face used to highlight labels."
+    :group 'font-lock-faces)
+  (defvar YaTeX-font-lock-label-face 'YaTeX-font-lock-label-face)
+
+  (defface YaTeX-font-lock-declaration-face
+    '((((class color) (background dark)) (:foreground "cyan"))
+      (((class color) (background light)) (:foreground "RoyalBlue"))
+      (t (:bold t :underline t)))
+    "Font Lock mode face used to highlight some declarations."
+    :group 'font-lock-faces)
+  (defvar YaTeX-font-lock-declaration-face 'YaTeX-font-lock-declaration-face)
+
+  (defface YaTeX-font-lock-include-face
+    '((((class color) (background dark)) (:foreground "Plum1"))
+      (((class color) (background light)) (:foreground "purple"))
+      (t (:bold t :underline t)))
+    "Font Lock mode face used to highlight expression for including."
+    :group 'font-lock-faces)
+  (defvar YaTeX-font-lock-include-face 'YaTeX-font-lock-include-face)
+
+  (defface YaTeX-font-lock-formula-face
+    '((((class static-color)) (:bold t))
+      (((type tty)) (:bold t))
+      (((class color) (background dark)) (:foreground "khaki" :bold t))
+      (((class color) (background light)) (:foreground "Goldenrod"))
+      (t (:bold t :underline t)))
+    "Font Lock mode face used to highlight formula."
+    :group 'font-lock-faces)
+  (defvar YaTeX-font-lock-formula-face 'YaTeX-font-lock-formula-face)
+
+  (defface YaTeX-font-lock-crossref-face
+    '((((class color) (background dark)) (:foreground "lightgoldenrod"))
+      (((class color) (background light)) (:foreground "DarkGoldenrod"))
+      (t (:bold t :underline t)))
+    "Font Lock mode face used to highlight cress references."
+    :group 'font-lock-faces)
+  (defvar YaTeX-font-lock-crossref-face 'YaTeX-font-lock-crossref-face)
+
+  (defface YaTeX-font-lock-bold-face
+    '((t (:bold t)))
+    "Font Lock mode face used to express bold itself."
+    :group 'font-lock-faces)
+  (defvar YaTeX-font-lock-bold-face 'YaTeX-font-lock-bold-face)
+
+  (defface YaTeX-font-lock-italic-face
+    '((t (:italic t)))
+    "Font Lock mode face used to express italic itself."
+    :group 'font-lock-faces)
+  (defvar YaTeX-font-lock-italic-face 'YaTeX-font-lock-italic-face)
+
+  ;; Make sure the 'YaTeX-font-lock-{italic,bold}-face is bound with
+  ;; italic/bold fontsets
+  (if (and (fboundp 'fontset-list) YaTeX-use-italic-bold)
+      (let ((flist (fontset-list)) fnt italic bold)
+	(while flist
+	  (setq fnt (car flist))
+	  (condition-case err
+	      (cond
+	       ((and (string-match "-medium-i-" fnt) (null italic))
+		(set-face-font 'YaTeX-font-lock-italic-face (setq italic fnt)))
+	       ((and (string-match "-bold-r-" fnt) (null bold))
+		(set-face-font 'YaTeX-font-lock-bold-face (setq bold fnt))))
+	    (error nil))
+	  (setq flist (cdr flist)))))
+
+  ;;Borrowed from XEmacs's font-lock.el
+  (defsubst YaTeX-font-lock-fillin (start end setprop markprop value &optional object)
+    "Fill in one property of the text from START to END.
+Arguments PROP and VALUE specify the property and value to put where none are
+already in place.  Therefore existing property values are not overwritten.
+Optional argument OBJECT is the string or buffer containing the text."
+    (let ((start (text-property-any start end markprop nil object)) next
+	  (putfunc (if (fboundp 'put-nonduplicable-text-property)
+		       'put-nonduplicable-text-property
+		     'put-text-property)))
+      (if (eq putfunc 'put-text-property)
+	  (setq markprop setprop))
+      (while start
+	(setq next (next-single-property-change start markprop object end))
+	(funcall putfunc start next setprop value object)
+	(funcall putfunc start next markprop value object)
+	(setq start (text-property-any next end markprop nil object)))))
+
+  (defun YaTeX-warning-font-lock (mode)
+    (let ((sw (selected-window)))
+      ;;(pop-to-buffer (format " *%s warning*" mode))
+      ;;(erase-buffer)
+      (momentary-string-display
+      (cond
+       (YaTeX-japan
+	(concat mode " は、既に font-lock に対応しました。\n"
+		"~/.emacs などにある\n"
+		"\t(put 'yatex-mode 'font-lock-keywords 'tex-mode)\n"
+		"\t(put 'yahtml-mode 'font-lock-keywords 'html-mode)\n"
+		"などの間に合わせの記述はもはや不要です。"))
+       (t
+	(concat mode " now supports the font-lock by itself.\n"
+		"So you can remove the descriptions such as\n"
+		"\t(put 'yatex-mode 'font-lock-keywords 'tex-mode)\n"
+		"\t(put 'yahtml-mode 'font-lock-keywords 'html-mode)\n"
+		"in your ~/.emacs file.  Thank you."))) (point))
+      (select-window sw)))
+  ))
+
 
 ;;;
 ;; Functions for the Installation time
@@ -937,3 +1188,9 @@ See yatex19.el for example."
 	(kill-emacs))))
 
 (provide 'yatexlib)
+; Local variables:
+; fill-prefix: ";;; "
+; paragraph-start: "^$\\|\\|;;;$"
+; paragraph-separate: "^$\\|\\|;;;$"
+; buffer-file-coding-system: sjis
+; End:

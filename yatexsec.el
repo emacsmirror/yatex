@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX sectioning browser.
 ;;; yatexsec.el
-;;; (c ) 1994, 1998 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Dec 19 13:13:17 1999 on firestorm
+;;; (c ) 1994,1998,1999 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Dec 25 19:18:36 2000 on firestorm
 ;;; $Id$
 
 (defvar YaTeX-sectioning-level
@@ -203,7 +203,7 @@ RET	Select.
 Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
   (interactive "p")
   (if (eq (selected-window) (minibuffer-window))
-      (let*((command (buffer-string))
+      (let*((command (YaTeX-minibuffer-string))
 	    (aster (and (string< "" command)
 			(equal (substring command -1) "*")))
 	    (command (if aster (substring command 0 -1) command))
@@ -215,7 +215,7 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 	(setq level (- level n))
 	(if (or (< level 0) (>= level (length alist)))
 	    (ding)
-	  (erase-buffer)
+	  (YaTeX-minibuffer-erase)
 	  (insert (concat (car (nth level alist)) (if aster "*" ""))))))
 )
 
@@ -278,7 +278,7 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 
 (defvar YaTeX-sectioning-buffer "*Sectioning lines*")
 (defvar YaTeX-sectioning-indent 1)
-(defun YaTeX-colloect-sections ()
+(defun YaTeX-collect-sections ()
   "Collect all the lines which contains sectioning command."
   (let ((cw (selected-window)) level indent begp (prevp 1) (prevl 1)
 	(pattern (concat YaTeX-ec-regexp
@@ -324,7 +324,7 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 	(pattern "(line:\\([0-9]+\\))")
 	secbuf (command ""))
     (save-excursion
-      (setq secbuf (YaTeX-colloect-sections))
+      (setq secbuf (YaTeX-collect-sections))
       (YaTeX-showup-buffer secbuf nil t)
       (set-buffer secbuf)
       (goto-char (point-max))

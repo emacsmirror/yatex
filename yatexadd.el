@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.14
-;;; (c )1991-1999 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Mar 17 20:21:45 2000 on firestorm
+;;; (c )1991-2000 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Dec 25 19:17:09 2000 on firestorm
 ;;; $Id$
 
 ;;;
@@ -23,7 +23,7 @@
 Notice that this function refers the let-variable `env' in
 YaTeX-make-begin-end."
   (let ((width "") bars (rule "") (and "") (j 1) loc ans (hline "\\hline"))
-    (if (string= env "tabular*")
+    (if (string= YaTeX-env-name "tabular*")
 	(setq width (concat "{" (read-string "Width: ") "}")))
     (setq loc (YaTeX:read-position "tb")
 	  bars (string-to-int
@@ -51,7 +51,7 @@ YaTeX-make-begin-end."
 		hline "\\hline"))))
 
     (setq rule (read-string "rule format: " rule))
-    (setq single-command "hline")
+    (setq YaTeX-single-command "hline")
 
     (format "%s%s{%s}" width loc rule)))
 
@@ -90,8 +90,8 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:table ()
   "YaTeX add-in function for table environment."
-  (setq env-name "tabular"
-	section-name "caption")
+  (setq YaTeX-env-name "tabular"
+	YaTeX-section-name "caption")
   (YaTeX:read-position "htbp"))
 
 (fset 'YaTeX:figure 'YaTeX:table)
@@ -100,12 +100,12 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:description ()
   "Truly poor service:-)"
-  (setq single-command "item[]")
+  (setq YaTeX-single-command "item[]")
   "")
 
 (defun YaTeX:itemize ()
   "It's also poor service."
-  (setq single-command "item")
+  (setq YaTeX-single-command "item")
   "")
 
 (fset 'YaTeX:enumerate 'YaTeX:itemize)
@@ -135,7 +135,7 @@ YaTeX-make-begin-end."
 	  "{" (read-string "Width: ") "}"))
 
 (defun YaTeX:thebibliography ()
-  (setq section-name "bibitem")
+  (setq YaTeX-section-name "bibitem")
   "")
 
 ;;;
@@ -194,7 +194,7 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:left ()
   (let ((minibuffer-completion-table YaTeX:left-right-delimiters)
-	delimiter (leftp (string= single-command "left")))
+	delimiter (leftp (string= YaTeX-single-command "left")))
     (setq delimiter
 	  (read-from-minibuffer
 	   (format "Delimiter%s: "
@@ -203,7 +203,7 @@ YaTeX-make-begin-end."
 		     "(SPC for menu)"))
 	   nil YaTeX-minibuffer-quick-map))
     (if (string= "" delimiter) (setq delimiter YaTeX:left-right-default))
-    (setq single-command (if leftp "right" "left")
+    (setq YaTeX-single-command (if leftp "right" "left")
 	  YaTeX:left-right-default
 	  (or (cdr (assoc delimiter YaTeX:left-right-delimiters)) delimiter))
     delimiter))
@@ -259,7 +259,7 @@ YaTeX-make-begin-end."
 (fset 'YaTeX:verb* 'YaTeX:verb)
 
 (defun YaTeX:footnotemark ()
-  (setq section-name "footnotetext")
+  (setq YaTeX-section-name "footnotetext")
   nil)
 
 (defun YaTeX:cite ()
@@ -274,7 +274,7 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:item ()
   (YaTeX-indent-line)
-  (setq section-name "label")
+  (setq YaTeX-section-name "label")
   " ")
 (fset 'YaTeX:item\[\] 'YaTeX:item)
 (fset 'YaTeX:subitem 'YaTeX:item)
@@ -476,7 +476,7 @@ Make \\label{xx} if no label."
 	(skip-chars-forward "^{")
 	(forward-list 1)
 	(skip-chars-forward " \t\n")
-	(setq boundary "\\S "))
+	(setq boundary "[^\\]"))
        ((looking-at "item\\s ")
 	(setq cc (+ cc 6))
 	(setq boundary (concat YaTeX-ec-regexp "\\(item\\|begin\\|end\\)\\b")))
@@ -528,7 +528,7 @@ Make \\label{xx} if no label."
   "enumerate")
 
 (defvar YaTeX::ref-labeling-section-level 2
-  "ref補完で収集するセクショニングコマンドの下限レベル
+  "*ref補完で収集するセクショニングコマンドの下限レベル
 YaTeX-sectioning-levelの数値で指定.")
 
 (defun YaTeX::ref (argp &optional labelcmd refcmd)
@@ -549,9 +549,10 @@ YaTeX-sectioning-levelの数値で指定.")
 		 'concat
 		 (delq nil
 		       (mapcar
-			(lambda (s)
-			  (if (>= llv (cdr s))
-			      (car s)))
+			(function
+			 (lambda (s)
+			   (if (>= llv (cdr s))
+			       (car s))))
 			YaTeX-sectioning-level))
 		 "\\|")
 		"\\|caption\\){"
@@ -602,7 +603,7 @@ YaTeX-sectioning-levelの数値で指定.")
 	      ;(goto-char (match-beginning 0))
 	      (setq e0 (match-end 0))
 	      (cond
-	       ((match-string 1)
+	       ((YaTeX-match-string 1)
 		;;if standard counter commands found 
 		(setq cmd (YaTeX-match-string 2))
 		(setq match-point (match-beginning 0))
@@ -1103,7 +1104,7 @@ and print them to standard output."
   "YaTeX add-in function for arguments of \\documentstyle."
   (cond
    ((equal argp 1)
-    (setq env-name "document")
+    (setq YaTeX-env-name "document")
     (let ((sname
 	   (YaTeX-cplread-with-learning
 	    (format "Documentstyle (default %s): "
@@ -1170,7 +1171,7 @@ and print them to standard output."
 (defun YaTeX::documentclass (&optional argp)
   (cond
    ((equal argp 1)
-    (setq env-name "document")
+    (setq YaTeX-env-name "document")
     (let ((sname
 	   (YaTeX-cplread-with-learning
 	    (format "Documentclass (default %s): " YaTeX-default-documentclass)
@@ -1252,7 +1253,7 @@ and print them to standard output."
     (read-file-name "EPS File: " ""))))
  
 (defun YaTeX:caption ()
-  (setq section-name "label")
+  (setq YaTeX-section-name "label")
   nil)
 
 ;;; -------------------- math-mode stuff --------------------
@@ -1312,3 +1313,9 @@ and print them to standard output."
 
 ;;; -------------------- End of yatexadd --------------------
 (provide 'yatexadd)
+; Local variables:
+; fill-prefix: ";;; "
+; paragraph-start: "^$\\|\\|;;;$"
+; paragraph-separate: "^$\\|\\|;;;$"
+; buffer-file-coding-system: sjis
+; End:

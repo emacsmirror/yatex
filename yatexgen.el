@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in function generator.
 ;;; yatexgen.el rev.5
-;;; (c )1991-1995,1999 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Aug 26 18:15:14 1999 on firestorm
+;;; (c )1991-1995,1999,2000 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Dec 25 19:17:30 2000 on firestorm
 ;;; $Id$
 
 (require 'yatex)
@@ -180,7 +180,7 @@ Send bug report to me."
 	  (YaTeX-suppress-sparse-keymap map)
 	  ;;First get input form.
 	  (recursive-edit)
-	  (setq input (buffer-string)
+	  (setq input (YaTeX-minibuffer-string)
 		end (1- (length input)))
 	  (if (string= "" input) (error YaTeX-generate-abort-message))
 	  (YaTeX-generate-move-to-add-in-position)
@@ -200,7 +200,7 @@ Send bug report to me."
 	  (unwind-protect
 	      (recursive-edit)
 	    (fset 'self-insert-command (symbol-function 'si)))
-	  (setq output (buffer-string))
+	  (setq output (YaTeX-minibuffer-string))
 	  (cond ((string= "" output)	(error YaTeX-generate-abort-message))
 		((string= input output)	(error YaTeX-generate-same-message))
 		((< (length output) (length input))
@@ -356,7 +356,7 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
    ((eq YaTeX-current-completion-type 'begin)
     (goto-char (point-min))
     (skip-chars-forward "^{")
-    (setq env-name
+    (setq YaTeX-env-name
 	  (buffer-substring (1+ (point))
 			    (progn (skip-chars-forward "^}") (point))))
     (forward-char 1))
@@ -374,9 +374,9 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
   (concat
    "YaTeX:"
    (cond
-    ((eq YaTeX-current-completion-type 'begin) env-name)
-    ((eq YaTeX-current-completion-type 'section) section-name)
-    ((eq YaTeX-current-completion-type 'maketitle) single-command)))
+    ((eq YaTeX-current-completion-type 'begin) YaTeX-env-name)
+    ((eq YaTeX-current-completion-type 'section) YaTeX-section-name)
+    ((eq YaTeX-current-completion-type 'maketitle) YaTeX-single-command)))
 )
 
 (defun YaTeX-generate-lisp-quote (str)
@@ -590,13 +590,14 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
   (or command
       (setq command
 	    (completing-read
-	     (format "Making add-in function for (default %s): " section-name)
+	     (format
+	      "Making add-in function for (default %s): " YaTeX-section-name)
 	     (append
 	      section-table user-section-table tmp-section-table
 	      env-table     user-env-table     tmp-env-table
 	      singlecmd-table user-singlecmd-table tmp-singlecmd-table)
 	     nil nil)
-	    command (if (string= "" command) section-name command)))
+	    command (if (string= "" command) YaTeX-section-name command)))
   (message
    (cond
     (YaTeX-japan "(o)’Ç‰ÁŒ^? (a)ˆø”Œ^? (yatexadd.doc‚ðŽQÆ‚Ì‚±‚Æ) :")
