@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
-;;; (c )1994-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Oct 19 13:41:29 1998 on firestorm
+;;; (c )1994-1999 by HIROSE Yuuji.[yuuji@gentei.org]
+;;; Last modified Tue May  4 10:25:55 1999 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -54,8 +54,8 @@ And you will have the local dictionary.")
 
 ;----------- work variables ----------------------------------------
 (defvar YaTeX-typesetting-mode-map nil
-  "Keymap used in YaTeX typesetting buffer"
-)
+  "Keymap used in YaTeX typesetting buffer")
+
 (if YaTeX-typesetting-mode-map nil
   (setq YaTeX-typesetting-mode-map (make-keymap))
   ;(suppress-keymap YaTeX-typesetting-mode-map t)
@@ -295,25 +295,23 @@ Optional sixth argument FUNC changes search-function."
 		   (beginning-of-line)
 		   (re-search-forward cmntrx (match-beginning 0) t)))))
     (store-match-data md)
-    found)
-)
+    found))
 
 (defun YaTeX-re-search-active-forward (regexp cmntrx &optional bound err cnt)
   "Search REGEXP backward which is not commented out by regexp CMNTRX.
 See also YaTeX-search-active-forward."
-  (YaTeX-search-active-forward regexp cmntrx bound err cnt 're-search-forward)
-)
+  (YaTeX-search-active-forward regexp cmntrx bound err cnt 're-search-forward))
+
 (defun YaTeX-search-active-backward (string cmntrx &optional bound err cnt)
   "Search STRING backward which is not commented out by regexp CMNTRX.
 See also YaTeX-search-active-forward."
-  (YaTeX-search-active-forward string cmntrx bound err cnt 'search-backward)
-)
+  (YaTeX-search-active-forward string cmntrx bound err cnt 'search-backward))
+
 (defun YaTeX-re-search-active-backward (regexp cmntrx &optional bound err cnt)
   "Search REGEXP backward which is not commented out by regexp CMNTRX.
 See also YaTeX-search-active-forward."
-  (YaTeX-search-active-forward regexp cmntrx bound err cnt 're-search-backward)
-)
-
+  (YaTeX-search-active-forward
+   regexp cmntrx bound err cnt 're-search-backward))
 
 ;;;###autoload
 (defun YaTeX-switch-to-buffer (file &optional setbuf)
@@ -333,8 +331,7 @@ Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
 	 (find-file file))
        (current-buffer)))
      (t (message "%s was not found in this directory." file)
-	nil)))
-)
+	nil))))
 
 ;;;###autoload
 (defun YaTeX-switch-to-buffer-other-window (file)
@@ -348,8 +345,7 @@ Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
    ((or YaTeX-create-file-prefix-g (file-exists-p file))
     (find-file-other-window file) t)
    (t (message "%s was not found in this directory." file)
-      nil))
-)
+      nil)))
 
 (defun YaTeX-replace-format-sub (string format repl)
   (let ((beg (or (string-match (concat "^\\(%" format "\\)") string)
@@ -358,8 +354,7 @@ Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
     (if (null beg) string ;no conversion
       (concat
        (substring string 0 (match-beginning 1)) repl
-       (substring string (match-end 1)))))
-)
+       (substring string (match-end 1))))))
 
 ;;;###autoload
 (defun YaTeX-replace-format (string format repl)
@@ -369,8 +364,7 @@ function `format' does.  FORMAT does not contain `%'"
     (while (not (string=
 		 ans (setq string (YaTeX-replace-format-sub ans format repl))))
       (setq ans string))
-    string)
-)
+    string))
 
 ;;;###autoload
 (defun YaTeX-replace-format-args (string &rest args)
@@ -381,8 +375,7 @@ corresponding real arguments ARGS."
       (setq string
 	    (YaTeX-replace-format string (int-to-string argp) (car args)))
       (setq args (cdr args) argp (1+ argp))))
-  string
-)
+  string)
 
 ;;;###autoload
 (defun rindex (string char)
@@ -448,8 +441,16 @@ that window.  This function never selects minibuffer window."
 	    (switch-to-buffer (get-buffer-create buffer))
 	    (or select (select-window window)))
 	   (t nil)))
-	 )))
-)
+	 ))))
+
+(cond
+ ((fboundp 'screen-height)
+  (fset 'YaTeX-screen-height 'screen-height)
+  (fset 'YaTeX-screen-width 'screen-width))
+ ((fboundp 'frame-height)
+  (fset 'YaTeX-screen-height 'frame-height)
+  (fset 'YaTeX-screen-width 'frame-width))
+ (t (error "I don't know how to run windows.el on this Emacs...")))
 
 ;;;###autoload
 (defun split-window-calculate-height (height)
@@ -462,15 +463,14 @@ Otherwise split window conventionally."
        (selected-window)
        (max
 	(min
-	 (- (screen-height)
+	 (- (YaTeX-screen-height)
 	    (if (numberp height)
 		(+ height 2)
-	      (/ (* (screen-height)
+	      (/ (* (YaTeX-screen-height)
 		    (string-to-int height))
 		 100)))
-	 (- (screen-height) window-min-height 1))
-	window-min-height)))
-)
+	 (- (YaTeX-screen-height) window-min-height 1))
+	window-min-height))))
 
 ;;;###autoload
 (defun YaTeX-window-list ()
@@ -478,8 +478,7 @@ Otherwise split window conventionally."
     (while (not (eq curw (setq win (next-window win))))
       (or (eq win (minibuffer-window))
 	  (setq wlist (cons win wlist))))
-    wlist)
-)
+    wlist))
 
 ;;;###autoload
 (defun substitute-all-key-definition (olddef newdef keymap)
@@ -497,8 +496,7 @@ where ever it appears."
   "Return (buffer-substring (match-beginning n) (match-beginning m))."
   (if (match-beginning n)
       (buffer-substring (match-beginning n)
-			(match-end (or m n))))
-)
+			(match-end (or m n)))))
 
 ;;;###autoload
 (defun YaTeX-minibuffer-complete ()
@@ -555,8 +553,7 @@ in t, exit minibuffer immediately."
 	    (if (eq (try-completion compl minibuffer-completion-table) t)
 		(exit-minibuffer)
 	      (funcall displist)))))
-    (store-match-data md))
-)
+    (store-match-data md)))
 
 (defun YaTeX-minibuffer-quick-complete ()
   "Set 'quick to 't and call YaTeX-minibuffer-complete.
@@ -577,8 +574,7 @@ See documentation of YaTeX-minibuffer-complete."
 		     (string-match pattern (buffer-file-name)))
 		(and (symbolp pattern) major-mode (eq major-mode pattern)))
 	    (eval job))
-	(setq list (cdr list)))))
-)
+	(setq list (cdr list))))))
 
 (defun goto-buffer-window (buffer)
   "Select window which is bound to BUFFER.
@@ -604,8 +600,7 @@ If no such window exist, switch to buffer BUFFER."
 	     (let ((w (win:get-buffer-window buffer)))
 	       (and w (win:switch-window w))))
 	(select-window (get-buffer-window buffer)))
-       (t (switch-to-buffer buffer))))
-)
+       (t (switch-to-buffer buffer)))))
 
 ;; Here starts the functions which support gmhist-vs-Emacs19 compatible
 ;; reading with history.
@@ -643,6 +638,18 @@ If no such window exist, switch to buffer BUFFER."
    ((featurep 'gmhist-mh)
     (read-with-history-in hsym prompt init))
    (t (read-string prompt init))))
+
+;;;###autoload
+(fset 'YaTeX-rassoc
+      (if (and nil (fboundp 'rassoc) (subrp (symbol-function 'rassoc)))
+	  (symbol-function 'rassoc)
+	(lambda (key list)
+	  (let ((l list))
+	    (catch 'found
+	      (while l
+		(if (equal key (cdr (car l)))
+		    (throw 'found (car l)))
+		(setq l (cdr l))))))))
 
 ;;;
 ;; Interface function for windows.el
@@ -719,8 +726,7 @@ of 'YaTeX-inner-environment, which can be referred by
 		    (throw 'begin t)))))
 	  (buffer-substring
 	   (progn (skip-chars-forward open) (1+ (point)))
-	   (progn (skip-chars-forward close) (point))))))
-)
+	   (progn (skip-chars-forward close) (point)))))))
 
 (defun YaTeX-end-environment ()
   "Close opening environment"
@@ -744,8 +750,7 @@ of 'YaTeX-inner-environment, which can be referred by
 	    (sit-for (if YaTeX-dos 2 1))
 	  (message "Matches with %s at line %d"
 		   (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
-		   (count-lines (point-min) (point)))))))
-)
+		   (count-lines (point-min) (point))))))))
 
 ;;;VER2
 (defun YaTeX-insert-struc (what env)
@@ -755,8 +760,7 @@ of 'YaTeX-inner-environment, which can be referred by
 	     YaTeX-struct-begin env (YaTeX-addin env))))
    ((eq what 'end)
     (insert (YaTeX-replace-format-args YaTeX-struct-end env)))
-   (t nil))
-)
+   (t nil)))
 
 ;;; Function for menu support
 (defun YaTeX-define-menu (keymap bindlist)

@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.14
-;;; (c )1991-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Sep 28 13:03:37 1998 on firestorm
+;;; (c )1991-1999 by HIROSE Yuuji.[yuuji@gentei.org]
+;;; Last modified Tue Jul 13 13:57:45 1999 on firestorm
 ;;; $Id$
 
 ;;;
@@ -10,14 +10,14 @@
 ;;;
 (defvar YaTeX:tabular-default-rule
   "@{\\vrule width 1pt\\ }c|c|c@{\\ \\vrule width 1pt}"
-  "*Your favorite default rule format."
-)
+  "*Your favorite default rule format.")
+
 (defvar YaTeX:tabular-thick-vrule "\\vrule width %s"
-  "*Vertical thick line format (without @{}).  %s'll be replaced by its width."
-)
+  "*Vertical thick line format (without @{}). %s'll be replaced by its width.")
+
 (defvar YaTeX:tabular-thick-hrule "\\noalign{\\hrule height %s}"
-  "*Horizontal thick line format.  %s will be replaced by its width."
-)
+  "*Horizontal thick line format.  %s will be replaced by its width.")
+
 (defun YaTeX:tabular ()
   "YaTeX add-in function for tabular environment.
 Notice that this function refers the let-variable `env' in
@@ -53,13 +53,12 @@ YaTeX-make-begin-end."
     (setq rule (read-string "rule format: " rule))
     (setq single-command "hline")
 
-    (format "%s%s{%s}" width loc rule))
-)
+    (format "%s%s{%s}" width loc rule)))
+
 (fset 'YaTeX:tabular* 'YaTeX:tabular)
 (defun YaTeX:array ()
   (concat (YaTeX:read-position "tb")
-	  "{" (read-string "Column format: ") "}")
-)
+	  "{" (read-string "Column format: ") "}"))
 
 (defun YaTeX:read-oneof (oneof)
   (let ((pos "") loc (guide ""))
@@ -82,21 +81,18 @@ YaTeX-make-begin-end."
 	(message "Please input one of `%s'." oneof)
 	(sit-for 3))))
     (message "")
-    pos)
-)
+    pos))
 
 (defun YaTeX:read-position (oneof)
   "Read a LaTeX (optional) position format such as `[htbp]'."
   (let ((pos (YaTeX:read-oneof oneof)))
-    (if (string= pos "")  "" (concat "[" pos "]")))
-)
+    (if (string= pos "")  "" (concat "[" pos "]"))))
 
 (defun YaTeX:table ()
   "YaTeX add-in function for table environment."
   (setq env-name "tabular"
 	section-name "caption")
-  (YaTeX:read-position "htbp")
-)
+  (YaTeX:read-position "htbp"))
 
 (fset 'YaTeX:figure 'YaTeX:table)
 (fset 'YaTeX:figure* 'YaTeX:table)
@@ -105,28 +101,25 @@ YaTeX-make-begin-end."
 (defun YaTeX:description ()
   "Truly poor service:-)"
   (setq single-command "item[]")
-  ""
-)
+  "")
 
 (defun YaTeX:itemize ()
   "It's also poor service."
   (setq single-command "item")
-  ""
-)
+  "")
 
 (fset 'YaTeX:enumerate 'YaTeX:itemize)
 
 (defun YaTeX:picture ()
   "Ask the size of coordinates of picture environment."
   (concat (YaTeX:read-coordinates "Picture size")
-	  (YaTeX:read-coordinates "Initial position"))
-)
+	  (YaTeX:read-coordinates "Initial position")))
 
 (defun YaTeX:equation ()
   (YaTeX-jmode-off)
   (if (fboundp 'YaTeX-toggle-math-mode)
-      (YaTeX-toggle-math-mode t))		;force math-mode ON.
-)
+      (YaTeX-toggle-math-mode t)))		;force math-mode ON.
+
 (mapcar '(lambda (f) (fset f 'YaTeX:equation))
 	'(YaTeX:eqnarray YaTeX:eqnarray* YaTeX:align YaTeX:align*
 	  YaTeX:split YaTeX:multline YaTeX:multline* YaTeX:gather YaTeX:gather*
@@ -135,18 +128,15 @@ YaTeX-make-begin-end."
 	  YaTeX:xxalignat YaTeX:xxalignat*))
 
 (defun YaTeX:list ()
-  "%\n{} %default label\n{} %formatting parameter"
-)
+  "%\n{} %default label\n{} %formatting parameter")
 
 (defun YaTeX:minipage ()
   (concat (YaTeX:read-position "cbt")
-	  "{" (read-string "Width: ") "}")
-)
+	  "{" (read-string "Width: ") "}"))
 
 (defun YaTeX:thebibliography ()
   (setq section-name "bibitem")
-  ""
-)
+  "")
 
 ;;;
 ;;Sample functions for section-type command.
@@ -154,12 +144,10 @@ YaTeX-make-begin-end."
 (defun YaTeX:multiput ()
   (concat (YaTeX:read-coordinates "Pos")
 	  (YaTeX:read-coordinates "Step")
-	  "{" (read-string "How many times: ") "}")
-)
+	  "{" (read-string "How many times: ") "}"))
 
 (defun YaTeX:put ()
-  (YaTeX:read-coordinates "Pos")
-)
+  (YaTeX:read-coordinates "Pos"))
 
 (defun YaTeX:makebox ()
   (cond
@@ -172,18 +160,15 @@ YaTeX-make-begin-end."
 	  (progn
 	    (or (equal (aref width 0) ?\[)
 		(setq width (concat "[" width "]")))
-	    (concat width (YaTeX:read-position "lr")))))))
-)
+	    (concat width (YaTeX:read-position "lr"))))))))
 
 (defun YaTeX:framebox ()
   (if (YaTeX-quick-in-environment-p "picture")
-      (YaTeX:makebox))
-)
+      (YaTeX:makebox)))
 
 (defun YaTeX:dashbox ()
   (concat "{" (read-string "Dash dimension: ") "}"
-	  (YaTeX:read-coordinates "Dimension"))
-)
+	  (YaTeX:read-coordinates "Dimension")))
 
 (defvar YaTeX-minibuffer-quick-map nil)
 (if YaTeX-minibuffer-quick-map nil
@@ -232,8 +217,7 @@ YaTeX-make-begin-end."
    (read-string (format "%s %s: " (or mes "Dimension") (or varX "X")))
    ","
    (read-string (format "%s %s: " (or mes "Dimension") (or varY "Y")))
-   ")")
-)
+   ")"))
 
 ;;;
 ;;Sample functions for maketitle-type command.
@@ -241,8 +225,7 @@ YaTeX-make-begin-end."
 (defun YaTeX:sum ()
   "Read range of summation."
   (YaTeX:check-completion-type 'maketitle)
-  (concat (YaTeX:read-boundary "_") (YaTeX:read-boundary "^"))
-)
+  (concat (YaTeX:read-boundary "_") (YaTeX:read-boundary "^")))
 
 (fset 'YaTeX:int 'YaTeX:sum)
 
@@ -253,47 +236,41 @@ YaTeX-make-begin-end."
     (if (string= "" var) ""
       (setq limit (read-string "Limit ($ means infinity): "))
       (if (string= "$" limit) (setq limit "\\infty"))
-      (concat "_{" var " \\rightarrow " limit "}")))
-)
+      (concat "_{" var " \\rightarrow " limit "}"))))
 
 (defun YaTeX:gcd ()
   "Add-in function for \\gcd(m,n)."
   (YaTeX:check-completion-type 'maketitle)
-  (YaTeX:read-coordinates "\\gcd" "(?,)" "(,?)")
-)
+  (YaTeX:read-coordinates "\\gcd" "(?,)" "(,?)"))
 
 (defun YaTeX:read-boundary (ULchar)
   "Read boundary usage by _ or ^.  _ or ^ is indicated by argument ULchar."
   (let ((bndry (read-string (concat ULchar "{???} ($ for infinity): "))))
     (if (string= bndry "") ""
       (if (string= bndry "$") (setq bndry "\\infty"))
-      (concat ULchar "{" bndry "}")))
-)
+      (concat ULchar "{" bndry "}"))))
 
 (defun YaTeX:verb ()
   "Enclose \\verb's contents with the same characters."
   (let ((quote-char (read-string "Quoting char: " "|"))
 	(contents (read-string "Quoted contents: ")))
-    (concat quote-char contents quote-char))
-)
+    (concat quote-char contents quote-char)))
+
 (fset 'YaTeX:verb* 'YaTeX:verb)
 
 (defun YaTeX:footnotemark ()
   (setq section-name "footnotetext")
-  nil
-)
+  nil)
 
 (defun YaTeX:cite ()
   (let ((comment (read-string "Comment for citation: ")))
     (if (string= comment "") ""
-      (concat "[" comment "]")))
-)
+      (concat "[" comment "]"))))
 
 (defun YaTeX:bibitem ()
   (let ((label (read-string "Citation label for bibitem: ")))
     (if (string= label "") ""
-      (concat "[" label "]")))
-)
+      (concat "[" label "]"))))
 
 (defun YaTeX:item ()
   (YaTeX-indent-line)
@@ -309,8 +286,7 @@ YaTeX-make-begin-end."
     (setq obl (char-to-string (read-char)))
     (if (string-match "[0-4]" obl)
 	(concat "[" obl "]")
-      ""))
-)
+      "")))
 (fset 'YaTeX:pagebreak 'YaTeX:linebreak)
 
 ;;;
@@ -320,8 +296,7 @@ YaTeX-make-begin-end."
 (defun YaTeX:check-completion-type (type)
   "Check valid completion type."
   (if (not (eq type YaTeX-current-completion-type))
-      (error "This should be completed with %s-type completion." type))
-)
+      (error "This should be completed with %s-type completion." type)))
 
 
 ;;;
@@ -375,8 +350,8 @@ YaTeX-make-begin-end."
 	  'YaTeX::label-search-tag)
 	(define-key YaTeX-label-select-map (char-to-string (+ key (- ?a ?A)))
 	  'YaTeX::label-search-tag)
-	(setq key (1+ key)))))
-)
+	(setq key (1+ key))))))
+
 (defun YaTeX::label-next ()
   (interactive) (forward-line 1) (message YaTeX-label-guide-msg))
 (defun YaTeX::label-previous ()
@@ -394,8 +369,8 @@ YaTeX-make-begin-end."
 	(goto-char (point-min))
 	(re-search-forward (concat "^" tag) nil t))
       (goto-char (match-beginning 0))))
-    (message YaTeX-label-guide-msg))
-)
+    (message YaTeX-label-guide-msg)))
+
 (defun YaTeX::ref (argp &optional labelcmd refcmd)
   (cond
    ((= argp 1)
@@ -415,8 +390,12 @@ YaTeX-make-begin-end."
 	      ;(message "cb=%s" buf)(sit-for 3)
 	      ))
 	(save-excursion
+	  (set-buffer (get-buffer-create YaTeX-label-buffer))
+	  (setq buffer-read-only nil)
+	  (erase-buffer))
+	(save-excursion
 	  (goto-char (point-min))
-	  (with-output-to-temp-buffer YaTeX-label-buffer
+	  (let ((standard-output (get-buffer YaTeX-label-buffer)))
 	    (princ (format "=== LABELS in [%s] ===\n" (buffer-name buf)))
 	    (while (YaTeX-re-search-active-forward
 		    (concat "\\\\" labelcmd "\\b")
@@ -440,7 +419,7 @@ YaTeX-make-begin-end."
 	    (princ YaTeX-label-menu-other)
 	    (princ YaTeX-label-menu-repeat)
 	    (princ YaTeX-label-menu-any)
-	    );with
+	    );standard-output
 	  (goto-char p)
 	  (or initl (setq initl lnum))
 	  (message "Collecting %s...Done" labelcmd)
@@ -474,10 +453,8 @@ YaTeX-make-begin-end."
 		  (setq label (read-string (format "\\%s{???}: " refcmd))))
 		 (t (setq label (nth (- lnum line 1) label-list)))))
 	    (bury-buffer YaTeX-label-buffer)))
-	label
-	))
-    ))
-)
+	label)))))
+
 (fset 'YaTeX::pageref 'YaTeX::ref)
 (defun YaTeX::cite (argp)
   (cond
@@ -490,8 +467,7 @@ YaTeX-make-begin-end."
     (delq nil (mapcar (function (lambda (buf)
 				  (set-buffer buf)
 				  (if (eq major-mode 'yatex-mode) buf)))
-		      (buffer-list))))
-)
+		      (buffer-list)))))
 
 (defun YaTeX-select-other-yatex-buffer ()
   "Select buffer from all yatex-mode's buffers interactivelly."
@@ -501,7 +477,11 @@ YaTeX-make-begin-end."
 	(ff "**find-file**"))
     (YaTeX-showup-buffer
      lbuf (function (lambda (x) 1)))	;;Select next window surely.
-    (with-output-to-temp-buffer lbuf
+    (save-excursion
+      (set-buffer (get-buffer lbuf))
+      (setq buffer-read-only nil)
+      (erase-buffer))
+    (let ((standard-output (get-buffer lbuf)))
       (while blist
 	(princ
 	 (format "%c:{%s}\n" (+ (% (setq lnum (1+ lnum)) 26) ?A)
@@ -526,8 +506,7 @@ YaTeX-make-begin-end."
 	(progn
 	  (call-interactively 'find-file)
 	  (current-buffer))
-      rv))
-)
+      rv)))
 
 (defun YaTeX-label-other ()
   (let ((rv (YaTeX-select-other-yatex-buffer)))
@@ -535,9 +514,7 @@ YaTeX-make-begin-end."
      ((null rv) "")
      (t
       (set-buffer rv)
-      (YaTeX::ref argp labelcmd refcmd)))
-    )
-)
+      (YaTeX::ref argp labelcmd refcmd)))))
 
 ;;
 ; completion for the arguments of \newcommand
@@ -573,8 +550,7 @@ YaTeX-make-begin-end."
       (message "")
       def				;return command name
       ))
-   (t ""))
-)
+   (t "")))
 
 ;;
 ; completion for the arguments of \pagestyle
@@ -583,8 +559,8 @@ YaTeX-make-begin-end."
   "Read the pagestyle with completion."
   (completing-read
    "Page style: "
-   '(("plain") ("empty") ("headings") ("myheadings") ("normal") nil))
-)
+   '(("plain") ("empty") ("headings") ("myheadings") ("normal") nil)))
+
 (fset 'YaTeX::thispagestyle 'YaTeX::pagestyle)
 
 ;;
@@ -594,8 +570,7 @@ YaTeX-make-begin-end."
   "Read the numbering style."
   (completing-read
    "Page numbering style: "
-   '(("arabic") ("Alpha") ("alpha") ("Roman") ("roman")))
-)
+   '(("arabic") ("Alpha") ("alpha") ("Roman") ("roman"))))
 
 ;;
 ; Length
@@ -656,8 +631,8 @@ YaTeX-make-begin-end."
      nil nil "\\")
     )
    ((equal 2 argp)
-    (read-string-with-history "Length: " nil 'YaTeX:length-history)))
-)
+    (read-string-with-history "Length: " nil 'YaTeX:length-history))))
+
 (fset 'YaTeX::addtolength 'YaTeX::setlength)
 
 (defun YaTeX::settowidth (&optional argp)
@@ -671,8 +646,8 @@ YaTeX-make-begin-end."
      'YaTeX:style-parameters-local
      nil nil "\\"))
    ((equal 2 argp)
-    (read-string "Text: ")))
-)
+    (read-string "Text: "))))
+
 (defun YaTeX::newlength (&optional argp)
   "YaTeX add-in function for arguments of \\newlength"
   (cond
@@ -684,9 +659,7 @@ YaTeX-make-begin-end."
 	   'YaTeX:style-parameters-default
 	   'YaTeX:style-parameters-private
 	   'YaTeX:style-parameters-local))
-      length)
-    ))
-)
+      length))))
 
 ;; \multicolumn's arguments
 (defun YaTeX::multicolumn (&optional argp)
@@ -702,8 +675,7 @@ YaTeX-make-begin-end."
 		   "lrc")))
       c))
    ((equal 3 argp)
-    (read-string "Item: ")))
-)
+    (read-string "Item: "))))
 
 (defvar YaTeX:documentstyles-default
   '(("article") ("jarticle") ("j-article")
@@ -773,8 +745,7 @@ YaTeX-make-begin-end."
 	    'YaTeX:documentstyles-private
 	    'YaTeX:documentstyles-local)))
       (if (string= "" sname) (setq sname YaTeX-default-document-style))
-      (setq YaTeX-default-document-style sname))))
-)
+      (setq YaTeX-default-document-style sname)))))
 
 ;;; -------------------- LaTeX2e stuff --------------------
 (defvar YaTeX:documentclass-options-default

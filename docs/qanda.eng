@@ -212,6 +212,17 @@
 	commands in a suitable sequence.  You can find `latexmk' script
 	in a directory of supports/latexmk in some CTAN ftp directory.
 	
+*Can I inhibit auto-filling against very long <a href="..."> line?
+	
+	If you use Emacs-19 or later, Yes.  The variable
+	auto-fill-inhibit-regexp controls the filling behaviour.  To set
+	this, use yatex-mode-hook as below.
+	
+	(add-hook 'yahtml-mode-hook
+	          '(lambda ()
+		     (setq auto-fill-inhibit-regexp
+			   "^[       ]*\\(<a href\\|<img src=\\)")))
+	
 *Filling a paragraph doesn't work as I expected.	
 	
 	It is because the indentation  depth  is different from  default
@@ -339,15 +350,18 @@
 =====
 *Mailing lists?
 	
-	A  question, so an  answer.  The  mailing  list for YaTeX  (Wild
-	Bird)   and it's implementation  to  Vz, Raicho (by KATSURAGAWA,
-	Naoki;  katsura@prc.tsukuba.ac.jp) is  "fj  Wild  Bird Society".
-	Send a mail like
+	A  question, so  an answer.   The mailing  list for  YaTeX (Wild
+	Bird)  and it's  implementation to  Vz; Raicho  (by KATSURAGAWA,
+	Naoki; katsura@prc.tsukuba.ac.jp),  implementation to Wz Editor;
+	HackTeX  (by TAKKENAKA,  Hiroshi),  implementation to  Hidemaru;
+	HiTeX (by YASUDA,  Haruyuki) is "fj Wild Bird  Society".  Send a
+	mail like
 	
-		To: yatex-control@jaist.ac.jp
+		To: yatex@jaist.ac.jp
 		Subject: append
 		-----
-		Hi!  My name is yuuji.  See any birds fly by?
+		Hi!  My name is yuuji.
+		See any birds fly by?
 	
 	and you're in.  The text will be used as  your profile. (you can
 	change it later) Once  you're in, you'll get  a reply with lists
@@ -359,7 +373,7 @@
 *How to get the up-to-date information on YaTeX?
 	
 	If you can access WWW, try to see;
-	http://www.comp.ae.keio.ac.jp/~yuuji/yatex/
+	http://www.yatex.org/
 	And if  you trace the link  of `yatex-current', you  can get the
 	really latest version of YaTeX.  Since it collects the elisps in
 	the author's source directory, what  you'll get may contain some
@@ -372,7 +386,7 @@
 
 	*Look for someone near you who knows what's he/she's doing.
 	*Post a question to the mailing list.
-	*Send mail to yuuji@ae.keio.ac.jp
+	*Send mail to yuuji@gentei.org
 	
 	take a pick.
 	

@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
-;;; (c )1993-1998 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Wed Sep 30 21:26:29 1998 on firestorm
+;;; (c )1993-1999 by HIROSE Yuuji [yuuji@gentei.org]
+;;; Last modified Thu Apr 29 17:39:10 1999 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -226,6 +226,7 @@
    ("v||"	"Downarrow"	"||\n\\/")
    ("|->"	"mapsto"	("|->"		"|Å®"))
    ("<-)"	"hookleftarrow"	("   ,\n<--+"	"   ÅR\n<--/"))
+   ("(->"	"hookrightarrow" ("`\n+-->"	"Å^\nÅ_-->"))
    ("/-"	"leftharpoonup"	"/\n~~~")
    ("\\-"	"leftharpoondown" "__\n\\")
    ("-/"	"rightharpoondown"  "__\n/")
@@ -474,6 +475,7 @@ This value is appended with YaTeX-verbatim-environments.")
 	    ;; And math modes of AMS-LaTeX
 	    '("align" "align*" "split" "multline" "multline*" "gather"
 	      "gather*" "aligned*" "gathered" "gathered*" "alignat"
+	      "equation*" "cases" 
 	      "alignat*" "xalignat" "xalignat*" "xxalignat" "xxalignat*"))))
       (let*((p (point)) (nest 0) me0
 	    (delim (concat YaTeX-sectioning-regexp "\\|^$\\|^\C-l"))
@@ -732,6 +734,218 @@ If so return the cons of its invocation key and image-string."
 	      (throw 'found (cons (car (car lists)) (nth 0 (car list)))))
 	  (setq list (cdr list)))
 	(setq lists (cdr lists))))))
+
+;;; ----- for AMS LaTeX (by matsu@math.s.chiba-u.ac.jp) -----
+(defvar YaTeX-ams-paren-modifier
+  '(("Biggl" . "Biggr") ("biggl" . "biggr")
+    ("Bigl" . "Bigr") ("bigl" . "bigr")
+    ("left" . "right") ("" . ""))
+  "Alist of modifier of parentheses.")
+
+(defvar YaTeX-left-paren "(\\|\\[\\|\\\\{")
+(defvar YaTeX-right-paren ")\\|\\]\\|\\\\}")
+(defvar YaTeX-paren
+  (concat YaTeX-left-paren "\\|" YaTeX-right-paren))
+
+(defun YaTeX-on-parenthesis-p ()
+  "If cursor is on an (AMS-LaTeX) parenthesis, return the parenthesis."
+  (interactive)
+  (let* ((list YaTeX-ams-paren-modifier)
+	 (longest 0) ;; the longest length of parenthesis command strings
+	 (flag t) ;; flag for whether on braces not following \
+	 (point (point))
+	 (move 0)
+	 (paren))
+    (while list
+      (setq longest
+	    (max longest (length (car (car list))) (length (cdr (car list)))))
+      (setq list (cdr list)))
+    (save-excursion
+      ;; search {} and, if it does not follow `\', set flag nil.
+      ;; if it is right after `\', set flag t and move to the position of \.
+      ;; mmmmm.
+      (if (looking-at "{\\|}")
+	  (if (not (equal (char-after (1- (point))) 92))
+	      (setq flag nil)
+	    (forward-char -1)))
+      ;; if flag is nil, do nothing.
+      (if (and flag (re-search-forward YaTeX-paren
+				       (+ (point) 3 longest) t))
+	  (progn
+	    (setq move (- (point) point))
+	    (setq paren (match-string 0))
+	    (setq list YaTeX-ams-paren-modifier)
+	    ;; criterion for whether on [] () \{\} or not.
+	    (if (string-match YaTeX-left-paren paren)
+		(while (and list flag)
+		  (let* ((mod (car (car list)))
+			 (mod-length 0) ;; length of modifier
+			 paren-regexp ;; regexp of paren.
+			 mod-regexp) ;; regexp of modifier.
+		    (if (> (length mod) 0)
+			(setq mod-regexp (concat "\\\\" mod)
+			      mod-length (1+ (length mod))))
+		    (cond ((string= paren "\\{")
+			   (setq paren-regexp (concat "\\" paren)))
+			  ((string= paren "[")
+			   (setq paren-regexp "\\["))
+			  (t (setq paren-regexp paren)))
+		    (save-excursion
+		      (if (and (>= (- (point) (point-min))
+				   (+ mod-length (length paren)))
+			       (not (forward-char
+				     (- 0 mod-length (length paren))))
+			       (looking-at (concat "\\(" mod-regexp "\\)\\("
+						   paren-regexp "\\)")))
+			  (setq flag nil)))
+		    (setq list (cdr list))))
+	      (while (and list flag)
+		(let* ((mod (cdr (car list)))
+		       (mod-length 0)
+		       paren-regexp
+		       mod-regexp)
+		  (if (> (length mod) 0)
+		      (setq mod-regexp (concat "\\\\" mod)
+			    mod-length (1+ (length mod))))
+		  (cond ((string= paren "\\}")
+			 (setq paren-regexp (concat "\\" paren)))
+			((string= paren "]")
+			 (setq paren-regexp "\\]"))
+			(t (setq paren-regexp paren)))
+		  (save-excursion
+		    (if (and (>= (- (point) (point-min))
+				 (+ mod-length (length paren)))
+			     (not (forward-char
+				   (- 0 mod-length (length paren))))
+			     (looking-at (concat "\\(" mod-regexp "\\)\\("
+						 paren-regexp "\\)")))
+			(setq flag nil)))
+		  (setq list (cdr list)))))
+	    (if (<= move (length (match-string 0)))
+		(match-string 0)))))))
+
+(defun YaTeX-goto-open-paren ()
+  "Jump to the exact position of open parenthesis"
+  (interactive)
+  (let ((paren)
+	(backslash-syntax (char-to-string (char-syntax ?\\))))
+    (if (setq paren (YaTeX-on-parenthesis-p))
+	(if (string-match "(\\|{\\|\\[" paren (1- (length paren)))
+	    (progn
+	      (re-search-forward "(\\|{\\|\\[" (+ (point) (length paren)) t)
+	      (backward-char))
+	  (re-search-forward ")\\|}\\|\\]" (+ (point) (length paren)) t)
+	  (unwind-protect
+	      (progn
+		(modify-syntax-entry ?\\ " ")
+		(backward-list))
+	    (modify-syntax-entry ?\\ backslash-syntax))))))
+
+(defun YaTeX-change-parentheses ()
+  "Change the size of parentheses, braces, and brackets of AMS-LaTeX."
+  (interactive)
+  (if (not (and YaTeX-use-AMS-LaTeX (YaTeX-on-parenthesis-p)))
+      nil
+    (let* ((mod (match-string 1)) ;; modifier
+	   (paren (if mod (match-string 2) (match-string 0))) ;; paren
+	   (mod-length (if (or (string= mod "\\left") (string= mod "\\right"))
+			   5            ;; 5 in case left or right
+			 (length mod))) ;; length of modifier
+	   (paren-length (length paren)) ;; length of paren
+	   (length (+ mod-length paren-length)) ;; length of whole string
+	   (big-p t) ;; flag whether new modifier is "[Bb]ig+" or not.
+	   size ;; left, big, Big etc.
+	   lr   ;; "l" or "r".
+	   char newsize newsize-length
+	   (backslash-syntax (char-to-string (char-syntax ?\\)))
+	   (case-fold-search))
+      ;; decide lr and size from mod and paren.
+      (cond ((string-match "\\(\\\\[Bb]ig+\\)[lr]" mod)
+	     (setq size (substring mod 1 (match-end 1))
+		   lr (substring mod (match-end 1) (match-end 0))))
+	    ((string-match "\\\\left" mod)
+	     (setq size "left-right" lr "l"))
+	    ((string-match "\\\\right" mod)
+	     (setq size "left-right" lr "r"))
+	    ((string-match "(\\|\\[\\|\\\\{" paren)
+	     (setq size "null" lr "l"))
+	    ((string-match ")\\|\\]\\|\\\\}" paren)
+	     (setq size "null" lr "r"))
+	    (t
+	     (setq size nil lr nil)))
+      (while (not newsize)
+	(message (format (concat "Change from %s: "
+				 "l(big) L(Big) h(bigg) H(Bigg) "
+				 "r(left-right) n(NONE) ") size))
+	(setq char (read-char)
+	      newsize (cond ((char-equal char ?l) "\\big")
+			    ((char-equal char ?L) "\\Big")
+			    ((char-equal char ?h) "\\bigg")
+			    ((char-equal char ?H) "\\Bigg")
+			    ((char-equal char ?r)
+			     (setq big-p nil) "\\left")
+			    ((char-equal char ?n)
+			     (setq big-p nil) "")
+			    (t nil))
+	      newsize-length (length newsize)))
+      (YaTeX-goto-open-paren)
+      (forward-char)
+      (delete-region (- (point) length) (- (point) paren-length))
+      (backward-char paren-length)
+      (insert-string newsize)
+      (if big-p (insert ?l))
+      (forward-char (1- paren-length))
+      (unwind-protect
+	  (progn
+	    (modify-syntax-entry ?\\ " ")
+	    (forward-list)
+	    (if (string= size "left-right") (setq length (1+ length)))
+	    (if (eq char ?r) (setq newsize "\\right"))
+	    (delete-region (- (point) length) (- (point) paren-length))
+	    (backward-char paren-length)
+	    (insert-string newsize)
+	    (if big-p (insert ?r))
+	    (forward-char paren-length)
+	    (if (string= lr "l") (backward-list)))
+	(modify-syntax-entry ?\\ backslash-syntax))
+      t)))
+
+(defun YaTeX-insert-amsparens-region (beg end char)
+  (interactive "r\ncWhich one ? l(big) L(Big) h(bigg) H(Bigg): ")
+  (let* ((case-fold-search)
+	 (st (cond ((char-equal char ?l) "big")
+		   ((char-equal char ?L) "Big")
+		   ((char-equal char ?h) "bigg")
+		   ((char-equal char ?H) "Bigg"))))
+    (if st
+	(YaTeX-insert-braces-region
+	 beg end (concat "\\" st "l(") (concat "\\" st "r)"))
+      (YaTeX-insert-braces-region beg end "(" ")"))))
+
+(defun YaTeX-insert-amsbraces-region (beg end char)
+  (interactive "r\ncWhich one ? l(big) L(Big) h(bigg) H(Bigg): ")
+  (let* ((case-fold-search)
+	 (st (cond ((char-equal char ?l) "big")
+		   ((char-equal char ?L) "Big")
+		   ((char-equal char ?h) "bigg")
+		   ((char-equal char ?H) "Bigg"))))
+    (if st
+	(YaTeX-insert-braces-region
+	 beg end (concat "\\" st "l\\{") (concat "\\" st "r\\}"))
+      (YaTeX-insert-braces-region beg end "\\{" "\\}"))))
+
+(defun YaTeX-insert-amsbrackets-region (beg end char)
+  (interactive "r\ncWhich one ? l(big) L(Big) h(bigg) H(Bigg): ")
+  (let* ((case-fold-search)
+	 (st (cond ((char-equal char ?l) "big")
+		   ((char-equal char ?L) "Big")
+		   ((char-equal char ?h) "bigg")
+		   ((char-equal char ?H) "Bigg"))))
+    (if st
+	(YaTeX-insert-braces-region
+	 beg end (concat "\\" st "l[") (concat "\\" st "r]"))
+      (YaTeX-insert-braces-region beg end "[" "]"))))
+
 
 ;;
 (provide 'yatexmth)

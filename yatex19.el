@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
-;;; (c )1994-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Jan 29 10:55:12 1998 on crx
+;;; (c )1994-1999 by HIROSE Yuuji.[yuuji@gentei.org]
+;;; Last modified Thu Apr 29 18:40:26 1999 on firestorm
 ;;; $Id$
 
 ;;; とりあえず hilit19 を使っている時に色が付くようにして
@@ -230,16 +230,23 @@
 (defun YaTeX-19-region-section-type (pattern)
   "Return list of starting and end point of section-type commands of PATTERN."
   (if (re-search-forward pattern nil t)
-      (let ((m0 (match-beginning 0)) cmd (argc 1))
+      (let ((m0 (match-beginning 0)) (e0 (match-end 0)) cmd (argc 1))
 	(setq cmd (substring (YaTeX-match-string 0) 1)
 	      argc (or (car (cdr (YaTeX-lookup-table cmd 'section))) argc))
-	(cons m0
-	      (progn ;(skip-chars-backward "^{") (forward-char -2)
-		     (while (> argc 0)
-		       (skip-chars-forward "^{")
-		       (forward-list 1)
-		       (setq argc (1- argc)))
-		     (point))))))
+	(if (= argc 0) (cons m0 (point)) ;引数個数0ならマッチした領域
+	  (skip-chars-forward " \n\t*")
+	  (while (looking-at "\\[") (forward-list 1)) ;optionならスキップ
+	  (skip-chars-forward " \n\t")
+	  (if (looking-at "{")		;{}が始まるならちゃんとしたsection型
+	      (cons m0
+		    (progn ;(skip-chars-backward "^{") (forward-char -2)
+		      (while (> argc 0)
+			(skip-chars-forward "^{")
+			(forward-list 1)
+			(setq argc (1- argc)))
+		      (point)))
+	    ;{}でないならたぶん \verb 環境などにあるダミー
+	    (cons m0 e0))))))
 
 (defun YaTeX-19-region-large-type (pattern)
   "Return list of large-type contents.
@@ -379,7 +386,7 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 		list YaTeX-sectioning-level)
 	  (while list
 	    (setq pat (concat YaTeX-ec-regexp (car (car list))
-			      ;"\\*?\\(\\[[^]]*\\]\\)?\\>"
+			      ;"\\*?\\(\\[[^]]*\\]\\)?\\>" ;改行はさむと駄目
 			      "\\>"
 			      )
 		  level (cdr (car list))

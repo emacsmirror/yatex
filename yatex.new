@@ -1,5 +1,32 @@
-	What's new in YaTeX
+	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
+
+1.67	[[[ http://www.yatex.org/ が誕生しました ]]]
+	=== yahtml ===
+	href入力でSPCなどのunsafe-charを%エンコードに置換するかを
+	yahtml-escape-chars で選べるようにした。nilならしない、tなら常に、
+	'ask なら確認する。デフォルトは 'ask。
+	初回href入力時に yahtml-urls を補完候補に入れてなかったのを修正。
+	[prefix] ; でリジョン中の <>'"& をエンティティ参照に変換、
+	[prefix] : で逆変換する機能を追加。
+	yahtml-translate-hyphens-when-comment-region が non-nil のときに
+	領域コメントアウトで - を &#45; に変換。
+	yahtml-prefer-upcase-attributes が non-nil のとき属性名を大文字に。
+	カレントまたは上位ディレクトリに .htaccess ファイルがありその中に
+	  AddType "text/html; charset=XXXX" .html
+	宣言があれば編集するHTMLソースの漢字コードもその宣言に合わせる。
+	<style>をデフォルト補完候補にいれ type 属性を入れるアドイン作成。
+	yahtml-insert-begend-region で領域を括った後の状態のリジョンが
+	括った環境全体になるようにした。つまり続けて insert-begend-region
+	すると括った直後の環境をさらに括ることが出来る。
+	スタイルシート(に関する補完)対応(ローカルファイルにあるもののみ)。
+	[prefix] s で<link>タグ補完。type="text/css" などの補完可。
+	[prefix] c で属性代入値をどこでも変更できるようにした。
+	=== yatex ===
+	数式モードで \left の直後に ( | [ を入れたときには自動的に対応す
+	る \right ) | ] を挿入するようにした。
+	[prefix] c で \right\left の括弧の組をまとめて変更できるようにし
+	た(by 千葉大松田さん)。
 
 1.66	\section*{} などの*つきセクションコマンドでインデントがずれるの
 	を修正。

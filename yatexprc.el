@@ -1,16 +1,16 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c )1993-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Mar  9 11:44:29 1998 on crx
+;;; (c )1993-1999 by HIROSE Yuuji.[yuuji@gentei.org]
+;;; Last modified Tue Jul 13 13:47:46 1999 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
 (require 'yatexlib)
 
 (defvar YaTeX-typeset-process nil
-  "Process identifier for jlatex"
-)
+  "Process identifier for jlatex")
+
 (defvar YaTeX-typeset-buffer "*YaTeX-typesetting*"
   "Process buffer for jlatex")
 
@@ -44,8 +44,7 @@
   (modify-syntax-entry ?\{ "w" YaTeX-typeset-buffer-syntax)
   (modify-syntax-entry ?\} "w" YaTeX-typeset-buffer-syntax)
   (modify-syntax-entry ?\[ "w" YaTeX-typeset-buffer-syntax)
-  (modify-syntax-entry ?\] "w" YaTeX-typeset-buffer-syntax)
-)
+  (modify-syntax-entry ?\] "w" YaTeX-typeset-buffer-syntax))
 
 (defun YaTeX-typeset (command buffer &optional prcname modename)
   "Execute jlatex (or other) to LaTeX typeset."
@@ -55,7 +54,7 @@
 	  (map YaTeX-typesetting-mode-map)
 	  (outcode
 	   (cond ((eq major-mode 'yatex-mode) YaTeX-coding-system)
-		 ((eq major-mode 'yahtml-mode) yahtml-coding-system))))
+		 ((eq major-mode 'yahtml-mode) yahtml-kanji-code))))
       (if (and YaTeX-typeset-process
 	       (eq (process-status YaTeX-typeset-process) 'run))
 	  ;; if tex command is halting.
@@ -118,8 +117,7 @@
 	(recenter -1))
       (select-window window)
       (switch-to-buffer cb)
-      (YaTeX-remove-nonstopmode)))
-)
+      (YaTeX-remove-nonstopmode))))
 
 (defun YaTeX-typeset-sentinel (proc mes)
   (cond ((null (buffer-name (process-buffer proc)))
@@ -160,12 +158,10 @@
              (set-buffer-modified-p (buffer-modified-p))
 	     )
 	   (select-window owin)
-	   (set-buffer obuf))))
-)
+	   (set-buffer obuf)))))
 
 (defvar YaTeX-texput-file "texput.tex"
-  "*File name for temporary file of typeset-region."
-)
+  "*File name for temporary file of typeset-region.")
 
 (defun YaTeX-typeset-region ()
   "Paste the region to the file `texput.tex' and execute typesetter.
@@ -247,9 +243,7 @@ operation to the region."
       (switch-to-buffer buffer)		;for Emacs-19
       (put 'dvi2-command 'region t)
       (put 'dvi2-command 'file buffer)
-      (put 'dvi2-command 'offset lineinfo)
-      ))
-)
+      (put 'dvi2-command 'offset lineinfo))))
 
 (defun YaTeX-typeset-buffer ()
   "Typeset whole buffer.
@@ -303,8 +297,7 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
 	  (exchange-point-and-mark)))
       (switch-to-buffer cb))		;for 19
     (YaTeX-typeset cmd YaTeX-typeset-buffer)
-    (put 'dvi2-command 'region nil))
-)
+    (put 'dvi2-command 'region nil)))
 
 (defvar YaTeX-call-command-history nil
   "Holds history list of YaTeX-call-command-on-file.")
@@ -316,15 +309,13 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
     "Call command: "
     (concat base-cmd " " (YaTeX-get-preview-file-name))
     'YaTeX-call-command-history)
-   buffer)
-)
+   buffer))
 
 (defun YaTeX-bibtex-buffer (cmd)
   "Pass the bibliography data of editing file to bibtex."
   (interactive)
   (YaTeX-save-buffers)
-  (YaTeX-call-command-on-file cmd "*YaTeX-bibtex*" )
-)
+  (YaTeX-call-command-on-file cmd "*YaTeX-bibtex*" ))
 
 (defun YaTeX-kill-typeset-process (proc)
   "Kill process PROC after sending signal to PROC.
@@ -347,8 +338,7 @@ PROC should be process identifier."
     (if (eq (process-status proc) 'run)
 	(progn
 	  (interrupt-process proc)
-	  (delete-process proc)))))
-)
+	  (delete-process proc))))))
 
 (defun YaTeX-system (command buffer)
   "Execute some command on buffer.  Not a official function."
@@ -371,8 +361,7 @@ PROC should be process identifier."
 	(set-process-buffer
 	 (start-process
 	  "system" buffer shell-file-name YaTeX-shell-command-option command)
-	 (get-buffer buffer)))))
-)
+	 (get-buffer buffer))))))
 
 (defvar YaTeX-preview-command-history nil
   "Holds minibuffer history of preview command.")
@@ -413,6 +402,12 @@ PROC should be process identifier."
 		      (concat preview-command " " preview-file))
 	(send-string-to-terminal "\e[>5l") ;show cursor
 	(redraw-display))
+       ((and (string-match "dviout" preview-command)	;maybe on `kon' 
+	     (stringp (getenv "TERM"))
+	     (string-match "^kon" (getenv "TERM")))
+	(call-process shell-file-name "con" "*dvi-preview*" nil
+		      YaTeX-shell-command-option
+		      (concat preview-command " " preview-file)))
        (t				;if UNIX
 	(set-process-buffer
 	 (start-process "preview" "*dvi-preview*" shell-file-name
@@ -421,8 +416,7 @@ PROC should be process identifier."
 	 (get-buffer pbuffer))
 	(message
 	 (concat "Starting " preview-command
-		 " to preview " preview-file))))))
-)
+		 " to preview " preview-file)))))))
 
 (defvar YaTeX-xdvi-remote-program "xdvi")
 (defun YaTeX-xdvi-remote-search (&optional region-mode)
@@ -447,8 +441,7 @@ by region."
 	     "xdvi" pb YaTeX-xdvi-remote-program
 	     "-remote"  (format "SloppySearch(%s) " str)
 	     (concat (YaTeX-get-preview-file-name) ".dvi")))
-      (message "Searching `%s'...Done" str)))
-)
+      (message "Searching `%s'...Done" str))))
 
 (defun YaTeX-set-virtual-error-position (file-sym line-sym)
   "Replace the value of FILE-SYM, LINE-SYM by virtual error position."
@@ -508,8 +501,7 @@ error or warning lines in reverse order."
     (recenter (/ (window-height) 2))
     (sit-for 1)
     (goto-char (match-beginning 0))
-    (select-window error-win))
-)
+    (select-window error-win)))
 
 (defun YaTeX-jump-error-line ()
   "Jump to corresponding line on latex command's error message."
@@ -531,8 +523,7 @@ error or warning lines in reverse order."
       (if (null error-buf)
 	  (error "`%s' is not found in this directory." error-file))
       (YaTeX-showup-buffer error-buf nil t)
-      (goto-line error-line))
-)
+      (goto-line error-line)))
 
 (defun YaTeX-send-string ()
   "Send string to current typeset process."
@@ -550,8 +541,7 @@ error or warning lines in reverse order."
 	(insert "\n")
 	(set-marker (process-mark YaTeX-typeset-process) (point))
 	(insert " "))
-    (ding))
-)
+    (ding)))
 
 (defun YaTeX-view-error ()
   (interactive)
@@ -564,8 +554,7 @@ error or warning lines in reverse order."
       ;;(goto-char (point-max))
       ;;(forward-line -1)
       ;;(recenter -1)
-      (select-window win)))
-)
+      (select-window win))))
 
 (defun YaTeX-get-error-file (default)
   "Get current processing file from typesetting log."
@@ -589,8 +578,7 @@ error or warning lines in reverse order."
 	     (progn (forward-char 1) (point))
 	     (progn (skip-chars-forward "^ \n" (point-end-of-line))
 		    (point))))
-      (if (string= "" s) default s)))
-)
+      (if (string= "" s) default s))))
       
 (defun YaTeX-put-nonstopmode ()
   (if (and (eq major-mode 'yatex-mode) YaTeX-need-nonstop)
@@ -600,9 +588,7 @@ error or warning lines in reverse order."
 	  (YaTeX-visit-main t)
 	  (goto-char (point-min))
 	  (insert "\\nonstopmode{}%_YaTeX_%\n")
-	  (if (buffer-file-name) (basic-save-buffer))))
-    )
-)
+	  (if (buffer-file-name) (basic-save-buffer))))))
 
 (defun YaTeX-remove-nonstopmode ()
   (if (and (eq major-mode 'yatex-mode) YaTeX-need-nonstop) ;for speed
@@ -613,8 +599,7 @@ error or warning lines in reverse order."
 	(narrow-to-region (point-min) (point))
 	(goto-char (point-min))
 	(delete-matching-lines "^\\\\nonstopmode\\{\\}%_YaTeX_%$")
-	(widen)))
-)
+	(widen))))
 
 (defun YaTeX-get-preview-file-name ()
   "Get file name to preview by inquiring YaTeX-get-latex-command"
@@ -627,9 +612,7 @@ error or warning lines in reverse order."
 				(buffer-file-name))
 			       0 -4))
       (setq period (rindex fname ?.))
-      (setq fname (substring fname 0 (if (eq -1 period) nil period)))
-      ))
-)
+      (setq fname (substring fname 0 (if (eq -1 period) nil period))))))
 
 (defun YaTeX-get-latex-command (&optional switch)
   "Specify the latex-command name and its argument.
@@ -659,8 +642,7 @@ will be given to the shell."
        (switch (if (string-match "\\s " magic) magic
 		 (concat magic " " parent)))
        (t (concat (substring magic 0 (string-match "\\s " magic)) " "))))
-     (t (concat tex-command " " (if switch parent)))))
-)
+     (t (concat tex-command " " (if switch parent))))))
 
 (defvar YaTeX-lpr-command-history nil
   "Holds command line history of YaTeX-lpr.")
@@ -720,9 +702,7 @@ page range description."
 	 (start-process "print" "*dvi-printing*" shell-file-name
 			YaTeX-shell-command-option cmd)
 	 (get-buffer lbuffer))
-	(message "Starting printing command: %s..." cmd)))
-      ))
-)
+	(message "Starting printing command: %s..." cmd))))))
 
 (defun YaTeX-main-file-p ()
   "Return if current buffer is main LaTeX source."
@@ -736,8 +716,7 @@ page range description."
       (let ((latex-main-id
 	     (concat "^\\s *" YaTeX-ec-regexp "document\\(style\\|class\\)")))
 	(or (re-search-backward latex-main-id nil t)
-	    (re-search-forward latex-main-id nil t))))))
-)
+	    (re-search-forward latex-main-id nil t)))))))
 
 (defun YaTeX-visit-main (&optional setbuf)
   "Switch buffer to main LaTeX source.
@@ -767,9 +746,7 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
 	  (setq YaTeX-parent-file main-file)
 	  (YaTeX-switch-to-buffer main-file setbuf))
        )))
-  nil
-)
-
+  nil)
 
 (defun YaTeX-guess-parent (command-line)
   (setq command-line
@@ -780,16 +757,14 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
 	(concat (if (string-match "\\(.*\\)\\." command-line)
 		    (substring command-line (match-beginning 1) (match-end 1))
 		  command-line)
-		".tex"))
-)
+		".tex")))
 
 (defun YaTeX-visit-main-other-window ()
   "Switch to buffer main LaTeX source in other window."
   (interactive)
   (if (YaTeX-main-file-p) (message "I think this is main LaTeX source.")
       (YaTeX-switch-to-buffer-other-window
-       (concat (YaTeX-get-preview-file-name) ".tex")))
-)
+       (concat (YaTeX-get-preview-file-name) ".tex"))))
 
 (defun YaTeX-get-builtin (key)
   "Read source built-in command of %# usage."
@@ -801,8 +776,7 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
 	(buffer-substring
 	 (progn (skip-chars-forward " 	" (point-end-of-line))(point))
 	 (point-end-of-line))
-      nil))
-)
+      nil)))
 
 (defun YaTeX-save-buffers ()
   "Save buffers whose major-mode is equal to current major-mode."
@@ -816,7 +790,6 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
 			  (buffer-modified-p buf)
 			  (y-or-n-p (format "Save %s" (buffer-name buf))))
 		     (save-buffer buf)))
-	      (buffer-list))))
-)
+	      (buffer-list)))))
 
 (provide 'yatexprc)

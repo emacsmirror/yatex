@@ -1297,12 +1297,12 @@ sa2cさん(asciinet)
 	たれました。享年二十六歳。彼には、野鳥だけでなく私が手掛けた数多
 	くのソフトウェアを作る動機、センスあふれるコメントなどを頂きまし
 	た。現在の野鳥が皆様に支持されるように健やかに育ったのは彼のおか
-	げと言っても過言ではありません。野鳥/雷鳥/白鳥を使うときに彼の安
-	らかな眠りを私と共に祈って下さい。
+	げと言っても過言ではありません。野鳥/雷鳥/白鳥/飛鳥を使うときに
+	彼の安らかな眠りを私と共に祈って下さい。
 
 るねきちさん(asciinet)
 	占い師だそうです。
-	http://www.comp.ae.keio.ac.jp/~yuuji/lune/astrology/
+	http://www.gentei.org/~yuuji/lune/astrology/
 
 三平善郎さん(慶應大)
 	開き括弧の入力時の処理のモード分けのアイデアを頂きました。
@@ -1370,6 +1370,7 @@ jaybirdさん(asciinet)
 	YaTeX-insert-amper をcontributeして頂きました。
 	作者の数多くの凡ミスを丁寧に拾って下さいました。
 	YaTeX-shift-section-undo の実現方法を教えていただきました。
+	Wzへの移植版 HackTeX を作成されました。
 
 佐藤圭さん(慶應大)
 	ネストした同種のitemize環境でのindentationの不具合を指摘して頂き
@@ -1428,6 +1429,9 @@ jaybirdさん(asciinet)
 	数式モードでのセクション型マクロ対応の要望と足すべきマクロ一覧を
 	頂きました。
 
+松田茂樹さん(千葉大)
+	AMS LaTeX用のいくつかの関数、YaTeX-change-parentheses などを作成
+	して頂きました。
 yatex
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))
 <refer YaTeX>
