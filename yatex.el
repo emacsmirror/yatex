@@ -1,30 +1,15 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //ñÏíπ//
-;;; yatex.el rev. 1.71
-;;; (c )1991-2003 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu May  1 22:36:40 2003 on firestorm
+;;; yatex.el rev. 1.72
+;;; (c)1991-2003 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Dec 25 13:10:42 2003 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 2, or (at your option)
-;; any later version.
-
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-
-;; You should have received a copy of the GNU General Public License
-;; along with this program; see the file COPYING.  If not, write to the
-;; Software Foundation Inc., 59 Temple Place - Suite 330, Boston, MA
-;; 02111-1307, USA.
-
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.71"
+(defconst YaTeX-revision-number "1.72"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -276,6 +261,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("widetilde") ("widehat") ("overline") ("overrightarrow")
      ;; section types in mathmode
      ("frac" 2) ("sqrt") ("mathrm") ("mathbf") ("mathit")
+
      )
    (if YaTeX-use-LaTeX2e
        '(("documentclass") ("usepackage")
@@ -287,6 +273,13 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("rotatebox" 2) ("resizebox" 2) ("reflectbox")
 	 ("colorbox" 2) ("fcolorbox" 3) ("textcolor" 2) ("color")
 	 ("includegraphics") ("includegraphics*")
+	 ("bou")			;defined in plext
+	 ("url")			;defined in url
+	 ("shadowbox") ("doublebox") ("ovalbox") ("Ovalbox")
+	 ("fancyoval")			;defined in fancybox
+	 ("keytop") ("mask" 2) ("maskbox" 5) ;defined in ascmac
+	 ("bm")				;deined in bm
+	 ("verbfile") ("listing")	;defined in misc
 	 )))
   "Default completion table for section-type completion.")
 
@@ -295,14 +288,21 @@ Nil for removing only one commenting character at the beginning-of-line.")
 
 ; Set tex-environment possible completion
 (defvar env-table
-  '(("quote") ("quotation") ("center") ("verse") ("document")
-    ("verbatim") ("itemize") ("enumerate") ("description")
-    ("list") ("tabular") ("tabular*") ("table") ("tabbing") ("titlepage")
-    ("sloppypar") ("picture") ("displaymath")
-    ("eqnarray") ("figure") ("equation") ("abstract") ("array")
-    ("thebibliography") ("theindex") ("flushleft") ("flushright")
-    ("minipage")
-    )
+  (append
+   '(("quote") ("quotation") ("center") ("verse") ("document")
+     ("verbatim") ("itemize") ("enumerate") ("description")
+     ("list") ("tabular") ("tabular*") ("table") ("tabbing") ("titlepage")
+     ("sloppypar") ("picture") ("displaymath")
+     ("eqnarray") ("figure") ("equation") ("abstract") ("array")
+     ("thebibliography") ("theindex") ("flushleft") ("flushright")
+     ("minipage")
+     )
+   (if YaTeX-use-LaTeX2e
+       '(("comment")			;defined in version
+	 ("longtable")			;defined in longtable
+	 ("screen") ("boxnote") ("shadebox") ("itembox") ;in ascmac
+	 ("alltt")			;defined in alltt
+	 ("breakbox"))))			;defined in eclbkbox
   "Default completion table for begin-type completion.")
 
 (defvar user-env-table nil)
@@ -352,7 +352,9 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("varpi") ("rho") ("varrho") ("sigma") ("varsigma") ("tau")
 	 ("upsilon") ("phi") ("varphi") ("chi") ("psi") ("omega")
 	 ("Gamma") ("Delta") ("Theta") ("Lambda")("Xi") ("Pi")
-	 ("Sigma") ("Upsilon") ("Phi") ("Psi") ("Omega"))))
+	 ("Sigma") ("Upsilon") ("Phi") ("Psi") ("Omega")))
+   (if YaTeX-use-LaTeX2e
+       '(("return") ("Return") ("yen"))))	;defined in ascmac
   "Default completion table for maketitle-type completion.")
 
 (defvar user-singlecmd-table nil)
@@ -506,7 +508,12 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
 (defvar YaTeX-fontsize-name "large" "*Initial fontsize completion")
 (defvar YaTeX-single-command "maketitle" "*Initial LaTeX single command")
 (defvar YaTeX-kanji-code (if YaTeX-dos 1 2)
-  "*File kanji code used by Japanese TeX.")
+  "*File kanji code used by Japanese TeX.
+nil: Do not care (Preserve coding-system)
+0: no-converion (mule)
+1: Shift JIS
+2: JIS
+3: EUC")
 
 (defvar YaTeX-coding-system nil "File coding system used by Japanese TeX.")
 (cond
@@ -515,9 +522,7 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
 	(cdr (assoc YaTeX-kanji-code YaTeX-kanji-code-alist))))
  ((boundp 'MULE)
   (setq YaTeX-coding-system
-	(symbol-value (cdr (assoc YaTeX-kanji-code YaTeX-kanji-code-alist)))))
- ((boundp 'NEMACS)
-  (setq YaTeX-latex-message-code latex-message-kanji-code)))
+	(symbol-value (cdr (assoc YaTeX-kanji-code YaTeX-kanji-code-alist))))))
 
 (defvar YaTeX-mode-syntax-table nil
   "*Syntax table for yatex-mode")
@@ -610,7 +615,9 @@ more features are available and they are documented in the manual.
 	    YaTeX-math-mode indent-line-function comment-line-break-function
 	    comment-start comment-start-skip
 	    ))
-  (cond ((boundp 'MULE)
+  (cond ((null YaTeX-kanji-code)
+	 nil)
+	((boundp 'MULE)
 	 (set-file-coding-system  YaTeX-coding-system))
 	((and YaTeX-emacs-20 (boundp 'buffer-file-coding-system))
 	 (setq buffer-file-coding-system
@@ -729,6 +736,8 @@ more features are available and they are documented in the manual.
 (autoload 'YaTeX-display-hierarchy-directly "yatexhie"
   "Same as YaTeX-display-hierarchy.  Call from mouse." t)
 
+;;autoload from yatexpkg.el
+(autoload 'YaTeX-package-auto-usepackage "yatexpkg" "Auto \\usepackage" t)
 
 ;;;
 ;; YaTeX-mode functions
@@ -780,6 +789,7 @@ This works also for other defined begin/end tokens to define the structure."
       (goto-char beg2)
       (YaTeX-intelligent-newline nil)
       (YaTeX-indent-line))
+    (YaTeX-package-auto-usepackage env 'env)
     (if YaTeX-current-position-register
 	(point-to-register YaTeX-current-position-register))))
 
@@ -813,7 +823,9 @@ you can put REGION into that environment between \\begin and \\end."
 	(cond
 	 ((save-excursion (not (search-backward YaTeX-ec nil t)))
 	  (if YaTeX-use-LaTeX2e "documentclass" "documentstyle"))
-	 ((progn (forward-char -1) (looking-at "ï\\\|ê}\\|éÆ"))
+	 ((progn
+	    (if (= (char-after (1- (point))) ?~) (forward-char -1))
+	    (forward-char -1) (looking-at "ï\\\|ê}\\|éÆ"))
 	  "ref")
 	 ((and (looking-at "[a-z \t]")
 	       (progn (skip-chars-backward "a-z \t")
@@ -886,12 +898,15 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 	   (enable-recursive-minibuffers t));;let
 	(setq YaTeX-section-name section)
 	(if beg
-	    (let ((e (make-marker)))
+	    (let*((e (make-marker))
+		  (ar2 (intern-soft (concat "YaTeX::" section "-region")))
+		  (arp (and ar2 (fboundp ar2))))
 	      (goto-char end)
 	      (insert "}")
 	      (set-marker e (point))
 	      (goto-char beg)
 	      (insert YaTeX-ec YaTeX-section-name "{")
+	      (if arp (funcall ar2 (point) e))
 	      (goto-char e)
 	      (set-marker e nil))
 	  (use-global-map YaTeX-recursive-map)
@@ -918,7 +933,8 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 	(if (string= (buffer-substring (- (point) 2) (point)) "{}")
 	  (forward-char -1))
 	(while (string= (buffer-substring (- (point) 3) (1- (point))) "{}")
-	  (forward-char -2)))
+	  (forward-char -2))
+	(YaTeX-package-auto-usepackage section 'section))
     (if (<= (minibuffer-depth) 0) (use-global-map global-map))
     (insert "")))		;insert dummy string to fontify(Emacs20)
 
@@ -967,7 +983,8 @@ into {\\xxx } braces.
       (if YaTeX-current-position-register
 	  (point-to-register YaTeX-current-position-register))
       (save-excursion
-	(insert (YaTeX-addin YaTeX-fontsize-name))))))
+	(insert (YaTeX-addin YaTeX-fontsize-name)))
+      (YaTeX-package-auto-usepackage YaTeX-fontsize-name 'large))))
 
 (defun YaTeX-make-fontsize-region ()
   "Call function:YaTeX-make-fontsize with ARG to specify region mode."
@@ -1003,6 +1020,7 @@ into {\\xxx } braces.
     (goto-char p)
     (forward-char -2)
     (if (looking-at "\\[\\]") (forward-char 1) (goto-char q)))
+  (YaTeX-package-auto-usepackage YaTeX-single-command 'maketitle)
   (if YaTeX-current-position-register
       (point-to-register YaTeX-current-position-register)))
 
@@ -2019,26 +2037,42 @@ Non-nil for the second argument kill its argument too."
 (defun YaTeX-kill-paren (kill-contents)
   "Kill parentheses leaving its contents.
 But kill its contents if the argument KILL-CONTENTS is non-nil."
-  (save-excursion
-    (let (p)
-      (if (looking-at "\\s(\\|\\(\\s)\\)")
-	  (progn
-	    (if (match-beginning 1)
-		(up-list -1))
-	    (setq p (point))
-	    (forward-list 1)
-	    (if kill-contents (delete-region p (point))
-	      (backward-delete-char 1)
-	      (goto-char p)
-	      (if (looking-at
-		   (concat "{" YaTeX-ec-regexp
-			   YaTeX-command-token-regexp "+"
-			   "\\s +"))
-		  (delete-region
-		   (point)
-		   (progn (re-search-forward "\\s +" nil t) (point)))
-		(delete-char 1)))
-	    t)))))
+  (interactive "P")
+  (let (p bsl (backslash-syntax (char-to-string (char-syntax ?\\)))
+	  (md (match-data)))
+    (unwind-protect
+	(save-excursion
+	  (modify-syntax-entry ?\\ " ")
+	  (if (looking-at "\\s(\\|\\(\\s)\\)")
+	      (progn
+		(if (match-beginning 1)
+		    (up-list -1))
+		(if (and (> (point) (point-min))
+			 (= (char-after (1- (point))) ?\\ ))
+		    (setq p (1- (point)) bsl t)
+		  (setq p (point)))
+		(forward-list 1)
+					;(YaTeX-goto-open-paren t)
+		(if kill-contents (delete-region p (point))
+		  (backward-delete-char 1)
+		  (cond
+		   ((save-excursion
+		      (forward-char -2)
+		      (looking-at (concat YaTeX-ec-regexp "/")))
+		    (backward-delete-char 2))
+		   ((= (char-after (1- (point))) ?\\)
+		    (backward-delete-char 1)))
+		  (goto-char p)
+		  (if (looking-at
+		       (concat "{" YaTeX-ec-regexp
+			       YaTeX-command-token-regexp "+"
+			       "\\s +"))
+		      (delete-region (point) (match-end 0))
+		    (delete-char 1)
+		    (if bsl (delete-char 1))))
+		t)))
+      (modify-syntax-entry ?\\ backslash-syntax)
+      (store-match-data md))))
 
 (defvar YaTeX-read-environment-history nil "Holds history of environments.")
 (put 'YaTeX-read-environment-history 'no-default t)

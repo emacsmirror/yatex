@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
-;;; (c ) 1994-2002 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Thu Nov 21 17:55:40 2002 on firestorm
+;;; (c) 1994-2003 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Nov 17 18:28:50 2003 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.70"
@@ -202,9 +202,7 @@ Consult your site's WWW administrator.")
 (defvar yahtml-environment-indent 1
   "*Indentation depth of HTML's listing environment")
 
-(defvar YaTeX-japan (or (boundp 'NEMACS) (boundp 'MULE) YaTeX-emacs-20)
-  "Whether yatex mode is running on Japanese environment or not.")
-
+;; YaTeX-japan is defined in yatexlib.el
 (defvar yahtml-lint-program (if YaTeX-japan "jweblint" "weblint")
   "*Program name to lint HTML file")
 (defvar yahtml-hate-too-deep-indentation nil
@@ -345,6 +343,9 @@ normal and region mode.  To customize yahtml, user should use this function."
       (yahtml-define-begend-key "ba" "a" map)
       (yahtml-define-begend-key "bf" "form" map)
       (yahtml-define-begend-key "bs" "select" map)
+      (yahtml-define-begend-key "bv" "div" map)
+      (yahtml-define-begend-key "bS" "div" map)
+      (yahtml-define-begend-key "bp" "pre" map)
       (YaTeX-define-key "b " 'yahtml-insert-begend map)
       (YaTeX-define-key "B " 'yahtml-insert-begend-region map)
       )
@@ -571,6 +572,7 @@ T for static indentation depth")
 	(set (make-local-variable 'yahtml-mode-old-mode) old-mm)))
   (let ((coding (or (yahtml-dir-default-charset) yahtml-kanji-code)))
     (cond
+     ((null coding) nil)
      ((and YaTeX-emacs-20 (boundp 'buffer-file-coding-system))
       (setq buffer-file-coding-system
 	    (or (and (fboundp 'set-auto-coding) buffer-file-name

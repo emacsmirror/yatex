@@ -10,7 +10,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Fri Feb  2 10:03:49 2001 on firestorm
+@c Last modified Fri Aug 29 01:55:00 2003 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -20,7 +20,7 @@
 @subtitle Yet Another tex-mode for emacs
 @title 『野鳥』
 @subtitle // YaTeX //
-@author @copyright{} 1991-2000 by    HIROSE, Yuuji [yuuji@@yatex.org]
+@author @copyright{} 1991-2003 by    HIROSE, Yuuji [yuuji@@yatex.org]
 @end titlepage
 
 @node Top, Intro, (dir), (dir)
@@ -42,6 +42,7 @@
 * Includeonly::                 勝手に includeonly
 * What column::                 カラム位置ガイド
 * Intelligent newline::         おまかせ改行
+* Usepackage cheker::           先回りusepackage
 * Changing mode of YaTeX::      野鳥動作モード変更
 * Online help::                 LaTeXオンラインヘルプ
 * Inclusion hierarchy browser::  ファイル分割階層構造の表示
@@ -51,65 +52,6 @@
 * Copying::                     取り扱い
 * Concept Index::               索引
 
- --- The Detailed Node Listing ---
-
-latexコマンド起動
-
-* Calling typesetter::          タイプセッタ起動
-* Calling previewer::           プレヴューア起動
-* Print out::                   プリントアウト用コマンドの起動
-
-%#記法
-
-* Changing typesetter::         タイプセット用コマンドの変更
-* Splitting input files::       入力ファイル分割
-* Fix region for typesetting::  領域の固定
-* lpr format::                  プリントアウトコマンド用フォーマット
-* Editing %# notation::         %#記法の編集
-
-補完入力
-
-* begin型補完::                 
-* section型補完::               
-* large型補完::                 
-* maketitle型補完::             
-* Arbitrary completion::        随時補完
-* end補完::                     
-* Accent mark completion::      アクセント記号補完
-* Image completion::            数式記号イメージ補完
-* Greek letter completion::     ギリシャ文字補完
-
-section型補完
-
-* 2個以上の引数をとる section型コマンド::  
-* Enclose section-type command::  括り補完
-* Recursive completion::        再帰補完
-* view-sectioning::             セクション区切りのアウトライン表示
-
-カーソルジャンプ
-
-* 対応オブジェクトへのジャンプ::  
-* お絵描きツール起動::          
-* メインファイルへのジャンプ::  
-* 環境を単位としたジャンプ::    
-* 最後の補完位置へのジャンプ::  
-
-変更/削除
-
-* Changing LaTeX command::      La@TeX{} コマンドの変更
-* Killing LaTeX command::       La@TeX{} コマンドの削除
-
-カスタマイズ
-
-* Lisp variables::              lisp 変数
-* Add-in functions::            付加関数(アドイン関数)
-
-lisp 変数
-
-* All customizable variables::  カスタマイズ変数一覧
-* Sample definitions::          カスタマイズ変数設定例
-* Hook variables::              hook変数
-* Hook file::                   hook用ファイル
 @end menu
 
 @node Intro, Terminology, Top, Top
@@ -1566,7 +1508,7 @@ description環境:
 す。もし項目名として別のものを表示して欲しい場合は、行頭を@code{%}にしてダ
 ミーの項目並びを作っておくと良いでしょう。
 
-@node Intelligent newline, Changing mode of YaTeX, What column, Top
+@node Intelligent newline, Usepackage cheker, What column, Top
 @comment  node-name,  next,  previous,  up
 @chapter おまかせ改行
 @cindex おまかせ改行[おまかせかいきよう]
@@ -1612,7 +1554,22 @@ tabular環境では、その環境のカラム数に対応した個数の @code{&} に加え、行末
 いでしょう。@file{yatexenv.el}内の関数 
 @code{YaTeX-intelligent-newline-itemize} の定義などを参考にしてください。
 
-@node Changing mode of YaTeX, Online help, Intelligent newline, Top
+@node Usepackage cheker, Changing mode of YaTeX, Intelligent newline, Top
+@comment  node-name,  next,  previous,  up
+@chapter 先回りusepackage
+@cindex 先回りusepackage[さきまわり]
+
+  begin型、section型、maketitle型、いずれかのLaTeX2eマクロを補完入力すると、
+そのマクロの利用に外部パッケージを必要とする場合、そのパッケージを
+本文中で @code{\usepackage@{@}} しているかどうかを調査し、もししていなければ
+プリアンブルに対応するパッケージを引数にした @code{\usepackage} 文を
+(確認後に)挿入します。
+
+  ただしこの機能が働くためには、パッケージ名とその中で定義されているマクロ
+群をalistの形式で変数 @code{YaTeX-package-alist-private} に設定しておく必
+要があります。
+
+@node Changing mode of YaTeX, Online help, Usepackage cheker, Top
 @comment  node-name,  next,  previous,  up
 @chapter 野鳥の動作モード切り替え
 @cindex モード切り替え[もうときりかえ]
@@ -1841,7 +1798,9 @@ prefix キーの直後のキーバインドで @kbd{英字} のものを @kbd{C-英字} に変更
 @end defvar
 
 @defvar YaTeX-kanji-code
-文書を作成する時の漢字コード 1=Shift JIS, 2=JIS, 3=EUC (2 (MS-DOSでは1))
+文書を作成する時の漢字コード
+nil=既存のコードのまま 0=no-conversion1=Shift JIS,
+2=JIS, 3=EUC (2 (MS-DOSでは1))
 @end defvar
 
 @defvar tex-command
@@ -2034,6 +1993,30 @@ font-lock利用時のみ有効。
 (@code{(featurep 'hilit19)}
 @end defvar
 
+@defvar YaTeX-singlecmd-suffix
+全てのmaketitle型コマンドの補完入力直後に挿入する文字列。
+@code{"{}"} などがお勧め。
+@end defvar
+
+@defvar YaTeX-package-alist-private
+LaTeX2eのパッケージ名とその中に含まれるマクロのリスト。
+適切に設定しておくと本文入力時にマクロを補完入力すると
+そのマクロに必要なパッケージを usepackage するか自動的に検査してくれる。
+していなければ \usepackage を自動追加することもできる。
+リストは 
+@lisp
+   '((パッケージ名1
+        (補完タイプ マクロのリスト……)
+        (補完タイプ マクロのリスト……))
+     (パッケージ名2
+        (補完タイプ マクロのリスト……)
+        (補完タイプ マクロのリスト……))………)
+@end lisp
+という形式にする。補完タイプは @code{env, section, maketitle} のどれか。
+具体例は変数 @code{YaTeX-package-alist-default}
+の値参照。
+@end defvar
+
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection カスタマイズ変数設定例
@@ -2125,7 +2108,7 @@ font-lock利用時のみ有効。
 ただくと、作者は喜んでサポートに励むことでしょう。
 
   苦情、希望、バグ報告、感想等は歓迎いたします。
-連絡は yuuji@@yatex.org まで(2000年12月現在)。
+連絡は yuuji@@yatex.org まで(2003年9月現在)。
 継続的に使用してくださる方はメイリングリスト「fj野鳥の会」に
 是非加入してください。加入方法については本パッケージの @file{docs/qanda}
 ファイルの「その他」の章を御覧ください。

@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.15
-;;; (c )1991-2003 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Mar 17 16:46:01 2003 on serow
+;;; yatexadd.el rev.17
+;;; (c)1991-2003 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Nov 27 11:11:30 2003 on firestorm
 ;;; $Id$
 
 ;;;
@@ -60,26 +60,28 @@ YaTeX-make-begin-end."
   (concat (YaTeX:read-position "tb")
 	  "{" (read-string "Column format: ") "}"))
 
-(defun YaTeX:read-oneof (oneof)
+(defun YaTeX:read-oneof (oneof &optional quick allow-dup)
   (let ((pos "") loc (guide ""))
     (and (boundp 'name) name (setq guide (format "%s " name)))
-    (while (not (string-match
-		 (setq loc (read-key-sequence
-			    (format "%s position (`%s') [%s]: "
-				    guide oneof pos));name is in YaTeX-addin
-		       loc (if (fboundp 'events-to-keys)
-			       (events-to-keys loc) loc))
-		 "\r\^g\n"))
-      (cond
-       ((string-match loc oneof)
-	(if (not (string-match loc pos))
-	    (setq pos (concat pos loc))))
-       ((and (string-match loc "\C-h\C-?") (> (length pos) 0))
-	(setq pos (substring pos 0 (1- (length pos)))))
-       (t
-	(ding)
-	(message "Please input one of `%s'." oneof)
-	(sit-for 3))))
+    (catch 'quick
+      (while (not (string-match
+		   (setq loc (read-key-sequence
+			      (format "%s position (`%s') [%s]: "
+				      guide oneof pos));name is in YaTeX-addin
+			 loc (if (fboundp 'events-to-keys)
+				 (events-to-keys loc) loc))
+		   "\r\^g\n"))
+	(cond
+	 ((string-match loc oneof)
+	  (if (or allow-dup (not (string-match loc pos)))
+	      (setq pos (concat pos loc)))
+	  (if quick (throw 'quick t)))
+	 ((and (string-match loc "\C-h\C-?") (> (length pos) 0))
+	  (setq pos (substring pos 0 (1- (length pos)))))
+	 (t
+	  (ding)
+	  (message "Please input one of `%s'." oneof)
+	  (sit-for 3)))))
     (message "")
     pos))
 
@@ -218,7 +220,6 @@ YaTeX-make-begin-end."
 
 (fset 'YaTeX:right 'YaTeX:left)
 
-
 (defun YaTeX:read-coordinates (&optional mes varX varY)
   (concat
    "("
@@ -226,6 +227,9 @@ YaTeX-make-begin-end."
    ","
    (read-string (format "%s %s: " (or mes "Dimension") (or varY "Y")))
    ")"))
+
+(defun YaTeX:itembox ()
+  (concat "{" (read-string "Item heading string: ") "}"))
 
 ;;;
 ;;Sample functions for maketitle-type command.
@@ -1132,12 +1136,7 @@ and print them to standard output."
    ((equal 1 argp)
     (read-string "Number of columns: "))
    ((equal 2 argp)
-    (let (c)
-      (while (not (string-match
-		   (progn (message "Format(one of l,r,c): ")
-			  (setq c (char-to-string (read-char))))
-		   "lrc")))
-      c))
+    (YaTeX:read-oneof "|lrc" nil t))
    ((equal 3 argp)
     (read-string "Item: "))))
 
@@ -1373,6 +1372,59 @@ and print them to standard output."
   (setq YaTeX-section-name "label")
   nil)
 
+(defvar YaTeX::usepackage-alist-default
+  '(("version") ("plext") ("url") ("fancybox") ("pifont") ("longtable")
+    ("ascmac") ("bm") ("graphics") ("graphicx") ("alltt") ("misc") ("eclbkbox")
+    ("amsmath") ("amssymb") ("xymtex") ("chemist")
+    ("a4j") ("array") ("epsf") ("color") ("epsfig") ("floatfig")
+    ("landscape") ("path") ("supertabular") ("twocolumn"))
+  "Default completion table for arguments of \usepackage")
+
+(defvar YaTeX::usepackage-alist-private nil
+  "*Private completion list of the argument for usepackage")
+
+(defvar YaTeX::usepackage-alist-local nil
+  "Directory local  completion list of the argument for usepackage")
+
+(defun YaTeX::usepackage (&optional argp)
+  (cond
+   ((equal argp 1)
+    (setq YaTeX-env-name "document")
+    (YaTeX-cplread-with-learning
+     "Use package: "
+     'YaTeX::usepackage-alist-default
+     'YaTeX::usepackage-alist-private
+     'YaTeX::usepackage-alist-local))))
+
+(defun YaTeX::mask (argp)
+  (cond
+   ((equal argp 1)
+    (read-string "String: "))
+   ((equal argp 2)
+    (let (c)
+      (while (not (memq c '(?A ?B ?C ?D ?E ?F ?G ?H ?I ?J ?K)))
+	(message "Mask type(A..K): ")
+	(setq c (upcase (read-char))))
+      (format "%c" c)))))
+
+(defun YaTeX::maskbox (argp)
+  (cond
+   ((equal argp 1)
+    (read-string "Width: "))
+   ((equal argp 2)
+    (read-string "Height: "))
+   ((equal argp 3)
+    (let (c)
+      (while (not (memq c '(?A ?B ?C ?D ?E ?F ?G ?H ?I ?J ?K)))
+	(message "Mask type(A..K): ")
+	(setq c (upcase (read-char))))
+      (format "%c" c)))
+   ((equal argp 4)
+    (YaTeX:read-oneof "lcr" 'quick))
+   ((equal argp 5)
+    (read-string "String: "))
+))
+
 ;;; -------------------- math-mode stuff --------------------
 (defun YaTeX::tilde (&optional pos)
   "For accent macros in mathmode"
@@ -1418,6 +1470,44 @@ and print them to standard output."
 (fset 'YaTeX::overline		'YaTeX::widetilde)
 (fset 'YaTeX::overrightarrow	'YaTeX::widetilde)
 	
+;
+; for \frac{}{} region
+(defun YaTeX::frac-region (beg end)
+  (if (catch 'done
+	(while (re-search-forward "\\s *\\(\\\\over\\|/\\)\\s *" end t)
+	  (goto-char (match-beginning 0))
+	  (if (y-or-n-p
+	       (format "Replace this `%s' with `}{'" (YaTeX-match-string 0)))
+	      (throw 'done t))
+	  (goto-char (match-end 0))))
+      (let (p (b0 (match-beginning 0)) e0)
+	(replace-match "}{")
+	(setq e0 (point))
+	(save-restriction
+	  (narrow-to-region beg end)
+	  (goto-char e0)
+	  (skip-chars-forward " \t")
+	  (setq p (point))
+	  (YaTeX-goto-corresponding-paren)
+	  (forward-char 1)
+	  (skip-chars-forward " \t\r\n")
+	  (if (= end (1+ (point)))
+	      (progn
+		(goto-char p)
+		(if (looking-at "\\\\") (forward-char 1))
+		(YaTeX-kill-paren nil)))
+	  (goto-char beg)
+	  (skip-chars-forward " \t")
+	  (setq p (point))
+	  (YaTeX-goto-corresponding-paren)
+	  (forward-char 1)
+	  (skip-chars-forward " \t\r\n")
+	  (if (>= (point) b0)
+	      (progn
+		(goto-char p)
+		(if (looking-at "\\\\") (forward-char 1))
+		(YaTeX-kill-paren nil))))))
+  (message ""))
 
 ;;;
 ;; Add-in functions for large-type command.

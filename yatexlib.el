@@ -1,12 +1,13 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
-;;; (c )1994-2002 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Oct  2 23:35:33 2002 on firestorm
+;;; (c)1994-2002 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Tue Aug 19 22:20:40 2003 on firestorm
 ;;; $Id$
 
 ;; General variables
 (defvar YaTeX-dos (memq system-type '(ms-dos windows-nt OS/2)))
+(defvar YaTeX-macos (memq system-type '(darwin)))
 (defvar YaTeX-emacs-19 (>= (string-to-int emacs-version) 19))
 (defvar YaTeX-emacs-20 (>= (string-to-int emacs-version) 20))
 (defvar YaTeX-emacs-21 (>= (string-to-int emacs-version) 21))
@@ -21,7 +22,11 @@
       window-system)  ; falls down lazy check..
   "Current display's capability of expressing colors.")
 
-(defvar YaTeX-japan (or (boundp 'NEMACS) (boundp 'MULE) YaTeX-emacs-20)
+(defvar YaTeX-japan
+  (or (boundp 'NEMACS)
+      (boundp 'MULE)
+      (and (boundp 'current-language-environment)
+	   (string-match "[Jj]apanese" current-language-environment)))
   "Whether yatex mode is running on Japanese environment or not.")
 
 ;; autoload from yahtml.el
@@ -33,14 +38,17 @@
     (list '(0 . *noconv*)
 	  (cons
 	   1
-	   (if YaTeX-dos (if (boundp '*sjis-dos*) *sjis-dos* *sjis*dos)
-	     *sjis*))
+	   (cond
+	    (YaTeX-dos (if (boundp '*sjis-dos*) *sjis-dos* *sjis*dos))
+	    (YaTeX-macos (if (boundp '*sjis-mac*) *sjis-mac* *sjis*mac))
+	    (t *sjis*)))
 	  '(2 . *junet*) '(3 . *euc-japan*)))
    (YaTeX-emacs-20
     ;;(cdr-safe(assq 'coding-system (assoc "Japanese" language-info-alist)))
     (list '(0 . no-conversion)
 	  (cons
 	   1 (cond (YaTeX-dos 'shift_jis-dos)
+		   (YaTeX-macos 'shift_jis-mac)
 		   ((member 'shift_jis (coding-system-list)) 'shift_jis-unix)
 		   (t 'sjis)))
 	  '(2 . iso-2022-jp-unix)

@@ -1,6 +1,14 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.72	=== yatex ===
+	YaTeX-kanji-code が nil なら coding-system に感知しない
+	補完したマクロがLaTeX2eの特定のpackageに依存している場合
+	そのpackageを半自動で \usepackage する(yatexpkg.el新設)
+	{} の末尾がイタリック補正 \/ ならそれを消す
+	=== yahtml ==
+	yahtml-kanji-code が nil なら coding-system に感知しない
+
 1.71	=== yatex ===
 	fill-prefix を指定している場合、Emacs21で \item の auto-fill が
 	\item の深さにかかわらず fill-prefix になってしまうのを回避

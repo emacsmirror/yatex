@@ -1299,6 +1299,166 @@ Clear page and start one-column typesetting.
 Begin a new page and create the parbox-ed BOX whose width is \textwidth.
 This is useful to make a page-acrossing title in a twocolumn page.
 
+breakbox
+\begin{breakbox} ... \end{breakbox}
+Make a surrounding frame extended across pages.
+Useful for cite a long program list.
+Requires `\usepackage{eclbkbox}'
+
+verbfile
+\verbfile{FILE}
+Include a FILE in verbatim format.
+Requires `\usepackage{misc}'
+See also \listing
+
+listing
+\listing{FILE}
+Include a FILE in verbatim format with line number.
+Requires `\usepackage{misc}'
+See also \verbfile
+
+ascmac
+\usepackage{ascmac}
+The `ascmac' package provides
+* \boxnote environment		notebook-like box
+* \screen environment		corner-rounded box suitable for screen output
+* \itembox environment		itemizing box
+* \shadebox environment		shaded box
+* \keytop macro			keytop
+* \yen				Yen mark
+* \return-key
+* \mask, \maskbox
+
+boxnote
+\begin{boxnote} ... \end{boxnote}
+Enclose with notebook-like square.
+Defined in ascmac.sty.
+
+<refer ascmac>
+
+screen
+\begin{screen} ... \end{screen}
+Enclose with corner-rounded square which stands for screen output.
+Requires `\usepackage{ascmac}'
+
+<refere ascmac>
+
+itembox
+\begin{itembox}{ITEMSTRING} ... \end{itembox}
+Enclose box with ITEMSTRING header.
+Requires `\usepackage{ascmac}'
+<refere ascmac>
+
+shadebox
+\begin{shadebox} ... \end{shadebox}
+Enclose shaded box.
+Requires `\usepackage{ascmac}'
+<refere ascmac>
+
+keytop
+\keytop{KEY}
+Output a keytop designed character.
+Requires `\usepackage{ascmac}'
+<refere ascmac>
+
+mask
+\mask{STRING}{MASKTYPE}
+Make a masked STRING.  MASKTYPE is one of character A through K.
+
+eg.) \mask{This is a pen!}{C}
+
+Mask types are viewed at
+http://www.yatex.org/help/ascmac-mask.jpg
+
+Defined in `\usepackage{ascmac}'
+
+<refere ascmac>
+
+maskbox
+\maskbox{WIDTH}{HEIGHT}{MASKTYPE}{POS}{STRING}
+Make a masked box of WIDTH x HEIGHT which contains STRING located in POS.
+Masking type MASKTYPE is one of character A through K.
+
+eg.) \maskbox{5cm}{2.5em}{G}{c}{Year!}
+
+Mask types are viewed at
+http://www.yatex.org/help/ascmac-mask.jpg
+
+Requires `\usepackage{ascmac}'
+<refere ascmac>
+
+alltt
+\begin{alltt} ... \end{alltt}
+An environment like verbatim except in which TeX macro can be used.
+
+comment
+\begin{comment} ... \end{comment}
+Comment out enclosed environment.
+But if \includeversion{comment} appears, enclosed part activated.
+Putting \excludeversion{ENV} defines new environment ENV which
+works equivalently to comment environment.
+
+Requires `\usepackage{version}'
+
+bou
+\bou{STRING}
+Put the emphasizing dot on each characters in STRING.
+
+Requires `\usepackage{plext}'
+
+url
+\url{URL_STRING}
+Put URL string with reasonable folding.
+
+Requires `\usepackage{url}'
+
+longtable
+\begin{longtable}{POSSTRING} ... \end{longtable}
+Same as table, but can be spreaded across pages.
+
+Requires `\usepackage{longtable}'
+
+fancybox
+\usepackage{fancybox}
+Provides some fancy boxes.
+* \shadowbox{}
+* \ovalbox{}
+* \doublebox{}
+
+shadowbox
+\shadowbox{STRING}
+Surround a STRING by shadow box.
+
+Require `\usepackage{fancybox}`
+
+<ref fancybox>
+
+ovalbox
+\ovalbox{STRING}
+Surround a STRING by oval box
+
+Require `\usepackage{fancybox}`
+
+<ref fancybox>
+
+Ovalbox
+\Ovalbox{STRING}
+Surround a STRING by thick oval box.
+
+Require `\usepackage{fancybox}`
+
+<ref fancybox>
+
+doublebox
+\doublebox{STRING}
+Surround a STRING by double frame.
+
+Require `\usepackage{fancybox}`
+
+<ref fancybox>
+
+
+
 YaTeX
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))
 The mode you are probably using now.

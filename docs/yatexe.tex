@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Fri Feb  2 12:39:12 2001 on firestorm
+@c Last modified Fri Sep 12 12:04:11 2003 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -15,7 +15,7 @@
 @subtitle Yet Another tex-mode for emacs
 @title Wild Bird
 @subtitle // YaTeX //
-@author @copyright{} 1991-1996 by    HIROSE, Yuuji [yuuji@@yatex.org]
+@author @copyright{} 1991-2003 by    HIROSE, Yuuji [yuuji@@yatex.org]
 @end titlepage
 
 @node Top, What is YaTeX?, (dir), (dir)
@@ -30,7 +30,7 @@
 * Main features::               What YaTeX can do
 * Installation::                Guide to install
 * Typesetting::                 Call typesetting processes
-* %#notation::                  
+* %#notation::                  Meta-keyword `%#'
 * Completion::                  Input LaTeX commands with completion
 * Local dictionaries::          Directory dependent completion
 * Commenting out::              Commenting/uncommenting text
@@ -40,6 +40,7 @@
 * Updation of includeonly::     Free from maintaining includeonly
 * What column::                 Check what table-column the cursor belong
 * Intelligent newline::         Guess requisites of new line
+* Usepackage checker::          Selecting correct \usepackage is YaTeX's job
 * Online help::                 On-line documentation of LaTeX
 * Browsing file hierarchy::     Walking through file hierarchy
 * Cooperation with other packages::  Work well with gmhist, min-out
@@ -47,75 +48,6 @@
 * Etcetera::                    YaTeX is acquisitive.
 * Copying::                     Redistribution
 
- --- The Detailed Node Listing ---
-
-Typesetting
-
-* Calling typesetter::          
-* Calling previewer::           
-* Printing out::                
-
-%# notation
-
-* Changing typesetter::         
-* Static region for typesetting::  
-* Lpr format::                  
-* Editing %# notation::         
-
-Completion
-
-* Begin-type completion::       
-* Section-type completion::     
-* Large-type completion::       
-* Maketitle-type completion::   
-* Arbitrary completion::        
-* End completion::              
-* Accent completion::           
-* Image completion::            
-* Greek letters completion::    
-
-Section-type completion
-
-* view-sectioning::             
-
-Cursor jump
-
-* Jump to corresponding object::  
-* Invoking image processor::    
-* Jump to main file::           
-* Jumping around the environment::  
-* Jumping to last completion position::  
-
-Changing and Deleting
-
-* Changing LaTeX commands::     
-* Killing LaTeX commands::      
-
-Customizations
-
-* Lisp variables::              
-* Add-in functions::            
-* Add-in generator::            
-
-Lisp variables
-
-* All customizable variables::  
-* Sample definitions::          
-* Hook variables::              
-* Hook file::                   
-
-Procedure
-
-* How the add-in function works::  
-* How the function is called::  
-* Useful functions for creating add-in::  
-* Contribution::                
-
-How the add-in function works
-
-* Defining option-add-in::      
-* Defining argument-add-in::    
-@end menu
 
 @node What is YaTeX?, Main features, Top, Top
 @comment  node-name,  next,  previous,  up
@@ -1348,7 +1280,7 @@ edited text is not in includeonly list and prompts you
 
 in the minibuffer.  Type @kbd{a} if you want to add the current file name
 to @code{\includeonly} list, @kbd{r} to replace \@code{includeonly} list
-by the current file, and type @kbd{%} to comment out the
+with the current file, and type @kbd{%} to comment out the
 @code{\includeonly} line.
 
 @node What column, Intelligent newline, Updation of includeonly, Top
@@ -1389,7 +1321,7 @@ environment  as a row of column  headers, you  can  create a row of
 virtual column  headers by  putting  them  in the  first line  and
 commenting that line with @code{%}.
 
-@node Intelligent newline, Online help, What column, Top
+@node Intelligent newline, Usepackage checker, What column, Top
 @comment  node-name,  next,  previous,  up
 @chapter Intelligent newline
 @cindex Intelligent newline
@@ -1440,7 +1372,22 @@ calling this function before your code to insert certain contents must be
 useful.  See the definition of the function
 @code{YaTeX-intelligent-newline-itemize} as an example.
 
-@node Online help, Browsing file hierarchy, Intelligent newline, Top
+@node Usepackage checker, Online help, Intelligent newline, Top
+@comment  node-name,  next,  previous,  up
+@chapter Usepackage checker
+@cindex usepackage
+
+When you input begint-type, section-type, maketitle-type macros with
+completion, and it requires some LaTeX2e package, YaTeX examines
+the existence of correct @code{\usepackage}.  If not, YaTeX inserts
+the @code{\usepackage@{@}} declaration corresponding to input macro.
+
+To activate the package completion for your favarite package,
+set the variable @code{YaTeX-package-alist-private} correctly.
+Please refere the value of @code{YaTeX-package-alist-default} as an
+example.
+
+@node Online help, Browsing file hierarchy, Usepackage checker, Top
 @comment  node-name,  next,  previous,  up
 @chapter Online help
 @cindex online help
@@ -1630,6 +1577,17 @@ in @file{~/.emacs} is preferred and that of defined in @file{yatex.el} is
 neglected.  Parenthesized contents stands for the default value.  When you
 are to change some of these variables,  see more detailed documentation of
 the variable by @kbd{M-x describe-variable}.
+
+@defvar YaTeX-japan
+Set this nil to produce all messages in English
+(@code{Depends on Japanese feature of Emacs})
+@end defvar
+
+@defvar YaTeX-kanji-code
+Default buffer-file-coding-system for YaTeX modes' buffer.
+Set this 0 to no language conversion.  Nil to preserve original 
+coding-system. (@code{1 or 2})
+@end defvar
 
 @defvar YaTeX-prefix
 Prefix key stroke (@kbd{C-c})
@@ -1831,6 +1789,28 @@ font-lock is used.
 (@code{(featurep 'hilit19)}
 @end defvar
 
+@defvar YaTeX-singlecmd-suffix
+Suffix which is always inserted after maketitle-type macros.
+@code{"{}"} is recommended.
+@end defvar
+
+@defvar YaTeX-package-alist-private
+Alist of LaTeX2e-package name vs. lists of macros in it.
+Set this alist properly and YaTeX automatically check the declaratiion of
+`usepackage' for corresponding macro, when you input that macro with
+completion.  If required `usepackage' is not found, YaTeX also
+automatically inserts `\usepackage'.  Alist is as follows;
+@lisp
+   '((PackageName1
+        (completionType ListOfMacro)
+        (completionType ListOfMacro))
+     (PackageName2
+        (completionType ListOfMacro)
+        (completionType ListOfMacro...))....)
+@end lisp
+completionType is one of @code{env, section, maketitle}.
+Consult the value of @code{YaTeX-package-alist-default} as an example.
+@end defvar
 
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
 @comment  node-name,  next,  previous,  up
@@ -1919,7 +1899,18 @@ Put the function into @file{yatexhks.el}
 @comment  node-name,  next,  previous,  up
 @subsection How the add-in function works
 
-  There are two kinds of add-in.  @dfn{Option add-in} returns the
+There are three types of add-in.
+
+@enumerate
+@item
+Option add-in
+@item
+argument add-in
+@item
+enclosing add-in
+@end enumerate
+
+@dfn{Option add-in} returns the
 La@TeX{}'s optional parameters such as optional strings after
 @code{\begin@{ENV@}}, optional strings between a section-type command
 and its first argument, and optional strings just after type
@@ -1952,9 +1943,33 @@ with an integer argument which indicates which argument of section-type
 command is being read.  Thus the add-in should determine the
 job referring the value of its argument.
 
+  @dfn{enclosing add-in} is for modifying and/or checking the region that
+will be enclosed by section-type commands via @kbd{[prefix] S}.  An
+enclosing add-in function will be called with two arguments, beginning of
+the enclosed region and end of the region.  Suppose you want to enclose
+the existing text @code{(a+b)/c} by @code{\frac{}}.
+
+@display
+a/c
+|  |
+A  B
+@end display
+
+You do set-mark-command at point A and then move to point B.  Typing
+@kbd{[prefix] S} and input @code{frac} enclose the region like this;
+
+@display
+\frac{a/c}
+@end display
+
+Normally, the expression @code{a/c} is translated to
+@code{\frac@{a@}@{c@}}. An enclosing add-in is useful for modifying
+@code{/} to @code{@}@{}.
+
 @menu
 * Defining option-add-in::      
 * Defining argument-add-in::    
+* Defining enclosing-add-in::   
 @end menu
 
 @node Defining option-add-in, Defining argument-add-in, How the add-in function works, How the add-in function works
@@ -1984,7 +1999,7 @@ Emacs-Lisp.  The next example reads the tabular format from keyboard.
           (concat "@{" (read-string "Rule: ") "@}"))
 @end lisp
 
-@node Defining argument-add-in,  , Defining option-add-in, How the add-in function works
+@node Defining argument-add-in, Defining enclosing-add-in, Defining option-add-in, How the add-in function works
 @comment  node-name,  next,  previous,  up
 @subsubsection Defining `argument add-in'
 
@@ -2006,6 +2021,29 @@ minibuffer.  Here is the created function considering this.
 
   Note that when the `argument add-in' function return `nil', normal
 argument reader will be called.
+
+@node Defining enclosing-add-in,  , Defining argument-add-in, How the add-in function works
+@comment  node-name,  next,  previous,  up
+@subsubsection Defining `enclosing add-in'
+
+  This section describes how to define the add-in function for
+text enclosed by @code{\frac@{@}}.
+
+  When enclosing the text @code{5/3} by @code{\frac@{@}}, you might want to
+replace @code{/} with @code{@}@{}.  Enclosing function
+@code{YaTeX::frac-region} is called with two arguments, beginning of
+enclosed text and end of enclosed text.  The function is expected to
+replace @code{/} with @code{@}@{}.  Here is an example expression.
+
+@lisp
+(defun YaTeX::frac-region (beg end)
+  (catch 'done
+    (while (search-forward "/" end t)
+      (goto-char (match-beginning 0))
+      (if (y-or-n-p "Replace this slash(/) with `}{'")
+	  (throw 'done (replace-match "}{")))
+      (goto-char (match-end 0)))))
+@end lisp
 
 @node How the function is called, Useful functions for creating add-in, How the add-in function works, Add-in functions
 @comment  node-name,  next,  previous,  up
@@ -2282,7 +2320,7 @@ redistribute this software freely but with NO warranty to anything
 as a result  of using this  software.   However, any  reports  and
 suggestions are  welcome as  long as I   feel  interests in   this
 software.   My possible  e-mail address is  `yuuji@@yatex.org'.
-(up to Dec.2000 at least)  And there is mailing list for YaTeX.
+(up to Sep.2003 at least)  And there is mailing list for YaTeX.
 Although the common language is Japanese, questions in English will be
 welcome.  To join the ML, send the mail whose subject is `append' to
 the address `yatex@@yatex.org.  If you have some

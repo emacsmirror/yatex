@@ -1,12 +1,13 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX package manager
 ;;; yatexpkg.el
-;;; (c )2003 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Fri May  2 20:13:49 2003 on firestorm
+;;; (c)2003 by HIROSE, Yuuji [yuuji@yatex.org]
+;;; Last modified Thu Aug 28 18:24:33 2003 on firestorm
 ;;; $Id$
 
 (defvar YaTeX-package-alist-default
-  '(("version"	(env "comment"))	;by tsuchiya@pine.kuee.kyoto-u.ac.jp
+  '(("version"	(env "comment")		;by tsuchiya@pine.kuee.kyoto-u.ac.jp
+     		(section "includeversion" "excludeversion"))
 
     ("plext"	(section "bou"))	;by yas.axis@ma.mni.ne.jp
 
@@ -17,14 +18,21 @@
     ("longtable" (env "longtable"))
     ("ascmac"	(env "screen" "boxnote" "shadebox" "itembox")
 		(maketitle "return" "Return" "yen")
-     		(section "keytop"))
+     		(section "keytop") ("mask") ("maskbox"))
     ("bm"	(section "bm"))		;by aoyama@le.chiba-u.ac.jp
 
     ("graphicx"	(section "includegraphics"))
     ("alltt"	(env "alltt"))
     ("misc"	(section "verbfile" "listing"))
     ("eclbkbox"	(env "breakbox")))
-  "Default package vs. macro list")
+  "Default package vs. macro list.
+Alists contains '(PACKAGENAME . MACROLIST)
+PACKAGENAME     Basename of package(String).
+MACROLIST	List of '(TYPE . MACROS)
+TYPE	One of 'env, 'section or 'maketitle according to completion-type
+MACROS	List of macros
+
+An good example is the value of YaTeX-package-alist-default.")
 
 (defvar YaTeX-package-alist-private nil
   "*User defined package vs. macro list. See also YaTeX-package-alist-default")
@@ -85,6 +93,7 @@ Search the usepackage for MACRO of the TYPE."
 			usepkgrx YaTeX-comment-prefix nil t)
 		  (setq mb0 (match-beginning 0))
 		  (skip-chars-forward "^{")
+		  (forward-char 1)
 		  (let ((pl pkglist))
 		    (while pl		;(car pl)'s car is package, cdr is type
 		      (if (looking-at (regexp-quote (car (car pl))))
@@ -100,7 +109,11 @@ Search the usepackage for MACRO of the TYPE."
 		  (setq pkg
 			(completing-read
 			 "Load which package?(TAB for list): "
-			 pkglist))
+			 pkglist nil nil
+			 ;;initial input
+			 (if (= (length pkglist) 1)
+			     (let ((w (car (car pkglist))))
+			       (if YaTeX-emacs-19 (cons w 0) w)))))
 		  (set-buffer pb)
 		  (goto-char (point-min))
 		  (if (YaTeX-re-search-active-forward

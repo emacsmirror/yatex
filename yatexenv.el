@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
-;;; (c ) 1994-2003 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Mar 30 19:25:47 2003 on firestorm
+;;; (c) 1994-2003 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Fri Jun 27 12:09:30 2003 on firestorm
 ;;; $Id$
 
 ;;;

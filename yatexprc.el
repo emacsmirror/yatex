@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c )1993-2003 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu May  1 22:37:31 2003 on firestorm
+;;; (c)1993-2003 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sun Nov  2 08:09:44 2003 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -27,15 +27,23 @@
   "Shell option for command execution.")
 
 (defvar YaTeX-latex-message-code
+;;   (cond
+;;    (YaTeX-dos (cdr (assq 1 YaTeX-kanji-code-alist)))
+;;    ((and YaTeX-emacs-20 (member 'undecided (coding-system-list))
+;; 	 'undecided))
+;;    ((featurep 'mule)
+;;     (or (and (boundp '*autoconv*) *autoconv*)
+;; 	(and (fboundp 'coding-system-list) 'automatic-conversion)))
+;;    ((boundp 'NEMACS)
+;;     (cdr (assq (if YaTeX-dos 1 2) YaTeX-kanji-code-alist))))
   (cond
-   (YaTeX-dos (cdr (assq 1 YaTeX-kanji-code-alist)))
-   ((and YaTeX-emacs-20 (member 'undecided (coding-system-list))
-	 'undecided))
-   ((featurep 'mule)
-    (or (and (boundp '*autoconv*) *autoconv*)
-	(and (fboundp 'coding-system-list) 'automatic-conversion)))
+   (YaTeX-emacs-20
+    (cdr (assoc latex-message-kanji-code YaTeX-kanji-code-alist)))
+   ((boundp 'MULE)
+    (symbol-value
+     (cdr (assoc latex-message-kanji-code YaTeX-kanji-code-alist))))
    ((boundp 'NEMACS)
-    (cdr (assq (if YaTeX-dos 1 2) YaTeX-kanji-code-alist))))
+    latex-message-kanji-code))
   "Process coding system for LaTeX.")
 
 (if YaTeX-typeset-buffer-syntax nil
@@ -395,11 +403,11 @@ PROC should be process identifier."
       (concat
        (catch 'found-paper
 	 (mapcar (lambda (pair)
-		   (if (member (car pair) opts)
+		   (if (YaTeX-member (car pair) opts)
 		       (throw 'found-paper (cdr pair))))
 		 YaTeX-paper-type-alist)
 	 YaTeX-default-paper-type)
-       (if (member "landscape" opts) "r" "")))))
+       (if (YaTeX-member "landscape" opts) (if YaTeX-dos "L" "r") "")))))
 
 (defvar YaTeX-preview-command-history nil
   "Holds minibuffer history of preview command.")
@@ -415,7 +423,10 @@ PROC should be process identifier."
      "Preview command: "
      (YaTeX-replace-format
       (or (YaTeX-get-builtin "PREVIEW") dvi2-command)
-      "p" (concat "-paper " (YaTeX-get-paper-type)))
+      "p" (format (cond
+		   (YaTeX-dos "-y:%s")
+		   (t "-paper %s"))
+		  (YaTeX-get-paper-type)))
      'YaTeX-preview-command-history)
     (read-string-with-history
      "Preview file[.dvi]: "
@@ -688,10 +699,13 @@ will be given to the shell."
 (defvar YaTeX-lpr-command-history nil
   "Holds command line history of YaTeX-lpr.")
 (put 'YaTeX-lpr-command-history 'no-default t)
+(defvar YaTeX-lpr-ask-page-range-default t)
 (defun YaTeX-lpr (arg)
-  "Print out.  If prefix arg ARG is non nil, call print driver without
+  "Print out.
+If prefix arg ARG is non nil, call print driver without
 page range description."
   (interactive "P")
+  (or YaTeX-lpr-ask-page-range-default (setq arg (not arg)))
   (let*((cmd (or (YaTeX-get-builtin "LPR") dviprint-command-format))
 	from to (lbuffer "*dvi-printing*") dir)
     (setq

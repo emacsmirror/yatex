@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in function generator.
 ;;; yatexgen.el rev.5
-;;; (c )1991-1995,1999,2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 25 19:17:30 2000 on firestorm
+;;; (c)1991-1995,1999,2000 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Fri Jun 27 12:09:37 2003 on firestorm
 ;;; $Id$
 
 (require 'yatex)

@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX sectioning browser.
 ;;; yatexsec.el
-;;; (c ) 1994,1998,1999,2003 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Wed Mar  5 13:19:11 2003 on firestorm
+;;; (c) 1994,1998,1999,2003 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Fri Jun 27 12:10:34 2003 on firestorm
 ;;; $Id$
 
 (defvar YaTeX-sectioning-level

@@ -1,7 +1,11 @@
 %%%
 %%% 野鳥-LaTeXヘルプファイル(c)HIROSE Yuuji [yuuji@yatex.org]
-%%% 機械的に変換して野鳥以外のデバイスで利用することを許可します。
-%%% その際にコピーライト表示と含まれている項目を削除しないでください。
+%%% このヘルプファイルを野鳥以外のデバイスで利用することを許可します。
+%%% 項目の修正や追加は自由に行なって構いませんが、そのことを
+%%% 知らせて頂けるとありがたいです。
+%%% 他のデバイスで利用する場合でも先頭のコピーライト表示と、末尾に含まれる
+%%% LaiTeX, laitex, YaTeX, yatex の各項目は(このヘルプファイルについての
+%%% 著作権表記と謝辞が含まれているので)削除しないでください。
 %%%
 
 textfloatsep
@@ -1234,6 +1238,169 @@ pt		ポイント(72.27pt=1インチ)
 新しいページを開始し、\textwidthのBOXをparboxで作成する。
 二段組みページでぶち抜きタイトルを作成する時に用いるとよい。
 
+breakbox
+\begin{breakbox} ... \end{breakbox}
+ページをまたがる枠で囲む
+要 `\usepackage{eclbkbox}'
+
+verbfile
+\verbfile{FILE}
+FILE を verbatim 環境的に取り込む。
+要 `\usepackage{misc}'
+cf) \listing
+
+listing
+\listing{FILE}
+FILE を verbatim 環境的に取り込む(行番号つき)。
+要 `\usepackage{misc}'
+cf) \verbfile
+
+ascmac
+\usepackage{ascmac}
+`ascmac' パッケージで定義されている代表的なマクロ
+* \boxnote 環境			帳面風のボックス
+* \screen 環境			スクリーン出力風の枠
+* \itembox 環境			目立つ枠
+* \shadebox 環境		影つきボックス
+* \keytop{} 			キートップ
+* \yen				円記号
+* \return-key			リターンキー
+* \mask, \maskbox		網掛け文字
+
+boxnote
+\begin{boxnote} ... \end{boxnote}
+帳面風の枠で囲む
+要 ascmac.sty
+
+<refer ascmac>
+
+screen
+\begin{screen} ... \end{screen}
+スクリーン出力風の枠で囲む
+要 `\usepackage{ascmac}'
+
+<refere ascmac>
+
+itembox
+\begin{itembox}{ITEMSTRING} ... \end{itembox}
+見出し(ITEMSTRING)つきの枠で囲む
+要 `\usepackage{ascmac}'
+<refere ascmac>
+
+shadebox
+\begin{shadebox} ... \end{shadebox}
+行幅いっぱいの影つきの枠で囲む
+要 `\usepackage{ascmac}'
+<refere ascmac>
+
+keytop
+\keytop{KEY}
+キートップ風に KEY を出力
+要 `\usepackage{ascmac}'
+<refere ascmac>
+
+mask
+\mask{文字列}{網掛けタイプ}
+「文字列」を指定した網掛けタイプで装飾する。
+網掛けタイプは A～K のどれか。
+
+例) \mask{御食事券発覚!}{C}
+
+どんな見映えかは以下を見よ。
+http://www.yatex.org/help/ascmac-mask.jpg
+
+要 `\usepackage{ascmac}'
+
+<refere ascmac>
+
+maskbox
+\maskbox{WIDTH}{HEIGHT}{MASKTYPE}{POS}{STRING}
+指定した幅(WIDTH)と高さ(HEIGHT)で指定した網掛けタイプ(MASKTYPE)
+のボックスを作り、その中の指定した位置(POS)にSTRINGを配置する。
+POSは l c rのどれかで、それぞれ、左寄せ、中央寄せ、右寄せ。
+
+網掛けタイプは A～K のどれか。
+
+例) \maskbox{0.7\columnwidth}{6em}{A}{c}{\shortstack{これは\\大事件だ!}}
+
+マスクタイプA～Kがどんな見映えかは以下を見よ。
+http://www.yatex.org/help/ascmac-mask.jpg
+
+要 `\usepackage{ascmac}'
+<refere ascmac>
+
+alltt
+\begin{alltt} ... \end{alltt}
+TeXマクロの使えるverbitam環境。
+
+comment
+\begin{comment} ... \end{comment}
+環境内の全てを出力しないようにする。
+ただし、 \includeversion{comment} と書くと環境を出力するようになる。
+また \excludeversion{ENV} とすると新しい環境 ENV が
+comment 環境 と同じ機能を持つものとして使えるようになる。
+
+要 `\usepackage{version}'
+
+bou
+\bou{STRING}
+横書き環境で STRING に傍点を付ける。
+
+要 `\usepackage{plext}'
+
+url
+\url{URL_STRING}
+overfullしがちなURLを頑張って折り返してくれる。
+
+要 `\usepackage{url}'
+
+longtable
+\begin{longtable}{POSSTRING} ... \end{longtable}
+ページをまたぐ表が作れる。
+
+table環境も参照せよ。
+
+fancybox
+\usepackage{fancybox}
+各種の見栄えの良いボックスが定義されている。
+
+* \shadowbox{}
+* \ovalbox{}
+* \doublebox{}
+
+shadowbox
+\shadowbox{STRING}
+STRINGをその幅で影つきボックスで囲む。
+
+要 `\usepackage{fancybox}`
+
+<ref fancybox>
+
+ovalbox
+\ovalbox{STRING}
+角の丸い四角枠で STRING を囲む。
+
+要 `\usepackage{fancybox}`
+
+<ref fancybox>
+
+Ovalbox
+\Ovalbox{STRING}
+角の丸い四角枠で STRING を囲む。ovalboxより線が太い。
+
+要 `\usepackage{fancybox}`
+
+<ref fancybox>
+
+doublebox
+\doublebox{STRING}
+二重四角枠で STRING を囲む。
+
+要 `\usepackage{fancybox}`
+
+<ref fancybox>
+
+
 LaiTeX
 a Little Assistant Interface for TeX on Vz
 おそらくあなたが今 Vz 上で使っているこのモード。
@@ -1320,8 +1487,8 @@ sa2cさん(asciinet)
 	たれました。享年二十六歳。彼には、野鳥だけでなく私が手掛けた数多
 	くのソフトウェアを作る動機、センスあふれるコメントなどを頂きまし
 	た。現在の野鳥が皆様に支持されるように健やかに育ったのは彼のおか
-	げと言っても過言ではありません。野鳥/雷鳥/白鳥/飛鳥を使うときに
-	彼の安らかな眠りを私と共に祈って下さい。
+	げと言っても過言ではありません。野鳥/雷鳥/白鳥/飛鳥/花鳥を使うと
+	きに彼の安らかな眠りを私と共に祈って下さい。
 
 るねきちさん(asciinet)
 	占い師だそうです。
