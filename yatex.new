@@ -1,6 +1,15 @@
 	What's new in YaTeX
 	yatex.el 各バージョンの変更点について
 
+1.60	LaTeX2e 対応
+	documentclass パラメータを修正し、ASCII 版 jLaTeX2e に対応
+	\{ \}でhilitがおかしくなるバグを修正
+	YaTeX-hilit-recenterのたびにpatterns-alistが太るのを修正
+	yahtml.el に hilit を導入
+	変数 YaTeX-hilit-sectioning-attenuation-rate で、セクションコマ
+	ンドの色の濃さの減衰百分率を指定できるようにした
+	\chapter, \section, ...のデフォルトの色を変えた
+
 1.59	%(コメント)のhilitのバグを修正。
 	tabular環境のお任せ改行で無限ループになることがあるのを回避。
 	アドイン関数が効かないバグを修正。

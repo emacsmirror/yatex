@@ -191,6 +191,14 @@
 	\begin{itemize} within the environment.   Now it's  too shallow?
 	Umm... time for me to take a break.
 	
+*Is it possible to include personal template file template.tex handily?
+	
+	Try Emacs-19's standard package `autoinsert.el' please.  Or its
+	upper compatible package auto-insert-tkld might also be good.
+	You can get auto-insert-tkld via anonymous ftp
+	ftp://ftp.ae.keio.ac.jp/pub/emacs-lisp/util/
+	ftp://archive.cis.ohio-state.edu/pub/gnu/elisp-archive/
+	
 [About Emacs-19/Mule2]
 ======================
 *Equations are too dark to read when I use hilit19.
@@ -295,7 +303,7 @@
 	Naoki;  katsura@prc.tsukuba.ac.jp) is  "fj  Wild  Bird Society".
 	Send a mail like
 	
-		To: yatex-control@harvest.jaist.ac.jp
+		To: yatex-control@jaist.ac.jp
 		Subject: append
 		-----
 		Hi!  See any birds fly by?

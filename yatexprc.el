@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Jan 28 01:01:44 1995 on VFR
+;;; Last modified Thu Nov  2 19:35:16 1995 on inspire
 ;;; $Id$
 
 (require 'yatex)
@@ -668,7 +668,8 @@ page range description."
     (string-match (YaTeX-guess-parent (YaTeX-get-builtin "!")) (buffer-name)))
    (t
     (save-excursion
-      (let ((latex-main-id (concat "^\\s *" YaTeX-ec-regexp "documentstyle")))
+      (let ((latex-main-id
+	     (concat "^\\s *" YaTeX-ec-regexp "document\\(style\\|class\\)")))
 	(or (re-search-backward latex-main-id nil t)
 	    (re-search-forward latex-main-id nil t))))))
 )

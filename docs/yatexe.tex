@@ -1673,6 +1673,20 @@ open the target file even if the file doesn't exist(@code{nil}).
 Simplyfy messages of various completions(@code{nil})。
 @end defvar
 
+@defvar YaTeX-hilit-sectioning-face
+When hilit19 and yatex19 is active, YaTeX colors the sectioning commands.
+This variable specifies the foreground and background color of
+@code{\part} macro.  The default value is @code{'(yellow/dodgerblue
+yellow/slateblue)}.  The first element of this list is for the screen when
+@code{hilit-background-mode} is @code{'light}, and the second element is
+for @code{'dark}.  You should specify both color as `forecolor/backcolor'.
+@end defvar
+
+@defvar YaTeX-hilit-sectioning-attenuation-rate
+When color mode, this variable specifies how much attenuate the color
+density of @code{\subparagraph} compared with that of @code{\chapter}.
+See also 。@code{YaTeX-hilit-sectioning-face}.
+@end defvar
 
 
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
@@ -2128,8 +2142,8 @@ software.   My possible  e-mail address is  `yuuji@@ae.keio.ac.jp'.
 (up to Mar.1995 at least)  And there is mailing list for YaTeX.
 Although the common language is Japanese, questions in English will be
 welcome.  To join the ML, send the mail whose subject is `append' to
-the address `yatex-control@@harvest.jaist.ac.jp'.  If you have some
-question, please ask to `yatex-request@@harvest.jaist.ac.jp'.
+the address `yatex-control@@jaist.ac.jp'.  If you have some
+question, please ask to `yatex-request@@jaist.ac.jp'.
 
   The specification of this software will be surely modified
 (depending on my feelings) without notice :-p.

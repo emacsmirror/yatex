@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon May 15 15:50:04 1995 on inspire
+;;; Last modified Sun Dec  3 03:29:56 1995 on inspire
 ;;; $Id$
 
 ;;; Ç∆ÇËÇ†Ç¶Ç∏ hilit19 ÇégÇ¡ÇƒÇ¢ÇÈéûÇ…êFÇ™ïtÇ≠ÇÊÇ§Ç…ÇµÇƒ
@@ -325,8 +325,13 @@ Assumes PATTERN begins with `{'."
 (defvar YaTeX-hilit-pattern-adjustment-private nil
   "*Adjustment hilit-pattern-alist for default yatex-mode's pattern.")
 (defvar YaTeX-hilit-sectioning-face
-  '(yellow/dodgerblue yellow/cornflowerblue)
+  '(yellow/dodgerblue yellow/slateblue)
   "*Hilightening face for sectioning unit.  '(FaceForLight FaceForDark)")
+(defvar YaTeX-hilit-sectioning-attenuation-rate
+  '(15 40)
+  "*Maximum attenuation rate of sectioning face. '(ForeRate BackRate)
+Each rate specifies how much portion of RGB value should be attenuated
+towards to lowest sectioning unit.  Numbers should be written in percentage.")
 (defvar YaTeX-sectioning-patterns-alist nil
   "Hilightening patterns for sectioning units.")
 (defvar YaTeX-hilit-singlecmd-face
@@ -345,7 +350,9 @@ Assumes PATTERN begins with `{'."
 	(sectcol (symbol-name sectface))
 	sect-pat-alist)
     (if (string-match "/" sectcol)
-	(let (colorvalue fR fG fB bR bG bB list pat fg bg level from face)
+	(let ((fmin (nth 0 YaTeX-hilit-sectioning-attenuation-rate))
+	      (bmin (nth 1 YaTeX-hilit-sectioning-attenuation-rate))
+	      colorvalue fR fG fB bR bG bB pat fg bg level from face list lm)
 	  (require 'yatexsec)
 	  (setq fg (substring sectcol 0 (string-match "/" sectcol))
 		bg (substring sectcol (1+ (string-match "/" sectcol)))
@@ -357,18 +364,19 @@ Assumes PATTERN begins with `{'."
 		bR (/ (nth 0 colorvalue) 256)
 		bG (/ (nth 1 colorvalue) 256)
 		bB (/ (nth 2 colorvalue) 256)
+		lm YaTeX-sectioning-max-level
 		list YaTeX-sectioning-level)
 	  (while list
 	    (setq pat (concat YaTeX-ec-regexp (car (car list)) "\\*?{")
 		  level (cdr (car list))
 		  fg (format "hex-%02x%02x%02x"
-			     (- fR (/ (* level fR) 40)) ;40 musn't be constant
-			     (- fG (/ (* level fG) 40))
-			     (- fB (/ (* level fB) 40)))
+			     (- fR (/ (* level fR fmin) lm 100))
+			     (- fG (/ (* level fG fmin) lm 100))
+			     (- fB (/ (* level fB fmin) lm 100)))
 		  bg (format "hex-%02x%02x%02x"
-			     (- bR (/ (* level bR) 15)) ;15 musn't be constant
-			     (- bG (/ (* level bG) 15))
-			     (- bB (/ (* level bB) 15)))
+			     (- bR (/ (* level bR bmin) lm 100))
+			     (- bG (/ (* level bG bmin) lm 100))
+			     (- bB (/ (* level bB bmin) lm 100)))
 		  from (intern (format "sectioning-%d" level))
 		  face (intern (concat fg "/" bg)))
 	    (hilit-translate from face)
@@ -390,39 +398,45 @@ Assumes PATTERN begins with `{'."
 	      (cond
 	       ((eq hilit-background-mode 'light) (car table))
 	       ((eq hilit-background-mode 'dark) (car (cdr table)))
-	       (t nil))))))
+	       (t nil)))))
+	  sect single)
       (hilit-translate
        ;;sectioning (funcall get-face YaTeX-hilit-sectioning-face)
-       macro (funcall get-face YaTeX-hilit-singlecmd-face)))
-    (setq hilit-patterns-alist		;Remove at first.
-	  (delq 'yatex-mode hilit-patterns-alist)
-	  hilit-patterns-alist
-	  (cons
-	   (cons 'yatex-mode
-		 (append
-		  YaTeX-sectioning-patterns-alist
-		  YaTeX-hilit-pattern-adjustment-private
-		  ;;YaTeX-hilit-pattern-adjustment-default
-		  YaTeX-hilit-patterns-alist
-		  (list
-		   (list
-		    'YaTeX-19-region-section-type
-		    (concat "\\\\\\("
-			    (mapconcat
-			     (function (lambda (s) (regexp-quote (car s))))
-			     (append user-section-table tmp-section-table)
-			     "\\|")
-			    "\\){")
-		    'keyword)
-		   (list
-		    (concat "\\\\\\("
-			    (mapconcat
-			     (function (lambda (s) (regexp-quote (car s))))
-			     (append user-singlecmd-table tmp-singlecmd-table)
-			     "\\|")
-			    "\\)\\b")
-		    0 'macro))))
-	   hilit-patterns-alist)))))
+       macro (funcall get-face YaTeX-hilit-singlecmd-face))
+      (if (setq sect (append user-section-table tmp-section-table))
+	  (setq sect (concat "\\\\\\("
+			     (mapconcat
+			      (function
+			       (lambda (s) (regexp-quote (car s))))
+			      sect
+			      "\\|")
+			     "\\){")))
+      (if (setq single (append user-singlecmd-table tmp-singlecmd-table))
+	  (setq single (concat "\\\\\\("
+			       (mapconcat
+				(function (lambda (s) (regexp-quote (car s))))
+				single
+				"\\|")
+			       "\\)\\b")))
+      (setq hilit-patterns-alist		;Remove at first.
+	    (delq (assq 'yatex-mode hilit-patterns-alist) hilit-patterns-alist)
+	    hilit-patterns-alist
+	    (cons
+	     (cons 'yatex-mode
+		   (append
+		    (list nil)
+		    YaTeX-sectioning-patterns-alist
+		    YaTeX-hilit-pattern-adjustment-private
+		    ;;YaTeX-hilit-pattern-adjustment-default
+		    YaTeX-hilit-patterns-alist
+		    (delq nil
+			  (list
+			   (if sect (list
+				     'YaTeX-19-region-section-type
+				     sect
+				     'keyword))
+			   (if single (list single 0 'macro))))))
+	     hilit-patterns-alist))))))
 ;;(YaTeX-19-collect-macros)	;causes an error
 (defun YaTeX-hilit-recenter (arg)
   "Collect current local macro and hilit-recenter."
@@ -490,5 +504,10 @@ WARNING, This code is not perfect."
 ;;;       string 'mediumspringgreen
 ;;;       formula 'khaki
 ;;;       label 'yellow-underlined))
+(and YaTeX-emacs-19
+     (eval-when-compile
+       (if (and (boundp 'window-system) window-system)
+	   (require 'hilit19)
+	 (error "Byte compile this file on window system! Not `-nw'!"))))
 
 (provide 'yatex19)

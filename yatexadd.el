@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.13
 ;;; (c )1991-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Jan 26 03:31:20 1995 on figaro
+;;; Last modified Mon Nov  6 14:30:25 1995 on inspire
 ;;; $Id$
 
 ;;;
@@ -389,7 +389,7 @@ YaTeX-make-begin-end."
 	   YaTeX-label-buffer (function (lambda (x) (window-width x))))
 	  (with-output-to-temp-buffer YaTeX-label-buffer
 	    (while (YaTeX-re-search-active-forward
-		    (concat "\\\\" labelcmd)
+		    (concat "\\\\" labelcmd "\\b")
 		    (regexp-quote YaTeX-comment-prefix) nil t)
 	      (goto-char (match-beginning 0))
 	      (skip-chars-forward "^{")
@@ -741,6 +741,70 @@ YaTeX-make-begin-end."
       (if (string= "" sname) (setq sname YaTeX-default-document-style))
       (setq YaTeX-default-document-style sname))))
 )
+
+;;; -------------------- LaTeX2e stuff --------------------
+(defvar YaTeX:documentclass-options-default
+  '(("a4paper") ("a5paper") ("b5paper") ("10pt") ("11pt") ("12pt")
+    ("latterpaper") ("legalpaper") ("executivepaper") ("landscape")
+    ("oneside") ("twoside") ("draft") ("final") ("leqno") ("fleqn") ("openbib")
+    ("clock")				;for slides class only
+    )
+    "Default options list for documentclass")
+(defvar YaTeX:documentclass-options-private nil
+  "*User defined options list for documentclass")
+(defvar YaTeX:documentclass-options-local nil
+  "*User defined options list for local documentclass")
+
+(defun YaTeX:documentclass ()
+  (let*((delim ",")
+	(dt (append YaTeX:documentclass-options-local
+		    YaTeX:documentclass-options-private
+		    YaTeX:documentclass-options-default))
+	(minibuffer-completion-table dt)
+	(opt (read-from-minibuffer
+	      "Documentclass options ([opt1,opt2,...]): "
+	      nil YaTeX-minibuffer-completion-map nil))
+	(substr opt) o)
+    (if (string< "" opt)
+	(progn
+	  (while substr
+	    (setq o (substring substr 0 (string-match delim substr)))
+	    (or (assoc o dt)
+		(YaTeX-update-table
+		 (list o)
+		 'YaTeX:documentclass-options-default
+		 'YaTeX:documentclass-options-private
+		 'YaTeX:documentclass-options-local))
+	    (setq substr
+		  (if (string-match delim substr)
+		      (substring substr (1+ (string-match delim substr))))))
+	  (concat "[" opt "]"))
+      "")))
+
+(defvar YaTeX:documentclasses-default
+  '(("article") ("jarticle") ("report") ("jreport") ("book") ("jbook")
+    ("j-article") ("j-report") ("j-book")
+    ("letter") ("slides") ("ltxdoc") ("ltxguide") ("ltnews") ("proc"))
+  "Default documentclass alist")
+(defvar YaTeX:documentclasses-private nil
+  "*User defined documentclass alist")
+(defvar YaTeX:documentclasses-local nil
+  "*User defined local documentclass alist")
+(defvar YaTeX-default-documentclass (if YaTeX-japan "jarticle" "article")
+  "*Default documentclass")
+
+(defun YaTeX::documentclass (&optional argp)
+  (cond
+   ((equal argp 1)
+    (setq env-name "document")
+    (let ((sname
+	   (YaTeX-cplread-with-learning
+	    (format "Documentclass (default %s): " YaTeX-default-documentclass)
+	    'YaTeX:documentclasses-default
+	    'YaTeX:documentclasses-private
+	    'YaTeX:documentclasses-local)))
+      (if (string= "" sname) (setq sname YaTeX-default-documentclass))
+      (setq YaTeX-default-documentclass sname)))))
 
 ;;; -------------------- End of yatexadd --------------------
 (provide 'yatexadd)

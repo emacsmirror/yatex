@@ -1879,6 +1879,20 @@ Non-nil に設定するとsection型コマンドの引数入力時、アドイン関数がなければ
 各種補完時のメッセージ出力を簡素化する(@code{nil})。
 @end defvar
 
+@defvar YaTeX-hilit-sectioning-face
+色付けが有効な時の @code{\part} の色
+(@code{'(yellow/dodgerblue yellow/slateblue)})。
+リストの第一要素は @code{hilit-background-mode} が @code{'light} の時の、
+第二要素は @code{'dark} の時の @code{\chapter} の色で、文字色/背景色 のよ
+うに指定する。
+@end defvar
+
+@defvar YaTeX-hilit-sectioning-attenuation-rate
+色付けが有効な時の、@code{\subparagraph} の色を @code{\chapter} の濃度の何
+%薄くしたものにするか(@code{'(15 40)}。@code{YaTeX-hilit-sectioning-face}
+の項参照。
+@end defvar
+
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection カスタマイズ変数設定例

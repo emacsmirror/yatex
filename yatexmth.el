@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el rev.4
 ;;; (c )1993-1995 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Feb 18 03:54:50 1995 on VFR
+;;; Last modified Wed Aug 16 12:45:55 1995 on inspire
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -445,8 +445,7 @@ This value is appended with YaTeX-verbatim-environments.")
   (or (YaTeX-quick-in-environment-p
        '("math" "eqnarray" "equation" "eqnarray*" "displaymath"))
       (let*((p (point)) (nest 0) me0
-	    (delim (concat YaTeX-sectioning-regexp
-			   "\\|^%\\|^$\\|^\C-l"))
+	    (delim (concat YaTeX-sectioning-regexp "\\|^$\\|^\C-l"))
 	    (boundary
 	     (save-excursion
 	       (if (looking-at delim)

@@ -1083,6 +1083,12 @@ abbrv	著者のファーストネーム、発行月、書籍名が省略される
 出力される、\bibitem[LABEL]{NAME}の書式では、\cite{NAME}で参照され、
 [LABEL] のような引用記号が出力される。
 
+cite
+\cite{NAME}			\cite[LABEL]{NAME}
+\cite{NAME}の書式では、NAMEで参照され、[1],[2] のような形で引用記号が
+出力される、\cite[LABEL]{NAME}の書式では、[1,LABEL] のような引用記号
+が出力される。
+
 footnote
 \footnote{NOTE}
 NOTEという内容の脚注を生成する。
@@ -1319,13 +1325,15 @@ jaybirdさん(asciinet)
 
 竹中浩さん(東京大)
 	M-q (YaTeX-fill-paragraph) のバグを報告して頂きました。
+	YaTeX-insert-amper をcontributeして頂きました。
 
 佐藤圭さん(慶應大)
 	ネストした同種のitemize環境でのindentationの不具合を指摘して頂き
 	ました。
 
 石川洋介さん(富士通)
-	Mule2で斜体フォントを使用するための手順を教えて頂きました。
+	Mule2で斜体フォントを使用するための手順、auto-insertの存在を教え
+	て頂きました。
 
 井上浩一さん(九州大学)
 	MuleでフォーマットしたinfoファイルをNemacs用にコンバートする方法
@@ -1334,6 +1342,10 @@ jaybirdさん(asciinet)
 田口直文さん(慶應大)
 	font-lock の使い方を調査するといって、まだ何も教えてくれません。
 	早くしてください:-)。
+
+吉田尚志さん(慶應大)
+	label/ref補完で、labelやrefで始まる単語全てを候補にいれてしまう
+	バグを報告して頂きました。
 
 yatex
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))
