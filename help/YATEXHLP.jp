@@ -1,5 +1,13 @@
+textfloatsep
+\addtolength{\textfloatsep}{長さ}
+ページ先頭のfloatまたは、ページ最下部のfloatとテキストとの間隔。
+
+floatsep
+\addtolength{\floatsep}{長さ}
+floatとfloatの間隔。
+
 oddsidemargin
-\setlength{\oddsidemargin}{2cm}
+\setlength{\oddsidemargin}{長さ}
 右ページの左端から1インチ(2.54cm)の線と本文の距離
 
 pagestyle
@@ -11,6 +19,10 @@ headings	ヘッダにセクションに応じた見出しとページ番号をつけ
 		フッタには何も出力しない.
 myheadings	headingsのスタイルで、ヘッダの情報を \markbpth と
 		\markright で指定できる.
+
+thispagestyle
+\thispagestyle{スタイル}
+現在のページだけのスタイルを決定する。
 
 pagenumbering
 \pagenumbering{スタイル}
@@ -50,63 +62,63 @@ NAMEという長さコマンドを新たに宣言する。
 \hbox{TEXT}の出力結果と同じ幅に長さ\NAME をセットする。
 
 evensidemargin
-\setlength{\evensidemargin}{1em}
+\setlength{\evensidemargin}{長さ}
 左ページの左端から1インチ(2.54cm)の線と本文の距離
 
 footheight
-\setlength{\footheight}{1ex}
+\setlength{\footheight}{長さ}
 フッタの高さ
 
 footskip
-\setlength{\footskip}{20pt}
+\setlength{\footskip}{長さ}
 本文の箱の下端とフッタの距離
 
 headheight
-\addtolength{\headheight}{-1cm}
+\addtolength{\headheight}{長さ}
 ヘッダの高さ
 
 headsep
-\setlength{\headsep}{5mm}
+\setlength{\headsep}{長さ}
 ヘッダと本文の間隔
 
 marginparsep
-\addtolength{\marginparsep}{3mm}
+\addtolength{\marginparsep}{長さ}
 傍注と本文の間隔
 
 marginparwidth
-\addtolength{\marginparwidth}{-1ex}
+\addtolength{\marginparwidth}{長さ}
 傍注の幅
 
 oddsidemargin
-\addtolength{\oddsidemargin}{-1mm}
+\addtolength{\oddsidemargin}{長さ}
 右ページの左端から1インチ(2.54cm)の線と本文の距離
 
 textheight
-\addtolength{\textheight}{3em}
+\addtolength{\textheight}{長さ}
 本文の高さ
 
 textwidth
-\addtolength{\textwidth}{2em}
+\addtolength{\textwidth}{長さ}
 本文の幅
 
 topmargin
-\addtolength{\topmargin}{1mm}
+\addtolength{\topmargin}{長さ}
 ページ上端から1インチの線とヘッダの距離
 
 topskip
-\addtolength{\topskip}{-1mm}
+\addtolength{\topskip}{長さ}
 本文の箱の上端と一行目のテキストとの間隔
 
 parindent
-\setlength{\parindent}{20pt}
+\setlength{\parindent}{長さ}
 \parindent	段落の先頭の字下げ幅.
 
-linewidth
-\addtolength{linewidth}{3em}
+linewidth
+\addtolength{\linewidth}{長さ}
 \linewidth	行の幅.
 
 baselineskip
-\addtolength{baselineskip}{5pt}
+\addtolength{baselineskip}{長さ}
 \baselineskip	行のベースライン間の最低限の高さ.
 
 baselinestretch
@@ -115,25 +127,31 @@ NAMEという長さコマンドを新たに宣言する。
 (* \setlengthなどではなく、\renewcommandで再定義する。)
 
 parskip
-\addtolength{parskip}{1ex}
+\addtolength{\parskip}{長さ}
 \parskip	段落前の垂直スペース.
 
 columnsep
-\addtolength{columnsep}{1pt}
+\addtolength{\columnsep}{長さ}
 \columnsep	2段組みの時の段間の幅.
 
 columnseprule
-\addtolength{columnseprule}{10pt}
+\addtolength{\columnseprule}{長さ}
+二段組の時の段間の罫線の太さ.
+
+columnwidth
+\addtolength{\columnwidth}{長さ}
+二段組の時には (\textwidth - \columnsep)/2
+そうでない時は、\textwidth
+
+
+columnseprule
+\addtolength{columnseprule}{長さ}
 \columnseprule	2段組みの時の段間の罫線の幅.		(default=0pt)
 
 mathindent
-\addtolength{mathindent}{2em}
+\addtolength{mathindent}{長さ}
 \mathindent	スタイルオプションで fleqn を指定した場合の、
 		左マージンからの数式の字下げ幅.
-
-section
-\section{セクション名}
-第一引数のセクション名でセクションの区切りを設定。
 
 LaTeX
 \LaTeX
@@ -141,9 +159,31 @@ NAMEという長さコマンドを新たに宣言する。
 \def\LaTeX{{\rm L\kern-.36em\raise.3ex\hbox{\sc a}\kern-.15em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
+fragile
+** LaTeX用語 **
+引数によって展開結果が変わるようなコマンドをいう。
+その逆は robust なコマンド。
+
+robust
+** LaTeX用語 **
+展開結果が常に変わらないようなコマンドをいう。
+フォント/サイズ指定子、長さコマンド、数式モード中に使う多くのコマンドは
+robustなコマンド。
+(maketitle型コマンドのうちオプション引数を全くとらないものと考えて良い)
+
 protect
 \protect「fragileなコマンド」
-RTFM
+引数によって結果が変わるようなコマンドを「fragileなコマンド」と言う。
+一方、引数がいろいろな箇所で参照されるコマンドを「動く引数を取るコマンド
+と言う。これは chapter や caption など目次などから参照される引数をとるも
+のや、tabular/array 環境の @ 表現が該当する。
+
+さて、これらの「動く引数を取るコマンド」の引数に「fragileなコマンド」を
+与える時に(fragileなコマンドの直前に)使うのが \protect である。以下は典
+型的な利用例である。
+
+\newcommand{\thissystem}[1]{YaTeX version #1}
+\chapter{\protect \thissystem{1.50}について}
 
 newcommand
 \newcommand{\コマンド名}[引数の数]{定義}
@@ -162,7 +202,9 @@ RTFM
 
 renewcommand
 \renewcommand{\コマンド名}[引数の数]{定義}
-\newcommandを参照。
+既に定義されているコマンドを別の内容で再定義する。
+以下は \newcommand の説明。
+<refer newcommand>
 
 newenvironment
 \newenvironment{環境名}[引数の数]{定義1}{定義2}
@@ -174,7 +216,10 @@ RTFM
 
 renewenvironment
 \renewenvironment{環境名}[引数の数]{定義1}{定義2}
-\newenvironmentを参照。
+既に定義されている「環境名」を別の内容で再定義する。
+以下は、\newenvironmentの説明。
+
+<refer newenvironment>
 
 typeout
 \typeout{メッセージ}
@@ -489,6 +534,34 @@ eqnarray* 環境は数式番号を出力しないほかはeqnarray環境と同じである。
 \raggedleft
 段落を左寄せして組版する。
 
+raggedbottom
+\raggedbottom
+組版する時に各ページの高さに多少のずれがあっても許容する。
+プリアンブルで指定する。
+→\flushbottom
+
+flushbottom
+\flushbottom
+組版する時に各ページの高さを正確にそろえる。
+プリアンブルで指定する。
+→\raggedbottom
+
+sloppy
+\sloppy
+\sloppy を指定すると、各行を必ず右マージンで折り返す代わりに、
+単語間の空白を大目に見る。
+→\fussy
+
+fussy
+\fussy
+通常の組版規則に戻る。
+→\sloppy
+
+sloppypar
+\begin{sloppypar} 段落 \end{sloppypar}
+段落を \sloppy で組む。
+→\sloppy
+
 verbatim
 \begin{verbatim} 内容 \end{verbatim}
 「内容」を固定幅フォントのタイプライタ書体で表示し、すべての文字を(TeXの
@@ -559,13 +632,26 @@ eqnarray* 環境は数式番号を出力しないほかはeqnarray環境と同じである。
 \def\labelenumii{(\theenumii)}
 とすると \ref値が 3a などのように設定される。
 
+item
+\item			\item[LABEL]
+itemize, enumerate, description 環境などで項目を開始する。
+[LABEL]を指定するとラベルとしてLABELを出力する。
+
+subitem
+\subitem 項目
+サブアイテムを定義。
+
+subsubitem
+\subsubitem 項目
+サブサブアイテムを定義。
+
 makebox
 \makebox[WID][POS]{オブジェクト}	\makebox(X,Y)[POS]{オブジェクト}
 第1の書式では、オブジェクトをWIDで指定した幅として、\hbox 内の
-POSで指定した場所配置する。POSにlを指定すると左寄せ、rを指定すると右寄せ、
+POSで指定した場所に配置する。POSにlを指定すると左寄せ、rを指定すると右寄せ、
 何も指定しないとセンタリングされる。
-第2の書式では、大きさ(X,Y)の(\unitlengthを基準とする)\hbox にオブジェク
-トを配置する。配置位置POSは第1の書式と同様。
+第2の書式では、picuture環境で大きさ(X,Y)の(\unitlengthを基準とする)
+\hbox にオブジェクトを配置する。配置位置POSは第1の書式と同様。
 
 mbox
 \mbox{オブジェクト}
@@ -641,7 +727,7 @@ TEXTに下線をつけて表示。
 \raisebox{DISTANCE}[HEIGHT][DEPTH]{BOX}
 BOXをDISTANCEだけ上げて組む。
 HEIGHT, DEPTH を指定すると、TeXから見たBOXの「高さ」と「深さ」
-(註:これらについてはTeXBookなどを参照のこと)
+(註:これらの用語についてはTeXBookなどを参照のこと)
 を HEIGHT, DEPTH に指定する。
 
 tabbing
@@ -685,8 +771,11 @@ tabbing環境におけるタブ位置操作コマンドは以下の通り(nは1から):
 詳しい説明は tabular 環境を参照。
 
 tabular
-\begin{tabular}{プリアンブル} C1 & C2 & .. & Cn \\ D1 ... \end{tabular}
+\begin{tabular}[OPT]{プリアンブル} C1 & C2 & .. & Cn \\ D1 ... \end{tabular}
 表を作成する。
+【[OPT]】(省略可)
+[t]		表の上端を現在の行に合わせる
+[b]		表の下端を現在の行に合わせる
 【プリアンブル】
 c		カラムを一つ指定し、そのカラムをセンタリング
 l		カラムを一つ指定し、そのカラムを左寄せ
@@ -697,19 +786,16 @@ r		カラムを一つ指定し、そのカラムを右寄せ
 p{LEN}		そのカラムをLENの長さのparboxエントリとして作成する
 
 【array, tabular 環境で使えるコマンド】
-\multicolumn{N}{FORMAT}{ITEM}
-		現在のカラムを含めNこのカラムをFORMATに従ったITEMで埋める
-		FORMATはl,r,cのうち(最大)ひとつ
-\vline		そのカラムに縦線を引く. 縦線の位置はそのカラムに指定され
-		ている l, r, c によって決まる
-\hline		行間に水平線を引く. 環境の最初のエントリの直前、もしくは
-		\\ の直後に来なければならない. もし \hline を続けて指定
-		すると\doublerulesep 分の空白が空けられる(標準では罫線の
-		箱自体が分割されてしまう)
-\cline{i-j}	i番目からj番目のカラムに横線を引く. \hlineと同様
-\extracolsep{W}	@表現の中で用いると、幅Wのスペースをそれ以降の全てのカラ
-		ムの左側に加える
-
+\multicolumn
+<refer multicolumn>
+\vline
+<refer vline>
+\hline
+<refer hline>
+\cline{i-j}
+<refer cline>
+\extracolsep{W}
+<refer extracolsep>
 
 
 以下の例を参照せよ。
@@ -751,6 +837,9 @@ array環境を制御する変数には以下のものがある:
 \arraystretch   : \baselinestretch と同様行間スペースの比率を決める
 		  \renewcommandで再定義する
 
+tabular環境は、ページを跨ることができない。これを可能にするスタイルファ
+イルとして、supertab.styがある。
+
 tabular*
 \begin{tabular*}{幅}{プリアンブル} ... \end{tabular*}
 幅を指定してtabular環境を作成。
@@ -762,6 +851,32 @@ array環境を制御する変数には以下のものがある:
  1 & 2 & 3
 \end{tabular*}
 tabular環境の説明を参照のこと。
+
+multicolumn
+\multicolumn{N}{FORMAT}{ITEM}
+	tabular環境で現在のカラムを含めNこのカラムをFORMATに従った
+	ITEMで埋める。FORMATはl,r,cのうち(最大)ひとつ
+
+vline
+\vline
+	tabular環境でそのカラムに縦線を引く. 縦線の位置はそのカラムに
+	指定されている l, r, c によって決まる
+
+hline
+\hline
+	tabular環境で、行間に水平線を引く. 環境の最初のエントリの直前、
+	もしくは \\ の直後に来なければならない. もし \hline を続けて
+	指定すると\doublerulesep 分の空白が空けられる(標準では罫線の
+	箱自体が分割されてしまう)
+
+cline
+\cline{i-j}
+	tabular環境中、i番目からj番目のカラムに横線を引く. \hlineと同様
+
+extracolsep
+\extracolsep{W}
+	tabular環境の@表現の中で用いると、幅Wのスペースをそれ以降の
+	全てのカラムの左側に加える
 
 picture
 \begin{picture}(WIDTH,HEIGHT)(X,Y) ..contents.. \end{picture}
@@ -821,22 +936,284 @@ NAME環境のカウンタ形式は \theNAME コマンドを再定義する。これのデフォルトは
 maketitle
 \maketitle
 タイトルを出力する。document環境中で宣言されなければならない。
+タイトルを構成する項目は以下のコマンドで定義する。
+\title{タイトル}
+\author{著者名}
+\date{日付}		(省略するとタイプセットした日の日付)
+\thanks{脚注}		(謝辞や所属名などを脚注形式で出すために用いる)
 
 part
 \part{第?部のタイトル}
-
+<refer chapter>
 
 chapter
 \chapter{章のタイトル}
+文を区切るコマンド一覧:
+\part			第?部
+\chapter		?章	(articleにはない)
+\section		?節
+\subsection		?.?節
+\subsubsection		?.?.?節
+\paragraph		段落
+\subparagraph		副段落
 
+section
+\section{セクション名}
+第一引数のセクション名でセクションの区切りを設定。
+<refer chapter>
+
+subsection
+\subsection{サブセクション名}
+第一引数の名前でサブセクションの区切りを設定。
+<refer chapter>
+
+subsubsection
+\subsubsection{サブサブセクション名}
+第一引数の名前でサブサブセクションの区切りを設定。
+<refer chapter>
+
+paragraph
+\paragraph{パラグラフ名}
+第一引数の名前でパラグラフの区切りを設定。
+<refer chapter>
+
+subparagraph
+\subparagraph{サブパラグラフ名}
+第一引数の名前でサブパラグラフの区切りを設定。
+<refer chapter>
+
+appendix
+\appendix
+付録部に入る宣言。
+セクションコマンドの番号の方式を付録用に変える。
+
+contentsline
+\contentsline{TYPE}{ENTRY}{PAGE}
+\contentsline{subsection}{\makebox{30pt}[r]{1.4.3} Gnats and Gnus}{22}
+とすると .toc ファイルに ENTRY を吐き出す。
+TYPEはセクションコマンドのどれか。
+
+addcontentsline
+\addcontentsline{TABLE}{TYPE}{ENTRY}
+TABLEで指定したファイル(toc, lof, lot のどれか)にENTRYというエントリを出
+力する。TYPEはTABLEの値によって変わり、
+	toc:	セクションコマンドのどれか
+	lof:	figure
+	lot:	table
+である。
+
+addtocontents
+\addtocontents{TABLE}{TEXT}
+TEXTをTABLEで指定したテーブルファイル(toc, lof, lot のどれか)に出力する。
+
+index
+\index{INDEX}
+まだ書いてない。
+
+glossary
+\glossary{STRING}
+まだ書いてない。
+
+makeindex
+\makeindex
+\indexentryで登録されている項目を .idx ファイルに書き込む。
+
+bibliography
+\bibliography{FILE1,FILE2, ... ,FILEn}
+BibTeXで読み込むファイルを指定する。
+
+bibliographystyle
+\bibliographystyle{スタイル}
+plain	通上
+unsrt	ソートしない
+alpha	"Foo94" のようなタグをつける
+abbrv	著者のファーストネーム、発行月、書籍名が省略される
+
+bibitem
+\bibitem{NAME}			\bibitem[LABEL]{NAME}
+\bibitem{NAME}の書式では、NAMEで参照され、[1],[2] のような形で引用記号が
+出力される、\bibitem[LABEL]{NAME}の書式では、\cite{LABEL}で参照され、
+[Knuth82] のような引用記号が出力される。
+
+footnote
+\footnote{NOTE}
+NOTEという内容の脚注を生成する。
+\footnote[NUM]{NOTE} とすると、番号をNUMで指定できる。
+fragile
+
+footnotemark
+\footnotemark[NUM]
+脚注番号のみ出力する時に使う。tabbing環境のように、脚注が出力されないと
+ころで、footnotetextと組み合わせて使う。[NUM]は省略可。
+
+footnotetext
+\footnotetext[NUM]{TEXT}
+脚注番号を出力せず脚注のみ出力する。
+通常 \footnotemark と組み合わせて使う。
+
+footnotesize
+\footnotesize
+文字サイズを脚注用のサイズに変更する。
+
+footnotesep
+\footnotesep
+各脚注の最初に置かれる空白の高さ(数値)。
+
+
+footnoterule
+\footnoterule
+本文と脚注のあいだに引かれる罫線を出力。
+
+documentstyle
+\documentstyle[OPTION1,OPTION2, ... ,OPTIONn]{STYLE}
+文書スタイルを指定する。
+[OPTION...] を指定すると、STYLE.sty を読んだ後に、
+OPTIONn.sty が順次読み込まれる。
 
 verb
 \verb#内容#
 \verbの直後に来る文字と、次にあらわれる同じ文字とのあいだに挟まれたもの
 を verbatim で表示する。\verb|foo| と \verb,foo, は同じ結果が得られる。
 
+styleparameter
+まだ訳していないスタイルパラメータ。
+%   \topfigrule     : Command to place rule (or whatever) between floats
+%                     at top of page and text.  Executed in inner vertical
+%                     mode right before the \textfloatsep skip separating
+%                     the floats from the text.  Must occupy zero vertical
+%                     space.  (See \footnoterule.)
+%   \botfigrule     : Same as \topfigrule, but put after the \textfloatsep
+%                     skip separating text from the floats at bottom of page.
+%   \intextsep      : Space left on top and bottom of an in-text float.
 
 
 newpage
+\newpage
+改頁を行う。
+\clearpage 		未出力の図表があれば独立した図表用頁を出力してから
+			改頁を行う。
+\cleardoublepage 	clearpageと同じだが、 両画面スタイル(bookなど)の
+			場合は、奇数頁から始まるように改頁する。
+\newpage		二段組みの時は現在の段を終了する。
+
 clearpage
+\clearpage 
+<refer newpage>
+
 cleardoublepage
+\cleardoublepage 
+<refer newpage>
+
+長さ
+
+長さに使える単位には以下のものがある。
+cm		センチ
+em		大文字Mの幅
+ex		小文字xの高さ
+in		インチ(約2.54cm)
+mm		ミリメートル
+pc		パイカ(=12pt)
+pt		ポイント(72.27pt=1インチ)
+\fill		自然長は0だが、任意の長さに伸びることのできる伸縮長
+\stretch{X}	\fill のX倍
+
+stretch
+\stretch{X}
+<refer 長さ>
+
+twocolumn
+\twocolumn[STRING]
+改頁したあと二段組みでの組版を開始する。
+[STRING]を指定すると、STRINGを二段ぶち抜きのタイトルとして出力。
+
+onecolumn
+\onecolumn
+改頁したあとで一段組みでの組版を開始する。
+
+topnewpage
+\topnewpage{BOX}
+新しいページを開始し、\textwidthのBOXをparboxで作成する。
+二段組みページでぶち抜きタイトルを作成する時に用いるとよい。
+
+YaTeX
+(setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))
+おそらくあなたが今使っているこのモード。
+LaTeXを効率的に使うための多くの機能を盛り込んでいます。
+
+【発音について】
+yatex.elなどプログラムを指す時は「やてっく」、システムを指す時は「やちょ
+う」と読みます。
+
+【謝辞】
+以下の方々の御協力を頂きました。ここに感謝申し上げます。
+
+(順不同)
+峯恒憲さん(九州大)
+	Bibtex起動、typeset process の kill、エラー箇所の正しい判定
+	の要望その他を頂きました。
+
+森中秀明さん(アンリツ)
+	タイプセットバッファでの実行継続、lpq, bibtex起動、領域指定タイ
+	プセット後のプレビュー対象ファイルのデフォルト値の変更、
+	describe-mode、\verb の補完の要望、verbatim環境や\verbの中にある
+	\begin{}, \end{} を数えないようにする要望、などを頂きました。
+
+石坂裕毅さん(富士通)
+	YaTeX-get-error-file のバグレポートなどを頂きました。
+
+Bayardさん(asciinet)
+	min-outとの連係の不具合の報告を頂きました。
+
+Ｋけんさん(asciinet)
+	ms-dos固有の設定に関するバグレポートを頂きました。
+
+sa2cさん(asciinet)
+	Mule用のパッチを頂きました。
+
+桂川直己さん(筑波大)
+	数え切れないバグレポートと要望を頂きました。またVzへの移植版であ
+	る laitex(雷鳥) を作成されました。
+
+三平善郎さん(慶応大)
+	開き括弧の入力時の処理のモード分けのアイデアを頂きました。
+
+萩庭崇さん(慶応大)
+	begin型補完の内側に文字があった場合それらをインデントしてほしい
+	という要望を頂きました。
+
+田中健次郎さん(慶応大)
+	タイプセット時に未セーブ状態の関連ファイルをセーブして欲しいとい
+	う要望を頂きました。
+
+bauerさん(asciinet)
+	アクセント補完の要望とアクセント記号の規則の情報等を頂きました。
+
+佐々木たろうさん(asciinet)
+	数式環境の処理に関する多様なアイデア、ウィンドウ選択処理に関する
+	ユーザインタフェースの繊細な改善案などを頂きました。
+
+Deslarさん(asciinet)
+	byte-compile関係のバグ報告などを頂きました。
+
+tadfさん(asciinet)
+	Demacsでのプロセス起動時のインタフェースの不具合の報告などを頂き
+	ました。
+
+ほんまたけるさん(asciinet)
+	パラグラフ境界をLaTeX用に設定しなおす要望などを頂きました。
+
+TUSKさん(asciinet)
+	Texinfoドキュメント(初版)を作成して頂きました。
+
+横田和也さん(asciinet)
+	dviout起動時の工夫の案、ミニバッファで読み込むもののヒストリを分
+	けるアイデアのきっかけをいただき、ヘルプファイルの項目の提供をし
+	て頂きました。
+
+kanbai-anさん(asciinet)
+	日本語入力モード判定関数のバグを直すパッチなどを頂きました。
+
+
+yatex
+<refer YaTeX>
+
