@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in function generator.
-;;; yatexgen.el rev.3
+;;; yatexgen.el rev.4
 ;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Nov 17 03:54:56 1994 on VFR
+;;; Last modified Sun Dec 11 05:38:35 1994 on VFR
 ;;; $Id$
 
 (require 'yatex)
@@ -469,7 +469,7 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
   (concat
    "(read-file-name \""
    (read-string (if nth (format "Prompt for argument#%d: " nth) "Prompt: "))
-   ": \" nil nil t \"\")\n")
+   ": \" "" nil t \"\")\n")
 )
 (defun YaTeX-generate-create-read-oneof (&optional nth readpos)
   (concat

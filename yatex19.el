@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Nov 21 21:52:16 1994 on figaro
+;;; Last modified Mon Dec 19 02:55:36 1994 on VFR
 ;;; $Id$
 
 ;;; とりあえず hilit19 を使っている時に色が付くようにして
@@ -205,7 +205,10 @@ where
 ;; Highlightening
 ;; ローカルなマクロを読み込んだ後 redraw すると
 ;; ローカルマクロを keyword として光らせる(keywordじゃまずいかな…)。
-(defvar YaTeX-hilit-pattern-adjustment
+(defvar YaTeX-hilit-patterns-alist nil
+  "*Hiliting pattern alist for LaTeX text.
+Default value is equal to latex-mode's one.")
+(defvar YaTeX-hilit-pattern-adjustment-default
   (list
    ;;\def が define なんだから new* も define でしょう。
    '("\\\\\\(re\\)?new\\(environment\\|command\\){" "}" define)
@@ -215,17 +218,26 @@ where
     (concat "\\\\\\(" YaTeX-sectioning-regexp "\\){") "}"
     'sectioning)
    ;;eqnarray などの数式環境が入ってないみたい…
-   '("\\\\begin{\\(eqnarray\\*?\\)\\|\\(equation\\*?\\)}"
-     "\\\\end{\\(eqnarray\\*?\\)\\|\\(equation\\*?\\)}"
+   '("\\\\begin{\\(eqnarray\\*?\\|equation\\*?\\)}"
+     "\\\\end{\\(eqnarray\\*?\\|equation\\*?\\)}"
      formula))
   "Adjustment for hilit19's LaTeX hilit pattern.")
+(defvar YaTeX-hilit-pattern-adjustment-private nil
+  "*Private variable, same purpose as YaTeX-hilit-pattern-adjustment-default.")
 (defvar YaTeX-hilit-sectioning-face
-  '(yellow/dodgerblue yellow/cornflowerblue))
+  '(yellow/dodgerblue yellow/cornflowerblue)
+  "*Hilightening face for sectioning unit.  '(FaceForLight FaceForDark)")
 (defvar YaTeX-hilit-singlecmd-face
-  '(slateblue2 aquamarine))
+  '(slateblue2 aquamarine)
+  "*Hilightening face for maketitle type.  '(FaceForLight FaceForDark)")
 (defun YaTeX-19-collect-macro ()
   (cond
    ((and (featurep 'hilit19) (fboundp 'hilit-translate))
+    (or YaTeX-hilit-patterns-alist
+	(let ((alist (cdr (assq 'latex-mode hilit-patterns-alist))))
+	  (setcar (assoc "\\\\item\\(\\[[^]]*\\]\\)?" alist)
+		  (concat YaTeX-item-regexp "\\b\\(\\[[^]]*\\]\\)?"))
+	  (setq YaTeX-hilit-patterns-alist alist)))
     (let ((get-face
 	   (function
 	    (lambda (table)
@@ -242,8 +254,9 @@ where
 	  (cons
 	   (cons 'yatex-mode
 		 (append
-		  YaTeX-hilit-pattern-adjustment
-		  (cdr (assq 'latex-mode hilit-patterns-alist))
+		  YaTeX-hilit-pattern-adjustment-private
+		  YaTeX-hilit-pattern-adjustment-default
+		  YaTeX-hilit-patterns-alist
 		  (list
 		   (list
 		    (concat "\\\\\\("
@@ -259,7 +272,7 @@ where
 			     (function (lambda (s) (regexp-quote (car s))))
 			     (append user-singlecmd-table tmp-singlecmd-table)
 			     "\\|")
-			    "\\)")
+			    "\\)\\b")
 		    0 'macro))))
 	   hilit-patterns-alist)))))
 (YaTeX-19-collect-macro)

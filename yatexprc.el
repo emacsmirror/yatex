@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Nov 25 03:31:46 1994 on VFR
+;;; Last modified Wed Dec 14 16:58:15 1994 on 98fa
 ;;; $Id$
 
 (require 'yatex)
@@ -37,12 +37,12 @@
   "Execute jlatex (or other) to LaTeX typeset."
   (interactive)
   (save-excursion
-    (let ((p (point)) (window (selected-window)) execdir)
+    (let ((p (point)) (window (selected-window)) execdir (cb (current-buffer)))
       (if (and YaTeX-typeset-process
 	       (eq (process-status YaTeX-typeset-process) 'run))
 	  ;; if tex command is halting.
 	  (YaTeX-kill-typeset-process YaTeX-typeset-process))
-      (YaTeX-visit-main t);;execution directory
+      (YaTeX-visit-main t) ;;execution directory
       (setq execdir default-directory)
       ;;Select lower-most window if there are more than 2 windows and
       ;;typeset buffer not seen.
@@ -80,7 +80,7 @@
 	(insert " ")
 	(set-marker (process-mark YaTeX-typeset-process) (1- (point))))
       (if (bolp) (forward-line -1))	;what for?
-      (if YaTeX-emacs-19
+      (if (and YaTeX-emacs-19 window-system)
 	  (let ((win (get-buffer-window buffer t)) owin)
 	    (select-frame (window-frame win))
 	    (setq owin (selected-window))
@@ -91,7 +91,8 @@
 	(select-window (get-buffer-window buffer))
 	(goto-char (point-max))
 	(recenter -1))
-      (select-window window)))
+      (select-window window)
+      (switch-to-buffer cb)))
 )
 
 (defun YaTeX-typeset-sentinel (proc mes)
@@ -128,7 +129,7 @@
                  ;; will stay around until M-x list-processes.
                  (delete-process proc)
 		 )
-             (setq YaTeX-typesetting-process nil)
+             (setq YaTeX-typeset-process nil)
              ;; Force mode line redisplay soon
              (set-buffer-modified-p (buffer-modified-p))
 	     )
@@ -156,7 +157,8 @@ operation to the region."
   (save-excursion
     (let*
 	((end "") typeout ;Type out message that tells the method of cutting.
-	 (cmd (concat (YaTeX-get-latex-command nil) " " YaTeX-texput-file))
+	 (texput YaTeX-texput-file)
+	 (cmd (concat (YaTeX-get-latex-command nil) " " texput))
 	 (buffer (current-buffer)) opoint preamble (subpreamble "") main
 	 (hilit-auto-highlight nil)	;for Emacs19 with hilit19
 	 reg-begin reg-end)
@@ -199,7 +201,7 @@ operation to the region."
 		 "\\begin{document}")))
       (goto-char opoint)
       ;;(set-buffer buffer)		;for clarity
-      (set-buffer (find-file-noselect YaTeX-texput-file))
+      (set-buffer (find-file-noselect texput))
       ;;(find-file YaTeX-texput-file)
       (erase-buffer)
       (if YaTeX-need-nonstop
@@ -225,7 +227,7 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
   (YaTeX-save-buffers)
   (let*((me (substring (buffer-name) 0 (rindex (buffer-name) ?.)))
 	(mydir (file-name-directory (buffer-file-name)))
-	(cmd (YaTeX-get-latex-command t)))
+	(cmd (YaTeX-get-latex-command t)) (cb (current-buffer)))
     (if (YaTeX-main-file-p) nil
       (save-excursion
 	(YaTeX-visit-main t)	;search into main buffer
@@ -264,8 +266,8 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
 		    (beginning-of-line) (insert "%"))
 		   (t nil))
 		  (basic-save-buffer))))
-	  (exchange-point-and-mark))
-	))
+	  (exchange-point-and-mark)))
+      (switch-to-buffer cb))		;for 19
     (YaTeX-typeset cmd YaTeX-typeset-buffer)
     (put 'dvi2-command 'region nil))
 )
@@ -276,9 +278,10 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
 (defun YaTeX-call-command-on-file (base-cmd buffer)
   (YaTeX-save-buffers)
   (YaTeX-typeset
-   (let ((minibufer-history-symbol 'YaTeX-call-command-history))
-     (read-string "Call command: "
-		  (concat base-cmd " " (YaTeX-get-preview-file-name))))
+   (read-string-with-history
+    "Call command: "
+    (concat base-cmd " " (YaTeX-get-preview-file-name))
+    'YaTeX-call-command-history)
    buffer)
 )
 
@@ -296,9 +299,21 @@ PROC should be process identifier."
    (YaTeX-dos
     (error "MS-DOS can't have concurrent process."))
    ((or (null proc) (not (eq (process-status proc) 'run)))
-    (error "No typesetting process."))
-   (t (interrupt-process proc)
-      (delete-process proc)))
+    (message "Typesetting process is not running."))
+   (t
+    (save-excursion
+      (set-buffer (process-buffer proc))
+      (save-excursion
+	(goto-char (point-max))
+	(beginning-of-line)
+	(if (looking-at "\\? +$")
+	    (let ((mp (point-max)))
+	      (process-send-string proc "x\n")
+	      (while (= mp (point-max)) (sit-for 1))))))
+    (if (eq (process-status proc) 'run)
+	(progn
+	  (interrupt-process proc)
+	  (delete-process proc)))))
 )
 
 (defun YaTeX-system (command buffer)
@@ -327,15 +342,15 @@ PROC should be process identifier."
   "Execute xdvi (or other) to tex-preview."
   (interactive
    (list
-    (let ((minibuffer-history-symbol 'YaTeX-preview-command-history))
-      (read-string "Preview command: " dvi2-command))
-    (let ((minibuffer-history-symbol 'YaTeX-preview-file-history))
-      (read-string "Preview file[.dvi]: "
-		   (if (get 'dvi2-command 'region)
-		       (substring YaTeX-texput-file
-				  0 (rindex YaTeX-texput-file ?.))
-		     (YaTeX-get-preview-file-name))
-		   ))))
+    (read-string-with-history
+     "Preview command: " dvi2-command 'YaTeX-preview-command-history)
+    (read-string-with-history
+     "Preview file[.dvi]: "
+     (if (get 'dvi2-command 'region)
+	 (substring YaTeX-texput-file
+		    0 (rindex YaTeX-texput-file ?.))
+       (YaTeX-get-preview-file-name))
+     'YaTeX-preview-file-history)))
   (setq dvi2-command preview-command)	;`dvi2command' is buffer local
   (save-excursion
     (YaTeX-visit-main t)
@@ -488,7 +503,7 @@ error or warning lines in reverse order."
       (setq s
 	    (buffer-substring
 	     (progn (forward-char 1) (point))
-	     (progn (skip-chars-forward "-A-Za-z0-9_/\.\\" (point-end-of-line))
+	     (progn (skip-chars-forward "^ \n" (point-end-of-line))
 		    (point))))
       (if (string= "" s) default s)))
 )
@@ -595,9 +610,10 @@ page range description."
 	(YaTeX-replace-format dviprint-to-format "e" to)))
      )
     (setq cmd
-	  (let ((minibuffer-history-symbol 'YaTeX-lpr-command-history))
-	    (read-string "Edit command line: "
-			 (format cmd (YaTeX-get-preview-file-name)))))
+	  (read-string-with-history
+	   "Edit command line: "
+	   (format cmd (YaTeX-get-preview-file-name))
+	   'YaTeX-lpr-command-history))
     (save-excursion
       (YaTeX-visit-main t) ;;change execution directory
       (YaTeX-showup-buffer
@@ -633,7 +649,8 @@ page range description."
   "Switch buffer to main LaTeX source.
 Use set-buffer instead of switch-to-buffer if the optional second argument
 SETBUF is t(Use it only from Emacs-Lisp program)."
-  (interactive)
+  (interactive "P")
+  (if (and (interactive-p) setbuf) (setq YaTeX-parent-file nil))
   (let (b-in main-file)
     (if (setq b-in (YaTeX-get-builtin "!"))
 	(setq main-file (YaTeX-guess-parent b-in)))
@@ -643,17 +660,18 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
     (if (YaTeX-main-file-p)
 	(if (interactive-p) (message "I think this is main LaTeX source.") nil)
       (cond
-       ((and (interactive-p) main-file (get-buffer-window main-file))
-	(select-window (get-buffer-window main-file)))
+       ((and (interactive-p) main-file (get-file-buffer main-file))
+	(goto-buffer-window main-file))
        ((and main-file (YaTeX-switch-to-buffer main-file setbuf)))
        ((and main-file
 	     (file-exists-p (setq main-file (concat "../" main-file)))
 	     (y-or-n-p (concat (expand-file-name main-file)
 			       " is main file?:")))
+	(setq YaTeX-parent-file main-file)
 	(YaTeX-switch-to-buffer main-file setbuf))
        (t (setq main-file (read-file-name "Enter your main text: " nil nil 1))
 	  (setq YaTeX-parent-file main-file)
-	  (find-file main-file))
+	  (YaTeX-switch-to-buffer main-file setbuf))
        )))
   nil
 )

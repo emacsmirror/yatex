@@ -1,13 +1,13 @@
 textfloatsep
-\addtolength{\textfloatsep}{長さ}
-ページ先頭のfloatまたは、ページ最下部のfloatとテキストとの間隔。
+\addtolength{\textfloatsep}{LENGTH}
+Length between the text and, float of the top or bottom of page
 
 floatsep
-\addtolength{\floatsep}{長さ}
-floatとfloatの間隔。
+\addtolength{\floatsep}{LENGTH}
+Length between two floats
 
 oddsidemargin
-\setlength{\oddsidemargin}{長さ}
+\setlength{\oddsidemargin}{LENGTH}
 右ページの左端から1インチ(2.54cm)の線と本文の距離
 
 pagestyle
@@ -62,63 +62,63 @@ NAMEという長さコマンドを新たに宣言する。
 \hbox{TEXT}の出力結果と同じ幅に長さ\NAME をセットする。
 
 evensidemargin
-\setlength{\evensidemargin}{長さ}
+\setlength{\evensidemargin}{LENGTH}
 左ページの左端から1インチ(2.54cm)の線と本文の距離
 
 footheight
-\setlength{\footheight}{長さ}
+\setlength{\footheight}{LENGTH}
 フッタの高さ
 
 footskip
-\setlength{\footskip}{長さ}
+\setlength{\footskip}{LENGTH}
 本文の箱の下端とフッタの距離
 
 headheight
-\addtolength{\headheight}{長さ}
+\addtolength{\headheight}{LENGTH}
 ヘッダの高さ
 
 headsep
-\setlength{\headsep}{長さ}
+\setlength{\headsep}{LENGTH}
 ヘッダと本文の間隔
 
 marginparsep
-\addtolength{\marginparsep}{長さ}
+\addtolength{\marginparsep}{LENGTH}
 傍注と本文の間隔
 
 marginparwidth
-\addtolength{\marginparwidth}{長さ}
+\addtolength{\marginparwidth}{LENGTH}
 傍注の幅
 
 oddsidemargin
-\addtolength{\oddsidemargin}{長さ}
+\addtolength{\oddsidemargin}{LENGTH}
 右ページの左端から1インチ(2.54cm)の線と本文の距離
 
 textheight
-\addtolength{\textheight}{長さ}
+\addtolength{\textheight}{LENGTH}
 本文の高さ
 
 textwidth
-\addtolength{\textwidth}{長さ}
+\addtolength{\textwidth}{LENGTH}
 本文の幅
 
 topmargin
-\addtolength{\topmargin}{長さ}
+\addtolength{\topmargin}{LENGTH}
 ページ上端から1インチの線とヘッダの距離
 
 topskip
-\addtolength{\topskip}{長さ}
+\addtolength{\topskip}{LENGTH}
 本文の箱の上端と一行目のテキストとの間隔
 
 parindent
-\setlength{\parindent}{長さ}
+\setlength{\parindent}{LENGTH}
 \parindent	段落の先頭の字下げ幅.
 
 linewidth
-\addtolength{\linewidth}{長さ}
+\addtolength{\linewidth}{LENGTH}
 \linewidth	行の幅.
 
 baselineskip
-\addtolength{baselineskip}{長さ}
+\addtolength{baselineskip}{LENGTH}
 \baselineskip	行のベースライン間の最低限の高さ.
 
 baselinestretch
@@ -127,29 +127,29 @@ NAMEという長さコマンドを新たに宣言する。
 (* \setlengthなどではなく、\renewcommandで再定義する。)
 
 parskip
-\addtolength{\parskip}{長さ}
+\addtolength{\parskip}{LENGTH}
 \parskip	段落前の垂直スペース.
 
 columnsep
-\addtolength{\columnsep}{長さ}
+\addtolength{\columnsep}{LENGTH}
 \columnsep	2段組みの時の段間の幅.
 
 columnseprule
-\addtolength{\columnseprule}{長さ}
+\addtolength{\columnseprule}{LENGTH}
 二段組の時の段間の罫線の太さ.
 
 columnwidth
-\addtolength{\columnwidth}{長さ}
+\addtolength{\columnwidth}{LENGTH}
 二段組の時には (\textwidth - \columnsep)/2
 そうでない時は、\textwidth
 
 
 columnseprule
-\addtolength{columnseprule}{長さ}
+\addtolength{columnseprule}{LENGTH}
 \columnseprule	2段組みの時の段間の罫線の幅.		(default=0pt)
 
 mathindent
-\addtolength{mathindent}{長さ}
+\addtolength{mathindent}{LENGTH}
 \mathindent	スタイルオプションで fleqn を指定した場合の、
 		左マージンからの数式の字下げ幅.
 
@@ -271,7 +271,7 @@ RTFM
 \\		\\[長さ]
 (任意の場所で)改行する。段落中では、\newline と同じ。
 オプション引数の[長さ]を指定すると、次の行との間隔を
-\vspace{長さ}によって確保する。
+\vspace{LENGTH}によって確保する。
 
 addvspace
 \addvspace{スキップ}
@@ -563,19 +563,18 @@ eqnarray* 環境は数式番号を出力しないほかはeqnarray環境と同じである。
 →\sloppy
 
 verbatim
-\begin{verbatim} 内容 \end{verbatim}
-「内容」を固定幅フォントのタイプライタ書体で表示し、すべての文字を(TeXの
-シーケンスとしてではなく)そのまま解釈する。
-
-#「ばーばちむ」じゃなくて「ばーべいたむ」だ!
+\begin{verbatim} ... \end{verbatim}
+The verbatim environment uses the fixed-width \tt font, turns blanks into 
+spaces, starts a new line for each carrige return (or sequence of 
+consecutive carriage returns), and interprets EVERY character literally.
+I.e., all special characters \, {, $, etc. are \catcode'd to 'other'.
 
 verbatim*
-\begin{verbatim*} 内容 \end{verbatim*}
-通常のverbatim環境において、スペース文字を空白ではなく、TeXbook に載って
-いるスペース文字のように印字する。
+\begin{verbatim*} ... \end{verbatim*}
+<refer verbatim>
 
-(註)こういう感じ→ |_|
-    (苦しい…)
+The verbatim* environment is the same, except that spaces
+print as the TeXbook's space character instead of as blank spaces.
 
 list
 \begin{list}{デフォルトラベル}{整形パラメータ} ... \end{list}
@@ -781,26 +780,26 @@ tabbing環境におけるタブ位置操作コマンドは以下の通り(nは1から):
 \kill	現在行のテキストは出力せずタブ設定だけ解釈する
 
 array
-\begin{array}{プリアンブル} C1 & C2 & .. & Cn \\ D1 ... \end{array}
-(数式などによる)配列を作成する。行列などは array 環境で作成する。
-詳しい説明は tabular 環境を参照。
+\begin{array}{PREAMBLE} C1 & C2 & .. & Cn \\ D1 ... \end{array}
+Make a mathematical array.  Useful to make matrix.
+See the help of `tabular' for detailed description.
 
 tabular
-\begin{tabular}[OPT]{プリアンブル} C1 & C2 & .. & Cn \\ D1 ... \end{tabular}
-表を作成する。
-【[OPT]】(省略可)
-[t]		表の上端を現在の行に合わせる
-[b]		表の下端を現在の行に合わせる
-【プリアンブル】
-c		カラムを一つ指定し、そのカラムをセンタリング
-l		カラムを一つ指定し、そのカラムを左寄せ
-r		カラムを一つ指定し、そのカラムを右寄せ
-@{表現}		「表現」をカラム毎に挿入する。これを指定すると
-		\arraycolsep や \tabcolsep のスペーシングは抑制される
-*{N}{PRE}	PREを N 回書いたのと同様の作用
-p{LEN}		そのカラムをLENの長さのparboxエントリとして作成する
+\begin{tabular}[OPT]{PREAMBLE} C1 & C2 & .. & Cn \\ D1 ... \end{tabular}
+Make tabular.
+[[OPT]]
+[t]		Align the top of tabular to the line.
+[b]		Align the bottom of tabular to the line.
+[[PREAMBLE]]
+  l,r,c  : indicate where entry is to be placed.
+  |      : for vertical rule
+  @{EXP} : inserts the text EXP in every column.  \arraycolsep or \tabcolsep
+           spacing is suppressed.
+  *{N}{PRE} : equivalent to writing N copies of PRE in the preamble.  PRE
+              may contain *{N'}{EXP'} expressions.
+  p{LEN} : makes entry in parbox of width LEN.
 
-【array, tabular 環境で使えるコマンド】
+[[Usable commands in array, tabular environment]]
 \multicolumn
 <refer multicolumn>
 \vline
@@ -813,9 +812,9 @@ p{LEN}		そのカラムをLENの長さのparboxエントリとして作成する
 <refer extracolsep>
 
 
-以下の例を参照せよ。
+See below as sample.
 
-\LaTeX 表記					印刷形式
+\LaTeX Expression				Printed image
 \begin{array}{ccr}
  x+y+z	& a_1	&  1 \\				x+y+z  a1    1
  x+z	& a_2	&  21 \\			 x+z   a2   21
@@ -831,324 +830,410 @@ p{LEN}		そのカラムをLENの長さのparboxエントリとして作成する
  \end{array} 
 \right)\]
 
-array環境を \right( \left) で囲むと配列自体を大きな括弧で括る。同様に、
-\right\{ \left\} で配列を中括弧で、\right[ \left] で配列を大括弧で、
-\right| \left| で配列をノルム記号(絶対値記号)で括ることができる。
-\right の数と \left の数は必ず同じでなければならないが、\right( \left] 
-のように括弧の種類は違ってもよい。\right. のように . をつけると見えない
-括弧が出力される。
+\right(, \left) or \right{, left} or \right[, \left] or \right|, \left|
+can enclose whole of array environment by parentheses, braces, brackets,
+norm respectively.  The number of `\right's and `\left's should be the
+same, but the type of parentheses don't have to match like
+\right( \left].  `\right.' produces the invisible parenthesis.
 
-\[ 答 \cdots \left\{					/
-	\begin{array}{ccc}				|  x = 5
-	 x & = & 5 \\				答 ... <
-   	 y & = & 3					|  y = 3
-	\end{array} \right. \]				\
+\[ Ans. \cdots \left\{					 /
+	  \begin{array}{ccc}				 |  x = 5
+	   x & = & 5 \\				Ans. ...<
+   	   y & = & 3					 |  y = 3
+	  \end{array} \right. \]			 \
 
-array環境を制御する変数には以下のものがある:
-\arraycolsep    : array環境の各カラム間の間隔の半分
-\tabcolsep      : tabular環境の各カラム間の間隔の半分
-\arrayrulewidth : 罫線の幅
-\doublerulesep  : array, tabular環境での隣接した罫線(二重罫線?)間の間隔
-\arraystretch   : \baselinestretch と同様行間スペースの比率を決める
-		  \renewcommandで再定義する
+Here are the style parameters for the tabular environment.
+\arraycolsep    : half the width separating columns in an array environment
+\tabcolsep      : half the width separating columns in a tabular environment
+\arrayrulewidth : width of rules
+\doublerulesep  : space between adjacent rules in array or tabular
+\arraystretch   : line spacing in array and tabular environments is done by
+                  placing a strut in every row of height and depth 
+                  \arraystretch times the height and depth of the strut
+                  produced by an ordinary \strut commmand.
 
-tabular環境は、ページを跨ることができない。これを可能にするスタイルファ
-イルとして、supertab.styがある。
+Tabular environment cannot spread across pages.  `supertabular.sty'
+allow this.
 
 tabular*
 \begin{tabular*}{幅}{プリアンブル} ... \end{tabular*}
-幅を指定してtabular環境を作成。
-この幅を充填するだけのスペースをプリアンブルの \extracolsep{} コマンドで
-確保する。
+Make tabular environment with specifying its width.
+To fill this width, use \extracolsep{} of preamble as below:
 \begin{tabular*}{10em}[b]{|c@{\extracolsep{\fill}}|c|c|}
  \hline
  a & b & c \\ \hline
  1 & 2 & 3
 \end{tabular*}
-tabular環境の説明を参照のこと。
+See also tabular.
 
 multicolumn
 \multicolumn{N}{FORMAT}{ITEM}
-	tabular環境で現在のカラムを含めNこのカラムをFORMATに従った
-	ITEMで埋める。FORMATはl,r,cのうち(最大)ひとつ
+In tabular environment,
+replaces the next N column items by
+ITEM, formatted according to FORMAT.  FORMAT should contain at most
+one l,r or c.  If it contains none, then ITEM is ignored.
 
 vline
 \vline
-	tabular環境でそのカラムに縦線を引く. 縦線の位置はそのカラムに
-	指定されている l, r, c によって決まる
+In tabular environment,
+draws a vertical line the height of the current row.  May
+appear in an array element entry.
+
 
 hline
 \hline
-	tabular環境で、行間に水平線を引く. 環境の最初のエントリの直前、
-	もしくは \\ の直後に来なければならない. もし \hline を続けて
-	指定すると\doublerulesep 分の空白が空けられる(標準では罫線の
-	箱自体が分割されてしまう)
+In tabular environment draws a horizontal line between rows.  Must
+appear either before the first entry (to appear above the first row) or
+right after a \\ command.  If followed by another \hline, then adds a
+\vskip of \doublerulesep.
 
 cline
 \cline{i-j}
-	tabular環境中、i番目からj番目のカラムに横線を引く. \hlineと同様
+In tabular environment,
+draws horizontal lines between rows covering columns
+i through j, inclusive.  Multiple commands may follow
+one another to provide lines covering several disjoint
+columns
 
 extracolsep
 \extracolsep{W}
-	tabular環境の@表現の中で用いると、幅Wのスペースをそれ以降の
-	全てのカラムの左側に加える
+for use inside an @ in the preamble.  Causes a WIDTH
+space to be added between columns for the rest of the 
+columns.  This is in addition to the ordinary intercolumn 
+space.
 
 picture
 \begin{picture}(WIDTH,HEIGHT)(X,Y) ..contents.. \end{picture}
-幅WIDTH, 高さHEIGHT の描画ボックスを作成。このボックスの左下の座標は
-(X,Y) となる(省略すると(0,0))。これらの引数の数値を含め、picuture環境の
-数値は \unitlength に対する相対値であらわされる。\unitlength の既定値は
-1pt.
-今時picture環境じゃないと思うので用法しか書かないよーん。
+The picture  environment  allows you to create  just about any kind of
+picture you want containing text, lines, arrows and circles.  You tell
+LaTeX  where  to  put  things  in  the  picture  by  specifying  their
+coordinates.   A coordinate  is a number that may have a decimal point
+and a minus  sign  - a number  like  5, 2.3 or -3.1416.   A coordinate
+specifies a length in multiples of the unit length \unitlength,  so if
+\unitlength  has been set to 1cm, then the coordinate 2.54 specifies a
+length of 2.54 centimeters.   You can change  the value of \unitlength
+anywhere  you want, using the \setlength  command,  but strange things
+will happen if you try changing it inside the picture environment.
 
-【コマンド】
-\put(X座標,Y座標){描画オブジェクト}
-\multiput(X座標,Y座標)(Xの増分,Yの増分){繰り返し回数}{描画オブジェクト}
-【描画オブジェクト】
-\makebox(X座標,Y座標)[POS]{テキスト}		(箱)
-\framebox(X座標,Y座標)[POS]{テキスト}		(枠付きの箱)
-\dashbox(X座標,Y座標)[POS]{テキスト}		(破線枠付きの箱)
-(以上POS = l, r, b, t)
-\line(ΔX,ΔY){水平方向の長さ}			(直線)
-\vector(ΔX,ΔY){水平方向の長さ}		(矢印)
-(ΔX,ΔY = ±1, ±2, ..., ±6 で互素, それぞれ基準は始点)
-\shortstack[POS]{一行\\二行\\三行}
-\circle{直径}					(円)
-\circle*{直径}					(塗り潰した円)
-(それぞれ基準は円の中心, 最大直径は40pt, 15pt)
-\oval(直径X,直径Y)[POS]				(楕円風 POS = l, r, t, b)
-\frame{描画オブジェクト}
-\thinlines, \thicklines				(細,太線を選ぶ)
-\linethickness{太さ}
+A position is a pair of coordinates,  such as (2.4,-5), specifying the
+point  with x-coordinate  2.4 and y-coordinate  -5.   Coordinates  are
+specified  in the  usual  way  with  respect  to an origin,  which  is
+normally  at the lower-left  corner of the picture.   Note that when a
+position  appears as an argument,  it is not enclosed  in braces;  the
+parentheses serve to delimit the argument.
+
+The  picture  environment  has  one  mandatory  argument,  which  is a
+position.   It specifies  the size  of the picture.   The  environment
+produces  a rectangular  box with width and height determined  by this
+argument's x- and y-coordinates.
+
+The  picture  environment  also  has  an optional  position  argument,
+following  the size argument,  that  can change  the origin.   (Unlike
+ordinary optional arguments,  this argument is not contained in square
+brackets.) The optional argument gives the coordinates of the point at
+the lower-left corner of the picture (thereby determining the origin). 
+For example, if \unitlength has been set to 1mm, the command
+
+\begin{picture}(100,200)(10,20)
+
+produces   a  picture   of  width  100  millimeters   and  height  200
+millimeters,  whose lower-left  corner is the point (10,20)  and whose
+upper-right  corner is therefore the point (110,220).   When you first
+draw a picture,  you will  omit  the optional  argument,  leaving  the
+origin  at the lower-left  corner.   If you then want  to modify  your
+picture by shifting everything, you just add the appropriate  optional
+argument.
+
+The environment's  mandatory  argument determines  the nominal size of
+the picture.   This need  bear  no relation  to how large  the picture
+really  is; LaTeX will happily  allow  you to put things  outside  the
+picture, or even off the page.  The picture's  nominal size is used by
+TeX in determining how much room to leave for it.
+
+Everything that appears in a picture is drawn by the \put command. The
+command
+
+\put (11.3,-.3){...}
+
+puts the object specified  by "..." in the picture, with its reference
+point at coordinates  (11.3,-.3).   The reference  points  for various
+objects will be described below.
+
+The \put command creates an LR box.  You can put anything  in the text
+argument  of the \put command  that you'd put into the argument  of an
+\mbox and related  commands.   When you do this,  the reference  point
+will be the lower left corner of the box.
+
+Picture environment is obsolete I thinks, so show only commands.
+
+[[COMMANDS]]
+\put(X,Y){OBJECT}
+\multiput(X,Y)(dX,dY){REPEAT}{OBJECT}
+[[OBJECTS]]
+\makebox(X,Y)[POS]{TEXT}
+\framebox(X,Y)[POS]{TEXT}
+\dashbox(X,Y)[POS]{TEXT}
+(POS = l, r, b, t)
+\line(dX,dY){HorizontalLength}
+\vector(dX,dY){HorizontalLength}		(arrow)
+(dX,dY = +-1, +-2, ..., +-6)
+\shortstack[POS]{FIRST\\SECOND\\THIRD...}
+\circle{DIAMETER}
+\circle*{DIAMETER}				(Filled circle)
+(Maximum diameters are 40pt, 15pt)
+\oval(Dia-X,DiaY)[POS]				(Oval POS = l, r, t, b)
+\frame{OBJECT}
+\thinlines, \thicklines				(choose line thickness)
+\linethickness{THICKNESS}
 
 newtheorem
 \newtheorem{NAME}{TEXT}[COUNTER]	\newtheorem{NAME}[OLDNAME]{TEXT} 
-定理型の新しい環境「NAME」を定義する。
-TEXT	定理番号のキャプションとして出される文字列
-COUNTER	NAMEのカウンタの親となるカウンタ名. 通常section.
-第2の形式では OLDNAME と同じカウンタ形式を使うことを指示する。
-NAME環境のカウンタ形式は \theNAME コマンドを再定義する。これのデフォルトは
-\theCOUNTER.\arabic{NAME}
+This defines the environment NAME to be just as one would expect a 
+theorem environment to be, except that it prints ``TEXT'' instead of 
+``Theorem''.  
+
+If OLDNAME is given, then environments NAME and OLDNAME use the same 
+counter, so using a NAME environment advances the number of the next 
+NAME environment, and vice-versa.
+
+If COUNTER is given, then environment NAME is numbered within COUNTER.
+E.g., if COUNTER = subsection, then the first NAME in subsection 7.2
+is numbered TEXT 7.2.1.
+
+The way NAME environments are numbered can be changed by redefining
+\theNAME.
 
 title
-\title{タイトル}
-\maketitleコマンドで出力するタイトル名を設定する。
+\title{TITLE}
+Define the title of the document.
 
 author
-\author{著者名}
-\maketitleコマンドで出力する日付を設定する。
-複数の著者を書くときは \and で区切って名前を書く。
+\author{AUTHOR}
+Declare the author of the document.
 
 date
-\date{日付}
-\maketitleコマンドで出力する著者名を設定する。
-\date を省略するとタイプセットした日の日付が出力される。
+\date{DATE}
+Define the date of document which is used by \maketitle.
+Omitting DATE produces current date.
 
 thanks
-\thanks{脚注}
-タイトル中(\title, \author, \date)での脚注(謝辞や住所など)の出力を行う。
+\thanks{FOOTNOTE}
+Output a footnote in title page.
 
 maketitle
 \maketitle
-タイトルを出力する。document環境中で宣言されなければならない。
-タイトルを構成する項目は以下のコマンドで定義する。
-\title{タイトル}
-\author{著者名}
-\date{日付}		(省略するとタイプセットした日の日付)
-\thanks{脚注}		(謝辞や所属名などを脚注形式で出すために用いる)
+Output a title.  Should be written in document environment.
+Here are the constituents of title page.
+\title{TITLE}
+\author{AUTHOR}
+\date{DATE}		(If DATE omitted, output the date of typesetting)
+\thanks{NOTE}		(Output a thanks message or the post of the author)
 
 part
-\part{第?部のタイトル}
+\part{TITLE}
+Start a new part whose title is TITLE.
 <refer chapter>
 
 chapter
-\chapter{章のタイトル}
-文を区切るコマンド一覧:
-\part			第?部
-\chapter		?章	(articleにはない)
-\section		?節
-\subsection		?.?節
-\subsubsection		?.?.?節
-\paragraph		段落
-\subparagraph		副段落
+\chapter{TITLE}
+Start a chapter whose title is TITLE.
+Sectioning commands:
+\part			Part ?
+\chapter		Chapter ?	(not available in `article.sty')
+\section		?
+\subsection		?.?
+\subsubsection		?.?.?
+\paragraph		***
+\subparagraph		===
 
 section
-\section{セクション名}
-第一引数のセクション名でセクションの区切りを設定。
+\section{TITLE}
+Start a section whose title is TITLE.
 <refer chapter>
 
 subsection
-\subsection{サブセクション名}
-第一引数の名前でサブセクションの区切りを設定。
+\subsection{TITLE}
+Start a subsection whose title is TITLE.
 <refer chapter>
 
 subsubsection
-\subsubsection{サブサブセクション名}
-第一引数の名前でサブサブセクションの区切りを設定。
+\subsubsection{TITLE}
+Start a paragraph whose title is TITLE.
 <refer chapter>
 
 paragraph
-\paragraph{パラグラフ名}
-第一引数の名前でパラグラフの区切りを設定。
-<refer chapter>
+\paragraph{TITLE}
+Start a paragraph whose title is TITLE.
+<refer chapter
 
 subparagraph
-\subparagraph{サブパラグラフ名}
-第一引数の名前でサブパラグラフの区切りを設定。
+\subparagraph{TITLE}
+Start a subparagraph whose title is TITLE.
 <refer chapter>
 
 appendix
 \appendix
-付録部に入る宣言。
-セクションコマンドの番号の方式を付録用に変える。
+Declare the beginning of appendix.
+Change the numbering fashion to appendix oriented.
 
 contentsline
 \contentsline{TYPE}{ENTRY}{PAGE}
 \contentsline{subsection}{\makebox{30pt}[r]{1.4.3} Gnats and Gnus}{22}
-とすると .toc ファイルに ENTRY を吐き出す。
-TYPEはセクションコマンドのどれか。
+Macro to produce a TYPE entry in a table of contents, etc.
+It will appear in the .TOC or other file.  For example,
+The entry for subsection 1.4.3 in the table of contents might
+be produced by:
+\contentsline{subsection}{\makebox{30pt}[r]{1.4.3} Gnats and Gnus}{22}
+The \protect command causes command sequences to be written
+without expanding them.
 
 addcontentsline
 \addcontentsline{TABLE}{TYPE}{ENTRY}
-TABLEで指定したファイル(toc, lof, lot のどれか)にENTRYというエントリを出
-力する。TYPEはTABLEの値によって変わり、
-	toc:	セクションコマンドのどれか
-	lof:	figure
-	lot:	table
-である。
+User command for adding his own entry to a table of contents, etc.
+It adds the entry
+   \contentsline{TYPE}{ENTRY}{page}
+to the .TABLE file.
 
 addtocontents
 \addtocontents{TABLE}{TEXT}
-TEXTをTABLEで指定したテーブルファイル(toc, lof, lot のどれか)に出力する。
+Adds TEXT to the .TABLE file, with no page number.
 
 index
 \index{INDEX}
-索引のエントリを定義する。
+Create an entry of index.
 
---------------------------------------------------------------------
-<refer 索引の作り方>
 
 glossary
 \glossary{STRING}
-用語集のエントリを定義する。
+Create an entry of glossary.
 
 makeindex
 \makeindex
-\indexentryで登録されている項目を .idx ファイルに書き込む。
-プリアンブルで指定する。
-
---------------------------------------------------------------------
-<refer 索引の作り方>
+Writes \indexentry to .idx file.
+Should be in preamble.
 
 makeglossary
 \makeglossary
-\glossaryentryで登録されている項目を .glo ファイルに書き込む。
-プリアンブルで指定する。
-
-索引の作り方
-
-(1)\documentstyleにmakeidxオプションを与え、プリアンブルに \makeindex
-   を書き、索引を生成する場所に \printindex を書く。
-(2)本文に \index{索引となる単語} を埋め込む。
-(3)一度(または二度)タイプセットする。
-(4).idxファイルができるのでそのファイルを makeindex にかける。
-(5).indファイルができるのでもう一度タイプセットして出来上がり。
-
-** \indexの記法 **
-日本語をそのまま \index{漢字} と入れたのではあいうえお順にソートされない。
-そこで、読みを@で区切って \index{かんじ@漢字} のように入れる。
+Writes \glossaryentry to .glo file.
+Should be in preamble.
 
 bibliography
 \bibliography{FILE1,FILE2, ... ,FILEn}
-BibTeXで読み込むファイルを指定する。
+Specifies the bibdata files.
 
 bibliographystyle
-\bibliographystyle{スタイル}
-plain	通上
-unsrt	ソートしない
-alpha	"Foo94" のようなタグをつける
-abbrv	著者のファーストネーム、発行月、書籍名が省略される
+\bibliographystyle{STYLE}
+Style of numbering of bibliographies.
+plain	nomal
+unsrt	without sortingg
+alpha	gives tag like "Foo94"
+abbrv	omit the first name of author, publishing month, book title
 
 thebibliography
-\begin{thebibliography} \bibitem{アイテム}… \end{thebibliography}
-参考文献データの登録環境を開始する。
-データは \bibitem コマンドによって登録する。
-\bibitem コマンドの用法は以下の通り。
+\begin{thebibliography} \bibitem{ITEM},... \end{thebibliography}
+The thebibliography environment is a list environment.  To save the
+use of an extra counter, it should use  enumiv  as the item counter.
+Instead of using \item, items in the bibliography are produced by the 
+\bibitem command.
+---
 <refer bibitem>
 
 bibitem
 \bibitem{NAME}			\bibitem[LABEL]{NAME}
-\bibitem{NAME}の書式では、NAMEで参照され、[1],[2] のような形で引用記号が
-出力される、\bibitem[LABEL]{NAME}の書式では、\cite{NAME}で参照され、
-[LABEL] のような引用記号が出力される。
+Produces a numbered (as [1], [2],...) entry cited as NAME.
+Second form produces an entry labeled by LABEL and cited as NAME.
+
+thefootnote
+In usual LaTeX style, produces the footnote number.
+If footnotes are to be numbered within pages, then the 
+document style file must include an \@addtoreset command 
+to cause the footnote counter to be reset when the page 
+counter is stepped.  This is not a good idea, though,
+because the counter will not always be reset in time
+to ensure that the first footnote on a page is footnote
+number one.  
 
 footnote
-\footnote{NOTE}
-NOTEという内容の脚注を生成する。
-\footnote[NUM]{NOTE} とすると、番号をNUMで指定できる。
-脚注がうまく出力されないような場所では \footnotemark と \footnotetext を
-組み合わせて出力する。
-fragile
+\footnote{NOTE}   or   \footnote[NUM]{NOTE}
+User command to insert a footnote.
+In second form, insert a footnote numbered
+NUM, where NUM is a number -- 1, 2,
+etc.  For example, if footnotes are numbered
+*, **, etc. within pages, then \footnote[2]{...}
+produces footnote '**'.  This command does not
+step the footnote counter.
+(fragile)
 
 footnotemark
 \footnotemark[NUM]
-脚注番号のみ出力する時に使う。tabbing環境のように、脚注が出力されないと
-ころで、\footnotetext と組み合わせて使う。[NUM]は省略可。
+Command to produce just the footnote mark in
+the text, but no footnote.  With no argument,
+it steps the footnote counter before generating
+the mark.
 
 footnotetext
 \footnotetext[NUM]{TEXT}
-脚注番号を出力せず脚注のみ出力する。
-通常 \footnotemark と組み合わせて使う。
+Command to produce the footnote but no  mark.
+\footnote is equivalent to \footnotemark \footnotetext .
 
 footnotesize
-\footnotesize
-文字サイズを脚注用のサイズに変更する。
+{\footnotesize ...}
+Size-changing command for footnotes.
 
 footnotesep
 \footnotesep
-各脚注の最初に置かれる空白の高さ(数値)。
-
+The height of a strut placed at the beginning of every footnote.
 
 footnoterule
 \footnoterule
-本文と脚注のあいだに引かれる罫線を出力。
+Macro to draw the rule separating footnotes from text.
+It is executed right after a \vspace of \skip\footins.
+It should take zero vertical space--i.e., it should to
+a negative skip to compensate for any positive space
+it occupies.  (See PLAIN.TEX.)
 
 documentstyle
 \documentstyle[OPTION1,OPTION2, ... ,OPTIONn]{STYLE}
-文書スタイルを指定する。
-[OPTION...] を指定すると、STYLE.sty を読んだ後に、
-OPTIONn.sty が順次読み込まれる。
+The user starts his file with the command as above
+which saves the OPTION's and \input's the file STYLE.STY.
 
 verb
-\verb#内容#
-\verbの直後に来る文字と、次にあらわれる同じ文字とのあいだに挟まれたもの
-を verbatim で表示する。\verb|foo| と \verb,foo, は同じ結果が得られる。
+\verb#CONTENTS#
+The command \verb produces in-line verbatim text, where the argument
+is delimited by any pair of characters.  E.g., \verb #...# takes
+'...' as its argument, and sets it verbatim in \tt font.
+
+The *-variants of these commands is the same, except that spaces
+print as the TeXbook's space character instead of as blank spaces.
 
 styleparameter
 まだ訳していないスタイルパラメータ。
-%   \topfigrule     : Command to place rule (or whatever) between floats
-%                     at top of page and text.  Executed in inner vertical
-%                     mode right before the \textfloatsep skip separating
-%                     the floats from the text.  Must occupy zero vertical
-%                     space.  (See \footnoterule.)
+
+topfigrule
+\topfigrule
+Command to place rule (or whatever) between floats
+at top of page and text.  Executed in inner vertical
+mode right before the \textfloatsep skip separating
+the floats from the text.  Must occupy zero vertical
+space.  (See \footnoterule.)
+
 botfigrule
-\setlength{\botfigrule}{長さ}
+\setlength{\botfigrule}{LENGTH}
 Same as \topfigrule, but put after the \textfloatsep
 skip separating text from the floats at bottom of page.
 
 intextsep
-\setlength{\intextsep}{長さ}
-文書中フロートの上下に残された空白の長さ
-
+\setlength{\intextsep}{LENGTH}
+Space left on top and bottom of an in-text float.
 
 newpage
 \newpage
-改頁を行う。
-\clearpage 		未出力の図表があれば独立した図表用頁を出力してから
-			改頁を行う。
-\cleardoublepage 	clearpageと同じだが、 両画面スタイル(bookなど)の
-			場合は、奇数頁から始まるように改頁する。
-\newpage		二段組みの時は現在の段を終了する。
+Advance to a new page.
+\clearpage 		Output the unfinished table of images, if any,
+			and clear page.
+\cleardoublepage 	Same as \clearpage except that when spread style
+			(such as book), start a new page with odd page.
+\newpage		Finish current column when twocolumn.
 
 clearpage
 \clearpage 
@@ -1158,58 +1243,42 @@ skip separating text from the floats at bottom of page.
 \cleardoublepage 
 <refer newpage>
 
-長さ
+length
 
-長さに使える単位には以下のものがある。
-cm		センチ
-em		大文字Mの幅
-ex		小文字xの高さ
-in		インチ(約2.54cm)
-mm		ミリメートル
-pc		パイカ(=12pt)
-pt		ポイント(72.27pt=1インチ)
-\fill		自然長は0だが、任意の長さに伸びることのできる伸縮長
-\stretch{X}	\fill のX倍
+Here are the available units of length in TeX.
+cm		centi meter
+em		width of `M'
+ex		height of `x'
+in		inch (=2.54cm)
+mm		mi.li meter
+pc		pica(=12pt)
+pt		point (72.27pt=1 inch)
+\fill		Freely extendable length whose normal length is 0
+\stretch{X}	X-times as long as \fill
 
 stretch
 \stretch{X}
-<refer 長さ>
+<refer length>
 
 twocolumn
 \twocolumn[STRING]
-改頁したあと二段組みでの組版を開始する。
-[STRING]を指定すると、STRINGを二段ぶち抜きのタイトルとして出力。
-→onecolumn
+Clear page and start two-column typesetting.
+Optional argument [STRING] specifies the page-acrossing title.
+->onecolumn
 
 onecolumn
 \onecolumn
-改頁したあとで一段組みでの組版を開始する。
-→twocolumn
+Clear page and start one-column typesetting.
+->twocolumn
 
 topnewpage
 \topnewpage{BOX}
-新しいページを開始し、\textwidthのBOXをparboxで作成する。
-二段組みページでぶち抜きタイトルを作成する時に用いるとよい。
-
-LaiTeX
-a Little Assistant Interface for TeX
-おそらくあなたが今 Vz 上で使っているこのモード。
-LaTeXを効率的に使うための多くの機能を盛り込んでいます。
-
-【発音について】
-
-laitex.defなどプログラムを指す時は「らいてっく」、システムを指す時は「ら
-いちょう」と読みます。
-
-【補足】
-「雷鳥」の旧仮名遣いは「らいてう」だそうです。
-
-laitex
-<refer LaiTeX>
+Begin a new page and create the parbox-ed BOX whose width is \textwidth.
+This is useful to make a page-acrossing title in a twocolumn page.
 
 YaTeX
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))
-おそらくあなたが今 Emacs で使っているこのモード。
+おそらくあなたが今使っているこのモード。
 LaTeXを効率的に使うための多くの機能を盛り込んでいます。
 
 【発音について】

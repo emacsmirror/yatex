@@ -2,7 +2,7 @@
 ;;; YaTeX library of general functions.
 ;;; yatexlib.el
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Nov 24 02:20:45 1994 on VFR
+;;; Last modified Wed Dec 21 05:58:06 1994 on landcruiser
 ;;; $Id$
 
 ;;;###autoload
@@ -47,15 +47,15 @@ See also YaTeX-search-active-forward."
 Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
   (interactive "Fswitch to file: ")
   (let (buf)
-    (if (setq buf (get-buffer (file-name-nondirectory file)))
+    (if (setq buf (get-file-buffer file))
 	(progn
 	  (funcall (if setbuf 'set-buffer 'switch-to-buffer)
-		   (file-name-nondirectory file))
+		   (get-file-buffer file))
 	  buf)
       (if (file-exists-p file)
-	  (funcall
-	   (if setbuf 'find-file-noselect 'find-file)
-	   file)
+	  (or ;find-file returns nil but set current-buffer...
+	   (funcall (if setbuf 'find-file-noselect 'find-file) file)
+	   (current-buffer))
 	(message "%s was not found in this directory." file)
 	nil)))
 )
@@ -64,8 +64,8 @@ Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
 (defun YaTeX-switch-to-buffer-other-window (file)
   "Switch to buffer if buffer exists, find file if not."
   (interactive "Fswitch to file: ")
-  (if (get-buffer (file-name-nondirectory file))
-      (progn (switch-to-buffer-other-window file) t)
+  (if (get-file-buffer file)
+      (progn (switch-to-buffer-other-window (get-file-buffer file)) t)
     (if (file-exists-p file)
 	(progn (find-file-other-window file) t)
       (message "%s was not found in this directory." file)
@@ -128,19 +128,7 @@ that window.  This function never selects minibuffer window."
 	     (get-buffer-window buffer))
 	   (progn
 	     (if select
-		 (cond
-		  (YaTeX-emacs-19
-		   (let ((frame (window-frame (get-buffer-window buffer t))))
-		     (select-frame frame)
-		     (focus-frame frame)
-		     (set-mouse-position frame 0 0)
-		     (raise-frame frame)
-		     (select-window (get-buffer-window buffer))
-		     (if (and (featurep 'windows)
-			      (win:frame-window frame))
-			 (win:adjust-window))))
-		  (t
-		   (select-window (get-buffer-window buffer)))))
+		 (goto-buffer-window buffer))
 	     t))
       (let ((window (selected-window))
 	    (wlist (YaTeX-window-list)) win w (x 0))
@@ -167,22 +155,32 @@ that window.  This function never selects minibuffer window."
 	   ((and YaTeX-emacs-19 (get-buffer-window buffer t))
 	    nil)			;if found in other frame
 	   (YaTeX-default-pop-window-height
-	    (split-window
-	     (selected-window)
-	     (max
-	      (min
-	       (- (screen-height)
-		  (if (numberp YaTeX-default-pop-window-height)
-		      (+ YaTeX-default-pop-window-height 2)
-		    (/ (* (screen-height)
-			  (string-to-int YaTeX-default-pop-window-height))
-		       100)))
-	       (- (screen-height) window-min-height 1))
-	      window-min-height))
+	    (split-window-calculate-height YaTeX-default-pop-window-height)
 	    (pop-to-buffer buffer)
 	    (or select (select-window window)))
 	   (t nil)))
 	 )))
+)
+
+;;;###autoload
+(defun split-window-calculate-height (height)
+  "Split current window wight specified HEIGHT.
+If HEIGHT is number, make new window that has HEIGHT lines.
+If HEIGHT is string, make new window that occupy HEIGT % of screen height.
+Otherwise split window conventionally."
+  (if (one-window-p)
+      (split-window
+       (selected-window)
+       (max
+	(min
+	 (- (screen-height)
+	    (if (numberp YaTeX-default-pop-window-height)
+		(+ YaTeX-default-pop-window-height 2)
+	      (/ (* (screen-height)
+		    (string-to-int YaTeX-default-pop-window-height))
+		 100)))
+	 (- (screen-height) window-min-height 1))
+	window-min-height)))
 )
 
 ;;;###autoload
@@ -215,11 +213,20 @@ where ever it appears."
 ;;;###autoload
 (defun YaTeX-minibuffer-complete ()
   "Complete in minibuffer.
-If the symbol 'delim is bound and is string, its value is assumed to be
+  If the symbol 'delim is bound and is string, its value is assumed to be
 the character class of delimiters.  Completion will be performed on
-the last field separated by those delimiters."
+the last field separated by those delimiters.
+  If the symbol 'quick is bound and is 't, when the try-completion results
+in t, exit minibuffer immediately."
   (interactive)
-  (let (beg word compl (md (match-data)))
+  (let ((md (match-data)) beg word compl
+	(quick (and (boundp 'quick) (eq quick t)))
+	(displist			;function to display completion-list
+	 (function
+	  (lambda ()
+	    (with-output-to-temp-buffer "*Completions*"
+	      (display-completion-list
+	       (all-completions word minibuffer-completion-table)))))))
     (setq beg (if (and (boundp 'delim) (stringp delim))
 		  (save-excursion
 		    (skip-chars-backward (concat "^" delim))
@@ -229,31 +236,117 @@ the last field separated by those delimiters."
 	  compl (try-completion word minibuffer-completion-table))
     (cond
      ((eq compl t)
-      (let ((p (point)) (max (point-max)))
-	(goto-char max)
-	(insert " [Sole completion]")
-	(goto-char p)
-	(sit-for 1)
-	(delete-region max (point-max))
-	(goto-char p)))
+      (if quick (exit-minibuffer)
+	(let ((p (point)) (max (point-max)))
+	  (unwind-protect
+	      (progn
+		(goto-char max)
+		(insert " [Sole completion]")
+		(goto-char p)
+		(sit-for 1))
+	    (delete-region max (point-max))
+	    (goto-char p)))))
      ((eq compl nil)
       (ding)
       (save-excursion
 	(let (p)
-	  (goto-char (setq p (point-max)))
-	  (insert " [No match]")
-	  (goto-char p)
-	  (sit-for 2)
-	  (delete-region p (point-max)))))
+	  (unwind-protect
+	      (progn
+		(goto-char (setq p (point-max)))
+		(insert " [No match]")
+		(goto-char p)
+		(sit-for 2))
+	    (delete-region p (point-max))))))
      ((string= compl word)
-      (with-output-to-temp-buffer "*Completions*"
-	(display-completion-list
-	 (all-completions word minibuffer-completion-table))))
+      (funcall displist))
      (t (delete-region beg (point-max))
-	(insert compl))
-     )
+	(insert compl)
+	(if quick
+	    (if (eq (try-completion compl minibuffer-completion-table) t)
+		(exit-minibuffer)
+	      (funcall displist)))))
     (store-match-data md))
 )
 
+(defun YaTeX-minibuffer-quick-complete ()
+  "Set 'quick to 't and call YaTeX-minibuffer-complete.
+See documentation of YaTeX-minibuffer-complete."
+  (interactive)
+  (let ((quick t))
+    (self-insert-command 1)
+    (YaTeX-minibuffer-complete)))
+
+(defun foreach-buffers (pattern job)
+  "For each buffer which matches with PATTERN, do JOB."
+  (let ((list (buffer-list)))
+    (save-excursion
+      (while list
+	(set-buffer (car list))
+	(if (or (and (stringp pattern)
+		     (buffer-file-name)
+		     (string-match pattern (buffer-file-name)))
+		(and (symbolp pattern) major-mode (eq major-mode pattern)))
+	    (eval job))
+	(setq list (cdr list)))))
+)
+
+(defun goto-buffer-window (buffer)
+  "Select window which is bound to BUFFER.
+If no such window exist, switch to buffer BUFFER."
+  (if (stringp buffer)
+      (setq buffer (or (get-file-buffer buffer) (get-buffer buffer))))
+  (if (get-buffer buffer)
+      (cond
+       ((get-buffer-window buffer)
+	(select-window (get-buffer-window buffer)))
+       ((and YaTeX-emacs-19 (get-buffer-window buffer t))
+	(let*((win (get-buffer-window buffer t))
+	      (frame (window-frame win)))
+	  (select-frame frame)
+	  (raise-frame frame)
+	  (focus-frame frame)
+	  (select-window win)
+	  (set-mouse-position frame 0 0)
+	  (and (featurep 'windows) (fboundp 'win:adjust-window)
+	       (win:adjust-window))))
+       (t (switch-to-buffer buffer))))
+)
+
+;; Here starts the functions which support gmhist-vs-Emacs19 compatible
+;; reading with history.
+;;;###autoload
+(defun completing-read-with-history
+  (prompt table &optional predicate must-match initial hsym)
+  "Completing read with general history: gmhist, Emacs-19."
+  (let ((minibuffer-history
+	 (or (symbol-value hsym)
+	     (and (boundp 'minibuffer-history) minibuffer-history)))
+	(minibuffer-history-symbol (or hsym 'minibuffer-history)))
+    (prog1
+	(if (fboundp 'completing-read-with-history-in)
+	    (completing-read-with-history-in
+	     minibuffer-history-symbol prompt table predicate must-match initial)
+	  (completing-read prompt table predicate must-match initial))
+      (if (and YaTeX-emacs-19 hsym) (set hsym minibuffer-history)))))
+
+;;;###autoload
+(defun read-from-minibuffer-with-history (prompt &optional init map read hsym)
+  "Read from minibuffer with general history: gmhist, Emacs-19."
+  (cond
+   (YaTeX-emacs-19
+    (read-from-minibuffer prompt init map read hsym))
+   (t
+    (let ((minibuffer-history-symbol hsym))
+      (read-from-minibuffer prompt init map read)))))
+
+;;;###autoload
+(defun read-string-with-history (prompt &optional init hsym)
+  "Read string with history: gmhist(Emacs-18) and Emacs-19."
+  (cond
+   (YaTeX-emacs-19
+    (read-from-minibuffer prompt init minibuffer-local-map nil hsym))
+   ((featurep 'gmhist-mh)
+    (read-with-history-in hsym prompt init))
+   (t (read-string prompt init))))
 
 (provide 'yatexlib)

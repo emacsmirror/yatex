@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el rev.2
 ;;; (c )1993-1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Oct 11 22:57:43 1994 on figaro
+;;; Last modified Fri Dec  2 17:03:30 1994 on VFR
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -42,7 +42,7 @@
 ;;;			("'" . Other-List-if-any)))
 ;;;
 ;;;	  Put these expressions into your ~/.emacs, and you can use this
-;;;	completion in the YaTeX-math-mode.
+;;;	completion in the math-mode.
 ;;;
 ;;;	  And you can add your favorite completion sequences to the
 ;;;	default completion list invoked with `;', by defining those lists
@@ -81,8 +81,8 @@
 ;;;		      '(("," . YaTeX-math-funcs-list)
 ;;;			("'" . ほかに定義したいシリーズがあれば…)))
 ;;;
-;;;	これらを ~/.emacs に書いておけば、野鳥の math-mode で自分専用の
-;;;	イメージ補完が利用できます。
+;;;	これらを ~/.emacs に書いておけば、math-mode で自分専用のイメージ
+;;;	補完が利用できます。
 
 (defvar YaTeX-jisold
   (and (boundp 'dos-machine-type)
@@ -378,6 +378,10 @@
   (list 'nth 1 list))
 
 (defvar YaTeX-math-cmd-regexp (concat (regexp-quote YaTeX-ec) "[A-z]"))
+(defvar YaTeX-math-verbatim-environments
+  '("alltt")
+  "*List of environments in which LaTeX math mode is disabled.
+This value is appended with YaTeX-verbatim-environments.")
 
 ;;;
 ;;YaTeX math-mode functions
@@ -438,12 +442,14 @@
   "If current position is supposed to be in LaTeX-math-mode, return t."
   (or (YaTeX-quick-in-environment-p
        '("math" "eqnarray" "equation" "eqnarray*" "displaymath"))
-      (let ((p (point)) (nest 0) me0
+      (let*((p (point)) (nest 0) me0
+	    (delim (concat YaTeX-sectioning-regexp
+			   "\\|^%\\|^$\\|^\C-l"))
 	    (boundary
 	     (save-excursion
-	       (if (looking-at YaTeX-paragraph-delimiter)
+	       (if (looking-at delim)
 		   (goto-char (max (point-min) (1- (point)))))
-	       (re-search-backward YaTeX-paragraph-delimiter nil 1)
+	       (re-search-backward delim nil 1)
 	       (point))))
 	(save-excursion
 	  (cond
@@ -455,7 +461,7 @@
 				     "\\([()]\\|[][]\\)") boundary t))
 		  (setq me0 (match-end 0))
 		  (if (or (YaTeX-on-comment-p)
-			  (YaTeX-quick-in-environment-p "verbatim")) nil
+			  (YaTeX-literal-p)) nil
 		    (if (or (= (char-after (1- me0)) ?\))
 			    (= (char-after (1- me0)) ?\]))
 			(setq nest (1+ nest))
@@ -464,11 +470,18 @@
 		(if (< nest 0) (throw 'open t))))
 	    t)
 	   (t (catch 'dollar
-		(while (search-backward "$" boundary t)
+		(while ;(search-backward "$" boundary t);little bit fast.
+		    (YaTeX-re-search-active-backward ;;;;;; Too slow???
+		     "\\$" YaTeX-comment-prefix boundary t)
 		  (cond
 		   ((equal (char-after (1- (point))) ?$) ; $$ equation $$
 		    (backward-char 1)
 		    (setq nest (1+ nest)))
+		   ((let ((YaTeX-verbatim-environments
+			   (append YaTeX-math-verbatim-environments
+				   YaTeX-verbatim-environments)))
+		      (YaTeX-literal-p))
+		    nil)
 		   ((and (equal (char-after (1- (point))) ?\\ )
 			 (not (equal (char-after (- (point) 3)) ?\\ )))
 		    nil)		;\$
@@ -583,8 +596,9 @@ at least you get to read the beginning."
     (setq result
 	  (catch 'complete
 	    (if (and (not force)
-		     (or (and (not YaTeX-auto-math-mode) (not YaTeX-math-mode))
-			 (not (YaTeX-in-math-mode-p))))
+		     (if YaTeX-auto-math-mode
+			 (not (YaTeX-in-math-mode-p))
+		       (not YaTeX-math-mode)))
 		(throw 'complete 'escape));this tag should be exit, but...
 	    (while t
 	      (message "Sequence(TAB for menu): %s" key)

@@ -25,25 +25,25 @@
 @cindex YaTeX
 
 @menu
-* What is YaTeX?::              
-* Main features::               
-* Installation::                
-* Typesetting::                 
-* %# notation::                 
-* Completion::                  
-* Local dictionaries::          
-* Commenting out::              
-* Cursor jump::                 
-* Changing and Deleting::       
-* Filling an item::             
-* Updation of @code{\includeonly}::  
-* What column?::                
-* Intelligent newline::         
-* Online help::                 
-* Cooperation with other packages::  
-* Customizations::              
-* Etcetera::                    
-* Copying::                     
+* What is YaTeX?::              Introduction
+* Main features::               What YaTeX can do
+* Installation::                Guide to install
+* Typesetting::                 Call typesetting processes
+* %# notation::                 Quick notation of controlling YaTeX
+* Completion::                  Input LaTeX commands with completion
+* Local dictionaries::          Directory dependent completion
+* Commenting out::              Commenting/uncommenting text
+* Cursor jump::                 Jumping to related position
+* Changing and Deleting::       Changing/deleting certain unit of text
+* Filling::                     Filling an item or paragraph
+* Updation of @code{\includeonly}::  Maintaining @code{\includeonly}
+* What column?::                Column position guide in tabular
+* Intelligent newline::         Guess requisites of new line
+* Online help::                 On-line documentation of LaTeX
+* Cooperation with other packages::  Work well with gmhist, min-out
+* Customizations::              How to breed `Wild Bird'
+* Etcetera::                    YaTeX is acquisitive.
+* Copying::                     Redistribution
 
  --- The Detailed Node Listing ---
 
@@ -265,7 +265,13 @@ notations in the source text.
 @end example
 
 @noindent
-anywhere in the source text.  And if you split the source text and
+anywhere in the source text.  This is useful for changing
+typesetter.
+
+@node Splitting input files, Static region for typesetting, Changing typesetter, %# notation
+@comment  node-name,  next,  previous,  up
+
+  And if you split the source text and
 edit subfile that should be included from main text.
 
 @example
@@ -285,13 +291,14 @@ description makes it convenient to use ghostview as dvi-previewer.
 Note that YaTeX  assumes the component  before the  last period of
 the last word in this line as base name of the main La@TeX{} source.
 
-  Here are the restrictions on splitting sources.
+  To make best use of the feature of inter-file jumping by
+@kbd{[prefix] g} (see @ref{Cursor jump}), take described below into
+consideration.
 
 @itemize
-@item All the file name should be different.
 @item You can put split texts in sub directory, but not in
  sub directory of sub directory.
-@item In the main text,specify the file with relative path name
+@item In the main text, specify the child file name with relative path name
  such as \include{chap1/sub}, when you include the file in
  a sub-directory.
 @item In a sub-text, write @code{%#!latex main.tex} even if @file{main.tex}
@@ -864,12 +871,14 @@ directory.
 minibuffer, YaTeX asks you with the following prompt;
 
 @example
-  `foo' is not in table. Register into: U)serTable L)ocal N)one
+  `foo' is not in table. Register into: U)serDic L)ocalDic N)one D)iscad
 @end example
 
 @noindent 
-In this menu, typing `u' updates your `user dictionary', `l' updates your
-local dictionary, and `n' updates no dictionary and throws the word away.
+In this menu, typing @kbd{u} updates your `user dictionary', @kbd{l}
+updates your local dictionary, @kbd{n} updates only on-memory dictionary
+which go through only current Emacs session, and @kbd{d} updates no
+dictionary and throws the new word away.
 
   If you find this switching feature meaningless and bothersome, put the
 next expression into your @file{~/.emacs}
@@ -948,6 +957,8 @@ work in `commenting out from @code{\begin} to @code{\end}' mode.
 @cindex cursor jump
 @cindex prefix g
 
+@section Jump to corresponding object
+
   Typing
 
 @table @kbd
@@ -970,14 +981,27 @@ that have relation each other.
 
   On a @code{\begin},@code{\end} line, typing @kbd{[prefix] g} moves the
 cursor to the corresponding @code{\end},@code{\begin} line, if its partner
-really exists.  The behaviour on the line @code{%#BEGIN} and @code{%#END}
+really exists.  The behavior on the line @code{%#BEGIN} and @code{%#END}
 are the same.  Note that if the correspondent of @code{label/ref} or
-@code{cite/bibitem} exists in another file, that file have to be opend to
+@code{cite/bibitem} exists in another file, that file have to be opened to
 make a round trip between references by @kbd{[prefix] g}.
 
   If you type @code{[prefix] g} on the line of @code{\include@{chap1@}},
 typically in the main text, YaTeX switches buffer to @file{chap1.tex}.
-The key strokes below work to the contrary.  Typing
+
+@table @kbd
+@item [prefix] 4 g
+        @dots{} go to corresponding object in other window
+@end table
+
+@noindent
+do the same job as @kbd{[prefix] g} except it's done in other window.
+Note that this function doesn't work on @code{begin/end},
+@code{%#BEGIN/%#END} pairs because it is meaningless.
+
+@section Jump to main file
+
+  Typing
 
 @table @kbd
 @item [prefix] ^
@@ -990,6 +1014,8 @@ The key strokes below work to the contrary.  Typing
 
 in a sub text switch the buffer to the main text specified by
 @code{%#!}  notation.
+
+@section Other jumping features
 
   And these are the functions which work on the current La@TeX{}
 environment:
@@ -1006,7 +1032,7 @@ environment:
 @cindex M-C-e
 @cindex M-C-@@
 
-@node Changing and Deleting, Filling an item, Cursor jump, Top
+@node Changing and Deleting, Filling, Cursor jump, Top
 @comment  node-name,  next,  previous,  up
 @chapter Changing and Deleting
 
@@ -1084,13 +1110,16 @@ Main \footnote@{note@} here.    Main note here. Main  here.
        ~(cursor)
 @end example
 
-@node Filling an item, Updation of @code{\includeonly}, Changing and Deleting, Top
+@node Filling, Updation of @code{\includeonly}, Changing and Deleting, Top
 @comment  node-name,  next,  previous,  up
-@chapter Filling an item
+@chapter Filling
+@cindex filling
+
+@section Filling an item
 @cindex filling an item
 @cindex prefix i
 
-  To fill a term (sentence) of @code{\item}, type
+  To fill a term (descriptive sentences) of @code{\item}, type
 
 @table @kbd
 @item [prefix] i
@@ -1102,7 +1131,7 @@ on that item.
 
   YaTeX uses the value of  the variable @code{YaTeX-item-regexp} as the
 regular expression to search item header  in  itemize environment.
-If you make a newcommand to itemize terms(eg. @code{\underlineitem}), put
+If you make a newcommand to itemize terms(e.g. @code{\underlineitem}), put
 
 @lisp
         (setq YaTeX-item-regexp
@@ -1114,7 +1143,42 @@ in your @file{~/.emacs}.  If you are not familiar with regular expression
 for Emacs-Lisp, name  a newcommand  for  `itemize' beginning  with
 @code{\item} such as @code{\itembf}, not @code{\bfitem}.
 
-@node Updation of @code{\includeonly}, What column?, Filling an item, Top
+  This function -- YaTeX-fill-item -- reformats the @code{\item} into
+`hang-indented' style.  When you separate the topic word and its
+description, use @kbd{M-q} instead.  For example:
+
+@example
+Hang indentation:
+       >
+       >\item[foo] `foo' is the typical word for describing an
+       >           arbitrarily written....
+
+Normal indentation:
+       >
+       > \item bar
+       >
+       > When the word `for' is used as an arbitrarily word, `bar' 
+       > is bound to follow it.
+@end example
+
+  Note that the indent depth of the @code{\item} and its descriptive
+paragraph are the same in latter case.  If you want to use different
+depth, invoke fill-paragraph at the beginning of non-whitespace
+character(see below).
+
+@section Filling paragraph
+@cindex Filling paragraph
+@cindex M-q
+
+  Fill-paragraph is little bit adapted for La@TeX{} sources.  It retains from
+filling in certain environments where formatting leads to a disaster such
+as verbatim, tabular, or so.  And it protects @code{\verb} expressions
+from being folded (The variable @code{YaTeX-verb-regexp} controls this).
+Besides, putting cursor on the first occurrence of non-whitespace
+character on a line changes the fill-prefix temporarily to the depth of
+the line.
+
+@node Updation of @code{\includeonly}, What column?, Filling, Top
 @comment  node-name,  next,  previous,  up
 @chapter Updation of @code{\includeonly}
 @cindex includeonly
@@ -1448,6 +1512,11 @@ the variable by @kbd{M-x describe-variable}.
         Regexp of La@TeX{} itemization command (@code{"\\\\(sub\\)*item"})
 @end defvar
 
+@defvar YaTeX-verb-regexp
+        Regexp of La@TeX{} verb command family.  Omit \\\\.
+        (@code{"verb\\*?\\|path"})
+@end defvar
+
 @defvar         YaTeX-nervous
         T for using local dictionary (@code{t})
 @end defvar
@@ -1473,6 +1542,12 @@ the variable by @kbd{M-x describe-variable}.
 
 @defvar YaTeX-auto-math-mode
         Switch math-mode automatically(@code{t})
+@end defvar
+
+@defvar YaTeX-math-key-list-private
+        User defined alist, math-mode-prefix vs completion alist
+        used in image completion(@code{nil}).  See @file{yatexmth.el}
+        for the information about how to define a completion alist.
 @end defvar
 
 @defvar YaTeX-default-pop-window-height
@@ -1624,7 +1699,7 @@ for section-type commands.
 concatenating `YaTeX::' and section-type command, is called automatically
 with an integer argument which indicates which argument of section-type
 command is being read.  Thus the add-in should determine the
-job refering the value of its argument.
+job referring the value of its argument.
 
 @menu
 * Defining `option add-in'::    
@@ -1718,13 +1793,13 @@ YaTeX:read-coordinates
 @itemx [A]
 Base prompt, X-axis prompt, Y-axis prompt     (each optional)        
 @itemx [D]
-  Read the coodinates with the prompt ``BasePrompt X-axisPrompt:'' for
+  Read the coordinates with the prompt ``BasePrompt X-axisPrompt:'' for
 X-axis, ``BasePrompt Y-axisPrompt:'' for Y-axis, and return it in the form 
-of ``(X,Y)''.  The default prompts are @code{Dimention}, @code{X},
+of ``(X,Y)''.  The default prompts are @code{Dimension}, @code{X},
 @code{Y} respectively.
 
 @item [F]
-YaTeX:check-comletion-type
+YaTeX:check-completion-type
 @itemx [A]
 One of the symbols: 'begin, 'section, or 'maketitle
 @itemx [D]
@@ -1831,9 +1906,9 @@ read optional string (if string omitted, omit [] too)
 @item Position
 read positional option (like [htbp])
 @item Coord.
-read coodinates
+read coordinates
 @item Quit
-quit from genarating
+quit from generating
 @end table
 
   Since (A) is the optional argument to specify the location of included
@@ -1930,7 +2005,7 @@ needed.
 @subsection Contribution
 
   If you get your own pretty function and you let it be in public, please 
-steel yourself in the happy atomospher and do not send me the function.
+steel yourself in the happy atmosphere and do not send me the function.
 I do know it is not fine because it is generated by yatexgen:-p.
 
 @node Etcetera, Copying, Customizations, Top
@@ -1944,6 +2019,8 @@ rarely used  often cause too many  hits.   Therefore always try to
 use completion  in order to  enrich your dictionary,  and you will
 also find `Wild Bird' growing suitable for your La@TeX{} style.
 
+  The package name `Wild Bird' is the English translation of Japanese
+title `Yachou', which is a trick on words of Japanese.
 
 @node Copying,  , Etcetera, Top
 @comment  node-name,  next,  previous,  up

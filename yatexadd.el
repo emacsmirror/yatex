@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.9
+;;; yatexadd.el rev.11
 ;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Nov 12 07:03:15 1994 on VFR
+;;; Last modified Mon Dec 19 03:07:01 1994 on landcruiser
 ;;; $Id$
 
 ;;;
@@ -176,18 +176,46 @@ YaTeX-make-begin-end."
 	  (YaTeX:read-coordinates "Dimension"))
 )
 
+(defvar YaTeX-minibuffer-quick-map nil)
+(if YaTeX-minibuffer-quick-map nil
+  (setq YaTeX-minibuffer-quick-map
+	(copy-keymap minibuffer-local-completion-map))
+  (let ((ch (1+ ? )))
+    (while (< ch 127)
+      (define-key YaTeX-minibuffer-quick-map (char-to-string ch)
+	'YaTeX-minibuffer-quick-complete)
+      (setq ch (1+ ch)))))
+
+(defvar YaTeX:left-right-delimiters
+   '(("(" . ")") (")" . "(") ("[" . "]") ("]" . "[")
+     ("\\{" . "\\}") ("\\}" . "\\{") ("|") ("\\|")
+     ("\\lfloor" . "\\rfloor") ("\\lceil" . "\\rceil")
+     ("\\langle" . "\\rangle") ("/") (".")
+     ("\\rfloor" . "\\rfloor") ("\\rceil" . "\\lceil")
+     ("\\rangle" . "\\langle") ("\\backslash")
+     ("\\uparrow") ("\\downarrow") ("\\updownarrow") ("\\Updownarrow"))
+   "TeX math delimiter, which can be completed after \\right or \\left.")
+
+(defvar YaTeX:left-right-default nil "Default string of YaTeX:right.")
+
 (defun YaTeX:left ()
-  (let (c)
-    (while (not (string-match
-		 (progn (message "Which parenthesis? One of [{(|)}]: ")
-			(setq c (regexp-quote (char-to-string (read-char)))))
-		 "[{(|)}]")))
-    (setq single-command "right")
-    (cond
-     ((string-match c "[(|)]") c)
-     (t (concat "\\" c))))
-)
+  (let ((minibuffer-completion-table YaTeX:left-right-delimiters)
+	delimiter (leftp (string= single-command "left")))
+    (setq delimiter
+	  (read-from-minibuffer
+	   (format "Delimiter%s: "
+		   (if YaTeX:left-right-default
+		       (format "(default=`%s')" YaTeX:left-right-default)
+		     "(SPC for menu)"))
+	   nil YaTeX-minibuffer-quick-map))
+    (if (string= "" delimiter) (setq delimiter YaTeX:left-right-default))
+    (setq single-command (if leftp "right" "left")
+	  YaTeX:left-right-default
+	  (or (cdr (assoc delimiter YaTeX:left-right-delimiters)) delimiter))
+    delimiter))
+
 (fset 'YaTeX:right 'YaTeX:left)
+
 
 (defun YaTeX:read-coordinates (&optional mes varX varY)
   (concat
@@ -487,7 +515,7 @@ YaTeX-make-begin-end."
       (if (> argc 0) (insert (format "[%d]" argc)))
       (if (and (stringp command)
 	       (string< "" command)
-	       (y-or-n-p "Update user completion table?"))
+	       (y-or-n-p "Update dictionary?"))
 	  (cond
 	   ((= argc 0)
 	    (YaTeX-update-table
@@ -515,6 +543,8 @@ YaTeX-make-begin-end."
    "Page style: "
    '(("plain") ("empty") ("headings") ("myheadings") ("normal") nil))
 )
+(fset 'YaTeX::thispagestyle 'YaTeX::pagestyle)
+
 ;;
 ; completion for the arguments of \pagenumbering
 ;;
@@ -570,6 +600,7 @@ YaTeX-make-begin-end."
   "*User definable alist of local style parameters.")
 
 (defvar YaTeX:length-history nil "Holds history of length.")
+(put 'YaTeX:length-history 'no-default t)
 (defun YaTeX::setlength (&optional argp)
   "YaTeX add-in function for arguments of \\setlength."
   (cond
@@ -583,8 +614,7 @@ YaTeX-make-begin-end."
      nil nil "\\")
     )
    ((equal 2 argp)
-    (let ((minibuffer-history-symbol 'YaTeX:length-history))
-      (read-string "Length: "))))
+    (read-string-with-history "Length: " nil 'YaTeX:length-history)))
 )
 (fset 'YaTeX::addtolength 'YaTeX::setlength)
 
@@ -670,7 +700,7 @@ YaTeX-make-begin-end."
 	(minibuffer-completion-table dt)
 	(opt (read-from-minibuffer
 	      "Style options ([opt1,opt2,...]): "
-	      nil YaTeX-minibuffer-completion-map))
+	      nil YaTeX-minibuffer-completion-map nil))
 	(substr opt) o)
     (if (string< "" opt)
 	(progn
@@ -689,9 +719,10 @@ YaTeX-make-begin-end."
       "")))
 
 (defun YaTeX::documentstyle (&optional argp)
-  "YaTeX add-in function for arguments of \\socumentstyle."
+  "YaTeX add-in function for arguments of \\documentstyle."
   (cond
    ((equal argp 1)
+    (setq env-name "document")
     (let ((sname
 	   (YaTeX-cplread-with-learning
 	    (format "Documentstyle (default %s): "

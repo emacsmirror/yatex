@@ -24,23 +24,74 @@
 * Intro::                       はじめに
 * Main features::               主な機能
 * Installation::                インストール
-* Invocation::                  外部コマンドの起動
+* Invocation::                  プロセス起動
 * %#notation ::                 %#記法
 * Completion::                  補完入力
 * Local dictionary::            ローカル辞書
 * Commenting out::              コメントアウト
 * Cursor jump::                 カーソルジャンプ
-* Modifying/Deleting::          変更/削除
-* Filling item::                itemの桁揃え
-* Includeonly::                 勝手にincludeonly
-* What column::                 ここはどこ?
+* Modifying/Deleting::          LaTeXコマンドの変更/削除
+* Filling::                     桁揃え
+* Includeonly::                 勝手に includeonly
+* What column::                 カラム位置ガイド
 * Intelligent newline::         おまかせ改行
-* Online help::                 オンラインヘルプ
+* Online help::                 LaTeXオンラインヘルプ
 * Cooperation with other packages::  他パッケージとの連携
 * Customizations::              カスタマイズ
 * Etc::                         その他
 * Copying::                     取り扱い
 * Concept Index::               索引
+
+ --- The Detailed Node Listing ---
+
+latexコマンド起動
+
+* Calling typesetter::          タイプセッタ起動
+* Print out::                   プリントアウト用コマンドの起動
+
+%#記法
+
+* Changing typesetter::         タイプセット用コマンドの変更
+* Splitting input files::       入力ファイル分割
+* Fix region for typesetting::  領域の固定
+* lpr format::                  プリントアウトコマンド用フォーマット
+* Editing %# notation::         %#記法の編集
+
+補完入力
+
+* begin型補完::                 
+* section型補完::               
+* large型補完::                 
+* maketitle型補完::             
+* Arbitrary completion::        随時補完
+* end補完::                     
+* Accent mark completion::      アクセント記号補完
+* Image completion::            数式記号イメージ補完
+* Greek letter completion::     ギリシャ文字補完
+
+section型補完
+
+* 2個以上の引数をとる section型コマンド::  
+* Enclose region-type command::  
+* Recursive completion::        再帰補完
+* view-sectioning::             セクション区切りのアウトライン表示
+
+変更/削除
+
+* Changing LaTeX command::      La@TeX{} コマンドの変更
+* Killing LaTeX command::       La@TeX{} コマンドの削除
+
+カスタマイズ
+
+* Lisp variables::              lisp 変数
+* Add-in functions::            付加関数(アドイン関数)
+
+lisp 変数
+
+* All customizable variables::  カスタマイズ変数一覧
+* Sample definitions::          カスタマイズ変数設定例
+* Hook variables::              hook変数
+* Hook file::                   hook用ファイル
 @end menu
 
 @node Intro, Main features, Top, Top
@@ -233,7 +284,7 @@
 @cindex 起動するコマンドを変える[きとうするこまんとをかえる]
 
 @example
-        %#!jlatex-ntt example
+        %#!jlatex-ntt
 @end example
 
 NTT jTeX と、ASCII jTeX を使い分けたいような場合に便利でしょう。
@@ -267,11 +318,11 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 なお、この行の最後の単語のピリオド以前を「メインファイル」のベース
 ネームであると仮定します(上の2つの場合どちらも@file{main})。
 
-  入力ファイル分割時には次のことに注意して下さい。
+  @kbd{[prefix] g} (@ref{Cursor jump}参照) での
+ファイル間ジャンプを有効に機能させるため、入力ファイル分割時には次のことに
+注意して下さい。
 
 @enumerate
-@item
-同時に編集するファイル群の名前は重複のないようにする。
 @item
 サブディレクトリを作って、その中にサブファイルを置くことはできるが
 サブディレクトリのサブディレクトリには置けない。
@@ -904,7 +955,6 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 @chapter ローカル辞書
 @cindex ローカル辞書[ろおかるししよ]
 @cindex .yatexrc
-@cindex 変な単語[へんなたんこ]
 
   補完入力用の候補は三種類の辞書から構成されています。一つは
 @file{yatex.el}に組み込まれた「標準辞書」、もう一つはユーザが個人的に常用
@@ -915,13 +965,14 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 来ます。
 
 @example
-  `foo' is not in table. Register into: U)serTable L)ocal N)one
+  `foo' is not in table. Register into: U)serDic L)ocalDic N)one D)iscard
 @end example
 
 @noindent 
 というプロンプトに対し、@kbd{u}と答えると「ユーザ辞書」を、@kbd{l}と答える
-とローカル辞書を更新することになり、@kbd{n}と答えると新たな単語を学習せず
-に捨てることになります。
+とローカル辞書を更新し、@kbd{n}と答えると辞書ファイルは更新せず現在のEmacs
+セッションのみ有効な単語とし、@kbd{d}と答えると新たな単語を学習せずに捨て
+ることになります。
 
   もし、ローカル辞書の機能はいらず、全てユーザ辞書の更新のみでよいと言う場
 合には@file{~/.emacs}などで、
@@ -933,6 +984,11 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 
 @noindent 
 として下さい。
+
+@cindex 変な単語[へんなたんこ]
+  もし、綴の間違ったものなど、変な単語が学習されてしまった場合は
+
+
 
 @node Commenting out, Cursor jump, Local dictionary, Top
 @comment  node-name,  next,  previous,  up
@@ -1004,6 +1060,8 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 @cindex カーソルジャンプ[かあそるしやんふ]
 @cindex prefix g
 
+@section 対応オブジェクトへのジャンプ
+
   文書中のいろいろな場所で
 
 @table @kbd
@@ -1028,11 +1086,24 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 ない場合はエラーになります。またこれは、領域固定のための @code{%#BEGIN} と 
 @code{%#END} のペアに対しても同様に動作します。なお、@code{label/ref}や
 @code{cite/bibitem}対応するものが別ファイルにある時は、ジャンプ先となるファ
-イルがオープンされていなければなりません。
-@xref{%#記法}
+イルがオープンされていなければなりません。@xref{%#記法}
+メインの .tex ファイルの @code{\include{chap1}} などにカーソルを合わせ、
+@kbd{[prefix] g} を押すと、@file{chap1.tex} にジャンプします。
 
-  メインの .tex ファイルの @code{\include{chap1}} などにカーソルを合わせ、
-@kbd{[prefix] g} を押すと、@file{chap1.tex} にジャンプします。また、
+また、
+
+@table @kbd
+@item [prefix] 4 g
+        @dots{} 別ウィンドウで対応オブジェクトにジャンプ
+@end table
+
+@noindent
+を押すと、対応するオブジェクトへのジャンプを別ウィンドウで行います。ただし、
+この機能は @code{begin/end}, @code{%#BEGIN/%#END} 間のジャンプに対しては
+(意味がないと思われるので)機能しないので注意してください。
+
+@section メインファイルへのジャンプ
+
 @file{chap1.tex}のようなサブファイルで、
 
 @table @kbd
@@ -1045,7 +1116,11 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 @noindent 
 を押すと、メインファイルの編集バッファに切替えます。もし、メインファイルを
 オープンしていない場合は、カレントディレクトリから探して自動的にオープンし
-ます。さらに現在の環境を単位として機能するコマンドに以下のものがあります。
+ます。
+
+@section 環境を単位としたジャンプ
+
+さらに現在の環境を単位として機能するコマンドに以下のものがあります。
 
 @cindex 環境の先頭へ[かんきようのせんとうへ]
 @cindex 環境の末尾へ[かんきようのまつひへ]
@@ -1067,7 +1142,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 
   
 
-@node Modifying/Deleting, Filling item, Cursor jump, Top
+@node Modifying/Deleting, Filling, Cursor jump, Top
 @comment  node-name,  next,  previous,  up
 @chapter 変更/削除
 @cindex 変更/削除[へんこう/さくしよ]
@@ -1149,10 +1224,13 @@ universal-argument (@kbd{C-u}) を打った後で@kbd{[prefix] k}をタイプすると、
                 ↑(カーソル位置)
 @end example
 
-@node Filling item, Includeonly, Modifying/Deleting, Top
+@node Filling, Includeonly, Modifying/Deleting, Top
 @comment  node-name,  next,  previous,  up
-@chapter itemの桁揃え
-@cindex itemの桁揃え[itemのけたそろえ]
+@chapter 桁揃え
+@cindex 桁揃え[けたそろえ]
+
+@section itemの桁揃え
+@cindex itemなどの桁揃え[itemなとのけたそろえ]
 @cindex prefix i
 
   itemize 環境中にある@code{\item}の項目(文章)が複数行に渡る場合に、項
@@ -1184,7 +1262,40 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 この変数の指定の仕方がよく分からない場合は、独自の項目列挙コマンドの名前を
 @code{@code{"\item"}で始まるものにして下さい(例えば"\itembf"})。
 
-@node Includeonly, What column, Filling item, Top
+  @kbd{[prefix] i} では@code{\item} を「ハングインデント」に整形します。も
+し@code{\item}とその説明用パラグラフを切り離す時は通常の
+@kbd{M-q}(他のモードではfill-paragraphが割り当てられている)を使ってくださ
+い。(つまり以下のような場合:)
+
+@example
+ハングインデント:
+       >\item[ほげほげ] 英語では、特に意味のない単語を `foo' であらわしま
+       >                すが、これの日本語版ともいえる単語が「ほげほげ」
+       >                です。
+通常インデント:
+       > \item へろへろ
+       >
+       > 「ほげほげ」をでたらめが単語として使った時に、第2のでたらめな
+       > 単語として「へろへろ」が使われることが多いようです。
+@end example
+
+  上の通常インデントの場合、説明パラグラフのインデントは \item と同じ深さ
+とする必要があります。ただし、@kbd{M-q}を行の最初の非空白文字の位置で押す
+ことにより深さを変えることができます(後述)。
+
+@section パラグラフの桁揃え
+@cindex パラグラフの桁揃え[はらくらふのけたそろえ]
+@cindex M-q
+
+  パラグラフの桁揃え(fill)は、基本的に通常通り機能しますが、verbatim環境や、
+tabular環境など桁揃えをすると悲惨な状況になるような環境中では機能しません。
+また、\verb で括ってあるものは決して行分割されません(変数 
+@code{YaTeX-verb-regexp} で制御) )。さらに、一時的にインデントの深さを変え
+てある箇所では、そのインデントの先頭で@kbd{M-q}を押すことにより 
+fill-prefix をいちいち変更しなくて桁揃えができます。
+
+
+@node Includeonly, What column, Filling, Top
 @comment  node-name,  next,  previous,  up
 @chapter 勝手にincludeonly
 @cindex 勝手にincludeonly[かつてにincludeonly]
@@ -1441,7 +1552,11 @@ prefix キーの直後のキーバインドで@kbd{英字}のものを@kbd{C-英字}に変更
 @end defvar
 
 @defvar YaTeX-item-regexp
-itemの桁揃えの時に用いる、itemの正規表現(@code{"\\\\item"})
+itemの桁揃えの時に用いる、itemの正規表現(@code{"\\\\(sub\\)*item"})
+@end defvar
+
+@defvar YaTeX-verb-regexp
+verbコマンドの正規表現。先頭の\\\\はつけない(@code{"verb\\*?\\|path"})
 @end defvar
 
 @defvar tex-command
@@ -1534,7 +1649,13 @@ fill を抑止する環境名のリスト(@code{'("verbatim" "tabular")})
 @end defvar
 
 @defvar YaTeX-auto-math-mode
-数式モードの切り替えを自動的に行う。(@code{nil})
+数式モードの切り替えを自動的に行う。(@code{t})
+@end defvar
+
+@defvar YaTeX-math-key-list-private
+        数式イメージ補完で用いる (プリフィクスキー . 対応補完テーブル) の
+        alist(@code{nil})。補完テーブルの書き方については
+        @file{yatexmth.el}を参照。
 @end defvar
 
 @defvar YaTeX-default-pop-window-height
@@ -1651,11 +1772,11 @@ fill を抑止する環境名のリスト(@code{'("verbatim" "tabular")})
   本プログラムはフリーソフトウェアです。本プログラムを使用して生じたいかな
 る結果に対しても作者は責任を負わないこととします。転載等に関しては制限いた
 しません。常識的に扱ってください。また、使用している旨をメイルでお知らせい
-ただくと、作者は喜んでサポートに励むことでしょう(ほんとか)。
+ただくと、作者は喜んでサポートに励むことでしょう。
 
   苦情、希望、バグ報告、感想等は歓迎いたします。
-連絡は pcs39334@@asciinet.or.jp または、
-yuuji@@ae.keio.ac.jpまで(1995年3月現在)。
+連絡は yuuji@@ae.keio.ac.jp または、
+pcs39334@@asciinet.or.jp まで(1995年3月現在)。
 
 仕様は、予告なく確実に(気分次第で)変更されます:-p。
 
