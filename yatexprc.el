@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Jul  9 18:24:42 1994 on figaro
+;;; Last modified Thu Jul 14 21:00:27 1994 on figaro
 ;;; $Id$
 
 (require 'yatex)
@@ -137,31 +137,32 @@ operation to the region."
 	 (buffer (current-buffer)) opoint preamble (subpreamble "") main
 	 reg-begin reg-end)
 
-      (if (search-backward "%#BEGIN" nil t)
-	  (progn
-	    (setq typeout "--- Region from BEGIN to "
-		  end "the end of the buffer ---"
-		  reg-begin (match-end 0))
-	    (if (search-forward "%#END" nil t)
-		(setq reg-end (match-beginning 0)
-		      end "END ---")
-	      (setq reg-end (point-max))))
-	(setq typeout "=== Region from (point) to (mark) ===")
-	(setq reg-begin (point) reg-end (mark)))
-      (goto-char (point-min))
-      (while (search-forward "%#REQUIRE" nil t)
-	(setq subpreamble
-	      (concat subpreamble
-		      (cond
-		       ((eolp)
-			(buffer-substring
-			 (match-beginning 0)
-			 (point-beginning-of-line)))
-		       (t (buffer-substring
-			   (match-end 0)
-			   (point-end-of-line))))
-		      "\n"))
-	(goto-char (match-end 0)))
+      (save-excursion
+	(if (search-backward "%#BEGIN" nil t)
+	    (progn
+	      (setq typeout "--- Region from BEGIN to "
+		    end "the end of the buffer ---"
+		    reg-begin (match-end 0))
+	      (if (search-forward "%#END" nil t)
+		  (setq reg-end (match-beginning 0)
+			end "END ---")
+		(setq reg-end (point-max))))
+	  (setq typeout "=== Region from (point) to (mark) ===")
+	  (setq reg-begin (point) reg-end (mark)))
+	(goto-char (point-min))
+	(while (search-forward "%#REQUIRE" nil t)
+	  (setq subpreamble
+		(concat subpreamble
+			(cond
+			 ((eolp)
+			  (buffer-substring
+			   (match-beginning 0)
+			   (point-beginning-of-line)))
+			 (t (buffer-substring
+			     (match-end 0)
+			     (point-end-of-line))))
+			"\n"))
+	  (goto-char (match-end 0))))
       (YaTeX-visit-main t)
       (setq main (current-buffer))
       (setq opoint (point))
