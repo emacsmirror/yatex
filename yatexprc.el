@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Apr 25 12:13:17 1994 on alto
+;;; Last modified Thu May  5 17:33:04 1994 on 98fa
 ;;; $Id$
 
 (require 'yatex)
@@ -132,21 +132,21 @@ operation to the region."
     (let*
 	((end "") typeout ;Type out message that tells the method of cutting.
 	 (cmd (concat (YaTeX-get-latex-command nil) " " YaTeX-texput-file))
-	 (buffer (current-buffer)) opoint preamble
-	 (region
-	  (if (re-search-backward
-	       "%#BEGIN" nil t)
-	      (progn
-		(setq typeout "--- Region from BEGIN to " end "END ---")
-		(buffer-substring
-		 (match-end 0)
-		 (if (re-search-forward "%#END" nil t)
-		     (match-beginning 0)
-		   (setq end "end of buffer ---")
-		   (point-max))))
-	    (setq typeout "=== Region from (point) to (mark) ===")
-	    (buffer-substring (point) (mark)))))
+	 (buffer (current-buffer)) opoint preamble main
+	 reg-begin reg-end)
+      
+      (if (re-search-backward "%#BEGIN" nil t)
+	  (progn
+	    (setq typeout "--- Region from BEGIN to " end "END ---"
+		  reg-begin (match-end 0))
+	    (if (re-search-forward "%#END" nil t)
+		(setq reg-end (match-beginning 0)
+		      end "end of buffer ---")
+	      (setq reg-end (point-max))))
+	(setq typeout "=== Region from (point) to (mark) ===")
+	(setq reg-begin (point) reg-end (mark)))
       (YaTeX-visit-main t)
+      (setq main (current-buffer))
       (setq opoint (point))
       (goto-char (point-min))
       (setq
@@ -157,17 +157,18 @@ operation to the region."
 		 "\\begin{document}")))
       (goto-char opoint)
       ;;(set-buffer buffer)		;for clarity
-      (find-file YaTeX-texput-file)
+      (set-buffer (find-file-noselect YaTeX-texput-file))
+      ;;(find-file YaTeX-texput-file)
       (erase-buffer)
       (if YaTeX-need-nonstop
 	  (insert "\\nonstopmode{}\n"))
       (insert preamble "\n")
-      (insert region)
+      (insert-buffer-substring buffer reg-begin reg-end)
       (insert "\\typeout{" typeout end "}\n") ;Notice the selected method.
       (insert "\n\\end{document}\n")
       (basic-save-buffer)
       (kill-buffer (current-buffer))
-      (YaTeX-visit-main t)
+      (set-buffer main)		;return to parent file or itself.
       (YaTeX-typeset cmd YaTeX-typeset-buffer)
       (put 'dvi2-command 'region t)))
 )
@@ -226,11 +227,15 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
     (put 'dvi2-command 'region nil))
 )
 
+(defvar YaTeX-call-command-history nil
+  "Holds history list of YaTeX-call-command-on-file.")
+(put 'YaTeX-call-command-history 'no-default t)
 (defun YaTeX-call-command-on-file (base-cmd buffer)
   (YaTeX-save-buffers)
   (YaTeX-typeset
-   (read-string "Call command: "
-		(concat base-cmd " " (YaTeX-get-preview-file-name)))
+   (let ((minibufer-history-symbol 'YaTeX-call-command-history))
+     (read-string "Call command: "
+		  (concat base-cmd " " (YaTeX-get-preview-file-name))))
    buffer)
 )
 
@@ -262,16 +267,25 @@ PROC should be process identifier."
 	(start-process "system" buffer shell-file-name "-c" command))))
 )
 
+(defvar YaTeX-preview-command-history nil
+  "Holds minibuffer history of preview command.")
+(put 'YaTeX-preview-command-history 'no-default t)
+(defvar YaTeX-preview-file-history nil
+  "Holds minibuffer history of file to preview.")
+(put 'YaTeX-preview-file-history 'no-default t)
 (defun YaTeX-preview (preview-command preview-file)
   "Execute xdvi (or other) to tex-preview."
   (interactive
-   (list (read-string "Preview command: " dvi2-command)
-	 (read-string "Preview file[.dvi]: "
-		      (if (get 'dvi2-command 'region)
-			  (substring YaTeX-texput-file
-				     0 (rindex YaTeX-texput-file ?.))
-			(YaTeX-get-preview-file-name))
-		      )))
+   (list
+    (let ((minibuffer-history-symbol 'YaTeX-preview-command-history))
+      (read-string "Preview command: " dvi2-command))
+    (let ((minibuffer-history-symbol 'YaTeX-preview-file-history))
+      (read-string "Preview file[.dvi]: "
+		   (if (get 'dvi2-command 'region)
+		       (substring YaTeX-texput-file
+				  0 (rindex YaTeX-texput-file ?.))
+		     (YaTeX-get-preview-file-name))
+		   ))))
   (setq dvi2-command preview-command)
   (save-excursion
     (YaTeX-visit-main t)
@@ -480,9 +494,12 @@ will be given to the shell."
        (switch (if (string-match "\\s " magic) magic
 		 (concat magic " " parent)))
        (t (concat (substring magic 0 (string-match "\\s " magic)) " "))))
-     (t (concat tex-command " " parent))))
+     (t (concat tex-command " " (if switch parent)))))
 )
 
+(defvar YaTeX-lpr-command-history nil
+  "Holds command line history of YaTeX-lpr.")
+(put 'YaTeX-lpr-command-history 'no-default t)
 (defun YaTeX-lpr (arg)
   "Print out.  If prefix arg ARG is non nil, call print driver without
 page range description."
@@ -511,8 +528,10 @@ page range description."
 	  ""
 	(YaTeX-replace-format dviprint-to-format "e" to)))
      )
-    (setq cmd (read-string "Edit command line: "
-			   (format cmd (YaTeX-get-preview-file-name))))
+    (setq cmd
+	  (let ((minibuffer-history-symbol 'YaTeX-lpr-command-history))
+	    (read-string "Edit command line: "
+			 (format cmd (YaTeX-get-preview-file-name)))))
     (save-excursion
       (YaTeX-visit-main t) ;;change execution directory
       (with-output-to-temp-buffer "*dvi-printing*"
@@ -625,7 +644,8 @@ that gives the maximum value by the FUNC.  FUNC should take an argument
 of its window object.  Non-nil for optional third argument SELECT selects
 that window."
   (or (and (get-buffer-window buffer)
-	   (progn (if select (select-window (get-buffer-window buffer))) t))
+	   (progn (if select (select-window (get-buffer-window buffer)))
+		  t))
       (cond
        ((> (length (YaTeX-window-list)) 2)
 	(let ((window (selected-window))
@@ -642,8 +662,10 @@ that window."
 	  (switch-to-buffer buffer)
 	  (or select (select-window window))))
        ((= (length (YaTeX-window-list)) 2)
-	(other-window 1)
-	(switch-to-buffer buffer))
+	(let ((window (selected-window)))
+	  (other-window 1)
+	  (switch-to-buffer buffer)
+	  (or select (select-window window))))
        (t nil)))
 )
 

@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.7
+;;; yatexadd.el rev.8
 ;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Apr 23 02:26:47 1994 on pajero
+;;; Last modified Sat May  7 06:09:39 1994 on pajero
 ;;; $Id$
 
 (provide 'yatexadd)
@@ -79,6 +79,10 @@
 )
 (fset 'YaTeX:eqnarray 'YaTeX:equation)
 (fset 'YaTeX:displaymath 'YaTeX:equation)
+
+(defun YaTeX:list ()
+  "%\n{} %default label\n{} %formatting parameter"
+)
 
 ;;;
 ;;Sample functions for section-type command.
@@ -292,6 +296,7 @@
 	))
     ))
 )
+(fset 'YaTeX::pageref 'YaTeX::ref)
 
 (defun YaTeX-label-other ()
   (let ((lbuf "*YaTeX mode buffers*") (blist (buffer-list)) (lnum -1) buf rv
@@ -360,6 +365,24 @@
    (t ""))
 )
 
+;;
+; completion for the arguments of \pagestyle
+;;
+(defun YaTeX::pagestyle (&optional argp)
+  "Read the pagestyle with completion."
+  (completing-read
+   "Page style: "
+   '(("plain") ("empty") ("headings") ("myheadings") ("normal") nil))
+)
+;;
+; completion for the arguments of \pagenumbering
+;;
+(defun YaTeX::pagenumbering (&optional argp)
+  "Read the numbering style."
+  (completing-read
+   "Page numbering style: "
+   '(("arabic") ("Alpha") ("alpha") ("Roman") ("roman")))
+)
 
 ;;;
 ;; global subroutines

@@ -1,6 +1,13 @@
-
 	Yet Another tex-mode for Emacs
 	yatex.el 各バージョンの変更点について。
+
+1.48	[prefix] ? の YaTeX-help でカーソル位置の LaTeX コマンドのヘルプ
+	が出るようにした(ヘルプ内容は未完成)。
+	begin 型補完全般でのインデント調整処理の改善。
+	gmhistとの連携により Preview, Lpr, call-command それぞれのヒスト
+	リを他のヒストリとは分離させた。
+	\ref 補完でカレントバッファのラベルが出なくなっていたバグを修正。
+	outline-minor-mode との連携がうまくいかなかったのを修正。
 
 1.47	YaTeX-quick-in-environment-p と YaTeX-get-latex-command の
 	バグフィクス。
@@ -10,6 +17,8 @@
 	エラー行ジャンプの適正化。
 	再帰的 section 型補完時のバグフィクス。
 	親ファイルを手入力した時に二度目以降もそのファイルを親とみなす。
+	[prefix] g でファイル間ジャンプをする時に、既にそのファイルがど
+	こかのウィンドウに出ていれば、そのウィンドウに移るようにした。
 	\verbのアドイン関数追加。
 
 1.45:	comment-region を begin/end 行で起動した時にメッセージを出す。
@@ -122,3 +131,7 @@
 	fill-prefix を null にした。
 
 1.27:	最初の正式リリース版
+
+Local Variables:
+mode: indented-text
+End:

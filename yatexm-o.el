@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Sample startup file to invoke yatex-mode with outline-minor mode.
 ;;; (c )1993 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Jan 29 16:55:05 1994 on gloria
+;;; Last modified Wed May  4 19:44:53 1994 on 98fa
 
 ;;;
 ;; outline-minor-mode(使用しない場合は不要です)
@@ -26,11 +26,12 @@
 (defvar yatex-mode-hook
   '(lambda ()
      (setq outline-regexp LaTeX-outline-regexp)			    ;;@
-     (outline-minor-mode)					    ;;@
-     (YaTeX-define-begend-key "ba" "abstract")))
+     (outline-minor-mode 1)					    ;;@
+     ))
 (defvar yatex-mode-load-hook
   '(lambda ()
      (setq-default outline-prefix-char (concat YaTeX-prefix "\C-o"));;@
      (require 'min-out)						    ;;@
      (define-key outline-minor-keymap "\C-?" 'hide-subtree)	    ;;@
+     (YaTeX-define-begend-key "ba" "abstract")
      ))
