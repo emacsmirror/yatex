@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Hooks for YaTeX
 
-;;; $BLnD;$K4XO"$9$k5-=R(B($B$?$H$($P%"%I%$%s4X?t(B)$B$O(B yatexhks.el $B$H$$$&L>A0$N(B
-;;; $B%U%!%$%k$KF~$l$F$/$@$5$$!#5/F0;~$K<+F0E*$K%m!<%I$7$^$9!#(B
+;;; –ì’¹‚ÉŠÖ˜A‚·‚é‹Lq(‚½‚Æ‚¦‚ÎƒAƒhƒCƒ“ŠÖ”)‚Í yatexhks.el ‚Æ‚¢‚¤–¼‘O‚Ì
+;;; ƒtƒ@ƒCƒ‹‚É“ü‚ê‚Ä‚­‚¾‚³‚¢B‹N“®Žž‚ÉŽ©“®“I‚Éƒ[ƒh‚µ‚Ü‚·B
 
 ;;; All the private definitions for YaTeX can be stuffed into the file
 ;;; named `yatexhks.el'.  The file `yatexhks.el' will be automatically
