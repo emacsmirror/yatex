@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Fri Dec 22 09:50:10 2000 on buell
+@c Last modified Fri Feb  2 12:39:12 2001 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -257,7 +257,7 @@ makes the cursor move to corresponding source line.
 overwriting.  The method of specification of the region is shown in the
 section @xref{%#notation}.
 
-  The documentstyle  for typeset-region is the same as that of editing
+  The documentclass  for typeset-region is the same as that of editing
 file if you edit one  file,  and is the same as main file's if you
 edit splitting files.
 
@@ -607,7 +607,7 @@ completion, type
 then the prompt
 
 @example
-        (C-v for view) \???@{@} (default documentstyle):
+        (C-v for view) \???@{@} (default documentclass):
 @end example
 
 @noindent
@@ -626,7 +626,7 @@ prompts you the argument of section-type La@TeX{} command.  For
 example, the following inputs
 
 @example
-        \???@{@} (default documentstyle): section
+        \???@{@} (default documentclass): section
         \section@{???@}: Hello world.
 @end example
 
@@ -953,7 +953,7 @@ directory.
 minibuffer, YaTeX asks you with the following prompt;
 
 @example
-  `foo' is not in table. Register into: U)serDic L)ocalDic N)one D)iscad
+  `foo' is not in table. Register into: U)serDic L)ocalDic N)one D)iscard
 @end example
 
 @noindent 
@@ -1737,11 +1737,11 @@ the percentage of the screen-height. @code{nil} for half height (10)
 @end defvar
 
 @defvar YaTeX-help-file
-Global online help file name (@file{$EMACS/etc/YATEXHLP.jp})
+Global online help file name (@file{$doc-directory/../../site-lisp/YATEXHLP.eng})
 @end defvar
 
 @defvar YaTeX-help-file-private
-Private online help file name (@file{"~/YATEXHLP.jp"})
+Private online help file name (@file{"~/YATEXHLP.eng"})
 @end defvar
 
 @defvar YaTeX-no-begend-shortcut
@@ -1803,7 +1803,7 @@ If you use AMS-LaTeX, set to @code{t} (@code{nil})
 @end defvar
 
 @defvar YaTeX-use-LaTeX2e
-If you use LaTeX2e, set to @code{t} (@code{nil})
+If you use LaTeX2e, set to @code{t} (@code{t})
 @end defvar
 
 @defvar YaTeX-template-file

@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 25 19:18:19 2000 on firestorm
+;;; Last modified Sun Dec 31 21:57:44 2000 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -221,8 +221,10 @@ operation to the region."
        preamble
        (if (re-search-forward "^[ 	]*\\\\begin.*{document}" nil t)
 	   (buffer-substring (point-min) (match-end 0))
-	 (concat "\\documentstyle{" YaTeX-default-document-style "}\n"
-		 "\\begin{document}")))
+	 (concat
+	  (if YaTeX-use-LaTeX2e "\\documentclass{" "\\documentstyle{")
+	  YaTeX-default-document-style "}\n"
+	  "\\begin{document}")))
       (goto-char opoint)
       ;;(set-buffer buffer)		;for clarity
       (let ((hilit-auto-highlight nil))

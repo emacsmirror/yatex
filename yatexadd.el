@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.14
 ;;; (c )1991-2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 25 19:17:09 2000 on firestorm
+;;; Last modified Sat Sep 29 23:17:06 2001 on duke
 ;;; $Id$
 
 ;;;
@@ -90,9 +90,17 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:table ()
   "YaTeX add-in function for table environment."
-  (setq YaTeX-env-name "tabular"
-	YaTeX-section-name "caption")
-  (YaTeX:read-position "htbp"))
+  (cond
+   ((eq major-mode 'yatex-mode)
+    (setq YaTeX-env-name "tabular"
+	  YaTeX-section-name "caption")
+    (YaTeX:read-position "htbp"))
+   ((eq major-mode 'texinfo-mode)
+    (concat " "
+	    (completing-read
+	     "Highlights with: "
+	     '(("@samp")("@kbd")("@code")("@asis")("@file")("@var"))
+	     nil nil "@")))))
 
 (fset 'YaTeX:figure 'YaTeX:table)
 (fset 'YaTeX:figure* 'YaTeX:table)
@@ -273,8 +281,12 @@ YaTeX-make-begin-end."
       (concat "[" label "]"))))
 
 (defun YaTeX:item ()
-  (YaTeX-indent-line)
-  (setq YaTeX-section-name "label")
+  (cond
+   ((eq major-mode 'yatex-mode)
+    (YaTeX-indent-line)
+    (setq YaTeX-section-name "label"))
+   ((eq major-mode 'texinfo-mode)
+    (setq YaTeX-section-name "dots"))) ;??
   " ")
 (fset 'YaTeX:item\[\] 'YaTeX:item)
 (fset 'YaTeX:subitem 'YaTeX:item)
@@ -464,8 +476,11 @@ YaTeX-make-begin-end."
 (defun YaTeX::ref-getset-label (buffer point)
   "Get label string in the BUFFER near the POINT.
 Make \\label{xx} if no label."
-  (let (boundary inspoint cc newlabel (labelholder "label") mathp env)
-    ;(set-buffer buffer)
+  ;;Here, we rewrite the LaTeX source.  Therefore we should be careful
+  ;;to decide the location suitable for \label.  Do straightforward!
+  (let (boundary inspoint cc newlabel (labelholder "label") mathp env
+       (r-escape (regexp-quote YaTeX-comment-prefix)))
+    ;;(set-buffer buffer)
     (switch-to-buffer buffer)
     (save-excursion
       (goto-char point)
@@ -476,29 +491,72 @@ Make \\label{xx} if no label."
 	(skip-chars-forward "^{")
 	(forward-list 1)
 	(skip-chars-forward " \t\n")
-	(setq boundary "[^\\]"))
+	;(setq boundary "[^\\]")
+	(setq boundary
+	      (save-excursion
+		(if (YaTeX-re-search-active-forward "[^\\]" r-escape nil 1)
+		    (match-beginning 0)
+		  (1- (point))))))
        ((looking-at "item\\s ")
 	(setq cc (+ cc 6))
-	(setq boundary (concat YaTeX-ec-regexp "\\(item\\|begin\\|end\\)\\b")))
+	;(setq boundary (concat YaTeX-ec-regexp "\\(item\\|begin\\|end\\)\\b"))
+	(setq boundary
+	      (save-excursion
+		(if (YaTeX-re-search-active-forward
+		     (concat YaTeX-ec-regexp "\\(item\\|begin\\|end\\)\\b")
+		     r-escape nil 1)
+		    (match-beginning 0)
+		  (1- (point))))))
        ((looking-at "bibitem")
-	(setq labelholder "bibitem"))	; label holder is bibitem itself
+	(setq labelholder "bibitem")	; label holder is bibitem itself
+	(setq boundary
+	      (save-excursion
+		(if (YaTeX-re-search-active-forward
+		     (concat YaTeX-ec-regexp "\\(bibitem\\|end\\)\\b")
+		     r-escape nil 1)
+		    (match-beginning 0)
+		  (1- (point))))))
        ((string-match YaTeX::ref-mathenv-regexp
 		      (setq env (or (YaTeX-inner-environment t) "document")))
 	(setq mathp t)
-	(setq boundary (concat YaTeX-ec-regexp "\\(\\\\\\|end{" env "}\\)")))
+	;;(setq boundary (concat YaTeX-ec-regexp "\\(\\\\\\|end{" env "}\\)"))
+	(setq boundary
+	      (save-excursion
+		(if (YaTeX-re-search-active-forward
+		     (concat YaTeX-ec-regexp "\\(\\\\\\|end{" env "}\\)")
+		     r-escape nil 1)
+		    (match-beginning 0)
+		  (1- (point))))))
+       ((looking-at "footnote\\s *{")
+	(skip-chars-forward "^{")	;move onto `{'
+	(setq boundary
+	      (save-excursion
+		(condition-case err
+		    (forward-list 1)
+		  (error (error "\\\\footnote at point %s's brace not closed"
+				(point))))
+		(1- (point)))))
        ((looking-at "caption\\|\\(begin\\)")
 	(skip-chars-forward "^{")
 	(if (match-beginning 1) (forward-list 1))
-	(setq boundary (concat YaTeX-ec-regexp "\\(begin\\|end\\)\\b")))
+	;;(setq boundary (concat YaTeX-ec-regexp "\\(begin\\|end\\)\\b"))
+	(setq boundary
+	      (save-excursion
+		(if (YaTeX-re-search-active-forward
+		     (concat YaTeX-ec-regexp "\\(begin\\|end\\)\\b")
+		     r-escape nil 1)
+		    (match-beginning 0)
+		(1- (point))))))
        (t ))
       (if (save-excursion (skip-chars-forward " \t") (looking-at "%"))
 	  (forward-line 1))
       (if (and (save-excursion
 		 (YaTeX-re-search-active-forward
-		  (concat "\\(" labelholder "\\)\\|\\(" boundary "\\)")
+		  ;;(concat "\\(" labelholder "\\)\\|\\(" boundary "\\)")
+		  labelholder
 		  (regexp-quote YaTeX-comment-prefix)
-		  nil 1))
-	       (match-beginning 1))
+		  boundary 1))
+	       (match-beginning 0))
 	  ;; if \label{hoge} found, return it
 	  (buffer-substring
 	   (progn
@@ -507,7 +565,8 @@ Make \\label{xx} if no label."
 	   (progn
 	     (forward-sexp 1) (1- (point))))
 	;;else make a label
-	(goto-char (match-beginning 0))
+	;(goto-char (match-beginning 0))
+	(goto-char boundary)
 	(skip-chars-backward " \t\n")
 	(save-excursion (setq newlabel (YaTeX::ref-generate-label)))
 	(delete-region (point) (progn (skip-chars-backward " \t") (point)))
@@ -555,7 +614,7 @@ YaTeX-sectioning-levelの数値で指定.")
 			       (car s))))
 			YaTeX-sectioning-level))
 		 "\\|")
-		"\\|caption\\){"
+		"\\|caption\\|footnote\\){"
 		"\\|\\(begin{\\(" mathenvs "\\|" enums  "\\)\\)\\)")))
 	  (regexp (concat "\\(" counter
 			  "\\)\\|\\(" YaTeX::ref-labeling-regexp "\\)"))
@@ -603,6 +662,7 @@ YaTeX-sectioning-levelの数値で指定.")
 	      ;(goto-char (match-beginning 0))
 	      (setq e0 (match-end 0))
 	      (cond
+	       ((YaTeX-literal-p) nil)
 	       ((YaTeX-match-string 1)
 		;;if standard counter commands found 
 		(setq cmd (YaTeX-match-string 2))
@@ -1245,6 +1305,27 @@ and print them to standard output."
     (if (and hmag (string< "" hmag))
 	(format "{%s}[%s]" vmag hmag)
       (format "{%s}" vmag))))
+
+(defun YaTeX:includegraphics ()
+  "Add-in for \\includegraphics's option"
+  (let (width height (scale "") angle str)
+    (setq width (read-string "Width: ")
+	  height (read-string "Height: "))
+    (or (string< width "") (string< "" height)
+	(setq scale (read-string "Scale: ")))
+    (setq angle (read-string "Angle(0-359): "))
+    (setq str
+	  (mapconcat
+	   'concat
+	   (delq nil
+		 (mapcar '(lambda (s)
+			    (and (stringp (symbol-value s))
+				 (string< "" (symbol-value s))
+				 (format "%s=%s" s (symbol-value s))))
+			 '(width height scale angle)))
+	   ","))
+    (if (string= "" str) ""
+      (concat "[" str "]"))))
 
 (defun YaTeX::includegraphics (argp)
   "Add-in for \\includegraphics"

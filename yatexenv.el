@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c ) 1994-1997 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Aug 26 18:14:51 1999 on firestorm
+;;; Last modified Thu Jan 18 15:21:26 2001 on buell
 ;;; $Id$
 
 ;;;
@@ -230,7 +230,7 @@ Return the list of (No.ofCols PointEndofFormat)"
 	  (looking-at "\\\\right\\b"))
 	(progn (YaTeX-reindent
 		(save-excursion (YaTeX-goto-corresponding-leftright)
-				(1- (current-column)))))
+				(- (current-column) 0))))
       (save-excursion
 	(forward-line -1)
 	(while (and (not (bobp)) (YaTeX-on-comment-p))
@@ -285,7 +285,7 @@ Note that this function assumes the corresponding \left\right
 is on another line."
   (let ((YaTeX-struct-begin "\\left%1")
 	(YaTeX-struct-end "\\right%1")
-	(YaTeX-struct-name-regexp "[][(){}.|]"))
+	(YaTeX-struct-name-regexp "[][(){}\\.|]"))
     (YaTeX-goto-corresponding-environment t)))
 
 ;;;

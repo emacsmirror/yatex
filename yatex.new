@@ -1,6 +1,10 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.70	Emacs21でmake-frameがエラーになることがあるのを回避
+	font-lock での Recenter が効かなくなるのを修正
+	(他、細かい修正がほとんど)
+
 1.69	font-lock 対応(XEmacs, Emacs-20, Emacs-21 のみ)。
 	hilit19, font-lockを共存させている場合 YaTeX-use-hilit19 か、	
 	YaTeX-use-font-lock どちらか一方を Non-nil にする。

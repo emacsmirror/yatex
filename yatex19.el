@@ -1,14 +1,14 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
-;;; (c )1994-2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 25 19:16:04 2000 on firestorm
+;;; (c )1994-2002 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed May 22 13:55:20 2002 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
 
-(cond
- (YaTeX-use-hilit19	(require 'hilit19))
- (YaTeX-use-font-lock	(require 'font-lock)))
+(and (boundp 'YaTeX-use-hilit19)
+     YaTeX-use-hilit19
+     (require 'hilit19))
 
 (defvar YaTeX-use-highlighting (or YaTeX-use-font-lock YaTeX-use-hilit19)
   "*Use highlighting buffer or not.")
@@ -18,6 +18,15 @@
    ((boundp 'frame-background-mode) frame-background-mode)
    ((fboundp 'get-frame-background-mode)
     (get-frame-background-mode (selected-frame)))
+   (if (face-background 'default)
+       (if (> (+ 32768 32768 32768)
+	      (apply '+
+		     (funcall (if (fboundp 'color-rgb-components)
+				  'color-rgb-components
+				'x-color-values)
+			      (face-background 'default))))
+	   'dark
+	 'light))
    (t nil)))
 
 (defvar YaTeX-mode-menu-map (make-sparse-keymap "YaTeX"))
@@ -319,7 +328,8 @@ Assumes PATTERN begins with `{'."
      "\\\\\\(title\\|author\\|date\\|thanks\\)\\>" define)
 
     ("\\\\document\\(style\\|class\\)\\(\\[.*\\]\\)?{" "}" decl)
-    ("\\\\\\(begin\\|end\\|nofiles\\|includeonly\\){" "}" decl)
+
+    ("\\\\\\(begin\\|end\\|nofiles\\|includeonly\\|usepackage\\(\\[.*\\]\\)?\\){" "}" decl)
     ("\\\\\\(raggedright\\|makeindex\\|makeglossary\\|maketitle\\)\\b" 0 decl)
     ("\\\\\\(pagestyle\\|thispagestyle\\|pagenumbering\\){" "}" decl)
     ("\\\\\\(normalsize\\|small\\|footnotesize\\|scriptsize\\|tiny\\|large\\|Large\\|LARGE\\|huge\\|Huge\\)\\b" 0 decl)
@@ -488,8 +498,9 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 	      (cond
 	       ((eq YaTeX-background-mode 'light) (car table))
 	       ((eq YaTeX-background-mode 'dark) (cdr table))
-	       (t nil)))))
-	  sect single)
+	       ;; Default case equals to 'light mode...is it OK?
+	       (t (car table))))))
+	  sect single pattern-alist)
       (YaTeX-19-create-face ;;hilit-translate
        ;;sectioning (funcall get-face YaTeX-hilit-sectioning-face)
        'macro (funcall get-face YaTeX-hilit-singlecmd-face))
@@ -508,53 +519,68 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 				single
 				"\\|")
 			       "\\)\\b")))
-      (setq hilit-patterns-alist		;Remove at first.
-	    (delq (assq 'yatex-mode hilit-patterns-alist) hilit-patterns-alist)
-	    hilit-patterns-alist
-	    (cons
-	     (cons 'yatex-mode
-		   (append
-		    (list nil)
-		    YaTeX-sectioning-patterns-alist
-		    YaTeX-hilit-pattern-adjustment-private
-		    ;;YaTeX-hilit-pattern-adjustment-default
-		    YaTeX-hilit-patterns-alist
-		    (delq nil
-			  (list
-			   (if sect (list
-				     'YaTeX-19-region-section-type
-				     sect
-				     'keyword))
-			   (if single (list single 0 'macro))))))
-	     hilit-patterns-alist))))))
+      (cons 'yatex-mode
+	    (append
+	     (list nil)
+	     YaTeX-sectioning-patterns-alist
+	     YaTeX-hilit-pattern-adjustment-private
+	     ;;YaTeX-hilit-pattern-adjustment-default
+	     YaTeX-hilit-patterns-alist
+	     (delq nil
+		   (list
+		    (if sect (list
+			      'YaTeX-19-region-section-type
+			      sect
+			      'keyword))
+		    (if single (list single 0 'macro))))))))))
 ;;(YaTeX-19-collect-macros)	;causes an error
+(defun YaTeX-hilit-setup-alist ()
+  (cond
+   ((boundp 'hilit-patterns-alist)
+    (setq hilit-patterns-alist
+	  (delq (assq 'yatex-mode hilit-patterns-alist) hilit-patterns-alist))
+    (if YaTeX-use-hilit19
+	(setq hilit-patterns-alist
+	      (cons (YaTeX-19-collect-macros) hilit-patterns-alist))))))
+
 (defun YaTeX-hilit-recenter (arg)
   "Collect current local macro and hilit-recenter."
   (interactive "P")
-  (YaTeX-19-collect-macros)
+  (YaTeX-hilit-setup-alist)
+  (if (fboundp 'font-lock-mode) (font-lock-mode -1))
   (hilit-recenter arg))
-(defvar YaTeX-19-recenter-function
-  (cond
-   (YaTeX-use-hilit19	(cons 'YaTeX-hilit-recenter 'hilit-recenter))
-   (YaTeX-use-font-lock	(cons 'YaTeX-font-lock-recenter 'recenter))
-   (t nil)))
 
-(if YaTeX-19-recenter-function
-    (let ((k (where-is-internal (cdr YaTeX-19-recenter-function))))
-      (while k
-	(define-key YaTeX-mode-map (car k) (car YaTeX-19-recenter-function))
-	(setq k (cdr k)))))
+(let ((k (append (where-is-internal 'hilit-recenter)
+		 (where-is-internal 'recenter))))
+  (while k
+    (define-key YaTeX-mode-map (car k) 'YaTeX-19-recenter)
+    (setq k (cdr k))))
+
+(defun YaTeX-19-recenter (&optional arg)
+  (interactive "P")
+  (if YaTeX-use-hilit19
+      (YaTeX-hilit-recenter arg)
+    (YaTeX-font-lock-recenter arg)))
 
 (defun YaTeX-font-lock-recenter (&optional arg)
   (interactive "P")
+  (cond
+   ((and (boundp 'hilit-patterns-alist)
+	 (assq 'yatex-mode hilit-patterns-alist))
+    (if (fboundp 'hilit-unhighlight-region)
+	(hilit-unhighlight-region (point-min) (point-max)))
+    (setq hilit-patterns-alist	;ensure to remove
+	  (delq (assq 'yatex-mode hilit-patterns-alist)
+		hilit-patterns-alist))))
   (setq YaTeX-font-lock-keywords
 	(YaTeX-convert-pattern-hilit2fontlock
-	 (cdr (assq 'yatex-mode (YaTeX-19-collect-macros))))
+	 (cdr (YaTeX-19-collect-macros)))
 	font-lock-keywords nil)
   ;(save-excursion
    ; (font-lock-fontify-region (window-start) (window-end)))
   (font-lock-mode -1)			;is stupid, but sure.
-  (font-lock-mode 1))
+  (font-lock-mode 1)
+  (recenter arg))
 
 (defvar YaTeX-font-lock-keywords nil
   "Pattern-face alist of yahtml-mode for font-lock")

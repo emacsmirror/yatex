@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
-;;; (c )1994-2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 25 18:51:11 2000 on firestorm
+;;; (c )1994-2002 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed May 22 13:55:31 2002 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -755,6 +755,28 @@ NULL includes null string in a list."
 	(setq str nil)))
     (nreverse list)))
 
+;;;###autoload
+(defun YaTeX-delete1 (elt list)
+  "Delete"
+  (let (e)
+    (while (setq e (YaTeX-member elt list))
+      (setq list (delq (car e) list))))
+  list)
+(if (fboundp 'delete)
+    (fset 'YaTeX-delete (symbol-function 'delete))
+  (fset 'YaTeX-delete (symbol-function 'YaTeX-delete1)))
+
+(defun YaTeX-member1 (elt list)
+  (catch 'found
+    (while list
+      (if (equal elt (car list))
+          (throw 'found list))
+      (setq list (cdr list)))))
+
+(if (and (fboundp 'member) (subrp (symbol-function 'member)))
+    (fset 'YaTeX-member (symbol-function 'member))
+  (fset 'YaTeX-member (symbol-function 'YaTeX-member1)))
+
 ;;;
 ;; Interface function for windows.el
 ;;;
@@ -783,6 +805,8 @@ Non-nil for optional argument QUICK restricts search bound to most
 recent sectioning command.  Matching point is stored to property 'point
 of 'YaTeX-inner-environment, which can be referred by
  (get 'YaTeX-inner-environment 'point)."
+  (put 'YaTeX-inner-environment 'point (point-min))
+  (put 'YaTeX-inner-environment 'indent 0)
   (let*((nest 0)
 	(beg (YaTeX-replace-format-args
 	      (regexp-quote YaTeX-struct-begin)
@@ -807,7 +831,8 @@ of 'YaTeX-inner-environment, which can be referred by
 		(save-excursion
 		  (if htmlp 
 		      ;;(re-search-backward YaTeX-sectioning-regexp nil 1)
-		      (goto-char (point-min)) ;Is this enough? 97/6/26
+		      ;;(goto-char (point-min)) ;Is this enough? 97/6/26
+		      (re-search-backward yahtml-indentation-boundary nil 1)
 		    (YaTeX-re-search-active-backward
 		     (concat YaTeX-ec-regexp
 			     "\\(" YaTeX-sectioning-regexp "\\)\\*?{")
@@ -831,6 +856,82 @@ of 'YaTeX-inner-environment, which can be referred by
 	  (buffer-substring
 	   (progn (skip-chars-forward open) (1+ (point)))
 	   (progn (skip-chars-forward close) (point)))))))
+
+(defun YaTeX-goto-corresponding-environment (&optional allow-mismatch noerr)
+  "Go to corresponding begin/end enclosure.
+Optional argument ALLOW-MISMATCH allows mismatch open/clese.  Use this
+for \left(, \right).
+Optional third argument NOERR causes no error for unballanced environment."
+  (interactive)
+  (if (not (YaTeX-on-begin-end-p)) nil
+    (let ((p  (match-end 0)) b0 b1 env (nest 0) regexp re-s (op (point))
+	  (m0 (match-beginning 0))	;whole matching
+	  (m1 (match-beginning 1))	;environment in \begin{}
+	  (m2 (match-beginning 2))	;environment in \end{}
+	  (m3 (match-beginning 3)))	;environment in \[ \] \( \)
+      ;(setq env (regexp-quote (buffer-substring p (match-beginning 0))))
+      (if (cond
+	   (m1				;if begin{xxx}
+	    (setq env
+		  (if allow-mismatch YaTeX-struct-name-regexp
+		    (regexp-quote (buffer-substring m1 (match-end 1)))))
+	;    (setq regexp (concat "\\(\\\\end{" env "}\\)\\|"
+	;			 "\\(\\\\begin{" env "}\\)"))
+	    (setq regexp
+		  (concat
+		   "\\("
+		   (YaTeX-replace-format-args
+		    (regexp-quote YaTeX-struct-end) env "" "")
+		   "\\)\\|\\("
+		   (YaTeX-replace-format-args
+		    (regexp-quote YaTeX-struct-begin) env "" "")
+		   "\\)"))
+	    (setq re-s 're-search-forward))
+	   (m2				;if end{xxx}
+	    (setq env
+		  (if allow-mismatch YaTeX-struct-name-regexp
+		    (regexp-quote (buffer-substring m2 (match-end 2)))))
+	;   (setq regexp (concat "\\(\\\\begin{" env "}\\)\\|"
+	;			 "\\(\\\\end{" env "}\\)"))
+	    (setq regexp
+		  (concat
+		   "\\("
+		   (YaTeX-replace-format-args
+		    (regexp-quote YaTeX-struct-begin) env "" "")
+		   "\\)\\|\\("
+		   (YaTeX-replace-format-args
+		    (regexp-quote YaTeX-struct-end) env "" "")
+		   "\\)"))
+	    (setq re-s 're-search-backward))
+	   (m3				;math environment
+	    (setq env (char-after (1+ m3))
+		  regexp (format "\\(%s%s\\)\\|\\(%s%s\\)"
+				 YaTeX-ec-regexp
+				 (regexp-quote
+				  (cdr (assq env '((?( . ")") (?) . "(")
+						   (?[ . "]") (?] . "[")))))
+				 YaTeX-ec-regexp
+				 (regexp-quote (char-to-string env)))
+		  re-s (if (memq env '(?\( ?\[))
+			   're-search-forward
+			 're-search-backward)))
+	   (t (if noerr nil (error "Corresponding environment not found."))))
+	  (progn
+	    (while (and (>= nest 0) (funcall re-s regexp nil t))
+	      (setq b0 (match-beginning 0) b1 (match-beginning 1))
+	      (if (or (equal b0 m0)
+		      (YaTeX-literal-p b0))
+		  nil
+		(setq nest (if (equal b0 b1)
+			       (1- nest) (1+ nest)))))
+	    (if (< nest 0)
+		(goto-char (match-beginning 0)) ;found.
+	      (goto-char op)
+	      (funcall
+	       (if noerr 'message 'error)
+	       "Corresponding environment `%s' not found." env)
+	      (sit-for 1)
+	      nil))))))
 
 (defun YaTeX-end-environment ()
   "Close opening environment"
@@ -994,7 +1095,8 @@ This function is a makeshift for YaTeX and yahtml."
 	(mapping
 	 '((bold . YaTeX-font-lock-bold-face)
 	   (italic . YaTeX-font-lock-italic-face)
-	   (define . font-lock-function-name-face)
+	   (defun . font-lock-function-name-face)
+	   (define . font-lock-variable-name-face)
 	   (keyword . font-lock-keyword-face)
 	   (decl . YaTeX-font-lock-declaration-face)
 	   (label . YaTeX-font-lock-label-face)
@@ -1014,7 +1116,7 @@ This function is a makeshift for YaTeX and yahtml."
 	       (if (numberp (car (cdr i)))
 		   (list (car i)	;regexp
 			 (car (cdr i))	;matching group number
-			 newface t) ;'keep)	;keep is hilit19 taste
+			 newface nil) ;'keep)	;keep is hilit19 taste
 		 (list
 		  (concat
 		   (car i)		;original regexp and..
@@ -1023,7 +1125,7 @@ This function is a makeshift for YaTeX and yahtml."
 		   ;;"]+" ;for shortest match
 		   ".*"
 		   (car (cdr i)))
-		  0 (list 'quote newface) t)) ;;'keep))
+		  0 (list 'quote newface) nil)) ;;'keep))
 	       flpa)))
        ((and (symbolp (car i)) (fboundp (car i)))
 	(setq flpa
@@ -1034,7 +1136,7 @@ This function is a makeshift for YaTeX and yahtml."
 		       'lambda (list 'dummy)
 		       '(goto-char (match-beginning 0))
 		       '(remove-text-properties
-			 (point) (1+ (point))
+			 (point) (min (point-max) (1+ (point)))
 			 '(face nil font-lock-multiline nil))
 		       (list
 			'let (list '(e (match-end 0))
@@ -1058,8 +1160,12 @@ This function is a makeshift for YaTeX and yahtml."
 	(nreverse flpa)
       flpa)))
 
+(if (and (boundp 'YaTeX-use-font-lock)
+	 YaTeX-use-font-lock)
+    (require 'font-lock))
+
 (cond
- ((featurep 'font-lock)
+ ((and (featurep 'font-lock) (fboundp 'defface))
   ;; In each defface, '(class static-color) is for Emacs-21 -nw
   ;; '(class tty) is for XEmacs-21 -nw
   (defface YaTeX-font-lock-label-face
@@ -1121,14 +1227,26 @@ This function is a makeshift for YaTeX and yahtml."
   ;; Make sure the 'YaTeX-font-lock-{italic,bold}-face is bound with
   ;; italic/bold fontsets
   (if (and (fboundp 'fontset-list) YaTeX-use-italic-bold)
-      (let ((flist (fontset-list)) fnt italic bold)
+      (let ((flist (fontset-list)) fnt italic bold
+	    (df (or (and (fboundp 'face-font-name) (face-font-name 'default))
+		    (face-font 'default)
+		    (face-font 'italic)
+		    (face-font 'bold)
+		    "giveup!"))
+	    sz medium-i bold-r)
+	(string-match
+	 "^-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-\\(\\([0-9]+\\)\\)" df)
+	(setq sz (or (match-string 1 df) "16"))
+	(setq medium-i (format "-medium-i-[^-]+--%s" sz)
+	      bold-r (format "-bold-r-[^-]+--%s" sz))
 	(while flist
 	  (setq fnt (car flist))
 	  (condition-case err
 	      (cond
-	       ((and (string-match "-medium-i-" fnt) (null italic))
+	       ((and (string-match medium-i fnt)
+		     (null italic))
 		(set-face-font 'YaTeX-font-lock-italic-face (setq italic fnt)))
-	       ((and (string-match "-bold-r-" fnt) (null bold))
+	       ((and (string-match bold-r fnt) (null bold))
 		(set-face-font 'YaTeX-font-lock-bold-face (setq bold fnt))))
 	    (error nil))
 	  (setq flist (cdr flist)))))

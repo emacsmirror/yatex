@@ -5,12 +5,12 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c $B$$$D$bK:$l$k$N$G$3$3$K=q$$$H$/$+!#(B
-@c C-l C-c n $B$G%N!<%IF~$l(B
-@c $B%N!<%I$$$8$C$?$i(B C-l C-u C-n $BA4It$N%N!<%I99?7(B C-l C-u C-e
-@c $B%a%K%e!<A}$d$7$?$i(B C-l C-u C-m $BA4It$N%a%K%e!<99?7(B C-l C-u C-a
-@c $B%U%)!<%^%C%H$9$k$H$-$O(B C-l C-e C-b
-@c Last modified Fri Dec 22 09:50:56 2000 on buell
+@c ‚¢‚Â‚à–Y‚ê‚é‚Ì‚Å‚±‚±‚É‘‚¢‚Æ‚­‚©B
+@c C-l C-c n ‚Åƒm[ƒh“ü‚ê
+@c ƒm[ƒh‚¢‚¶‚Á‚½‚ç C-l C-u C-n ‘S•”‚Ìƒm[ƒhXV C-l C-u C-e
+@c ƒƒjƒ…[‘‚â‚µ‚½‚ç C-l C-u C-m ‘S•”‚Ìƒƒjƒ…[XV C-l C-u C-a
+@c ƒtƒH[ƒ}ƒbƒg‚·‚é‚Æ‚«‚Í C-l C-e C-b
+@c Last modified Fri Feb  2 10:03:49 2001 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -18,7 +18,7 @@
 @sp 10
 @center
 @subtitle Yet Another tex-mode for emacs
-@title $B!XLnD;!Y(B
+@title w–ì’¹x
 @subtitle // YaTeX //
 @author @copyright{} 1991-2000 by    HIROSE, Yuuji [yuuji@@yatex.org]
 @end titlepage
@@ -27,189 +27,189 @@
 @comment  node-name,  next,  previous,  up
 
 @menu
-* Intro::                       $B$O$8$a$K(B
-* Terminology::                 $B%^%K%e%"%k;2>H>e$NCm0U(B
-* Main features::               $B<g$J5!G=(B
-* Installation::                $B%$%s%9%H!<%k(B
-* Invocation::                  $B%W%m%;%95/F0(B
-* %#notation ::                 %#$B5-K!(B
-* Completion::                  $BJd40F~NO(B
-* Local dictionary::            $B%m!<%+%k<-=q(B
-* Commenting out::              $B%3%a%s%H%"%&%H(B
-* Cursor jump::                 $B%+!<%=%k%8%c%s%W(B
-* Modifying/Deleting::          LaTeX$B%3%^%s%I$NJQ99(B/$B:o=|(B
-* Filling::                     $B7eB7$((B
-* Includeonly::                 $B>!<j$K(B includeonly
-* What column::                 $B%+%i%`0LCV%,%$%I(B
-* Intelligent newline::         $B$*$^$+$;2~9T(B
-* Changing mode of YaTeX::      $BLnD;F0:n%b!<%IJQ99(B
-* Online help::                 LaTeX$B%*%s%i%$%s%X%k%W(B
-* Inclusion hierarchy browser::  $B%U%!%$%kJ,3d3,AX9=B$$NI=<((B
-* Cooperation with other packages::  $BB>%Q%C%1!<%8$H$NO"7H(B
-* Customizations::              $B%+%9%?%^%$%:(B
-* Etc::                         $B$=$NB>(B
-* Copying::                     $B<h$j07$$(B
-* Concept Index::               $B:w0z(B
+* Intro::                       ‚Í‚¶‚ß‚É
+* Terminology::                 ƒ}ƒjƒ…ƒAƒ‹QÆã‚Ì’ˆÓ
+* Main features::               å‚È‹@”\
+* Installation::                ƒCƒ“ƒXƒg[ƒ‹
+* Invocation::                  ƒvƒƒZƒX‹N“®
+* %#notation ::                 %#‹L–@
+* Completion::                  •âŠ®“ü—Í
+* Local dictionary::            ƒ[ƒJƒ‹«‘
+* Commenting out::              ƒRƒƒ“ƒgƒAƒEƒg
+* Cursor jump::                 ƒJ[ƒ\ƒ‹ƒWƒƒƒ“ƒv
+* Modifying/Deleting::          LaTeXƒRƒ}ƒ“ƒh‚Ì•ÏX/íœ
+* Filling::                     Œ…‘µ‚¦
+* Includeonly::                 Ÿè‚É includeonly
+* What column::                 ƒJƒ‰ƒ€ˆÊ’uƒKƒCƒh
+* Intelligent newline::         ‚¨‚Ü‚©‚¹‰üs
+* Changing mode of YaTeX::      –ì’¹“®ìƒ‚[ƒh•ÏX
+* Online help::                 LaTeXƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv
+* Inclusion hierarchy browser::  ƒtƒ@ƒCƒ‹•ªŠ„ŠK‘w\‘¢‚Ì•\¦
+* Cooperation with other packages::  ‘¼ƒpƒbƒP[ƒW‚Æ‚Ì˜AŒg
+* Customizations::              ƒJƒXƒ^ƒ}ƒCƒY
+* Etc::                         ‚»‚Ì‘¼
+* Copying::                     æ‚èˆµ‚¢
+* Concept Index::               õˆø
 
  --- The Detailed Node Listing ---
 
-latex$B%3%^%s%I5/F0(B
+latexƒRƒ}ƒ“ƒh‹N“®
 
-* Calling typesetter::          $B%?%$%W%;%C%?5/F0(B
-* Calling previewer::           $B%W%l%t%e!<%"5/F0(B
-* Print out::                   $B%W%j%s%H%"%&%HMQ%3%^%s%I$N5/F0(B
+* Calling typesetter::          ƒ^ƒCƒvƒZƒbƒ^‹N“®
+* Calling previewer::           ƒvƒŒƒ”ƒ…[ƒA‹N“®
+* Print out::                   ƒvƒŠƒ“ƒgƒAƒEƒg—pƒRƒ}ƒ“ƒh‚Ì‹N“®
 
-%#$B5-K!(B
+%#‹L–@
 
-* Changing typesetter::         $B%?%$%W%;%C%HMQ%3%^%s%I$NJQ99(B
-* Splitting input files::       $BF~NO%U%!%$%kJ,3d(B
-* Fix region for typesetting::  $BNN0h$N8GDj(B
-* lpr format::                  $B%W%j%s%H%"%&%H%3%^%s%IMQ%U%)!<%^%C%H(B
-* Editing %# notation::         %#$B5-K!$NJT=8(B
+* Changing typesetter::         ƒ^ƒCƒvƒZƒbƒg—pƒRƒ}ƒ“ƒh‚Ì•ÏX
+* Splitting input files::       “ü—Íƒtƒ@ƒCƒ‹•ªŠ„
+* Fix region for typesetting::  —Ìˆæ‚ÌŒÅ’è
+* lpr format::                  ƒvƒŠƒ“ƒgƒAƒEƒgƒRƒ}ƒ“ƒh—pƒtƒH[ƒ}ƒbƒg
+* Editing %# notation::         %#‹L–@‚Ì•ÒW
 
-$BJd40F~NO(B
+•âŠ®“ü—Í
 
-* begin$B7?Jd40(B::                 
-* section$B7?Jd40(B::               
-* large$B7?Jd40(B::                 
-* maketitle$B7?Jd40(B::             
-* Arbitrary completion::        $B?o;~Jd40(B
-* end$BJd40(B::                     
-* Accent mark completion::      $B%"%/%;%s%H5-9fJd40(B
-* Image completion::            $B?t<05-9f%$%a!<%8Jd40(B
-* Greek letter completion::     $B%.%j%7%cJ8;zJd40(B
+* beginŒ^•âŠ®::                 
+* sectionŒ^•âŠ®::               
+* largeŒ^•âŠ®::                 
+* maketitleŒ^•âŠ®::             
+* Arbitrary completion::        •âŠ®
+* end•âŠ®::                     
+* Accent mark completion::      ƒAƒNƒZƒ“ƒg‹L†•âŠ®
+* Image completion::            ”®‹L†ƒCƒ[ƒW•âŠ®
+* Greek letter completion::     ƒMƒŠƒVƒƒ•¶š•âŠ®
 
-section$B7?Jd40(B
+sectionŒ^•âŠ®
 
-* 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B::  
-* Enclose section-type command::  $B3g$jJd40(B
-* Recursive completion::        $B:F5"Jd40(B
-* view-sectioning::             $B%;%/%7%g%s6h@Z$j$N%"%&%H%i%$%sI=<((B
+* 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh::  
+* Enclose section-type command::  Š‡‚è•âŠ®
+* Recursive completion::        Ä‹A•âŠ®
+* view-sectioning::             ƒZƒNƒVƒ‡ƒ“‹æØ‚è‚ÌƒAƒEƒgƒ‰ƒCƒ“•\¦
 
-$B%+!<%=%k%8%c%s%W(B
+ƒJ[ƒ\ƒ‹ƒWƒƒƒ“ƒv
 
-* $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B::  
-* $B$*3(IA$-%D!<%k5/F0(B::          
-* $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B::  
-* $B4D6-$rC10L$H$7$?%8%c%s%W(B::    
-* $B:G8e$NJd400LCV$X$N%8%c%s%W(B::  
+* ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv::  
+* ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®::          
+* ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv::  
+* ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv::    
+* ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv::  
 
-$BJQ99(B/$B:o=|(B
+•ÏX/íœ
 
-* Changing LaTeX command::      La@TeX{} $B%3%^%s%I$NJQ99(B
-* Killing LaTeX command::       La@TeX{} $B%3%^%s%I$N:o=|(B
+* Changing LaTeX command::      La@TeX{} ƒRƒ}ƒ“ƒh‚Ì•ÏX
+* Killing LaTeX command::       La@TeX{} ƒRƒ}ƒ“ƒh‚Ìíœ
 
-$B%+%9%?%^%$%:(B
+ƒJƒXƒ^ƒ}ƒCƒY
 
-* Lisp variables::              lisp $BJQ?t(B
-* Add-in functions::            $BIU2C4X?t(B($B%"%I%$%s4X?t(B)
+* Lisp variables::              lisp •Ï”
+* Add-in functions::            •t‰ÁŠÖ”(ƒAƒhƒCƒ“ŠÖ”)
 
-lisp $BJQ?t(B
+lisp •Ï”
 
-* All customizable variables::  $B%+%9%?%^%$%:JQ?t0lMw(B
-* Sample definitions::          $B%+%9%?%^%$%:JQ?t@_DjNc(B
-* Hook variables::              hook$BJQ?t(B
-* Hook file::                   hook$BMQ%U%!%$%k(B
+* All customizable variables::  ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——
+* Sample definitions::          ƒJƒXƒ^ƒ}ƒCƒY•Ï”İ’è—á
+* Hook variables::              hook•Ï”
+* Hook file::                   hook—pƒtƒ@ƒCƒ‹
 @end menu
 
 @node Intro, Terminology, Top, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B$O$8$a$K(B
+@chapter ‚Í‚¶‚ß‚É
 @cindex Demacs
 @cindex Mule
 @cindex LaTeX
-@cindex $B$d$A$g$&(B[$B$d$A$h$&(B]
+@cindex ‚â‚¿‚å‚¤[‚â‚¿‚æ‚¤]
 
-  $BLnD;$O!"(BGNU Emacs $B$G(B La@TeX{} $BMQ$NJ8=q$r:n@.$9$k;~$K(B jLa@TeX{} $B$J$I$N(B
-$B%?%$%W%;%C%H%3%^%s%I$d!"%W%l%t%e!<%"$N5/F0$r(B Emacs $BJT=82hLLCf$+$i(B
-$B9T$($k$h$&$K$9$k$H6&$K!"3HD%@-$N9b$$<o!9$NJd405!G=$K$h$j%=!<%9%F%-(B
-$B%9%H$NJT=8$r;Y1g$7$^$9!#$5$i$K(B La@TeX{} $B%3%^%s%I$N%*%s%i%$%s%X%k%W$K(B
-$B$h$j%^%K%e%"%k$rD4$Y$k<j4V$r7Z8:$7$^$9!#(B
+  –ì’¹‚ÍAGNU Emacs ‚Å La@TeX{} —p‚Ì•¶‘‚ğì¬‚·‚é‚É pLa@TeX{} ‚È‚Ç‚Ì
+ƒ^ƒCƒvƒZƒbƒgƒRƒ}ƒ“ƒh‚âAƒvƒŒƒ”ƒ…[ƒA‚Ì‹N“®‚ğ Emacs •ÒW‰æ–Ê’†‚©‚ç
+s‚¦‚é‚æ‚¤‚É‚·‚é‚Æ‹¤‚ÉAŠg’£«‚Ì‚‚¢íX‚Ì•âŠ®‹@”\‚É‚æ‚èƒ\[ƒXƒeƒL
+ƒXƒg‚Ì•ÒW‚ğx‰‡‚µ‚Ü‚·B‚³‚ç‚É La@TeX{} ƒRƒ}ƒ“ƒh‚ÌƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv‚É
+‚æ‚èƒ}ƒjƒ…ƒAƒ‹‚ğ’²‚×‚éèŠÔ‚ğŒyŒ¸‚µ‚Ü‚·B
 
   English manual @xref{Top, , , yatexe,YaTeX English info}.
 
 @node Terminology, Main features, Intro, Top
 @comment  node-name,  next,  previous,  up
-@chapter $BK\%^%K%e%"%k;2>H>e$NCm0U(B
+@chapter –{ƒ}ƒjƒ…ƒAƒ‹QÆã‚Ì’ˆÓ
 
-  $BK\%^%K%e%"%k$G$O0J2<$NI=5-$rMQ$$$^$9!#(B
+  –{ƒ}ƒjƒ…ƒAƒ‹‚Å‚ÍˆÈ‰º‚Ì•\‹L‚ğ—p‚¢‚Ü‚·B
 
 @itemize @bullet
 @item
-begin$B7?%3%^%s%I(B
+beginŒ^ƒRƒ}ƒ“ƒh
 
-@code{\begin@{$B4D6-(B@} $B!A(B \end@{$B4D6-(B@}}$B$H$$$&7A<0$N(BLaTeX$B%3%^%s%I$r;X$7$^$9!#(B
-begin$B7?%3%^%s%I$rJd40F~NO$9$k$3$H$r(Bbegin$B7?Jd40$H8F$S$^$9!#(B
-
-@item
-section$B7?%3%^%s%I(B
-
-@code{\section@{$B%?%$%H%k(B@}}$B$d(B@code{\mbox@{$BFbMF(B@}}$B$N$h$&$K(B
-$B0z?t$r<h$k(BLaTeX$B%3%^%s%I$r;X$7$^$9!#(B
+@code{\begin@{ŠÂ‹«@} ` \end@{ŠÂ‹«@}}‚Æ‚¢‚¤Œ`®‚ÌLaTeXƒRƒ}ƒ“ƒh‚ğw‚µ‚Ü‚·B
+beginŒ^ƒRƒ}ƒ“ƒh‚ğ•âŠ®“ü—Í‚·‚é‚±‚Æ‚ğbeginŒ^•âŠ®‚ÆŒÄ‚Ñ‚Ü‚·B
 
 @item
-maketitle$B7?%3%^%s%I(B
+sectionŒ^ƒRƒ}ƒ“ƒh
 
-@code{\maketitle}$B$d(B@code{\tableofcontents}$B$N$h$&$K0z?t$r<h$i$J$$(BLaTeX$B%3%^(B
-$B%s%I$r;X$7$^$9!#(B
+@code{\section@{ƒ^ƒCƒgƒ‹@}}‚â@code{\mbox@{“à—e@}}‚Ì‚æ‚¤‚É
+ˆø”‚ğæ‚éLaTeXƒRƒ}ƒ“ƒh‚ğw‚µ‚Ü‚·B
 
 @item
-large$B7?%3%^%s%I(B
+maketitleŒ^ƒRƒ}ƒ“ƒh
 
-@code{@{\large ...@}} $B$d(B @code{@{\tt ...@}} $B$N$h$&$J%U%)%s%H(B/$B%5%$%:;XDj;R(B
-$B$r;X$7$^$9!#(B
+@code{\maketitle}‚â@code{\tableofcontents}‚Ì‚æ‚¤‚Éˆø”‚ğæ‚ç‚È‚¢LaTeXƒRƒ}
+ƒ“ƒh‚ğw‚µ‚Ü‚·B
+
+@item
+largeŒ^ƒRƒ}ƒ“ƒh
+
+@code{@{\large ...@}} ‚â @code{@{\tt ...@}} ‚Ì‚æ‚¤‚ÈƒtƒHƒ“ƒg/ƒTƒCƒYw’èq
+‚ğw‚µ‚Ü‚·B
 
 @item @kbd{[prefix]}
 
-$BLnD;$N5!G=$r8F$S=P$9$?$a$N%W%j%U%#%/%9%-!<!#%G%U%)%k%H$G$O(B@kbd{C-c}$B$K3d$j(B
-$BEv$F$i$l$F$$$k$N$G!"FC$KJQ99$7$F$$$J$$>l9gK\%^%K%e%"%k$N(B @kbd{[prefix]} $B$H(B
-$B$$$&I=5-$O!"(B@kbd{C-c} $B$HFI$_49$($F$/$@$5$$!#(B
+–ì’¹‚Ì‹@”\‚ğŒÄ‚Ño‚·‚½‚ß‚ÌƒvƒŠƒtƒBƒNƒXƒL[BƒfƒtƒHƒ‹ƒg‚Å‚Í@kbd{C-c}‚ÉŠ„‚è
+“–‚Ä‚ç‚ê‚Ä‚¢‚é‚Ì‚ÅA“Á‚É•ÏX‚µ‚Ä‚¢‚È‚¢ê‡–{ƒ}ƒjƒ…ƒAƒ‹‚Ì @kbd{[prefix]} ‚Æ
+‚¢‚¤•\‹L‚ÍA@kbd{C-c} ‚Æ“Ç‚İŠ·‚¦‚Ä‚­‚¾‚³‚¢B
 @end itemize
 
 @node Main features, Installation, Terminology, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B<g$J5!G=(B
+@chapter å‚È‹@”\
 
 @itemize @bullet
-@item $B%?%$%W%;%C%?$d%W%l%t%e!<%"$J$I$NJT=82hLL$+$i$N5/F0(B(@kbd{C-c t})
-@item $B%+!<%=%k0LCV$K$h$i$J$$8GDj%j%8%g%s$NItJ,%?%$%W%;%C%H(B
-@item \includeonly$B$N%o%s%?%C%A99?7(B
-@item $B%(%i!<2U=j$X$N<+F0%8%c%s%W(B(@kbd{C-c '})
-@item @code{\begin@{@}, \end@{@}, \section...} $B$J$I$N(B La@TeX{}
-$B%3%^%s%I$NJd40F~NO(B
+@item ƒ^ƒCƒvƒZƒbƒ^‚âƒvƒŒƒ”ƒ…[ƒA‚È‚Ç‚Ì•ÒW‰æ–Ê‚©‚ç‚Ì‹N“®(@kbd{C-c t})
+@item ƒJ[ƒ\ƒ‹ˆÊ’u‚É‚æ‚ç‚È‚¢ŒÅ’èƒŠƒWƒ‡ƒ“‚Ì•”•ªƒ^ƒCƒvƒZƒbƒg
+@item \includeonly‚Ìƒƒ“ƒ^ƒbƒ`XV
+@item ƒGƒ‰[‰ÓŠ‚Ö‚Ì©“®ƒWƒƒƒ“ƒv(@kbd{C-c '})
+@item @code{\begin@{@}, \end@{@}, \section...} ‚È‚Ç‚Ì La@TeX{}
+ƒRƒ}ƒ“ƒh‚Ì•âŠ®“ü—Í
 (@kbd{C-c b}, @kbd{C-c s}, @kbd{C-c l}, @kbd{C-c m})
-@item $B4{$KF~NO$7$?%F%-%9%H$r4D6-$d%3%^%s%I0z?t$NCf$K<h$j9~$`3g$jJd40(B
-(@kbd{C-u} +$BDL>oJd40%-!<(B)
-@item $B%;%/%7%g%s6h@Z$jF~NO;~$NJ8=q9=B$%"%&%H%i%$%sI=<((B
-@item $B%;%/%7%g%s%3%^%s%I$N0l3g%7%U%H(B (@ref{view-sectioning})
-@item $BJd40<-=q$N3X=,(B
-@item La@TeX{} $B$N4D6-$d%3%^%s%I$K1~$8$?%,%$%IIU$-0z?tF~NO(B
-@item $BLnD;$K$J$$%,%$%IIU$-0z?tF~NO4X?t$N<+F0@8@.(B(@file{yatexgen.el})
-@item La@TeX{} $B%3%^%s%I$N:o=|(B/$BJQ99(B(@kbd{C-c k}, @kbd{C-c c})
-@item $B%U%!%$%k4V!"(B@code{\begin}<->@code{\end}$B4V!"(B
-        @code{\ref}<->@code{\label}$B4V!"(B
-        @code{\cite}<->@code{\bibitem}$B%8%c%s%W(B(@kbd{C-c g})
-@item $B0l3g%3%a%s%H%"%&%H(B/$B%"%s%3%a%s%H%"%&%H(B
+@item Šù‚É“ü—Í‚µ‚½ƒeƒLƒXƒg‚ğŠÂ‹«‚âƒRƒ}ƒ“ƒhˆø”‚Ì’†‚Éæ‚è‚ŞŠ‡‚è•âŠ®
+(@kbd{C-u} +’Êí•âŠ®ƒL[)
+@item ƒZƒNƒVƒ‡ƒ“‹æØ‚è“ü—Í‚Ì•¶‘\‘¢ƒAƒEƒgƒ‰ƒCƒ“•\¦
+@item ƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚ÌˆêŠ‡ƒVƒtƒg (@ref{view-sectioning})
+@item •âŠ®«‘‚ÌŠwK
+@item La@TeX{} ‚ÌŠÂ‹«‚âƒRƒ}ƒ“ƒh‚É‰‚¶‚½ƒKƒCƒh•t‚«ˆø”“ü—Í
+@item –ì’¹‚É‚È‚¢ƒKƒCƒh•t‚«ˆø”“ü—ÍŠÖ”‚Ì©“®¶¬(@file{yatexgen.el})
+@item La@TeX{} ƒRƒ}ƒ“ƒh‚Ìíœ/•ÏX(@kbd{C-c k}, @kbd{C-c c})
+@item ƒtƒ@ƒCƒ‹ŠÔA@code{\begin}<->@code{\end}ŠÔA
+        @code{\ref}<->@code{\label}ŠÔA
+        @code{\cite}<->@code{\bibitem}ƒWƒƒƒ“ƒv(@kbd{C-c g})
+@item ˆêŠ‡ƒRƒƒ“ƒgƒAƒEƒg/ƒAƒ“ƒRƒƒ“ƒgƒAƒEƒg
         (@kbd{C-c >}, @kbd{C-c <}, @kbd{C-c ,}, @kbd{C-c .})
-@item $B%"%/%;%s%H5-9f(B/$B?t<04D6-MQ%3%^%s%I(B/$B%.%j%7%cJ8;z$NF~NO;Y1g(B
+@item ƒAƒNƒZƒ“ƒg‹L†/”®ŠÂ‹«—pƒRƒ}ƒ“ƒh/ƒMƒŠƒVƒƒ•¶š‚Ì“ü—Íx‰‡
         (@kbd{C-c a}, @kbd{;}, @kbd{/})
-@item tabular/array$B4D6-$N%+%i%`0LCV%,%$%I(B
-@item $BI8=`E*(B La@TeX{} $B%3%^%s%I$N%*%s%i%$%s%X%k%W(B(@kbd{C-c ?}, @kbd{C-c /})
-@item $B%I%-%e%a%s%H$N%$%s%/%k!<%I9=B$$N;k3PE*I=<($H%P%C%U%!@Z$jBX$((B
+@item tabular/arrayŠÂ‹«‚ÌƒJƒ‰ƒ€ˆÊ’uƒKƒCƒh
+@item •W€“I La@TeX{} ƒRƒ}ƒ“ƒh‚ÌƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv(@kbd{C-c ?}, @kbd{C-c /})
+@item ƒhƒLƒ…ƒƒ“ƒg‚ÌƒCƒ“ƒNƒ‹[ƒh\‘¢‚Ì‹Šo“I•\¦‚Æƒoƒbƒtƒ@Ø‚è‘Ö‚¦
 (@kbd{C-c d})
 @end itemize
 
 @node Installation, Invocation, Main features, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B5/F0K!(B
+@chapter ‹N“®–@
 @cindex Install
-@cindex $B%$%s%9%H!<%k(B[$B$$$s$9$H$*$k(B]
+@cindex ƒCƒ“ƒXƒg[ƒ‹[‚¢‚ñ‚·‚Æ‚¨‚é]
 @cindex .emacs
 @cindex auto-mode-alist
 @cindex autoload
-@section $BLnD;5/F0$N$?$a$N@_Dj(B
+@section –ì’¹‹N“®‚Ì‚½‚ß‚Ìİ’è
 
-  ~/.emacs$B$K2<$N(B2$B9`L\$r2C$($^$9!#(B
+  ~/.emacs‚É‰º‚Ì2€–Ú‚ğ‰Á‚¦‚Ü‚·B
 
 @lisp
 (setq auto-mode-alist
@@ -217,298 +217,299 @@ large$B7?%3%^%s%I(B
 (autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
 @end lisp
 
-$B<!$KLnD;$N(B emacs-lisp $B%U%!%$%k72$rCV$/%G%#%l%/%H%j$r(B load-path $B$K2C$($^$9!#(B
-$B$?$H$($P!"(B @file{~/src/emacs/yatex}$B$KCV$/$N$G$"$l$P!"(B
+Ÿ‚É–ì’¹‚Ì emacs-lisp ƒtƒ@ƒCƒ‹ŒQ‚ğ’u‚­ƒfƒBƒŒƒNƒgƒŠ‚ğ load-path ‚É‰Á‚¦‚Ü‚·B
+‚½‚Æ‚¦‚ÎA @file{~/src/emacs/yatex}‚É’u‚­‚Ì‚Å‚ ‚ê‚ÎA
 
 @lisp
 (setq load-path (cons (expand-file-name "~/src/emacs/yatex") load-path))
 @end lisp
 
 @noindent 
-$B$J$I$H$7$^$9!#(B
+‚È‚Ç‚Æ‚µ‚Ü‚·B
 
-  $B0J>e$N@_Dj$K$h$j!"3HD%;R$,(B .tex $B$G$"$k%U%!%$%k$rJT=8$9$k$H<+F0E*$KLnD;$,(B
-$B%m!<%I$5$l$^$9!#LnD;$,@5>o$K5/F0$G$-$?$H$-$O%b!<%I%i%$%s$NI=<($,!V$d$F$U!W(B
-$B$KJQ$o$j$^$9!#(B
+  ˆÈã‚Ìİ’è‚É‚æ‚èAŠg’£q‚ª .tex ‚Å‚ ‚éƒtƒ@ƒCƒ‹‚ğ•ÒW‚·‚é‚Æ©“®“I‚É–ì’¹‚ª
+ƒ[ƒh‚³‚ê‚Ü‚·B–ì’¹‚ª³í‚É‹N“®‚Å‚«‚½‚Æ‚«‚Íƒ‚[ƒhƒ‰ƒCƒ“‚Ì•\¦‚ªu‚â‚Ä‚Óv
+‚É•Ï‚í‚è‚Ü‚·B
 
-@section $B%?%$%W%;%C%?(B/$B%W%l%t%e!<%"4D6-$N@_Dj(B
+@section ƒ^ƒCƒvƒZƒbƒ^/ƒvƒŒƒ”ƒ…[ƒAŠÂ‹«‚Ìİ’è
 
-  $BMxMQ$9$k30It%W%m%0%i%`$K4X$9$k0J2<$NJQ?t$r3NG'$7!"I,MW$J$i@5$7$$CM$KJQ99(B
-$B$7$^$9!#(B
+  —˜—p‚·‚éŠO•”ƒvƒƒOƒ‰ƒ€‚ÉŠÖ‚·‚éˆÈ‰º‚Ì•Ï”‚ğŠm”F‚µA•K—v‚È‚ç³‚µ‚¢’l‚É•ÏX
+‚µ‚Ü‚·B
 @table @code
 @item tex-command
-        @dots{} $B5/F0$9$k%?%$%W%;%C%?$N%3%^%s%IL>(B
+        @dots{} ‹N“®‚·‚éƒ^ƒCƒvƒZƒbƒ^‚ÌƒRƒ}ƒ“ƒh–¼
 @item dvi2-command
-        @dots{} $B5/F0$9$k%W%l%t%e!<%"$N%3%^%s%IL>(B
+        @dots{} ‹N“®‚·‚éƒvƒŒƒ”ƒ…[ƒA‚ÌƒRƒ}ƒ“ƒh–¼
 @item NTT-jTeX
-        @dots{} $B2~9T(B+$B%$%s%G%s%H$K$h$C$F!"%?%$%W%;%C%H8e$N;z4V$,6u$$$F$7$^(B
-        $B$&$N$rM^@)$9$k>l9g$K(Bt$B$K$9$k(B($B8E$$(BNTT-jTeX$B$G82Cx$K8=$l$k(B)$B!#6qBNE*$K$O!"(B
-        fill$B$9$k$H$-$K3F9T$N=*$o$j$K(B%$B$rIU2C$9$k$h$&$K$J$k!#(B
+        @dots{} ‰üs+ƒCƒ“ƒfƒ“ƒg‚É‚æ‚Á‚ÄAƒ^ƒCƒvƒZƒbƒgŒã‚ÌšŠÔ‚ª‹ó‚¢‚Ä‚µ‚Ü
+        ‚¤‚Ì‚ğ—}§‚·‚éê‡‚Ét‚É‚·‚é(ŒÃ‚¢NTT-jTeX‚ÅŒ°’˜‚ÉŒ»‚ê‚é)B‹ï‘Ì“I‚É‚ÍA
+        fill‚·‚é‚Æ‚«‚ÉŠes‚ÌI‚í‚è‚É%‚ğ•t‰Á‚·‚é‚æ‚¤‚É‚È‚éB
 @item YaTeX-kanji-code
-        @dots{} $BJ8=q$r:n@.$9$k;~$N4A;z%3!<%I(B
+        @dots{} •¶‘‚ğì¬‚·‚é‚ÌŠ¿šƒR[ƒh
 @item dviprint-command-format
-        @dots{} $B%U%!%$%k$N0u:~$K;H$o$l$k%3%^%s%INs$N=q<0(B
+        @dots{} ƒtƒ@ƒCƒ‹‚Ìˆóü‚Ég‚í‚ê‚éƒRƒ}ƒ“ƒh—ñ‚Ì‘®
 @item makeindex-command
-        @dots{} makeindex$B%3%^%s%I(B
+        @dots{} makeindexƒRƒ}ƒ“ƒh
 @end table
 
-$B$3$l$i$rJQ99$9$k>l9g$O!"$d$O$j(B@file{~/.emacs}$B$K$F!"$?$H$($P(B
+‚±‚ê‚ç‚ğ•ÏX‚·‚éê‡‚ÍA‚â‚Í‚è@file{~/.emacs}‚É‚ÄA‚½‚Æ‚¦‚Î
 @lisp
 (setq tex-command "bigjlatex")
 @end lisp
-$B$N$h$&$K$7$F$/$@$5$$!#$I$N$h$&$JCM$r%;%C%H$9$l$PNI$$$+$K$D$$$F$O!"(B
-@ref{All customizable variables}$B$r;2>H$7$F$/$@$5$$!#(B
+‚Ì‚æ‚¤‚É‚µ‚Ä‚­‚¾‚³‚¢B‚Ç‚Ì‚æ‚¤‚È’l‚ğƒZƒbƒg‚·‚ê‚Î—Ç‚¢‚©‚É‚Â‚¢‚Ä‚ÍA
+@ref{All customizable variables}‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢B
 
 
 @node Invocation, %#notation , Installation, Top
 @comment  node-name,  next,  previous,  up
-@chapter latex$B%3%^%s%I5/F0(B
+@chapter latexƒRƒ}ƒ“ƒh‹N“®
 @cindex prefix key
 @cindex C-c
-@cindex $B%?%$%W%;%C%?(B[$B$?$$$U$;$D$?(B]
-@cindex $B%W%l%t%e!<%"(B[$B$U$l$R$f$&$"(B]
+@cindex ƒ^ƒCƒvƒZƒbƒ^[‚½‚¢‚Ó‚¹‚Â‚½]
+@cindex ƒvƒŒƒ”ƒ…[ƒA[‚Ó‚ê‚Ğ‚ä‚¤‚ ]
 @cindex jlatex
-@cindex $B%W%j%s%H%"%&%H(B[$B$U$j$s$H$"$&$H(B]
+@cindex platex
+@cindex ƒvƒŠƒ“ƒgƒAƒEƒg[‚Ó‚è‚ñ‚Æ‚ ‚¤‚Æ]
 
-LaTeX$B%=!<%9$NJT=8Cf!"<!$N%-!<F~NO$K$h$j!"(Bjlatex $B$J$I$N%?%$%W%;%C%H%W%m%0%i(B
-$B%`(B($B0J8e%?%$%W%;%C%?$H8F$V(B)$B!"%W%l%t%e!<%"$J$I$N5/F0$,$G$-$^$9!#(B
+LaTeXƒ\[ƒX‚Ì•ÒW’†AŸ‚ÌƒL[“ü—Í‚É‚æ‚èAplatex ‚È‚Ç‚Ìƒ^ƒCƒvƒZƒbƒgƒvƒƒOƒ‰
+ƒ€(ˆÈŒãƒ^ƒCƒvƒZƒbƒ^‚ÆŒÄ‚Ô)AƒvƒŒƒ”ƒ…[ƒA‚È‚Ç‚Ì‹N“®‚ª‚Å‚«‚Ü‚·B
 
 @table @kbd
 @item [prefix] t j
-        @dots{} $B%?%$%W%;%C%?(B(jlatex)$B5/F0(B
+        @dots{} ƒ^ƒCƒvƒZƒbƒ^(platex)‹N“®
 @item [prefix] t r
-        @dots{} $B%?%$%W%;%C%?5/F0(B($BNN0h;XDj(B)
+        @dots{} ƒ^ƒCƒvƒZƒbƒ^‹N“®(—Ìˆæw’è)
 @item [prefix] t k
-        @dots{} $BF0:nCf$N%?%$%W%;%C%?$NDd;_(B
+        @dots{} “®ì’†‚Ìƒ^ƒCƒvƒZƒbƒ^‚Ì’â~
 @item [prefix] t b
-        @dots{} jbibtex$B5/F0(B
+        @dots{} jbibtex‹N“®
 @item [prefix] t p
-        @dots{} $B%W%l%t%e!<%"5/F0(B
+        @dots{} ƒvƒŒƒ”ƒ…[ƒA‹N“®
 @item [prefix] t l
-        @dots{} lpr($B%W%j%s%H%"%&%HMQ(B)$B%3%^%s%I5/F0(B
+        @dots{} lpr(ƒvƒŠƒ“ƒgƒAƒEƒg—p)ƒRƒ}ƒ“ƒh‹N“®
 @item [prefix] t s
-        @dots{} xdvi -remote $B$G$N%5!<%A(B
+        @dots{} xdvi -remote ‚Å‚ÌƒT[ƒ`
 @end table
 
 @menu
-* Calling typesetter::          $B%?%$%W%;%C%?5/F0(B
-* Calling previewer::           $B%W%l%t%e!<%"5/F0(B
-* Print out::                   $B%W%j%s%H%"%&%HMQ%3%^%s%I$N5/F0(B
+* Calling typesetter::          ƒ^ƒCƒvƒZƒbƒ^‹N“®
+* Calling previewer::           ƒvƒŒƒ”ƒ…[ƒA‹N“®
+* Print out::                   ƒvƒŠƒ“ƒgƒAƒEƒg—pƒRƒ}ƒ“ƒh‚Ì‹N“®
 @end menu
 
 @node Calling typesetter, Calling previewer, Invocation, Invocation
 @comment  node-name,  next,  previous,  up
-@section $B%?%$%W%;%C%?5/F0(B
-@cindex $B%?%$%W%;%C%?5/F0(B[$B$?$$$U$;$D$?$-$H$&(B]
-@cindex $B%?%$%W%;%C%H%(%i!<(B[$B$?$$$U$;$D$H$($i$"(B]
-@cindex $B%(%i!<=$@5(B[$B$($i$"$7$f$&$;$$(B]
+@section ƒ^ƒCƒvƒZƒbƒ^‹N“®
+@cindex ƒ^ƒCƒvƒZƒbƒ^‹N“®[‚½‚¢‚Ó‚¹‚Â‚½‚«‚Æ‚¤]
+@cindex ƒ^ƒCƒvƒZƒbƒgƒGƒ‰[[‚½‚¢‚Ó‚¹‚Â‚Æ‚¦‚ç‚ ]
+@cindex ƒGƒ‰[C³[‚¦‚ç‚ ‚µ‚ä‚¤‚¹‚¢]
 
-  $B%?%$%W%;%C%?$r5/F0$9$k$H!"JT=8%&%#%s%I%&$,(B2$B$D$KJ,3d$5$l!"JRJ}$N%&%#%s%I(B
-$B%&$K%?%$%W%;%C%H2hLL$,I=<($5$l$^$9!#=PNO$5$l$k%a%C%;!<%8$HO"F0$7%?%$%W%;%C(B
-$B%H%P%C%U%!$O<+F0E*$K%9%/%m!<%k$7$^$9!#$b$7!"ESCf$G%(%i!<$,5/$3$C$F;_$^$C$F(B
-$B$7$^$C$?>l9g$K$O%?%$%W%;%C%H%P%C%U%!$K0\$j!"(B(@kbd{C-x o}) $B%?%$%W%;%C%?$N=P(B
-$B$7$F$$$k(B ? $B%W%m%s%W%H$KBP$7$F!"(B@kbd{x} ($B=hM}$NCfCG(B)$B$J$I$N;X<($rAw$k$3$H$,(B
-$B$G$-$^$9!#%(%i!<$r=$@5$9$k>l9g$O!"(B
+  ƒ^ƒCƒvƒZƒbƒ^‚ğ‹N“®‚·‚é‚ÆA•ÒWƒEƒBƒ“ƒhƒE‚ª2‚Â‚É•ªŠ„‚³‚êA•Ğ•û‚ÌƒEƒBƒ“ƒh
+ƒE‚Éƒ^ƒCƒvƒZƒbƒg‰æ–Ê‚ª•\¦‚³‚ê‚Ü‚·Bo—Í‚³‚ê‚éƒƒbƒZ[ƒW‚Æ˜A“®‚µƒ^ƒCƒvƒZƒb
+ƒgƒoƒbƒtƒ@‚Í©“®“I‚ÉƒXƒNƒ[ƒ‹‚µ‚Ü‚·B‚à‚µA“r’†‚ÅƒGƒ‰[‚ª‹N‚±‚Á‚Ä~‚Ü‚Á‚Ä
+‚µ‚Ü‚Á‚½ê‡‚É‚Íƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@‚ÉˆÚ‚èA(@kbd{C-x o}) ƒ^ƒCƒvƒZƒbƒ^‚Ìo
+‚µ‚Ä‚¢‚é ? ƒvƒƒ“ƒvƒg‚É‘Î‚µ‚ÄA@kbd{x} (ˆ—‚Ì’†’f)‚È‚Ç‚Ìw¦‚ğ‘—‚é‚±‚Æ‚ª
+‚Å‚«‚Ü‚·BƒGƒ‰[‚ğC³‚·‚éê‡‚ÍA
 
 @table @kbd
 @item [prefix] '
-@itemx (prefix+$B%"%]%9%H%m%U%#(B)
-        @dots{} $BD>A0$N%(%i!<H/@89T$X%8%c%s%W(B
+@itemx (prefix+ƒAƒ|ƒXƒgƒƒtƒB)
+        @dots{} ’¼‘O‚ÌƒGƒ‰[”­¶s‚ÖƒWƒƒƒ“ƒv
 @end table
 
-$B$rF~NO$9$k$3$H$K$h$j!"%?%$%W%;%C%?$,%(%i!<$rH/@8$7$?9T$K0\$k$3$H$,$G$-$^$9!#(B
-$B$^$?!"%?%$%W%;%C%?$N=PNO$9$k(B overfull hbox $B$J$I$N%&%)!<%K%s%09T$K$bBP1~$7(B
-$B$F$$$^$9$N$G!"=g<!(B @kbd{[prefix] '} $B$r2!$9$3$H$K$h$j!"0l$DA0$N%&%)!<%K%s%0(B
-$BH/@89T$K%8%c%s%W$7$F$$$-$^$9!#(B
+‚ğ“ü—Í‚·‚é‚±‚Æ‚É‚æ‚èAƒ^ƒCƒvƒZƒbƒ^‚ªƒGƒ‰[‚ğ”­¶‚µ‚½s‚ÉˆÚ‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+‚Ü‚½Aƒ^ƒCƒvƒZƒbƒ^‚Ìo—Í‚·‚é overfull hbox ‚È‚Ç‚ÌƒEƒH[ƒjƒ“ƒOs‚É‚à‘Î‰‚µ
+‚Ä‚¢‚Ü‚·‚Ì‚ÅA‡Ÿ @kbd{[prefix] '} ‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èAˆê‚Â‘O‚ÌƒEƒH[ƒjƒ“ƒO
+”­¶s‚ÉƒWƒƒƒ“ƒv‚µ‚Ä‚¢‚«‚Ü‚·B
 
-  $B$b$7!"5$$K$J$k%(%i!<9T$,$"$C$?>l9g$O!"%?%$%W%;%C%H%P%C%U%!$G!"%((B
-$B%i!<$NI=<($5$l$F$$$k9T$K%+!<%=%k$r9g$o$;%9%Z!<%9%-!<$r2!$9$H(B La@TeX{} 
-$B%=!<%9$NBP1~$9$k9T$K%8%c%s%W$7$^$9!#(B
+  ‚à‚µA‹C‚É‚È‚éƒGƒ‰[s‚ª‚ ‚Á‚½ê‡‚ÍAƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@‚ÅAƒG
+ƒ‰[‚Ì•\¦‚³‚ê‚Ä‚¢‚és‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹ƒXƒy[ƒXƒL[‚ğ‰Ÿ‚·‚Æ La@TeX{} 
+ƒ\[ƒX‚Ì‘Î‰‚·‚és‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B
 
-@subsection $BNN0h%?%$%W%;%C%H(B
+@subsection —Ìˆæƒ^ƒCƒvƒZƒbƒg
 
-  $B%]%$%s%H$H%^!<%/$N4V!"$"$k$$$O%F%-%9%HCf$KKd$a9~$s$@(B @code{%#BEGIN} $B$H(B
-@code{%#END}$B$N4V$NNN0h(B(@ref{%#notation})$B$@$1$r@Z$j<h$C$F%?%$%W%;%C%H$9$k$3$H$,(B
-$B$G$-$^$9!#$3$N>l9g$N(B documentstyle $B$O!"C10l%U%!%$%k$N(B La@TeX{} $B%=!<%9$NJT(B
-$B=8;~$K$O$=$N%U%!%$%k$N(B documentstyle $B$,!"JL%U%!%$%k$+$i(B include $B$7$F$$$k>l(B
-$B9g$K$O%a%$%s%U%!%$%k$N(B documentstyle $B$,<+F0E*$KA*Br$5$l$^$9!#;XDjNN0h$O!"(B
-$B%a%$%s%U%!%$%k$N$"$k%G%#%l%/%H%j$N(B@file{texput.tex}$B$H$$$&NW;~%U%!%$%k$K=P(B
-$BNO$5$l$^$9$N$G!">e=q$-$K$OCm0U$7$F$/$@$5$$!#(B
+  ƒ|ƒCƒ“ƒg‚Æƒ}[ƒN‚ÌŠÔA‚ ‚é‚¢‚ÍƒeƒLƒXƒg’†‚É–„‚ß‚ñ‚¾ @code{%#BEGIN} ‚Æ
+@code{%#END}‚ÌŠÔ‚Ì—Ìˆæ(@ref{%#notation})‚¾‚¯‚ğØ‚èæ‚Á‚Äƒ^ƒCƒvƒZƒbƒg‚·‚é‚±‚Æ‚ª
+‚Å‚«‚Ü‚·B‚±‚Ìê‡‚Ì documentclass ‚ÍA’Pˆêƒtƒ@ƒCƒ‹‚Ì La@TeX{} ƒ\[ƒX‚Ì•Ò
+W‚É‚Í‚»‚Ìƒtƒ@ƒCƒ‹‚Ì documentclass ‚ªA•Êƒtƒ@ƒCƒ‹‚©‚ç include ‚µ‚Ä‚¢‚éê
+‡‚É‚ÍƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ì documentclass ‚ª©“®“I‚É‘I‘ğ‚³‚ê‚Ü‚·Bw’è—Ìˆæ‚ÍA
+ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ì‚ ‚éƒfƒBƒŒƒNƒgƒŠ‚Ì@file{texput.tex}‚Æ‚¢‚¤—Õƒtƒ@ƒCƒ‹‚Éo
+—Í‚³‚ê‚Ü‚·‚Ì‚ÅAã‘‚«‚É‚Í’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢B
 
 @node Calling previewer, Print out, Calling typesetter, Invocation
 @comment  node-name,  next,  previous,  up
-@section $B%W%l%t%e!<%"5/F0(B
-  @kbd{[prefix] t p} $B$K$h$j%W%l%t%e!<%"$N5/F0$,$G$-$^$9!#$5$i$K!"$b$7$"$J(B
-$B$?$,!"(B-remote $B5!G=$D$-$N(Bxdvi$B$rMxMQ$7$F$$$k>l9g$O(B @kbd{[prefix] t s} $B$r2!$9(B
-$B$3$H$K$h$j%+!<%=%k0LCV$NJ8;zNs$r8!:w$7$F$=$N%Z!<%8$rI=<($9$k$h$&$K$9$G$K5/(B
-$BF0Cf$N(Bxdvi$B$KL?Na$rAw$j$^$9!#$3$l$K$h$j!"8=:_JT=8Cf$N2U=j$N%?%$%W%;%C%H7k2L(B
-$B$rB(:B$K8+$k$3$H$,$G$-$^$9!#(B
+@section ƒvƒŒƒ”ƒ…[ƒA‹N“®
+  @kbd{[prefix] t p} ‚É‚æ‚èƒvƒŒƒ”ƒ…[ƒA‚Ì‹N“®‚ª‚Å‚«‚Ü‚·B‚³‚ç‚ÉA‚à‚µ‚ ‚È
+‚½‚ªA-remote ‹@”\‚Â‚«‚Ìxdvi‚ğ—˜—p‚µ‚Ä‚¢‚éê‡‚Í @kbd{[prefix] t s} ‚ğ‰Ÿ‚·
+‚±‚Æ‚É‚æ‚èƒJ[ƒ\ƒ‹ˆÊ’u‚Ì•¶š—ñ‚ğŒŸõ‚µ‚Ä‚»‚Ìƒy[ƒW‚ğ•\¦‚·‚é‚æ‚¤‚É‚·‚Å‚É‹N
+“®’†‚Ìxdvi‚É–½—ß‚ğ‘—‚è‚Ü‚·B‚±‚ê‚É‚æ‚èAŒ»İ•ÒW’†‚Ì‰ÓŠ‚Ìƒ^ƒCƒvƒZƒbƒgŒ‹‰Ê
+‚ğ‘¦À‚ÉŒ©‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
-@c $B$J$*!"(B-remote $B5!G=IU$-$N(B xdvi $B$O(B
+@c ‚È‚¨A-remote ‹@”\•t‚«‚Ì xdvi ‚Í
 @c @code{ftp://ftp.ae.keio.ac.jp/pub/text/xdvi/xdvi-remote}
-@c $B$J$I$+$iF~<j$9$k$3$H$,$G$-$^$9!#(B
+@c ‚È‚Ç‚©‚ç“üè‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 @node Print out,  , Calling previewer, Invocation
 @comment  node-name,  next,  previous,  up
-@section $B%W%j%s%H%"%&%H(B
+@section ƒvƒŠƒ“ƒgƒAƒEƒg
 
-  @kbd{[prefix] t l}$B$r2!$7$F%W%j%s%H%"%&%H$r;X<($9$k$H!"=PNO3+;O(B/$B=*N;%Z!<(B
-$B%8$rJ9$$$F$/$k$N$G!"$=$l$>$l$KEz$($^$9!#$3$l$r>JN,$7$?$$;~$O!"(B
-universal-argument $B$r$D$1!"(B
+  @kbd{[prefix] t l}‚ğ‰Ÿ‚µ‚ÄƒvƒŠƒ“ƒgƒAƒEƒg‚ğw¦‚·‚é‚ÆAo—ÍŠJn/I—¹ƒy[
+ƒW‚ğ•·‚¢‚Ä‚­‚é‚Ì‚ÅA‚»‚ê‚¼‚ê‚É“š‚¦‚Ü‚·B‚±‚ê‚ğÈ—ª‚µ‚½‚¢‚ÍA
+universal-argument ‚ğ‚Â‚¯A
 
-@cindex $B=PNO3+;O%Z!<%8(B[$B$7$f$D$j$h$/$+$$$7$X$($7(B]
-@cindex $B=PNO=*N;%Z!<%8(B[$B$7$f$D$j$h$/$7$f$&$j$h$&$X$($7(B]
+@cindex o—ÍŠJnƒy[ƒW[‚µ‚ä‚Â‚è‚æ‚­‚©‚¢‚µ‚Ö‚¦‚µ]
+@cindex o—ÍI—¹ƒy[ƒW[‚µ‚ä‚Â‚è‚æ‚­‚µ‚ä‚¤‚è‚æ‚¤‚Ö‚¦‚µ]
 
 @table @kbd
 @item C-u [prefix] t l
-        @dots{} $B%Z!<%83NG'>JN,(Blpr$B5/F0(B
+        @dots{} ƒy[ƒWŠm”FÈ—ªlpr‹N“®
 @end table
-@cindex $B%Z!<%83NG'>JN,(Blpr$B5/F0(B[$B$X$($7$+$/$K$s$7$h$&$j$d$/(Blpr$B$-$H$&(B]
+@cindex ƒy[ƒWŠm”FÈ—ªlpr‹N“®[‚Ö‚¦‚µ‚©‚­‚É‚ñ‚µ‚æ‚¤‚è‚â‚­lpr‚«‚Æ‚¤]
 
 @noindent
-$B$N$h$&$K5/F0$7$F$/$@$5$$!#(B
+‚Ì‚æ‚¤‚É‹N“®‚µ‚Ä‚­‚¾‚³‚¢B
 
 @node %#notation , Completion, Invocation, Top
 @comment  node-name,  next,  previous,  up
-@chapter %#$B5-K!(B
+@chapter %#‹L–@
 
-  $BK\J8Cf$K(B@code{%#}$B$G$O$8$^$k%-!<%o!<%I$rKd$a9~$`$3$H$G%?%$%W%;%C%?5/F0Ey(B
-$B$N@)8f$r$9$k$3$H$,$G$-$^$9!#(B
+  –{•¶’†‚É@code{%#}‚Å‚Í‚¶‚Ü‚éƒL[ƒ[ƒh‚ğ–„‚ß‚Ş‚±‚Æ‚Åƒ^ƒCƒvƒZƒbƒ^‹N“®“™
+‚Ì§Œä‚ğ‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 @menu
-* Changing typesetter::         $B%?%$%W%;%C%HMQ%3%^%s%I$NJQ99(B
-* Splitting input files::       $BF~NO%U%!%$%kJ,3d(B
-* Fix region for typesetting::  $BNN0h$N8GDj(B
-* lpr format::                  $B%W%j%s%H%"%&%H%3%^%s%IMQ%U%)!<%^%C%H(B
-* Editing %# notation::         %#$B5-K!$NJT=8(B
+* Changing typesetter::         ƒ^ƒCƒvƒZƒbƒg—pƒRƒ}ƒ“ƒh‚Ì•ÏX
+* Splitting input files::       “ü—Íƒtƒ@ƒCƒ‹•ªŠ„
+* Fix region for typesetting::  —Ìˆæ‚ÌŒÅ’è
+* lpr format::                  ƒvƒŠƒ“ƒgƒAƒEƒgƒRƒ}ƒ“ƒh—pƒtƒH[ƒ}ƒbƒg
+* Editing %# notation::         %#‹L–@‚Ì•ÒW
 @end menu
 
 @node Changing typesetter, Splitting input files, %#notation , %#notation
 @comment  node-name,  next,  previous,  up
-@section $B%?%$%W%;%C%HMQ%3%^%s%IJQ99(B
+@section ƒ^ƒCƒvƒZƒbƒg—pƒRƒ}ƒ“ƒh•ÏX
 
-  $B5/F0$9$k%3%^%s%I$rJQ$($?$$;~$OK\J8Cf$K<!$N$h$&$J9T$r=q$-$^$9!#(B
+  ‹N“®‚·‚éƒRƒ}ƒ“ƒh‚ğ•Ï‚¦‚½‚¢‚Í–{•¶’†‚ÉŸ‚Ì‚æ‚¤‚Ès‚ğ‘‚«‚Ü‚·B
 
-@cindex $B5/F0$9$k%3%^%s%I$rJQ$($k(B[$B$-$H$&$9$k$3$^$s$H$r$+$($k(B]
+@cindex ‹N“®‚·‚éƒRƒ}ƒ“ƒh‚ğ•Ï‚¦‚é[‚«‚Æ‚¤‚·‚é‚±‚Ü‚ñ‚Æ‚ğ‚©‚¦‚é]
 
 @example
         %#!jlatex-ntt
 @end example
 
-NTT jTeX $B$H!"(BASCII jTeX $B$r;H$$J,$1$?$$$h$&$J>l9g$KJXMx$G$7$g$&!#(B
+NTT jTeX ‚ÆAASCII jTeX ‚ğg‚¢•ª‚¯‚½‚¢‚æ‚¤‚Èê‡‚É•Ö—˜‚Å‚µ‚å‚¤B
 
-@cindex $B%?%$%W%;%C%?$N;H$$J,$1(B[$B$?$$$U$;$D$?$N$D$+$$$o$1(B]
+@cindex ƒ^ƒCƒvƒZƒbƒ^‚Ìg‚¢•ª‚¯[‚½‚¢‚Ó‚¹‚Â‚½‚Ì‚Â‚©‚¢‚í‚¯]
 
 @node Splitting input files, Fix region for typesetting, Changing typesetter, %#notation
 @comment  node-name,  next,  previous,  up
-@section $BF~NO%U%!%$%kJ,3d(B
+@section “ü—Íƒtƒ@ƒCƒ‹•ªŠ„
 
-$B$^$?!">OKh$KJL%U%!%$%k$N(B .tex $B$r:n@.$7$F$$$k>l9g$G!"(B@file{main.tex}$B$+$i(B 
-@file{sub.tex}$B$r(B @code{\include}$B$7$F$$$k$h$&$J;~$O!"(B@file{sub.tex}$B$NG$0U$N(B
-$B0LCV$K<!$N$h$&$J9T$rKd$a9~$_$^$9!#(B
+‚Ü‚½AÍ–ˆ‚É•Êƒtƒ@ƒCƒ‹‚Ì .tex ‚ğì¬‚µ‚Ä‚¢‚éê‡‚ÅA@file{main.tex}‚©‚ç 
+@file{sub.tex}‚ğ @code{\include}‚µ‚Ä‚¢‚é‚æ‚¤‚È‚ÍA@file{sub.tex}‚Ì”CˆÓ‚Ì
+ˆÊ’u‚ÉŸ‚Ì‚æ‚¤‚Ès‚ğ–„‚ß‚İ‚Ü‚·B
 
 @example
-        %#!jlatex main.tex
+        %#!platex main.tex
 @end example
 
-@cindex $BF~NO%U%!%$%kJ,3d(B[$B$K$f$&$j$h$/$U$"$$$k$U$s$+$D(B]
+@cindex “ü—Íƒtƒ@ƒCƒ‹•ªŠ„[‚É‚ä‚¤‚è‚æ‚­‚Ó‚ ‚¢‚é‚Ó‚ñ‚©‚Â]
 
-$B>e$NNc$N$h$&$K%3%^%s%IL>$@$1$G$J$/0z?t$b=q$$$?>l9g$K$O!"A4$F$r$=$N$^$^(B 
-shell $B$KEO$9$N$G<!$N$h$&$K=q$1$P!"(Bghostview $B$J$I$r%W%l%t%e!<%"$K;H$&;~$KJX(B
-$BMx$G$9!#(B
+ã‚Ì—á‚Ì‚æ‚¤‚ÉƒRƒ}ƒ“ƒh–¼‚¾‚¯‚Å‚È‚­ˆø”‚à‘‚¢‚½ê‡‚É‚ÍA‘S‚Ä‚ğ‚»‚Ì‚Ü‚Ü 
+shell ‚É“n‚·‚Ì‚ÅŸ‚Ì‚æ‚¤‚É‘‚¯‚ÎAghostview ‚È‚Ç‚ğƒvƒŒƒ”ƒ…[ƒA‚Ég‚¤‚É•Ö
+—˜‚Å‚·B
 
 @cindex ghostview
 
 @example
-        %#!jlatex main ; dvi2ps main.dvi > main
+        %#!platex main ; dvi2ps main.dvi > main
 @end example
 
-$B$J$*!"$3$N9T$N:G8e$NC18l$N%T%j%*%I0JA0$r!V%a%$%s%U%!%$%k!W$N%Y!<%9(B
-$B%M!<%`$G$"$k$H2>Dj$7$^$9(B($B>e$N(B2$B$D$N>l9g$I$A$i$b(B@file{main})$B!#(B
+‚È‚¨A‚±‚Ìs‚ÌÅŒã‚Ì’PŒê‚ÌƒsƒŠƒIƒhˆÈ‘O‚ğuƒƒCƒ“ƒtƒ@ƒCƒ‹v‚Ìƒx[ƒX
+ƒl[ƒ€‚Å‚ ‚é‚Æ‰¼’è‚µ‚Ü‚·(ã‚Ì2‚Â‚Ìê‡‚Ç‚¿‚ç‚à@file{main})B
 
-  @kbd{[prefix] g} (@ref{Cursor jump}$B;2>H(B) $B$G$N(B
-$B%U%!%$%k4V%8%c%s%W$rM-8z$K5!G=$5$;$k$?$a!"F~NO%U%!%$%kJ,3d;~$K$O<!$N$3$H$K(B
-$BCm0U$7$F2<$5$$!#(B
+  @kbd{[prefix] g} (@ref{Cursor jump}QÆ) ‚Å‚Ì
+ƒtƒ@ƒCƒ‹ŠÔƒWƒƒƒ“ƒv‚ğ—LŒø‚É‹@”\‚³‚¹‚é‚½‚ßA“ü—Íƒtƒ@ƒCƒ‹•ªŠ„‚É‚ÍŸ‚Ì‚±‚Æ‚É
+’ˆÓ‚µ‚Ä‰º‚³‚¢B
 
 @enumerate
 @item
-$B%5%V%G%#%l%/%H%j$r:n$C$F!"$=$NCf$K%5%V%U%!%$%k$rCV$/$3$H$O$G$-$k$,(B
-$B%5%V%G%#%l%/%H%j$N%5%V%G%#%l%/%H%j$K$OCV$1$J$$!#(B
+ƒTƒuƒfƒBƒŒƒNƒgƒŠ‚ğì‚Á‚ÄA‚»‚Ì’†‚ÉƒTƒuƒtƒ@ƒCƒ‹‚ğ’u‚­‚±‚Æ‚Í‚Å‚«‚é‚ª
+ƒTƒuƒfƒBƒŒƒNƒgƒŠ‚ÌƒTƒuƒfƒBƒŒƒNƒgƒŠ‚É‚Í’u‚¯‚È‚¢B
 @item
-$B%a%$%s%U%!%$%k$+$i%5%V%G%#%l%/%H%jFb$N%U%!%$%k$r(B include
-$B$9$k;~$K$O!"AjBP%Q%9;XDj$rMQ$$$F!"(B
-@code{\include@{chap1/sub@}}$B$N$h$&$K5-=R!#(B
+ƒƒCƒ“ƒtƒ@ƒCƒ‹‚©‚çƒTƒuƒfƒBƒŒƒNƒgƒŠ“à‚Ìƒtƒ@ƒCƒ‹‚ğ include
+‚·‚é‚É‚ÍA‘Š‘ÎƒpƒXw’è‚ğ—p‚¢‚ÄA
+@code{\include@{chap1/sub@}}‚Ì‚æ‚¤‚É‹LqB
 @item
-$B%a%$%s%U%!%$%k$,0l$D>e$N%G%#%l%/%H%j$K$"$k>l9g$b!"%5%V%U%!%$%k$K$O(B
-%#!jlatex main.tex $B$N$h$&$K5-=R$9$k(B(../main$B$G$O$J$$(B)$B!#(B
+ƒƒCƒ“ƒtƒ@ƒCƒ‹‚ªˆê‚Âã‚ÌƒfƒBƒŒƒNƒgƒŠ‚É‚ ‚éê‡‚àAƒTƒuƒtƒ@ƒCƒ‹‚É‚Í
+%#!platex main.tex ‚Ì‚æ‚¤‚É‹Lq‚·‚é(../main‚Å‚Í‚È‚¢)B
 @end enumerate
 
 
 
 @node Fix region for typesetting, lpr format, Splitting input files, %#notation
 @comment  node-name,  next,  previous,  up
-@section $BNN0h$N8GDj(B
-@cindex $B8GDjNN0h$N%?%$%W%;%C%H(B[$B$3$F$$$j$h$&$$$-$N$?$$$U$;$D$H(B]
+@section —Ìˆæ‚ÌŒÅ’è
+@cindex ŒÅ’è—Ìˆæ‚Ìƒ^ƒCƒvƒZƒbƒg[‚±‚Ä‚¢‚è‚æ‚¤‚¢‚«‚Ì‚½‚¢‚Ó‚¹‚Â‚Æ]
 @cindex %#BEGIN
 @cindex %#END
 
-  @kbd{[prefix] tr} $B$NNN0h;XDj$N%?%$%W%;%C%H$G$O!"$H$/$K;XDj$N$J$$$+$.$j!"(B 
-@kbd{C-SPC}$B$G%^!<%/$7$?0LCV$H!"%]%$%s%H(B($B%+!<%=%k0LCV(B)$B$N4V$rNN0h$H$_$J$7$^(B
-$B$9$,!"I,$:7h$^$C$?NN0h$r%?%$%W%;%C%H$7$?$$>l9g$O!"$=$NNN0h$r(B
+  @kbd{[prefix] tr} ‚Ì—Ìˆæw’è‚Ìƒ^ƒCƒvƒZƒbƒg‚Å‚ÍA‚Æ‚­‚Éw’è‚Ì‚È‚¢‚©‚¬‚èA 
+@kbd{C-SPC}‚Åƒ}[ƒN‚µ‚½ˆÊ’u‚ÆAƒ|ƒCƒ“ƒg(ƒJ[ƒ\ƒ‹ˆÊ’u)‚ÌŠÔ‚ğ—Ìˆæ‚Æ‚İ‚È‚µ‚Ü
+‚·‚ªA•K‚¸Œˆ‚Ü‚Á‚½—Ìˆæ‚ğƒ^ƒCƒvƒZƒbƒg‚µ‚½‚¢ê‡‚ÍA‚»‚Ì—Ìˆæ‚ğ
 
 @example
         %#BEGIN
-        <$BEO$7$?$$NN0h(B>
+        <“n‚µ‚½‚¢—Ìˆæ>
         %#END
 @end example
 
 @noindent 
-$B$N$h$&$K(B@code{%#BEGIN}$B$H(B@code{%#END}$B$G0O$_!"%+!<%=%k$r!V(B@code{%#BEGIN}$B0J9_!W(B
-$B$KCV$$$F$/$@$5$$!#$3$N;~$NNN0h7hDj5,B'$r$^$H$a$k$H<!$N$h$&$K$J$j$^$9!#(B
+‚Ì‚æ‚¤‚É@code{%#BEGIN}‚Æ@code{%#END}‚ÅˆÍ‚İAƒJ[ƒ\ƒ‹‚ğu@code{%#BEGIN}ˆÈ~v
+‚É’u‚¢‚Ä‚­‚¾‚³‚¢B‚±‚Ì‚Ì—ÌˆæŒˆ’è‹K‘¥‚ğ‚Ü‚Æ‚ß‚é‚ÆŸ‚Ì‚æ‚¤‚É‚È‚è‚Ü‚·B
 
 
 @enumerate
 @item
-$B%+!<%=%k0LCV$h$j%P%C%U%!$N@hF,J}8~$K(B@code{%#BEGIN}$B$H$$$&%-!<%o!<%I$,(B
-$B$"$k>l9g(B
+ƒJ[ƒ\ƒ‹ˆÊ’u‚æ‚èƒoƒbƒtƒ@‚Ìæ“ª•ûŒü‚É@code{%#BEGIN}‚Æ‚¢‚¤ƒL[ƒ[ƒh‚ª
+‚ ‚éê‡
 
 @enumerate
 @item
-@code{%#BEGIN}$B$h$j%P%C%U%!$NKvHxJ}8~$K(B@code{%#END}$B$H$$$&%-!<%o!<%I$,8+$D$+$C(B
-$B$?>l9g!#(B
-@result{}@code{%#BEGIN} $B$+$i!"$=$N(B @code{%#END} $B$N$"$k0LCV$^$G!#(B
+@code{%#BEGIN}‚æ‚èƒoƒbƒtƒ@‚Ì––”ö•ûŒü‚É@code{%#END}‚Æ‚¢‚¤ƒL[ƒ[ƒh‚ªŒ©‚Â‚©‚Á
+‚½ê‡B
+@result{}@code{%#BEGIN} ‚©‚çA‚»‚Ì @code{%#END} ‚Ì‚ ‚éˆÊ’u‚Ü‚ÅB
 @item
-@code{%#END} $B$,8+$D$+$i$J$+$C$?>l9g!#(B
-@result{}$B%P%C%U%!$N:G8eHx$^$G!#(B
+@code{%#END} ‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡B
+@result{}ƒoƒbƒtƒ@‚ÌÅŒã”ö‚Ü‚ÅB
 @end enumerate
-@cindex $BNN0h7hDj5,B'(B[$B$j$h$&$$$-$1$D$F$$$-$=$/(B]
+@cindex —ÌˆæŒˆ’è‹K‘¥[‚è‚æ‚¤‚¢‚«‚¯‚Â‚Ä‚¢‚«‚»‚­]
 
 @item
-$B%+!<%=%k0LCV$h$j%P%C%U%!$N@hF,J}8~$K(B @code{%#BEGIN} $B$H$$$&%-!<%o!<%I$,(B
-$B8+$D$+$i$J$+$C$?>l9g!#(B
-@result{}$B%^!<%/(B(@kbd{C-SPC}$B0LCV(B)$B$H%]%$%s%H(B($B%+!<%=%k0LCV(B)$B$N4V$NNN0h!#(B
+ƒJ[ƒ\ƒ‹ˆÊ’u‚æ‚èƒoƒbƒtƒ@‚Ìæ“ª•ûŒü‚É @code{%#BEGIN} ‚Æ‚¢‚¤ƒL[ƒ[ƒh‚ª
+Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡B
+@result{}ƒ}[ƒN(@kbd{C-SPC}ˆÊ’u)‚Æƒ|ƒCƒ“ƒg(ƒJ[ƒ\ƒ‹ˆÊ’u)‚ÌŠÔ‚Ì—ÌˆæB
 @end enumerate
 
-  tabular $B4D6-$r2?EY$b;n9T:x8m$7$F$$$k$h$&$J>l9g$O!"(B@code{\begin}$B$NA0$N9T(B
-$B$K(B @code{%#BEGIN} $B$H=q$-!"(B@code{\end} $B$N<!$N9T$K(B @code{%#END} $B$H=q$$$F$*$/(B
-$B$H4JC1$K:nI=7k2L$r%F%9%H$9$k$3$H$,$G$-$^$9!#$^$?!"D9$$(B .tex $B%U%!%$%k$N8eH>(B
-$B$K(B @code{%#BEGIN} $B$r=q$$$F$*$1$P!"A0H>$NItJ,$OL5;k$G$-$^$9!#$3$N(BBEGIN$B$H(BEND
-$B$N>C$7K:$l$K$O==J,$4Cm0U2<$5$$!#(B
-@cindex $BD9$$%U%!%$%k$NJT=8(B[$B$J$+$$$U$"$$$k$N$X$s$7$f$&(B]
+  tabular ŠÂ‹«‚ğ‰½“x‚àsöŒë‚µ‚Ä‚¢‚é‚æ‚¤‚Èê‡‚ÍA@code{\begin}‚Ì‘O‚Ìs
+‚É @code{%#BEGIN} ‚Æ‘‚«A@code{\end} ‚ÌŸ‚Ìs‚É @code{%#END} ‚Æ‘‚¢‚Ä‚¨‚­
+‚ÆŠÈ’P‚Éì•\Œ‹‰Ê‚ğƒeƒXƒg‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚Ü‚½A’·‚¢ .tex ƒtƒ@ƒCƒ‹‚ÌŒã”¼
+‚É @code{%#BEGIN} ‚ğ‘‚¢‚Ä‚¨‚¯‚ÎA‘O”¼‚Ì•”•ª‚Í–³‹‚Å‚«‚Ü‚·B‚±‚ÌBEGIN‚ÆEND
+‚ÌÁ‚µ–Y‚ê‚É‚Í\•ª‚²’ˆÓ‰º‚³‚¢B
+@cindex ’·‚¢ƒtƒ@ƒCƒ‹‚Ì•ÒW[‚È‚©‚¢‚Ó‚ ‚¢‚é‚Ì‚Ö‚ñ‚µ‚ä‚¤]
 
 @c @node  Require, lpr format, Fix region for typesetting, %#notation
 @comment  node-name,  next,  previous,  up
 
 @node lpr format, Editing %# notation, Fix region for typesetting, %#notation
 @comment  node-name,  next,  previous,  up
-@section lpr$B%U%)!<%^%C%H(B
-@cindex lpr$B$U$)!<$^$C$H(B[lpr$B$U$*$*$^$D$H(B]
-@cindex lpr$B%U%)!<%^%C%H(B[lpr$B$U$*$*$^$D$H(B]
+@section lprƒtƒH[ƒ}ƒbƒg
+@cindex lpr‚Ó‚§[‚Ü‚Á‚Æ[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ]
+@cindex lprƒtƒH[ƒ}ƒbƒg[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ]
 @cindex lpr format
 
-  $B$^$:!"%W%j%s%H%"%&%HMQ%3%^%s%INs$N%U%)!<%^%C%H$K$D$$$F@bL@$7$^$9!#(B
-$B%3%^%s%INs%U%)!<%^%C%H$O!"(B3$B$D$N(B Lisp $BJQ?t$K$h$C$FI=8=$5$l$^$9!#%G(B
-$B%U%)%k%H$N(B dvi2ps $BMQ$N%U%)!<%^%C%H$rNc$K@bL@$7$^$9!#(B
+  ‚Ü‚¸AƒvƒŠƒ“ƒgƒAƒEƒg—pƒRƒ}ƒ“ƒh—ñ‚ÌƒtƒH[ƒ}ƒbƒg‚É‚Â‚¢‚Äà–¾‚µ‚Ü‚·B
+ƒRƒ}ƒ“ƒh—ñƒtƒH[ƒ}ƒbƒg‚ÍA3‚Â‚Ì Lisp •Ï”‚É‚æ‚Á‚Ä•\Œ»‚³‚ê‚Ü‚·Bƒf
+ƒtƒHƒ‹ƒg‚Ì dvi2ps —p‚ÌƒtƒH[ƒ}ƒbƒg‚ğ—á‚Éà–¾‚µ‚Ü‚·B
 
 @table @code
 @item (1)dviprint-command-format
@@ -521,94 +522,94 @@ shell $B$KEO$9$N$G<!$N$h$&$K=q$1$P!"(Bghostview $B$J$I$r%W%l%t%e!<%"$K;H$&;~$
 @code{"-t %e"}
 @end table
 
-$B<B:]$K%W%j%s%H%"%&%H$9$k;~$O!"(B(1)$BCf$N(B %s $B$,%U%!%$%kL>$KCV$-49$($i$l!"(B%f $B$,(B
-(2)$B$NFbMF!"(B%t $B$,(B(3)$B$NFbMF$KCV$-49$($i$l$^$9!#$=$N:]$K(B(2)$B$NJ8;zNsCf$N(B %b $B$O(B
-$B!V=PNO3+;O%Z!<%8!W!"(B(3)$B$NJ8;zNsCf$N(B %e $B$O!V=PNO=*N;%Z!<%8!W$KCV$-49$($i$l(B
-$B$^$9!#$b$7!"%Z!<%8$r;XDj$7$J$$;~$K$O!"(B%f, %t $BN>J}$H$bL5;k$5$l$^$9!#(B
+ÀÛ‚ÉƒvƒŠƒ“ƒgƒAƒEƒg‚·‚é‚ÍA(1)’†‚Ì %s ‚ªƒtƒ@ƒCƒ‹–¼‚É’u‚«Š·‚¦‚ç‚êA%f ‚ª
+(2)‚Ì“à—eA%t ‚ª(3)‚Ì“à—e‚É’u‚«Š·‚¦‚ç‚ê‚Ü‚·B‚»‚ÌÛ‚É(2)‚Ì•¶š—ñ’†‚Ì %b ‚Í
+uo—ÍŠJnƒy[ƒWvA(3)‚Ì•¶š—ñ’†‚Ì %e ‚Íuo—ÍI—¹ƒy[ƒWv‚É’u‚«Š·‚¦‚ç‚ê
+‚Ü‚·B‚à‚µAƒy[ƒW‚ğw’è‚µ‚È‚¢‚É‚ÍA%f, %t —¼•û‚Æ‚à–³‹‚³‚ê‚Ü‚·B
 
-  $B$3$N!"(Bdviprint-command-format $B$rNW;~$KJQ$($?$$;~$O!"(BLa@TeX{} $B$N(B
-$B%=!<%9%F%-%9%HCf$NG$0U$N>l=j$K!"(B
+  ‚±‚ÌAdviprint-command-format ‚ğ—Õ‚É•Ï‚¦‚½‚¢‚ÍALa@TeX{} ‚Ì
+ƒ\[ƒXƒeƒLƒXƒg’†‚Ì”CˆÓ‚ÌêŠ‚ÉA
 
 @example
         %#LPR dvi2ps %f %t %s | 4up -page 4 | texfix | lpr -Plp2
 @end example
 
 @noindent 
-$B$N$h$&$K=q$$$F2<$5$$!#%W%j%s%H%"%&%H$9$k%Z!<%8HO0O$r$$$A$$$AJ9$+$;$J$$$h$&(B
-$B$K$9$k;~$K(B
+‚Ì‚æ‚¤‚É‘‚¢‚Ä‰º‚³‚¢BƒvƒŠƒ“ƒgƒAƒEƒg‚·‚éƒy[ƒW”ÍˆÍ‚ğ‚¢‚¿‚¢‚¿•·‚©‚¹‚È‚¢‚æ‚¤
+‚É‚·‚é‚É
 
 @example
         %#LPR dvi2ps %s | lpr
 @end example
 
 @noindent 
-$B$J$I$H$9$k$N$bJXMx$+$b$7$l$^$;$s!#(B
+‚È‚Ç‚Æ‚·‚é‚Ì‚à•Ö—˜‚©‚à‚µ‚ê‚Ü‚¹‚ñB
 
 @node Editing %# notation,  , lpr format, %#notation
 @comment  node-name,  next,  previous,  up
-@section %#$B5-K!<+BN$NJT=8(B
-@cindex %#$B5-K!<+BN$NJT=8(B[%#$B$-$[$&$7$?$$$N$X$s$7$f$&(B]
+@section %#‹L–@©‘Ì‚Ì•ÒW
+@cindex %#‹L–@©‘Ì‚Ì•ÒW[%#‚«‚Ù‚¤‚µ‚½‚¢‚Ì‚Ö‚ñ‚µ‚ä‚¤]
 
-$B0J>e$N$h$&$J(B@code{%#}$B$G;O$^$k3F<o@)8f5-K!$rJT=8$9$k$?$a$K$O(B
+ˆÈã‚Ì‚æ‚¤‚È@code{%#}‚Ån‚Ü‚éŠeí§Œä‹L–@‚ğ•ÒW‚·‚é‚½‚ß‚É‚Í
 
 @table @kbd
 @item [prefix] %
-        @dots{} @code{%#}@var{$B5-K!JT=8%a%K%e!<(B}
+        @dots{} @code{%#}@var{‹L–@•ÒWƒƒjƒ…[}
 @end table
 
 @noindent 
-$B$r2!$7$^$9!#(B
+‚ğ‰Ÿ‚µ‚Ü‚·B
 
 @example
         !)Edit-%#! B)EGIN-END-region L)Edit-%#LPR
 @end example
 
 @noindent 
-$B$H$$$&%a%K%e!<$,=P$FMh$k$N$G!"(B@code{%#!}$B$KB3$/%3%^%s%I$rJQ99$7$?$$;~$K$O(B
-@kbd{!}$B$r!"(B@code{%#LPR}$B$G(B lpr $B%U%)!<%^%C%H$rJQ$($?$$;~$O(B@kbd{l}$B$r!"$"$i$+(B
-$B$8$a@_Dj$7$?%j%8%g%s$r(B @code{%#BEGIN} $B!A(B @code{%#END} $B$G3g$j$?$$;~$O!"(B
-@kbd{b}$B$r2!$7$^$9!#(B@kbd{b}$B$rA*$s$@;~$K$O!"$=$l$^$G%P%C%U%!Cf$KCV$+$l$F$$$?(B 
-@code{%#BEGIN}, @code{%#END} $B$,<+F0E*$K>C5n$5$l$^$9!#(B
-@cindex lpr$B%U%)!<%^%C%H$NJQ99(B[lpr$B$U$*$*$^$D$H$N$X$s$3$&(B]
+‚Æ‚¢‚¤ƒƒjƒ…[‚ªo‚Ä—ˆ‚é‚Ì‚ÅA@code{%#!}‚É‘±‚­ƒRƒ}ƒ“ƒh‚ğ•ÏX‚µ‚½‚¢‚É‚Í
+@kbd{!}‚ğA@code{%#LPR}‚Å lpr ƒtƒH[ƒ}ƒbƒg‚ğ•Ï‚¦‚½‚¢‚Í@kbd{l}‚ğA‚ ‚ç‚©
+‚¶‚ßİ’è‚µ‚½ƒŠƒWƒ‡ƒ“‚ğ @code{%#BEGIN} ` @code{%#END} ‚ÅŠ‡‚è‚½‚¢‚ÍA
+@kbd{b}‚ğ‰Ÿ‚µ‚Ü‚·B@kbd{b}‚ğ‘I‚ñ‚¾‚É‚ÍA‚»‚ê‚Ü‚Åƒoƒbƒtƒ@’†‚É’u‚©‚ê‚Ä‚¢‚½ 
+@code{%#BEGIN}, @code{%#END} ‚ª©“®“I‚ÉÁ‹‚³‚ê‚Ü‚·B
+@cindex lprƒtƒH[ƒ}ƒbƒg‚Ì•ÏX[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ‚Ì‚Ö‚ñ‚±‚¤]
 
 @node Completion, Local dictionary, %#notation , Top
 @comment  node-name,  next,  previous,  up
-@chapter $BJd40F~NO(B
+@chapter •âŠ®“ü—Í
 
-  La@TeX{} $B$G$N4D6-L>$J$I$O!"LnD;$NJd405!G=$rMxMQ$7$FG=N(E*$KF~NO$9$k$3$H(B
-$B$,$G$-$^$9!#(B
+  La@TeX{} ‚Å‚ÌŠÂ‹«–¼‚È‚Ç‚ÍA–ì’¹‚Ì•âŠ®‹@”\‚ğ—˜—p‚µ‚Ä”\—¦“I‚É“ü—Í‚·‚é‚±‚Æ
+‚ª‚Å‚«‚Ü‚·B
 
 @menu
-* begin$B7?Jd40(B::                 
-* section$B7?Jd40(B::               
-* large$B7?Jd40(B::                 
-* maketitle$B7?Jd40(B::             
-* Arbitrary completion::        $B?o;~Jd40(B
-* end$BJd40(B::                     
-* Accent mark completion::      $B%"%/%;%s%H5-9fJd40(B
-* Image completion::            $B?t<05-9f%$%a!<%8Jd40(B
-* Greek letter completion::     $B%.%j%7%cJ8;zJd40(B
+* beginŒ^•âŠ®::                 
+* sectionŒ^•âŠ®::               
+* largeŒ^•âŠ®::                 
+* maketitleŒ^•âŠ®::             
+* Arbitrary completion::        •âŠ®
+* end•âŠ®::                     
+* Accent mark completion::      ƒAƒNƒZƒ“ƒg‹L†•âŠ®
+* Image completion::            ”®‹L†ƒCƒ[ƒW•âŠ®
+* Greek letter completion::     ƒMƒŠƒVƒƒ•¶š•âŠ®
 @end menu
 
-@node begin$B7?Jd40(B, section$B7?Jd40(B, Completion, Completion
+@node beginŒ^•âŠ®, sectionŒ^•âŠ®, Completion, Completion
 @comment  node-name,  next,  previous,  up
-@section begin$B7?Jd40(B
-@cindex begin$B7?Jd40(B[begin$B$+$?$[$+$s(B]
-@cindex $B4D6-L>$NJd40(B[$B$+$s$-$h$&$a$$$N$[$+$s(B]
+@section beginŒ^•âŠ®
+@cindex beginŒ^•âŠ®[begin‚©‚½‚Ù‚©‚ñ]
+@cindex ŠÂ‹«–¼‚Ì•âŠ®[‚©‚ñ‚«‚æ‚¤‚ß‚¢‚Ì‚Ù‚©‚ñ]
 @cindex prefix b
 
-  @code{\begin@{env@}...\end@{env@}}$B$NMM$J7A<0$NF~NO$NJd40$r(Bbegin$B7?Jd40$H(B
-$B8F$V$3$H$K$7$^$9!#(Bbegin $B7?Jd40$O!"(B
+  @code{\begin@{env@}...\end@{env@}}‚Ì—l‚ÈŒ`®‚Ì“ü—Í‚Ì•âŠ®‚ğbeginŒ^•âŠ®‚Æ
+ŒÄ‚Ô‚±‚Æ‚É‚µ‚Ü‚·Bbegin Œ^•âŠ®‚ÍA
 
 @table @kbd
 @item [prefix] b
-        @dots{} begin $B7?Jd403+;O(B($BI8=`$G$O(B @kbd{C-c b})
+        @dots{} begin Œ^•âŠ®ŠJn(•W€‚Å‚Í @kbd{C-c b})
 @end table
 
 @noindent 
-$B$G;O$^$j$^$9!#IQHK$KMQ$$$i$l$k<!$N(B La@TeX{} $B4D6-$NJd40$O!"(B[prefix] @kbd{b}
-$B$KB3$/<!$N(B1$BJ8;z$rF~NO$9$k$@$1$G!"(B@code{\begin@{xxx@}...\end@{xxx@}}$B$r40@.(B
-$B$5$;$^$9!#(B
+‚Ån‚Ü‚è‚Ü‚·B•p”É‚É—p‚¢‚ç‚ê‚éŸ‚Ì La@TeX{} ŠÂ‹«‚Ì•âŠ®‚ÍA[prefix] @kbd{b}
+‚É‘±‚­Ÿ‚Ì1•¶š‚ğ“ü—Í‚·‚é‚¾‚¯‚ÅA@code{\begin@{xxx@}...\end@{xxx@}}‚ğŠ®¬
+‚³‚¹‚Ü‚·B
 
 @table @kbd
 @item [prefix] b c
@@ -647,107 +648,107 @@ shell $B$KEO$9$N$G<!$N$h$&$K=q$1$P!"(Bghostview $B$J$I$r%W%l%t%e!<%"$K;H$&;~$
         @dots{} @code{\begin@{verse@}...\end@{verse@}}
 @end table
 
-  $B>e5-$N$b$N0J30$N4D6-L>$O(B Emacs $B$N;}$D%$%s%/%j%a%s%?%k$JJd405!G=$rMQ$$$F(B
-$BF~NO$7$^$9(B($B>e5-$N4D6-L>$b0J2<$NJd40F~NO2DG=(B)$B!#(B
+  ã‹L‚Ì‚à‚ÌˆÈŠO‚ÌŠÂ‹«–¼‚Í Emacs ‚Ì‚ÂƒCƒ“ƒNƒŠƒƒ“ƒ^ƒ‹‚È•âŠ®‹@”\‚ğ—p‚¢‚Ä
+“ü—Í‚µ‚Ü‚·(ã‹L‚ÌŠÂ‹«–¼‚àˆÈ‰º‚Ì•âŠ®“ü—Í‰Â”\)B
 
 @table @kbd
 @item [prefix] b @key{SPC}
-        @dots{} begin $B7?Jd40F~NO(B
+        @dots{} begin Œ^•âŠ®“ü—Í
 @end table
 
-@kbd{[prefix] b @key{SPC}} $B$HF~NO$9$k$H!":G2<9T$N%_%K%P%C%U%!$K(B
+@kbd{[prefix] b @key{SPC}} ‚Æ“ü—Í‚·‚é‚ÆAÅ‰ºs‚Ìƒ~ƒjƒoƒbƒtƒ@‚É
 
 @example
         Begin environment(default document): 
 @end example
 
 @noindent
-$B$HI=<($5$l$^$9!#$3$3$G!"2?$bF~$l$:$K%j%?!<%s%-!<$N$_2!$9$H!"3g8LFb$K=P$F$$(B
-$B$k%G%U%)%k%H$N4D6-L>$,F~NO$5$l$^$9$,!"E,Ev$J4D6-L>$rF~NO$9$k$H!"(B
-@code{\begin@{$B4D6-L>(B@} $B!D(B \end@{$B4D6-L>(B@}}$B$,J8=qCf$KA^F~$5$l$^$9!#%_%K%P%C(B
-$B%U%!$G4D6-L>$rF~NO$9$k$H$-$K!"4D6-L>$NF,J8;z$rF~NO$7!V%9%Z!<%9!W$r$?$?$/$H!"(B
-$B0lCW$9$k4D6-L>$,FbIt%F!<%V%k$KB8:_$7$?>l9g!"@5$7$$4D6-L>$KJd40$5$l$k$N$G!"(B
-$BF~NO$N<j4V$,>J$1$^$9!#FbIt%F!<%V%k$KB8:_$7$J$$4D6-L>$rF~NO$7$?;~$O%f!<%6@l(B
-$BMQ$N%F!<%V%k$KEPO?$5$l!"$5$i$K$=$N%F!<%V%k$r<+F0E*$K!"%f!<%6<-=q(B($B%G%U%)%k(B
-$B%H$G$O(B @file{~/.yatexrc})$B$KJ]B8$7$^$9!#(B
+‚Æ•\¦‚³‚ê‚Ü‚·B‚±‚±‚ÅA‰½‚à“ü‚ê‚¸‚ÉƒŠƒ^[ƒ“ƒL[‚Ì‚İ‰Ÿ‚·‚ÆAŠ‡ŒÊ“à‚Éo‚Ä‚¢
+‚éƒfƒtƒHƒ‹ƒg‚ÌŠÂ‹«–¼‚ª“ü—Í‚³‚ê‚Ü‚·‚ªA“K“–‚ÈŠÂ‹«–¼‚ğ“ü—Í‚·‚é‚ÆA
+@code{\begin@{ŠÂ‹«–¼@} c \end@{ŠÂ‹«–¼@}}‚ª•¶‘’†‚É‘}“ü‚³‚ê‚Ü‚·Bƒ~ƒjƒoƒb
+ƒtƒ@‚ÅŠÂ‹«–¼‚ğ“ü—Í‚·‚é‚Æ‚«‚ÉAŠÂ‹«–¼‚Ì“ª•¶š‚ğ“ü—Í‚µuƒXƒy[ƒXv‚ğ‚½‚½‚­‚ÆA
+ˆê’v‚·‚éŠÂ‹«–¼‚ª“à•”ƒe[ƒuƒ‹‚É‘¶İ‚µ‚½ê‡A³‚µ‚¢ŠÂ‹«–¼‚É•âŠ®‚³‚ê‚é‚Ì‚ÅA
+“ü—Í‚ÌèŠÔ‚ªÈ‚¯‚Ü‚·B“à•”ƒe[ƒuƒ‹‚É‘¶İ‚µ‚È‚¢ŠÂ‹«–¼‚ğ“ü—Í‚µ‚½‚Íƒ†[ƒUê
+—p‚Ìƒe[ƒuƒ‹‚É“o˜^‚³‚êA‚³‚ç‚É‚»‚Ìƒe[ƒuƒ‹‚ğ©“®“I‚ÉAƒ†[ƒU«‘(ƒfƒtƒHƒ‹
+ƒg‚Å‚Í @file{~/.yatexrc})‚É•Û‘¶‚µ‚Ü‚·B
 
-$B$5$i$K!"FCDj$N4D6-$rJd40F~NO$7$?;~$K$O$=$N4D6-$GI,$:MQ$$$i$l$k%(%s%H%j$r<+(B
-$BF0A^F~$7$^$9(B($BNc(B: @code{itemize}$B4D6-$K$*$1$k(B@code{\item}$B$J$I(B)$B!#A^F~$5$l$?%((B
-$B%s%H%j$,ITMW$J>l9g$K$O(Bundo$B$K$h$C$F>C5n$7$F2<$5$$!#(B
-@cindex $B%f!<%6<-=q(B[$B$f$&$5$7$7$h(B]
+‚³‚ç‚ÉA“Á’è‚ÌŠÂ‹«‚ğ•âŠ®“ü—Í‚µ‚½‚É‚Í‚»‚ÌŠÂ‹«‚Å•K‚¸—p‚¢‚ç‚ê‚éƒGƒ“ƒgƒŠ‚ğ©
+“®‘}“ü‚µ‚Ü‚·(—á: @code{itemize}ŠÂ‹«‚É‚¨‚¯‚é@code{\item}‚È‚Ç)B‘}“ü‚³‚ê‚½ƒG
+ƒ“ƒgƒŠ‚ª•s—v‚Èê‡‚É‚Íundo‚É‚æ‚Á‚ÄÁ‹‚µ‚Ä‰º‚³‚¢B
+@cindex ƒ†[ƒU«‘[‚ä‚¤‚³‚µ‚µ‚æ]
 
-@subsection $B4{$K=q$$$?%F%-%9%H$r4D6-$G3g$k(B
+@subsection Šù‚É‘‚¢‚½ƒeƒLƒXƒg‚ğŠÂ‹«‚ÅŠ‡‚é
 
-  $B$H$3$m$G!":G=i$K=q$$$F$7$^$C$?%V%m%C%/$r8e$+$i!"(Bitemize $B4D6-$NCf(B
-$B$KJD$8$3$a$?$$$H;W$&$3$H$,$"$j$^$9$,!"$=$N$h$&$J$H$-$O!"$"$i$+$8$a(B
-$BJD$8$3$a$?$$CJMn$r%^!<%/$7$F!"(Bbegin $B7?Jd40$N3F%3%^%s%I$N(B @kbd{[prefix]}
-$B$N<!$N!X>.J8;z$N(B 'b'$B!Y(B $B$r!XBgJ8;z!Y$KJQ$($F5/F0$7$F2<$5$$!#(B($B$^$?$O!"(B
-@kbd{C-u} $B$r@h$KBG$A!"(Buniversal argument $B$r$D$1$F$b2DG=$G$9(B)
-@cindex $B%V%m%C%/(B[$B$U$m$D$/(B]
-@cindex $BJD$89~$a$k(B[$B$H$7$3$a$k(B]
+  ‚Æ‚±‚ë‚ÅAÅ‰‚É‘‚¢‚Ä‚µ‚Ü‚Á‚½ƒuƒƒbƒN‚ğŒã‚©‚çAitemize ŠÂ‹«‚Ì’†
+‚É•Â‚¶‚±‚ß‚½‚¢‚Æv‚¤‚±‚Æ‚ª‚ ‚è‚Ü‚·‚ªA‚»‚Ì‚æ‚¤‚È‚Æ‚«‚ÍA‚ ‚ç‚©‚¶‚ß
+•Â‚¶‚±‚ß‚½‚¢’i—‚ğƒ}[ƒN‚µ‚ÄAbegin Œ^•âŠ®‚ÌŠeƒRƒ}ƒ“ƒh‚Ì @kbd{[prefix]}
+‚ÌŸ‚Ìw¬•¶š‚Ì 'b'x ‚ğw‘å•¶šx‚É•Ï‚¦‚Ä‹N“®‚µ‚Ä‰º‚³‚¢B(‚Ü‚½‚ÍA
+@kbd{C-u} ‚ğæ‚É‘Å‚¿Auniversal argument ‚ğ‚Â‚¯‚Ä‚à‰Â”\‚Å‚·)
+@cindex ƒuƒƒbƒN[‚Ó‚ë‚Â‚­]
+@cindex •Â‚¶‚ß‚é[‚Æ‚µ‚±‚ß‚é]
 
-  $BNc$($P$"$k%Q%i%0%i%U$r(B description $B4D6-$NCf$KF~$l$?$$$H$-$O!"(B
-$B$=$N%Q%i%0%i%U$r%^!<%/$7$F$+$i!"(B
+  —á‚¦‚Î‚ ‚éƒpƒ‰ƒOƒ‰ƒt‚ğ description ŠÂ‹«‚Ì’†‚É“ü‚ê‚½‚¢‚Æ‚«‚ÍA
+‚»‚Ìƒpƒ‰ƒOƒ‰ƒt‚ğƒ}[ƒN‚µ‚Ä‚©‚çA
 
 @table @kbd
 @item [prefix] B D
-@itemx ($B$^$?$O(B ESC 1 [prefix] b D)
-@itemx ($B$^$?$O(B  C-u  [prefix] b D $B$J$I(B)
+@itemx (‚Ü‚½‚Í ESC 1 [prefix] b D)
+@itemx (‚Ü‚½‚Í  C-u  [prefix] b D ‚È‚Ç)
 @end table
 
-$B$H%?%$%W$7$F$/$@$5$$!#$3$l$O!"(B@kbd{[prefix] b SPC}$B$NJd40F~NO$K$b$"$F$O$^$j!"(B
-@kbd{b} $B$rBgJ8;z$KJQ$($F!"(B@kbd{[prefix] B SPC} $B$H%?%$%W$9$l$P!"$"$i$+$8$a(B
-$B%^!<%/$7$F$*$$$?%j%8%g%s$r!"(Bbegin $B$H(B end $B$N4D6-$G3g$j$^$9!#(B
+‚Æƒ^ƒCƒv‚µ‚Ä‚­‚¾‚³‚¢B‚±‚ê‚ÍA@kbd{[prefix] b SPC}‚Ì•âŠ®“ü—Í‚É‚à‚ ‚Ä‚Í‚Ü‚èA
+@kbd{b} ‚ğ‘å•¶š‚É•Ï‚¦‚ÄA@kbd{[prefix] B SPC} ‚Æƒ^ƒCƒv‚·‚ê‚ÎA‚ ‚ç‚©‚¶‚ß
+ƒ}[ƒN‚µ‚Ä‚¨‚¢‚½ƒŠƒWƒ‡ƒ“‚ğAbegin ‚Æ end ‚ÌŠÂ‹«‚ÅŠ‡‚è‚Ü‚·B
 
-@node section$B7?Jd40(B, large$B7?Jd40(B, begin$B7?Jd40(B, Completion
+@node sectionŒ^•âŠ®, largeŒ^•âŠ®, beginŒ^•âŠ®, Completion
 @comment  node-name,  next,  previous,  up
-@section section$B7?Jd40(B
-@cindex  section$B7?Jd40(B[section$B$+$?$[$+$s(B]
+@section sectionŒ^•âŠ®
+@cindex  sectionŒ^•âŠ®[section‚©‚½‚Ù‚©‚ñ]
 @cindex prefix s
 
-  @code{\section@{$BL\E*(B@}} $B$N$h$&$J7A<0$NF~NO$NJd40$r(B section $B7?Jd40$H8F$V$3(B
-$B$H$K$7$^$9!#(Bsection $B7?Jd40$O!"(B
+  @code{\section@{–Ú“I@}} ‚Ì‚æ‚¤‚ÈŒ`®‚Ì“ü—Í‚Ì•âŠ®‚ğ section Œ^•âŠ®‚ÆŒÄ‚Ô‚±
+‚Æ‚É‚µ‚Ü‚·Bsection Œ^•âŠ®‚ÍA
 
 @table @kbd
 @item [prefix] s
-        @dots{} section $B7?Jd40(B
+        @dots{} section Œ^•âŠ®
 @end table
 
 @noindent 
-$B$G<B9T$7$^$9!#(B@kbd{[prefix] s} $B$rF~NO$9$k$H%_%K%P%C%U%!$K!"(B
+‚ÅÀs‚µ‚Ü‚·B@kbd{[prefix] s} ‚ğ“ü—Í‚·‚é‚Æƒ~ƒjƒoƒbƒtƒ@‚ÉA
 
 @example
-        (C-v for view-section) \???@{@} (default documentstyle):
+        (C-v for view-section) \???@{@} (default documentclass):
 @end example
 
 @noindent 
-$B$H$$$&%W%m%s%W%H$,8=$l$k$N$G!"$=$3$G(B @samp{section} $B$N$h$&$J(B La@TeX{} $B%3%^(B
-$B%s%IL>$rF~NO$7$^$9!#$3$3$G$b%j%?!<%s%-!<$N$_$G3g8LFb$N%G%U%)%k%HCM$,A*Br$5(B
-$B$l$k$[$+!"(B@samp{chapter}$B$J$I$N$h$&$JIQEY$N9b$$L>>NF~NO$K$O%9%Z!<%9%-!<$K$h(B
-$B$kJd405!G=$,M-8z$G$9!#(B $B<!$K!"(B@{@}$B$NCf?H$NF~NO$rB%$9!"(B
+‚Æ‚¢‚¤ƒvƒƒ“ƒvƒg‚ªŒ»‚ê‚é‚Ì‚ÅA‚»‚±‚Å @samp{section} ‚Ì‚æ‚¤‚È La@TeX{} ƒRƒ}
+ƒ“ƒh–¼‚ğ“ü—Í‚µ‚Ü‚·B‚±‚±‚Å‚àƒŠƒ^[ƒ“ƒL[‚Ì‚İ‚ÅŠ‡ŒÊ“à‚ÌƒfƒtƒHƒ‹ƒg’l‚ª‘I‘ğ‚³
+‚ê‚é‚Ù‚©A@samp{chapter}‚È‚Ç‚Ì‚æ‚¤‚È•p“x‚Ì‚‚¢–¼Ì“ü—Í‚É‚ÍƒXƒy[ƒXƒL[‚É‚æ
+‚é•âŠ®‹@”\‚ª—LŒø‚Å‚·B Ÿ‚ÉA@{@}‚Ì’†g‚Ì“ü—Í‚ğ‘£‚·A
 
 @example
         \section@{???@}:
 @end example
 
 @noindent 
-$B$H$$$&%W%m%s%W%H$,8=$l$k$N$G!"%;%/%7%g%s$N%?%$%H%k$J$I$rF~NO$7$^$9!#(B
-$B$?$H$($P!"(B
+‚Æ‚¢‚¤ƒvƒƒ“ƒvƒg‚ªŒ»‚ê‚é‚Ì‚ÅAƒZƒNƒVƒ‡ƒ“‚Ìƒ^ƒCƒgƒ‹‚È‚Ç‚ğ“ü—Í‚µ‚Ü‚·B
+‚½‚Æ‚¦‚ÎA
 
 @example
-        (C-v for view-section) \???@{@} (default documentstyle): section
-        \section@{???@}: $BL\E*(B
+        (C-v for view-section) \???@{@} (default documentclass): section
+        \section@{???@}: –Ú“I
 @end example
 
 @noindent 
-$B$N$h$&$KF~NO$7$?>l9g$O!"J8>OCf$K(B
+‚Ì‚æ‚¤‚É“ü—Í‚µ‚½ê‡‚ÍA•¶Í’†‚É
 
 @example
-        \section@{$BL\E*(B@}
+        \section@{–Ú“I@}
 @end example
 
 @noindent 
-$B$,A^F~$5$l!"(B
+‚ª‘}“ü‚³‚êA
 
 @example
         (C-v for view-section) \???@{@} (default section): vspace*
@@ -755,38 +756,38 @@ shell $B$KEO$9$N$G<!$N$h$&$K=q$1$P!"(Bghostview $B$J$I$r%W%l%t%e!<%"$K;H$&;~$
 @end example
 
 @noindent 
-$B$N$h$&$K(B@{@}$B$NCf?H$r>JN,$7$?$H$-$O!"(B
+‚Ì‚æ‚¤‚É@{@}‚Ì’†g‚ğÈ—ª‚µ‚½‚Æ‚«‚ÍA
 
 @example
         \vspace*@{@}
 @end example
 
 @noindent 
-$B$@$1$,A^F~$5$l!"2~9T$O$;$:%+!<%=%k$O<+F0E*$KCf3g8L$NFbB&$K0\F0$7$^$9!#(B
+‚¾‚¯‚ª‘}“ü‚³‚êA‰üs‚Í‚¹‚¸ƒJ[ƒ\ƒ‹‚Í©“®“I‚É’†Š‡ŒÊ‚Ì“à‘¤‚ÉˆÚ“®‚µ‚Ü‚·B
 
 @menu
-* 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B::  
-* Enclose section-type command::  $B3g$jJd40(B
-* Recursive completion::        $B:F5"Jd40(B
-* view-sectioning::             $B%;%/%7%g%s6h@Z$j$N%"%&%H%i%$%sI=<((B
+* 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh::  
+* Enclose section-type command::  Š‡‚è•âŠ®
+* Recursive completion::        Ä‹A•âŠ®
+* view-sectioning::             ƒZƒNƒVƒ‡ƒ“‹æØ‚è‚ÌƒAƒEƒgƒ‰ƒCƒ“•\¦
 @end menu
 
-@node 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B, Enclose section-type command, section$B7?Jd40(B, section$B7?Jd40(B
+@node 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh, Enclose section-type command, sectionŒ^•âŠ®, sectionŒ^•âŠ®
 @comment  node-name,  next,  previous,  up
-@subsection 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B
-@cindex $B0z?t(B[$B$R$-$9$&(B]
+@subsection 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh
+@cindex ˆø”[‚Ğ‚«‚·‚¤]
 
-  $B$H$3$m$G!"(B@samp{\addtolength@{\topmargin@}@{8mm@}} $B$J$I$N$h$&$K!"0z?t$rFs$D(B
-$B0J>e<h$k(B La@TeX{} $B%3%^%s%I$,$"$j$^$9!#$3$N$h$&$J%3%^%s%I$NJd40F~NO$K$O!"(B
-section $B7?Jd408F$S=P$7$K0z?t$rIU$1$F$/$@$5$$!#Nc$($P>e$N(B@samp{addtolength} 
-$B$NNc$G$"$l$P!"0z?t(B2$B$r;XDj$7$^$9!#$D$^$j!"(B
+  ‚Æ‚±‚ë‚ÅA@samp{\addtolength@{\topmargin@}@{8mm@}} ‚È‚Ç‚Ì‚æ‚¤‚ÉAˆø”‚ğ“ñ‚Â
+ˆÈãæ‚é La@TeX{} ƒRƒ}ƒ“ƒh‚ª‚ ‚è‚Ü‚·B‚±‚Ì‚æ‚¤‚ÈƒRƒ}ƒ“ƒh‚Ì•âŠ®“ü—Í‚É‚ÍA
+section Œ^•âŠ®ŒÄ‚Ño‚µ‚Éˆø”‚ğ•t‚¯‚Ä‚­‚¾‚³‚¢B—á‚¦‚Îã‚Ì@samp{addtolength} 
+‚Ì—á‚Å‚ ‚ê‚ÎAˆø”2‚ğw’è‚µ‚Ü‚·B‚Â‚Ü‚èA
 
 @example
-        C-u 2 [prefix] s   ($B$^$?$O!"(BESC 2 [prefix] s)
+        C-u 2 [prefix] s   (‚Ü‚½‚ÍAESC 2 [prefix] s)
 @end example
 
 @noindent 
-$B$H(B section $B7?Jd40$r8F$S=P$7$?8e!"(B
+‚Æ section Œ^•âŠ®‚ğŒÄ‚Ño‚µ‚½ŒãA
 
 @example
         (Ctrl-v for view-section) \???@{@} (default vspace*): addtolength
@@ -795,243 +796,243 @@ section $B7?Jd408F$S=P$7$K0z?t$rIU$1$F$/$@$5$$!#Nc$($P>e$N(B@samp{addtolength}
 @end example
 
 @noindent 
-$B$N$h$&$KF~NO$7$F$/$@$5$$!#:G=i$N(B addtolength $B$NItJ,$H!"Bh0l0z?t$G$"$k(B 
-\topmargin $B$NF~NO$OEvA3%9%Z!<%9$K$h$kJd40F~NO$,2DG=$G$9!#%f!<%6<-=q$KEPO?(B
-$B$5$l$k(B La@TeX{} $B%3%^%s%I$K$O!"$3$N0z?t$N?t$b3X=,$5$l$k$N$G!":G=i$NJd40$N;~(B
-$B0z?t$N?t$r;XDj$7$F5/F0$7$F$*$1$P!"0J8e$NJd40;~$K$O!"5-21$5$l$?8D?t$@$10z?t(B
-$B$rJ9$$$FMh$k$h$&$K$J$j$^$9!#$"$H$G0z?t$N8D?t$rJQ$($?$$;~$O!":F$S(B @kbd{C-u} 
-$B$rMQ$$$F8D?t$r;XDj$7D>$9$3$H$G!"<+F0E*$K<-=qCf$N0z?t$N8D?t$NItJ,$r99?7$7$^(B
-$B$9!#(B
-@cindex $B0z?t$N8D?t$rJQ$($k(B[$B$R$-$9$&$N$3$9$&$r$+$($k(B]
+‚Ì‚æ‚¤‚É“ü—Í‚µ‚Ä‚­‚¾‚³‚¢BÅ‰‚Ì addtolength ‚Ì•”•ª‚ÆA‘æˆêˆø”‚Å‚ ‚é 
+\topmargin ‚Ì“ü—Í‚Í“–‘RƒXƒy[ƒX‚É‚æ‚é•âŠ®“ü—Í‚ª‰Â”\‚Å‚·Bƒ†[ƒU«‘‚É“o˜^
+‚³‚ê‚é La@TeX{} ƒRƒ}ƒ“ƒh‚É‚ÍA‚±‚Ìˆø”‚Ì”‚àŠwK‚³‚ê‚é‚Ì‚ÅAÅ‰‚Ì•âŠ®‚Ì
+ˆø”‚Ì”‚ğw’è‚µ‚Ä‹N“®‚µ‚Ä‚¨‚¯‚ÎAˆÈŒã‚Ì•âŠ®‚É‚ÍA‹L‰¯‚³‚ê‚½ŒÂ”‚¾‚¯ˆø”
+‚ğ•·‚¢‚Ä—ˆ‚é‚æ‚¤‚É‚È‚è‚Ü‚·B‚ ‚Æ‚Åˆø”‚ÌŒÂ”‚ğ•Ï‚¦‚½‚¢‚ÍAÄ‚Ñ @kbd{C-u} 
+‚ğ—p‚¢‚ÄŒÂ”‚ğw’è‚µ’¼‚·‚±‚Æ‚ÅA©“®“I‚É«‘’†‚Ìˆø”‚ÌŒÂ”‚Ì•”•ª‚ğXV‚µ‚Ü
+‚·B
+@cindex ˆø”‚ÌŒÂ”‚ğ•Ï‚¦‚é[‚Ğ‚«‚·‚¤‚Ì‚±‚·‚¤‚ğ‚©‚¦‚é]
 
 
-@node Enclose section-type command, Recursive completion, 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B, section$B7?Jd40(B
-@subsection $B4{$K=q$$$?%F%-%9%H$r3g$k(B
-@cindex $B3g$k(B[$B$/$/$k(B]
+@node Enclose section-type command, Recursive completion, 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh, sectionŒ^•âŠ®
+@subsection Šù‚É‘‚¢‚½ƒeƒLƒXƒg‚ğŠ‡‚é
+@cindex Š‡‚é[‚­‚­‚é]
 
-  $B$^$?!"5/F0%3%^%s%I$N(B@kbd{s}$B$rBgJ8;z$KJQ$($F5/F0$9$k$H!"$"$i$+$8$a=q(B
-$B$$$?J8>O$r(B section $B7?%3%^%s%I$NBh0l0z?t$H$7$F3g$j$^$9!#(B
+  ‚Ü‚½A‹N“®ƒRƒ}ƒ“ƒh‚Ì@kbd{s}‚ğ‘å•¶š‚É•Ï‚¦‚Ä‹N“®‚·‚é‚ÆA‚ ‚ç‚©‚¶‚ß‘
+‚¢‚½•¶Í‚ğ section Œ^ƒRƒ}ƒ“ƒh‚Ì‘æˆêˆø”‚Æ‚µ‚ÄŠ‡‚è‚Ü‚·B
 
-@node Recursive completion, view-sectioning, Enclose section-type command, section$B7?Jd40(B
+@node Recursive completion, view-sectioning, Enclose section-type command, sectionŒ^•âŠ®
 @comment  node-name,  next,  previous,  up
-@subsection $B:F5"Jd40(B
-@cindex $B:F5"Jd40(B[$B$5$$$-$[$+$s(B]
+@subsection Ä‹A•âŠ®
+@cindex Ä‹A•âŠ®[‚³‚¢‚«‚Ù‚©‚ñ]
 
-  $B9bEY$J;H$$J}$K$J$k$+$b$7$l$^$;$s$,!"(Bsection$B7?Jd40$N0z?t$NF~NO;~$K$5$i$K(B
-$BJd40F~NO$rMxMQ$9$k$3$H$,$G$-$^$9(B(section/large/maketitle$B7?$K8B$k(B)$B!#(Bsection
-$B7?%3%^%s%I$N0z?t$K99$K(B La@TeX{} $B%3%^%s%I$,Mh$k>l9g$K$O%_%K%P%C%U%!$GLnD;$N(B
-$BJd40%-!<$r:F5"E*$KF~NO$9$k$3$H$G0z?t$NF~NO$b8zN(E*$K9T$J$($^$9!#(B
+  ‚“x‚Èg‚¢•û‚É‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñ‚ªAsectionŒ^•âŠ®‚Ìˆø”‚Ì“ü—Í‚É‚³‚ç‚É
+•âŠ®“ü—Í‚ğ—˜—p‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·(section/large/maketitleŒ^‚ÉŒÀ‚é)Bsection
+Œ^ƒRƒ}ƒ“ƒh‚Ìˆø”‚ÉX‚É La@TeX{} ƒRƒ}ƒ“ƒh‚ª—ˆ‚éê‡‚É‚Íƒ~ƒjƒoƒbƒtƒ@‚Å–ì’¹‚Ì
+•âŠ®ƒL[‚ğÄ‹A“I‚É“ü—Í‚·‚é‚±‚Æ‚Åˆø”‚Ì“ü—Í‚àŒø—¦“I‚És‚È‚¦‚Ü‚·B
 
-@node view-sectioning,  , Recursive completion, section$B7?Jd40(B
+@node view-sectioning,  , Recursive completion, sectionŒ^•âŠ®
 @comment  node-name,  next,  previous,  up
-@subsection $B%;%/%7%g%s6h@Z$j$N%"%&%H%i%$%sI=<((B
-@cindex $B%"%&%H%i%$%s(B[$B$"$&$H$i$$$s(B]
+@subsection ƒZƒNƒVƒ‡ƒ“‹æØ‚è‚ÌƒAƒEƒgƒ‰ƒCƒ“•\¦
+@cindex ƒAƒEƒgƒ‰ƒCƒ“[‚ ‚¤‚Æ‚ç‚¢‚ñ]
 
-  $BDL>o$N(Bsection$B7?Jd40$N;~$K%_%K%P%C%U%!$G(B@kbd{C-v}$B$r2!$9$H8=:_B8:_$9$k%;%/(B
-$B%7%g%s6h@Z$j%3%^%s%IA4$F$r(B @code{*Sectioning Lines*}$B$H$$$&%P%C%U%!$K0lMwI=(B
-$B<($7$^$9(B($B!V(B<<--$B!W$N$D$$$F$$$k9T$,$b$C$H$b6a$$%;%/%7%g%s6h@Z$j(B)$B!#$3$N;~%_%K(B
-$B%P%C%U%!$G(B@kbd{C-p}, @kbd{C-n} $B$r2!$9$H(B@samp{part}, @samp{chapter}, ...,
-@samp{subparagraph} $B$N%3%^%s%I$,O@M}3,AX$N9b$5$K$7$?$,$C$F>e2<$7$^$9!#$^$?!"(B
-@kbd{C-v}, @kbd{M-v} $B$r2!$9$H%;%/%7%g%s6h@Z$j0lMw%P%C%U%!$,%9%/%m!<%k$7!"(B
-$B?t;z$N(B@kbd{0}$B!A(B@kbd{7}$B$r2!$9$H$"$k9b$50J>e$N%;%/%7%g%s6h@Z$j$@$1$rA*$s$GI=(B
-$B<($7$^$9(B($B<B:]$K$d$C$F8+$l$PJ,$+$j$^$9(B)$B!#(B
+  ’Êí‚ÌsectionŒ^•âŠ®‚Ì‚Éƒ~ƒjƒoƒbƒtƒ@‚Å@kbd{C-v}‚ğ‰Ÿ‚·‚ÆŒ»İ‘¶İ‚·‚éƒZƒN
+ƒVƒ‡ƒ“‹æØ‚èƒRƒ}ƒ“ƒh‘S‚Ä‚ğ @code{*Sectioning Lines*}‚Æ‚¢‚¤ƒoƒbƒtƒ@‚Éˆê——•\
+¦‚µ‚Ü‚·(u<<--v‚Ì‚Â‚¢‚Ä‚¢‚és‚ª‚à‚Á‚Æ‚à‹ß‚¢ƒZƒNƒVƒ‡ƒ“‹æØ‚è)B‚±‚Ìƒ~ƒj
+ƒoƒbƒtƒ@‚Å@kbd{C-p}, @kbd{C-n} ‚ğ‰Ÿ‚·‚Æ@samp{part}, @samp{chapter}, ...,
+@samp{subparagraph} ‚ÌƒRƒ}ƒ“ƒh‚ª˜_—ŠK‘w‚Ì‚‚³‚É‚µ‚½‚ª‚Á‚Äã‰º‚µ‚Ü‚·B‚Ü‚½A
+@kbd{C-v}, @kbd{M-v} ‚ğ‰Ÿ‚·‚ÆƒZƒNƒVƒ‡ƒ“‹æØ‚èˆê——ƒoƒbƒtƒ@‚ªƒXƒNƒ[ƒ‹‚µA
+”š‚Ì@kbd{0}`@kbd{7}‚ğ‰Ÿ‚·‚Æ‚ ‚é‚‚³ˆÈã‚ÌƒZƒNƒVƒ‡ƒ“‹æØ‚è‚¾‚¯‚ğ‘I‚ñ‚Å•\
+¦‚µ‚Ü‚·(ÀÛ‚É‚â‚Á‚ÄŒ©‚ê‚Î•ª‚©‚è‚Ü‚·)B
 
-@code{*Sectioning Lines*}$B%P%C%U%!$O!"(B
+@code{*Sectioning Lines*}ƒoƒbƒtƒ@‚ÍA
 
 @table @kbd
 @item M-x YaTeX-section-overview
-        @dots{} $B%;%/%7%g%s6h@Z$j0lMw%P%C%U%!$r@8@.(B
+        @dots{} ƒZƒNƒVƒ‡ƒ“‹æØ‚èˆê——ƒoƒbƒtƒ@‚ğ¶¬
 @end table
 
-@cindex $B%;%/%7%g%s6h@Z$j0lMw%P%C%U%!(B[$B$;$/$7$h$s$/$-$j$$$A$i$s$O$D$U$"(B]
-$B$G:n@.$9$k$3$H$,$G$-$^$9!#$3$N%P%C%U%!$rA*Br$7G$0U$N9T$G%9%Z!<%9$r2!$9$H!"(B
-$B3:Ev$9$k%;%/%7%g%s6h@Z$j$N$"$kK\J8Cf$N>l=j$K%8%c%s%W$7$^$9!#$5$i$K!"F1%P%C(B
-$B%U%!$G(B @kbd{u} $B$r2!$9$H!"%=!<%9%F%-%9%H$NBP1~$9$k%;%/%7%g%s%3%^%s%I$,0l3,(B
-$BAX>e$,$j(B($BNc(B: subsection $B$,(B section $B$KJQ$o$k(B)$B!"(B@kbd{d}$B$r2!$9$H0l3,AX2<$,$j(B
-$B$^$9!#(B@code{*Sectioning Lines*}$B%P%C%U%!$K$"$k%;%/%7%g%s6h@Z$j$N9T$r%^!<%/(B
-$B$7$F$*$$$F(B@kbd{U}$B$r2!$9$H%j%8%g%sFb$N$b$N$KBP1~$9$k%=!<%9%F%-%9%H$N%;%/%7%g(B
-$B%s%3%^%s%I$9$Y$F$,0l3,AX>e$,$j!"(B@kbd{D}$B$r2!$9$H2<$,$j$^$9!#%;%/%7%g%s6h@Z(B
-$B$j0lMw%P%C%U%!$GMxMQ$G$-$k%-!<%3%^%s%I$K$O0J2<$N$b$N$,$"$j$^$9!#(B
+@cindex ƒZƒNƒVƒ‡ƒ“‹æØ‚èˆê——ƒoƒbƒtƒ@[‚¹‚­‚µ‚æ‚ñ‚­‚«‚è‚¢‚¿‚ç‚ñ‚Í‚Â‚Ó‚ ]
+‚Åì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚±‚Ìƒoƒbƒtƒ@‚ğ‘I‘ğ‚µ”CˆÓ‚Ìs‚ÅƒXƒy[ƒX‚ğ‰Ÿ‚·‚ÆA
+ŠY“–‚·‚éƒZƒNƒVƒ‡ƒ“‹æØ‚è‚Ì‚ ‚é–{•¶’†‚ÌêŠ‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B‚³‚ç‚ÉA“¯ƒoƒb
+ƒtƒ@‚Å @kbd{u} ‚ğ‰Ÿ‚·‚ÆAƒ\[ƒXƒeƒLƒXƒg‚Ì‘Î‰‚·‚éƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚ªˆêŠK
+‘wã‚ª‚è(—á: subsection ‚ª section ‚É•Ï‚í‚é)A@kbd{d}‚ğ‰Ÿ‚·‚ÆˆêŠK‘w‰º‚ª‚è
+‚Ü‚·B@code{*Sectioning Lines*}ƒoƒbƒtƒ@‚É‚ ‚éƒZƒNƒVƒ‡ƒ“‹æØ‚è‚Ìs‚ğƒ}[ƒN
+‚µ‚Ä‚¨‚¢‚Ä@kbd{U}‚ğ‰Ÿ‚·‚ÆƒŠƒWƒ‡ƒ““à‚Ì‚à‚Ì‚É‘Î‰‚·‚éƒ\[ƒXƒeƒLƒXƒg‚ÌƒZƒNƒVƒ‡
+ƒ“ƒRƒ}ƒ“ƒh‚·‚×‚Ä‚ªˆêŠK‘wã‚ª‚èA@kbd{D}‚ğ‰Ÿ‚·‚Æ‰º‚ª‚è‚Ü‚·BƒZƒNƒVƒ‡ƒ“‹æØ
+‚èˆê——ƒoƒbƒtƒ@‚Å—˜—p‚Å‚«‚éƒL[ƒRƒ}ƒ“ƒh‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
 
 @table @kbd
 @item SPC
-        @dots{} $BBP1~$9$k%=!<%99T$X%8%c%s%W(B
+        @dots{} ‘Î‰‚·‚éƒ\[ƒXs‚ÖƒWƒƒƒ“ƒv
 @item .
-        @dots{} $BBP1~$9$k%=!<%99T$rI=<((B
+        @dots{} ‘Î‰‚·‚éƒ\[ƒXs‚ğ•\¦
 @item u
-        @dots{} $B%+!<%=%k0LCV$KBP1~$9$k%;%/%7%g%s%3%^%s%I$r0l3,AX>e$2$k(B
+        @dots{} ƒJ[ƒ\ƒ‹ˆÊ’u‚É‘Î‰‚·‚éƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚ğˆêŠK‘wã‚°‚é
 @item d
-        @dots{} $B%+!<%=%k0LCV$KBP1~$9$k%;%/%7%g%s%3%^%s%I$r0l3,AX2<$2$k(B
+        @dots{} ƒJ[ƒ\ƒ‹ˆÊ’u‚É‘Î‰‚·‚éƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚ğˆêŠK‘w‰º‚°‚é
 @item U
-        @dots{} $B%^!<%/$7$?%;%/%7%g%s%3%^%s%I$r0l3,AX>e$2$k(B
+        @dots{} ƒ}[ƒN‚µ‚½ƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚ğˆêŠK‘wã‚°‚é
 @item D
-        @dots{} $B%^!<%/$7$?%;%/%7%g%s%3%^%s%I$r0l3,AX>e$2$k(B
-@item 0$B!A(B6
-        @dots{} $B%l%Y%k(B n $B0J2<$N%;%/%7%g%s%3%^%s%I$r1#$7$FI=<((B
+        @dots{} ƒ}[ƒN‚µ‚½ƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚ğˆêŠK‘wã‚°‚é
+@item 0`6
+        @dots{} ƒŒƒxƒ‹ n ˆÈ‰º‚ÌƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚ğ‰B‚µ‚Ä•\¦
 @end table
 
-@cindex $BO@M}3,AX(B[$B$m$s$j$+$$$=$&(B]
-@cindex $B%;%/%7%g%s6h@Z$j(B[$B$;$/$7$h$s$/$-$j(B]
-@cindex $B%8%c%s%W(B[$B$7$d$s$U(B]
+@cindex ˜_—ŠK‘w[‚ë‚ñ‚è‚©‚¢‚»‚¤]
+@cindex ƒZƒNƒVƒ‡ƒ“‹æØ‚è[‚¹‚­‚µ‚æ‚ñ‚­‚«‚è]
+@cindex ƒWƒƒƒ“ƒv[‚µ‚â‚ñ‚Ó]
 
-@node large$B7?Jd40(B, maketitle$B7?Jd40(B, section$B7?Jd40(B, Completion
+@node largeŒ^•âŠ®, maketitleŒ^•âŠ®, sectionŒ^•âŠ®, Completion
 @comment  node-name,  next,  previous,  up
-@section large$B7?Jd40(B
-@cindex large$B7?Jd40(B[large$B$+$?$[$+$s(B]
+@section largeŒ^•âŠ®
+@cindex largeŒ^•âŠ®[large‚©‚½‚Ù‚©‚ñ]
 @cindex prefix l
 
-  @code{@{\large @}} $B$N$h$&$J7A<0$NJd40$r(B large $B7?Jd40$H8F$V$3$H$K$7$^$9!#(B
+  @code{@{\large @}} ‚Ì‚æ‚¤‚ÈŒ`®‚Ì•âŠ®‚ğ large Œ^•âŠ®‚ÆŒÄ‚Ô‚±‚Æ‚É‚µ‚Ü‚·B
 
 @table @kbd
 @item [prefix] l
-        @dots{} large $B7?Jd403+;O(B
+        @dots{} large Œ^•âŠ®ŠJn
 @end table
 
 @noindent 
-$B$,(Blarge$B7?Jd40$N3+;O$G$9!#(B@kbd{[prefix] l} $B$r2!$9$H!"%_%K%P%C%U%!$K(B
+‚ªlargeŒ^•âŠ®‚ÌŠJn‚Å‚·B@kbd{[prefix] l} ‚ğ‰Ÿ‚·‚ÆAƒ~ƒjƒoƒbƒtƒ@‚É
 
 @example
         @{\??? @} (default large): 
 @end example
 
 @noindent 
-$B$HI=<($5$l$k$N$G!">e5-$N$b$N$HF1$8MWNN$GJd40F~NO$7$F2<$5$$!#Jd408uJd$KMQ0U(B
-$B$5$l$F$$$k$N$O!"(B@samp{footnotesize} $B$d(B @samp{huge} $B$N$h$&$JJ8;z%5%$%:;XDj(B
-$B;R$H!"(B@samp{bf}$B$d(B@samp{dg}$B$N$h$&$J%U%)%s%H;XDj;R$G$9!#(B
-@cindex $BJ8;z%5%$%:;XDj;R(B[$B$b$7$5$$$9$7$F$$$7(B]
-@cindex $B%U%)%s%H;XDj;R(B[$B$U$*$s$H$7$F$$$7(B]
+‚Æ•\¦‚³‚ê‚é‚Ì‚ÅAã‹L‚Ì‚à‚Ì‚Æ“¯‚¶—v—Ì‚Å•âŠ®“ü—Í‚µ‚Ä‰º‚³‚¢B•âŠ®Œó•â‚É—pˆÓ
+‚³‚ê‚Ä‚¢‚é‚Ì‚ÍA@samp{footnotesize} ‚â @samp{huge} ‚Ì‚æ‚¤‚È•¶šƒTƒCƒYw’è
+q‚ÆA@samp{bf}‚â@samp{dg}‚Ì‚æ‚¤‚ÈƒtƒHƒ“ƒgw’èq‚Å‚·B
+@cindex •¶šƒTƒCƒYw’èq[‚à‚µ‚³‚¢‚·‚µ‚Ä‚¢‚µ]
+@cindex ƒtƒHƒ“ƒgw’èq[‚Ó‚¨‚ñ‚Æ‚µ‚Ä‚¢‚µ]
 
-@subsection $B4{$K=q$$$?J8;z$r3g$k(B
-@cindex $B3g$k(B[$B$/$/$k(B]
+@subsection Šù‚É‘‚¢‚½•¶š‚ğŠ‡‚é
+@cindex Š‡‚é[‚­‚­‚é]
 
-  $B$^$?!"(Bbegin$B7?Jd40$N;~$HF1MM!"@h$K=q$$$F$7$^$C$?0lO"$NJ8>O$NJ8;z$N%5%$%:(B
-$B$rJQ$($?$$$H;W$&;~$,$"$j$^$9$,!"$=$N$h$&$J;~$O!"%5%$%:$dBg$-$5$rJQ$($?$$J8(B
-$B;z$NHO0O$r%^!<%/$7$F$+$i!"8F$S=P$7%-!<$r(B @kbd{[prefix] L} $B$H!"BgJ8;z$N(B L 
-$B$KJQ$($F8F$S=P$;$P!"$=$N%j%8%g%sA4BN$,!"%V%l!<%9$G0O$^$l$^$9!#(B
+  ‚Ü‚½AbeginŒ^•âŠ®‚Ì‚Æ“¯—lAæ‚É‘‚¢‚Ä‚µ‚Ü‚Á‚½ˆê˜A‚Ì•¶Í‚Ì•¶š‚ÌƒTƒCƒY
+‚ğ•Ï‚¦‚½‚¢‚Æv‚¤‚ª‚ ‚è‚Ü‚·‚ªA‚»‚Ì‚æ‚¤‚È‚ÍAƒTƒCƒY‚â‘å‚«‚³‚ğ•Ï‚¦‚½‚¢•¶
+š‚Ì”ÍˆÍ‚ğƒ}[ƒN‚µ‚Ä‚©‚çAŒÄ‚Ño‚µƒL[‚ğ @kbd{[prefix] L} ‚ÆA‘å•¶š‚Ì L 
+‚É•Ï‚¦‚ÄŒÄ‚Ño‚¹‚ÎA‚»‚ÌƒŠƒWƒ‡ƒ“‘S‘Ì‚ªAƒuƒŒ[ƒX‚ÅˆÍ‚Ü‚ê‚Ü‚·B
 
-@node maketitle$B7?Jd40(B, Arbitrary completion, large$B7?Jd40(B, Completion
+@node maketitleŒ^•âŠ®, Arbitrary completion, largeŒ^•âŠ®, Completion
 @comment  node-name,  next,  previous,  up
-@section maketitle$B7?Jd40(B
-@cindex maketitle$B7?Jd40(B[maketitle$B$+$?$[$+$s(B]
+@section maketitleŒ^•âŠ®
+@cindex maketitleŒ^•âŠ®[maketitle‚©‚½‚Ù‚©‚ñ]
 @cindex prefix m
 
-  @code{\maketitle} $B$N7A<0$NJd40$r(B maketitle $B7?Jd40$H8F$V$3$H$K$7$^$9!#(B
+  @code{\maketitle} ‚ÌŒ`®‚Ì•âŠ®‚ğ maketitle Œ^•âŠ®‚ÆŒÄ‚Ô‚±‚Æ‚É‚µ‚Ü‚·B
 
 @table @kbd
 @item [prefix] m
-        @dots{} maketitle $B7?Jd403+;O(B
+        @dots{} maketitle Œ^•âŠ®ŠJn
 @end table
 
 @noindent 
-$B$G!"(Bmaketitle $B7?Jd40$r3+;O$7$^$9!#Jd40$NMWNN$O:#$^$G$N$b$N$H$^$C$?$/F1$8$G(B
-$B$9!#(BLa@TeX{} $BMQ$N%3%^%s%IL>$,Jd408uJd$H$7$FMQ0U$5$l$F$$$^$9!#(B
+‚ÅAmaketitle Œ^•âŠ®‚ğŠJn‚µ‚Ü‚·B•âŠ®‚Ì—v—Ì‚Í¡‚Ü‚Å‚Ì‚à‚Ì‚Æ‚Ü‚Á‚½‚­“¯‚¶‚Å
+‚·BLa@TeX{} —p‚ÌƒRƒ}ƒ“ƒh–¼‚ª•âŠ®Œó•â‚Æ‚µ‚Ä—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·B
 
-@node Arbitrary completion, end$BJd40(B, maketitle$B7?Jd40(B, Completion
+@node Arbitrary completion, end•âŠ®, maketitleŒ^•âŠ®, Completion
 @comment  node-name,  next,  previous,  up
-@section $B?o;~Jd40(B
-@cindex $B?o;~Jd40(B[$B$9$$$7$[$+$s(B]
+@section •âŠ®
+@cindex •âŠ®[‚·‚¢‚µ‚Ù‚©‚ñ]
 @cindex prefix SPC
 
-  $B$5$F!":#$^$G=R$Y$?E57?E*$J(B La@TeX{} $B%3%^%s%I7A<0$NJd40F~NO$rMQ$$$:$K!":#(B
-$BF~NO$7$h$&$H$7$F$$$k(B La@TeX{} $B%3%^%s%I$rJ8=qCf$NG$0U$N0LCV$G?o;~Jd40$9$k$3(B
-$B$H$b$G$-$^$9!#(BLa@TeX{} $B%3%^%s%I(B($B@hF,$,(B\$B$G;O$^$k(B)$B$rF~NO$7$F$$$kESCf$G!"(B
+  ‚³‚ÄA¡‚Ü‚Åq‚×‚½“TŒ^“I‚È La@TeX{} ƒRƒ}ƒ“ƒhŒ`®‚Ì•âŠ®“ü—Í‚ğ—p‚¢‚¸‚ÉA¡
+“ü—Í‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚é La@TeX{} ƒRƒ}ƒ“ƒh‚ğ•¶‘’†‚Ì”CˆÓ‚ÌˆÊ’u‚Å•âŠ®‚·‚é‚±
+‚Æ‚à‚Å‚«‚Ü‚·BLa@TeX{} ƒRƒ}ƒ“ƒh(æ“ª‚ª\‚Ån‚Ü‚é)‚ğ“ü—Í‚µ‚Ä‚¢‚é“r’†‚ÅA
 
 @table @kbd
 @item [prefix] SPC
-        @dots{} $B?o;~Jd40(B
+        @dots{} •âŠ®
 @end table
 
 @noindent 
-$B$rF~NO$9$l$P!"A4$F$NJd408uJd$NCf$+$i0lCW$9$k$b$N$,A*$P$l%+!<%=%k0LCV$KA^F~(B
-$B$5$l$^$9!#(B
+‚ğ“ü—Í‚·‚ê‚ÎA‘S‚Ä‚Ì•âŠ®Œó•â‚Ì’†‚©‚çˆê’v‚·‚é‚à‚Ì‚ª‘I‚Î‚êƒJ[ƒ\ƒ‹ˆÊ’u‚É‘}“ü
+‚³‚ê‚Ü‚·B
 
-@node end$BJd40(B, Accent mark completion, Arbitrary completion, Completion
+@node end•âŠ®, Accent mark completion, Arbitrary completion, Completion
 @comment  node-name,  next,  previous,  up
-@section end$BJd40(B
-@cindex end$BJd40(B[end$B$[$+$s(B]
+@section end•âŠ®
+@cindex end•âŠ®[end‚Ù‚©‚ñ]
 @cindex prefix e
 
-  $B8=:_3+$$$?$^$^$N4D6-L>$r<+F0E*$K8!=P$7!"(B@code{\end@{$B4D6-L>(B@}}$B$rA^F~$7$^(B
-$B$9!#(Bbegin $B7?Jd40$rMQ$$$l$P4D6-$NJD$8K:$l$O$J$$$N$G$9$,!";~$K$O$D$$$D$$<j$G(B 
-@code{\begin@{$B4D6-L>(B@}} $B$rF~$l$F$7$^$$!"Ha$7$$;W$$$r$9$k$3$H$,$"$j$^$9!#$=(B
-$B$N$h$&$J;~$K$O5$$K$;$:B3$1$FJ8>O$rF~NO$7!"$7$+$k$N$A$K(B
+  Œ»İŠJ‚¢‚½‚Ü‚Ü‚ÌŠÂ‹«–¼‚ğ©“®“I‚ÉŒŸo‚µA@code{\end@{ŠÂ‹«–¼@}}‚ğ‘}“ü‚µ‚Ü
+‚·Bbegin Œ^•âŠ®‚ğ—p‚¢‚ê‚ÎŠÂ‹«‚Ì•Â‚¶–Y‚ê‚Í‚È‚¢‚Ì‚Å‚·‚ªA‚É‚Í‚Â‚¢‚Â‚¢è‚Å 
+@code{\begin@{ŠÂ‹«–¼@}} ‚ğ“ü‚ê‚Ä‚µ‚Ü‚¢A”ß‚µ‚¢v‚¢‚ğ‚·‚é‚±‚Æ‚ª‚ ‚è‚Ü‚·B‚»
+‚Ì‚æ‚¤‚È‚É‚Í‹C‚É‚¹‚¸‘±‚¯‚Ä•¶Í‚ğ“ü—Í‚µA‚µ‚©‚é‚Ì‚¿‚É
 
 @table @kbd
 @item [prefix] e
-        @dots{} end $BJd40(B
+        @dots{} end •âŠ®
 @end table
 
 @noindent 
-$B$H$9$k$3$H$G!"8=:_3+$$$F$$$k4D6-L>$G(B \end@{@} $B$,Jd$o$l$^$9!#(B
+‚Æ‚·‚é‚±‚Æ‚ÅAŒ»İŠJ‚¢‚Ä‚¢‚éŠÂ‹«–¼‚Å \end@{@} ‚ª•â‚í‚ê‚Ü‚·B
 
-@node Accent mark completion, Image completion, end$BJd40(B, Completion
+@node Accent mark completion, Image completion, end•âŠ®, Completion
 @comment  node-name,  next,  previous,  up
-@section $B%"%/%;%s%H5-9fJd40(B
-@cindex $B%"%/%;%s%H5-9fJd40(B[$B$"$/$;$s$H$-$3$&$[$+$s(B]
+@section ƒAƒNƒZƒ“ƒg‹L†•âŠ®
+@cindex ƒAƒNƒZƒ“ƒg‹L†•âŠ®[‚ ‚­‚¹‚ñ‚Æ‚«‚±‚¤‚Ù‚©‚ñ]
 @cindex prefix a
-@cindex $B2$J8(B[$B$*$&$U$s(B]
+@cindex ‰¢•¶[‚¨‚¤‚Ó‚ñ]
 
-  $B2$J8$N%"%/%;%s%H5-9f(B(@code{\`@{o@}}$B$J$I(B)$B$rF~NO$9$k;~$O!"(B
+  ‰¢•¶‚ÌƒAƒNƒZƒ“ƒg‹L†(@code{\`@{o@}}‚È‚Ç)‚ğ“ü—Í‚·‚é‚ÍA
 
 @table @kbd
 @item [prefix] a
-        @dots{} $B%"%/%;%s%H5-9fF~NO(B
+        @dots{} ƒAƒNƒZƒ“ƒg‹L†“ü—Í
 @end table
 
 @noindent 
-$B$r2!$9$H!"%_%K%P%C%U%!$K(B
+‚ğ‰Ÿ‚·‚ÆAƒ~ƒjƒoƒbƒtƒ@‚É
 
 @example
         1:` 2:' 3:^ 4:" 5:~ 6:= 7:. u v H t c d b
 @end example
 
 @noindent 
-$B$H$$$&%a%K%e!<$,=P$FMh$k$N$G!"?t;z!"$^$?$OBP1~$9$k5-9f(B/$B1Q;z$rF~NO(B
-$B$7$F2<$5$$!#$9$k$HJT=8%P%C%U%!$K!"(B
+‚Æ‚¢‚¤ƒƒjƒ…[‚ªo‚Ä—ˆ‚é‚Ì‚ÅA”šA‚Ü‚½‚Í‘Î‰‚·‚é‹L†/‰pš‚ğ“ü—Í
+‚µ‚Ä‰º‚³‚¢B‚·‚é‚Æ•ÒWƒoƒbƒtƒ@‚ÉA
 
 @example
         \`@{@}
 @end example
 
 @noindent 
-$B$,$"$i$o$l!"%+!<%=%k$,(B@{@}$BFb$K0LCV$9$k$N$G!"$5$i$K0lJ8;zF~NO$9$k;v$G!"(B
+‚ª‚ ‚ç‚í‚êAƒJ[ƒ\ƒ‹‚ª@{@}“à‚ÉˆÊ’u‚·‚é‚Ì‚ÅA‚³‚ç‚Éˆê•¶š“ü—Í‚·‚é–‚ÅA
 
 @example
         \`@{o@}
 @end example
 
 @noindent 
-$B$,40@.$5$l!"%+!<%=%k$O(B@{@}$B$N30$KLa$j$^$9!#(B
+‚ªŠ®¬‚³‚êAƒJ[ƒ\ƒ‹‚Í@{@}‚ÌŠO‚É–ß‚è‚Ü‚·B
 
 @node Image completion, Greek letter completion, Accent mark completion, Completion
 @comment  node-name,  next,  previous,  up
-@section $B?t<05-9f%$%a!<%8Jd40(B
-@cindex  $B?t<05-9f%$%a!<%8Jd40(B[$B$9$&$7$-$-$3$&$$$a$($7$[$+$s(B]
-@cindex $B%$%a!<%8Jd40(B[$B$$$a$($7$[$+$s(B]
+@section ”®‹L†ƒCƒ[ƒW•âŠ®
+@cindex  ”®‹L†ƒCƒ[ƒW•âŠ®[‚·‚¤‚µ‚«‚«‚±‚¤‚¢‚ß‚¦‚µ‚Ù‚©‚ñ]
+@cindex ƒCƒ[ƒW•âŠ®[‚¢‚ß‚¦‚µ‚Ù‚©‚ñ]
 @cindex ;
-@cindex $B?t<0%b!<%I(B[$B$9$&$7$-$b$*$H(B]
-@cindex $BLp0u(B[$B$d$7$k$7(B]
-@cindex $B&2(B[$B$7$/$^(B]
+@cindex ”®ƒ‚[ƒh[‚·‚¤‚µ‚«‚à‚¨‚Æ]
+@cindex –îˆó[‚â‚µ‚é‚µ]
+@cindex ƒ°[‚µ‚­‚Ü]
 @cindex leftarrow
-@cindex $B!g(B[$B$`$1$s$?$$(B]
+@cindex ‡[‚Ş‚¯‚ñ‚½‚¢]
 
-  $B<g$K?t<0%b!<%I$G;HMQ$5$l$k!"Lp0u$d&2$J$I$N5-9f$r5<;wE*$KI=8=$9$k%-!<F~NO(B
-$B$G!"(BLa@TeX{} $B%3%^%s%I$rF~NO$G$-$^$9!#$3$l$OLnD;<+?H$N!V?t<0%b!<%I!W$G$N$_(B
-$BF0:n$7$^$9!#LnD;$O%+!<%=%k$,(B@TeX{}$B$N?t<04D6-$NCf$K$"$k;~$K(B@kbd{;}$B$d!"(B
-@kbd{:}$B$KFC<l$J5!G=$r;}$?$;$^$9!#(B
+  å‚É”®ƒ‚[ƒh‚Åg—p‚³‚ê‚éA–îˆó‚âƒ°‚È‚Ç‚Ì‹L†‚ğ‹[—“I‚É•\Œ»‚·‚éƒL[“ü—Í
+‚ÅALa@TeX{} ƒRƒ}ƒ“ƒh‚ğ“ü—Í‚Å‚«‚Ü‚·B‚±‚ê‚Í–ì’¹©g‚Ìu”®ƒ‚[ƒhv‚Å‚Ì‚İ
+“®ì‚µ‚Ü‚·B–ì’¹‚ÍƒJ[ƒ\ƒ‹‚ª@TeX{}‚Ì”®ŠÂ‹«‚Ì’†‚É‚ ‚é‚É@kbd{;}‚âA
+@kbd{:}‚É“Áê‚È‹@”\‚ğ‚½‚¹‚Ü‚·B
 
-  $B$5$F!"Nc$($P!""+(B(leftarrow)$B$r(BASCII$BJ8;z$@$1$GI=8=$9$k>l9g!"0lHLE*$K$O!V(B<-$B!W(B
-$B$N$h$&$K$7$^$9$,!"$3$l$rMxMQ$7$F!"?t<05-9f%$%a!<%8F~NO%b!<%I$G(B 
-@code{\leftarrow}$B$rF~NO$9$k$K$O!"(B@kbd{;}($B%;%_%3%m%s(B)$B$rBG$C$F$+$i(B@kbd{<-}$B$H(B
-$BF~NO$7$^$9!#F1MM$K!"D9$$Lp0u"+(B-(long-leftarrow) $B$r(BASCII$BJ8;z$@$1$GI=8=$9$k(B
-$B>l9g!V(B<--$B!W$H$9$k$N$G!"(B@code{\longleftarrow}$B$rF~NO$9$k$?$a$K$O!"(B@kbd{;<--}
-$B$HF~NO$7$^$9!#$"$k$$$OL58BBg5-9f$r(BASCII$BJ8;z$@$1$GI=8=$9$k;~$O!V(Boo$B!W$N$h$&(B
-$B$K$9$k$3$H$+$i!"(B@code{\infty} $B$rF~NO$9$k;~$O!"(B@kbd{;oo}$B$H%-!<F~NO$7$^$9!#(B
+  ‚³‚ÄA—á‚¦‚ÎA©(leftarrow)‚ğASCII•¶š‚¾‚¯‚Å•\Œ»‚·‚éê‡Aˆê”Ê“I‚É‚Íu<-v
+‚Ì‚æ‚¤‚É‚µ‚Ü‚·‚ªA‚±‚ê‚ğ—˜—p‚µ‚ÄA”®‹L†ƒCƒ[ƒW“ü—Íƒ‚[ƒh‚Å 
+@code{\leftarrow}‚ğ“ü—Í‚·‚é‚É‚ÍA@kbd{;}(ƒZƒ~ƒRƒƒ“)‚ğ‘Å‚Á‚Ä‚©‚ç@kbd{<-}‚Æ
+“ü—Í‚µ‚Ü‚·B“¯—l‚ÉA’·‚¢–îˆó©-(long-leftarrow) ‚ğASCII•¶š‚¾‚¯‚Å•\Œ»‚·‚é
+ê‡u<--v‚Æ‚·‚é‚Ì‚ÅA@code{\longleftarrow}‚ğ“ü—Í‚·‚é‚½‚ß‚É‚ÍA@kbd{;<--}
+‚Æ“ü—Í‚µ‚Ü‚·B‚ ‚é‚¢‚Í–³ŒÀ‘å‹L†‚ğASCII•¶š‚¾‚¯‚Å•\Œ»‚·‚é‚Íuoov‚Ì‚æ‚¤
+‚É‚·‚é‚±‚Æ‚©‚çA@code{\infty} ‚ğ“ü—Í‚·‚é‚ÍA@kbd{;oo}‚ÆƒL[“ü—Í‚µ‚Ü‚·B
 
-  $B$3$l$i$NA`:n$r$^$H$a$k$H<!$N$h$&$K$J$j$^$9!#(B
+  ‚±‚ê‚ç‚Ì‘€ì‚ğ‚Ü‚Æ‚ß‚é‚ÆŸ‚Ì‚æ‚¤‚É‚È‚è‚Ü‚·B
 
 @example
-INPUT                   $BF~NO$5$l$k(B La@TeX{} $B%3%^%s%I(B
+INPUT                   “ü—Í‚³‚ê‚é La@TeX{} ƒRƒ}ƒ“ƒh
 ; < -                   @code{\leftarrow}
 ; < - -                 @code{\longleftarrow}
 ; < - - >               @code{\longleftrightarrow}
@@ -1041,86 +1042,86 @@ INPUT                   $BF~NO$5$l$k(B La@TeX{} $B%3%^%s%I(B
 
 
 @noindent 
-  $B$$$:$l$N>l9g$b!"%$%a!<%8F~NO$r9T$C$F$$$kESCf$GK>$_$N$b$N$,%P%C%U%!(B
-$B$KI=<($5$l$?$J$i!"$=$3$G%$%a!<%8F~NO$r;_$a$F<!$NJT=8F0:n$K0\$C$F$b(B
-$B9=$$$^$;$s!#(B
+  ‚¢‚¸‚ê‚Ìê‡‚àAƒCƒ[ƒW“ü—Í‚ğs‚Á‚Ä‚¢‚é“r’†‚Å–]‚İ‚Ì‚à‚Ì‚ªƒoƒbƒtƒ@
+‚É•\¦‚³‚ê‚½‚È‚çA‚»‚±‚ÅƒCƒ[ƒW“ü—Í‚ğ~‚ß‚ÄŸ‚Ì•ÒW“®ì‚ÉˆÚ‚Á‚Ä‚à
+\‚¢‚Ü‚¹‚ñB
 
-@cindex ;$B<+?H(B[;$B$7$7$s(B]
-  $B?t<04D6-Cf$G(B@samp{;}$B<+?H$rF~NO$9$k$K$O(B@kbd{;;}$B$N$h$&$K$7$^$9!#%$%a!<%8(B
-$BF~NO$NESCf$G(BTAB$B$r2!$9$H!"$=$l$^$GF~NO$7$?J8;z$G;O$^$k$b$N0lMw$,I=<($5$l$^(B
-$B$9!#$3$3$GL\E*$N(B La@TeX{} $B%3%^%s%I$^$G%+!<%=%k$r0\F0$7:FEY(BTAB$B$r2!$9$3$H$G(B
-$B$=$N(B La@TeX{} $B%3%^%s%I$,%P%C%U%!$KA^F~$5$l$^$9!#(B
+@cindex ;©g[;‚µ‚µ‚ñ]
+  ”®ŠÂ‹«’†‚Å@samp{;}©g‚ğ“ü—Í‚·‚é‚É‚Í@kbd{;;}‚Ì‚æ‚¤‚É‚µ‚Ü‚·BƒCƒ[ƒW
+“ü—Í‚Ì“r’†‚ÅTAB‚ğ‰Ÿ‚·‚ÆA‚»‚ê‚Ü‚Å“ü—Í‚µ‚½•¶š‚Ån‚Ü‚é‚à‚Ìˆê——‚ª•\¦‚³‚ê‚Ü
+‚·B‚±‚±‚Å–Ú“I‚Ì La@TeX{} ƒRƒ}ƒ“ƒh‚Ü‚ÅƒJ[ƒ\ƒ‹‚ğˆÚ“®‚µÄ“xTAB‚ğ‰Ÿ‚·‚±‚Æ‚Å
+‚»‚Ì La@TeX{} ƒRƒ}ƒ“ƒh‚ªƒoƒbƒtƒ@‚É‘}“ü‚³‚ê‚Ü‚·B
 
-  $B$I$N%-!<F~NO$K$I$N5-9f$,BP1~$7$F$$$k$+A4$FCN$j$?$$;~$O!"(B@kbd{;}$B$r2!$7$?(B
-$BD>8e$K(BTAB$B$r2!$7$F$/$@$5$$!#0J2<$NNc$O!"(B@kbd{;<}$B$H2!$7$?8e$K(BTAB$B$r2!$7$?$b$N(B
-$B$G$9!#(B
+  ‚Ç‚ÌƒL[“ü—Í‚É‚Ç‚Ì‹L†‚ª‘Î‰‚µ‚Ä‚¢‚é‚©‘S‚Ä’m‚è‚½‚¢‚ÍA@kbd{;}‚ğ‰Ÿ‚µ‚½
+’¼Œã‚ÉTAB‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢BˆÈ‰º‚Ì—á‚ÍA@kbd{;<}‚Æ‰Ÿ‚µ‚½Œã‚ÉTAB‚ğ‰Ÿ‚µ‚½‚à‚Ì
+‚Å‚·B
 
 @example
 KEY             LaTeX sequence          sign
-<               \leq                    $B!e(B
-<<              \ll                     $B!T(B
-<-              \leftarrow              $B"+(B
+<               \leq                    …
+<<              \ll                     s
+<-              \leftarrow              ©
 <=              \Leftarrow              <=
 @end example
 
-$B:8$+$i(B[$BF~NO%-!<(B]$B!"(B[$BBP1~$9$k(B La@TeX{} $B%3%^%s%I(B]$B!"(B[($B5<;w(B)$B5-9f?^<((B]$B!"$H(B
-$B$$$&=g$G%a%K%e!<$,=P$FMh$k$N$G!"$h$/;H$&$b$N$r3P$($F$*$/$HNI$$$G$7$g(B
-$B$&!#$b$N$K$h$C$F$O(BASCII$BJ8;z$GI=8=$9$k$3$H$,:$Fq$J$N$G!"$"$^$j3P$((B
-$B$d$9$$%-!<JB$S$G$O$J$$$b$N$,$"$k$G$7$g$&$+$i!"$=$N$h$&$J>l9g$O(B 
-\maketitle $B7?Jd40$GF~NO$9$k$+!"0J2<$K=R$Y$kBP1~I=$N@_Dj$r9T$C$FC1(B
-$B=c$J%-!<JB$S$N$b$N$r@_Dj$9$k$HNI$$$G$7$g$&!#(B
+¶‚©‚ç[“ü—ÍƒL[]A[‘Î‰‚·‚é La@TeX{} ƒRƒ}ƒ“ƒh]A[(‹[—)‹L†}¦]A‚Æ
+‚¢‚¤‡‚Åƒƒjƒ…[‚ªo‚Ä—ˆ‚é‚Ì‚ÅA‚æ‚­g‚¤‚à‚Ì‚ğŠo‚¦‚Ä‚¨‚­‚Æ—Ç‚¢‚Å‚µ‚å
+‚¤B‚à‚Ì‚É‚æ‚Á‚Ä‚ÍASCII•¶š‚Å•\Œ»‚·‚é‚±‚Æ‚ª¢“ï‚È‚Ì‚ÅA‚ ‚Ü‚èŠo‚¦
+‚â‚·‚¢ƒL[•À‚Ñ‚Å‚Í‚È‚¢‚à‚Ì‚ª‚ ‚é‚Å‚µ‚å‚¤‚©‚çA‚»‚Ì‚æ‚¤‚Èê‡‚Í 
+\maketitle Œ^•âŠ®‚Å“ü—Í‚·‚é‚©AˆÈ‰º‚Éq‚×‚é‘Î‰•\‚Ìİ’è‚ğs‚Á‚Ä’P
+ƒ‚ÈƒL[•À‚Ñ‚Ì‚à‚Ì‚ğİ’è‚·‚é‚Æ—Ç‚¢‚Å‚µ‚å‚¤B
 
-  $BF~NO%-!<$H(B    La@TeX{} $B%3%^%s%I!"5-9f$NBP1~I=$r8D?ME*$K@_Dj$7$?$$>l9g$O(B 
-Emacs-Lisp $BJQ?t(B @code{YaTeX-math-sign-alist-private}  $B$KDj5A$7$F$/$@$5$$!#(B
-$B$=$NFbMF$H%G%U%)%k%H$N$b$N$r9g$o$;$?$b$N$,BP1~I=$H$7$F;HMQ$5$l$^$9(B(private
-$B$NJ}$,M%@h$5$l$k(B)$B!#$J$*!"$3$NJQ?t$N9=B$$K$D$$$F$O(B @file{yatexmth.el}  $B$r;2(B
-$B>H$7$F$/$@$5$$!#(B
+  “ü—ÍƒL[‚Æ    La@TeX{} ƒRƒ}ƒ“ƒhA‹L†‚Ì‘Î‰•\‚ğŒÂl“I‚Éİ’è‚µ‚½‚¢ê‡‚Í 
+Emacs-Lisp •Ï” @code{YaTeX-math-sign-alist-private}  ‚É’è‹`‚µ‚Ä‚­‚¾‚³‚¢B
+‚»‚Ì“à—e‚ÆƒfƒtƒHƒ‹ƒg‚Ì‚à‚Ì‚ğ‡‚í‚¹‚½‚à‚Ì‚ª‘Î‰•\‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·(private
+‚Ì•û‚ª—Dæ‚³‚ê‚é)B‚È‚¨A‚±‚Ì•Ï”‚Ì\‘¢‚É‚Â‚¢‚Ä‚Í @file{yatexmth.el}  ‚ğQ
+Æ‚µ‚Ä‚­‚¾‚³‚¢B
 @cindex YaTeX-math-sign-alist-private
 
 @node Greek letter completion,  , Image completion, Completion
 @comment  node-name,  next,  previous,  up
-@section $B%.%j%7%cJ8;zJd40(B
-@cindex $B%.%j%7%cJ8;zJd40(B[$B$-$j$7$d$b$7$[$+$s(B]
+@section ƒMƒŠƒVƒƒ•¶š•âŠ®
+@cindex ƒMƒŠƒVƒƒ•¶š•âŠ®[‚«‚è‚µ‚â‚à‚µ‚Ù‚©‚ñ]
 @cindex :
 
-  $B$b$&0l$D!"?t<04D6-Cf$G(B@kbd{:}$B$r2!$9$H%.%j%7%cJ8;zF~NO%b!<%I$KF~$j$^$9!#(B
-@kbd{:}$B$r2!$7$?D>8e$K(B@kbd{a}$B$r2!$9$H(B@code{\alpha}$B$,!"(B@kbd{g} $B$r2!$9$H(B 
-@code{\gamma}$B$,!"$J$I%"%k%U%!%Y%C%H$KBP1~$7$?%.%j%7%cJ8;z$,A^F~$5$l$^$9!#(B
-$BA`:nJ}K!$O(B;$B$N?t<05-9fJd40$H$^$C$?$/F1$8$G$9!#$^$:$O(B@kbd{:}$B$ND>8e$K(B
-TAB$B$r2!$7$F$I$N%"%k%U%!%Y%C%H$K$I$N%.%j%7%cJ8;z$,BP1~$7$F$$$k$+D4$Y$F$_$F(B
-$B$/$@$5$$!#(B
+  ‚à‚¤ˆê‚ÂA”®ŠÂ‹«’†‚Å@kbd{:}‚ğ‰Ÿ‚·‚ÆƒMƒŠƒVƒƒ•¶š“ü—Íƒ‚[ƒh‚É“ü‚è‚Ü‚·B
+@kbd{:}‚ğ‰Ÿ‚µ‚½’¼Œã‚É@kbd{a}‚ğ‰Ÿ‚·‚Æ@code{\alpha}‚ªA@kbd{g} ‚ğ‰Ÿ‚·‚Æ 
+@code{\gamma}‚ªA‚È‚ÇƒAƒ‹ƒtƒ@ƒxƒbƒg‚É‘Î‰‚µ‚½ƒMƒŠƒVƒƒ•¶š‚ª‘}“ü‚³‚ê‚Ü‚·B
+‘€ì•û–@‚Í;‚Ì”®‹L†•âŠ®‚Æ‚Ü‚Á‚½‚­“¯‚¶‚Å‚·B‚Ü‚¸‚Í@kbd{:}‚Ì’¼Œã‚É
+TAB‚ğ‰Ÿ‚µ‚Ä‚Ç‚ÌƒAƒ‹ƒtƒ@ƒxƒbƒg‚É‚Ç‚ÌƒMƒŠƒVƒƒ•¶š‚ª‘Î‰‚µ‚Ä‚¢‚é‚©’²‚×‚Ä‚İ‚Ä
+‚­‚¾‚³‚¢B
 
-  @kbd{;}$B$H(B@kbd{:}$B$r?t<04D6-Cf$G2!$7$F$$$k$K$b$+$+$o$i$:!"%$%a!<%8Jd40$,F/(B
-$B$+$J$$>l9g$O!"(B@kbd{C-u ;}$B$N$h$&$K(B universal-argument $B$r$D$1$F%-!<$r2!$9$3(B
-$B$H$K$h$j!"6/@)E*$K%$%a!<%8Jd40$KF~$k$3$H$,$G$-$^$9!#$^$?!"$3$N;~$K$I$N$h$&(B
-$B$J>uBV$G?t<04D6-FbH=Dj$K<:GT$7$?$+$r$4O"Mm2<$5$$!#(B
+  @kbd{;}‚Æ@kbd{:}‚ğ”®ŠÂ‹«’†‚Å‰Ÿ‚µ‚Ä‚¢‚é‚É‚à‚©‚©‚í‚ç‚¸AƒCƒ[ƒW•âŠ®‚ª“­
+‚©‚È‚¢ê‡‚ÍA@kbd{C-u ;}‚Ì‚æ‚¤‚É universal-argument ‚ğ‚Â‚¯‚ÄƒL[‚ğ‰Ÿ‚·‚±
+‚Æ‚É‚æ‚èA‹­§“I‚ÉƒCƒ[ƒW•âŠ®‚É“ü‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚Ü‚½A‚±‚Ì‚É‚Ç‚Ì‚æ‚¤
+‚Èó‘Ô‚Å”®ŠÂ‹«“à”»’è‚É¸”s‚µ‚½‚©‚ğ‚²˜A—‰º‚³‚¢B
 
 @node Local dictionary, Commenting out, Completion, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B%m!<%+%k<-=q(B
-@cindex $B%m!<%+%k<-=q(B[$B$m$*$+$k$7$7$h(B]
+@chapter ƒ[ƒJƒ‹«‘
+@cindex ƒ[ƒJƒ‹«‘[‚ë‚¨‚©‚é‚µ‚µ‚æ]
 @cindex .yatexrc
 
-  $BJd40F~NOMQ$N8uJd$O;0<oN`$N<-=q$+$i9=@.$5$l$F$$$^$9!#0l$D$O(B
-@file{yatex.el}$B$KAH$_9~$^$l$?!VI8=`<-=q!W!"$b$&0l$D$O%f!<%6$,8D?ME*$K>oMQ(B
-$B$9$k%3%^%s%I$rJ]B8$9$k!V%f!<%6<-=q!W!"$=$7$F$b$&$R$H$D$O$"$k%G%#%l%/%H%j$G(B
-$B$N$_M-8z$J%3%^%s%I$rJ]B8$9$k!V%m!<%+%k<-=q!W$G$9!#(B
+  •âŠ®“ü—Í—p‚ÌŒó•â‚ÍOí—Ş‚Ì«‘‚©‚ç\¬‚³‚ê‚Ä‚¢‚Ü‚·Bˆê‚Â‚Í
+@file{yatex.el}‚É‘g‚İ‚Ü‚ê‚½u•W€«‘vA‚à‚¤ˆê‚Â‚Íƒ†[ƒU‚ªŒÂl“I‚Éí—p
+‚·‚éƒRƒ}ƒ“ƒh‚ğ•Û‘¶‚·‚éuƒ†[ƒU«‘vA‚»‚µ‚Ä‚à‚¤‚Ğ‚Æ‚Â‚Í‚ ‚éƒfƒBƒŒƒNƒgƒŠ‚Å
+‚Ì‚İ—LŒø‚ÈƒRƒ}ƒ“ƒh‚ğ•Û‘¶‚·‚éuƒ[ƒJƒ‹«‘v‚Å‚·B
 
-  $BJd40F~NO;~$K?7$7$$C18l$rF~$l$?>l9g$K!"$=$NC18l$r$I$N<-=q$KF~$l$k$+J9$$$F(B
-$BMh$^$9!#(B
+  •âŠ®“ü—Í‚ÉV‚µ‚¢’PŒê‚ğ“ü‚ê‚½ê‡‚ÉA‚»‚Ì’PŒê‚ğ‚Ç‚Ì«‘‚É“ü‚ê‚é‚©•·‚¢‚Ä
+—ˆ‚Ü‚·B
 
 @example
   `foo' is not in table. Register into: U)serDic L)ocalDic N)one D)iscard
 @end example
 
 @noindent 
-$B$H$$$&%W%m%s%W%H$KBP$7!"(B@kbd{u}$B$HEz$($k$H!V%f!<%6<-=q!W$r!"(B@kbd{l}$B$HEz$($k(B
-$B$H%m!<%+%k<-=q$r99?7$7!"(B@kbd{n}$B$HEz$($k$H<-=q%U%!%$%k$O99?7$;$:8=:_$N(BEmacs
-$B%;%C%7%g%s$N$_M-8z$JC18l$H$7!"(B@kbd{d}$B$HEz$($k$H?7$?$JC18l$r3X=,$;$:$K<N$F(B
-$B$k$3$H$K$J$j$^$9!#(B
+‚Æ‚¢‚¤ƒvƒƒ“ƒvƒg‚É‘Î‚µA@kbd{u}‚Æ“š‚¦‚é‚Æuƒ†[ƒU«‘v‚ğA@kbd{l}‚Æ“š‚¦‚é
+‚Æƒ[ƒJƒ‹«‘‚ğXV‚µA@kbd{n}‚Æ“š‚¦‚é‚Æ«‘ƒtƒ@ƒCƒ‹‚ÍXV‚¹‚¸Œ»İ‚ÌEmacs
+ƒZƒbƒVƒ‡ƒ“‚Ì‚İ—LŒø‚È’PŒê‚Æ‚µA@kbd{d}‚Æ“š‚¦‚é‚ÆV‚½‚È’PŒê‚ğŠwK‚¹‚¸‚ÉÌ‚Ä
+‚é‚±‚Æ‚É‚È‚è‚Ü‚·B
 
-  $B$b$7!"%m!<%+%k<-=q$N5!G=$O$$$i$:!"A4$F%f!<%6<-=q$N99?7$N$_$G$h$$$H8@$&>l(B
-$B9g$K$O(B@file{~/.emacs}$B$J$I$G!"(B
+  ‚à‚µAƒ[ƒJƒ‹«‘‚Ì‹@”\‚Í‚¢‚ç‚¸A‘S‚Äƒ†[ƒU«‘‚ÌXV‚Ì‚İ‚Å‚æ‚¢‚ÆŒ¾‚¤ê
+‡‚É‚Í@file{~/.emacs}‚È‚Ç‚ÅA
 @cindex YaTeX-nervous
 
 @lisp
@@ -1128,335 +1129,335 @@ TAB$B$r2!$7$F$I$N%"%k%U%!%Y%C%H$K$I$N%.%j%7%cJ8;z$,BP1~$7$F$$$k$+D4$Y$F$_$F(B
 @end lisp
 
 @noindent 
-$B$H$7$F2<$5$$!#(B
+‚Æ‚µ‚Ä‰º‚³‚¢B
 
 @node Commenting out, Cursor jump, Local dictionary, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B%3%a%s%H%"%&%H(B
-@cindex $B%3%a%s%H%"%&%H(B[$B$3$a$s$H$"$&$H(B]
+@chapter ƒRƒƒ“ƒgƒAƒEƒg
+@cindex ƒRƒƒ“ƒgƒAƒEƒg[‚±‚ß‚ñ‚Æ‚ ‚¤‚Æ]
 @cindex prefix <
 @cindex prefix >
 @cindex prefix .
 @cindex prefix ,
 
 
-  La@TeX{}$B$NJT=8$K$O;n9T:x8m$,$D$-$b$N$G$9!#$"$kItJ,$r0l3g$G%3%a%s%H%"%&%H(B
-$B$7$?$j!"%3%a%s%H$r30$7$?$j$7$?$$$3$H$,$"$j$^$9!#(B
+  La@TeX{}‚Ì•ÒW‚É‚ÍsöŒë‚ª‚Â‚«‚à‚Ì‚Å‚·B‚ ‚é•”•ª‚ğˆêŠ‡‚ÅƒRƒƒ“ƒgƒAƒEƒg
+‚µ‚½‚èAƒRƒƒ“ƒg‚ğŠO‚µ‚½‚è‚µ‚½‚¢‚±‚Æ‚ª‚ ‚è‚Ü‚·B
 
 @table @kbd
 @item [prefix] >
-        @dots{} $B%j%8%g%s$r(B % $B$G%3%a%s%H%"%&%H(B
+        @dots{} ƒŠƒWƒ‡ƒ“‚ğ % ‚ÅƒRƒƒ“ƒgƒAƒEƒg
 @item [prefix] <
-        @dots{} $B%j%8%g%s$N(B % $B$N%3%a%s%H$r30$9(B
+        @dots{} ƒŠƒWƒ‡ƒ“‚Ì % ‚ÌƒRƒƒ“ƒg‚ğŠO‚·
 @end table
 
 @noindent 
-$B$O!"$"$i$+$8$a@_Dj$7$?%j%8%g%s$KBP$7$F$NA`:n!"(B
+‚ÍA‚ ‚ç‚©‚¶‚ßİ’è‚µ‚½ƒŠƒWƒ‡ƒ“‚É‘Î‚µ‚Ä‚Ì‘€ìA
 
 @table @kbd
 @item [prefix] .
-        @dots{} $B8=:_$N%Q%i%0%i%U$r%3%a%s%H%"%&%H(B
+        @dots{} Œ»İ‚Ìƒpƒ‰ƒOƒ‰ƒt‚ğƒRƒƒ“ƒgƒAƒEƒg
 @item [prefix] ,
-        @dots{} $B8=:_$N%Q%i%0%i%U$N%3%a%s%H$r30$9(B
+        @dots{} Œ»İ‚Ìƒpƒ‰ƒOƒ‰ƒt‚ÌƒRƒƒ“ƒg‚ğŠO‚·
 @end table
 
 @noindent 
-$B$O!"%+!<%=%k$N0LCV$9$k%Q%i%0%i%UA4BN$KBP$7$F$NA`:n$G$9!#$J$*!"$3$3$G$$$&(B
-$B!V%Q%i%0%i%U!W$O(B (@code{mark-paragraph}) $B4X?t$K$h$j%^!<%/$5$l$kHO0O$r;X$7(B
-$B$^$9(B($BI8=`@_Dj$G(B@kbd{ESC h}$B$K%P%$%s%I$5$l$F$$$k(B)$B!#$J$*!"4{$K(B@code{%}$B$G%3%a(B
-$B%s%H%"%&%H$5$l$F$$$k%Q%i%0%i%U$KBP$7$F7+$jJV$7%Q%i%0%i%U$N%3%a%s%H$r;HMQ$7(B
-$B$?>l9g$NF0:n$OJ]>Z$7$^$;$s$N$G8fCm0U$/$@$5$$!#(B
+‚ÍAƒJ[ƒ\ƒ‹‚ÌˆÊ’u‚·‚éƒpƒ‰ƒOƒ‰ƒt‘S‘Ì‚É‘Î‚µ‚Ä‚Ì‘€ì‚Å‚·B‚È‚¨A‚±‚±‚Å‚¢‚¤
+uƒpƒ‰ƒOƒ‰ƒtv‚Í (@code{mark-paragraph}) ŠÖ”‚É‚æ‚èƒ}[ƒN‚³‚ê‚é”ÍˆÍ‚ğw‚µ
+‚Ü‚·(•W€İ’è‚Å@kbd{ESC h}‚ÉƒoƒCƒ“ƒh‚³‚ê‚Ä‚¢‚é)B‚È‚¨AŠù‚É@code{%}‚ÅƒRƒ
+ƒ“ƒgƒAƒEƒg‚³‚ê‚Ä‚¢‚éƒpƒ‰ƒOƒ‰ƒt‚É‘Î‚µ‚ÄŒJ‚è•Ô‚µƒpƒ‰ƒOƒ‰ƒt‚ÌƒRƒƒ“ƒg‚ğg—p‚µ
+‚½ê‡‚Ì“®ì‚Í•ÛØ‚µ‚Ü‚¹‚ñ‚Ì‚ÅŒä’ˆÓ‚­‚¾‚³‚¢B
 
-  $B$5$F!"J8>O$KBP$7$F$@$1$G$J$/!";~$K$O(B@code{\begin}, @code{\end} $B<+BN$KBP(B
-$B$7$F$b%3%a%s%H%"%&%H$NA`:n$r$7$?$$$H$-$,$"$j$^$9!#$3$N$h$&$J$H$-$O!"(B
-@code{\begin@{@}} $B$"$k$$$O(B @code{\end@{@}} $B$N9T$K%+!<%=%k$r9g$o$;!"(B
+  ‚³‚ÄA•¶Í‚É‘Î‚µ‚Ä‚¾‚¯‚Å‚È‚­A‚É‚Í@code{\begin}, @code{\end} ©‘Ì‚É‘Î
+‚µ‚Ä‚àƒRƒƒ“ƒgƒAƒEƒg‚Ì‘€ì‚ğ‚µ‚½‚¢‚Æ‚«‚ª‚ ‚è‚Ü‚·B‚±‚Ì‚æ‚¤‚È‚Æ‚«‚ÍA
+@code{\begin@{@}} ‚ ‚é‚¢‚Í @code{\end@{@}} ‚Ìs‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹A
 
 @table @kbd
 @item [prefix] >
-        @dots{} @code{\begin@{@}}$B!A(B@code{\end@{@}} $BA4$F%3%a%s%H%"%&%H(B
+        @dots{} @code{\begin@{@}}`@code{\end@{@}} ‘S‚ÄƒRƒƒ“ƒgƒAƒEƒg
 @item [prefix] <
-        @dots{} @code{\begin@{@}}$B!A(B@code{\end@{@}} $BA4$F%3%a%s%H$r30$9(B
+        @dots{} @code{\begin@{@}}`@code{\end@{@}} ‘S‚ÄƒRƒƒ“ƒg‚ğŠO‚·
 @end table
 
 @noindent 
-$B$H$9$k$3$H$G!"(B@code{\begin$B!A(B\end}$B$G0O$^$l$k4D6-A4$F$KBP$7$F%3%a%s%HA`:n$7!"(B
+‚Æ‚·‚é‚±‚Æ‚ÅA@code{\begin`\end}‚ÅˆÍ‚Ü‚ê‚éŠÂ‹«‘S‚Ä‚É‘Î‚µ‚ÄƒRƒƒ“ƒg‘€ì‚µA
 
 @table @kbd
 @item [prefix] .
-        @dots{} @code{\begin@{@}} $B$H(B @code{\end@{@}} $B$r%3%a%s%H%"%&%H(B
+        @dots{} @code{\begin@{@}} ‚Æ @code{\end@{@}} ‚ğƒRƒƒ“ƒgƒAƒEƒg
 @item [prefix] ,
-        @dots{} @code{\begin@{@}} $B$H(B @code{\end@{@}} $B$N%3%a%s%H$r30$9(B
+        @dots{} @code{\begin@{@}} ‚Æ @code{\end@{@}} ‚ÌƒRƒƒ“ƒg‚ğŠO‚·
 @end table
 
-$B$O!"BP1~$9$k(B @code{\begin} $B$H(B @code{\end} 2$B9T$@$1$r!"%3%a%s%HA`:n$NBP>]$H(B
-$B$7$^$9!#%j%8%g%s$r%3%a%s%H%"%&%H$7$h$&$H$7$F!"%^!<%/$r@_Dj$7$?$N$A$K%+!<%=(B
-$B%k$r0\F0$7(B@kbd{[preifx] >} $B$r2!$7$F$b%+!<%=%k$,(B @code{\begin@{@}} $B$N>e$K$"(B
-$B$k$H(B@code{\begin@{@}}$B!A(B@code{\end@{@}}$B%b!<%I$G%3%a%s%H5!G=$,F/$$$F$7$^$&$N(B
-$B$GCm0U$7$F2<$5$$!#(B
+‚ÍA‘Î‰‚·‚é @code{\begin} ‚Æ @code{\end} 2s‚¾‚¯‚ğAƒRƒƒ“ƒg‘€ì‚Ì‘ÎÛ‚Æ
+‚µ‚Ü‚·BƒŠƒWƒ‡ƒ“‚ğƒRƒƒ“ƒgƒAƒEƒg‚µ‚æ‚¤‚Æ‚µ‚ÄAƒ}[ƒN‚ğİ’è‚µ‚½‚Ì‚¿‚ÉƒJ[ƒ\
+ƒ‹‚ğˆÚ“®‚µ@kbd{[preifx] >} ‚ğ‰Ÿ‚µ‚Ä‚àƒJ[ƒ\ƒ‹‚ª @code{\begin@{@}} ‚Ìã‚É‚ 
+‚é‚Æ@code{\begin@{@}}`@code{\end@{@}}ƒ‚[ƒh‚ÅƒRƒƒ“ƒg‹@”\‚ª“­‚¢‚Ä‚µ‚Ü‚¤‚Ì
+‚Å’ˆÓ‚µ‚Ä‰º‚³‚¢B
 
 @node Cursor jump, Modifying/Deleting, Commenting out, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B%+!<%=%k%8%c%s%W(B
-@cindex $B%+!<%=%k%8%c%s%W(B[$B$+$"$=$k$7$d$s$U(B]
+@chapter ƒJ[ƒ\ƒ‹ƒWƒƒƒ“ƒv
+@cindex ƒJ[ƒ\ƒ‹ƒWƒƒƒ“ƒv[‚©‚ ‚»‚é‚µ‚â‚ñ‚Ó]
 @cindex prefix g
 
 
 @menu
-* $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B::  
-* $B$*3(IA$-%D!<%k5/F0(B::          
-* $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B::  
-* $B4D6-$rC10L$H$7$?%8%c%s%W(B::    
-* $B:G8e$NJd400LCV$X$N%8%c%s%W(B::  
+* ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv::  
+* ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®::          
+* ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv::  
+* ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv::    
+* ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv::  
 @end menu
 
-@node $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B, $B$*3(IA$-%D!<%k5/F0(B, Cursor jump, Cursor jump
+@node ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv, ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®, Cursor jump, Cursor jump
 @comment  node-name,  next,  previous,  up
-@section $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B
+@section ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv
 
-  $BJ8=qCf$N$$$m$$$m$J>l=j$G(B
+  •¶‘’†‚Ì‚¢‚ë‚¢‚ë‚ÈêŠ‚Å
 
 @table @kbd
 @item [prefix] g
-        @dots{} $BBP1~$9$k%*%V%8%'%/%H$K%8%c%s%W(B
+        @dots{} ‘Î‰‚·‚éƒIƒuƒWƒFƒNƒg‚ÉƒWƒƒƒ“ƒv
 @end table
 
 @noindent 
-$B$r2!$9$3$H$K$h$j!"%+!<%=%k0LCV$N(BLa@TeX{}$B%3%^%s%I$KBP1~$9$k>l=j$K%8%c%s%W(B
-$B$7$^$9!#BP1~4X78$,B8:_$9$k$H2r<a$5$l$k%3%^%s%I$K$O0J2<$N$b$N$,$"$j$^$9!#(B
+‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èAƒJ[ƒ\ƒ‹ˆÊ’u‚ÌLa@TeX{}ƒRƒ}ƒ“ƒh‚É‘Î‰‚·‚éêŠ‚ÉƒWƒƒƒ“ƒv
+‚µ‚Ü‚·B‘Î‰ŠÖŒW‚ª‘¶İ‚·‚é‚Æ‰ğß‚³‚ê‚éƒRƒ}ƒ“ƒh‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
 
 @itemize @bullet
-@item @code{\begin@{@}} $B"+"*(B @code{\end@{@}}
-@item @code{%#BEGIN} $B"+"*(B @code{%#END}
-@item $B2hA|%U%!%$%k$N<h$j9~$_%^%/%m(B $B"*(B $BBP1~$9$k(Bviewer/$B$*3($+$-%D!<%k5/F0(B
-@item @code{\label@{@}} $B"+"*(B @code{\ref@{@}}
-@item @code{\include(\input)} $B"*(B $BBP1~$9$k%U%!%$%k(B
-@item @code{\bibitem@{@}} $B"+"*(B @code{\cite@{@}}
+@item @code{\begin@{@}} ©¨ @code{\end@{@}}
+@item @code{%#BEGIN} ©¨ @code{%#END}
+@item ‰æ‘œƒtƒ@ƒCƒ‹‚Ìæ‚è‚İƒ}ƒNƒ ¨ ‘Î‰‚·‚éviewer/‚¨ŠG‚©‚«ƒc[ƒ‹‹N“®
+@item @code{\label@{@}} ©¨ @code{\ref@{@}}
+@item @code{\include(\input)} ¨ ‘Î‰‚·‚éƒtƒ@ƒCƒ‹
+@item @code{\bibitem@{@}} ©¨ @code{\cite@{@}}
 @end itemize
 
-  @code{\begin@{@}} $B$+(B @code{\end@{@}} $B$N9T$G(B@kbd{[prefix] g}$B$r2!$9$3$H$K(B
-$B$h$j!"BP1~$9$k(B@code{end/begin}$B$N9T$K%8%c%s%W$7$^$9!#$b$A$m$sBP1~$9$k$b$N$,(B
-$B$J$$>l9g$O%(%i!<$K$J$j$^$9!#$^$?$3$l$O!"NN0h8GDj$N$?$a$N(B @code{%#BEGIN} $B$H(B 
-@code{%#END} $B$N%Z%"$KBP$7$F$bF1MM$KF0:n$7$^$9!#$J$*!"(B@code{label/ref}$B$d(B
-@code{cite/bibitem}$BBP1~$9$k$b$N$,JL%U%!%$%k$K$"$k;~$O!"%8%c%s%W@h$H$J$k%U%!(B
-$B%$%k$,%*!<%W%s$5$l$F$$$J$1$l$P$J$j$^$;$s!#(B@xref{%#notation}.
-$B%a%$%s$N(B .tex $B%U%!%$%k$N(B @code{\include@{chap1@}} $B$J$I$K%+!<%=%k$r9g$o$;!"(B
-@kbd{[prefix] g} $B$r2!$9$H!"(B@file{chap1.tex} $B$K%8%c%s%W$7$^$9!#(B
+  @code{\begin@{@}} ‚© @code{\end@{@}} ‚Ìs‚Å@kbd{[prefix] g}‚ğ‰Ÿ‚·‚±‚Æ‚É
+‚æ‚èA‘Î‰‚·‚é@code{end/begin}‚Ìs‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B‚à‚¿‚ë‚ñ‘Î‰‚·‚é‚à‚Ì‚ª
+‚È‚¢ê‡‚ÍƒGƒ‰[‚É‚È‚è‚Ü‚·B‚Ü‚½‚±‚ê‚ÍA—ÌˆæŒÅ’è‚Ì‚½‚ß‚Ì @code{%#BEGIN} ‚Æ 
+@code{%#END} ‚ÌƒyƒA‚É‘Î‚µ‚Ä‚à“¯—l‚É“®ì‚µ‚Ü‚·B‚È‚¨A@code{label/ref}‚â
+@code{cite/bibitem}‘Î‰‚·‚é‚à‚Ì‚ª•Êƒtƒ@ƒCƒ‹‚É‚ ‚é‚ÍAƒWƒƒƒ“ƒvæ‚Æ‚È‚éƒtƒ@
+ƒCƒ‹‚ªƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñB@xref{%#notation}.
+ƒƒCƒ“‚Ì .tex ƒtƒ@ƒCƒ‹‚Ì @code{\include@{chap1@}} ‚È‚Ç‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹A
+@kbd{[prefix] g} ‚ğ‰Ÿ‚·‚ÆA@file{chap1.tex} ‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B
 
-$B$^$?!"(B
+‚Ü‚½A
 
 @table @kbd
 @item [prefix] 4 g
-        @dots{} $BJL%&%#%s%I%&$GBP1~%*%V%8%'%/%H$K%8%c%s%W(B
+        @dots{} •ÊƒEƒBƒ“ƒhƒE‚Å‘Î‰ƒIƒuƒWƒFƒNƒg‚ÉƒWƒƒƒ“ƒv
 @end table
 
 @noindent
-$B$r2!$9$H!"BP1~$9$k%*%V%8%'%/%H$X$N%8%c%s%W$rJL%&%#%s%I%&$G9T$$$^$9!#$?$@$7!"(B
-$B$3$N5!G=$O(B @code{begin/end}, @code{%#BEGIN/%#END} $B4V$N%8%c%s%W$KBP$7$F$O(B
-($B0UL#$,$J$$$H;W$o$l$k$N$G(B)$B5!G=$7$J$$$N$GCm0U$7$F$/$@$5$$!#(B
+‚ğ‰Ÿ‚·‚ÆA‘Î‰‚·‚éƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv‚ğ•ÊƒEƒBƒ“ƒhƒE‚Ås‚¢‚Ü‚·B‚½‚¾‚µA
+‚±‚Ì‹@”\‚Í @code{begin/end}, @code{%#BEGIN/%#END} ŠÔ‚ÌƒWƒƒƒ“ƒv‚É‘Î‚µ‚Ä‚Í
+(ˆÓ–¡‚ª‚È‚¢‚Æv‚í‚ê‚é‚Ì‚Å)‹@”\‚µ‚È‚¢‚Ì‚Å’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢B
 
-@node $B$*3(IA$-%D!<%k5/F0(B, $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B, $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B, Cursor jump
+@node ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®, ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv, ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv, Cursor jump
 @comment  node-name,  next,  previous,  up
-@section $B$*3(IA$-%D!<%k5/F0(B
-@cindex $B$*3(IA$-%D!<%k5/F0(B[$B$*$($+$-$D$&$k$-$H$&(B]
+@section ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®
+@cindex ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®[‚¨‚¦‚©‚«‚Â‚¤‚é‚«‚Æ‚¤]
 
-$B>e5-$N!V2hA|%U%!%$%k$N<h$j9~$_%^%/%m!W$H$O!"Nc$($P(B 
-@code{\epsfile@{file=foo@}} $B$N$h$&$JA^3(<h$j9~$_%3%^%s%I$N$3$H$G!"$3$N9T$K(B
-$B%+!<%=%k$r9g$o$;$F(B@kbd{[prefix] g}$B$r2!$9$H$=$N2hA|%U%!%$%k$N85$H$J$C$?%U%!(B
-$B%$%k$rBP1~$9$k$*3(IA$-%D!<%k$r5/F0$7$F%*!<%W%s$7$^$9!#5/F0$9$k%D!<%k$NH=Dj(B
-$B$O0J2<$N$h$&$K$J$5$l$^$9!#(B
+ã‹L‚Ìu‰æ‘œƒtƒ@ƒCƒ‹‚Ìæ‚è‚İƒ}ƒNƒv‚Æ‚ÍA—á‚¦‚Î 
+@code{\epsfile@{file=foo@}} ‚Ì‚æ‚¤‚È‘}ŠGæ‚è‚İƒRƒ}ƒ“ƒh‚Ì‚±‚Æ‚ÅA‚±‚Ìs‚É
+ƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹‚Ä@kbd{[prefix] g}‚ğ‰Ÿ‚·‚Æ‚»‚Ì‰æ‘œƒtƒ@ƒCƒ‹‚ÌŒ³‚Æ‚È‚Á‚½ƒtƒ@
+ƒCƒ‹‚ğ‘Î‰‚·‚é‚¨ŠG•`‚«ƒc[ƒ‹‚ğ‹N“®‚µ‚ÄƒI[ƒvƒ“‚µ‚Ü‚·B‹N“®‚·‚éƒc[ƒ‹‚Ì”»’è
+‚ÍˆÈ‰º‚Ì‚æ‚¤‚É‚È‚³‚ê‚Ü‚·B
 
 @enumerate
 @item
-$B%+%l%s%H9T$,JQ?t(B @code{YaTeX-processed-file-regexp-alist} $B$KDj5A$5(B
-$B$l$F$$$k@55,I=8=$N$$$:$l$+$H%^%C%A$7$?$i!"%U%!%$%kL>$KAjEv$9$kItJ,$r(B 
-\\(\\)$B$+$iH4$-=P$7$F3P$($F$*$/(B($B2?HVL\$N(B\\(\\)$B$+$OJQ?t$N3F%j%9%H$N(B cdr $BIt$K(B
-$BF~$l$F$*$/(B)$B!#%^%C%A$7$J$1$l$P2?$b$7$J$$!#(B
+ƒJƒŒƒ“ƒgs‚ª•Ï” @code{YaTeX-processed-file-regexp-alist} ‚É’è‹`‚³
+‚ê‚Ä‚¢‚é³‹K•\Œ»‚Ì‚¢‚¸‚ê‚©‚Æƒ}ƒbƒ`‚µ‚½‚çAƒtƒ@ƒCƒ‹–¼‚É‘Š“–‚·‚é•”•ª‚ğ 
+\\(\\)‚©‚ç”²‚«o‚µ‚ÄŠo‚¦‚Ä‚¨‚­(‰½”Ô–Ú‚Ì\\(\\)‚©‚Í•Ï”‚ÌŠeƒŠƒXƒg‚Ì cdr •”‚É
+“ü‚ê‚Ä‚¨‚­)Bƒ}ƒbƒ`‚µ‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢B
 @item
-$B9TKv$K!"JQ?t(B @code{YaTeX-file-processor-alist} $B$KEPO?$5$l$F$$$k%3%^%s%I$,(B
-$B!V(B%$B%3%^%s%I!W(B $B$N$h$&$K=q$$$F$"$l$P6/@)E*$K!V%3%^%s%I(B $B%U%!%$%kL>(B.$B3HD%;R!W$r(B
-$B5/F0!#(B
+s––‚ÉA•Ï” @code{YaTeX-file-processor-alist} ‚É“o˜^‚³‚ê‚Ä‚¢‚éƒRƒ}ƒ“ƒh‚ª
+u%ƒRƒ}ƒ“ƒhv ‚Ì‚æ‚¤‚É‘‚¢‚Ä‚ ‚ê‚Î‹­§“I‚ÉuƒRƒ}ƒ“ƒh ƒtƒ@ƒCƒ‹–¼.Šg’£qv‚ğ
+‹N“®B
 @item
-$B$J$1$l$P!"JQ?t(B @code{YaTeX-file-processor-alist} $B$N3F%j%9%H$N(Bcdr$BIt$KF~$C$F(B
-$B$$$k3HD%;R$r!V%U%!%$%kL>!W$N8e$m$KB-$7$?%U%!%$%k$,B8:_$9$k$+=g<!D4$Y$F!"B8(B
-$B:_$7$?>l9g(Bcar$BIt$KF~$C$F$$$k%3%^%s%I$r5/F0$9$k!#(B
+‚È‚¯‚ê‚ÎA•Ï” @code{YaTeX-file-processor-alist} ‚ÌŠeƒŠƒXƒg‚Ìcdr•”‚É“ü‚Á‚Ä
+‚¢‚éŠg’£q‚ğuƒtƒ@ƒCƒ‹–¼v‚ÌŒã‚ë‚É‘«‚µ‚½ƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚©‡Ÿ’²‚×‚ÄA‘¶
+İ‚µ‚½ê‡car•”‚É“ü‚Á‚Ä‚¢‚éƒRƒ}ƒ“ƒh‚ğ‹N“®‚·‚éB
 @item
-$B0J>e$I$l$+$K%^%C%A$7$J$1$l$P$"$-$i$a$k!#(B
+ˆÈã‚Ç‚ê‚©‚Éƒ}ƒbƒ`‚µ‚È‚¯‚ê‚Î‚ ‚«‚ç‚ß‚éB
 @end enumerate
 
 
-$BJQ?t(B @code{YaTeX-file-processor-alist} $B$HJQ?t(B 
-@code{YaTeX-file-processor-alist} $B$N@_DjJ}K!$K$D$$$F$O$=$l$>$l$NJQ?t$K$D$$(B
-$B$F(B describe-variable $B$7$F@bL@$rFI$s$G2<$5$$!#$&$^$/@_Dj$9$k$H!"2hA|%U%!%$(B
-$B%k$K$+$.$i$:!"G$0U$N7A<0$N%U%!%$%k$rG$0U$N%W%m%;%C%5$G=hM}$9$k%3%^%s%I$r4J(B
-$BC1$K8F$S=P$9$3$H$,$G$-$^$9!#(B
+•Ï” @code{YaTeX-file-processor-alist} ‚Æ•Ï” 
+@code{YaTeX-file-processor-alist} ‚Ìİ’è•û–@‚É‚Â‚¢‚Ä‚Í‚»‚ê‚¼‚ê‚Ì•Ï”‚É‚Â‚¢
+‚Ä describe-variable ‚µ‚Äà–¾‚ğ“Ç‚ñ‚Å‰º‚³‚¢B‚¤‚Ü‚­İ’è‚·‚é‚ÆA‰æ‘œƒtƒ@ƒC
+ƒ‹‚É‚©‚¬‚ç‚¸A”CˆÓ‚ÌŒ`®‚Ìƒtƒ@ƒCƒ‹‚ğ”CˆÓ‚ÌƒvƒƒZƒbƒT‚Åˆ—‚·‚éƒRƒ}ƒ“ƒh‚ğŠÈ
+’P‚ÉŒÄ‚Ño‚·‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
-@node $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B, $B4D6-$rC10L$H$7$?%8%c%s%W(B, $B$*3(IA$-%D!<%k5/F0(B, Cursor jump
+@node ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv, ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv, ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®, Cursor jump
 @comment  node-name,  next,  previous,  up
-@section $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B
+@section ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv
 
-@file{chap1.tex}$B$N$h$&$J%5%V%U%!%$%k$G!"(B
+@file{chap1.tex}‚Ì‚æ‚¤‚ÈƒTƒuƒtƒ@ƒCƒ‹‚ÅA
 
 @table @kbd
 @item [prefix] ^
-        @dots{} $B%a%$%s%U%!%$%k$K%8%c%s%W(B
+        @dots{} ƒƒCƒ“ƒtƒ@ƒCƒ‹‚ÉƒWƒƒƒ“ƒv
 @item [prefix] 4 ^
-        @dots{} $BJL%&%#%s%I%&$G%a%$%s%U%!%$%k$K%8%c%s%W(B
+        @dots{} •ÊƒEƒBƒ“ƒhƒE‚ÅƒƒCƒ“ƒtƒ@ƒCƒ‹‚ÉƒWƒƒƒ“ƒv
 @end table
 
 @noindent 
-$B$r2!$9$H!"%a%$%s%U%!%$%k$NJT=8%P%C%U%!$K@ZBX$($^$9!#$b$7!"%a%$%s%U%!%$%k$r(B
-$B%*!<%W%s$7$F$$$J$$>l9g$O!"%+%l%s%H%G%#%l%/%H%j$+$iC5$7$F<+F0E*$K%*!<%W%s$7(B
-$B$^$9!#(B
+‚ğ‰Ÿ‚·‚ÆAƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ì•ÒWƒoƒbƒtƒ@‚ÉØ‘Ö‚¦‚Ü‚·B‚à‚µAƒƒCƒ“ƒtƒ@ƒCƒ‹‚ğ
+ƒI[ƒvƒ“‚µ‚Ä‚¢‚È‚¢ê‡‚ÍAƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç’T‚µ‚Ä©“®“I‚ÉƒI[ƒvƒ“‚µ
+‚Ü‚·B
 
-@node $B4D6-$rC10L$H$7$?%8%c%s%W(B, $B:G8e$NJd400LCV$X$N%8%c%s%W(B, $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B, Cursor jump
+@node ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv, ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv, ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv, Cursor jump
 @comment  node-name,  next,  previous,  up
-@section $B4D6-$rC10L$H$7$?%8%c%s%W(B
+@section ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv
 
-$B$5$i$K8=:_$N4D6-$rC10L$H$7$F5!G=$9$k%3%^%s%I$K0J2<$N$b$N$,$"$j$^$9!#(B
+‚³‚ç‚ÉŒ»İ‚ÌŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚Ä‹@”\‚·‚éƒRƒ}ƒ“ƒh‚ÉˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
 
-@cindex $B4D6-$N@hF,$X(B[$B$+$s$-$h$&$N$;$s$H$&$X(B]
-@cindex $B4D6-$NKvHx$X(B[$B$+$s$-$h$&$N$^$D$R$X(B]
-@cindex $B4D6-$r%^!<%/(B[$B$+$s$-$h$&$r$^$"$/(B]
+@cindex ŠÂ‹«‚Ìæ“ª‚Ö[‚©‚ñ‚«‚æ‚¤‚Ì‚¹‚ñ‚Æ‚¤‚Ö]
+@cindex ŠÂ‹«‚Ì––”ö‚Ö[‚©‚ñ‚«‚æ‚¤‚Ì‚Ü‚Â‚Ğ‚Ö]
+@cindex ŠÂ‹«‚ğƒ}[ƒN[‚©‚ñ‚«‚æ‚¤‚ğ‚Ü‚ ‚­]
 @cindex M-C-a
 @cindex M-C-e
 @cindex M-C-@@
 @table @kbd
 @item M-C-a
-        @dots{} $B4D6-$N@hF,(B(@code{\begin})$B$X%8%c%s%W(B
+        @dots{} ŠÂ‹«‚Ìæ“ª(@code{\begin})‚ÖƒWƒƒƒ“ƒv
 @item M-C-e
-        @dots{} $B4D6-$NKvHx(B(@code{\end})$B$X%8%c%s%W(B
+        @dots{} ŠÂ‹«‚Ì––”ö(@code{\end})‚ÖƒWƒƒƒ“ƒv
 @item M-C-@@
-        @dots{} $B4D6-A4BN$r%^!<%/(B
+        @dots{} ŠÂ‹«‘S‘Ì‚ğƒ}[ƒN
 @end table
 
-$B>e5-$N%3%^%s%I$ODL>o$N(B@kbd{[prefix]}$B%-!<$G$O$J$/(B@kbd{META}$B%-!<$r%W%j%U%#%/(B
-$B%9$H$7$F5!G=$9$k$N$G$4Cm0U2<$5$$!#(B
+ã‹L‚ÌƒRƒ}ƒ“ƒh‚Í’Êí‚Ì@kbd{[prefix]}ƒL[‚Å‚Í‚È‚­@kbd{META}ƒL[‚ğƒvƒŠƒtƒBƒN
+ƒX‚Æ‚µ‚Ä‹@”\‚·‚é‚Ì‚Å‚²’ˆÓ‰º‚³‚¢B
 
-@node $B:G8e$NJd400LCV$X$N%8%c%s%W(B,  , $B4D6-$rC10L$H$7$?%8%c%s%W(B, Cursor jump
+@node ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv,  , ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv, Cursor jump
 @comment  node-name,  next,  previous,  up
-@section $B:G8e$NJd400LCV$X$N%8%c%s%W(B
+@section ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv
 
-$BLnD;$OJd40F~NO$7$?0LCV$r>o$K%l%8%9%?(B @code{3}$B$KJ]B8$7$F$$$^$9!#(B
-$BF~NOESCf$GG!2?$J$k%U%!%$%k$NG!2?$J$k0LCV$K9T$C$?$H$7$F$b!"(B
-@kbd{C-x j 3}(@code{jump-to-register})$B$r;H$C$FD>$A$K:G8e$NJd40F~NO0LCV$KLa(B
-$B$k$3$H$,$G$-$^$9!#(B
+–ì’¹‚Í•âŠ®“ü—Í‚µ‚½ˆÊ’u‚ğí‚ÉƒŒƒWƒXƒ^ @code{3}‚É•Û‘¶‚µ‚Ä‚¢‚Ü‚·B
+“ü—Í“r’†‚Å”@‰½‚È‚éƒtƒ@ƒCƒ‹‚Ì”@‰½‚È‚éˆÊ’u‚És‚Á‚½‚Æ‚µ‚Ä‚àA
+@kbd{C-x j 3}(@code{jump-to-register})‚ğg‚Á‚Ä’¼‚¿‚ÉÅŒã‚Ì•âŠ®“ü—ÍˆÊ’u‚É–ß
+‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 @node Modifying/Deleting, Filling, Cursor jump, Top
 @comment  node-name,  next,  previous,  up
-@chapter $BJQ99(B/$B:o=|(B
-@cindex $BJQ99(B/$B:o=|(B[$B$X$s$3$&(B/$B$5$/$7$h(B]
+@chapter •ÏX/íœ
+@cindex •ÏX/íœ[‚Ö‚ñ‚±‚¤/‚³‚­‚µ‚æ]
 @cindex prefix c
 @cindex prefix k
 
-  $B4{$KF~NO$5$l$F$$$k(B La@TeX{} $B%3%^%s%I$NJQ99(B/$B:o=|$N$?$a$K0J2<$N5!G=$,MQ0U(B
-$B$5$l$F$$$^$9!#(B
+  Šù‚É“ü—Í‚³‚ê‚Ä‚¢‚é La@TeX{} ƒRƒ}ƒ“ƒh‚Ì•ÏX/íœ‚Ì‚½‚ß‚ÉˆÈ‰º‚Ì‹@”\‚ª—pˆÓ
+‚³‚ê‚Ä‚¢‚Ü‚·B
 
 @table @kbd
 @item [prefix] c
-        @dots{} $B%+!<%=%k0LCV$N(B La@TeX{} $B%3%^%s%I$NJQ99(B
+        @dots{} ƒJ[ƒ\ƒ‹ˆÊ’u‚Ì La@TeX{} ƒRƒ}ƒ“ƒh‚Ì•ÏX
 @item [prefix] k
-        @dots{} $B%+!<%=%k0LCV$N(B La@TeX{} $B%3%^%s%I$N:o=|(B
+        @dots{} ƒJ[ƒ\ƒ‹ˆÊ’u‚Ì La@TeX{} ƒRƒ}ƒ“ƒh‚Ìíœ
 @end table
 
 @noindent 
-$B$3$l$i$N%3%^%s%I$O!"%3%^%s%I$r5/F0$9$k>l=j$K$h$C$FF0:n$r7hDj$9$k$N$GCm0U$7(B
-$B$F2<$5$$!#(B
+‚±‚ê‚ç‚ÌƒRƒ}ƒ“ƒh‚ÍAƒRƒ}ƒ“ƒh‚ğ‹N“®‚·‚éêŠ‚É‚æ‚Á‚Ä“®ì‚ğŒˆ’è‚·‚é‚Ì‚Å’ˆÓ‚µ
+‚Ä‰º‚³‚¢B
 
 @menu
-* Changing LaTeX command::      La@TeX{} $B%3%^%s%I$NJQ99(B
-* Killing LaTeX command::       La@TeX{} $B%3%^%s%I$N:o=|(B
+* Changing LaTeX command::      La@TeX{} ƒRƒ}ƒ“ƒh‚Ì•ÏX
+* Killing LaTeX command::       La@TeX{} ƒRƒ}ƒ“ƒh‚Ìíœ
 @end menu
 
 @node Changing LaTeX command, Killing LaTeX command, Modifying/Deleting, Modifying/Deleting
 @comment  node-name,  next,  previous,  up
-@section La@TeX{} $B%3%^%s%I$NJQ99(B
+@section La@TeX{} ƒRƒ}ƒ“ƒh‚Ì•ÏX
 
-$BJQ99$7$?$$(B La@TeX{} $B%3%^%s%I$K%+!<%=%k$r9g$o$;$F(B @kbd{[prefix] c} 
-$B$r2!$9$H$=$N%3%^%s%I$rJd40F~NO$J$I$rMQ$$$F<j7Z$KJQ$($k$3$H$,$G$-$^$9!#(B
-@kbd{[prefix] c} $B$GJQ99$G$-$k%3%^%s%I$K$O0J2<$N$b$N$,$"$j$^$9!#(B
+•ÏX‚µ‚½‚¢ La@TeX{} ƒRƒ}ƒ“ƒh‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹‚Ä @kbd{[prefix] c} 
+‚ğ‰Ÿ‚·‚Æ‚»‚ÌƒRƒ}ƒ“ƒh‚ğ•âŠ®“ü—Í‚È‚Ç‚ğ—p‚¢‚ÄèŒy‚É•Ï‚¦‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+@kbd{[prefix] c} ‚Å•ÏX‚Å‚«‚éƒRƒ}ƒ“ƒh‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
 
 @itemize
-@item @code{begin/end} $B$N4D6-L>(B
-@item section$B7?%3%^%s%I$N%3%^%s%IL>(B
-@item section$B7?%3%^%s%I$N0z?t(B
-@item section$B7?%3%^%s%I$N%*%W%7%g%s%Q%i%a!<%?(B([]$B$G0O$^$l$?$b$N(B)
-@item large$B7?%3%^%s%I(B
-@item ($B%$%a!<%8Jd40$GF~NO2DG=$J(B)$B?t<0%b!<%I@lMQ$N(Bmaketitle$B7?%3%^%s%I(B
+@item @code{begin/end} ‚ÌŠÂ‹«–¼
+@item sectionŒ^ƒRƒ}ƒ“ƒh‚ÌƒRƒ}ƒ“ƒh–¼
+@item sectionŒ^ƒRƒ}ƒ“ƒh‚Ìˆø”
+@item sectionŒ^ƒRƒ}ƒ“ƒh‚ÌƒIƒvƒVƒ‡ƒ“ƒpƒ‰ƒ[ƒ^([]‚ÅˆÍ‚Ü‚ê‚½‚à‚Ì)
+@item largeŒ^ƒRƒ}ƒ“ƒh
+@item (ƒCƒ[ƒW•âŠ®‚Å“ü—Í‰Â”\‚È)”®ƒ‚[ƒhê—p‚ÌmaketitleŒ^ƒRƒ}ƒ“ƒh
 @end itemize
 
-  $BJQ$($?$$(Bsection$B7?%3%^%s%I$N0z?t$,$5$i$K(B La@TeX{} $B%3%^%s%I$r4^$`>l9g$O!"(B
-$B$=$N0z?t$r0O$`Cf3g8L$N>e$G(B @kbd{[prefix] c} $B$r2!$9$3$H$GCf$N%3%^%s%I$rJQ99(B
-$BBP>]H=Dj$+$i=|30$9$k$3$H$,$G$-$^$9!#(B
+  •Ï‚¦‚½‚¢sectionŒ^ƒRƒ}ƒ“ƒh‚Ìˆø”‚ª‚³‚ç‚É La@TeX{} ƒRƒ}ƒ“ƒh‚ğŠÜ‚Şê‡‚ÍA
+‚»‚Ìˆø”‚ğˆÍ‚Ş’†Š‡ŒÊ‚Ìã‚Å @kbd{[prefix] c} ‚ğ‰Ÿ‚·‚±‚Æ‚Å’†‚ÌƒRƒ}ƒ“ƒh‚ğ•ÏX
+‘ÎÛ”»’è‚©‚çœŠO‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
-@cindex $B4D6-L>$NJQ99(B[$B$+$s$-$h$&$a$$$N$X$s$3$&(B]
+@cindex ŠÂ‹«–¼‚Ì•ÏX[‚©‚ñ‚«‚æ‚¤‚ß‚¢‚Ì‚Ö‚ñ‚±‚¤]
 
 @node Killing LaTeX command,  , Changing LaTeX command, Modifying/Deleting
 @comment  node-name,  next,  previous,  up
-@section La@TeX{} $B%3%^%s%I$N:o=|(B
+@section La@TeX{} ƒRƒ}ƒ“ƒh‚Ìíœ
 
-@kbd{[prefix] k} $B$O5/F0$9$k0LCV$K$h$j(B
-$B<!$N$h$&$JF0:n$r9T$$$^$9!#(B
-@cindex $B4D6-$N:o=|(B[$B$+$s$-$h$&$N$5$/$7$h(B]
+@kbd{[prefix] k} ‚Í‹N“®‚·‚éˆÊ’u‚É‚æ‚è
+Ÿ‚Ì‚æ‚¤‚È“®ì‚ğs‚¢‚Ü‚·B
+@cindex ŠÂ‹«‚Ìíœ[‚©‚ñ‚«‚æ‚¤‚Ì‚³‚­‚µ‚æ]
 
 
 @example
-$B5/F00LCV(B                        $BF0:n(B
-\begin, \end$B$N9T(B                @code{\begin\end}$B%Z%"$N:o=|(B
-%#BEGIN, %#END $B$N9T(B             %#BEGIN,%#END$B%Z%"$N:o=|(B
-section$B7?%3%^%s%I$N>e(B($BCf(B)       section$B7?%3%^%s%I$N:o=|(B
-$B%U%)%s%H;XDj3g8L$N>e(B            $B%U%)%s%H;XDj$N:o=|(B
-$B3g8L$N>e(B                        $BBP$r$J$93g8L$N:o=|(B
+‹N“®ˆÊ’u                        “®ì
+\begin, \end‚Ìs                @code{\begin\end}ƒyƒA‚Ìíœ
+%#BEGIN, %#END ‚Ìs             %#BEGIN,%#ENDƒyƒA‚Ìíœ
+sectionŒ^ƒRƒ}ƒ“ƒh‚Ìã(’†)       sectionŒ^ƒRƒ}ƒ“ƒh‚Ìíœ
+ƒtƒHƒ“ƒgw’èŠ‡ŒÊ‚Ìã            ƒtƒHƒ“ƒgw’è‚Ìíœ
+Š‡ŒÊ‚Ìã                        ‘Î‚ğ‚È‚·Š‡ŒÊ‚Ìíœ
 @end example
 
 @noindent 
-@code{\begin, \end} $B$*$h$S(B @code{%#BEGIN, %#END} $B$r:o=|$9$k>l9g!"(B
-@code{\begin, \end} $B$d(B @code{%#BEGIN, %#END} $B$NB8:_$9$k9T$O(B
-$B$^$k$4$H:o=|$5$l$k$N$G!"$=$l$i$N0l9T$K(B @code{\begin} $B$J$I$rFs$D0J>eO"$M$F(B
-$B=q$+$J$$$h$&$KCm0U$7$F$/$@$5$$!#(B
-$B>e5-$N$b$N$O$9$Y$FK\J8$r0O$&!VMF4o!W$r:o=|$9$k$h$&$KF/$-$^$9$,!"(B
-universal-argument (@kbd{C-u}) $B$rBG$C$?8e$G(B@kbd{[prefix] k}$B$r%?%$%W$9$k$H!"(B
-$B$=$l$>$l$N!VMF4o!W$K4^$^$l$k!VCf?H!W$b0l5$$K:o=|$7$^$9!#0J2<$NNc$r;29M$K$7(B
-$B$F2<$5$$!#(B
+@code{\begin, \end} ‚¨‚æ‚Ñ @code{%#BEGIN, %#END} ‚ğíœ‚·‚éê‡A
+@code{\begin, \end} ‚â @code{%#BEGIN, %#END} ‚Ì‘¶İ‚·‚és‚Í
+‚Ü‚é‚²‚Æíœ‚³‚ê‚é‚Ì‚ÅA‚»‚ê‚ç‚Ìˆês‚É @code{\begin} ‚È‚Ç‚ğ“ñ‚ÂˆÈã˜A‚Ë‚Ä
+‘‚©‚È‚¢‚æ‚¤‚É’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢B
+ã‹L‚Ì‚à‚Ì‚Í‚·‚×‚Ä–{•¶‚ğˆÍ‚¤u—eŠív‚ğíœ‚·‚é‚æ‚¤‚É“­‚«‚Ü‚·‚ªA
+universal-argument (@kbd{C-u}) ‚ğ‘Å‚Á‚½Œã‚Å@kbd{[prefix] k}‚ğƒ^ƒCƒv‚·‚é‚ÆA
+‚»‚ê‚¼‚ê‚Ìu—eŠív‚ÉŠÜ‚Ü‚ê‚éu’†gv‚àˆê‹C‚Éíœ‚µ‚Ü‚·BˆÈ‰º‚Ì—á‚ğQl‚É‚µ
+‚Ä‰º‚³‚¢B
 
 @example
-        $B85$N%F%-%9%H(B:                   [prefix] k      C-u [prefix] k
-        $BK\J8(B\footnote@{$B5SCm(B@}$B$G$9!#(B     $BK\J85SCm$G$9!#(B  $BK\J8$G$9!#(B
-                $B",(B($B%+!<%=%k0LCV(B)
+        Œ³‚ÌƒeƒLƒXƒg:                   [prefix] k      C-u [prefix] k
+        –{•¶\footnote@{‹r’@}‚Å‚·B     –{•¶‹r’‚Å‚·B  –{•¶‚Å‚·B
+                ª(ƒJ[ƒ\ƒ‹ˆÊ’u)
 @end example
 
 @node Filling, Includeonly, Modifying/Deleting, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B7eB7$((B
-@cindex $B7eB7$((B[$B$1$?$=$m$((B]
+@chapter Œ…‘µ‚¦
+@cindex Œ…‘µ‚¦[‚¯‚½‚»‚ë‚¦]
 
-@section item$B$N7eB7$((B
-@cindex item$B$J$I$N7eB7$((B[item$B$J$H$N$1$?$=$m$((B]
+@section item‚ÌŒ…‘µ‚¦
+@cindex item‚È‚Ç‚ÌŒ…‘µ‚¦[item‚È‚Æ‚Ì‚¯‚½‚»‚ë‚¦]
 @cindex prefix i
 
-  itemize $B4D6-Cf$K$"$k(B@code{\item}$B$N9`L\(B($BJ8>O(B)$B$,J#?t9T$KEO$k>l9g$K!"9`(B
-$BL\$N@hF,$r7eB7$($7$?$$>l9g$K$O!"(B
+  itemize ŠÂ‹«’†‚É‚ ‚é@code{\item}‚Ì€–Ú(•¶Í)‚ª•¡”s‚É“n‚éê‡‚ÉA€
+–Ú‚Ìæ“ª‚ğŒ…‘µ‚¦‚µ‚½‚¢ê‡‚É‚ÍA
 
 @c @table @kbd
 @c @item [prefix] i
-@c         @dots{} item$B$N7eB7$((B
+@c         @dots{} item‚ÌŒ…‘µ‚¦
 @c @end table
 
 @table @kbd
 @item M-q
-        @dots{} $B7eB7$((B
+        @dots{} Œ…‘µ‚¦
 @end table
 
-@cindex NTT-jTeX[$B$($L$F$$$$$F$$$$$7$($$$F$D$/(B]
+@cindex NTT-jTeX[‚¦‚Ê‚Ä‚¢‚¢‚Ä‚¢‚¢‚µ‚¦‚¢‚Ä‚Â‚­]
 @noindent 
-$B$K$h$C$F!"$=$N(B item $B$N%$%s%G%s%H$N?<$5$K1~$8$F(B fill $B$5$l$^$9!#$J$*!"8E$$(B
-NTT jTeX $B$r;HMQ$7$F$$$k>l9g$K$O!"(BLisp $BJQ?t(B@code{NTT-jTeX}$B$r(B@code{t}$B$K%;%C(B
-$B%H$7$F2<$5$$!#(B
+‚É‚æ‚Á‚ÄA‚»‚Ì item ‚ÌƒCƒ“ƒfƒ“ƒg‚Ì[‚³‚É‰‚¶‚Ä fill ‚³‚ê‚Ü‚·B‚È‚¨AŒÃ‚¢
+NTT jTeX ‚ğg—p‚µ‚Ä‚¢‚éê‡‚É‚ÍALisp •Ï”@code{NTT-jTeX}‚ğ@code{t}‚ÉƒZƒb
+ƒg‚µ‚Ä‰º‚³‚¢B
 
 @cindex YaTeX-item-regexp
-  $B$3$N$H$-!"JQ?t(B@code{YaTeX-item-regexp}$B$NCM(B($BI8=`$G$O(B @code{"\\\\item"})$B$r(B
-$B9`L\;XDj%3%^%s%I$N@55,I=8=$H$7$F8!:w$K;HMQ$7$^$9!#(Bitemize $B4D6-$G!"FH<+$N%3(B
-$B%^%s%I$rDj5A$7$F9`L\$rNs5s$7$F$$$k>l9g(B($BNc$($P(B@code{\underlineitem})$B$O!"(B
-@file{~/.emacs} $B$G<!$N$h$&$K;XDj$7$F2<$5$$!#(B
+  ‚±‚Ì‚Æ‚«A•Ï”@code{YaTeX-item-regexp}‚Ì’l(•W€‚Å‚Í @code{"\\\\item"})‚ğ
+€–Úw’èƒRƒ}ƒ“ƒh‚Ì³‹K•\Œ»‚Æ‚µ‚ÄŒŸõ‚Ég—p‚µ‚Ü‚·Bitemize ŠÂ‹«‚ÅA“Æ©‚ÌƒR
+ƒ}ƒ“ƒh‚ğ’è‹`‚µ‚Ä€–Ú‚ğ—ñ‹“‚µ‚Ä‚¢‚éê‡(—á‚¦‚Î@code{\underlineitem})‚ÍA
+@file{~/.emacs} ‚ÅŸ‚Ì‚æ‚¤‚Éw’è‚µ‚Ä‰º‚³‚¢B
 
 @lisp
         (setq YaTeX-item-regexp
@@ -1464,583 +1465,583 @@ NTT jTeX $B$r;HMQ$7$F$$$k>l9g$K$O!"(BLisp $BJQ?t(B@code{NTT-jTeX}$B$r(B@co
 @end lisp
 
 @noindent 
-$B$3$NJQ?t$N;XDj$N;EJ}$,$h$/J,$+$i$J$$>l9g$O!"FH<+$N9`L\Ns5s%3%^%s%I$NL>A0$r(B
-@code{@code{"\item"}$B$G;O$^$k$b$N$K$7$F2<$5$$(B($BNc$($P(B"\itembf"})$B!#(B
+‚±‚Ì•Ï”‚Ìw’è‚Ìd•û‚ª‚æ‚­•ª‚©‚ç‚È‚¢ê‡‚ÍA“Æ©‚Ì€–Ú—ñ‹“ƒRƒ}ƒ“ƒh‚Ì–¼‘O‚ğ
+@code{@code{"\item"}‚Ån‚Ü‚é‚à‚Ì‚É‚µ‚Ä‰º‚³‚¢(—á‚¦‚Î"\itembf"})B
 
-$BLnD;$N(B @kbd{M-q} $B$G$O(B @code{\item} $B$r4D6-$K1~$8$F0J2<$N$h$&$K!V%O%s%0%$%s(B
-$B%G%s%H!W$7$^$9!#(B
+–ì’¹‚Ì @kbd{M-q} ‚Å‚Í @code{\item} ‚ğŠÂ‹«‚É‰‚¶‚ÄˆÈ‰º‚Ì‚æ‚¤‚Éuƒnƒ“ƒOƒCƒ“
+ƒfƒ“ƒgv‚µ‚Ü‚·B
 
 @example
-itemize, enumerate$B4D6-(B:
-       >\item[$B$[$2$[$2(B] $B1Q8l$G$O!"FC$K0UL#$N$J$$C18l$r(B `foo' $B$G$"$i$o$7$^(B
-       >                $B$9$,!"$3$l$NF|K\8lHG$H$b$$$($kC18l$,!V$[$2$[$2!W(B
-       >                $B$G$9!#(B
-description$B4D6-(B:
-       > \item[$B$X$m$X$m(B] $B!V$[$2$[$2!W$r$G$?$i$a$,C18l$H$7$F;H$C$?;~$K!"Bh(B
-       >            2$B$N$G$?$i$a$JC18l$H$7$F!V$X$m$X$m!W$,;H$o$l$k$3$H$,B?(B
-       >            $B$$$h$&$G$9!#(B
+itemize, enumerateŠÂ‹«:
+       >\item[‚Ù‚°‚Ù‚°] ‰pŒê‚Å‚ÍA“Á‚ÉˆÓ–¡‚Ì‚È‚¢’PŒê‚ğ `foo' ‚Å‚ ‚ç‚í‚µ‚Ü
+       >                ‚·‚ªA‚±‚ê‚Ì“ú–{Œê”Å‚Æ‚à‚¢‚¦‚é’PŒê‚ªu‚Ù‚°‚Ù‚°v
+       >                ‚Å‚·B
+descriptionŠÂ‹«:
+       > \item[‚Ö‚ë‚Ö‚ë] u‚Ù‚°‚Ù‚°v‚ğ‚Å‚½‚ç‚ß‚ª’PŒê‚Æ‚µ‚Äg‚Á‚½‚ÉA‘æ
+       >            2‚Ì‚Å‚½‚ç‚ß‚È’PŒê‚Æ‚µ‚Äu‚Ö‚ë‚Ö‚ëv‚ªg‚í‚ê‚é‚±‚Æ‚ª‘½
+       >            ‚¢‚æ‚¤‚Å‚·B
 @end example
 
-@section $B%Q%i%0%i%U$N7eB7$((B
-@cindex $B%Q%i%0%i%U$N7eB7$((B[$B$O$i$/$i$U$N$1$?$=$m$((B]
+@section ƒpƒ‰ƒOƒ‰ƒt‚ÌŒ…‘µ‚¦
+@cindex ƒpƒ‰ƒOƒ‰ƒt‚ÌŒ…‘µ‚¦[‚Í‚ç‚­‚ç‚Ó‚Ì‚¯‚½‚»‚ë‚¦]
 @cindex M-q
 
-  itemize$B4D6-0J30$G$N%Q%i%0%i%U$N7eB7$((B(fill)$B$O!"4pK\E*$KB>$N%b!<%I$HF1$8(B
-$B$h$&$K5!G=$7$^$9$,!"(Bverbatim$B4D6-$d!"(Btabular$B4D6-$J$I7eB7$($r$9$k$HHa;4$J>u(B
-$B67$K$J$k$h$&$J4D6-Cf$G$O5!G=$7$^$;$s!#$^$?!"(B\verb $B$G3g$C$F$"$k$b$N$O7h$7$F(B
-$B9TJ,3d$5$l$^$;$s(B($BJQ?t(B @code{YaTeX-verb-regexp} $B$G@)8f(B) )$B!#$5$i$K!"0l;~E*$K(B
-$B%$%s%G%s%H$N?<$5$rJQ$($F$"$k2U=j$G$O!"$=$N%$%s%G%s%H$N@hF,$G(B@kbd{M-q}$B$r2!(B
-$B$9$3$H$K$h$j(B fill-prefix $B$r$$$A$$$AJQ99$7$J$/$F7eB7$($,$G$-$^$9!#(B
+  itemizeŠÂ‹«ˆÈŠO‚Å‚Ìƒpƒ‰ƒOƒ‰ƒt‚ÌŒ…‘µ‚¦(fill)‚ÍAŠî–{“I‚É‘¼‚Ìƒ‚[ƒh‚Æ“¯‚¶
+‚æ‚¤‚É‹@”\‚µ‚Ü‚·‚ªAverbatimŠÂ‹«‚âAtabularŠÂ‹«‚È‚ÇŒ…‘µ‚¦‚ğ‚·‚é‚Æ”ßS‚Èó
+‹µ‚É‚È‚é‚æ‚¤‚ÈŠÂ‹«’†‚Å‚Í‹@”\‚µ‚Ü‚¹‚ñB‚Ü‚½A\verb ‚ÅŠ‡‚Á‚Ä‚ ‚é‚à‚Ì‚ÍŒˆ‚µ‚Ä
+s•ªŠ„‚³‚ê‚Ü‚¹‚ñ(•Ï” @code{YaTeX-verb-regexp} ‚Å§Œä) )B‚³‚ç‚ÉAˆê“I‚É
+ƒCƒ“ƒfƒ“ƒg‚Ì[‚³‚ğ•Ï‚¦‚Ä‚ ‚é‰ÓŠ‚Å‚ÍA‚»‚ÌƒCƒ“ƒfƒ“ƒg‚Ìæ“ª‚Å@kbd{M-q}‚ğ‰Ÿ
+‚·‚±‚Æ‚É‚æ‚è fill-prefix ‚ğ‚¢‚¿‚¢‚¿•ÏX‚µ‚È‚­‚ÄŒ…‘µ‚¦‚ª‚Å‚«‚Ü‚·B
 
 
 @node Includeonly, What column, Filling, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B>!<j$K(Bincludeonly
-@cindex $B>!<j$K(Bincludeonly[$B$+$D$F$K(Bincludeonly]
+@chapter Ÿè‚Éincludeonly
+@cindex Ÿè‚Éincludeonly[‚©‚Â‚Ä‚Éincludeonly]
 @cindex includeonly
 
-  $B%U%!%$%k$rJ,3d$7$FJ8>O$rF~NO$7$F$$$k;~$K$O!"%a%$%s%U%!%$%kCf$K(B
+  ƒtƒ@ƒCƒ‹‚ğ•ªŠ„‚µ‚Ä•¶Í‚ğ“ü—Í‚µ‚Ä‚¢‚é‚É‚ÍAƒƒCƒ“ƒtƒ@ƒCƒ‹’†‚É
 
 @example
-        \includeonly@{$B8=:_JT=8Cf$N%U%!%$%kL>(B@}
+        \includeonly@{Œ»İ•ÒW’†‚Ìƒtƒ@ƒCƒ‹–¼@}
 @end example
 
 @noindent 
-$B$N$h$&$K=q$$$F$*$/$3$H$G!"%?%$%W%;%C%H$N;~4V$r@aLs$G$-$^$9$,!"$A$g$C$HB>$N(B
-$B%U%!%$%k$r<jD>$7$7$?$$;~$K$O(B
-@cindex $BB>$N%U%!%$%k$N<jD>$7(B[$B$[$+$N$U$"$$$k$N$F$J$*$7(B]
+‚Ì‚æ‚¤‚É‘‚¢‚Ä‚¨‚­‚±‚Æ‚ÅAƒ^ƒCƒvƒZƒbƒg‚ÌŠÔ‚ğß–ñ‚Å‚«‚Ü‚·‚ªA‚¿‚å‚Á‚Æ‘¼‚Ì
+ƒtƒ@ƒCƒ‹‚ğè’¼‚µ‚µ‚½‚¢‚É‚Í
+@cindex ‘¼‚Ìƒtƒ@ƒCƒ‹‚Ìè’¼‚µ[‚Ù‚©‚Ì‚Ó‚ ‚¢‚é‚Ì‚Ä‚È‚¨‚µ]
 
 @example
-        \includeonly@{$B$A$g$C$H<jD>$7$7$?$$%U%!%$%kL>(B@}
+        \includeonly@{‚¿‚å‚Á‚Æè’¼‚µ‚µ‚½‚¢ƒtƒ@ƒCƒ‹–¼@}
 @end example
 
 @noindent 
-$B$H=q$-D>$5$J$1$l$P$J$i$:<j4V$,$+$+$j$^$9!#LnD;$G$O8=:_JT=8$7$F$$$k%U%!%$%k(B
-$BL>$,%a%$%s%U%!%$%k$N(B@code{\includeonly}$B$K$J$$>l9g$K$O<+F0E*$K$3$l$r8!=P$7!"(B
-$B<!$N;X<($r6D$.$^$9!#(B
+‚Æ‘‚«’¼‚³‚È‚¯‚ê‚Î‚È‚ç‚¸èŠÔ‚ª‚©‚©‚è‚Ü‚·B–ì’¹‚Å‚ÍŒ»İ•ÒW‚µ‚Ä‚¢‚éƒtƒ@ƒCƒ‹
+–¼‚ªƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ì@code{\includeonly}‚É‚È‚¢ê‡‚É‚Í©“®“I‚É‚±‚ê‚ğŒŸo‚µA
+Ÿ‚Ìw¦‚ğ‹Â‚¬‚Ü‚·B
 
 @example
         A)dd R)eplace %)comment?
 @end example
 
 @noindent 
-$B8=:_JT=8Cf$N%U%!%$%k$r(B @code{\includeonly} $B$N%j%9%H$K2C$($?$$;~$K$O(B@kbd{a}
-$B$r!"8=:_JT=8Cf$N%U%!%$%k$@$1$r(B @code{\includeonly} $B$K$7$?$$;~$O(B@kbd{r}$B$r!"(B
-@code{\includeonly} $B$N9T$r%3%a%s%H%"%&%H$7$FL58z2=$7$?$$;~$K$O!"(B@kbd{%}$B$r(B
-$B$=$l$>$l2!$7$F2<$5$$!#(B
+Œ»İ•ÒW’†‚Ìƒtƒ@ƒCƒ‹‚ğ @code{\includeonly} ‚ÌƒŠƒXƒg‚É‰Á‚¦‚½‚¢‚É‚Í@kbd{a}
+‚ğAŒ»İ•ÒW’†‚Ìƒtƒ@ƒCƒ‹‚¾‚¯‚ğ @code{\includeonly} ‚É‚µ‚½‚¢‚Í@kbd{r}‚ğA
+@code{\includeonly} ‚Ìs‚ğƒRƒƒ“ƒgƒAƒEƒg‚µ‚Ä–³Œø‰»‚µ‚½‚¢‚É‚ÍA@kbd{%}‚ğ
+‚»‚ê‚¼‚ê‰Ÿ‚µ‚Ä‰º‚³‚¢B
 
 @node What column, Intelligent newline, Includeonly, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B$3$3$O$I$3(B?
-@cindex $B$3$3$O$I$3(B?[$B$3$3$O$H$3(B?]
+@chapter ‚±‚±‚Í‚Ç‚±?
+@cindex ‚±‚±‚Í‚Ç‚±?[‚±‚±‚Í‚Æ‚±?]
 @cindex prefix &
-@cindex $BJ#;($J(Btabular[$B$U$/$5$D$J(Btabular]
+@cindex •¡G‚Ètabular[‚Ó‚­‚³‚Â‚Ètabular]
 
-  $B9`L\?t$NB?$$(B tabular $B$J$I$r$?$/$5$s=q$$$F$$$k$H2<$NJ}$N9T$G!"$$$^=q$$$F(B
-$B$$$k7e$,$I$3$KBP1~$9$k$N$+$o$+$i$J$/$J$C$F$7$^$&$3$H$,$"$j$^$9!#Nc$($P!"0J(B
-$B2<$N$h$&$J(B tabular $B$K$*$$$F!"(B
+  €–Ú”‚Ì‘½‚¢ tabular ‚È‚Ç‚ğ‚½‚­‚³‚ñ‘‚¢‚Ä‚¢‚é‚Æ‰º‚Ì•û‚Ìs‚ÅA‚¢‚Ü‘‚¢‚Ä
+‚¢‚éŒ…‚ª‚Ç‚±‚É‘Î‰‚·‚é‚Ì‚©‚í‚©‚ç‚È‚­‚È‚Á‚Ä‚µ‚Ü‚¤‚±‚Æ‚ª‚ ‚è‚Ü‚·B—á‚¦‚ÎAˆÈ
+‰º‚Ì‚æ‚¤‚È tabular ‚É‚¨‚¢‚ÄA
 
 @example
         \begin@{tabular@}@{|c|c|c|c|c|c|c|c|@}\hline
-         $B;aL>(B&$B=jB0(B&$B")(B&$B=;=j(B&$BEEOC(B&FAX&$B5">J@h(B&$B5">J@hEEOC(B\\ \hline
-         $BLp>eFsO:(B & 6 & 223 & $B2#IM;T9AKL6hF|5H(B & xxx-yyy &
-                zzz-www & $B%H%s%,(B & 9876-54321 \\
-         $BF|5H>.AN(B & 2 & \multicolumn@{2@}@{c|@}@{$B65$($J$$(B@}
+         –¼&Š‘®&§&ZŠ&“d˜b&FAX&‹AÈæ&‹AÈæ“d˜b\\ \hline
+         –îã“ñ˜Y & 6 & 223 & ‰¡•ls`–k‹æ“ú‹g & xxx-yyy &
+                zzz-www & ƒgƒ“ƒK & 9876-54321 \\
+         “ú‹g¬‘m & 2 & \multicolumn@{2@}@{c|@}@{‹³‚¦‚È‚¢@}
                 &&&(???)
          \\ \hline
         \end@{tabular@}
 @end example
 
 @noindent 
-(???)$B$NItJ,$,$I$N9`L\$J$N$+$9$0$KH=CG$9$k$N$OFq$7$$$G$7$g$&!#$3$s$J;~$O!"(B
+(???)‚Ì•”•ª‚ª‚Ç‚Ì€–Ú‚È‚Ì‚©‚·‚®‚É”»’f‚·‚é‚Ì‚Í“ï‚µ‚¢‚Å‚µ‚å‚¤B‚±‚ñ‚È‚ÍA
 
 @table @kbd
 @item [prefix] &
-        @dots{} $B8=:_$N%+%i%`I=<((B
+        @dots{} Œ»İ‚ÌƒJƒ‰ƒ€•\¦
 @end table
-@cindex $B8=:_$N%+%i%`I=<((B[$B$1$s$5$$$N$+$i$`$R$h$&$7(B]
+@cindex Œ»İ‚ÌƒJƒ‰ƒ€•\¦[‚¯‚ñ‚³‚¢‚Ì‚©‚ç‚Ş‚Ğ‚æ‚¤‚µ]
 
-$B$r2!$9$H%+!<%=%k0LCV$N%+%i%`$,$I$N9`L\$K3:Ev$9$k$+$r%_%K%P%C%U%!$KI=<($7$^(B
-$B$9!#(Btabular/array$B4D6-$NBh(B1$B9TL\$r9`L\L>$NJB$S$H$_$J$7$FBP1~$9$k$b$N$rC5$7$^(B
-$B$9!#$b$79`L\L>$H$7$FJL$N$b$N$rI=<($7$FM_$7$$>l9g$O!"9TF,$r(B@code{%}$B$K$7$F%@(B
-$B%_!<$N9`L\JB$S$r:n$C$F$*$/$HNI$$$G$7$g$&!#(B
+‚ğ‰Ÿ‚·‚ÆƒJ[ƒ\ƒ‹ˆÊ’u‚ÌƒJƒ‰ƒ€‚ª‚Ç‚Ì€–Ú‚ÉŠY“–‚·‚é‚©‚ğƒ~ƒjƒoƒbƒtƒ@‚É•\¦‚µ‚Ü
+‚·Btabular/arrayŠÂ‹«‚Ì‘æ1s–Ú‚ğ€–Ú–¼‚Ì•À‚Ñ‚Æ‚İ‚È‚µ‚Ä‘Î‰‚·‚é‚à‚Ì‚ğ’T‚µ‚Ü
+‚·B‚à‚µ€–Ú–¼‚Æ‚µ‚Ä•Ê‚Ì‚à‚Ì‚ğ•\¦‚µ‚Ä—~‚µ‚¢ê‡‚ÍAs“ª‚ğ@code{%}‚É‚µ‚Äƒ_
+ƒ~[‚Ì€–Ú•À‚Ñ‚ğì‚Á‚Ä‚¨‚­‚Æ—Ç‚¢‚Å‚µ‚å‚¤B
 
 @node Intelligent newline, Changing mode of YaTeX, What column, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B$*$^$+$;2~9T(B
-@cindex $B$*$^$+$;2~9T(B[$B$*$^$+$;$+$$$-$h$&(B]
-@cindex &$BF~NO(B[&$B$K$f$&$j$h$/(B]
+@chapter ‚¨‚Ü‚©‚¹‰üs
+@cindex ‚¨‚Ü‚©‚¹‰üs[‚¨‚Ü‚©‚¹‚©‚¢‚«‚æ‚¤]
+@cindex &“ü—Í[&‚É‚ä‚¤‚è‚æ‚­]
 
-  tabular[*], array, itemize, enumerate, tabbing $B4D6-$r(Bbegin$B7?Jd40$GF~NO$7(B
-$B$?;~!"$^$?$O3F4D6-Fb$G(B
+  tabular[*], array, itemize, enumerate, tabbing ŠÂ‹«‚ğbeginŒ^•âŠ®‚Å“ü—Í‚µ
+‚½A‚Ü‚½‚ÍŠeŠÂ‹«“à‚Å
 
 @table @kbd
 @item ESC RET
-        @dots{} $B$*$^$+$;2~9T(B
+        @dots{} ‚¨‚Ü‚©‚¹‰üs
 @end table
 
 @noindent 
-$B$r2!$9$H!"$=$N4D6-$K1~$8$?9T%(%s%H%j$r<!$N9T$KA^F~$7$^$9(B(begin$B7?Jd40;~$K<+(B
-$BF0A^F~$5$l$?%(%s%H%j$,ITMW$J>l9g$O(B undo $B$K$h$C$F>C5n$G$-$^$9(B)$B!#Nc$($P!"(B
-tabular$B4D6-$G$O!"$=$N4D6-$N%+%i%`?t$KBP1~$7$?8D?t$N(B @code{&} $B$K2C$(!"9TKv(B
-$B$N(B @code{\\} $B$rF~$l$^$9!#$3$N;~$=$l0JA0$K(B @code{\hline} $B$,$"$l$P$=$l$bIU$1(B
-$B2C$($^$9!#4D6-$H$=$l$K1~$8$F<+F0F~NO$9$k$b$N$NBP1~$O0J2<$N$h$&$K$J$j$^$9!#(B
+‚ğ‰Ÿ‚·‚ÆA‚»‚ÌŠÂ‹«‚É‰‚¶‚½sƒGƒ“ƒgƒŠ‚ğŸ‚Ìs‚É‘}“ü‚µ‚Ü‚·(beginŒ^•âŠ®‚É©
+“®‘}“ü‚³‚ê‚½ƒGƒ“ƒgƒŠ‚ª•s—v‚Èê‡‚Í undo ‚É‚æ‚Á‚ÄÁ‹‚Å‚«‚Ü‚·)B—á‚¦‚ÎA
+tabularŠÂ‹«‚Å‚ÍA‚»‚ÌŠÂ‹«‚ÌƒJƒ‰ƒ€”‚É‘Î‰‚µ‚½ŒÂ”‚Ì @code{&} ‚É‰Á‚¦As––
+‚Ì @code{\\} ‚ğ“ü‚ê‚Ü‚·B‚±‚Ì‚»‚êˆÈ‘O‚É @code{\hline} ‚ª‚ ‚ê‚Î‚»‚ê‚à•t‚¯
+‰Á‚¦‚Ü‚·BŠÂ‹«‚Æ‚»‚ê‚É‰‚¶‚Ä©“®“ü—Í‚·‚é‚à‚Ì‚Ì‘Î‰‚ÍˆÈ‰º‚Ì‚æ‚¤‚É‚È‚è‚Ü‚·B
 
 @itemize
 @item @code{tabular}, @code{tabular*}, @code{array}
 
-        $B%+%i%`?t(B-1 $B$@$1$N(B @code{&} $B$H(B @code{\\}$B!#I,MW$K1~$8$F(B @code{\hline}
+        ƒJƒ‰ƒ€”-1 ‚¾‚¯‚Ì @code{&} ‚Æ @code{\\}B•K—v‚É‰‚¶‚Ä @code{\hline}
 
 @item @code{tabbing}
 
-        $B0l9TL\$GDj5A$7$F$$$k(B @code{\=} $B$HF1$88D?t$N(B @code{\>}$B!#(B
+        ˆês–Ú‚Å’è‹`‚µ‚Ä‚¢‚é @code{\=} ‚Æ“¯‚¶ŒÂ”‚Ì @code{\>}B
 
 @item @code{itemize}, @code{enumerate}, @code{description}, @code{list}
 
-        @code{\item} $B$^$?$O(B @code{item[]}
+        @code{\item} ‚Ü‚½‚Í @code{item[]}
 @end itemize
 
-  tabular $B4D6-$NNc$N$h$&$K!"K\5!G=$O3F4D6-$N0l9TL\$NFbMF$r;29M$K$7$FF0:n$9(B
-$B$k$N$G!"$J$k$Y$/Fs9TL\0J9_$G8F$S=P$9$h$&$K$7$F$/$@$5$$!#(B
+  tabular ŠÂ‹«‚Ì—á‚Ì‚æ‚¤‚ÉA–{‹@”\‚ÍŠeŠÂ‹«‚Ìˆês–Ú‚Ì“à—e‚ğQl‚É‚µ‚Ä“®ì‚·
+‚é‚Ì‚ÅA‚È‚é‚×‚­“ñs–ÚˆÈ~‚ÅŒÄ‚Ño‚·‚æ‚¤‚É‚µ‚Ä‚­‚¾‚³‚¢B
 
-  $B$b$7!"$=$NB>$N4D6-!"Nc$($P(B @code{foo}$B!"$KBP$7$F(B@code{$B$*$^$+$;2~9T(B}$B$rF0:n(B
-$B$5$;$?$$;~$O!"(B@code{YaTeX-intelligent-newline-foo} $B$H$$$&L>A0$N4X?t$rDj5A(B
-$B$7$^$9!#Dj5A$7$?4X?t$O!"8=:_$N9T$K2~9T$rA^F~$7$?D>8e$N9TF,$N0LCV$G8F$P$l$^(B
-$B$9!#4X?t(B @code{YaTeX-indent-line} $B$r8F$V$H8=:_$N4D6-$N%M%9%H$K1~$8$??<$5$K(B
-$B%$%s%G%s%H$5$l$k$N$G!"$3$l$r8F$s$G$+$i2?$+$rA^F~$9$k$h$&$J%3!<%I$r=q$/$H$h(B
-$B$$$G$7$g$&!#(B@file{yatexenv.el}$BFb$N4X?t(B 
-@code{YaTeX-intelligent-newline-itemize} $B$NDj5A$J$I$r;29M$K$7$F$/$@$5$$!#(B
+  ‚à‚µA‚»‚Ì‘¼‚ÌŠÂ‹«A—á‚¦‚Î @code{foo}A‚É‘Î‚µ‚Ä@code{‚¨‚Ü‚©‚¹‰üs}‚ğ“®ì
+‚³‚¹‚½‚¢‚ÍA@code{YaTeX-intelligent-newline-foo} ‚Æ‚¢‚¤–¼‘O‚ÌŠÖ”‚ğ’è‹`
+‚µ‚Ü‚·B’è‹`‚µ‚½ŠÖ”‚ÍAŒ»İ‚Ìs‚É‰üs‚ğ‘}“ü‚µ‚½’¼Œã‚Ìs“ª‚ÌˆÊ’u‚ÅŒÄ‚Î‚ê‚Ü
+‚·BŠÖ” @code{YaTeX-indent-line} ‚ğŒÄ‚Ô‚ÆŒ»İ‚ÌŠÂ‹«‚ÌƒlƒXƒg‚É‰‚¶‚½[‚³‚É
+ƒCƒ“ƒfƒ“ƒg‚³‚ê‚é‚Ì‚ÅA‚±‚ê‚ğŒÄ‚ñ‚Å‚©‚ç‰½‚©‚ğ‘}“ü‚·‚é‚æ‚¤‚ÈƒR[ƒh‚ğ‘‚­‚Æ‚æ
+‚¢‚Å‚µ‚å‚¤B@file{yatexenv.el}“à‚ÌŠÖ” 
+@code{YaTeX-intelligent-newline-itemize} ‚Ì’è‹`‚È‚Ç‚ğQl‚É‚µ‚Ä‚­‚¾‚³‚¢B
 
 @node Changing mode of YaTeX, Online help, Intelligent newline, Top
 @comment  node-name,  next,  previous,  up
-@chapter $BLnD;$NF0:n%b!<%I@Z$jBX$((B
-@cindex $B%b!<%I@Z$jBX$((B[$B$b$&$H$-$j$+$((B]
+@chapter –ì’¹‚Ì“®ìƒ‚[ƒhØ‚è‘Ö‚¦
+@cindex ƒ‚[ƒhØ‚è‘Ö‚¦[‚à‚¤‚Æ‚«‚è‚©‚¦]
 @cindex prefix w
 
 @table @kbd
 @item [prefix] w
-        @dots{} $BLnD;F0:n%b!<%I@Z$jBX$(%a%K%e!<(B
+        @dots{} –ì’¹“®ìƒ‚[ƒhØ‚è‘Ö‚¦ƒƒjƒ…[
 @end table
 
 @noindent
-$B$GLnD;<+?H$NF0:n$r7hDj$9$k0J2<$N%b!<%I$r@Z$jBX$($^$9!#(B
+‚Å–ì’¹©g‚Ì“®ì‚ğŒˆ’è‚·‚éˆÈ‰º‚Ìƒ‚[ƒh‚ğØ‚è‘Ö‚¦‚Ü‚·B
 
 @itemize @bullet
-@item $B=$@5%b!<%I(B
-@item $BLnD;?t<0%b!<%I(B
+@item C³ƒ‚[ƒh
+@item –ì’¹”®ƒ‚[ƒh
 @end itemize
 
-$B=$@5%b!<%I$O!"3+$-3g8LF~NO;~$N=hM}$r%3%s%H%m!<%k$7!"=$@5%b!<%I(BON$B$N;~$O3+$-(B
-$B3g8L$NF~NO$O3+$-3g8L$N$_$NF~NO$K$J$j!"=$@5%b!<%I(BOFF$B$N;~$O3+$-3g8L$NF~NO$@(B
-$B$1$GJD$83g8L$^$GF~NO$7$^$9!#%G%U%)%k%H(B($B5/F0;~(B)$B$N@_Dj$O(B@emph{OFF}$B$G$9!#(B
+C³ƒ‚[ƒh‚ÍAŠJ‚«Š‡ŒÊ“ü—Í‚Ìˆ—‚ğƒRƒ“ƒgƒ[ƒ‹‚µAC³ƒ‚[ƒhON‚Ì‚ÍŠJ‚«
+Š‡ŒÊ‚Ì“ü—Í‚ÍŠJ‚«Š‡ŒÊ‚Ì‚İ‚Ì“ü—Í‚É‚È‚èAC³ƒ‚[ƒhOFF‚Ì‚ÍŠJ‚«Š‡ŒÊ‚Ì“ü—Í‚¾
+‚¯‚Å•Â‚¶Š‡ŒÊ‚Ü‚Å“ü—Í‚µ‚Ü‚·BƒfƒtƒHƒ‹ƒg(‹N“®)‚Ìİ’è‚Í@emph{OFF}‚Å‚·B
 
-  $BLnD;?t<0%b!<%I$O!"JQ?t(B @code{YaTeX-auto-math-mode} $B$,(B @code{nil} $B$N;~$N(B
-$B$_M-8z$G!"$3$N$H$-(B@kbd{;}$B$d(B@kbd{:}$B$r2!$7$?;~(B(@ref{Image completion}$B;2>H(B)$B$K!"(B
-$B$I$N$h$&$J%$%a!<%8Jd40$r5!G=$5$;$k$+!"DL>o$N%-!<$H$7$F5!G=$5$;$k$+$r<jF0$G(B
-$B@Z$jBX$($^$9!#<+F0H=Dj$,CY$$%^%7%s$G$O(B@code{YaTeX-auto-math-mode}
-@code{nil}$B$K%;%C%H$7!"LnD;?t<0%b!<%I$r<jF0$G@Z$jBX$($k$HNI$$$G$7$g$&!#(B
+  –ì’¹”®ƒ‚[ƒh‚ÍA•Ï” @code{YaTeX-auto-math-mode} ‚ª @code{nil} ‚Ì‚Ì
+‚İ—LŒø‚ÅA‚±‚Ì‚Æ‚«@kbd{;}‚â@kbd{:}‚ğ‰Ÿ‚µ‚½(@ref{Image completion}QÆ)‚ÉA
+‚Ç‚Ì‚æ‚¤‚ÈƒCƒ[ƒW•âŠ®‚ğ‹@”\‚³‚¹‚é‚©A’Êí‚ÌƒL[‚Æ‚µ‚Ä‹@”\‚³‚¹‚é‚©‚ğè“®‚Å
+Ø‚è‘Ö‚¦‚Ü‚·B©“®”»’è‚ª’x‚¢ƒ}ƒVƒ“‚Å‚Í@code{YaTeX-auto-math-mode}
+@code{nil}‚ÉƒZƒbƒg‚µA–ì’¹”®ƒ‚[ƒh‚ğè“®‚ÅØ‚è‘Ö‚¦‚é‚Æ—Ç‚¢‚Å‚µ‚å‚¤B
 
 
 @node Online help, Inclusion hierarchy browser, Changing mode of YaTeX, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B%*%s%i%$%s%X%k%W(B
-@cindex $B%*%s%i%$%s%X%k%W(B[$B$*$s$i$$$s$X$k$U(B]
+@chapter ƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv
+@cindex ƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv[‚¨‚ñ‚ç‚¢‚ñ‚Ö‚é‚Ó]
 @cindex apropos
-@cindex $B%-!<%o!<%I8!:w(B[$B$-$$$o$"$H$1$s$5$/(B]
+@cindex ƒL[ƒ[ƒhŒŸõ[‚«‚¢‚í‚ ‚Æ‚¯‚ñ‚³‚­]
 @cindex prefix ?
 @cindex prefix /
 
-  $B;H$*$&$H$9$k(B La@TeX{} $B%3%^%s%I$NMQK!$,$h$/J,$+$i$J$$;~$O!"%*%s%i%$%s%X%k(B
-$B%W$r$R$-$^$7$g$&!#%X%k%W$K4X$9$k%-!<$K$O0J2<$N$b$N$,$"$j$^$9!#(B
+  g‚¨‚¤‚Æ‚·‚é La@TeX{} ƒRƒ}ƒ“ƒh‚Ì—p–@‚ª‚æ‚­•ª‚©‚ç‚È‚¢‚ÍAƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹
+ƒv‚ğ‚Ğ‚«‚Ü‚µ‚å‚¤Bƒwƒ‹ƒv‚ÉŠÖ‚·‚éƒL[‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
 
 @table @kbd
 @item [prefix] ?
-        @dots{} $B%*%s%i%$%s%X%k%W(B
+        @dots{} ƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv
 @item [prefix] /
-        @dots{} $B%*%s%i%$%s(Bapropos
+        @dots{} ƒIƒ“ƒ‰ƒCƒ“apropos
 @end table
 
-@section $B%*%s%i%$%s%X%k%W(B
-@cindex $B%0%m!<%P%k%X%k%W(B[$B$/$m$*$O$k$X$k$U(B]
-@cindex $B%W%i%$%Y!<%H%X%k%W(B[$B$U$i$$$X$($H$X$k$U(B]
+@section ƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv
+@cindex ƒOƒ[ƒoƒ‹ƒwƒ‹ƒv[‚­‚ë‚¨‚Í‚é‚Ö‚é‚Ó]
+@cindex ƒvƒ‰ƒCƒx[ƒgƒwƒ‹ƒv[‚Ó‚ç‚¢‚Ö‚¦‚Æ‚Ö‚é‚Ó]
 @cindex YaTeX-help-file
 @cindex YaTeX-help-file-private
 
-  $B!V%*%s%i%$%s%X%k%W!W$O!"0lHLE*$J(B La@TeX{} $B%3%^%s%I(B($B%G%U%)%k%H$G%+!<%=%k(B
-$B0LCV$N%3%^%s%I(B)$B$KBP$9$k@bL@$rNY$N%P%C%U%!$KI=<($7$^$9!#$3$N;~;2>H$5$l$k%X(B
-$B%k%WMQ%U%!%$%k$K$O!V%0%m!<%P%k%X%k%W!W$H!V%W%i%$%Y!<%H%X%k%W!W$NFs<oN`$,$"(B
-$B$j!"A0<T$O(B La@TeX{} $B$NI8=`%3%^%s%I$N<g$J$b$N$N@bL@$r4^$`%U%!%$%k$G!"JQ?t(B
-@code{YaTeX-help-file}$B$NCM$G;XDj$5$l$^$9!#$3$N%U%!%$%k$ODL>o8x6&$N>l=j(B($B%G(B
-$B%U%)%k%H$G(B@code{$EMACSEXECPATH})$B$KCV$+$l!"C/$b$,$=$NFbMF$r99?7$G$-$k$h$&$K(B
-$BA40w$K=q$-9~$_8"$,M?$($i$l$k$Y$-$b$N$G$9!#8e<T$O!"HsI8=`$b$7$/$O8D?ME*$J%^(B
-$B%/%mDj5A$K4X$9$k@bL@$,=q$+$l$F$$$k%U%!%$%k$G!"JQ?t(B
-@code{YaTeX-help-file-private}$B$NCM$G;XDj$5$l$^$9!#$3$A$i$O%f!<%6$N%[!<%`%G%#(B
-$B%l%/%H%j$N2<$J$I$KCV$+$l$^$9!#(B
+  uƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒvv‚ÍAˆê”Ê“I‚È La@TeX{} ƒRƒ}ƒ“ƒh(ƒfƒtƒHƒ‹ƒg‚ÅƒJ[ƒ\ƒ‹
+ˆÊ’u‚ÌƒRƒ}ƒ“ƒh)‚É‘Î‚·‚éà–¾‚ğ—×‚Ìƒoƒbƒtƒ@‚É•\¦‚µ‚Ü‚·B‚±‚ÌQÆ‚³‚ê‚éƒw
+ƒ‹ƒv—pƒtƒ@ƒCƒ‹‚É‚ÍuƒOƒ[ƒoƒ‹ƒwƒ‹ƒvv‚Æuƒvƒ‰ƒCƒx[ƒgƒwƒ‹ƒvv‚Ì“ñí—Ş‚ª‚ 
+‚èA‘OÒ‚Í La@TeX{} ‚Ì•W€ƒRƒ}ƒ“ƒh‚Ìå‚È‚à‚Ì‚Ìà–¾‚ğŠÜ‚Şƒtƒ@ƒCƒ‹‚ÅA•Ï”
+@code{YaTeX-help-file}‚Ì’l‚Åw’è‚³‚ê‚Ü‚·B‚±‚Ìƒtƒ@ƒCƒ‹‚Í’ÊíŒö‹¤‚ÌêŠ(ƒf
+ƒtƒHƒ‹ƒg‚Å@code{$EMACSEXECPATH})‚É’u‚©‚êA’N‚à‚ª‚»‚Ì“à—e‚ğXV‚Å‚«‚é‚æ‚¤‚É
+‘Sˆõ‚É‘‚«‚İŒ ‚ª—^‚¦‚ç‚ê‚é‚×‚«‚à‚Ì‚Å‚·BŒãÒ‚ÍA”ñ•W€‚à‚µ‚­‚ÍŒÂl“I‚Èƒ}
+ƒNƒ’è‹`‚ÉŠÖ‚·‚éà–¾‚ª‘‚©‚ê‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚ÅA•Ï”
+@code{YaTeX-help-file-private}‚Ì’l‚Åw’è‚³‚ê‚Ü‚·B‚±‚¿‚ç‚Íƒ†[ƒU‚Ìƒz[ƒ€ƒfƒB
+ƒŒƒNƒgƒŠ‚Ì‰º‚È‚Ç‚É’u‚©‚ê‚Ü‚·B
 
-@section $B%*%s%i%$%s(Bapropos
+@section ƒIƒ“ƒ‰ƒCƒ“apropos
 
-  $B!V%*%s%i%$%s(Bapropos$B!W$O(B GNU Emacs $B$N(B apropos $B$HF1MM!"%f!<%6$,;XDj$7$?%-!<(B
-$B%o!<%I$r@bL@J8$K4^$`9`L\$9$Y$F$rNY$N%P%C%U%!$KI=<($7$^$9!#(B
+  uƒIƒ“ƒ‰ƒCƒ“aproposv‚Í GNU Emacs ‚Ì apropos ‚Æ“¯—lAƒ†[ƒU‚ªw’è‚µ‚½ƒL[
+ƒ[ƒh‚ğà–¾•¶‚ÉŠÜ‚Ş€–Ú‚·‚×‚Ä‚ğ—×‚Ìƒoƒbƒtƒ@‚É•\¦‚µ‚Ü‚·B
 
-  $B$b$7!"D4$Y$h$&$H$7$?(BLa@TeX{}$B%3%^%s%I$KBP$9$k@bL@$,%X%k%W%U%!%$%kCf$K8+$D(B
-$B$+$i$J$+$C$?>l9g$O!"@bL@J8$NF~NO$r5a$a$F$/$k$N$G!"2DG=$G$"$l$P;29M=q$J$I$r(B
-$BD4$Y$F$=$N%3%^%s%I$N@bL@$rF~NO$7$F$/$@$5$$!#$b$7!"$J$K$+I8=`E*$J%3%^%s%I$K(B
-$BBP$9$k@bL@$r=q$$$?$J$i$P$<$R;d$^$G$=$N@bL@$r$*Aw$j2<$5$$!#<!2s$NG[I[$K4^$a(B
-$B$?$$$H;W$$$^$9!#(B
+  ‚à‚µA’²‚×‚æ‚¤‚Æ‚µ‚½La@TeX{}ƒRƒ}ƒ“ƒh‚É‘Î‚·‚éà–¾‚ªƒwƒ‹ƒvƒtƒ@ƒCƒ‹’†‚ÉŒ©‚Â
+‚©‚ç‚È‚©‚Á‚½ê‡‚ÍAà–¾•¶‚Ì“ü—Í‚ğ‹‚ß‚Ä‚­‚é‚Ì‚ÅA‰Â”\‚Å‚ ‚ê‚ÎQl‘‚È‚Ç‚ğ
+’²‚×‚Ä‚»‚ÌƒRƒ}ƒ“ƒh‚Ìà–¾‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B‚à‚µA‚È‚É‚©•W€“I‚ÈƒRƒ}ƒ“ƒh‚É
+‘Î‚·‚éà–¾‚ğ‘‚¢‚½‚È‚ç‚Î‚º‚Ğ„‚Ü‚Å‚»‚Ìà–¾‚ğ‚¨‘—‚è‰º‚³‚¢BŸ‰ñ‚Ì”z•z‚ÉŠÜ‚ß
+‚½‚¢‚Æv‚¢‚Ü‚·B
 
 @node Inclusion hierarchy browser, Cooperation with other packages, Online help, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B%$%s%/%k!<%I9=B$%V%i%&%6(B
-@cindex $B%$%s%/%k!<%I9=B$(B[$B$$$s$/$k$&$H$3$&$=$&(B]
+@chapter ƒCƒ“ƒNƒ‹[ƒh\‘¢ƒuƒ‰ƒEƒU
+@cindex ƒCƒ“ƒNƒ‹[ƒh\‘¢[‚¢‚ñ‚­‚é‚¤‚Æ‚±‚¤‚»‚¤]
 @cindex prefix d
 
-$BJ#?t$N%U%!%$%k$KJ,3d$7$F$$$k%I%-%e%a%s%H$r=q$$$F$$$k>l9g!"(B
+•¡”‚Ìƒtƒ@ƒCƒ‹‚É•ªŠ„‚µ‚Ä‚¢‚éƒhƒLƒ…ƒƒ“ƒg‚ğ‘‚¢‚Ä‚¢‚éê‡A
 
 @table @kbd
 @item [prefix] d
-        @dots{} $B%$%s%/%k!<%I9=B$%V%i%&%:(B
+        @dots{} ƒCƒ“ƒNƒ‹[ƒh\‘¢ƒuƒ‰ƒEƒY
 @end table
 
 @noindent
-$B$r2!$9$H!"$=$N%I%-%e%a%s%H$N?F%U%!%$%k$rJ9$$$FMh$^$9!#$3$3$GA4$F$N%U%!%$%k(B
-$B$N?F$H$J$k%U%!%$%k(B($B%G%U%)%k%H$,<($5$l$F$$$k$N$GBgDq$O(BRET$B$N$_(B)$B$rF~NO$9$k$H(B
-$B%$%s%/%k!<%I$7$F$$$kA4$F$N%U%!%$%k$r2r@O$7!"%$%s%/%k!<%I>u67$r;k3PE*$KI=<((B
-$B$7$^$9!#$3$N%P%C%U%!$G$O0J2<$N%-!<A`:n$,M-8z$G$9!#(B
+‚ğ‰Ÿ‚·‚ÆA‚»‚ÌƒhƒLƒ…ƒƒ“ƒg‚Ìeƒtƒ@ƒCƒ‹‚ğ•·‚¢‚Ä—ˆ‚Ü‚·B‚±‚±‚Å‘S‚Ä‚Ìƒtƒ@ƒCƒ‹
+‚Ìe‚Æ‚È‚éƒtƒ@ƒCƒ‹(ƒfƒtƒHƒ‹ƒg‚ª¦‚³‚ê‚Ä‚¢‚é‚Ì‚Å‘å’ï‚ÍRET‚Ì‚İ)‚ğ“ü—Í‚·‚é‚Æ
+ƒCƒ“ƒNƒ‹[ƒh‚µ‚Ä‚¢‚é‘S‚Ä‚Ìƒtƒ@ƒCƒ‹‚ğ‰ğÍ‚µAƒCƒ“ƒNƒ‹[ƒhó‹µ‚ğ‹Šo“I‚É•\¦
+‚µ‚Ü‚·B‚±‚Ìƒoƒbƒtƒ@‚Å‚ÍˆÈ‰º‚ÌƒL[‘€ì‚ª—LŒø‚Å‚·B
 
 @table @kbd
 @item n
-        @dots{} $B<!$N9T$K0\F0$7BP1~$9$k%U%!%$%k$rNY$N%P%C%U%!$KI=<((B
+        @dots{} Ÿ‚Ìs‚ÉˆÚ“®‚µ‘Î‰‚·‚éƒtƒ@ƒCƒ‹‚ğ—×‚Ìƒoƒbƒtƒ@‚É•\¦
 @item p
-        @dots{} $B>e$N9T$K0\F0$7BP1~$9$k%U%!%$%k$rNY$N%P%C%U%!$KI=<((B
+        @dots{} ã‚Ìs‚ÉˆÚ“®‚µ‘Î‰‚·‚éƒtƒ@ƒCƒ‹‚ğ—×‚Ìƒoƒbƒtƒ@‚É•\¦
 @item N
-        @dots{} $BF1$8%$%s%/%k!<%I%l%Y%k$N<!$N%U%!%$%k$K0\F0(B
+        @dots{} “¯‚¶ƒCƒ“ƒNƒ‹[ƒhƒŒƒxƒ‹‚ÌŸ‚Ìƒtƒ@ƒCƒ‹‚ÉˆÚ“®
 @item P
-        @dots{} $BF1$8%$%s%/%k!<%I%l%Y%k$NA0$N%U%!%$%k$K0\F0(B
+        @dots{} “¯‚¶ƒCƒ“ƒNƒ‹[ƒhƒŒƒxƒ‹‚Ì‘O‚Ìƒtƒ@ƒCƒ‹‚ÉˆÚ“®
 @item j
-        @dots{} $B<!$N9T$K0\F0(B
+        @dots{} Ÿ‚Ìs‚ÉˆÚ“®
 @item k
-        @dots{} $B>e$N9T$K0\F0(B
+        @dots{} ã‚Ìs‚ÉˆÚ“®
 @item u
-        @dots{} $B0lBe?F$K$"$?$k%U%!%$%k$K0\F0(B
+        @dots{} ˆê‘ãe‚É‚ ‚½‚éƒtƒ@ƒCƒ‹‚ÉˆÚ“®
 @item .
-        @dots{} $B%+!<%=%k0LCV$N%U%!%$%k$rNY$N%P%C%U%!$KI=<((B
+        @dots{} ƒJ[ƒ\ƒ‹ˆÊ’u‚Ìƒtƒ@ƒCƒ‹‚ğ—×‚Ìƒoƒbƒtƒ@‚É•\¦
 @item SPC
-        @dots{} $BNY$N%P%C%U%!$NBP1~%U%!%$%k$r%9%/%m!<%k%"%C%W(B
+        @dots{} —×‚Ìƒoƒbƒtƒ@‚Ì‘Î‰ƒtƒ@ƒCƒ‹‚ğƒXƒNƒ[ƒ‹ƒAƒbƒv
 @item DEL, b
-        @dots{} $BNY$N%P%C%U%!$NBP1~%U%!%$%k$r%9%/%m!<%k%@%&%s(B
+        @dots{} —×‚Ìƒoƒbƒtƒ@‚Ì‘Î‰ƒtƒ@ƒCƒ‹‚ğƒXƒNƒ[ƒ‹ƒ_ƒEƒ“
 @item <
-        @dots{} $BNY$N%P%C%U%!$NBP1~%U%!%$%k$N@hF,$rI=<((B
+        @dots{} —×‚Ìƒoƒbƒtƒ@‚Ì‘Î‰ƒtƒ@ƒCƒ‹‚Ìæ“ª‚ğ•\¦
 @item >
-        @dots{} $BNY$N%P%C%U%!$NBP1~%U%!%$%k$NKvHx$rI=<((B
+        @dots{} —×‚Ìƒoƒbƒtƒ@‚Ì‘Î‰ƒtƒ@ƒCƒ‹‚Ì––”ö‚ğ•\¦
 @item '
-        @dots{} (@kbd{<}$B$d(B@kbd{>}$B$N8e$G(B)$B85$NI=<(0LCV$KLa$k(B
+        @dots{} (@kbd{<}‚â@kbd{>}‚ÌŒã‚Å)Œ³‚Ì•\¦ˆÊ’u‚É–ß‚é
 @item RET, g
-        @dots{} $B%+!<%=%k0LCV$N%U%!%$%k$rNY$N%P%C%U%!$G%*!<%W%s(B
+        @dots{} ƒJ[ƒ\ƒ‹ˆÊ’u‚Ìƒtƒ@ƒCƒ‹‚ğ—×‚Ìƒoƒbƒtƒ@‚ÅƒI[ƒvƒ“
 @item mouse-2
-        @dots{} RET$B$HF1$8(B($B%&%#%s%I%&;HMQ;~$N$_(B)
+        @dots{} RET‚Æ“¯‚¶(ƒEƒBƒ“ƒhƒEg—p‚Ì‚İ)
 @item o
-        @dots{} $BNY$N%&%#%s%I%&$K0\F0(B
+        @dots{} —×‚ÌƒEƒBƒ“ƒhƒE‚ÉˆÚ“®
 @item 1
-        @dots{} $BB>$N%&%#%s%I%&$r>C$9(B
+        @dots{} ‘¼‚ÌƒEƒBƒ“ƒhƒE‚ğÁ‚·
 @item -
-        @dots{} $B%V%i%&%:%&%#%s%I%&$r>.$5$/$9$k(B
+        @dots{} ƒuƒ‰ƒEƒYƒEƒBƒ“ƒhƒE‚ğ¬‚³‚­‚·‚é
 @item +
-        @dots{} $B%V%i%&%:%&%#%s%I%&$rBg$-$/$9$k(B
+        @dots{} ƒuƒ‰ƒEƒYƒEƒBƒ“ƒhƒE‚ğ‘å‚«‚­‚·‚é
 @item ?
-        @dots{} $B%X%k%WI=<((B
+        @dots{} ƒwƒ‹ƒv•\¦
 @item q
-        @dots{} $BI=<(A0$N>uBV$KLa$k(B
+        @dots{} •\¦‘O‚Ìó‘Ô‚É–ß‚é
 @end table
 
-  $B$?$@$7!"NY$N%&%#%s%I%&$N%U%!%$%k$NFbMF$rI=<($9$k5!G=$K4X$7$F$O!"BP1~$9$k(B
-$B%U%!%$%k$r%/%m!<%:$7$F$7$^$&$H$&$^$/F/$-$^$;$s$N$G$4Cm0U$/$@$5$$!#(B
+  ‚½‚¾‚µA—×‚ÌƒEƒBƒ“ƒhƒE‚Ìƒtƒ@ƒCƒ‹‚Ì“à—e‚ğ•\¦‚·‚é‹@”\‚ÉŠÖ‚µ‚Ä‚ÍA‘Î‰‚·‚é
+ƒtƒ@ƒCƒ‹‚ğƒNƒ[ƒY‚µ‚Ä‚µ‚Ü‚¤‚Æ‚¤‚Ü‚­“­‚«‚Ü‚¹‚ñ‚Ì‚Å‚²’ˆÓ‚­‚¾‚³‚¢B
 
 @node Cooperation with other packages, Customizations, Inclusion hierarchy browser, Top
 @comment  node-name,  next,  previous,  up
-@chapter $BB>%Q%C%1!<%8$H$NO"7H(B
-@cindex  $BB>%Q%C%1!<%8$H$NO"7H(B[$B$?$O$D$1$($7$H$N$l$s$1$$(B]
+@chapter ‘¼ƒpƒbƒP[ƒW‚Æ‚Ì˜AŒg
+@cindex  ‘¼ƒpƒbƒP[ƒW‚Æ‚Ì˜AŒg[‚½‚Í‚Â‚¯‚¦‚µ‚Æ‚Ì‚ê‚ñ‚¯‚¢]
 
 @section gmhist
 @cindex gmhist
-@cindex $B%3%^%s%I%R%9%H%j(B[$B$3$^$s$H$R$9$H$j(B]
-@cindex $B%R%9%H%j(B[$B$R$9$H$j(B]
+@cindex ƒRƒ}ƒ“ƒhƒqƒXƒgƒŠ[‚±‚Ü‚ñ‚Æ‚Ğ‚·‚Æ‚è]
+@cindex ƒqƒXƒgƒŠ[‚Ğ‚·‚Æ‚è]
 
-  @file{gmhist.el}$B$H(B@file{gmhist-mh.el} $B$r%m!<%I$7$F$$$k>l9g!"%W%l%t%e!<%3(B
-$B%^%s%I$NF~NO(B(@kbd{[prefix] tp]})$B!"0u:~%3%^%s%I$NF~NO(B(@kbd{[prefix] tl})$B$N(B
-$B;~$KFHN)$7$?%R%9%H%j$rMxMQ$G$-$^$9!#$=$l$>$l$N%W%m%s%W%H$G!"(B@kbd{M-p} $B$r2!(B
-$B$9$HD>A0$KMxMQ$7$?%3%^%s%IJ8;zNs$r$/$jJV$78F$S=P$9$3$H$,$G$-$^$9!#(B
+  @file{gmhist.el}‚Æ@file{gmhist-mh.el} ‚ğƒ[ƒh‚µ‚Ä‚¢‚éê‡AƒvƒŒƒ”ƒ…[ƒR
+ƒ}ƒ“ƒh‚Ì“ü—Í(@kbd{[prefix] tp]})AˆóüƒRƒ}ƒ“ƒh‚Ì“ü—Í(@kbd{[prefix] tl})‚Ì
+‚É“Æ—§‚µ‚½ƒqƒXƒgƒŠ‚ğ—˜—p‚Å‚«‚Ü‚·B‚»‚ê‚¼‚ê‚Ìƒvƒƒ“ƒvƒg‚ÅA@kbd{M-p} ‚ğ‰Ÿ
+‚·‚Æ’¼‘O‚É—˜—p‚µ‚½ƒRƒ}ƒ“ƒh•¶š—ñ‚ğ‚­‚è•Ô‚µŒÄ‚Ño‚·‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 @section min-out
 @cindex min-out
 
-  @file{min-out.el} (@code{outline-minor-mode}) $B$HLnD;$rAH$_9g$o$;$F;H$&$3(B
-$B$H$b$b$A$m$s2DG=$G$9!#@_Dj$NJ}K!$K4X$7$F$O(B@file{yatexm-o.el}$B$r$4Mw$/$@$5$$!#(B
+  @file{min-out.el} (@code{outline-minor-mode}) ‚Æ–ì’¹‚ğ‘g‚İ‡‚í‚¹‚Äg‚¤‚±
+‚Æ‚à‚à‚¿‚ë‚ñ‰Â”\‚Å‚·Bİ’è‚Ì•û–@‚ÉŠÖ‚µ‚Ä‚Í@file{yatexm-o.el}‚ğ‚²——‚­‚¾‚³‚¢B
 
 @node Customizations, Etc, Cooperation with other packages, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B%+%9%?%^%$%:(B
-@cindex $B%+%9%?%^%$%:(B[$B$+$9$?$^$$$9(B]
-@cindex $B%-!<%"%5%$%s(B[$B$-$$$"$5$$$s(B]
+@chapter ƒJƒXƒ^ƒ}ƒCƒY
+@cindex ƒJƒXƒ^ƒ}ƒCƒY[‚©‚·‚½‚Ü‚¢‚·]
+@cindex ƒL[ƒAƒTƒCƒ“[‚«‚¢‚ ‚³‚¢‚ñ]
 
-  $BLnD;$NF0:n$r@)8f$9$k<o!9$NJQ?t$rFH<+$K@_Dj$9$k$3$H$K$h$j!"Jd40F~(B
-$BNO$r5/F0$9$k%-!<%"%5%$%s$rJQ$($?$j!"4D6-L>$NJd408uJd$r$5$i$K=<<B$5(B
-$B$;$k$3$H$J$I$,$G$-$^$9!#(B
+  –ì’¹‚Ì“®ì‚ğ§Œä‚·‚éíX‚Ì•Ï”‚ğ“Æ©‚Éİ’è‚·‚é‚±‚Æ‚É‚æ‚èA•âŠ®“ü
+—Í‚ğ‹N“®‚·‚éƒL[ƒAƒTƒCƒ“‚ğ•Ï‚¦‚½‚èAŠÂ‹«–¼‚Ì•âŠ®Œó•â‚ğ‚³‚ç‚É[À‚³
+‚¹‚é‚±‚Æ‚È‚Ç‚ª‚Å‚«‚Ü‚·B
 
 @menu
-* Lisp variables::              lisp $BJQ?t(B
-* Add-in functions::            $BIU2C4X?t(B($B%"%I%$%s4X?t(B)
+* Lisp variables::              lisp •Ï”
+* Add-in functions::            •t‰ÁŠÖ”(ƒAƒhƒCƒ“ŠÖ”)
 @end menu
 
 @node Lisp variables, Add-in functions, Customizations, Customizations
 @comment  node-name,  next,  previous,  up
-@section lisp $BJQ?t(B
-@cindex prefix$B%-!<JQ99(B[prefix$B$-$$$X$s$3$&(B]
+@section lisp •Ï”
+@cindex prefixƒL[•ÏX[prefix‚«‚¢‚Ö‚ñ‚±‚¤]
 
-  $BNc$($P(B prefix $B%-!<$r(B @kbd{C-c} $B0J30$N%-!<$K$7$?$$>l9g$O!"(B
-@code{YaTeX-prefix}$B$K(B prefix $B%-!<$K$7$?$$%7%s%\%k$rDj5A$7$F$/$@$5$$!#$5$i(B
-$B$K!"!V(B@kbd{C-c $B1Q;z(B}$B!W$H$$$&%-!<%P%$%s%I$OFH<+$N4X?t$,3d$jEv$F$F$"$k$N$G;H(B
-$B$$$?$/$J$$!#$3$N$h$&$J;~$O!"(B@code{YaTeX-inhibit-prefix-letter} $B$r(B @code{t} 
-$B$K@_Dj$9$k$3$H$K$h$j!"(B@kbd{C-c $B1Q;z!D(B}$B$N%P%$%s%I$,A4$F!"BP1~$9$k(B@kbd{C-c
-C-$B1Q;z!D(B}$B$KJQ$o$j$^$9(B($B$?$@$7!"(Bbegin$B7?(B large$B7?Jd40$NBgJ8;z5/F0$K$h$k%j%8%g(B
-$B%s;XDj$O2DG=$J$^$^$G$9!#$3$l$bL58z$K$7$?$$>l9g$O(B@code{t}$B$G$O$J$/(B 1 $B$K%;%C(B
-$B%H$7$F2<$5$$!#(B)$B!#(B
+  —á‚¦‚Î prefix ƒL[‚ğ @kbd{C-c} ˆÈŠO‚ÌƒL[‚É‚µ‚½‚¢ê‡‚ÍA
+@code{YaTeX-prefix}‚É prefix ƒL[‚É‚µ‚½‚¢ƒVƒ“ƒ{ƒ‹‚ğ’è‹`‚µ‚Ä‚­‚¾‚³‚¢B‚³‚ç
+‚ÉAu@kbd{C-c ‰pš}v‚Æ‚¢‚¤ƒL[ƒoƒCƒ“ƒh‚Í“Æ©‚ÌŠÖ”‚ªŠ„‚è“–‚Ä‚Ä‚ ‚é‚Ì‚Åg
+‚¢‚½‚­‚È‚¢B‚±‚Ì‚æ‚¤‚È‚ÍA@code{YaTeX-inhibit-prefix-letter} ‚ğ @code{t} 
+‚Éİ’è‚·‚é‚±‚Æ‚É‚æ‚èA@kbd{C-c ‰pšc}‚ÌƒoƒCƒ“ƒh‚ª‘S‚ÄA‘Î‰‚·‚é@kbd{C-c
+C-‰pšc}‚É•Ï‚í‚è‚Ü‚·(‚½‚¾‚µAbeginŒ^ largeŒ^•âŠ®‚Ì‘å•¶š‹N“®‚É‚æ‚éƒŠƒWƒ‡
+ƒ“w’è‚Í‰Â”\‚È‚Ü‚Ü‚Å‚·B‚±‚ê‚à–³Œø‚É‚µ‚½‚¢ê‡‚Í@code{t}‚Å‚Í‚È‚­ 1 ‚ÉƒZƒb
+ƒg‚µ‚Ä‰º‚³‚¢B)B
 
 @menu
-* All customizable variables::  $B%+%9%?%^%$%:JQ?t0lMw(B
-* Sample definitions::          $B%+%9%?%^%$%:JQ?t@_DjNc(B
-* Hook variables::              hook$BJQ?t(B
-* Hook file::                   hook$BMQ%U%!%$%k(B
+* All customizable variables::  ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——
+* Sample definitions::          ƒJƒXƒ^ƒ}ƒCƒY•Ï”İ’è—á
+* Hook variables::              hook•Ï”
+* Hook file::                   hook—pƒtƒ@ƒCƒ‹
 @end menu
 
 @node All customizable variables, Sample definitions, Lisp variables, Lisp variables
 @comment  node-name,  next,  previous,  up
-@subsection $B%+%9%?%^%$%:JQ?t0lMw(B
-@cindex $B%+%9%?%^%$%:JQ?t0lMw(B[$B$+$9$?$^$$$9$X$s$9$&$$$A$i$s(B]
+@subsection ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——
+@cindex ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——[‚©‚·‚½‚Ü‚¢‚·‚Ö‚ñ‚·‚¤‚¢‚¿‚ç‚ñ]
 
-  yatex-mode $B$K$*$1$k<!$NJQ?t$,%+%9%?%^%$%:2DG=$G$9!#(B@file{~/.emacs} $B$G(B 
-@code{setq} $B$7$F$*$1$P!"$=$A$i$NDj5A$,M%@h$5$l$^$9!#3g8L$NCf$O%G%U%)%k%HCM(B
-$B$G$9!#<B:]$KJQ?t$NCM$rJQ99$9$k>l9g$O(B @kbd{M-x describe-variable} $B$G(B
-$BJQ?t$N>\:Y$J@bL@$r;2>H$7$F$/$@$5$$!#(B
+  yatex-mode ‚É‚¨‚¯‚éŸ‚Ì•Ï”‚ªƒJƒXƒ^ƒ}ƒCƒY‰Â”\‚Å‚·B@file{~/.emacs} ‚Å 
+@code{setq} ‚µ‚Ä‚¨‚¯‚ÎA‚»‚¿‚ç‚Ì’è‹`‚ª—Dæ‚³‚ê‚Ü‚·BŠ‡ŒÊ‚Ì’†‚ÍƒfƒtƒHƒ‹ƒg’l
+‚Å‚·BÀÛ‚É•Ï”‚Ì’l‚ğ•ÏX‚·‚éê‡‚Í @kbd{M-x describe-variable} ‚Å
+•Ï”‚ÌÚ×‚Èà–¾‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢B
 
 @defvar YaTeX-prefix
-yatex-mode $BCf$N%W%j%U%#%/%9%-!<(B (@kbd{\C-c})
+yatex-mode ’†‚ÌƒvƒŠƒtƒBƒNƒXƒL[ (@kbd{\C-c})
 @end defvar
 
 @defvar YaTeX-inhibit-prefix-letter
-prefix $B%-!<$ND>8e$N%-!<%P%$%s%I$G(B @kbd{$B1Q;z(B} $B$N$b$N$r(B @kbd{C-$B1Q;z(B} $B$KJQ99(B 
+prefix ƒL[‚Ì’¼Œã‚ÌƒL[ƒoƒCƒ“ƒh‚Å @kbd{‰pš} ‚Ì‚à‚Ì‚ğ @kbd{C-‰pš} ‚É•ÏX 
 (@code{nil})
 @end defvar
 
 @defvar YaTeX-fill-prefix
-$BK\J8$r=q$/;~$N9TF,$KA^F~$9$k@\F,<-$9$J$o$A(B fill-prefix (@code{""(nil)})
+–{•¶‚ğ‘‚­‚Ìs“ª‚É‘}“ü‚·‚éÚ“ª«‚·‚È‚í‚¿ fill-prefix (@code{""(nil)})
 @end defvar
 
 @defvar YaTeX-user-completion-table
-$B3X=,$7$?(BLa@TeX{}$B%3%^%s%IJ]B8%U%!%$%kL>(B (@code{"~/.yatexrc"})
+ŠwK‚µ‚½La@TeX{}ƒRƒ}ƒ“ƒh•Û‘¶ƒtƒ@ƒCƒ‹–¼ (@code{"~/.yatexrc"})
 @end defvar
 
 @defvar YaTeX-kanji-code
-$BJ8=q$r:n@.$9$k;~$N4A;z%3!<%I(B 1=Shift JIS, 2=JIS, 3=EUC (2 (MS-DOS$B$G$O(B1))
+•¶‘‚ğì¬‚·‚é‚ÌŠ¿šƒR[ƒh 1=Shift JIS, 2=JIS, 3=EUC (2 (MS-DOS‚Å‚Í1))
 @end defvar
 
 @defvar tex-command
-La@TeX{}$B%?%$%W%;%C%?%3%^%s%IL>(B (@code{"jlatex"})
+La@TeX{}ƒ^ƒCƒvƒZƒbƒ^ƒRƒ}ƒ“ƒh–¼ (@code{"platex"})
 @end defvar
 
 @defvar dvi2-command
-$B%W%l%t%e!<%"%3%^%s%IL>(B (@code{"xdvi -geo +0+0 -s 4"})
+ƒvƒŒƒ”ƒ…[ƒAƒRƒ}ƒ“ƒh–¼ (@code{"xdvi -geo +0+0 -s 4"})
 @end defvar
 
 @defvar dviprint-command-format
-dvi$B%U%!%$%k$N0u:~$K;H$o$l$k%3%^%s%I<0(B (@code{"dvi2ps %f %t %s | lpr"})
+dviƒtƒ@ƒCƒ‹‚Ìˆóü‚Ég‚í‚ê‚éƒRƒ}ƒ“ƒh® (@code{"dvi2ps %f %t %s | lpr"})
 @end defvar
 
 @defvar dviprint-from-format
-$B>e$N(B@code{%f}$B$KAjEv$9$k3+;O%Z!<%8;XDj=q<0!"(B@code{%b} $B$,3+;O%Z!<%8HV9f$KJQ(B
-$B$o$k(B (@code{"-f %b"})
+ã‚Ì@code{%f}‚É‘Š“–‚·‚éŠJnƒy[ƒWw’è‘®A@code{%b} ‚ªŠJnƒy[ƒW”Ô†‚É•Ï
+‚í‚é (@code{"-f %b"})
 @end defvar
 
 @defvar dviprint-to-format
-@code{%t} $B$KAjEv$9$k=*N;%Z!<%8;XDj=q<0!"(B@code{%e}$B$,=*N;%Z!<%8HV9f$KJQ$o$k(B 
+@code{%t} ‚É‘Š“–‚·‚éI—¹ƒy[ƒWw’è‘®A@code{%e}‚ªI—¹ƒy[ƒW”Ô†‚É•Ï‚í‚é 
 (@code{"-t %e"})
 @end defvar
 
 @defvar makeindex-command
-makeindex$B%3%^%s%I(B (@code{"makeindex"} (MS-DOS$B$G$O(B@code{"makeind"}))
+makeindexƒRƒ}ƒ“ƒh (@code{"makeindex"} (MS-DOS‚Å‚Í@code{"makeind"}))
 @end defvar
 
 @defvar YaTeX-need-nonstop
-@code{\nonstopmode@{@}}$B$r<+F0E*$KIU2C$9$k$+(B (@code{nil})
+@code{\nonstopmode@{@}}‚ğ©“®“I‚É•t‰Á‚·‚é‚© (@code{nil})
 @end defvar
 
 @defvar latex-warning-regexp
-latex$B%3%^%s%I$N=PNO$9$k%&%)!<%K%s%09T$N@55,I=8=(B (@code{"line.* [0-9]*"})
+latexƒRƒ}ƒ“ƒh‚Ìo—Í‚·‚éƒEƒH[ƒjƒ“ƒOs‚Ì³‹K•\Œ» (@code{"line.* [0-9]*"})
 @end defvar
 
 @defvar latex-error-regexp
-$BF1$8$/%(%i!<9T$N@55,I=8=(B (@code{"l\\.[1-9][0-9]*"})
+“¯‚¶‚­ƒGƒ‰[s‚Ì³‹K•\Œ» (@code{"l\\.[1-9][0-9]*"})
 @end defvar
 
 @defvar latex-dos-emergency-message
-MS-DOS$B>e$GF0:n$9$k(B latex $B%3%^%s%I$,!"%(%i!<$K$h$jDd;_$9$k$H$-=PNO$9$k%a%C(B
-$B%;!<%8(B (@code{"Emergency stop"})
+MS-DOSã‚Å“®ì‚·‚é latex ƒRƒ}ƒ“ƒh‚ªAƒGƒ‰[‚É‚æ‚è’â~‚·‚é‚Æ‚«o—Í‚·‚éƒƒb
+ƒZ[ƒW (@code{"Emergency stop"})
 @end defvar
 
 @defvar latex-message-kanji-code
-jlatex $B%3%^%s%I$N=PNO$9$k%a%C%;!<%8$N4A;z%3!<%I(B.$B%?%$%W%;%C%H%P%C%U%!(B
-$B$N=PNO$,2=$1$k;~$O!"$3$l$r@_Dj$9$k(B (2, Nemacs$B$G$N$_M-8z(B)
+ƒ^ƒCƒvƒZƒbƒ^‚Ìo—Í‚·‚éƒƒbƒZ[ƒW‚ÌŠ¿šƒR[ƒh.ƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@
+‚Ìo—Í‚ª‰»‚¯‚é‚ÍA‚±‚ê‚ğİ’è‚·‚é (2, Nemacs‚Å‚Ì‚İ—LŒø)
 @end defvar
 
 @defvar NTT-jTeX
-$B8E$$(BNTT-j@TeX{}$B;HMQ;~$N$h$&$K%$%s%G%s%H$7$?9T$N@hF,$HA0$N9T$N(B
-($B%?%$%W%;%C%H8e$N(B)$B;z4V$,6u$$$F$7$^$&$N$r7y$&>l9g$O(B@code{t}$B$K$9$k(B
+ŒÃ‚¢NTT-j@TeX{}g—p‚Ì‚æ‚¤‚ÉƒCƒ“ƒfƒ“ƒg‚µ‚½s‚Ìæ“ª‚Æ‘O‚Ìs‚Ì
+(ƒ^ƒCƒvƒZƒbƒgŒã‚Ì)šŠÔ‚ª‹ó‚¢‚Ä‚µ‚Ü‚¤‚Ì‚ğŒ™‚¤ê‡‚Í@code{t}‚É‚·‚é
 (@code{nil})
 @end defvar
 
 @defvar YaTeX-item-regexp
-item$B$N7eB7$($N;~$KMQ$$$k!"(Bitem$B$N@55,I=8=(B (@code{"\\\\(sub\\)*item"})
+item‚ÌŒ…‘µ‚¦‚Ì‚É—p‚¢‚éAitem‚Ì³‹K•\Œ» (@code{"\\\\(sub\\)*item"})
 @end defvar
 
 @defvar YaTeX-verb-regexp
-verb$B%3%^%s%I$N@55,I=8=!#@hF,$N(B\\\\$B$O$D$1$J$$(B (@code{"verb\\*?\\|path"})
+verbƒRƒ}ƒ“ƒh‚Ì³‹K•\Œ»Bæ“ª‚Ì\\\\‚Í‚Â‚¯‚È‚¢ (@code{"verb\\*?\\|path"})
 @end defvar
 
 @defvar YaTeX-nervous
-$B%m!<%+%k<-=q$rMQ$$$k;~(B @code{t} (@code{t})
+ƒ[ƒJƒ‹«‘‚ğ—p‚¢‚é @code{t} (@code{t})
 @end defvar
 
 @defvar YaTeX-sectioning-regexp
-$B%;%/%7%g%s6h@Z$j@_Dj%3%^%s%I$N@55,I=8=(B 
+ƒZƒNƒVƒ‡ƒ“‹æØ‚èİ’èƒRƒ}ƒ“ƒh‚Ì³‹K•\Œ» 
 (@code{"\\(part\\|chapter\\*?\\|\\(sub\\)*\\(section\\|paragraph\\)\\*?\\)\\b"})
 @end defvar
 
 @defvar YaTeX-fill-inhibit-environments
-fill $B$rM^;_$9$k4D6-L>$N%j%9%H(B 
+fill ‚ğ—}~‚·‚éŠÂ‹«–¼‚ÌƒŠƒXƒg 
 (@code{'("tabular" "tabular*" "array" "picture" "eqnarray" "eqnarray*" "equation" "math" "displaymath" "verbatim" "verbatim*")})
 @end defvar
 
 @defvar YaTeX-uncomment-once
-$BNN0h(Buncomment$B$G9TF,$NJ#?t$N(B@code{%}$B$rA4$F:o=|$9$k$+(B (@code{nil})
+—Ìˆæuncomment‚Ås“ª‚Ì•¡”‚Ì@code{%}‚ğ‘S‚Äíœ‚·‚é‚© (@code{nil})
 @end defvar
 
 @defvar YaTeX-close-paren-always
-$B3+$-3g8L$NF~NO$G>o$KJD$83g8L$rF~NO$9$k(B (@code{t})
+ŠJ‚«Š‡ŒÊ‚Ì“ü—Í‚Åí‚É•Â‚¶Š‡ŒÊ‚ğ“ü—Í‚·‚é (@code{t})
 @end defvar
 
 @defvar YaTeX-auto-math-mode
-$B?t<0%b!<%I$N@Z$jBX$($r<+F0E*$K9T$&(B (@code{t})
+”®ƒ‚[ƒh‚ÌØ‚è‘Ö‚¦‚ğ©“®“I‚És‚¤ (@code{t})
 @end defvar
 
 @defvar YaTeX-math-key-list-private
-$B?t<0%$%a!<%8Jd40$GMQ$$$k(B ($B%W%j%U%#%/%9%-!<(B . $BBP1~Jd40%F!<%V%k(B) $B$N(B
-alist (@code{nil})$B!#Jd40%F!<%V%k$N=q$-J}$K$D$$$F$O(B@file{yatexmth.el}$B$r;2>H!#(B
+”®ƒCƒ[ƒW•âŠ®‚Å—p‚¢‚é (ƒvƒŠƒtƒBƒNƒXƒL[ . ‘Î‰•âŠ®ƒe[ƒuƒ‹) ‚Ì
+alist (@code{nil})B•âŠ®ƒe[ƒuƒ‹‚Ì‘‚«•û‚É‚Â‚¢‚Ä‚Í@file{yatexmth.el}‚ğQÆB
 @end defvar
 
 @defvar YaTeX-default-pop-window-height
-1$B2hLL$N;~$K%?%$%W%;%C%H%P%C%U%!$r=i$a$F:n@.$9$k;~$N9b$5!#?tCM$G9T?t!"?t;z(B
-$BJ8;zNs$G(BEmacs$B%&%#%s%I%&$KBP$9$kI4J,N((B (10)
+1‰æ–Ê‚Ì‚Éƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@‚ğ‰‚ß‚Äì¬‚·‚é‚Ì‚‚³B”’l‚Ås”A”š
+•¶š—ñ‚ÅEmacsƒEƒBƒ“ƒhƒE‚É‘Î‚·‚é•S•ª—¦ (10)
 @end defvar
 
 @defvar YaTeX-help-file
-$B6&MQ%X%k%W%U%!%$%k(B (@file{$EMACS/etc/YATEXHLP.jp})
+‹¤—pƒwƒ‹ƒvƒtƒ@ƒCƒ‹ (@file{$doc-directory/../../site-lisp/YATEXHLP.jp})
 @end defvar
 
 @defvar YaTeX-help-file-private
-$B8D?MMQ%X%k%W%U%!%$%k(B (@file{"~/YATEXHLP.jp"})
+ŒÂl—pƒwƒ‹ƒvƒtƒ@ƒCƒ‹ (@file{"~/YATEXHLP.jp"})
 @end defvar
 
 @defvar YaTeX-no-begend-shortcut
-@kbd{[prefix] b ??} $B$N%7%g!<%H%+%C%H$r;H$o$:!"(B@kbd{[prefix] b} $B$@$1$GJd40(B
-$BF~NO$KF~$k(B (@code{nil})
+@kbd{[prefix] b ??} ‚ÌƒVƒ‡[ƒgƒJƒbƒg‚ğg‚í‚¸A@kbd{[prefix] b} ‚¾‚¯‚Å•âŠ®
+“ü—Í‚É“ü‚é (@code{nil})
 @end defvar
 
 @defvar YaTeX-hilit-pattern-adjustment-private
-$B@55,I=8=$H$=$l$K%^%C%A$9$k$b$N$NO@M}E*0UL#$r%7%s%\%k$G$"$i$o$7$?$b$N$N(B
-$B%j%9%H!D$N%j%9%H!#(Bhilit19 $B$rAH$_9~$s$G$$$k;~$N$_M-8z!#(B
-$B>\$7$/$O(B @code{(assq 'yatex-mode hilit-patterns-alist)} 
-$B$7$?7k2L$H!"JQ?t(B @code{YaTeX-hilit-pattern-adjustment-default} $B$NCM(B($B$H>l9g(B
-$B$K$h$C$F$O(B hilit19 $B$N%I%-%e%a%s%H(B)$B$r;2>H$;$h!#(B
+³‹K•\Œ»‚Æ‚»‚ê‚Éƒ}ƒbƒ`‚·‚é‚à‚Ì‚Ì˜_—“IˆÓ–¡‚ğƒVƒ“ƒ{ƒ‹‚Å‚ ‚ç‚í‚µ‚½‚à‚Ì‚Ì
+ƒŠƒXƒgc‚ÌƒŠƒXƒgBhilit19 ‚ğ‘g‚İ‚ñ‚Å‚¢‚é‚Ì‚İ—LŒøB
+Ú‚µ‚­‚Í @code{(assq 'yatex-mode hilit-patterns-alist)} 
+‚µ‚½Œ‹‰Ê‚ÆA•Ï” @code{YaTeX-hilit-pattern-adjustment-default} ‚Ì’l(‚Æê‡
+‚É‚æ‚Á‚Ä‚Í hilit19 ‚ÌƒhƒLƒ…ƒƒ“ƒg)‚ğQÆ‚¹‚æB
 @end defvar
 
 @defvar YaTeX-sectioning-level
-LaTeX$B$N%;%/%7%g%sC10L@k8@%3%^%s%I$H$=$NO@M}E*9b$5$N(Balist$B!#(B
+LaTeX‚ÌƒZƒNƒVƒ‡ƒ“’PˆÊéŒ¾ƒRƒ}ƒ“ƒh‚Æ‚»‚Ì˜_—“I‚‚³‚ÌalistB
 @end defvar
 
 @defvar YaTeX-hierarchy-ignore-heading-regexp
-Hierarchy $B%P%C%U%!$ODL>o%U%!%$%k%X%C%@$H$7$F!"(BLaTeX$B$N%;%/%7%g%s@k8@%3%^%s(B
-$B%I$N0z?t$r8!:w$7!"$=$l$,$J$1$l$P%3%a%s%H9T$rC5$9$,!"$=$N:]$K%X%C%@$H$7$F$O(B
-$B0UL#$r;}$?$J$$%Q%?!<%s$r$3$NJQ?t$K@_Dj$9$k!#%G%U%)%k%H$G$O(B RCS $B%X%C%@$H%b!<(B
-$B%I;XDj9T(B(-*- xxx -*-)$B$,@_Dj$5$l$F$$$k!#(B
+Hierarchy ƒoƒbƒtƒ@‚Í’Êíƒtƒ@ƒCƒ‹ƒwƒbƒ_‚Æ‚µ‚ÄALaTeX‚ÌƒZƒNƒVƒ‡ƒ“éŒ¾ƒRƒ}ƒ“
+ƒh‚Ìˆø”‚ğŒŸõ‚µA‚»‚ê‚ª‚È‚¯‚ê‚ÎƒRƒƒ“ƒgs‚ğ’T‚·‚ªA‚»‚ÌÛ‚Éƒwƒbƒ_‚Æ‚µ‚Ä‚Í
+ˆÓ–¡‚ğ‚½‚È‚¢ƒpƒ^[ƒ“‚ğ‚±‚Ì•Ï”‚Éİ’è‚·‚éBƒfƒtƒHƒ‹ƒg‚Å‚Í RCS ƒwƒbƒ_‚Æƒ‚[
+ƒhw’ès(-*- xxx -*-)‚ªİ’è‚³‚ê‚Ä‚¢‚éB
 @end defvar
 
 @defvar YaTeX-skip-default-reader
-Non-nil $B$K@_Dj$9$k$H(Bsection$B7?%3%^%s%I$N0z?tF~NO;~!"%"%I%$%s4X?t$,$J$1$l$P(B
-$B%_%K%P%C%U%!$G$NFI$_9~$_$r$;$:$KF~NO$r40N;$5$;$k(B (@code{nil})
+Non-nil ‚Éİ’è‚·‚é‚ÆsectionŒ^ƒRƒ}ƒ“ƒh‚Ìˆø”“ü—ÍAƒAƒhƒCƒ“ŠÖ”‚ª‚È‚¯‚ê‚Î
+ƒ~ƒjƒoƒbƒtƒ@‚Å‚Ì“Ç‚İ‚İ‚ğ‚¹‚¸‚É“ü—Í‚ğŠ®—¹‚³‚¹‚é (@code{nil})
 @end defvar
 
 @defvar YaTeX-create-file-prefix-g
-@code{\include}$B$J$I$G(B @kbd{prefix g}$B$7$?;~$K!"%8%c%s%W@h$,B8:_$7$J$$%U%!%$(B
-$B%k$G$"$C$F$b%*!<%W%s$9$k(B (@code{nil})
+@code{\include}‚È‚Ç‚Å @kbd{prefix g}‚µ‚½‚ÉAƒWƒƒƒ“ƒvæ‚ª‘¶İ‚µ‚È‚¢ƒtƒ@ƒC
+ƒ‹‚Å‚ ‚Á‚Ä‚àƒI[ƒvƒ“‚·‚é (@code{nil})
 @end defvar
 
 @defvar YaTeX-simple-messages
-$B3F<oJd40;~$N%a%C%;!<%8=PNO$r4JAG2=$9$k(B (@code{nil})
+Šeí•âŠ®‚ÌƒƒbƒZ[ƒWo—Í‚ğŠÈ‘f‰»‚·‚é (@code{nil})
 @end defvar
 
 @defvar YaTeX-hilit-sectioning-face
-$B?'IU$1$,M-8z$J;~$N(B @code{\part} $B$N?'(B 
-(@code{'(yellow/dodgerblue yellow/slateblue)})$B!#(B
-$B%j%9%H$NBh0lMWAG$O(B @code{hilit-background-mode} $B$,(B @code{'light} $B$N;~$N!"(B
-$BBhFsMWAG$O(B @code{'dark} $B$N;~$N(B @code{\chapter} $B$N?'$G!"J8;z?'(B/$BGX7J?'(B $B$N$h(B
-$B$&$K;XDj$9$k!#(B
+F•t‚¯‚ª—LŒø‚È‚Ì @code{\part} ‚ÌF 
+(@code{'(yellow/dodgerblue yellow/slateblue)})B
+ƒŠƒXƒg‚Ì‘æˆê—v‘f‚Í @code{hilit-background-mode} ‚ª @code{'light} ‚Ì‚ÌA
+‘æ“ñ—v‘f‚Í @code{'dark} ‚Ì‚Ì @code{\chapter} ‚ÌF‚ÅA•¶šF/”wŒiF ‚Ì‚æ
+‚¤‚Éw’è‚·‚éB
 @end defvar
 
 @defvar YaTeX-hilit-sectioning-attenuation-rate
-$B?'IU$1$,M-8z$J;~$N!"(B@code{\subparagraph} $B$N?'$r(B @code{\chapter} $B$NG;EY$N2?(B
-%$BGv$/$7$?$b$N$K$9$k$+(B (@code{'(15 40)}) @code{YaTeX-hilit-sectioning-face}
-$B$N9`;2>H!#(B
+F•t‚¯‚ª—LŒø‚È‚ÌA@code{\subparagraph} ‚ÌF‚ğ @code{\chapter} ‚Ì”Z“x‚Ì‰½
+%”–‚­‚µ‚½‚à‚Ì‚É‚·‚é‚© (@code{'(15 40)}) @code{YaTeX-hilit-sectioning-face}
+‚Ì€QÆB
 @end defvar
 
 @defvar YaTeX-use-AMS-LaTeX
-AMS-LaTeX $B$r;HMQ$9$k>l9g$O(B @code{t} $B$K@_Dj$9$k(B (@code{nil})
+AMS-LaTeX ‚ğg—p‚·‚éê‡‚Í @code{t} ‚Éİ’è‚·‚é (@code{nil})
 @end defvar
 
 @defvar YaTeX-use-LaTeX2e
-LaTeX2e $B$r;HMQ$9$k>l9g$O(B @code{t} $B$K@_Dj$9$k(B (@code{nil})
+LaTeX2e ‚ğg—p‚·‚éê‡‚Í @code{t} ‚Éİ’è‚·‚é (@code{t})
 @end defvar
 
 @defvar YaTeX-template-file
-$B?75,%U%!%$%k:n@.;~$K<+F0A^F~$9$k%U%!%$%kL>(B (@code{~/work/template.tex})
+V‹Kƒtƒ@ƒCƒ‹ì¬‚É©“®‘}“ü‚·‚éƒtƒ@ƒCƒ‹–¼ (@code{~/work/template.tex})
 @end defvar
 
 @defvar YaTeX-search-file-from-top-directory
-input$B$9$k%U%!%$%k$rC5$9$H$-$N4p=`%G%#%l%/%H%j$r(Bmain$B%U%!%$%k$N$"$k%G%#%l%/%H(B
-$B%j$K$9$k$+(B (@code{t})
+input‚·‚éƒtƒ@ƒCƒ‹‚ğ’T‚·‚Æ‚«‚ÌŠî€ƒfƒBƒŒƒNƒgƒŠ‚ğmainƒtƒ@ƒCƒ‹‚Ì‚ ‚éƒfƒBƒŒƒNƒg
+ƒŠ‚É‚·‚é‚© (@code{t})
 @end defvar
 @defvar YaTeX-use-font-lock
-$B%=!<%9$N?'$E$1%Q%C%1!<%8$H$7$F(B font-lock $B$rMxMQ$9$k$+$I$&$+(B
-(@code{(featurep 'font-lock)}
+ƒ\[ƒX‚ÌF‚Ã‚¯ƒpƒbƒP[ƒW‚Æ‚µ‚Ä font-lock ‚ğ—˜—p‚·‚é‚©‚Ç‚¤‚©
+(@code{(featurep 'font-lock)})
 @end defvar
 
 @defvar YaTeX-use-hilit19
-$B%=!<%9$N?'$E$1%Q%C%1!<%8$H$7$F(B hilit19 $B$rMxMQ$9$k$+$I$&$+(B
-(@code{(featurep 'hilit19)}
+ƒ\[ƒX‚ÌF‚Ã‚¯ƒpƒbƒP[ƒW‚Æ‚µ‚Ä hilit19 ‚ğ—˜—p‚·‚é‚©‚Ç‚¤‚©
+(@code{(featurep 'hilit19)})
 @end defvar
 
 @defvar YaTeX-use-italic-bold
-italic, bold$B%U%)%s%H$rLnD;$,C5$9$+$I$&$+(B (Emacs20$B0J9_$J$i(B@code{t})
-font-lock$BMxMQ;~$N$_M-8z!#(B
+italic, boldƒtƒHƒ“ƒg‚ğ–ì’¹‚ª’T‚·‚©‚Ç‚¤‚© (Emacs20ˆÈ~‚È‚ç@code{t})
+font-lock—˜—p‚Ì‚İ—LŒøB
 (@code{(featurep 'hilit19)}
 @end defvar
 
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
 @comment  node-name,  next,  previous,  up
-@subsection $B%+%9%?%^%$%:JQ?t@_DjNc(B
-@cindex $B@_DjNc(B[$B$;$D$F$$$l$$(B]
+@subsection ƒJƒXƒ^ƒ}ƒCƒY•Ï”İ’è—á
+@cindex İ’è—á[‚¹‚Â‚Ä‚¢‚ê‚¢]
 
-  $B$?$H$($P!"(Bprefix $B%-!<$H$7$F(B@kbd{ESC}$B$r;HMQ$7!"?7$?$JJd408uJd$r3JG<$9$k%U%!(B
-$B%$%k$r!"(B@file{~/src/emacs/yatexrc} $B$K$7!"9TF,$N(B prefix $B$r%?%VJ8;z0l$D$KJQ(B
-$B$($?$$$H$-$O!"(B
+  ‚½‚Æ‚¦‚ÎAprefix ƒL[‚Æ‚µ‚Ä@kbd{ESC}‚ğg—p‚µAV‚½‚È•âŠ®Œó•â‚ğŠi”[‚·‚éƒtƒ@
+ƒCƒ‹‚ğA@file{~/src/emacs/yatexrc} ‚É‚µAs“ª‚Ì prefix ‚ğƒ^ƒu•¶šˆê‚Â‚É•Ï
+‚¦‚½‚¢‚Æ‚«‚ÍA
 
 @lisp
         (setq YaTeX-prefix "\e"
@@ -2049,22 +2050,22 @@ font-lock$BMxMQ;~$N$_M-8z!#(B
 @end lisp
 
 @noindent 
-$B$r(B @file{~/.emacs} $B$K2C$($^$9!#(B
+‚ğ @file{~/.emacs} ‚É‰Á‚¦‚Ü‚·B
 
 @node Hook variables, Hook file, Sample definitions, Lisp variables
 @comment  node-name,  next,  previous,  up
-@subsection hook$BJQ?t(B
-@cindex hook$BJQ?t(B[hook$B$X$s$9$&(B]
+@subsection hook•Ï”
+@cindex hook•Ï”[hook‚Ö‚ñ‚·‚¤]
 @cindex yatex-mode-hook
 @cindex yatex-mode-load-hook
 
-  $B$^$?!"(Bhook $BJQ?t(B @code{yatex-mode-hook}, @code{yatex-mode-load-hook} $B$rMQ(B
-$B0U$7$F$$$^$9!#$9$Y$F$N(B yatex-mode $B$N%P%C%U%!$G:nMQ$5$;$?$$$b$N$O!"(B
-@code{yatex-mode-hook} $B$K5-=R$7!"(B@file{yatex.el} $B$r%m!<%I$9$k;~$@$1:nMQ$5(B
-$B$;$?$$$b$N$O(B@code{yatex-mode-load-hook} $B$K5-=R$7$^$9!#Nc$($P!"(B
-@code{outline-minor-mode} $B$rMxMQ$9$k>l9g!"$=$l$>$l$N%P%C%U%!$G(B 
-@code{outline-minor-mode} $B$rM-8z$K$7$?$$$N$G!"(B@code{yatex-mode-hook} $B$r<!(B
-$B$N$h$&$K@_Dj$7$^$9!#(B
+  ‚Ü‚½Ahook •Ï” @code{yatex-mode-hook}, @code{yatex-mode-load-hook} ‚ğ—p
+ˆÓ‚µ‚Ä‚¢‚Ü‚·B‚·‚×‚Ä‚Ì yatex-mode ‚Ìƒoƒbƒtƒ@‚Åì—p‚³‚¹‚½‚¢‚à‚Ì‚ÍA
+@code{yatex-mode-hook} ‚É‹Lq‚µA@file{yatex.el} ‚ğƒ[ƒh‚·‚é‚¾‚¯ì—p‚³
+‚¹‚½‚¢‚à‚Ì‚Í@code{yatex-mode-load-hook} ‚É‹Lq‚µ‚Ü‚·B—á‚¦‚ÎA
+@code{outline-minor-mode} ‚ğ—˜—p‚·‚éê‡A‚»‚ê‚¼‚ê‚Ìƒoƒbƒtƒ@‚Å 
+@code{outline-minor-mode} ‚ğ—LŒø‚É‚µ‚½‚¢‚Ì‚ÅA@code{yatex-mode-hook} ‚ğŸ
+‚Ì‚æ‚¤‚Éİ’è‚µ‚Ü‚·B
 
 @lisp
         (setq yatex-mode-hook
@@ -2072,78 +2073,78 @@ font-lock$BMxMQ;~$N$_M-8z!#(B
 @end lisp
 
 @noindent 
-$B5U$K!"FH<+$N%-!<Dj5A$r9T$$$?$$;~$J$I$O!"(B@code{yatex-mode-load-hook} $B$rMxMQ(B
-$B$7$^$9!#Nc$($P!"(Bbegin $B7?Jd40$K$*$$$F!"(B document $B$d!"(Benumerate $B0J30$N4D6-L>(B
-$B$b%7%g!<%H%+%C%H%-!<$GF~$l$?$$$J$I$H$$$&;~$O!"<!$N$h$&$K$7$^$9!#0J2<$NNc$O!"(B
-@kbd{[prefix] ba} $B$G(B @code{\begin@{abstract@}}, @code{\end@{abstract@}} $B$r(B
-$BA^F~$7$^$9!#(B
+‹t‚ÉA“Æ©‚ÌƒL[’è‹`‚ğs‚¢‚½‚¢‚È‚Ç‚ÍA@code{yatex-mode-load-hook} ‚ğ—˜—p
+‚µ‚Ü‚·B—á‚¦‚ÎAbegin Œ^•âŠ®‚É‚¨‚¢‚ÄA document ‚âAenumerate ˆÈŠO‚ÌŠÂ‹«–¼
+‚àƒVƒ‡[ƒgƒJƒbƒgƒL[‚Å“ü‚ê‚½‚¢‚È‚Ç‚Æ‚¢‚¤‚ÍAŸ‚Ì‚æ‚¤‚É‚µ‚Ü‚·BˆÈ‰º‚Ì—á‚ÍA
+@kbd{[prefix] ba} ‚Å @code{\begin@{abstract@}}, @code{\end@{abstract@}} ‚ğ
+‘}“ü‚µ‚Ü‚·B
 
 @lisp
         (setq yatex-mode-load-hook
               '(lambda() (YaTeX-define-begend-key "ba" "abstract")))
 @end lisp
 
-$B$J$*!"?7$?$J%-!<$NDj5A$K$O!"4X?t(B @code{YaTeX-define-key}
-@code{YaTeX-define-begend-key}$B$rMxMQ$9$k$h$&$K$7$F$/$@$5$$!#(B
+‚È‚¨AV‚½‚ÈƒL[‚Ì’è‹`‚É‚ÍAŠÖ” @code{YaTeX-define-key}
+@code{YaTeX-define-begend-key}‚ğ—˜—p‚·‚é‚æ‚¤‚É‚µ‚Ä‚­‚¾‚³‚¢B
 
 @node Hook file,  , Hook variables, Lisp variables
 @comment  node-name,  next,  previous,  up
-@subsection hook$BMQ%U%!%$%k(B
+@subsection hook—pƒtƒ@ƒCƒ‹
 
-  $BJQ?t(B @code{yatex-mode-load-hook} $B$GDj5A$9$kFbMF$,B?$$;~$O!"(B
-@file{yatexhks.el}$B$H$$$&%U%!%$%k$r:n$j!"$=$NCf$KLnD;4XO"$N@_Dj$r=q$/;v$G!"(B
-$B=i4|2=$N;~$K<+F0E*$K%m!<%I$7$^$9!#(B
+  •Ï” @code{yatex-mode-load-hook} ‚Å’è‹`‚·‚é“à—e‚ª‘½‚¢‚ÍA
+@file{yatexhks.el}‚Æ‚¢‚¤ƒtƒ@ƒCƒ‹‚ğì‚èA‚»‚Ì’†‚É–ì’¹ŠÖ˜A‚Ìİ’è‚ğ‘‚­–‚ÅA
+‰Šú‰»‚Ì‚É©“®“I‚Éƒ[ƒh‚µ‚Ü‚·B
 
 
 @node Add-in functions,  , Lisp variables, Customizations
 @comment  node-name,  next,  previous,  up
-@section $BIU2C4X?t(B($B%"%I%$%s4X?t(B)
+@section •t‰ÁŠÖ”(ƒAƒhƒCƒ“ŠÖ”)
 
-  $B3F<oJd40;~$K!"4D6-L>$d%3%^%s%IL>$K1~$8$?$-$a:Y$d$+$JJd40F~NO5!G=$r<B8=$9(B
-$B$k$?$a$N4X?t$r:n@.$9$k$3$H$,$G$-$^$9!#$3$N4X?t$N:n@.J}K!$d!"AH$_9~$_J}K!$K(B
-$B4X$7$F$O!"(B@code{yatexadd.doc} $B$r$4Mw$/$@$5$$!#(B
+  Šeí•âŠ®‚ÉAŠÂ‹«–¼‚âƒRƒ}ƒ“ƒh–¼‚É‰‚¶‚½‚«‚ß×‚â‚©‚È•âŠ®“ü—Í‹@”\‚ğÀŒ»‚·
+‚é‚½‚ß‚ÌŠÖ”‚ğì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚±‚ÌŠÖ”‚Ìì¬•û–@‚âA‘g‚İ‚İ•û–@‚É
+ŠÖ‚µ‚Ä‚ÍA@code{yatexadd.doc} ‚ğ‚²——‚­‚¾‚³‚¢B
 
 @node Etc, Copying, Customizations, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B$=$NB>(B
+@chapter ‚»‚Ì‘¼
 
-  $BLnD;$NI8=`$N(B La@TeX{} $B%3%^%s%I$N<-=q$K$O!":n<T$,IQHK$K;H$&$b$N$7$+EPO?$5(B
-$B$l$F$$$^$;$s!#$3$l$O!"Jd408uJd$K;H$$$=$&$b$J$$%3%^%s%I$,B8:_$7$F!"Jd40$7$?(B
-$B$$%3%^%s%I$r=P$9$^$G$N%9%H%m!<%/?t$rA}$d$7$F$7$^$&;v$rKI;_$9$k$?$a$G$9!#I8(B
-$B=`<-=q$K$J$$%3%^%s%I$b!"$G$-$k$@$1Jd40F~NOJ}<0$rMxMQ$7!"%f!<%6<-=q$r=<<B$5(B
-$B$;$k$3$H$G!"$"$J$?$N(B La@TeX{} $B%9%?%$%k$K$"$C$?LnD;$X$H0i$C$F$$$/$3$H$G$7$g(B
-$B$&!#(B
+  –ì’¹‚Ì•W€‚Ì La@TeX{} ƒRƒ}ƒ“ƒh‚Ì«‘‚É‚ÍAìÒ‚ª•p”É‚Ég‚¤‚à‚Ì‚µ‚©“o˜^‚³
+‚ê‚Ä‚¢‚Ü‚¹‚ñB‚±‚ê‚ÍA•âŠ®Œó•â‚Ég‚¢‚»‚¤‚à‚È‚¢ƒRƒ}ƒ“ƒh‚ª‘¶İ‚µ‚ÄA•âŠ®‚µ‚½
+‚¢ƒRƒ}ƒ“ƒh‚ğo‚·‚Ü‚Å‚ÌƒXƒgƒ[ƒN”‚ğ‘‚â‚µ‚Ä‚µ‚Ü‚¤–‚ğ–h~‚·‚é‚½‚ß‚Å‚·B•W
+€«‘‚É‚È‚¢ƒRƒ}ƒ“ƒh‚àA‚Å‚«‚é‚¾‚¯•âŠ®“ü—Í•û®‚ğ—˜—p‚µAƒ†[ƒU«‘‚ğ[À‚³
+‚¹‚é‚±‚Æ‚ÅA‚ ‚È‚½‚Ì La@TeX{} ƒXƒ^ƒCƒ‹‚É‚ ‚Á‚½–ì’¹‚Ö‚Æˆç‚Á‚Ä‚¢‚­‚±‚Æ‚Å‚µ‚å
+‚¤B
 
 @node Copying, Concept Index, Etc, Top
 @comment  node-name,  next,  previous,  up
-@chapter $B<h$j07$$(B
+@chapter æ‚èˆµ‚¢
 
-  $BK\%W%m%0%i%`$O%U%j!<%=%U%H%&%'%"$G$9!#K\%W%m%0%i%`$r;HMQ$7$F@8$8$?$$$+$J(B
-$B$k7k2L$KBP$7$F$b:n<T$O@UG$$rIi$o$J$$$3$H$H$7$^$9!#E>:\Ey$K4X$7$F$O@)8B$$$?(B
-$B$7$^$;$s!#>o<1E*$K07$C$F$/$@$5$$!#$^$?!";HMQ$7$F$$$k;]$r%a%$%k$G$*CN$i$;$$(B
-$B$?$@$/$H!":n<T$O4n$s$G%5%]!<%H$KNe$`$3$H$G$7$g$&!#(B
+  –{ƒvƒƒOƒ‰ƒ€‚ÍƒtƒŠ[ƒ\ƒtƒgƒEƒFƒA‚Å‚·B–{ƒvƒƒOƒ‰ƒ€‚ğg—p‚µ‚Ä¶‚¶‚½‚¢‚©‚È
+‚éŒ‹‰Ê‚É‘Î‚µ‚Ä‚àìÒ‚ÍÓ”C‚ğ•‰‚í‚È‚¢‚±‚Æ‚Æ‚µ‚Ü‚·B“]Ú“™‚ÉŠÖ‚µ‚Ä‚Í§ŒÀ‚¢‚½
+‚µ‚Ü‚¹‚ñBí¯“I‚Éˆµ‚Á‚Ä‚­‚¾‚³‚¢B‚Ü‚½Ag—p‚µ‚Ä‚¢‚é|‚ğƒƒCƒ‹‚Å‚¨’m‚ç‚¹‚¢
+‚½‚¾‚­‚ÆAìÒ‚ÍŠì‚ñ‚ÅƒTƒ|[ƒg‚É—ã‚Ş‚±‚Æ‚Å‚µ‚å‚¤B
 
-  $B6l>p!"4uK>!"%P%0Js9p!"46A[Ey$O4?7^$$$?$7$^$9!#(B
-$BO"Mm$O(B yuuji@@yatex.org $B$^$G(B(2000$BG/(B12$B7n8=:_(B)$B!#(B
-$B7QB3E*$K;HMQ$7$F$/$@$5$kJ}$O%a%$%j%s%0%j%9%H!V(Bfj$BLnD;$N2q!W$K(B
-$B@'Hs2CF~$7$F$/$@$5$$!#2CF~J}K!$K$D$$$F$OK\%Q%C%1!<%8$N(B @file{docs/qanda}
-$B%U%!%$%k$N!V$=$NB>!W$N>O$r8fMw$/$@$5$$!#(B
+  ‹êîAŠó–]AƒoƒO•ñAŠ´‘z“™‚ÍŠ½Œ}‚¢‚½‚µ‚Ü‚·B
+˜A—‚Í yuuji@@yatex.org ‚Ü‚Å(2000”N12ŒŒ»İ)B
+Œp‘±“I‚Ég—p‚µ‚Ä‚­‚¾‚³‚é•û‚ÍƒƒCƒŠƒ“ƒOƒŠƒXƒgufj–ì’¹‚Ì‰ïv‚É
+¥”ñ‰Á“ü‚µ‚Ä‚­‚¾‚³‚¢B‰Á“ü•û–@‚É‚Â‚¢‚Ä‚Í–{ƒpƒbƒP[ƒW‚Ì @file{docs/qanda}
+ƒtƒ@ƒCƒ‹‚Ìu‚»‚Ì‘¼v‚ÌÍ‚ğŒä——‚­‚¾‚³‚¢B
 
-$B;EMM$O!"M=9p$J$/3N<B$K(B($B5$J,<!Bh$G(B)$BJQ99$5$l$^$9(B:-p$B!#(B
+d—l‚ÍA—\‚È‚­ŠmÀ‚É(‹C•ªŸ‘æ‚Å)•ÏX‚³‚ê‚Ü‚·:-pB
 
 @flushright
-$B9-@%M:Fs(B
+L£—Y“ñ
 @end flushright
 
 @node    Concept Index,  , Copying, Top
 @comment node-name, next, previous, up
-@unnumbered $B:w0z(B
+@unnumbered õˆø
 @printindex cp
 
-@c $B%+%9%?%^%$%:JQ?t:w0z$r:w0z$HJ,N%$9$k>l9g$K$O%3%a%s%H%"%&%H$r30$9(B!!!
+@c ƒJƒXƒ^ƒ}ƒCƒY•Ï”õˆø‚ğõˆø‚Æ•ª—£‚·‚éê‡‚É‚ÍƒRƒƒ“ƒgƒAƒEƒg‚ğŠO‚·!!!
 @c @node    Variable Index
 @c @comment node-name, next, previous, up
-@c @unnumbered $B%+%9%?%^%$%:JQ?t:w0z(B
+@c @unnumbered ƒJƒXƒ^ƒ}ƒCƒY•Ï”õˆø
 @c @printindex vr
 
 @contents
@@ -2153,6 +2154,7 @@ font-lock$BMxMQ;~$N$_M-8z!#(B
 @c Local Variables:
 @c fill-column: 74
 @c fill-prefix: nil
+@c buffer-file-coding-system: sjis-dos
 @c End:
 
 Tag table:

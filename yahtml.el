@@ -1,9 +1,9 @@
 ;;; -*- Emacs-Lisp -*-
-;;; (c ) 1994-2000 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Dec 25 18:56:49 2000 on firestorm
+;;; (c ) 1994-2002 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Wed May 22 13:55:01 2002 on firestorm
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.69"
+(defconst yahtml-revision-number "1.70"
   "Revision number of running yahtml.el")
 
 ;;;[Installation]
@@ -246,6 +246,13 @@ at each reserved chars.")
 				(not yahtml-use-font-lock))
   "*Non-nil means to Use hilit19 to highlight buffer")
 
+(defvar yahtml-mode-abbrev-table nil
+  "*Abbrev table in use in yahtml-mode buffers.")
+(define-abbrev-table 'yahtml-mode-abbrev-table ())
+
+(defvar yahtml-indentation-boundary "^\\s *<h[1-3]>"
+  "*Boundary regexp for indentation calculation.")
+
 ;;; --- customizable variable ends here ---
 (defvar yahtml-prefix-map nil)
 (defvar yahtml-mode-map nil "Keymap used in yahtml-mode.")
@@ -452,7 +459,10 @@ normal and region mode.  To customize yahtml, user should use this function."
    (mapconcat 'car yahtml-env-table "\\|")
    "\\)\\b")
   "Regexp of any closable elemnts.")
-  
+ 
+(defvar yahtml-indent-listing-constant t
+  "*Nil means indentation for listing obeys the column of `>'.
+T for static indentation depth")
 
 (or (assoc "p" yahtml-env-table)
     (setq yahtml-env-table (cons '("p") yahtml-env-table)))
@@ -540,24 +550,27 @@ normal and region mode.  To customize yahtml, user should use this function."
 (defvar yahtml-mode-old-mode nil)
 (defun yahtml-mode ()
   (interactive)
-  (kill-all-local-variables)
+  (let ((old-mm major-mode))		;Emacs21.0.95 resets major-mode
+    (kill-all-local-variables)		;with kill-all-local-variables
+    (if (not (eq 'yahtml-mode old-mm))
+	(set (make-local-variable 'yahtml-mode-old-mode) old-mm)))
   (let ((coding (or (yahtml-dir-default-charset) yahtml-kanji-code)))
     (cond
      ((and YaTeX-emacs-20 (boundp 'buffer-file-coding-system))
       (setq buffer-file-coding-system
 	    (or (and (fboundp 'set-auto-coding) buffer-file-name
-		     (save-excursion (set-auto-coding buffer-file-name 2000)))
+		     (save-excursion (set-auto-coding buffer-file-name (buffer-size))))
 		coding)))
      ((featurep 'mule)
       (set-file-coding-system coding))
      ((boundp 'NEMACS)
       (make-local-variable 'kanji-fileio-code)
       (setq kanji-fileio-code coding))))
-  (if (not (eq 'yahtml-mode major-mode))
-      (set (make-local-variable 'yahtml-mode-old-mode) major-mode))
   (setq major-mode 'yahtml-mode
 	mode-name "yahtml"
-	YaTeX-current-file-name (file-name-nondirectory (buffer-file-name)))
+	YaTeX-current-file-name (file-name-nondirectory
+				 (or (buffer-file-name) ""))
+	local-abbrev-table yahtml-mode-abbrev-table)
   (mapcar
    (function (lambda (x)
 	       (make-local-variable (car x))
@@ -833,13 +846,14 @@ normal and region mode.  To customize yahtml, user should use this function."
 	   (not (equal last-command-char ?\C-j))
 	   (memq yahtml-current-completion-type '(multiline inline))
 	   (yahtml-make-optional-argument ;should be made generic?
-	    "class" (completing-read "class: " a)))
+	    "class"
+	    (let ((completion-ignore-case t))
+	      (completing-read "class: " a))))
       (if (and (intern-soft addin) (fboundp (intern-soft addin))
 	       (stringp (setq s (funcall (intern addin))))
 	       (string< "" s))
 	  (if (eq (aref s 0) ? ) s (concat " " s))
 	""))))
-
 
 (defvar yahtml-completing-buffer nil)
 (defun yahtml-collect-labels (&optional file)
@@ -881,14 +895,15 @@ If optional argument FILE is specified collect labels in FILE."
   "Complete external URL from history or local file name."
   (interactive)
   (let ((p (point)) initial i2 cmpl path dir file listfunc beg labels
-	(lim (YaTeX-minibuffer-begin)))
+	(lim (YaTeX-minibuffer-begin))
+	(min (if (fboundp 'field-beginning) (field-beginning) (point-min))))
     (setq initial (YaTeX-minibuffer-string))
     (cond
      ((string-match "^http:" initial)
       (setq cmpl (try-completion initial yahtml-urls)
 	    listfunc (list 'lambda nil
 			   (list 'all-completions initial 'yahtml-urls))
-	    beg (point-min)))
+	    beg min))
      ((setq beg (string-match "#" initial))
       (or (equal beg 0)			;begin with #
 	  (progn
@@ -901,7 +916,7 @@ If optional argument FILE is specified collect labels in FILE."
 	    listfunc (list 'lambda ()
 			   (list 'all-completions
 				 initial (list 'quote labels)))
-	    beg (+ (point-min) beg)))
+	    beg (+ min beg)))
      (t
       (setq path (if (string-match "^/" initial)
 		     (or (yahtml-url-to-path initial) initial)
@@ -1035,7 +1050,8 @@ Not used yet.")
     ("rev" . yahtml-link-types-alist)
     ("rel" . yahtml-link-types-alist)
     ("type" . yahtml-content-types-alist)
-    ("codetype" . yahtml-content-types-alist)))
+    ("codetype" . yahtml-content-types-alist)
+    ("http-equiv" ("Refresh"))))
 
 (defvar yahtml-link-types-alist 
   '(("alternate") ("stylesheet") ("start") ("next") ("prev")
@@ -1177,7 +1193,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 		  c3 (char-after 3)
 		  c4 (char-after 4))
 	    (cond
-	     ((and (eq c1 255) (eq c2 216)) ; 0xff 0xd8
+	     ((and (eq c1 ?\377) (eq c2 ?\330)) ; 0xff 0xd8
 	      ;;JPEG images need JPEG markers inspection
 	      ;;JPEG markers consist of [ 0xff ID(B) LEN(S) CONTENTS... ]
 	      ;; Warning: here seekpoint is measured by Emacs's point value
@@ -1186,16 +1202,19 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	      (catch 'exit
 		(while (< seekpoint (- (buffer-size) 4))
 		  (cond
-		   ((not (eq (char-after seekpoint) 255))
+		   ((not (eq (char-after seekpoint) ?\377))
 		    ;maybe corrupted, exit from loop
 		    (throw 'exit t))
-		   ((memq (char-after (1+ seekpoint))
-			  '(192 193 194 195 197 198 199 201 202 203 205 206 207))
+		   ((memq
+		     (char-after (1+ seekpoint))
+		     '(?\300 ?\301 ?\302 ?\303
+		       ?\305 ?\306 ?\307 ?\311 ?\312 ?\313 ?\315 ?\316 ?\317))
+		    ;;'(192 193 194 195 197 198 199 201 202 203 205 206 207
 		    ;;found!
 		    (setq height (yahtml-hex-value (+ seekpoint 4) 2)
 			  width  (yahtml-hex-value (+ seekpoint 6) 2)
 			  depth  (yahtml-hex-value (+ seekpoint 3) 1)))
-		   ((eq (char-after (1+ seekpoint)) 254) ;0xFE = comment
+		   ((eq (char-after (1+ seekpoint)) ?\376) ;0xFE = comment
 		    ;; JPEG comment area
 		    (setq beg (+ seekpoint 2 2)
 			  end (+ seekpoint
@@ -1206,7 +1225,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 		  (setq seekpoint (+ seekpoint 2)
 			seekpoint (+ seekpoint
 				     (yahtml-hex-value (1- seekpoint) 2))))))
-	     ((and (eq c1 137) ;0x89
+	     ((and (eq c1 ?\211) ;0x89
 		   (eq c2 ?P) (eq c3 ?N) (eq c4 ?G))
 	      ;;PNG Image data X=@0x10(L), Y=@0x14(L), D=@0x18(B)
 	      (setq width  (yahtml-hex-value 16 4)
@@ -1236,7 +1255,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 (defun yahtml:form ()
   "Add-in function `form' input format"
   (concat
-   " " (if yahtml-prefer-upcase-attributes "METHOD" "method=")
+   " " (if yahtml-prefer-upcase-attributes "METHOD" "method") "="
    (completing-read "Method: " '(("POST") ("GET")) nil t)
    " " (if yahtml-prefer-upcase-attributes "ACTION" "action") "=\""
    (read-string "Action: ") "\""
@@ -1249,7 +1268,14 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	  (read-string "name: ") "\""))
 
 (defun yahtml:ol ()
-  (setq yahtml-last-single-cmd "li") "")
+  "Add-in function for <ol>"
+  (setq yahtml-last-single-cmd "li")
+  (let ((start (read-string "start="))
+	(type (completing-read
+	       "type=" '(("1") ("a") ("A") ("i") ("I")) nil t)))
+    (concat
+     (yahtml-make-optional-argument "start" start)
+     (yahtml-make-optional-argument "type" type))))
 (defun yahtml:ul ()
   (setq yahtml-last-single-cmd "li") "")
 (defun yahtml:dl ()
@@ -1359,6 +1385,44 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	       (yahtml-make-optional-argument "href" href))))))
      (t ;;??
       ))))
+
+(defvar yahtml:meta-names
+  '(("name" ("keywords")("author")("copyright")("date")("GENERATOR"))))
+
+(defun yahtml:meta ()
+  (let ((name (yahtml-make-optional-argument
+	       "name"
+	       (yahtml-read-parameter "name" nil yahtml:meta-names)))
+	http-equiv content)
+    (if (string= "" name)
+	(if (string-match
+	     "Content-type"
+	     (setq http-equiv (yahtml-make-optional-argument
+			       "http-equiv"
+			       (yahtml-read-parameter "http-equiv" nil))))
+	    (error "It's very bad idea to set Content-type in META.  %s"
+		     "See docs/qanda")
+	  (concat http-equiv
+		  (yahtml-make-optional-argument
+		   "content" (yahtml-read-parameter "content"))))
+      (concat
+       name
+       (yahtml-make-optional-argument
+	"content"
+	(cond
+	 ((string-match "date" name)
+	  (read-string "Date: " (current-time-string)))
+	 ((string-match "author" name)
+	  (read-string "Author: "
+		       (if (and (user-full-name) (string< "" (user-full-name)))
+			   (user-full-name)
+			 (user-login-name))))
+	 ((string-match "GENERATOR" name)
+	  (setq content (read-string "Generator: " "User-agent: "))
+	  (if (string-match "yahtml" content)
+	      (message "Thank you!"))
+	  content)
+	 (t (read-string (concat name ": ")))))))))
 
 (defun yahtml:br ()
   (yahtml-make-optional-argument "clear" (yahtml-read-parameter "clear")))
@@ -1571,7 +1635,8 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 				(if (file-exists-p (concat file f))
 				    (throw 'dirindex
 					   (setq file (concat file f))))))
-			     (yahtml-get-directory-index)))
+			     (yahtml-get-directory-index))
+			    nil)
 			  (setq file (concat file yahtml-directory-index))))
 		  (if (string-match "^/" file)
 		      (setq file (yahtml-url-to-path file)))
@@ -2173,7 +2238,7 @@ This function should be able to treat white spaces in value, but not yet."
 	(itemizing-envs "^\\([uod]l\\|menu\\|dir\\)$")
 	(itms "<\\(dt\\|dd\\|li\\|t[rdh]\\|option\\)\\b")
 	(excludes
-	 "\\(a\\|p\\|span\\|tt\\|em\\|u\\|i\\|big\\|small\\|font\\)\\b")
+	 "\\(a\\|p\\|span\\|code\\|tt\\|em\\|u\\|i\\|big\\|small\\|font\\)\\b")
 	inenv p col peol (case-fold-search t))
     (save-excursion
       (beginning-of-line)
@@ -2204,12 +2269,15 @@ This function should be able to treat white spaces in value, but not yet."
 		    (goto-char p)
 		    (re-search-forward itms op t)
 		    (progn
-		      (skip-chars-forward "^>")
-		      (skip-chars-forward ">")
-		      (skip-chars-forward " \t")
-		      (setq col (if (looking-at "$")
-				    (+ col yahtml-environment-indent)
-				  (current-column)))))))
+		      (if yahtml-indent-listing-constant
+			  (setq col (+ (current-column)
+				       (if yahtml-faithful-to-htmllint 1 2)))
+			(skip-chars-forward "^>")
+			(skip-chars-forward ">")
+			(skip-chars-forward " \t")
+			(setq col (if (looking-at "$")
+				      (+ col yahtml-environment-indent)
+				    (current-column))))))))
 	    col)
 	   (t
 	    (+ col yahtml-environment-indent)))))
@@ -2402,7 +2470,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
   (interactive)
   (let ((case-fold-search t))
     (if (save-excursion
-	  (re-search-backward "<\\(\\(dt\\)\\|\\(dd\\)\\)>"
+	  (re-search-backward "<\\(\\(dt\\)\\|\\(dd\\)\\)[ \t>]"
 			      (get 'YaTeX-inner-environment 'point) t))
 	(cond
 	 ((match-beginning 2)
@@ -2510,12 +2578,12 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 	  (setq e (point))
 	  (goto-char b)
 	  (while (re-search-forward	;‚¿‚å‚Æ‚¢‚¢‰ÁŒ¸‚ÈREGEXP
-		  "\\([a-z][a-z0-9]*\\)?\\.\\([a-z][a-z0-9]*\\)\\>" e t)
+		  "\\([a-z][-a-z0-9]*\\)?\\.\\([-a-z0-9][-a-z0-9]*\\)\\>" e t)
 	    (setq element (YaTeX-match-string 1)
 		  class (YaTeX-match-string 2))
 	    ;;if starts with period (match-string 1 is nil),
 	    ;;this is global class
-	    (setq element (or element "global"))
+	    (setq element (downcase (or element "global")))
 	    (if (setq a (assoc element alist))
 		(or (assoc class (cdr a))
 		    (setcdr a (cons (list class) (cdr a))))
@@ -2568,7 +2636,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 	(setq yahtml-css-class-alist alist)))))
 
 (defun yahtml-css-get-element-completion-alist (element)
-  (let ((alist (cdr-safe (assoc element yahtml-css-class-alist)))
+  (let ((alist (cdr-safe (assoc (downcase element) yahtml-css-class-alist)))
 	(global (cdr-safe (assoc "global" yahtml-css-class-alist))))
     (and (or alist global)
 	 (append alist global))))
@@ -2615,9 +2683,12 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 (defun yahtml-hilit-region-tag-itself (ptn)
   "Return list of start/end point of <tag options...> itself."
   (if (re-search-forward ptn nil t)
-      (let ((m0 (match-beginning 0)))
-	(skip-chars-forward "^>")
-	(cons m0 (1+ (point) )))))
+      (let ((m0 (match-beginning 0)) (e0 (match-end 0)))
+	(skip-chars-forward "^<>")
+	(if (eq (char-after (point)) ?<) nil
+	  (prog1
+	      (cons m0 (min (point-max) (1+ (point))))
+	    (goto-char e0))))))
 
 ;(setq hilit-patterns-alist (delq (assq 'yahtml-mode hilit-patterns-alist) hilit-patterns-alist))
 (and yahtml-use-hilit19
@@ -2665,6 +2736,11 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 	    (setq hilit-mode-enable-list
 		  (delq 'yahtml-mode hilit-mode-enable-list))))
       (yahtml-font-lock-set-default-keywords)))
+
+(defun yahtml-font-lock-recenter (&optional arg)
+  (interactive "P")
+  (font-lock-mode -1)			;is stupid, but sure.
+  (font-lock-mode 1))
 
 ;; (defun yahtml-fontify-to-tagend (lim)
 ;;   "*Fontify any tag including < and >.

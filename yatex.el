@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.69
-;;; (c )1991-2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 25 18:57:10 2000 on firestorm
+;;; yatex.el rev. 1.70
+;;; (c )1991-2002 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed May 22 13:54:47 2002 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -24,7 +24,7 @@
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.69"
+(defconst YaTeX-revision-number "1.70"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -218,7 +218,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
   "*Use font-lock to fontify buffer or not.")
 
 (defvar YaTeX-use-hilit19 (and (featurep 'hilit19) (fboundp 'x-color-values)
-			       (fboundp 'hilit-translate))
+			       (fboundp 'hilit-translate)
+			       (not YaTeX-use-font-lock))
   "*Use hilit19 to highlight buffer or not.")
 
 ;;-- Math mode values --
@@ -245,6 +246,12 @@ Nil for removing only one commenting character at the beginning-of-line.")
   "*Template TeX source file.  This will be inserted to empty file.")
 
 (defvar YaTeX-addin-prefix "YaTeX:")
+
+(defvar yatex-mode-abbrev-table nil
+  "*Abbrev table in use in yatex-mode buffers.")
+(define-abbrev-table 'yatex-mode-abbrev-table ())
+
+
 ;------------ Completion table ------------
 ; Set tex-section-like command possible completion
 (defvar section-table
@@ -609,7 +616,7 @@ more features are available and they are documented in the manual.
 	 (setq buffer-file-coding-system
 	       (or (and (fboundp 'set-auto-coding) buffer-file-name
 			(save-excursion
-			  (set-auto-coding buffer-file-name 2000)))
+			  (set-auto-coding buffer-file-name (buffer-size))))
 		   YaTeX-coding-system)))
 	((featurep 'mule)
 	 (set-file-coding-system YaTeX-coding-system))
@@ -624,10 +631,7 @@ more features are available and they are documented in the manual.
 	comment-start YaTeX-comment-prefix
 	comment-end ""
 	comment-start-skip "[^\\\\]%+[ \t]*"
-	)
-  (if (boundp 'kill-buffer-hook)	;For Recent Emacs
-      (set (make-local-variable 'kill-buffer-hook)
-	   (cons 'YaTeX-kill-buffer-hook kill-buffer-hook)))
+	local-abbrev-table yatex-mode-abbrev-table)
   (if (and YaTeX-use-font-lock (featurep 'font-lock))
       (progn
 	(YaTeX-font-lock-set-default-keywords)
@@ -640,7 +644,7 @@ more features are available and they are documented in the manual.
   (set-syntax-table YaTeX-mode-syntax-table)
   (if YaTeX-dos (setq YaTeX-saved-screen-height (screen-height)))
   (YaTeX-read-user-completion-table)
-  (and (fboundp 'YaTeX-19-collect-macros) (YaTeX-19-collect-macros))
+  (and (fboundp 'YaTeX-hilit-setup-alist) (YaTeX-hilit-setup-alist))
   (makunbound 'inenv)
   (turn-on-auto-fill)			;1.63
   (and (= 0 (buffer-size)) (file-exists-p YaTeX-template-file)
@@ -1533,81 +1537,7 @@ search-last-string, you can repeat search the same label/ref by typing
 	(setq search-last-regexp string)))
      (t nil))))
 
-(defun YaTeX-goto-corresponding-environment (&optional allow-mismatch noerr)
-  "Go to corresponding begin/end enclosure.
-Optional argument ALLOW-MISMATCH allows mismatch open/clese.  Use this
-for \left(, \right).
-Optional third argument NOERR causes no error for unballanced environment."
-  (interactive)
-  (if (not (YaTeX-on-begin-end-p)) nil
-    (let ((p  (match-end 0)) b0 b1 env (nest 0) regexp re-s (op (point))
-	  (m0 (match-beginning 0))	;whole matching
-	  (m1 (match-beginning 1))	;environment in \begin{}
-	  (m2 (match-beginning 2))	;environment in \end{}
-	  (m3 (match-beginning 3)))	;environment in \[ \] \( \)
-      ;(setq env (regexp-quote (buffer-substring p (match-beginning 0))))
-      (if (cond
-	   (m1				;if begin{xxx}
-	    (setq env
-		  (if allow-mismatch YaTeX-struct-name-regexp
-		    (regexp-quote (buffer-substring m1 (match-end 1)))))
-	;    (setq regexp (concat "\\(\\\\end{" env "}\\)\\|"
-	;			 "\\(\\\\begin{" env "}\\)"))
-	    (setq regexp
-		  (concat
-		   "\\("
-		   (YaTeX-replace-format-args
-		    (regexp-quote YaTeX-struct-end) env "" "")
-		   "\\)\\|\\("
-		   (YaTeX-replace-format-args
-		    (regexp-quote YaTeX-struct-begin) env "" "")
-		   "\\)"))
-	    (setq re-s 're-search-forward))
-	   (m2				;if end{xxx}
-	    (setq env
-		  (if allow-mismatch YaTeX-struct-name-regexp
-		    (regexp-quote (buffer-substring m2 (match-end 2)))))
-	;   (setq regexp (concat "\\(\\\\begin{" env "}\\)\\|"
-	;			 "\\(\\\\end{" env "}\\)"))
-	    (setq regexp
-		  (concat
-		   "\\("
-		   (YaTeX-replace-format-args
-		    (regexp-quote YaTeX-struct-begin) env "" "")
-		   "\\)\\|\\("
-		   (YaTeX-replace-format-args
-		    (regexp-quote YaTeX-struct-end) env "" "")
-		   "\\)"))
-	    (setq re-s 're-search-backward))
-	   (m3				;math environment
-	    (setq env (char-after (1+ m3))
-		  regexp (format "\\(%s%s\\)\\|\\(%s%s\\)"
-				 YaTeX-ec-regexp
-				 (regexp-quote
-				  (cdr (assq env '((?( . ")") (?) . "(")
-						   (?[ . "]") (?] . "[")))))
-				 YaTeX-ec-regexp
-				 (regexp-quote (char-to-string env)))
-		  re-s (if (memq env '(?\( ?\[))
-			   're-search-forward
-			 're-search-backward)))
-	   (t (if noerr nil (error "Corresponding environment not found."))))
-	  (progn
-	    (while (and (>= nest 0) (funcall re-s regexp nil t))
-	      (setq b0 (match-beginning 0) b1 (match-beginning 1))
-	      (if (or (equal b0 m0)
-		      (YaTeX-literal-p b0))
-		  nil
-		(setq nest (if (equal b0 b1)
-			       (1- nest) (1+ nest)))))
-	    (if (< nest 0)
-		(goto-char (match-beginning 0)) ;found.
-	      (goto-char op)
-	      (funcall
-	       (if noerr 'message 'error)
-	       "Corresponding environment `%s' not found." env)
-	      (sit-for 1)
-	      nil))))))
+;;YaTeX-goto-corresponding-environment was moved to yatexlib
 
 (defun YaTeX-goto-corresponding-file (&optional other)
   "Visit or switch buffer of corresponding file,
@@ -2533,9 +2463,13 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 	  (while (re-search-forward "\\\\\\(\\(page\\)?ref\\|cite\\){" nil t)
 	    (if (< (point-end-of-line)
 		   (save-excursion (forward-char -1) (forward-list 1) (point)))
-		(progn (end-of-line) (insert YaTeX-comment-prefix))))
+		(progn (end-of-line)
+		       (if (save-excursion
+			     (backward-word 1)
+			     (looking-at "[^0-9A-z!-)]"))
+			   (insert YaTeX-comment-prefix)))))
 	  (goto-char (point-min))
-	  (if (and NTT-jTeX (looking-at "[ \t]"))
+	  (if (and NTT-jTeX (looking-at "[ \t]\\|^$"))
 	      (progn
 		(goto-char (point-min))
 		(while (not (eobp))
@@ -2543,7 +2477,7 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 		  (or (bolp)
 		      (save-excursion
 			(backward-word 1)
-			(looking-at "\\sw+")) ;is not japanese string
+			(looking-at "[0-9A-z!-)]")) ;is not japanese string
 		      (progn (setq p (point)) (insert YaTeX-comment-prefix)))
 		  (forward-line 1))
 		(goto-char p)
@@ -2775,7 +2709,7 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
 (substitute-all-key-definition
  'fill-paragraph 'YaTeX-fill-paragraph YaTeX-mode-map)
 (substitute-all-key-definition
- 'kill-buffer 'YaTeX-kill-buffer yahtml-mode-map)
+ 'kill-buffer 'YaTeX-kill-buffer YaTeX-mode-map)
 (run-hooks 'yatex-mode-load-hook)
 
 ;; `History' was moved to ChangeLog
