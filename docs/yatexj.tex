@@ -1,5 +1,4 @@
 \input texinfo @c -*- texinfo -*-
-%#!bigjtex
 @setfilename yatexj
 @settitle Yet Another tex-mode for Emacs
 
@@ -34,6 +33,7 @@
 * Local dictionary - ローカル辞書(神経質な人へ)::  
 * Includeonly - 勝手にincludeonly::  
 * Where am I? - 今はどこ?::     
+* Intelligent newline - おまかせ改行::  
 * Online help - オンラインヘルプ::  
 * Cooperation with other packages - 他パッケージとの連携::  
 * Customizations - カスタマイズ::  
@@ -151,7 +151,7 @@
 * Print out - プリントアウト用コマンドの起動::  
 @end menu
 
-@node Calling typesetter - タイプセッタ起動, Print out - プリントアウト用コマンドの起動, Invocation - 外部コマンドの起動, Invocation - 外部コマンドの起動
+@node Calling typesetter - タイプセッタ起動, Print out - プリントアウト用コマンドの起動,  , Invocation - 外部コマンドの起動
 @comment  node-name,  next,  previous,  up
 @section タイプセッタ起動
 @cindex タイプセッタ起動
@@ -219,7 +219,7 @@
 * Editing %# notation - %#記法の編集::  
 @end menu
 
-@node Changing typesetter - タイプセット用コマンドの変更, Splitting input files - 入力ファイル分割, %#記法, %#記法
+@node Changing typesetter - タイプセット用コマンドの変更, Splitting input files - 入力ファイル分割,  , %#記法
 @comment  node-name,  next,  previous,  up
 @section タイプセット用コマンド変更
 
@@ -426,7 +426,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 * Greek letter completion - ギリシャ文字補完::  
 @end menu
 
-@node begin型補完, section型補完, Completion - 補完入力, Completion - 補完入力
+@node begin型補完, section型補完,  , Completion - 補完入力
 @comment  node-name,  next,  previous,  up
 @section begin型補完
 @cindex begin型補完[beginがたほかん]
@@ -604,7 +604,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 * view-sectioning - セクション区切りのアウトライン表示::  
 @end menu
 
-@node 2個以上の引数をとる section型コマンド, Input argument without copletion - 引数入力時に補完しない, section型補完, section型補完
+@node 2個以上の引数をとる section型コマンド, Input argument without copletion - 引数入力時に補完しない,  , section型補完
 @comment  node-name,  next,  previous,  up
 @subsection 2個以上の引数をとる section型コマンド
 @cindex 引数[ひきすう]
@@ -1177,7 +1177,7 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 @code{\includeonly} の行をコメントアウトして無効化したい時には、@kbd{%}を
 それぞれ押して下さい。
 
-@node Where am I? - 今はどこ?, Online help - オンラインヘルプ, Includeonly - 勝手にincludeonly, Top
+@node Where am I? - 今はどこ?, Intelligent newline - おまかせ改行, Includeonly - 勝手にincludeonly, Top
 @comment  node-name,  next,  previous,  up
 @chapter 今はどこ?
 @cindex 今はどこ?[いまはどこ]
@@ -1213,7 +1213,52 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 す。もし項目名として別のものを与えたい場合は、行頭を@code{%}にしてダミーの
 項目並びを作っておくと良いでしょう。
 
-@node Online help - オンラインヘルプ, Cooperation with other packages - 他パッケージとの連携, Where am I? - 今はどこ?, Top
+@node Intelligent newline - おまかせ改行, Online help - オンラインヘルプ, Where am I? - 今はどこ?, Top
+@comment  node-name,  next,  previous,  up
+@chapter おまかせ改行
+@cindex おまかせ改行[おまかせかいぎょう]
+@cindex &入力[&にゅうりょく]
+@cindex prefix &
+
+  tabular[*], array, itemize, enumerate, tabbing 環境で
+
+@table @kbd
+@item ESC RET
+	@dots{} おまかせ改行
+@end table
+
+@noindent 
+を押すと、その環境に応じた行エントリを次の行に挿入します。例えば、tabular
+環境では、その環境のカラム数に対応した個数の @code{&} にくわえ、行末の 
+@code{\\} を入れます。この時それ以前に @code{\hline} があればそれも付け加
+えます。環境とそれに応じて自動入力するものの対応は以下のようになります。
+
+@itemize
+@item @code{tabular}, @code{tabular*}, @code{array}
+
+	カラム数-1 だけの @code{&} と @code{\\}。必要に応じて @code{\hline}
+
+@item @code{tabbing}
+
+	一行目で定義している @code{\=} と同じ個数の @code{\>}。
+
+@item @code{itemize}, @code{enumerate}, @code{description}, @code{list}
+
+	@code{\item} または @code{item[]}
+@end itemize
+
+  tabular 環境の例のように、本機能は各環境の一行目の内容を参考にして動作す
+るので、なるべく二行目以降で呼び出すようにしてください。
+
+  もし、その他の環境、例えば @code{foo}、に対して@code{おまかせ改行}を動作
+させたい時は、@code{YaTeX-intelligent-newline-foo} という名前の関数を定義
+します。定義した関数は、現在の行に改行を挿入した直後の行頭の位置で呼ばれま
+す。関数 @code{YaTeX-indent-line} を呼ぶと現在の環境のネストに応じた深さに
+インデントされるので、これを呼んでから何かを挿入するようなコードを書くとよ
+いでしょう。関数 @code{YaTeX-intelligent-newline-itemize} の定義などを参考
+にしてください。
+
+@node Online help - オンラインヘルプ, Cooperation with other packages - 他パッケージとの連携, Intelligent newline - おまかせ改行, Top
 @comment  node-name,  next,  previous,  up
 @chapter オンラインヘルプ
 @cindex オンラインヘルプ[おんらいんへるぷ]
@@ -1296,7 +1341,7 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 * Add-in functions - 付加関数(アドイン関数)::  
 @end menu
 
-@node Lisp variables - lisp 変数, Add-in functions - 付加関数(アドイン関数), Customizations - カスタマイズ, Customizations - カスタマイズ
+@node Lisp variables - lisp 変数, Add-in functions - 付加関数(アドイン関数),  , Customizations - カスタマイズ
 @comment  node-name,  next,  previous,  up
 @section lisp 変数
 @cindex prefixキー変更[prefixきーへんこう]
@@ -1317,7 +1362,7 @@ C-英字…}に変わります(ただし、begin型 large型補完の大文字起動によるリジョ
 * Hook file - hook用ファイル::  
 @end menu
 
-@node All customizable variables - カスタマイズ変数一覧, Sample definitions - カスタマイズ変数設定例, Lisp variables - lisp 変数, Lisp variables - lisp 変数
+@node All customizable variables - カスタマイズ変数一覧, Sample definitions - カスタマイズ変数設定例,  , Lisp variables - lisp 変数
 @comment  node-name,  next,  previous,  up
 @subsection カスタマイズ変数一覧
 @cindex カスタマイズ変数一覧[かすたまいずへんすういちらん]

@@ -37,6 +37,7 @@
 * Local dictionaries::          
 * Updation of @code{\includeonly}::  
 * What column?::                
+* Intelligent newline::         
 * Online help::                 
 * Cooperation with other packages::  
 * Customizations::              
@@ -232,7 +233,7 @@ notations in the source text.
 * Editing %# notation::         
 @end menu
 
-@node Changing typesetter, Static region for typesetting, %# notation, %# notation
+@node Changing typesetter, Static region for typesetting,  , %# notation
 @comment  node-name,  next,  previous,  up
 @section To change the `latex' command or to split a source text.
 @cindex typesetter
@@ -409,7 +410,7 @@ kinds of completion type, begin-type, section-type, large-type, etc...
 * Greek letters completion::    
 @end menu
 
-@node Begin-type completion, Section-type completion, Completion, Completion
+@node Begin-type completion, Section-type completion,  , Completion
 @comment  node-name,  next,  previous,  up
 @section Begin-type completion
 @cindex begin-type completion
@@ -621,7 +622,7 @@ minibuffer.
 * view-sectioning::             
 @end menu
 
-@node view-sectioning,  , Section-type completion, Section-type completion
+@node view-sectioning,  ,  , Section-type completion
 @comment  node-name,  next,  previous,  up
 @subsection view-sectioning
 @cindex view sectioning
@@ -1078,7 +1079,7 @@ to @code{\includeonly} list, @kbd{r} to replace \@code{includeonly} list
 by the current file, and type @kbd{%} to comment out the
 @code{\includeonly} line.
 
-@node What column?, Online help, Updation of @code{\includeonly}, Top
+@node What column?, Intelligent newline, Updation of @code{\includeonly}, Top
 @comment  node-name,  next,  previous,  up
 @chapter What column?
 @cindex what column
@@ -1116,7 +1117,56 @@ environment  as a row of column  headers, you  can  create a row of
 virtual column  headers by  putting  them  in the  first line  and
 commenting that line with @code{%}.
 
-@node Online help, Cooperation with other packages, What column?, Top
+@node Intelligent newline, Online help, What column?, Top
+@comment  node-name,  next,  previous,  up
+@chapter Intelligent newline
+@cindex Intelligent newline
+@cindex ESC RET
+@cindex M-C-m
+
+  In tabular[*], array, itemize, enumerate or tabbing environment,
+
+@table @kbd
+@item ESC RET
+	@dots{} Intelligent newline
+@end table
+
+@noindent 
+inserts the contents corresponding to the current environment in the next
+line.  In @code{tabular} environment, for example, @kbd{ESC RET} inserts
+the certain number of @code{&} and trailing @code{\\}, and @code{\hline}
+if other @code{\hline} is found in backward.  Here are the list of
+contents v.s. environments.
+
+@itemize
+@item @code{tabular}, @code{tabular*}, @code{array}
+
+	Corresponding number of @code{&} and  @code{\\}.
+	And @code{\hline} if needed.
+
+@item @code{tabbing}
+
+	The same number of @code{\>} as @code{\=} in the first line.
+
+@item @code{itemize}, @code{enumerate}, @code{description}, @code{list}
+
+	@code{\item} or @code{item[]}.
+@end itemize
+
+  Note that since this function works seeing the contents of the first
+line, please call this after the second line if possible.
+
+  If you want to apply these trick to other environments, @code{foo}
+environment for example, define the function named
+@code{YaTeX-intelligent-newline-foo} to insert corresponding contents.
+That function will be called at the beginning of the next line after the
+newline is inserted to the current line.  Since the function
+@code{YaTeX-indent-line} is designed to indent the current line properly,
+calling this function before your code to insert certain contents must be
+useful.  See the definition of the function
+@code{YaTeX-intelligent-newline-itemize} as an example.
+
+@node Online help, Cooperation with other packages, Intelligent newline, Top
 @comment  node-name,  next,  previous,  up
 @chapter Online help
 @cindex online help
@@ -1203,7 +1253,7 @@ add-in functions.
 * Add-in functions::            
 @end menu
 
-@node Lisp variables, Add-in functions, Customizations, Customizations
+@node Lisp variables, Add-in functions,  , Customizations
 @comment  node-name,  next,  previous,  up
 @section Lisp variables
 @cindex customizable variables
@@ -1229,7 +1279,7 @@ that variable to 1 instead of @code{t}).
 * Hook file::                   
 @end menu
 
-@node All customizable variables, Sample definitions, Lisp variables, Lisp variables
+@node All customizable variables, Sample definitions,  , Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection All customizable variables
 @cindex all customizable variables
