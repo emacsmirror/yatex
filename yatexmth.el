@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
-;;; yatexmth.el rev.3
+;;; yatexmth.el rev.4
 ;;; (c )1993-1995 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Sun Jan 22 23:14:51 1995 on landcruiser
+;;; Last modified Fri Jan 27 23:57:40 1995 on VFR
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -228,6 +228,9 @@
    ("\\-"	"leftharpoondown" "__\n\\")
    ("-/"	"rightharpoondown"  "__\n/")
    ("-\\"	"rightharpoonup" "~~\n\\")
+   ;;left and right
+   ("left"	"left"		"(leftmark)")
+   ("right"	"right"		"(rightmark)")
    ;other marks
    ("Z"		"aleph"		"|\\|")
    ("|\\|"	"aleph"		"|\\|")
@@ -671,7 +674,9 @@ at least you get to read the beginning."
       (delete-region beg (point))
       (call-interactively (global-key-binding this-key)))
      ((eq result 'select)
-      (message "Done."))
+      (message "Done.")
+      (setq YaTeX-current-completion-type 'maketitle)
+      (insert (YaTeX-addin single-command)))
      ((eq result 'exit)
       (delete-region beg (point))
       (YaTeX-toggle-math-mode))

@@ -1,12 +1,27 @@
 	What's new in YaTeX
 	yatex.el 各バージョンの変更点について
 
+1.57	同じ環境がネストしている時の M-C-a, M-C-e のバグ修正。
+	\beginの行をTABでreindentした時は\endも同じ桁に揃える。
+	リジョンを環境で括った時の中身の処理を行う関数
+	YaTeX-enclose-<環境名> をサポート。equation で括った時に中身の $ 
+	を全て消去し、verbatimで括った時はなにもしないようにした。
+	\item 行でTABした時にカーソル位置を保存。
+	\item を補完した次の section 型コマンドのデフォルトを label に。
+	hierarchyバッファでの SPC, DEL, +, - の追加。
+	fill すると kill-ring を壊してしまうのを修正。
+	数式環境でのインデントのサポート(やだなあ)。
+	中括弧がネストしたり、引数が複数ある section 型コマンドも正しく 
+	hilit するようにし、% の hilit も適正化した。
+	インデントが変わらない時のTABでも修正フラグが立っていたのを修正。
+
 1.56	[prefix] d の YaTeX-display-hierarchy を追加。
 	変数 indent-line-function に YaTeX-indent-line を設定した。
 	YaTeX-generate-simple の修正(1.51から今まで全然動かなかったのに…)。
 	NTT-jTeX を利用する時に文書をインデントしても良いように 
 	auto-fill や fill-paragraph を調整した。
 	maketitle 型コマンドが [] で終わっている時にはカーソルを括弧内に。
+	セクションコマンドの論理的高さに応じて色の濃度を変える(Mule2+X)。
 
 1.55	{}の上で [prefix] k した時に直前のコマンドが maketitle 型辞書に
 	属していれば {} のみ(フォント指定子があればそれも)を消すようにした。

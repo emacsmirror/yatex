@@ -2,7 +2,7 @@
 ;;; YaTeX library of general functions.
 ;;; yatexlib.el
 ;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sun Jan 22 23:15:03 1995 on landcruiser
+;;; Last modified Thu Jan 26 11:15:29 1995 on pajero
 ;;; $Id$
 
 ;;;###autoload
@@ -128,7 +128,7 @@ corresponding real arguments ARGS."
 that gives the maximum value by the FUNC.  FUNC should take an argument
 of its window object.  Non-nil for optional third argument SELECT selects
 that window.  This function never selects minibuffer window."
-  (or (and (if YaTeX-emacs-19
+  (or (and (if (and YaTeX-emacs-19 select)
 	       (get-buffer-window buffer t)
 	     (get-buffer-window buffer))
 	   (progn
@@ -354,5 +354,15 @@ If no such window exist, switch to buffer BUFFER."
    ((featurep 'gmhist-mh)
     (read-with-history-in hsym prompt init))
    (t (read-string prompt init))))
+
+;;;
+;; Interface function for windows.el
+;;;
+;;;###autoload
+(defun YaTeX-switch-to-window ()
+  "Switch to windows.el's window decided by last pressed key."
+  (interactive)
+  (or (featurep 'windows) (error "Why don't you use `windows.el'?"))
+  (win-switch-to-window 1 (- last-command-char win:base-key)))
 
 (provide 'yatexlib)

@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c ) 1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Nov 24 04:33:18 1994 on 98fa
+;;; Last modified Thu Feb  2 16:11:12 1995 on pajero
 ;;; $Id$
 
 ;;;
@@ -165,30 +165,19 @@ Return the list of (No.ofCols PointEndofFormat)"
 ;; Functions for itemize/enumerate/list environments
 ;;;
 
-(defun YaTeX-indent-for-item ()
-  (let (col (p (point)) begenv)
-    (save-excursion
-      (YaTeX-beginning-of-environment t)
-      (setq begenv (point-end-of-line))
-      (goto-char p)
-      (if (YaTeX-search-active-backward "\\item" YaTeX-comment-prefix begenv t)
-	  (setq col (current-column))))
-    (if col (indent-to col) (YaTeX-indent-line)))
-)
-
 (defvar YaTeX-item-for-insert "\\item ")
 (defun YaTeX-intelligent-newline-itemize ()
   "Insert '\\item '."
-  (YaTeX-indent-for-item)
   (insert YaTeX-item-for-insert)
+  (YaTeX-indent-line)
 )
 (fset 'YaTeX-intelligent-newline-enumerate 'YaTeX-intelligent-newline-itemize)
 (fset 'YaTeX-intelligent-newline-list 'YaTeX-intelligent-newline-itemize)
 
 (defun YaTeX-intelligent-newline-description ()
-  (YaTeX-indent-for-item)
   (insert "\\item[] ")
   (forward-char -2)
+  (YaTeX-indent-line)
 )
 
 
@@ -211,3 +200,103 @@ Return the list of (No.ofCols PointEndofFormat)"
     (if (and env func (fboundp func))
 	(funcall func)))
 )
+
+;;;
+;; Environment-specific line indenting functions
+;;;
+;;;###autoload
+(defun YaTeX-indent-line-equation ()
+  "Indent a line in equation family."
+  (let ((p (point)) (l-r 0) right-p peol depth (mp YaTeX-environment-indent))
+    (if (save-excursion
+	  (beginning-of-line)
+	  (skip-chars-forward " \t")
+	  (looking-at "\\\\right\\b"))
+	(progn (YaTeX-reindent
+		(save-excursion (YaTeX-goto-corresponding-leftright)
+				(current-column))))
+      (save-excursion
+	(forward-line -1)
+	(while (and (not (bobp)) (YaTeX-on-comment-p))
+	  (forward-line -1))
+	;;(beginning-of-line)	;must be unnecessary
+	(skip-chars-forward " \t")
+	(if (eolp) (error "Math-environment can't have a null line!!"))
+	(setq depth (current-column)
+	      peol (point-end-of-line))
+	(while (re-search-forward
+		"\\\\\\(\\(left\\)\\|\\(right\\)\\)\\b" peol t)
+	  (setq l-r (+ l-r (if (match-beginning 2) 1 -1))))
+	(cond
+	 ((progn (beginning-of-line)
+		 (re-search-forward "\\\\\\\\\\s *$" (point-end-of-line) t))
+	  ;;If previous line has `\\', this indentation is always normal.
+	  (setq depth (+ (YaTeX-current-indentation) mp)))
+	 ((> l-r 0)
+	  (beginning-of-line)
+	  (search-forward "\\left" peol)
+	  (goto-char (1+ (match-beginning 0)))
+	  (setq depth (current-column)))
+	 ((< l-r 0)
+	  (goto-char (match-beginning 0))	;should be \right
+	  (YaTeX-goto-corresponding-leftright)
+	  (beginning-of-line)
+	  (skip-chars-forward " \t")
+	  (setq depth (+ (current-column) mp))) ;+mp is good?
+	 (t				;if \left - \right = 0
+	  (cond
+	   ((re-search-forward "\\\\\\\\\\s *$" peol t)
+	    (setq depth (+ (YaTeX-current-indentation) mp)))
+	   ((re-search-forward "\\\\end{" peol t)
+	    nil)			;same indentation as previous line's
+	   ((re-search-forward "\\\\begin{" peol t)
+	    (setq depth (+ depth mp)))
+	   (t
+	    (or (bobp) (forward-line -1))
+	    (cond
+	     ((re-search-forward
+	       "\\\\\\\\\\s *$\\|\\\\begin{" (point-end-of-line) t)
+	      (setq depth (+ depth mp)))
+	     )))))
+	(goto-char p))
+      (YaTeX-reindent depth))))
+
+;;;###autoload
+(defun YaTeX-goto-corresponding-leftright ()
+  "Go to corresponding \left or \right.
+Note that this function assumes the corresponding \left\right
+is on another line."
+  (let ((YaTeX-struct-begin "\\left%1")
+	(YaTeX-struct-end "\\right%1")
+	(YaTeX-struct-name-regexp "[][(){}.|]"))
+    (YaTeX-goto-corresponding-environment t)))
+
+;;;
+;; Functions for formatting region being enclosed with environment
+;;;
+; These functions must take two argument; region-beginning, region-end.
+
+(defun YaTeX-enclose-equation (beg end)
+  (goto-char beg)
+  (save-restriction
+    (let (m0 bsl)
+      (narrow-to-region beg end)
+      (while (YaTeX-re-search-active-forward
+	      "\\(\\$\\)" YaTeX-comment-prefix nil t)
+	(goto-char (setq m0 (match-beginning 0)))
+	(setq bsl 0)
+	(if (and (not (bobp)) (= (char-after (1- (point))) ?\\ ))
+	    (while (progn (forward-char -1) (= (char-after (point)) ?\\ ))
+	      (setq bsl (1+ bsl))))
+	(goto-char m0)
+	(if (= 0 (% bsl 2))
+	    (delete-char 1)
+	  (forward-char 1))))))
+
+(fset 'YaTeX-enclose-eqnarray 'YaTeX-enclose-equation)
+(fset 'YaTeX-enclose-eqnarray* 'YaTeX-enclose-equation)
+
+(defun YaTeX-enclose-verbatim (beg end)) ;do nothing when enclose verbatim
+(fset 'YaTeX-enclose-verbatim* 'YaTeX-enclose-verbatim)
+
+(provide 'yatexenv)

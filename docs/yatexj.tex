@@ -178,6 +178,8 @@ large型コマンド
         (@kbd{C-c a}, @kbd{;}, @kbd{/})
 @item tabular/array環境のカラム位置ガイド
 @item 標準的 La@TeX{} コマンドのオンラインヘルプ(@kbd{C-c ?}, @kbd{C-c /})
+@item ドキュメントのインクルード構造の視覚的表示とバッファ切り替え
+(@kbd{C-c d})
 @end itemize
 
 @node Installation, Invocation, Main features, Top
@@ -1556,6 +1558,73 @@ fill-prefix をいちいち変更しなくて桁揃えができます。
 対する説明を書いたならばぜひ私までその説明をお送り下さい。次回の配布に含め
 たいと思います。
 
+@node Inclusion hierarchy browser
+@comment  node-name,  next,  previous,  up
+@chapter インクルード構造ブラウザ
+@cindex インクルード構造[いんくるうとこうそう]
+@cindex prefix d
+
+複数のファイルに分割しているドキュメントを書いている場合、
+
+@table @kbd
+@item [prefix] d
+        @dots{} インクルード構造ブラウズ
+@end table
+
+@noindent
+を押すと、そのドキュメントの親ファイルを聞いて来ます。ここで全てのファイル
+の親となるファイル(デフォルトが示されているので大抵はRETのみ)を入力すると
+インクルードしている全てのファイルを解析し、インクルード状況を視覚的に表示
+します。このバッファでは以下のキー操作が有効です。
+
+@table @kbd
+@item n
+        @dots{} 次の行に移動し対応するファイルを隣のバッファに表示
+@item p
+        @dots{} 上の行に移動し対応するファイルを隣のバッファに表示
+@item N
+        @dots{} 同じインクルードレベルの次のファイルに移動
+@item P
+        @dots{} 同じインクルードレベルの前のファイルに移動
+@item j
+        @dots{} 次の行に移動
+@item k
+        @dots{} 上の行に移動
+@item u
+        @dots{} 一代親にあたるファイルに移動
+@item .
+        @dots{} カーソル位置のファイルを隣のバッファに表示
+@item SPC
+        @dots{} 隣のバッファの対応ファイルをスクロールアップ
+@item DEL, b
+        @dots{} 隣のバッファの対応ファイルをスクロールダウン
+@item <
+        @dots{} 隣のバッファの対応ファイルの先頭を表示
+@item >
+        @dots{} 隣のバッファの対応ファイルの末尾を表示
+@item '
+        @dots{} (@kbd{<}や@kbd{>}の後で)元の表示位置に戻る
+@item RET, g
+        @dots{} カーソル位置のファイルを隣のバッファでオープン
+@item mouse-2
+        @dots{} RETと同じ(ウィンドウ使用時のみ)
+@item o
+        @dots{} 隣のウィンドウに移動
+@item 1
+        @dots{} 他のウィンドウを消す
+@item -
+        @dots{} ブラウズウィンドウを小さくする
+@item +
+        @dots{} ブラウズウィンドウを大きくする
+@item ?
+        @dots{} ヘルプ表示
+@item q
+        @dots{} 表示前の状態に戻る
+@end table
+
+  ただし、隣のウィンドウのファイルの内容を表示する機能に関しては、対応する
+ファイルをクローズしてしまうとうまく働きませんのでご注意ください。
+
 @node Cooperation with other packages, Customizations, Online help, Top
 @comment  node-name,  next,  previous,  up
 @chapter 他パッケージとの連携
@@ -1783,6 +1852,17 @@ fill を抑止する環境名のリスト(@code{'("verbatim" "tabular")})
 詳しくは @code{(assq 'yatex-mode hilit-patterns-alist)} 
 した結果と、変数 @code{YaTeX-hilit-pattern-adjustment-default} の値(と場合
 によっては hilit19 のドキュメント)を参照せよ。
+@end defvar
+
+@defvar YaTeX-sectioning-level
+LaTeXのセクション単位宣言コマンドとその論理的高さのalist。
+@end defvar
+
+@defvar YaTeX-hierarchy-ignore-heading-regexp
+Hierarchy バッファは通常ファイルヘッダとして、LaTeXのセクション宣言コマン
+ドの引数を検索し、それがなければコメント行を探すが、その際にヘッダとしては
+意味を持たないパターンをこの変数に設定する。デフォルトでは RCS ヘッダとモー
+ド指定行(-*- xxx -*-)が設定されている。
 @end defvar
 
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables

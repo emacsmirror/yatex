@@ -2,7 +2,7 @@
 ;;; YaTeX helper with LaTeX commands and macros.
 ;;; yatexhlp.el
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Nov 12 04:20:26 1994 on VFR
+;;; Last modified Mon Jan 23 10:17:11 1995 on pajero
 ;;; $Id$
 
 (let ((help-file (concat "YATEXHLP."
@@ -151,7 +151,7 @@ Where:	<DELIM> is the value of YaTeX-help-delimiter.
   (if (and (= (current-column) 1) (= (preceding-char) ?.) (eolp))
       (let ((cbuf (current-buffer)))
 	(beginning-of-line)
-	(kill-line 1)
+	(delete-region (point) (progn (forward-line 1) (point)))
 	(save-excursion
 	  (YaTeX-help-add-entry
 	   YaTeX-help-command-current YaTeX-help-file-current))

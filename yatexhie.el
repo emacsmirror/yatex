@@ -2,21 +2,22 @@
 ;;; YaTeX hierarchy browser.
 ;;; yatexhie.el
 ;;; (c )1995 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Sun Jan 22 23:15:25 1995 on landcruiser
+;;; Last modified Thu Feb  2 23:55:59 1995 on figaro
 ;;; $Id$
 
 ;; ----- Customizable variables -----
-(defvar YaTeX-hierarchy-inspect-mode t
-  "*Non-nil inspects the contents of file of cursor position.")
-
+(defvar YaTeX-hierarchy-ignore-heading-regexp
+  "\\$[A-Z][a-z]+: .* \\$\\|-\\*- .* -\\*-"
+  "*Regexp of lines to ignore as files' headline.")
 
 ;; ----- General variables -----
 (defvar YaTeX-default-TeX-extensions "\\.\\(tex\\|sty\\)")
 (defvar YaTeX-hierarchy-current-main nil)
 (defvar YaTeX-hierarchy-buffer-message
   (concat
-   "n)ext p)rev N)extsamelev P)revsamelev u)p K)ill-buffer RET)select"
-   (if (and YaTeX-emacs-19 window-system) " Mouse2)select" "")))
+   "n)ext p)rev N)extsame P)revsame u)p K)illbuf RET)select"
+   (if (and YaTeX-emacs-19 window-system) " Mouse2)select" "")
+   " ?)help"))
 (defvar YaTeX-hierarchy-saved-wc nil "Saved window configuration.")
 
 ;; ----- Functions for parsing hierarchy -----
@@ -81,23 +82,30 @@ If FILE is nil, beginning with current buffer's file."
   (save-excursion
     (set-buffer (find-file-noselect file))
     (save-excursion
-      (goto-char (point-min))
-      (cond
-       ((and
-	 (YaTeX-re-search-active-forward
-	  (concat YaTeX-ec-regexp YaTeX-sectioning-regexp)
-	  YaTeX-comment-prefix nil t)
-	 (re-search-forward "{\\([^}]+\\)}" nil t))
-	(goto-char (match-beginning 1))
-	(skip-chars-forward " \t\n")
-	(buffer-substring (point)
-			  (min (point-end-of-line)
-			       (match-end 1))))
-       ((re-search-forward "^ *%\\([^#]\\)" nil t)
-	(goto-char (match-beginning 1))
-	(skip-chars-forward " \t")
-	(buffer-substring (point) (point-end-of-line)))
-       (t "")))))
+      (let (p)
+	(goto-char (point-min))
+	(cond
+	 ((re-search-forward
+	   (concat YaTeX-ec-regexp YaTeX-sectioning-regexp) nil t)
+	  (search-forward "{")
+	  (forward-char -1)
+	  (setq p (condition-case nil
+		      (progn (forward-list 1) (1- (point)))
+		    (error (point-end-of-line))))
+	  (goto-char (1+ (match-beginning 0)))
+	  (skip-chars-forward " \t\n")
+	  (buffer-substring (point) (min (point-end-of-line) p)))
+	 ((catch 'found
+	    (while (re-search-forward "^ *%\\([^#]\\)" nil t)
+	      (or (re-search-forward
+		   YaTeX-hierarchy-ignore-heading-regexp
+		   (point-end-of-line) t)
+		  (throw 'found t))))
+	  (beginning-of-line)
+	  (search-forward "%")
+	  (skip-chars-forward "% \t")
+	  (buffer-substring (point) (point-end-of-line)))
+	 (t ""))))))
 
 (defun YaTeX-display-a-hierachy (hier level)
   "Put a HIER of document hierarchy.
@@ -177,12 +185,19 @@ LEVEL is including depth."
 
 \\[YaTeX-hierarchy-next]	next line
 \\[YaTeX-hierarchy-prev]	previous line
-\\[YaTeX-hierarchy-forward]	move forward in same level
-\\[YaTeX-hierarchy-backward]	move backward in same level
+\\[YaTeX-hierarchy-forward]	move forward in the same level
+\\[YaTeX-hierarchy-backward]	move backward in the same level
 \\[YaTeX-hierarchy-up-document]	move to parent file
 \\[delete-other-windows]	delete other windows
 \\[other-window]	other window
-\\[YaTeX-hierarchy-show]	show buffer contents in the next window
+\\[shrink-window]	shrink window
+\\[enlarge-window]	enlarge window
+\\[YaTeX-hierarchy-show]	show file contents in the next window
+\\[YaTeX-hierarchy-scroll-up]	scroll up file contents buffer
+\\[YaTeX-hierarchy-scroll-down]	scroll down file contents buffer
+\\[YaTeX-hierarchy-top]	show the top of file contents
+\\[YaTeX-hierarchy-bottom]	show the bottom of file contents
+\\[YaTeX-hierarchy-lastpos]	return to the previous position
 \\[YaTeX-hierarchy-select]	select file
 \\[YaTeX-hierarchy-mouse-select]	select
 "
@@ -214,7 +229,7 @@ LEVEL is including depth."
   (interactive "p")
   (forward-line arg)
   (skip-chars-forward "- +\\|")
-  (if (and (/= arg 0) YaTeX-hierarchy-inspect-mode (not quiet))
+  (if (and (/= arg 0) (not quiet))
       (YaTeX-hierarchy-select t))
   (message YaTeX-hierarchy-buffer-message))
 
@@ -278,7 +293,9 @@ LEVEL is including depth."
   (interactive "p")
   (YaTeX-hierarchy-next 0)		;move to file name column
   (if (bolp) (error "Not on file name line"))
-  (let ((file (buffer-substring (point) (point-end-of-line))))
+  (let ((file (buffer-substring
+	       (point)
+	       (progn (skip-chars-forward "^ \t") (point)))))
     (YaTeX-hierarchy-next arg)
     (cond
      ((get-buffer file)
@@ -321,13 +338,51 @@ If ARG is non-nil, show the buffer in the next window."
       (set-window-configuration (car YaTeX-hierarchy-saved-wc))
     (bury-buffer nil)))
 
-(defun YaTeX-hierarchy-toggle-inspection (arg)
-  "Toggle inspection mode of YaTeX-hierarchy buffer."
+(defun YaTeX-hierarchy-scroll-up (arg &optional action)
+  "Scroll up file contents of YaTeX-hierarchy."
   (interactive "P")
-  (setq YaTeX-hierarchy-inspect-mode
-	(or arg (not YaTeX-hierarchy-inspect-mode)))
-  (message "YaTeX hierarchy inspection mode %s"
-	   (if YaTeX-hierarchy-inspect-mode "ON" "OFF")))
+  (YaTeX-hierarchy-next 0 t)
+  (let*((bufname (buffer-substring
+		  (point)
+		  (save-excursion (skip-chars-forward "^ \t") (point))))
+	(buf (get-buffer bufname))
+	(cw (selected-window)))
+    (cond
+     ((and buf (get-buffer-window buf))
+      (select-window (get-buffer-window buf)))
+     ((and buf (YaTeX-showup-buffer buf nil t)) t)
+     (t (YaTeX-hierarchy-select nil)))
+    (unwind-protect
+	(cond
+	 ((eq action 'down)	(scroll-down arg))
+	 ((eq action 'top)	(beginning-of-buffer))
+	 ((eq action 'bottom)	(end-of-buffer))
+	 ((eq action 'last)	(exchange-point-and-mark))
+	 (t (scroll-up arg)))
+      (select-window cw))))
+
+(defun YaTeX-hierarchy-scroll-down (arg)
+  "Scroll down file contents of YaTeX-hierarchy."
+  (interactive "P")
+  (YaTeX-hierarchy-scroll-up arg 'down))
+
+(defun YaTeX-hierarchy-top ()
+  "Show the top of YaTeX-hierarchy inspection buffer's."
+  (interactive)
+  (YaTeX-hierarchy-scroll-up nil 'top)
+)
+
+(defun YaTeX-hierarchy-bottom ()
+  "Show the top of YaTeX-hierarchy inspection buffer's."
+  (interactive)
+  (YaTeX-hierarchy-scroll-up nil 'bottom)
+)
+
+(defun YaTeX-hierarchy-lastpos ()
+  "Go to last position in YaTeX-hierarchy buffer."
+  (interactive)
+  (YaTeX-hierarchy-scroll-up nil 'last)
+)
 
 ;; ----- Setting up keymap -----
 (defvar YaTeX-hierarchy-mode-map nil "Keymap used in YaTeX-hierarchy-mode.")
@@ -347,9 +402,17 @@ If ARG is non-nil, show the buffer in the next window."
   (define-key YaTeX-hierarchy-mode-map "K"	'YaTeX-hierarchy-kill-buffer)
   (define-key YaTeX-hierarchy-mode-map "1"	'delete-other-windows)
   (define-key YaTeX-hierarchy-mode-map "o"	'other-window)
+  (define-key YaTeX-hierarchy-mode-map "-"	'shrink-window)
+  (define-key YaTeX-hierarchy-mode-map "+"	'enlarge-window)
   (define-key YaTeX-hierarchy-mode-map "."	'YaTeX-hierarchy-show)
+  (define-key YaTeX-hierarchy-mode-map " "	'YaTeX-hierarchy-scroll-up)
+  (define-key YaTeX-hierarchy-mode-map "b"	'YaTeX-hierarchy-scroll-down)
+  (define-key YaTeX-hierarchy-mode-map "\C-?"	'YaTeX-hierarchy-scroll-down)
   (define-key YaTeX-hierarchy-mode-map "\C-m"	'YaTeX-hierarchy-select)
-  (define-key YaTeX-hierarchy-mode-map ";" 'YaTeX-hierarchy-toggle-inspection)
+  (define-key YaTeX-hierarchy-mode-map "<"	'YaTeX-hierarchy-top)
+  (define-key YaTeX-hierarchy-mode-map ">"	'YaTeX-hierarchy-bottom)
+  (define-key YaTeX-hierarchy-mode-map "'"	'YaTeX-hierarchy-lastpos)
+  (define-key YaTeX-hierarchy-mode-map "g"	'YaTeX-hierarchy-select)
   (define-key YaTeX-hierarchy-mode-map "q"	'YaTeX-hierarchy-quit)
   (define-key YaTeX-hierarchy-mode-map "?"	'describe-mode)
   (if (and YaTeX-emacs-19 window-system)

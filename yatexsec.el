@@ -2,7 +2,7 @@
 ;;; YaTeX sectioning browser.
 ;;; yatexsec.el
 ;;; (c ) 1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Nov 25 04:46:42 1994 on VFR
+;;; Last modified Tue Jan 24 23:19:14 1995 on VFR
 ;;; $Id$
 
 (defvar YaTeX-sectioning-level
@@ -152,7 +152,8 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
   (interactive "p")
   (if (eq (selected-window) (minibuffer-window))
       (let*((command (buffer-string))
-	    (aster (equal (substring command -1) "*"))
+	    (aster (and (string< "" command)
+			(equal (substring command -1) "*")))
 	    (command (if aster (substring command 0 -1) command))
 	    (alist YaTeX-sectioning-level)
 	    (level 0))

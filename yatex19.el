@@ -1,13 +1,14 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sun Jan 22 23:15:56 1995 on landcruiser
+;;; Last modified Thu Feb  2 23:44:30 1995 on figaro
 ;;; $Id$
 
 ;;; とりあえず hilit19 を使っている時に色が付くようにして
 ;;; メニューバーでごにょごにょできるようにしただけ。
 ;;; いったい誰がメニューバー使ってLaTeXソース書くんだろうか?
 ;;; まあいいや練習練習。後ろの方にちょっとコメントあり。
+;;; 真中辺にあるけど、hilit19.el 対応の方は結構本気。
 
 (require 'yatex)
 
@@ -207,28 +208,116 @@ where
    (sort (append env-table user-env-table)
 	 '(lambda (x y) (string< (car x) (car y))))))
 
+;; Other key bindings for window-system
+;(YaTeX-define-key [?\C- ] 'YaTeX-do-completion)
+(define-key YaTeX-mode-map [?\M-\C- ] 'YaTeX-mark-environment)
+
 ;; Highlightening
-;; ローカルなマクロを読み込んだ後 redraw すると
-;; ローカルマクロを keyword として光らせる(keywordじゃまずいかな…)。
-(defvar YaTeX-hilit-patterns-alist nil
-  "*Hiliting pattern alist for LaTeX text.
-Default value is equal to latex-mode's one.")
-(defvar YaTeX-hilit-pattern-adjustment-default
-  (list
-   ;;\def が define なんだから new* も define でしょう。
-   '("\\\\\\(re\\)?new\\(environment\\|command\\){" "}" define)
-   '("\\\\new\\(length\\|theorem\\|counter\\){" "}" define)
-   ;;セクションコマンドが単なるキーワードってことはないでしょう。
-   ;;(list
-    ;;(concat "\\\\\\(" YaTeX-sectioning-regexp "\\){") "}"
-    ;;'sectioning)
-   ;;eqnarray などの数式環境が入ってないみたい…
-   '("\\\\begin{\\(eqnarray\\*?\\|equation\\*?\\)}"
-     "\\\\end{\\(eqnarray\\*?\\|equation\\*?\\)}"
-     formula))
-  "Adjustment for hilit19's LaTeX hilit pattern.")
+;; メニューに比べてこっちは結構本気でやってます。
+;; だって文書構造がとっても分かり易いんだもん。
+;; みんなも hilit19.el を使おう!
+;;
+;; さて、まずは対応する {} をピカピカ範囲とするような関数を作る。
+;; これは hilit-LaTeX.el を参考にした。でも、ちゃんと section 型コマンドの
+;; 引数を数えて正しい位置までピカピカさせるよ～ん!
+
+(defun YaTeX-19-region-section-type (pattern)
+  "Return list of starting and end point of section-type commands of PATTERN."
+  (if (re-search-forward pattern nil t)
+      (let ((m0 (match-beginning 0)) cmd (argc 1))
+	(setq cmd (substring (YaTeX-match-string 0) 1 -1)
+	      argc (or (car (cdr (YaTeX-lookup-table cmd 'section))) argc))
+	(cons m0
+	      (progn (skip-chars-backward "^{") (forward-char -2)
+		     (while (> argc 0)
+		       (skip-chars-forward "^{")
+		       (forward-list 1)
+		       (setq argc (1- argc)))
+		     (point))))))
+
+(defun YaTeX-19-region-large-type (pattern)
+  "Return list of large-type contents.
+Assumes PATTERN begins with `{'."
+  (if (re-search-forward pattern nil t)
+      (let ((m0 (match-beginning 0)))
+	(goto-char m0)
+	(skip-chars-forward "^ \t\n")
+	(skip-chars-forward " \t\n")
+	(cons (point)
+	      (progn (goto-char m0) (forward-list 1)
+		     (1- (point)))))))
+
+;; 些細なことだが % の前の文字もピカリとさせてしまうようで… >hilit19
+;; ↓この関数は下の hilit-set-mode-patterns の "[^\\]\\(%\\).*$" に
+;; 依存している
+(defun YaTeX-19-region-comment (pattern)
+  "Return list of comment start and end point."
+  (if (re-search-forward pattern nil t)
+      (cons (match-beginning 1) (match-end 0))))
+
+(defvar YaTeX-hilit-patterns-alist
+  '(
+    ;; comments
+    (YaTeX-19-region-comment "[^\\]\\(%\\).*$" comment)
+    
+    (YaTeX-19-region-section-type "\\\\footnote\\(mark\\|text\\)?{" keyword)
+    ("\\\\[a-z]+box" 0 keyword)
+    (YaTeX-19-region-section-type "\\\\\\(v\\|h\\)space\\(\*\\)?{" keyword)
+    
+    ;; (re-)define new commands/environments/counters
+    (YaTeX-19-region-section-type
+     "\\\\\\(re\\)?new\\(environment\\|command\\|theorem\\){" defun)
+    (YaTeX-19-region-section-type
+     "\\\\\\(re\\)?new\\(length\\|counter\\){" define)
+
+    ;; various declarations/definitions
+    (YaTeX-19-region-section-type
+     "\\\\\\(set\\|setto\\|addto\\)\\(length\\|width\\|counter\\){"
+     define)
+    (YaTeX-19-region-section-type
+     "\\\\\\(title\\|author\\|date\\|thanks\\){" define)
+
+    ("\\\\documentstyle\\(\\[.*\\]\\)?{" "}" decl)
+    ("\\\\\\(begin\\|end\\|nofiles\\|includeonly\\){" "}" decl)
+    ("\\\\\\(raggedright\\|makeindex\\|makeglossary\\|maketitle\\)\\b" 0 decl)
+    ("\\\\\\(pagestyle\\|thispagestyle\\|pagenumbering\\){" "}" decl)
+    ("\\\\\\(normalsize\\|small\\|footnotesize\\|scriptsize\\|tiny\\|large\\|Large\\|LARGE\\|huge\\|Huge\\)\\b" 0 decl)
+    ("\\\\\\(appendix\\|tableofcontents\\|listoffigures\\|listoftables\\)\\b"
+     0 decl)
+    ("\\\\\\(bf\\|em\\|it\\|rm\\|sf\\|sl\\|ss\\|tt\\)\\b" 0 decl)
+
+    ;; label-like things
+    ;;this should be customized by YaTeX-item-regexp
+    ("\\\\\\(sub\\)*item\\b\\(\\[[^]]*\\]\\)?" 0 label)
+    (YaTeX-19-region-section-type
+     "\\\\caption\\(\\[[^]]*\\]\\)?{" label)
+
+    ;; formulas
+    ("[^\\]\\\\("  "\\\\)" formula)                   ; \( \)
+    ("[^\\]\\\\\\[" "\\\\\\]" formula)                ; \[ \]
+    ("\\\\begin{\\(eqn\\|equation\\)" "\\\\end{\\(eqn\\|equation\\)" formula)
+    ("[^\\$]\\($\\($[^$]*\\$\\|[^$]*\\)\\$\\)" 1 formula) ; '$...$' or '$$...$$'
+
+    ;; things that bring in external files
+    ("\\\\\\(include\\|input\\|bibliography\\){" "}" include)
+
+    ;; "wysiwyg" emphasis -- these don't work with nested expressions
+    ;; ("{\\\\\\(em\\|it\\|sl\\)" "}" italic)
+    (YaTeX-19-region-large-type "{\\\\bf" bold)
+
+    ("``" "''" string)
+
+    ;; things that do some sort of cross-reference
+    (YaTeX-19-region-section-type
+     "\\\\\\(\\(no\\)?cite\\|\\(page\\)?ref\\|label\\|index\\|glossary\\){"
+     crossref)
+    )
+  "*Hiliting pattern alist for LaTeX text.")
+
+;;(defvar YaTeX-hilit-pattern-adjustment-default nil)
+;; ↑いらなくなった。
 (defvar YaTeX-hilit-pattern-adjustment-private nil
-  "*Private variable, same purpose as YaTeX-hilit-pattern-adjustment-default.")
+  "*Adjustment hilit-pattern-alist for default yatex-mode's pattern.")
 (defvar YaTeX-hilit-sectioning-face
   '(yellow/dodgerblue yellow/cornflowerblue)
   "*Hilightening face for sectioning unit.  '(FaceForLight FaceForDark)")
@@ -240,54 +329,55 @@ Default value is equal to latex-mode's one.")
 
 ;;; セクションコマンドを、構造レベルの高さに応じて色の濃度を変える
 ;;; 背景が黒でないと何が嬉しいのか分からないに違いない.
-(let*((sectface
-       (car (if (eq hilit-background-mode 'dark) 
-		(cdr YaTeX-hilit-sectioning-face)
-	      YaTeX-hilit-sectioning-face)))
-      (sectcol (symbol-name sectface))
-      sect-pat-alist)
-  (if (string-match "/" sectcol)
-      (let (colorvalue fR fG fB bR bG bB list pat fg bg level from face)
-	(require 'yatexsec)
-	(setq fg (substring sectcol 0 (string-match "/" sectcol))
-	      bg (substring sectcol (1+ (string-match "/" sectcol)))
-	      colorvalue (x-color-values fg)
-	      fR (/ (nth 0 colorvalue) 256)
-	      fG (/ (nth 1 colorvalue) 256)
-	      fB (/ (nth 2 colorvalue) 256)
-	      colorvalue (x-color-values bg)
-	      bR (/ (nth 0 colorvalue) 256)
-	      bG (/ (nth 1 colorvalue) 256)
-	      bB (/ (nth 2 colorvalue) 256)
-	      list YaTeX-sectioning-level)
-	(while list
-	  (setq pat (concat YaTeX-ec-regexp (car (car list)) "\\*?{")
-		level (cdr (car list))
-		fg (format "hex-%02x%02x%02x"
-			   (- fR (/ (* level fR) 40))	;40 musn't be constant
-			   (- fG (/ (* level fG) 40))
-			   (- fB (/ (* level fB) 40)))
-		bg (format "hex-%02x%02x%02x"
-			   (- bR (/ (* level bR) 15))	;20 musn't be constant
-			   (- bG (/ (* level bG) 15))
-			   (- bB (/ (* level bB) 15)))
-		from (intern (format "sectioning-%d" level))
-		face (intern (concat fg "/" bg)))
-	  (hilit-translate from face)
-	  (setq sect-pat-alist
-		(cons (list pat "}" face)
-		      sect-pat-alist))
-	  (setq list (cdr list)))
-	(setq YaTeX-sectioning-patterns-alist sect-pat-alist))))
+;;; もしかして白地の時は構造レベルに応じて色を明るくしたほうが良いのか?
+(cond
+ ((and (featurep 'hilit19) (fboundp 'x-color-values))
+  (let*((sectface
+	 (car (if (eq hilit-background-mode 'dark)
+		  (cdr YaTeX-hilit-sectioning-face)
+		YaTeX-hilit-sectioning-face)))
+	(sectcol (symbol-name sectface))
+	sect-pat-alist)
+    (if (string-match "/" sectcol)
+	(let (colorvalue fR fG fB bR bG bB list pat fg bg level from face)
+	  (require 'yatexsec)
+	  (setq fg (substring sectcol 0 (string-match "/" sectcol))
+		bg (substring sectcol (1+ (string-match "/" sectcol)))
+		colorvalue (x-color-values fg)
+		fR (/ (nth 0 colorvalue) 256)
+		fG (/ (nth 1 colorvalue) 256)
+		fB (/ (nth 2 colorvalue) 256)
+		colorvalue (x-color-values bg)
+		bR (/ (nth 0 colorvalue) 256)
+		bG (/ (nth 1 colorvalue) 256)
+		bB (/ (nth 2 colorvalue) 256)
+		list YaTeX-sectioning-level)
+	  (while list
+	    (setq pat (concat YaTeX-ec-regexp (car (car list)) "\\*?{")
+		  level (cdr (car list))
+		  fg (format "hex-%02x%02x%02x"
+			     (- fR (/ (* level fR) 40)) ;40 musn't be constant
+			     (- fG (/ (* level fG) 40))
+			     (- fB (/ (* level fB) 40)))
+		  bg (format "hex-%02x%02x%02x"
+			     (- bR (/ (* level bR) 15)) ;20 musn't be constant
+			     (- bG (/ (* level bG) 15))
+			     (- bB (/ (* level bB) 15)))
+		  from (intern (format "sectioning-%d" level))
+		  face (intern (concat fg "/" bg)))
+	    (hilit-translate from face)
+	    (setq sect-pat-alist
+		  (cons;;(list pat "}" face)
+		   (list 'YaTeX-19-region-section-type pat face)
+		   sect-pat-alist))
+	    (setq list (cdr list)))
+	  (setq YaTeX-sectioning-patterns-alist sect-pat-alist))))))
 
-(defun YaTeX-19-collect-macro ()
+;; ローカルなマクロを読み込んだ後 redraw すると
+;; ローカルマクロを keyword として光らせる(keywordじゃまずいかな…)。
+(defun YaTeX-19-collect-macros ()
   (cond
    ((and (featurep 'hilit19) (fboundp 'hilit-translate))
-    (or YaTeX-hilit-patterns-alist
-	(let ((alist (cdr (assq 'latex-mode hilit-patterns-alist))))
-	  (setcar (assoc "\\\\item\\(\\[[^]]*\\]\\)?" alist)
-		  (concat YaTeX-item-regexp "\\b\\(\\[[^]]*\\]\\)?"))
-	  (setq YaTeX-hilit-patterns-alist alist)))
     (let ((get-face
 	   (function
 	    (lambda (table)
@@ -306,17 +396,18 @@ Default value is equal to latex-mode's one.")
 		 (append
 		  YaTeX-sectioning-patterns-alist
 		  YaTeX-hilit-pattern-adjustment-private
-		  YaTeX-hilit-pattern-adjustment-default
+		  ;;YaTeX-hilit-pattern-adjustment-default
 		  YaTeX-hilit-patterns-alist
 		  (list
 		   (list
+		    'YaTeX-19-region-section-type
 		    (concat "\\\\\\("
 			    (mapconcat
 			     (function (lambda (s) (regexp-quote (car s))))
 			     (append user-section-table tmp-section-table)
 			     "\\|")
 			    "\\){")
-		    "}" 'keyword)
+		    'keyword)
 		   (list
 		    (concat "\\\\\\("
 			    (mapconcat
@@ -326,16 +417,63 @@ Default value is equal to latex-mode's one.")
 			    "\\)\\b")
 		    0 'macro))))
 	   hilit-patterns-alist)))))
-(YaTeX-19-collect-macro)
+;;(YaTeX-19-collect-macros)	;causes an error
 (defun YaTeX-hilit-recenter (arg)
   "Collect current local macro and hilit-recenter."
   (interactive "P")
-  (YaTeX-19-collect-macro)
+  (YaTeX-19-collect-macros)
   (hilit-recenter arg))
 (if (fboundp 'hilit-recenter)		;Replace hilit-recenter with
     (mapcar (function (lambda (key)	;YaTeX-hilit-recenter in yatex-mode
 			(define-key YaTeX-mode-map key 'YaTeX-hilit-recenter)))
 	    (where-is-internal 'hilit-recenter)))
+
+(defun YaTeX-switch-to-new-window ()
+  (let ((c 0) (i 1) (free (make-string win:max-configs ? )))
+    (while (< i win:max-configs)
+      (or (aref win:configs i) (aset free i (+ i win:base-key)))
+      (setq i (1+ i)))
+    (while (not (string-match (char-to-string c) free))
+      (message "Which window to create? [%s]: " free)
+      (setq c (read-char)))
+    (message "Creating window [%c]" c)
+    (set-buffer (get-buffer-create "*scratch*"))
+    (win:switch-window (- c win:base-key))))
+
+(defun YaTeX-visit-main-other-frame ()
+  "Visit main file in other frame.
+WARNING, This code is not perfect."
+  (interactive)
+  (if (YaTeX-main-file-p) (message "I think this is main LaTeX source.")
+    (let (parent)
+      (save-excursion (YaTeX-visit-main t) (setq parent (current-buffer)))
+      (cond
+       ((get-buffer-window parent t)
+	(goto-buffer-window parent))
+       ((and (featurep 'windows) win:use-frame)
+	(YaTeX-switch-to-new-window)
+	(switch-to-buffer parent))
+       (t (switch-to-buffer-other-frame (buffer-name parent)))))))
+
+(defun YaTeX-goto-corresponding-*-other-frame (arg)
+  "Go to corresponding object in other frame."
+  (interactive "P")
+  (let (b p)
+    (save-window-excursion
+      (save-excursion
+	(YaTeX-goto-corresponding-* arg)
+	(setq b (current-buffer) p (point))))
+    (cond
+     ((get-buffer-window b t)
+      (goto-buffer-window b)
+      (goto-char p))
+     ((and (featurep 'windows) win:use-frame)
+      (YaTeX-switch-to-new-window)
+      (switch-to-buffer b)
+      (goto-char p))
+     (t (switch-to-buffer-other-frame (buffer-name b))
+	(goto-char p))))
+)
 
 ;;; reverseVideo にして hilit-background-mode を 'dark
 ;;; にしている人は数式などが暗くなりすぎて見づらいかもしれない。

@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sun Jan 22 23:14:44 1995 on landcruiser
+;;; Last modified Sat Jan 28 01:01:44 1995 on VFR
 ;;; $Id$
 
 (require 'yatex)
@@ -632,7 +632,11 @@ page range description."
     (setq cmd
 	  (read-string-with-history
 	   "Edit command line: "
-	   (format cmd (YaTeX-get-preview-file-name))
+	   (format cmd
+		   (if (get 'dvi2-command 'region)
+		       (substring YaTeX-texput-file
+				  0 (rindex YaTeX-texput-file ?.))
+		     (YaTeX-get-preview-file-name)))
 	   'YaTeX-lpr-command-history))
     (save-excursion
       (YaTeX-visit-main t) ;;change execution directory

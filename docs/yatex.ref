@@ -117,7 +117,8 @@
 	
 	◆itemの桁揃え			[prefix] i
 
-	  \item を使う環境中のみ有効です。
+	  \item を使う環境中のみ有効です。\item の項目全体をハングインデ
+	ントします。
 
 	◆LaTeXコマンド変更		[prefix] c
 
@@ -151,6 +152,9 @@
 
 	  「おまかせ改行」は tabular, array, itemize, enumerate, list,
 	description 環境で有効です。
+
+
+	◆インクルード構造ブラウズ	[prefix] d
 
 							       広瀬雄二
 						    yuuji@ae.keio.ac.jp

@@ -1306,12 +1306,18 @@ Nop.Mさん(asciinet)
 藤枝和宏さん(JAIST)
 	野鳥/雷鳥の Mailing List を設立して頂きました。
 
-松本憲彦さん(東京学芸大学)
+松本憲彦さん(東京学芸大)
 	マニュアルのバグを指摘して頂きました。
 
-小宮山康子さん(成蹊大学)
+小宮山康子さん(成蹊大)
 	\item[] などの補完後 [] の中にカーソルを置く要望を頂きました。
 
+竹中浩さん(東京大)
+	M-q (YaTeX-fill-paragraph) のバグを報告して頂きました。
+
+佐藤圭さん(慶應大)
+	ネストした同種のitemize環境でのindentationの不具合を指摘して頂き
+	ました。
 yatex
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))
 <refer YaTeX>

@@ -36,10 +36,11 @@
 * Cursor jump::                 Jumping to related position
 * Changing and Deleting::       Changing/deleting certain unit of text
 * Filling::                     Filling an item or paragraph
-* Updation of @code{\includeonly}::  Maintaining @code{\includeonly}
-* What column?::                Column position guide in tabular
+* Updation of includeonly::     Free from maintaining includeonly
+* What column?::                Guidance to tabular column
 * Intelligent newline::         Guess requisites of new line
 * Online help::                 On-line documentation of LaTeX
+* Browsing file hierarchy::     Walking through file hierarchy
 * Cooperation with other packages::  Work well with gmhist, min-out
 * Customizations::              How to breed `Wild Bird'
 * Etcetera::                    YaTeX is acquisitive.
@@ -138,6 +139,7 @@ Language Enhancement to GNU Emacs), and latex on DOS.
         (@kbd{C-c a}, @kbd{;}, @kbd{:})
 @item Online help for the popular La@TeX{} commands
       (@kbd{C-c ?}, @kbd{C-c /})(English help is not yet supported)
+@item Document files hierarchy browser (@kbd{C-c d})
 @end itemize
 
 @node Installation, Typesetting, Main features, Top
@@ -1180,7 +1182,7 @@ Besides, putting cursor on the first occurrence of non-whitespace
 character on a line changes the fill-prefix temporarily to the depth of
 the line.
 
-@node Updation of @code{\includeonly}, What column?, Filling, Top
+@node Updation of includeonly, What column?, Filling, Top
 @comment  node-name,  next,  previous,  up
 @chapter Updation of @code{\includeonly}
 @cindex includeonly
@@ -1299,7 +1301,7 @@ calling this function before your code to insert certain contents must be
 useful.  See the definition of the function
 @code{YaTeX-intelligent-newline-itemize} as an example.
 
-@node Online help, Cooperation with other packages, Intelligent newline, Top
+@node Online help, Browsing file hierarchy, Intelligent newline, Top
 @comment  node-name,  next,  previous,  up
 @chapter Online help
 @cindex online help
@@ -1349,7 +1351,73 @@ me your additional descriptions if you  describe  the help on some
 standard commands.   I might  want    to include it  in   the next
 distribution.
 
-@node Cooperation with other packages, Customizations, Online help, Top
+@node Browsing file hierarchy, Cooperation with other packages, Online help, Top
+@comment  node-name,  next,  previous,  up
+@chapter Browsing file hierarchy
+@cindex hierarchy
+@cindex browsing
+
+  When you are editing multi-file source, typing
+
+@table @kbd
+@item [prefix] d
+        @dots{} browse file hierarchy
+@end table
+
+@noindent
+asks you the parent-most file (which may be defaulted) and displays the
+documentation hierarchy in the next window.  In this buffer, the following
+commands are available.
+
+@table @kbd
+@item n
+        @dots{} move to the next line and show its contents
+@item p
+        @dots{} move to the previous line and show its contents
+@item N
+        @dots{} move to the next file in the same inclusion level
+@item P
+        @dots{} move to the previous file in the same inclusion level
+@item j
+        @dots{} move to the next line
+@item k
+        @dots{} move to the previous line
+@item u
+        @dots{} move to the parent file
+@item .
+        @dots{} show the current files contents in the next window
+@item SPC
+        @dots{} scroll up the current file window
+@item DEL, b
+        @dots{} scroll down the current file window
+@item <
+        @dots{} show the beginning of the current file
+@item >
+        @dots{} show the end of the current file
+@item >
+        @dots{} return to the previous postion after @kbd{<} or @kbd{>}
+@item RET, g
+        @dots{} open the current file in the next window
+@item mouse-2
+        @dots{} same as RET(available only with window system)
+@item o
+        @dots{} other window
+@item 1
+        @dots{} delete other windows
+@item -
+        @dots{} shrink hierarchy buffer window
+@item +
+        @dots{} enlarge hierarchy buffer window
+@item ?
+        @dots{} describe mode
+@item q
+        @dots{} quit
+@end table
+
+  Note that operations on the file contents in the next window do not work 
+correctly when you close the corresponding file.
+
+@node Cooperation with other packages, Customizations, Browsing file hierarchy, Top
 @comment  node-name,  next,  previous,  up
 @chapter Cooperation with other packages
 
@@ -1581,6 +1649,14 @@ hilit19.el).
 
 @defvar YaTeX-sectioning-level
 Alist of LaTeX's sectioning command vs its height.
+@end defvar
+
+@defvar YaTeX-hierarchy-ignore-heading-regexp
+@code{YaTeX-display-hierarchy} searches for sectioning command first, and
+comment line secondary as a file headings.  In latter case, ignore lines
+that match with regular expression of this variable.  Default value of
+this variable is RCS header expressions and mode specifying line `-*- xxxx 
+-*'.
 @end defvar
 
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
