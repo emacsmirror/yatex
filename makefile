@@ -22,12 +22,13 @@ TMPDIR	= /tmp
 VERSION = `head yatex.el|awk '/rev\./{print $$4}'`
 PACKDIR	= $(TMPDIR)/yatex$(VERSION)
 EMACS	= mule
+INSTALL	= install -c
 
 all:
 
 install:
 	$(EMACS) -batch -e batch-byte-compile $(LISP)
-	#install -c * $(MYELISPLIB)
+	#$(INSTALL) * $(MYELISPLIB)
 
 package:
 	@-mkdir $(PACKDIR)
