@@ -1,18 +1,18 @@
 ;;; -*- Emacs-Lisp -*-
-;;; YaTeX interface for math-mode.
+;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el rev.2
 ;;; (c )1993-1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Apr 23 02:26:57 1994 on pajero
+;;; Last modified Fri Jul  8 00:48:24 1994 on figaro
 ;;; $Id$
 
 ;;; [Customization guide]
 ;;;
 ;;;	  By default,  you can use two  completion  groups in YaTeX math
-;;;	mode, `,' for mathematical signs and `/' for greek letters.  But
+;;;	mode, `;' for mathematical signs and `/' for greek letters.  But
 ;;;	you  can add other completion groups   by defining the  alist of
 ;;;	`prefix  key'    vs   `completion   list'    into  the  variable
 ;;;	YaTeX-math-key-list-private.  If  you wish  to    accomplish the
-;;;	completion as follows(prefix key is `;'):
+;;;	completion as follows(prefix key is `,'):
 ;;;
 ;;;		KEY		COMPLETION
 ;;;		s		\sin
@@ -24,7 +24,7 @@
 ;;;		l		\log
 ;;;		hs		\sinh
 ;;;
-;;;	Typing `s' after `;' makes `\sin', `hs' after `;' makes `\sinh'
+;;;	Typing `s' after `,' makes `\sin', `hs' after `,' makes `\sinh'
 ;;;	and so on.  First, you have to define list of key-completion
 ;;;	pairs.  Variable name(YaTeX-math-funcs-list) is arbitrary.
 ;;;
@@ -38,21 +38,21 @@
 ;;;	above) into the variable YaTeX-math-key-list-private.
 ;;;
 ;;;		(setq YaTeX-math-key-list-private
-;;;		      '((";" . YaTeX-math-funcs-list)
+;;;		      '(("," . YaTeX-math-funcs-list)
 ;;;			("'" . Other-List-if-any)))
 ;;;
 ;;;	  Put these expressions into your ~/.emacs, and you can use this
 ;;;	completion in the YaTeX-math-mode.
 ;;;
 ;;;	  And you can add your favorite completion sequences to the
-;;;	default completion list invoked with `,', by defining those lists
+;;;	default completion list invoked with `;', by defining those lists
 ;;;	into variable YaTeX-math-sign-alist-private.
 
 ;;; 【イメージ補完の追加方法】
 ;;;
-;;;	  標準のイメージ補完では、「,」で始まる数式記号補完と、「/」で始
+;;;	  標準のイメージ補完では、「;」で始まる数式記号補完と、「/」で始
 ;;;	まるギリシャ文字補完が使用可能ですが、これ以外の文字で始まる補完
-;;;	シリーズも定義することができます。例えば、「;」で始まる次のよう
+;;;	シリーズも定義することができます。例えば、「,」で始まる次のよう
 ;;;	な補完シリーズを定義する場合を考えてみます。
 ;;;
 ;;;		補完キー	補完結果
@@ -65,7 +65,7 @@
 ;;;		l		\log
 ;;;		hs		\sinh
 ;;;
-;;;	「;」のあとに s を押すと \sin が、hs を押すと \sinh が入力されま
+;;;	「,」のあとに s を押すと \sin が、hs を押すと \sinh が入力されま
 ;;;	す。このような補完リストの登録は以下のようにします(変数名は任意)。
 ;;;
 ;;;		(setq YaTeX-math-funcs-list
@@ -74,11 +74,11 @@
 ;;;				:
 ;;;			("hs"	"sinh")))
 ;;;
-;;;	さらに、「;」を押した時にイメージ補完が始まるよう次の変数に、起動キー
+;;;	さらに、「,」を押した時にイメージ補完が始まるよう次の変数に、起動キー
 ;;;	と上で定義した補完用変数の登録を行ないます。
 ;;;
 ;;;		(setq YaTeX-math-key-list-private
-;;;		      '((";" . YaTeX-math-funcs-list)
+;;;		      '(("," . YaTeX-math-funcs-list)
 ;;;			("'" . ほかに定義したいシリーズがあれば…)))
 ;;;
 ;;;	これらを ~/.emacs に書いておけば、野鳥の math-mode で自分専用の
@@ -106,6 +106,7 @@
 (YaTeX-setq-math-sym YaTeX-image-bot		"｜\n￣"	"⊥")
 (YaTeX-setq-math-sym YaTeX-image-neg		"�ｲ"		"￢")
 (YaTeX-setq-math-sym YaTeX-image-flat		"ｂ"		"♭")
+(YaTeX-setq-math-sym YaTeX-image-sqrt		"√"		"√")
 
 (setq
  YaTeX-math-sign-alist-default
@@ -116,6 +117,8 @@
    ("sigma"	"sum"		("\\-+\n >\n/-+" "Σ"))
    ("integral"	"int"		(" /\\\n \\\n\\/" YaTeX-image-int))
    ("ointegral"	"oint"		" /\\\n(\\)\n\\/")
+   ("sqrt"	"sqrt"		("  __\n,/" YaTeX-image-sqrt))
+   ("root"	"sqrt"		("  __\n,/" YaTeX-image-sqrt))
    ("A"		"forall"	"|_|\nV")
    ("E"		"exists"	"-+\n-+\n-+")
    ("!"		"neg"		("--+\n  |" YaTeX-image-neg))
@@ -127,6 +130,7 @@
    ("-+"	"mp"		"-\n+")
    ("x"		"times"		("x" "×"))
    ("/"		"div"		(",\n-\n'" "÷"))
+   ("f"		"frac"		"xxx\n---\nyyy" "÷")
    ("*"		"ast"		"*")
    ("#"		"star"		("_/\\_\n\\  /\n//\\\\" "★"))
    ("o"		"circ"		"o")
@@ -366,18 +370,6 @@
   (define-key YaTeX-math-menu-map "\^m"	'exit-recursive-edit)
   (define-key YaTeX-math-menu-map "q"	'abort-recursive-edit))
 
-(defvar YaTeX-math-key-list-default
-  '(("," . YaTeX-math-sign-alist)
-    ("/" . YaTeX-greek-key-alist))
-  "Default key sequence to invoke math-mode's image completion."
-)
-(defvar YaTeX-math-key-list-private nil
-  "*User defined alist, math-mode-prefix vs completion alist"
-)
-(defvar YaTeX-math-key-list
-  (append YaTeX-math-key-list-private YaTeX-math-key-list-default)
-  "Key sequence to invoke math-mode's image completion."
-)
 (defvar YaTeX-math-exit-key "\e"
   "*Key sequence after prefix key of YaTeX-math-mode to exit from math-mode."
 )
@@ -390,43 +382,30 @@
 ;;;
 ;;YaTeX math-mode functions
 ;;;
-;##autoload from yatex.el
+;;;###autoload from yatex.el
 (defun YaTeX-toggle-math-mode (&optional arg)
   (interactive "P")
-  (require 'yatexmth)
   (or (memq 'YaTeX-math-mode mode-line-format) nil
       (setq mode-line-format
 	    (append (list "" 'YaTeX-math-mode) mode-line-format)))
-  (if (or arg (null YaTeX-math-mode))
-      (let ((keys ""))
-	(setq YaTeX-math-mode "math:")
-	(mapcar
-	 (function (lambda (x)
-		     (let ((key (car x)) (list (cdr x)))
-		       (setq keys (concat keys " " key))
-		       (put 'YaTeX-math-key-list list (key-binding key))
-		       (define-key YaTeX-mode-map key
-			 'YaTeX-math-insert-sequence))))
-	 YaTeX-math-key-list)
-	(message "Turn on math mode. Prefix keys are %s" keys)
-	(sit-for 3)
-	(message
-	 (concat "To exit from math-mode, type `ESC' after prefix, "
-		 "or type `"
-		 (key-description
-		  (car
-		   (where-is-internal 'YaTeX-switch-mode-menu YaTeX-mode-map)))
-		 " $'")))
-    (setq YaTeX-math-mode nil)
-    (mapcar
-     (function (lambda (x)
-		 (let ((key (car x)) (list (cdr x)))
-		   (define-key YaTeX-mode-map key
-		     (get 'YaTeX-math-key-list list)))))
-     YaTeX-math-key-list)
-    (setq YaTeX-math-mode nil)
-    (message "Exit from math mode."))
-  (set-buffer-modified-p (buffer-modified-p))
+  (if YaTeX-auto-math-mode nil		;Only effective on manual mode.
+    (if (or arg (null YaTeX-math-mode))
+	(let (keys)
+	  (setq YaTeX-math-mode "math:")
+	  (message "Turn on math mode. Prefix keys are %s"
+		   (mapconcat 'car YaTeX-math-key-list " "))
+	  (sit-for 3)
+	  (message
+	   (concat "To exit from math-mode, type `ESC' after prefix, "
+		   "or type `"
+		   (key-description
+		    (car
+		     (where-is-internal
+		      'YaTeX-switch-mode-menu YaTeX-mode-map)))
+		   " $'")))
+      (setq YaTeX-math-mode nil)
+      (message "Exit from math mode."))
+    (set-buffer-modified-p (buffer-modified-p)))
 )
 
 (defun YaTeX-math-forward (arg)
@@ -453,6 +432,47 @@
 
 (defun YaTeX-math-get-sign (list)
   (YaTeX-math-gets (car (cdr-safe (cdr-safe list))))
+)
+
+(defun YaTeX-in-math-mode-p ()
+  "If current position is supposed to be in LaTeX-math-mode, return t."
+  (or (YaTeX-quick-in-environment-p
+       '("math" "eqnarray" "equation" "eqnarray*" "displaymath"))
+      (let ((p (point)) (nest 0) me0
+	    (boundary
+	     (save-excursion
+	       (if (looking-at YaTeX-paragraph-delimiter)
+		   (goto-char (max (point-min) (1- (point)))))
+	       (re-search-backward YaTeX-paragraph-delimiter nil 1)
+	       (point))))
+	(save-excursion
+	  (cond
+	   ((catch 'open
+	      (save-excursion
+		(while (and (>= nest 0)
+			    (re-search-backward
+			     (concat YaTeX-ec-regexp	;\
+				     "\\([()]\\|[][]\\)") boundary t))
+		  (setq me0 (match-end 0))
+		  (if (or (YaTeX-on-comment-p)
+			  (YaTeX-quick-in-environment-p "verbatim")) nil
+		    (if (or (= (char-after (1- me0)) ?\))
+			    (= (char-after (1- me0)) ?\]))
+			(setq nest (1+ nest))
+		      (setq nest (1- nest)))))
+		(if (< nest 0) (throw 'open t))))
+	    t)
+	   (t (catch 'dollar
+		(while (search-backward "$" boundary t)
+		  (cond
+		   ((equal (char-after (1- (point))) ?$) ; $$ equation $$
+		    (backward-char 1)
+		    (setq nest (1+ nest)))
+		   ((and (equal (char-after (1- (point))) ?\\ )
+			 (not (equal (char-after (- (point) 3)) ?\\ )))
+		    nil)		;\$
+		   (t (setq nest (1+ nest)))))
+		(if (= (% nest 2) 1) (throw 'dollar t))))))))
 )
 
 (defun YaTeX-math-display-list (list cols)
@@ -551,8 +571,9 @@ at least you get to read the beginning."
 	  (setq buffer-file-name name)
 	  (set-buffer-modified-p modified)))))
 
-(defun YaTeX-math-insert-sequence ()
-  (interactive)
+(defun YaTeX-math-insert-sequence (&optional force)
+  "Insert math-mode sequence with image completion."
+  (interactive "P")
   (let*((key "") regkey str  last-char list i
 	(case-fold-search nil) match sign
 	(this-key (char-to-string last-command-char))
@@ -560,8 +581,12 @@ at least you get to read the beginning."
 	(n (length alist)) (beg (point)) result)
     (setq result
 	  (catch 'complete
+	    (if (and (not force)
+		     (or (and (not YaTeX-auto-math-mode) (not YaTeX-math-mode))
+			 (not (YaTeX-in-math-mode-p))))
+		(throw 'complete 'escape));this tag should be exit, but...
 	    (while t
-	      (message "Sequence: %s" key)
+	      (message "Sequence(TAB for menu): %s" key)
 	      (setq last-char (read-char)
 		    key (concat key (char-to-string last-char))
 		    i 0)
@@ -570,20 +595,24 @@ at least you get to read the beginning."
 		(throw 'complete 'escape))
 	       ((string= key YaTeX-math-exit-key)	;;exit from math-mode
 		(throw 'complete 'exit))
-	       ((string-match "[\C-g\C-c]" key) (throw 'complete 'abort))
-	       ((string-match "[\n\r]" key) (throw 'complete 'menu))
-	       ((string-match "[\C-h\C-?]" key)
-		(if (string= key "") (throw 'complete 'abort))
+	       ((string-match "\r" key)			;;RET = kakutei
+		(throw 'complete 'select))
+	       ((string-match "[\C-g\C-c]" key)		;;C-g = abort
+		(throw 'complete 'abort))
+	       ((string-match "[\t\n]" key)		;;TAB, LFD = menu
+		(throw 'complete 'menu))
+	       ((string-match "[\C-h\C-?]" key)		;;BS, DEL = BS
+		(if (< (length key) 2) (throw 'complete 'abort))
 		(setq key (substring key 0 -2))))
 	      
 	      (setq regkey (concat "^" (regexp-quote key)))
-	      (message "Sequence: %s" key)
+	      (message "Sequence(TAB for menu): %s" key)
 	      (if
 		  (catch 'found
 		    ;;(1)input string strictly matches with alist
-		    (setq single-command (car (cdr match))
-			  ;;remember previous match
-			  match (assoc key alist))
+		    (setq match (assoc key alist))
+		    ;;remember previous match
+
 		    ;;(2)search partial match into alist
 		    (setq list alist)
 		    (while (< i n)
@@ -591,8 +620,7 @@ at least you get to read the beginning."
 			   regkey
 			   ;;(aref array i)
 			   ;;(car (nth i alist))
-			   (car (car list))
-			   )
+			   (car (car list)))
 			  (progn
 			    (or match
 				;;(setq match (nth i alist))
@@ -602,11 +630,12 @@ at least you get to read the beginning."
 		  nil ;;if any match, continue reading
 		;;else reading of sequence has been done.
 		(message "complete.")
-		(throw 'complete t)
-		)
+		(throw 'complete t))
+
 	      (if match
 		  (progn (delete-region beg (point))
-			 (insert YaTeX-ec (car (cdr match)))
+			 (setq single-command (car (cdr match)))
+			 (insert YaTeX-ec single-command)
 			 (if (and YaTeX-math-need-image
 				  (setq sign (YaTeX-math-get-sign match)))
 			     (YaTeX-math-show-image (concat sign "\n")))
@@ -616,12 +645,7 @@ at least you get to read the beginning."
     (cond
      ((eq result t)
       (setq YaTeX-current-completion-type 'maketitle)
-      (if t nil
-	(delete-region beg (point))
-	(setq single-command (car (cdr match)))
-	;;(recursive-edit)
-	(insert YaTeX-ec single-command)
-	)
+
       ;;;(sit-for 1)
       (setq unread-command-char last-char)
       (insert (YaTeX-addin single-command)))
@@ -631,6 +655,8 @@ at least you get to read the beginning."
      ((eq result 'escape)
       (delete-region beg (point))
       (insert this-key))
+     ((eq result 'select)
+      (message "Done."))
      ((eq result 'exit)
       (delete-region beg (point))
       (YaTeX-toggle-math-mode))

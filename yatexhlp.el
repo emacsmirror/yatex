@@ -2,7 +2,7 @@
 ;;; YaTeX helper with LaTeX commands and macros.
 ;;; yatexhlp.el
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu May  5 16:09:42 1994 on 98fa
+;;; Last modified Fri Jul  1 17:03:23 1994 on VFR
 ;;; $Id$
 
 (let ((help-file
@@ -34,7 +34,73 @@
 	(t "[[ Description ]]"))
   "Section header of description.")
 
-(defun YaTeX-refer-help (command help-file)
+(defvar YaTeX-help-reference-regexp "<refer\\s +\\([^>]+\\)>"
+  "Regexp of reference format of YaTeX-help file.")
+(defvar YaTeX-help-buffer "** YaTeX HELP **" "Help buffer name for yatexhlp")
+
+(defun YaTeX-help-entries ()
+  "Return the alist which contains all the entries in YaTeX-help file."
+  (let (entries entry)
+    (save-excursion
+      (mapcar
+       (function
+	(lambda (help)
+	  (if (file-exists-p help)
+	      (progn
+		(set-buffer (find-file-noselect help))
+		(save-excursion
+		  (goto-char (point-min))
+		  (while (re-search-forward
+			  (concat "^" (regexp-quote YaTeX-help-delimiter)
+				  "\\(.+\\)$") nil t)
+		    (setq entry (buffer-substring
+				 (match-beginning 1) (match-end 1)))
+		    (or (assoc entry entries)
+			(setq entries (cons (list entry) entries)))))))))
+       (list YaTeX-help-file YaTeX-help-file-private)))
+    entries)
+)
+
+(defvar YaTeX-help-entries (YaTeX-help-entries))
+
+(defun YaTeX-help-resolve-reference (buffer1 buffer2 &optional done-list)
+  "Replace reference format in buffer1 with refered contents in buffer2."
+  (let (ref ref-list beg end)
+    (save-excursion
+      (switch-to-buffer buffer1)
+      (goto-char (point-min))
+      (while (re-search-forward YaTeX-help-reference-regexp nil t)
+	(setq ref (buffer-substring (match-beginning 1) (match-end 1))
+	      ref-list (cons (list ref) ref-list))
+	(replace-match "")
+	(if (assoc ref done-list) nil	;already documented.
+	  (switch-to-buffer buffer2)
+	  (save-excursion
+	    (goto-char (point-min))
+	    (if (re-search-forward
+		 (concat (regexp-quote YaTeX-help-delimiter)
+			 (regexp-quote ref)
+			 "$") nil t)
+		(progn
+		  (setq beg (progn (forward-line 2) (point))
+			end (progn
+			      (re-search-forward
+			       (concat "^" (regexp-quote YaTeX-help-delimiter))
+			       nil 1)
+			      (goto-char (match-beginning 0))
+			      (forward-line -1)
+			      (while (and (bolp) (eolp) (not (bobp)))
+				(forward-char -1))
+			      (point)))
+		  (switch-to-buffer buffer1)
+		  (insert-buffer-substring buffer2 beg end))))
+	  (switch-to-buffer buffer1)))
+      (if beg (YaTeX-help-resolve-reference
+	       buffer1 buffer2 (append done-list ref-list))))
+    )
+)
+
+(defun YaTeX-refer-help (command help-file &optional append)
   "Refer the COMMAND's help into HELP-FILE.
 \[Help-file format\]
 <DELIM><LaTeX/TeX command without escape character(\\)><NL>
@@ -44,31 +110,35 @@ Where:	<DELIM> is the value of YaTeX-help-delimiter.
 	<NL> is newline.
 	<TERM> is newline or end of buffer."
   (let ((hfbuf (find-file-noselect help-file))
-	(hbuf (get-buffer-create "** YaTeX HELP **"))
+	(hbuf (get-buffer-create YaTeX-help-buffer))
 	(curwin (selected-window))
 	sb se db de)
     (set-buffer hfbuf)
     (goto-char (point-min))
     (if (null
-	 (re-search-forward
-	  (concat (regexp-quote YaTeX-help-delimiter)
-		  (regexp-quote command)
-		  "$") nil t))
+	 (let ((case-fold-search nil))
+	   (re-search-forward
+	    (concat (regexp-quote YaTeX-help-delimiter)
+		    (regexp-quote command)
+		    "$") nil t)))
 	nil				;if not found, return nil
       (forward-line 1)
       (setq sb (point)
 	    se (progn (forward-line 1) (point))
 	    db (point)
 	    de (progn
-		 (re-search-forward (regexp-quote YaTeX-help-delimiter) nil 1)
-		 (1- (match-beginning 0))))
-      (YaTeX-showup-buffer hbuf)
+		 (re-search-forward
+		  (concat "^" (regexp-quote YaTeX-help-delimiter)) nil 1)
+		 (- (point) (length YaTeX-help-delimiter))))
+      (YaTeX-showup-buffer
+       hbuf (function (lambda (x) (nth 3 (window-edges x)))))
       (pop-to-buffer hbuf)
-      (erase-buffer)
+      (if append (goto-char (point-max)) (erase-buffer))
       (insert YaTeX-help-synopsis "\n")
       (insert-buffer-substring hfbuf sb se)
       (insert "\n" YaTeX-help-description "\n")
       (insert-buffer-substring hfbuf db de)
+      (YaTeX-help-resolve-reference hbuf hfbuf (list (list command)))
       (goto-char (point-min))
       (select-window curwin)
       t))
@@ -110,13 +180,15 @@ Where:	<DELIM> is the value of YaTeX-help-delimiter.
     (delete-blank-lines)
     (let ((make-backup-files t))
       (basic-save-buffer))
-    (bury-buffer hfbuf))
+    (bury-buffer hfbuf)
+    (setq YaTeX-help-entries (cons (list command) YaTeX-help-entries)))
 )
 (defun YaTeX-help-prepare-entry (command help-file)
   "Read help description on COMMAND and add it to HELP-FILE."
   (let ((buf (get-buffer-create "**Description**"))
 	(conf (current-window-configuration)))
-    (YaTeX-showup-buffer buf)
+    (YaTeX-showup-buffer
+     buf (function (lambda (x) (nth 3 (window-edges x)))))
     (pop-to-buffer buf)
     (make-local-variable 'YaTeX-help-file-current)
     (make-local-variable 'YaTeX-help-command-current)
@@ -153,6 +225,44 @@ as a help file."
    nil "\\(\\sw+\\)\\([^]+\\|\\s'\\)" "\\1" (point-min) (point-max))
 )
 
+(defun YaTeX-apropos-file (keyword help-file &optional append)
+  (let ((hb (find-file-noselect help-file))
+	(ab (get-buffer-create YaTeX-help-buffer))
+	(sw (selected-window))
+	(head (concat "^" (regexp-quote YaTeX-help-delimiter)))
+	pt command)
+    (YaTeX-showup-buffer
+     ab (function (lambda (x) (nth 3 (window-edges x)))))
+    (select-window (get-buffer-window ab))
+    (set-buffer ab)			;assertion
+    (or append (erase-buffer))
+    (set-buffer hb)
+    (goto-char (point-min))
+    (while (re-search-forward keyword nil t)
+      (setq pt (point))
+      (re-search-backward head nil t)
+      (setq command (buffer-substring (match-end 0) (point-end-of-line)))
+      (switch-to-buffer ab)
+      (goto-char (point-max))
+      (insert-char ?- (1- (window-width)))
+      (insert (format "\n<<%s>>\n" command))
+      (YaTeX-refer-help command help-file t) ;append mode
+      (set-buffer hb)
+      (goto-char pt)
+      (if (re-search-forward head nil 1)
+	  (goto-char (1- (match-beginning 0)))))
+    (select-window sw)
+    pt)
+)
+
+;;;###autoload
+(defun YaTeX-apropos (key)
+  (interactive "sLaTeX apropos (regexp): ")
+  (or (YaTeX-apropos-file key YaTeX-help-file)
+      (YaTeX-apropos-file key YaTeX-help-file-private t)
+      (message "No matches found."))
+)
+
 ;;;###autoload
 (defun YaTeX-help ()
   "Show help buffer of LaTeX/TeX commands or macros."
@@ -172,7 +282,7 @@ as a help file."
 		     (buffer-substring (match-beginning 2) (match-end 2))))))
        ((search-backward YaTeX-ec (point-beginning-of-line) t)
 	(goto-char (setq beg (match-end 0)))
-	(re-search-forward "\\sw+")
+	(re-search-forward YaTeX-TeX-token-regexp (point-end-of-line) t)
 	(setq end (point))
 	(if (and (<= beg p) (<= p end))
 	    (setq command (buffer-substring beg end)))))
@@ -185,12 +295,7 @@ as a help file."
       (setq command
 	    (completing-read
 	     "Describe (La)TeX command: "
-	     (append
-	      section-table user-section-table tmp-section-table
-	      article-table user-article-table
-	      env-table     user-env-table     tmp-env-table
-	      singlecmd-table user-singlecmd-table tmp-singlecmd-table)
-	     nil nil command))	;no-predicate, not require match
+	     YaTeX-help-entries nil nil command))
       );end excursion
     (or (YaTeX-refer-help command YaTeX-help-file)
 	(YaTeX-refer-help command YaTeX-help-file-private)

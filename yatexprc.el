@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri May 13 01:22:54 1994 on 98fa
+;;; Last modified Fri Jul  1 02:44:32 1994 on figaro
 ;;; $Id$
 
 (require 'yatex)
@@ -44,7 +44,7 @@
     (with-output-to-temp-buffer buffer
       (if YaTeX-dos			;if MS-DOS
 	  (progn
-	    (message (concat "Typesetting " (buffer-name) "..."))
+	    (message (format "Calling `%s'..." command))
 	    (YaTeX-put-nonstopmode)
 	    (call-process shell-file-name
 			  nil buffer nil "/c" command)
@@ -64,10 +64,9 @@
 		YaTeX-latex-message-code YaTeX-coding-system))
 	      ((boundp 'NEMACS)
 	       (set-kanji-process-code YaTeX-latex-message-code))))
-    (message "Type SPC to continue.")
     (goto-char (point-max))
     (if YaTeX-dos (message "Done.")
-      (insert (message " "))
+      (insert " ")
       (set-marker (process-mark YaTeX-typeset-process) (1- (point))))
     (if (bolp) (forward-line -1))
     (recenter -1)
@@ -80,16 +79,19 @@
          (set-process-buffer proc nil))
         ((memq (process-status proc) '(signal exit))
          (let* ((obuf (current-buffer)) (pbuf (process-buffer proc))
+		(pwin (get-buffer-window pbuf))
 		(owin (selected-window)) win)
            ;; save-excursion isn't the right thing if
            ;;  process-buffer is current-buffer
            (unwind-protect
                (progn
                  ;; Write something in *typesetting* and hack its mode line
-		 (YaTeX-pop-to-buffer pbuf)
-		 (set-buffer (process-buffer proc))
+		 (if pwin
+		     (select-window pwin)
+		   (set-buffer pbuf))
+		 ;;(YaTeX-showup-buffer pbuf nil t)
                  (goto-char (point-max))
-		 (recenter -3)
+		 (if pwin (recenter -3))
                  (insert ?\n "latex typesetting " mes)
                  (forward-char -1)
                  (insert " at " (substring (current-time-string) 0 -5) "\n")
@@ -132,19 +134,34 @@ operation to the region."
     (let*
 	((end "") typeout ;Type out message that tells the method of cutting.
 	 (cmd (concat (YaTeX-get-latex-command nil) " " YaTeX-texput-file))
-	 (buffer (current-buffer)) opoint preamble main
+	 (buffer (current-buffer)) opoint preamble (subpreamble "") main
 	 reg-begin reg-end)
-      
-      (if (re-search-backward "%#BEGIN" nil t)
+
+      (if (search-backward "%#BEGIN" nil t)
 	  (progn
-	    (setq typeout "--- Region from BEGIN to " end "END ---"
+	    (setq typeout "--- Region from BEGIN to "
+		  end "the end of the buffer ---"
 		  reg-begin (match-end 0))
-	    (if (re-search-forward "%#END" nil t)
+	    (if (search-forward "%#END" nil t)
 		(setq reg-end (match-beginning 0)
-		      end "end of buffer ---")
+		      end "END ---")
 	      (setq reg-end (point-max))))
 	(setq typeout "=== Region from (point) to (mark) ===")
 	(setq reg-begin (point) reg-end (mark)))
+      (goto-char (point-min))
+      (while (search-forward "%#REQUIRE" nil t)
+	(setq subpreamble
+	      (concat subpreamble
+		      (cond
+		       ((eolp)
+			(buffer-substring
+			 (match-beginning 0)
+			 (point-beginning-of-line)))
+		       (t (buffer-substring
+			   (match-end 0)
+			   (point-end-of-line))))
+		      "\n"))
+	(goto-char (match-end 0)))
       (YaTeX-visit-main t)
       (setq main (current-buffer))
       (setq opoint (point))
@@ -162,7 +179,7 @@ operation to the region."
       (erase-buffer)
       (if YaTeX-need-nonstop
 	  (insert "\\nonstopmode{}\n"))
-      (insert preamble "\n")
+      (insert preamble "\n" subpreamble "\n")
       (insert-buffer-substring buffer reg-begin reg-end)
       (insert "\\typeout{" typeout end "}\n") ;Notice the selected method.
       (insert "\n\\end{document}\n")
@@ -261,6 +278,8 @@ PROC should be process identifier."
 (defun YaTeX-system (command buffer)
   "Execute some command on buffer.  Not a official function."
   (save-excursion
+    (YaTeX-showup-buffer
+     buffer (function (lambda (x) (nth 3 (window-edges x)))))
     (with-output-to-temp-buffer buffer
       (if YaTeX-dos
 	  (call-process shell-file-name nil buffer nil "/c " command)
@@ -286,20 +305,24 @@ PROC should be process identifier."
 				  0 (rindex YaTeX-texput-file ?.))
 		     (YaTeX-get-preview-file-name))
 		   ))))
-  (setq dvi2-command preview-command)
+  (setq dvi2-command preview-command)	;`dvi2command' is buffer local
   (save-excursion
     (YaTeX-visit-main t)
-    (with-output-to-temp-buffer "*dvi-preview*"
-      (if YaTeX-dos			;if MS-DOS
-	  (progn (send-string-to-terminal "\e[2J\e[>5h") ;CLS & hide cursor
-		 (call-process shell-file-name "con" "*dvi-preview*" nil
-			       "/c " dvi2-command preview-file)
-		 (send-string-to-terminal "\e[>5l") ;show cursor
-		 (redraw-display))
-	(start-process "preview" "*dvi-preview*" shell-file-name "-c"
-		       (concat dvi2-command " " preview-file)) ;if UNIX
-	(message
-	 (concat "Starting " dvi2-command " to preview " preview-file)))))
+    (let ((pbuffer "*dvi-preview*"))
+      (YaTeX-showup-buffer
+       pbuffer (function (x) (nth 3 (window-edges x))))
+      (with-output-to-temp-buffer pbuffer
+	(if YaTeX-dos			;if MS-DOS
+	    (progn (send-string-to-terminal "\e[2J\e[>5h") ;CLS & hide cursor
+		   (call-process shell-file-name "con" "*dvi-preview*" nil
+				 "/c " preview-command preview-file)
+		   (send-string-to-terminal "\e[>5l") ;show cursor
+		   (redraw-display))
+	  (start-process "preview" "*dvi-preview*" shell-file-name "-c"
+			 (concat preview-command " " preview-file)) ;if UNIX
+	  (message
+	   (concat "Starting " preview-command
+		   " to preview " preview-file))))))
 )
 
 (defun YaTeX-prev-error ()
@@ -311,7 +334,7 @@ error or warning lines in reverse order."
 	error-line typeset-win error-buffer error-win)
     (if (null (get-buffer YaTeX-typeset-buffer))
 	(error "There is no typesetting buffer."))
-    (YaTeX-pop-to-buffer YaTeX-typeset-buffer)
+    (YaTeX-showup-buffer YaTeX-typeset-buffer nil t)
     (setq typeset-win (selected-window))
     (if (re-search-backward
 	 (concat "\\(" latex-error-regexp "\\)\\|\\("
@@ -397,8 +420,9 @@ error or warning lines in reverse order."
   (if (null (get-buffer YaTeX-typeset-buffer))
       (message "No typeset buffer found.")
     (let ((win (selected-window)))
-      (YaTeX-pop-to-buffer YaTeX-typeset-buffer)
+      (YaTeX-showup-buffer YaTeX-typeset-buffer nil t)
       (goto-char (point-max))
+      (forward-line -1)
       (recenter -1)
       (select-window win)))
 )
@@ -504,7 +528,8 @@ will be given to the shell."
   "Print out.  If prefix arg ARG is non nil, call print driver without
 page range description."
   (interactive "P")
-  (let*(from to (cmd (or (YaTeX-get-builtin "LPR") dviprint-command-format)))
+  (let*((cmd (or (YaTeX-get-builtin "LPR") dviprint-command-format))
+	from to (lbuffer "*dvi-printing*"))
     (setq
      cmd 
      (YaTeX-replace-format
@@ -534,7 +559,9 @@ page range description."
 			 (format cmd (YaTeX-get-preview-file-name)))))
     (save-excursion
       (YaTeX-visit-main t) ;;change execution directory
-      (with-output-to-temp-buffer "*dvi-printing*"
+      (YaTeX-showup-buffer
+       lbuffer (function (lambda (x) (nth 3 (window-edges x)))))
+      (with-output-to-temp-buffer lbuffer
 	(if YaTeX-dos
 	    (call-process shell-file-name "con" "*dvi-printing*" nil
 			  "/c " cmd)
@@ -565,7 +592,8 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
     (if (setq b-in (YaTeX-get-builtin "!"))
 	(setq main-file (YaTeX-guess-parent b-in)))
     (if YaTeX-parent-file
-	(setq main-file (get-file-buffer YaTeX-parent-file)))
+	(setq main-file ;;(get-file-buffer YaTeX-parent-file)
+	      YaTeX-parent-file))
     (if (YaTeX-main-file-p)
 	(if (interactive-p) (message "I think this is main LaTeX source.") nil)
       (cond
@@ -632,47 +660,4 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
 	    (buffer-list)))
 )
 
-(defun YaTeX-pop-to-buffer (buffer &optional win)
-  (if (setq win (get-buffer-window buffer))
-      (select-window win)
-    (pop-to-buffer buffer))
-)
-
-(defun YaTeX-showup-buffer (buffer &optional func select)
-  "Make BUFFER show up in certain window (but current window)
-that gives the maximum value by the FUNC.  FUNC should take an argument
-of its window object.  Non-nil for optional third argument SELECT selects
-that window."
-  (or (and (get-buffer-window buffer)
-	   (progn (if select (select-window (get-buffer-window buffer)))
-		  t))
-      (cond
-       ((> (length (YaTeX-window-list)) 2)
-	(let ((window (selected-window))
-	      (list (YaTeX-window-list)) win w (x 0))
-	  (if func
-	      (while list
-		(setq w (car list))
-		(if (and (not (eq window w))
-			 (> (funcall func w) x))
-		    (setq win w x (funcall func w)))
-		(setq list (cdr list)))
-	    (setq win (get-lru-window)))
-	  (select-window win)
-	  (switch-to-buffer buffer)
-	  (or select (select-window window))))
-       ((= (length (YaTeX-window-list)) 2)
-	(let ((window (selected-window)))
-	  (other-window 1)
-	  (switch-to-buffer buffer)
-	  (or select (select-window window))))
-       (t nil)))
-)
-
-(defun YaTeX-window-list ()
-  (let*((curw (selected-window)) (win curw) (wlist (list curw)))
-    (while (not (eq curw (setq win (next-window win))))
-      (setq wlist (cons win wlist)))
-    wlist)
-)
 (provide 'yatexprc)

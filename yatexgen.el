@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
-;;; Generate add-in functions for YaTeX.
-;;; yatexgen.el rev.1(beta2)
+;;; YaTeX add-in function generator.
+;;; yatexgen.el rev.2
 ;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Apr 23 02:26:34 1994 on pajero
+;;; Last modified Fri Jul  8 00:46:09 1994 on figaro
 ;;; $Id$
 
 (require 'yatex)
@@ -402,4 +402,196 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
     (while (< i 127)
       (define-key map (char-to-string i) 'undefined)
       (setq i (1+ i))))
+)
+
+;;;
+;; Auto-generate Function for Lispers.
+;;;
+(defun YaTeX-generate-read-completion-type (nth)
+  (message
+"Read type(%d): (S)tring (C)omplete (F)ile ([)option (P)osition co(O)rd. (q)uit" nth)
+  (let ((c (read-char)))
+    (cond
+     ((= c ?s) 'string)
+     ((= c ?c) 'completion)
+     ((= c ?f) 'file)
+     ((= c ?\[) 'option)
+     ((= c ?p) 'oneof)
+     ((= c ?o) 'coord)
+     ;;((= c ?m) 'macro)
+     (t        'quit)))
+ )
+(defun YaTeX-generate-read-completion-table ()
+  (let ((i 1) cand (cands "(") (cb (current-buffer))
+	(buf (get-buffer-create " *Candidates*")))
+    (save-window-excursion
+      (save-excursion
+      (YaTeX-showup-buffer buf nil)
+      (set-buffer buf)
+      (erase-buffer)
+      (while (string<
+	      ""
+	      (setq cand (read-string (format "Item[%d](RET to exit): " i))))
+	(setq cands (concat cands (format "(""%s"")\n" cand))
+	      i (1+ i))
+	(insert cand "\n"))
+      (kill-buffer buf)))
+    ;;(set-buffer cb)
+    (concat cands ")"))
+)
+(defun YaTeX-generate-corresponding-paren (left)
+  (cond
+   ((equal left "{") "}")
+   ((equal left "[") "]")
+   ((equal left "(") ")")
+   ((equal left "<") ">")
+   ((equal left "\\begin{" "}"))
+   (t left))
+)
+(defun YaTeX-generate-create-read-string (&optional nth)
+  (concat
+   "(read-string """
+   (read-string (if nth (format "Prompt for argument#%d: " nth) "Prompt: "))
+   ": ""\n"
+   """" (read-string "Default: ") """"
+   ")\n")
+)
+(defun YaTeX-generate-create-completing-read (&optional nth)
+  (concat
+   "(completing-read """
+   (read-string (if nth (format "Prompt for argument#%d: " nth) "Prompt: "))
+   ": ""\n"
+   (format "'%s\n" (YaTeX-generate-read-completion-table))
+   "nil "
+   (format "%s)" (y-or-n-p "Require match? ")))
+)
+(defun YaTeX-generate-create-read-file-name (&optional nth)
+  (concat
+   "(read-file-name """
+   (read-string (if nth (format "Prompt for argument#%d: " nth) "Prompt: "))
+   ": "" nil nil t """")\n")
+)
+(defun YaTeX-generate-create-read-oneof (&optional nth readpos)
+  (concat
+   (if readpos
+       "(YaTeX:read-position """
+     "(YaTeX:read-oneof """)
+   (read-string "Acceptable characters: " "lcr") """)\n")
+)
+(defun YaTeX-generate-option-type (command)
+  (let ((func (format "YaTeX:%s" command)) leftp
+	(buf (get-buffer-create YaTeX-generate-buffer)) type (n 1))
+    (set-buffer buf)
+    (erase-buffer)
+    (insert "(defun " func " ()\n  (concat\n")
+    (catch 'done
+      (while t
+	(setq type (YaTeX-generate-read-completion-type n))
+	(insert 
+	 (cond
+	  ;;Read string
+	  ((eq type 'string)
+	   (concat """" (setq leftp (read-string "Left parenthesis: " "{"))
+		   """\n"
+		   (YaTeX-generate-create-read-string)
+		   """" (YaTeX-generate-corresponding-paren leftp) """"
+		   ))
+	  
+	  ;;Completing-read
+	  ((eq type 'completion)
+	   (concat """" (setq leftp (read-string "Left parenthesis: " "{"))
+		   """\n"
+		   (YaTeX-generate-create-completing-read)
+		   """" (YaTeX-generate-corresponding-paren leftp) """")
+	   )
+	  ((eq type 'file)
+	   (concat """" (setq leftp (read-string "Left parenthesis: " "{"))
+		   """\n"
+		   (YaTeX-generate-create-read-file-name)
+		   """" (YaTeX-generate-corresponding-paren leftp) """")
+	   )
+	  ((eq type 'oneof)
+	   (YaTeX-generate-create-read-oneof nil t)
+	   )
+	  ((eq type 'option)
+	   (concat "(let ((op (read-string """
+		   (read-string "Prompt: ")
+		   ": "")))\n"
+		   "(if (string< """" op)\n"
+		   "    (concat ""["" op ""]"")\n"
+		   "  """"))\n")
+	   )
+	  
+	  ((eq type 'coord)
+	   (concat "(YaTeX:read-coordinates """
+		   (read-string "Prompt for coordinates: ")
+		   ": """)
+	   )
+	  ((eq type 'macro)
+	   (error "not yet supported")
+	   )
+	  (t (throw 'done t))))
+	(setq n (1+ n))))
+    (insert "))\n")			;close defun
+    (goto-char (point-min))
+    (while (not (eobp)) (lisp-indent-line) (forward-line 1))
+    (eval-current-buffer)
+    buf)
+)
+(defun YaTeX-generate-argument-type (command argc)
+  "Create an argument-type add-in function."
+  (interactive)
+  (let ((func (format "YaTeX::%s" command)) (argp 1)
+	(cb (current-buffer))
+	(buf (get-buffer-create YaTeX-generate-buffer)))
+    (set-buffer buf)
+    (erase-buffer)
+    (insert "(defun " func " (&optional argp)\n(cond\n")
+    (while (<= argp argc)
+      (insert (format "((equal argp %d)\n" argp))
+      (setq type (YaTeX-generate-read-completion-type argp))
+      (insert
+       (cond
+	((eq type 'string)
+	 (concat (YaTeX-generate-create-read-string argp)))
+	((eq type 'completion)
+	 (concat (YaTeX-generate-create-completing-read argp)))
+	((eq type 'oneof)
+	 (YaTeX-generate-create-read-oneof))
+	((eq type 'file)
+	 (concat (YaTeX-generate-create-read-file-name argp)))
+	(t ""))
+       ")\n")
+      (setq argp (1+ argp)))
+    (insert "))\n")
+    (goto-char (point-min))
+    (while (not (eobp)) (lisp-indent-line) (forward-line 1))
+    (eval-current-buffer)
+    (set-buffer cb)
+    (YaTeX-update-table
+     (if (> argc 1) (list command argc) (list command))
+     'section-table 'user-section-table 'tmp-section-table)
+    buf)
+)
+(defun YaTeX-generate-simple (&optional command)
+  "Simple but requiring some elisp knowledge add-in generator."
+  (interactive)
+  (or command
+      (setq command
+	    (completing-read
+	     (format "Making add-in function for (default %s): " section-name)
+	     (append
+	      section-table user-section-table tmp-section-table
+	      article-table user-article-table
+	      env-table     user-env-table     tmp-env-table
+	      singlecmd-table user-singlecmd-table tmp-singlecmd-table)
+	     nil nil)
+	    command (if (string= "" command) section-name command)))
+  (message "(o)í«â¡å^? (a)à¯êîå^? (yatexadd.docÇéQè∆ÇÃÇ±Ç∆) :")
+  (YaTeX-showup-buffer
+   (if (= (read-char) ?o)
+       (YaTeX-generate-option-type command)
+     (YaTeX-generate-argument-type
+      command
+      (string-to-int (read-string "How many arguments?: ")))) nil)
 )
