@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.5
 ;;; (c)1991-1993 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Sep 18 04:13:41 1993 on 98fa
+;;; Last modified Wed Oct  6 03:40:30 1993 on 98fa
 ;;; $Id$
 
 (provide 'yatexadd)
@@ -72,6 +72,13 @@
   (concat (YaTeX:read-coordinates "Picture size")
 	  (YaTeX:read-coordinates "Initial position"))
 )
+
+(defun YaTeX:equation ()
+  (if (fboundp 'YaTeX-toggle-math-mode)
+      (YaTeX-toggle-math-mode t))		;force math-mode ON.
+)
+(fset 'YaTeX:eqnarray 'YaTeX:equation)
+(fset 'YaTeX:displaymath 'YaTeX:equation)
 
 ;;;
 ;;Sample functions for section-type command.
@@ -224,6 +231,8 @@
 	(goto-char (point-min))
 	(message "Collecting labels...")
 	(save-window-excursion
+	  (YaTeX-showup-buffer
+	   YaTeX-label-buffer (function (lambda (x) (window-width x))))
 	  (with-output-to-temp-buffer YaTeX-label-buffer
 	    (while (re-search-forward "\\label{\\([^}]+\\)}" nil t)
 	      (setq e0 (match-end 0) m1 (match-beginning 1) e1 (match-end 1))
@@ -272,6 +281,8 @@
 (defun YaTeX-label-other ()
   (let ((lbuf "*YaTeX mode buffers*") (blist (buffer-list)) (lnum -1) buf rv
 	(ff "**find-file**"))
+    (YaTeX-showup-buffer
+     lbuf (function (lambda (x) 1)))	;;Select next window surely.
     (with-output-to-temp-buffer lbuf
       (while blist
 	(if (and (buffer-file-name (setq buf (car blist)))

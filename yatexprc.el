@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
-;;; yatexprc.el rev.1.43
+;;; yatexprc.el rev.1.44
 ;;; (c)1993 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Sep 18 04:12:18 1993 on 98fa
+;;; Last modified Mon Oct 25 17:48:39 1993 on figaro
 ;;; $Id$
 
 (require 'yatex)
@@ -28,31 +28,34 @@
 (defun YaTeX-typeset (command buffer)
   "Execute jlatex (or other) to LaTeX typeset."
   (interactive)
-  (if (and YaTeX-typeset-process
-	   (eq (process-status YaTeX-typeset-process) 'run))
-      ;; if tex command is halting.
-      (YaTeX-kill-typeset-process YaTeX-typeset-process))
-  (YaTeX-visit-main t)  ;;execution directory
-  (with-output-to-temp-buffer buffer
-    (if (eq system-type 'ms-dos)			;if MS-DOS
-	(progn
-	  (message (concat "Typesetting " (buffer-name) "..."))
-	  (YaTeX-put-nonstopmode)
-	  (call-process shell-file-name
-			nil buffer nil "/c" command)
-	  (YaTeX-remove-nonstopmode))
-      (setq YaTeX-typeset-process			;if UNIX
+  (let ((window (selected-window)))
+    (if (and YaTeX-typeset-process
+	     (eq (process-status YaTeX-typeset-process) 'run))
+	;; if tex command is halting.
+	(YaTeX-kill-typeset-process YaTeX-typeset-process))
+    (YaTeX-visit-main t);;execution directory
+    ;;Select under-most window if there are more than 2 windows and
+    ;;typeset buffer isn't seen.
+    (YaTeX-showup-buffer
+     buffer (function (lambda (x) (nth 3 (window-edges x)))))
+    (with-output-to-temp-buffer buffer
+      (if (eq system-type 'ms-dos)	;if MS-DOS
+	  (progn
+	    (message (concat "Typesetting " (buffer-name) "..."))
+	    (YaTeX-put-nonstopmode)
+	    (call-process shell-file-name
+			  nil buffer nil "/c" command)
+	    (YaTeX-remove-nonstopmode))
+	(setq YaTeX-typeset-process	;if UNIX
 	      (start-process "LaTeX" buffer shell-file-name "-c"
 			     command))
-      (set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)))
-  (setq current-TeX-buffer (buffer-name))
-  (let ((window (selected-window)))
+	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)))
+    (setq current-TeX-buffer (buffer-name))
     (select-window (get-buffer-window buffer))
-    ;;(other-window 1)
     (use-local-map YaTeX-typesetting-mode-map)
     (set-syntax-table YaTeX-typeset-buffer-syntax)
     (setq mode-name "typeset")
-    (if YaTeX-typeset-process ; if process is running (maybe on UNIX)
+    (if YaTeX-typeset-process		; if process is running (maybe on UNIX)
 	(cond ((boundp 'MULE)
 	       (set-current-process-coding-system
 		YaTeX-latex-message-code YaTeX-coding-system))
@@ -61,13 +64,11 @@
     (message "Type SPC to continue.")
     (goto-char (point-max))
     (if (eq system-type 'ms-dos) (message "Done.")
-      (while (bobp) (message "Invoking process. wait...") (sleep-for 1))
-      (insert (message " ")))
+      (insert (message " "))
+      (set-marker (process-mark YaTeX-typeset-process) (1- (point))))
     (if (bolp) (forward-line -1))
     (recenter -1)
-    (select-window window)
-  ;;(other-window -1)
-    )
+    (select-window window))
 )
 
 (defun YaTeX-typeset-sentinel (proc mes)
@@ -325,6 +326,7 @@ avoid make confliction of line numbers by editing."
 	  nil
 	;; if warning or error found
 	(if error-win (select-window error-win)
+	  (select-window (get-lru-window))
 	  (YaTeX-switch-to-buffer error-buffer)
 	  (setq error-win (selected-window)))
 	(goto-line YaTeX-error-line)
@@ -614,4 +616,28 @@ in Emacs-Lisp program)."
     (pop-to-buffer buffer))
 )
 
+(defun YaTeX-showup-buffer (buffer &optional func)
+  "Make BUFFER show up in certain window (but current window)
+that gives the maximum value by the FUNC.  FUNC should take an argument
+of its window object"
+  (or (get-buffer-window buffer)
+      (< (length (YaTeX-window-list)) 3)
+      (let ((window (selected-window)) (list (YaTeX-window-list)) win w (x 0))
+	(while list
+	  (setq w (car list))
+	    (if (and (not (eq window w))
+		     (> (funcall func w) x))
+		(setq win w x (funcall func w)))
+	    (setq list (cdr list)))
+	(select-window win)
+	(switch-to-buffer buffer)
+	(select-window window)))
+)
+
+(defun YaTeX-window-list ()
+  (let*((curw (selected-window)) (win curw) (wlist (list curw)))
+    (while (not (eq curw (setq win (next-window win))))
+      (setq wlist (cons win wlist)))
+    wlist)
+)
 (provide 'yatexprc)
