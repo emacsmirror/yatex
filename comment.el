@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; comment/uncomment region for emacs.
 ;;; comment.el rev.0.1
-;;; (c) 1992 by Hirose Yuuji.(yuuji@ae.keio.ac.jp)
-;;; Last modified Sat Nov 19 23:58:40 1994 on figaro
+;;; (c) 1992, 2002 by HIROSE Yuuji.(yuuji@yatex.org)
+;;; Last modified Mon Nov 25 18:33:23 2002 on firestorm
 
 ;;; Rename `comment-region' to `comment-out-region' for standard
 ;;; Emacs-19 function.
@@ -47,7 +47,7 @@ compatibility for uncomment-region.  It has no means now."
 )
 
 
-(defun uncomment-region (string &optional beg end once)
+(defun uncomment-out-region (string &optional beg end once)
   "Deletes STRING from the beginning of every line in the region.
 Called interactively, STRING defaults to comment-start (or '> ' if
 none is defined) unless a prefix argument is given, in which case it
