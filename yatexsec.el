@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX sectioning browser.
 ;;; yatexsec.el
-;;; (c ) 1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Feb 17 11:26:44 1997 on supra
+;;; (c ) 1994, 1998 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
+;;; Last modified Wed Sep 30 20:09:35 1998 on firestorm
 ;;; $Id$
 
 (defvar YaTeX-sectioning-level
@@ -290,7 +290,7 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
       (set-buffer cb)
       (YaTeX-showup-buffer YaTeX-sectioning-buffer) ;show buffer
       (goto-char (point-min))
-      (with-output-to-temp-buffer YaTeX-sectioning-buffer
+      (let ((standard-output (get-buffer YaTeX-sectioning-buffer)))
 	(while (re-search-forward pattern nil t)
 	  (goto-char (1+ (match-beginning 0)))
 	  (setq level (YaTeX-get-sectioning-level)
@@ -373,8 +373,8 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
     (if (and YaTeX-sectioning-buffer-parent
 	     (get-buffer YaTeX-sectioning-buffer-parent)
 	     (save-excursion
-	       (or (= (char-after (point)) ?\\ )
-		   (skip-chars-backward "^\\\\" (point-beginning-of-line)))
+	       (beginning-of-line)
+	       (skip-chars-forward "^\\\\" (point-end-of-line))
 	       (YaTeX-on-section-command-p YaTeX-sectioning-regexp)))
 	(save-excursion
 	  (or (buffer-name (get-buffer YaTeX-sectioning-buffer-parent))
@@ -460,10 +460,13 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 	      nsc (YaTeX-shifted-section (YaTeX-match-string 1) n))
 	(goto-char (match-beginning 0))
 	(let (buffer-read-only)
-	  (delete-region (point) (progn (beginning-of-line) (point)))
+	  ;(delete-region (point) (progn (beginning-of-line) (point)))
+	  (delete-region (progn (beginning-of-line) (point))
+			 (progn (skip-chars-forward " \t") (point)))
 	  (indent-to-column (cdr (assoc nsc YaTeX-sectioning-level)))
 	  (delete-region
-	   (1+ (point)) (progn (skip-chars-forward "^*{") (point)))
+	   (progn (skip-chars-forward "%\\\\") (point))
+	   (progn (skip-chars-forward "^*{") (point)))
 	  (insert nsc))
 	(YaTeX-on-section-command-p YaTeX-sectioning-regexp)
 	(setq to (YaTeX-match-string 0)

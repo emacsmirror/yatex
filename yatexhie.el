@@ -2,7 +2,7 @@
 ;;; YaTeX hierarchy browser.
 ;;; yatexhie.el
 ;;; (c )1995 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Feb  2 23:55:59 1995 on figaro
+;;; Last modified Thu Sep 17 21:46:29 1998 on firestorm
 ;;; $Id$
 
 ;; ----- Customizable variables -----
@@ -43,7 +43,7 @@ If FILE is nil, use current buffer."
 			(skip-chars-forward
 			 (concat "^ \t\n\r" YaTeX-ec-regexp "{}"))
 			(point)))))
-	 ((match-beginning 3)
+	 ((and (match-beginning 3) (looking-at "{"))
 	  (skip-chars-forward "{")
 	  (setq file (buffer-substring
 		      (point)

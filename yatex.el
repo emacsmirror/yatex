@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs.
-;;; yatex.el rev. 1.65
-;;; (c )1991-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Dec 16 22:15:26 1997 on crx
+;;; yatex.el rev. 1.66
+;;; (c )1991-1998 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Mon Oct 26 21:05:14 1998 on firestorm
 ;;; $Id$
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -16,22 +16,16 @@
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program; see the file COPYING.  If not, write to
-;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+;; along with this program; see the file COPYING.  If not, write to the
+;; Software Foundation Inc., 59 Temple Place - Suite 330, Boston, MA
+;; 02111-1307, USA.
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.65"
+(defconst YaTeX-revision-number "1.66"
   "Revision number of running yatex.el"
 )
 ;---------- Local variables ----------
-;;;
-;; Initialize local variable for yatex-mode.
-;; Preserving user preferred definitions.
-;; ** Check all of these defvar-ed values **
-;; ** and setq other values more suitable **
-;; ** for your site, if needed.           **
-;;;
 (defvar YaTeX-prefix "\C-c"
   "*Prefix key to call YaTeX functions.
 You can select favorite prefix key by setq in your ~/.emacs."
@@ -139,7 +133,7 @@ tにする(古いNTT-jTeXで顕著に現れる)。具体的には、fillするときに各行の終わりに
   "*Regular expression of item command."
 )
 (defvar YaTeX-sectioning-regexp
-  "\\(part\\|chapter\\*?\\|\\(sub\\)*\\(section\\|paragraph\\)\\*?\\)\\b"
+  "part\\|chapter\\*?\\|\\(sub\\)*\\(section\\|paragraph\\)\\(\\*?\\|\\b\\)"
   "*LaTeX sectioning commands regexp."
 )
 (defvar YaTeX-paragraph-start
@@ -155,6 +149,7 @@ for YaTeX-uncomment-paragraph."
   (concat "^[ \t]*%\\|^[ \t]*$\\|^\C-l\\|\\\\\\\\$\\|^[ \t]*\\\\\\("
 	  YaTeX-sectioning-regexp		;sectioning commands
 	  "\\|begin{\\|end{"			;special declaration
+	  "\\|\\[\\|\\]"
 	  "\\|newpage\\b\\|vspace\\b"
 	  "\\)")
   "*Paragraph delimiter regexp of common LaTeX source.  Use this value
@@ -182,6 +177,7 @@ Define those environments as a form of list."
   (concat
    "array\\*?\\|eqnarray\\*?\\|tabbing\\|tabular\\*?\\|"	;LaTeX
    "align\\*?\\|split\\*?\\|aligned\\*?\\|alignat\\*?\\|"	;AMS-LaTeX
+   "[bpvV]?matrix\\|smallmatrix\\|cases\\|"			;AMS-LaTeX
    "xalignat\\*?\\|xxalignat\\*?")				;AMS-LaTeX
   "*Regexp of environments where `&' becomes field delimiter.")
 (defvar YaTeX-uncomment-once t
@@ -241,8 +237,13 @@ Nil for removing only one commenting character at the beginning-of-line."
     ("newcommand" 2) ("renewcommand" 2)
     ("setcounter" 2) ("newenvironment" 3) ("newtheorem" 2)
     ("cline") ("framebox") ("savebox" 2) ("sbox" 2) ("newsavebox") ("usebox")
-    ("date") ("put") ("ref")
-    ("frac" 2) ("multicolumn" 3) ("shortstack")
+    ("date") ("put") ("ref") ("pageref")
+    ("multicolumn" 3) ("shortstack")
+    ;; for mathmode accent
+    ("tilde") ("hat") ("check") ("bar") ("dot") ("ddot") ("vec")
+    ("widetilde") ("widehat") ("overline") ("overrightarrow")
+    ;; section types in mathmode
+    ("frac" 2) ("sqrt") ("mathrm") ("mathbf") ("mathit")
     )
   "Default completion table for section-type completion."
 )
@@ -278,13 +279,14 @@ Nil for removing only one commenting character at the beginning-of-line."
 
 (defvar singlecmd-table
   (append
-   '(("maketitle") ("sloppy") ("protect")
+   '(("maketitle") ("makeindex") ("sloppy") ("protect")
      ("LaTeX") ("TeX") ("item") ("item[]") ("appendix") ("hline")
      ;;("rightarrow") ("Rightarrow") ("leftarrow") ("Leftarrow")
-     ("pagebreak") ("newpage") ("clearpage") ("cleardoublepage")
+     ("pagebreak") ("nopagebreak")
+     ("newpage") ("clearpage") ("cleardoublepage")
      ("footnotemark") ("verb") ("verb*")
      ("linebreak") ("pagebreak") ("noindent") ("indent")
-     ("left") ("right")
+     ("left") ("right") ("dots")
      )
    (if YaTeX-greek-by-maketitle-completion
        '(("alpha") ("beta") ("gamma") ("delta") ("epsilon")
@@ -460,13 +462,14 @@ nil enters both open/close parentheses when opening parentheses key pressed."
   (setq YaTeX-latex-message-code latex-message-kanji-code)))
 
 (defvar YaTeX-mode-syntax-table nil
+
   "*Syntax table for yatex-mode")
 
 (if YaTeX-mode-syntax-table nil
   (setq YaTeX-mode-syntax-table (make-syntax-table (standard-syntax-table)))
-  (modify-syntax-entry ?\< "(>" YaTeX-mode-syntax-table)
-  (modify-syntax-entry ?\> ")<" YaTeX-mode-syntax-table)
   (modify-syntax-entry ?\n " " YaTeX-mode-syntax-table)
+  (modify-syntax-entry ?\{ "(}" YaTeX-mode-syntax-table)
+  (modify-syntax-entry ?\} "){" YaTeX-mode-syntax-table)
 )
 
 ;---------- Provide YaTeX-mode ----------
@@ -547,9 +550,15 @@ more features are available and they are documented in the manual.
   (cond ((boundp 'MULE)
 	 (set-file-coding-system  YaTeX-coding-system))
 	((and YaTeX-emacs-20 (fboundp 'coding-system-equal))
-	 (or (coding-system-equal
-	      YaTeX-coding-system buffer-file-coding-system)
-	     (set-buffer-file-coding-system YaTeX-coding-system)))
+	 (let ((mp (buffer-modified-p))
+	       (ud (memq
+		    buffer-file-coding-system
+		    '(undecided undecided-unix undecided-dos undecided-mac))))
+	   (if (coding-system-equal
+		YaTeX-coding-system buffer-file-coding-system)
+	       nil ; if coding-system is the same, do nothing
+	     (set-buffer-file-coding-system YaTeX-coding-system)
+	     (if ud (set-buffer-modified-p mp)))))
 	((featurep 'mule)
 	 (set-file-coding-system YaTeX-coding-system))
   	((boundp 'NEMACS)
@@ -744,6 +753,7 @@ the region from BEG to END into the first argument of the LaTeX sequence.
 Optional 4th arg CMD is LaTeX command name, for non-interactive use."
   (interactive "P")
   (setq YaTeX-current-completion-type 'section)
+  (if (equal arg '(4)) (setq beg (region-beginning) end (region-end)))
   (unwind-protect
       (let*
 	  ((source-window (selected-window))
@@ -755,12 +765,12 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 		   (if (> (minibuffer-depth) 0)
 		       (format "%s???{} (default %s)%s: " YaTeX-ec section-name
 			       (format "[level:%d]" (minibuffer-depth)))
-		     (format "(C-v for view-section) %s???{} (default %s): "
-			     YaTeX-ec section-name)))
+		     (format "(C-v for view-section) %s???{%s} (default %s): "
+			     YaTeX-ec (if beg "region" "") section-name)))
 		 nil)))
 	   (section (if (string= section "") section-name section))
 	   (numarg	;; The number of section-type command's argument
-	    (or arg
+	    (or (and (numberp arg) arg)
 		(nth 1 (YaTeX-lookup-table section 'section))
 		1))
 	   (arg-reader (intern-soft (concat "YaTeX::" section)))
@@ -776,7 +786,8 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 	      (set-marker e (point))
 	      (goto-char beg)
 	      (insert YaTeX-ec section-name "{")
-	      (goto-char (marker-position e)))
+	      (goto-char e)
+	      (set-marker e nil))
 	  (use-global-map YaTeX-recursive-map)
 	  (if (= numarg 0) (YaTeX-make-singlecmd section-name)
 	    (progn (insert YaTeX-ec section-name)
@@ -830,6 +841,7 @@ into {\\xxx } braces.
 	       nil nil))))
     (if (string= fontsize "")
 	(setq fontsize fontsize-name))
+    (setq YaTeX-current-completion-type 'large)
     (setq fontsize-name fontsize)
     (YaTeX-update-table
      (list fontsize-name)
@@ -840,10 +852,11 @@ into {\\xxx } braces.
 	  (insert "{\\" fontsize-name " ")
 	  (exchange-point-and-mark)
 	  (insert "}"))
-      (insert "{\\" fontsize-name " }")
+      (insert "{\\" fontsize-name " ")
       (if YaTeX-current-position-register
 	  (point-to-register YaTeX-current-position-register))
-      (forward-char -1)))
+      (save-excursion
+	(insert (YaTeX-addin fontsize-name) "}"))))
 )
 
 (defun YaTeX-make-fontsize-region ()
@@ -1171,7 +1184,7 @@ Optional second argument CHAR is for non-interactive call from menu."
   (interactive "P")
   (message
    (concat "J)latex R)egion B)ibtex mk(I)ndex "
-	   (if (not YaTeX-dos) "K)ill-latex ")
+	   (if (fboundp 'start-process) "K)ill-latex ")
 	   "P)review "
 	   (and (boundp 'window-system) window-system "S)earch ")
 	   "V)iewerr L)pr"))
@@ -1227,12 +1240,14 @@ Optional second argument CHAR is for non-interactive call from menu."
 	(while (re-search-forward "^%#\\(BEGIN\\)\\|\\(END\\)$" nil t)
 	  (beginning-of-line)
 	  (delete-region (point) (progn (forward-line 1) (point))))
-	(goto-char (marker-position b))
+	(goto-char b)
 	(open-line 1)
 	(delete-region (point) (progn (beginning-of-line)(point)));for 19 :-<
 	(insert "%#BEGIN")
-	(goto-char (marker-position e))
-	(insert "%#END\n"))
+	(goto-char e)
+	(insert "%#END\n")
+	(set-marker b nil)
+	(set-marker e nil))
        )))
 )
 
@@ -1251,28 +1266,30 @@ search-last-string, you can repeat search the same label/ref by typing
   If optional second argument OTHERWIN is non-nil, move to other window."
 
   (let ((scmd "") label direc string blist (p (point)) (cb (current-buffer))
-	(refcommands "label\\|ref\\|cite\\|bibitem")
+	(refcommands "label\\|\\(page\\)?ref\\|cite\\|bibitem")
 	(func (function (lambda (string sfunc)
 			  (or
 			   (funcall sfunc string nil t)
-			   (funcall (if (eq sfunc 'search-forward)
-					'search-backward 'search-forward)
+			   (funcall (if (eq sfunc 're-search-forward)
+					're-search-backward 're-search-forward)
 				    string nil t))))))
     (cond
      ((YaTeX-on-section-command-p refcommands)
       (setq scmd (cdr (assoc (YaTeX-match-string 1)
-			     '(("label" . "ref") ("ref" . "label")
+			     '(("label" . "\\(page\\)?ref") ("ref" . "label")
+			       ("pageref" . "label")
 			       ("cite" . "bibitem") ("bibitem" . "cite")))))
       (goto-char (match-end 0))
       (let ((label (buffer-substring 
 		    (1- (point)) (progn (backward-list 1) (1+ (point))))))
-	(setq string (concat "\\" scmd "{" label "}"))
+	;(setq string (concat "\\" scmd "{" label "}"))
+	(setq string (concat "\\\\" scmd "{" (regexp-quote label) "}"))
 	(setq direc (if (string-match "ref\\|cite" scmd)
-			'search-forward 'search-backward))
+			're-search-forward 're-search-backward))
 	(if YaTeX-current-position-register
 	    (point-to-register YaTeX-current-position-register))
-	(if reverse (setq direc (if (eq direc 'search-forward)
-				    'search-backward 'search-forward)))
+	(if reverse (setq direc (if (eq direc 're-search-forward)
+				    're-search-backward 're-search-forward)))
 	(if (funcall func string direc)	;label/ref found!
 	    (progn
 	      (if otherwin
@@ -1322,8 +1339,9 @@ search-last-string, you can repeat search the same label/ref by typing
 	      (setq blist (cdr blist)))))
 	)
       (if YaTeX-emacs-19
-	  (setq search-ring (cons string search-ring))
-	(setq search-last-string string)))
+	  (setq regexp-search-ring
+		(cons string (delete string regexp-search-ring)))
+	(setq search-last-regexp string)))
      (t nil)))
 )
 
@@ -1459,6 +1477,7 @@ fj野鳥の会で聞こう!
     ("\\\\postscriptbox{[^}]*}{[^}]*}{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 1)
     ("\\\\\\(epsfbox\\|includegraphics\\|epsfig\\)\\*?{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 2) ;\epsfbox{hoge.ps} or \includegraphics{hoge.eps}
     ("\\\\\\(psbox\\)\\(\\[[^]]+\\]\\)?{\\(\\([^,} ]*/\\)?[^} ]+\\)\\(\\.e?ps\\)}" 3) ;\psbox[options...]{hoge.eps} (97/1/11)
+    ("\\\\input{\\([^} ]+\\)\\(\\.tps\\)}" 1) ;tgif2tex (1998/9/16)
     )
   "See the documentation of YaTeX-processed-file-regexp-alist."
 )
@@ -1706,7 +1725,7 @@ it comments out whole environment"
       (if (> p (point)) (setq beg (1+ beg)) (forward-char 1))
       (funcall func YaTeX-comment-prefix beg (point) YaTeX-uncomment-once)))
   (message "%sommented out current environment."
-	   (if (eq func 'comment-region) "C" "Un-c"))
+	   (if (eq func 'comment-out-region) "C" "Un-c"))
 )
 
 (defun YaTeX-beginning-of-environment (&optional limit-search-bound end)
@@ -1781,12 +1800,12 @@ to most recent sectioning command."
   (interactive)
   (save-excursion
     (if (YaTeX-on-begin-end-p)
-	(let ((p (make-marker)))
-	  (set-marker p (point))
+	(let ((p (point-marker)))
 	  (YaTeX-goto-corresponding-environment)
 	  (YaTeX-remove-prefix YaTeX-comment-prefix YaTeX-uncomment-once)
-	  (goto-char (marker-position p))
-	  (YaTeX-remove-prefix YaTeX-comment-prefix YaTeX-uncomment-once))
+	  (goto-char p)
+	  (YaTeX-remove-prefix YaTeX-comment-prefix YaTeX-uncomment-once)
+	  (set-marker p nil))
       (if (YaTeX-on-comment-p)
 	  (let*((fill-prefix "")
 		;;append `^%' to head of paragraph delimiter.
@@ -1835,11 +1854,11 @@ This function assumes that pairs occupy whole of each line where they resid."
 	    (kill-region
 	     (progn
 	       (goto-char b2)
-	       (skip-chars-backward " \t")
+	       (skip-chars-backward " \t%")
 	       (if (bolp) (point) b2))
 	     e2))
 	(goto-char b1)
-	(skip-chars-backward " \t")
+	(skip-chars-backward " \t%")
 	(if (not kill-contents)
 	    (progn
 	      (kill-append
@@ -1876,12 +1895,14 @@ Non-nil for the second argument kill its argument too."
       (skip-chars-forward "^{")
       (forward-list 1)
       (set-marker end (point))
-      (if kill-all (delete-region beg end)
+      (if kill-all (kill-region beg end)
 	(goto-char beg)
-	(delete-region
+	(kill-region
 	 (point) (progn (skip-chars-forward "^{" end) (1+ (point))))
 	(goto-char end)
-	(backward-delete-char 1))))
+	(set-marker end nil)
+	(kill-append (buffer-substring (point) (1- (point))) nil)
+	(delete-backward-char 1))))
 )
 
 (defun YaTeX-kill-paren (kill-contents)
@@ -1985,10 +2006,10 @@ This function refers a local variable `source-window' in YaTeX-make-section"
 	 ((string= newenv env)	(message "No need to change."))
 	 (t
 	  (search-forward (concat "{" env) (point-end-of-line) t)
-	  (replace-match (concat "{" newenv))
+	  (replace-match (concat "{" newenv) t)
 	  (exchange-point-and-mark)
 	  (search-forward (concat "{" env) (point-end-of-line) t)
-	  (replace-match (concat "{" newenv))))
+	  (replace-match (concat "{" newenv) t)))
 	t)))
 )
 
@@ -2323,6 +2344,7 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
   (cond
    ((not (eq major-mode 'yatex-mode)) (fill-paragraph arg))
    ((YaTeX-quick-in-environment-p YaTeX-fill-inhibit-environments) nil)
+   ((YaTeX-in-math-mode-p) nil)
    (t
     (save-excursion
       (let ((verbrex (concat YaTeX-ec-regexp
@@ -2362,7 +2384,8 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 	  ;;(fill-paragraph arg)
 	  (fill-region-as-paragraph (point-min) (point-max) arg)
 	  (while spacelist
-	    (goto-char (marker-position (car poslist)))
+	    (goto-char (car poslist))
+	    (set-marker (car poslist) nil)
 	    (delete-char 1)
 	    (insert (car spacelist))
 	    (setq spacelist (cdr spacelist) poslist (cdr poslist)))
@@ -2480,7 +2503,7 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
 	     (+ (YaTeX-current-indentation)
 		(or additional 0)
 		YaTeX-environment-indent)))))
-	depth iteminfo (p (point)) pp (peol (point-end-of-line))
+	sect depth iteminfo (p (point)) pp (peol (point-end-of-line))
 	;;inenv below is sometimes defined in YaTeX-indent-new-comment-line
 	(inenv (or (and (boundp 'inenv) inenv) (YaTeX-inner-environment t))))
     ;;(if NTT-jTeX		;;Do you need this section?
@@ -2498,11 +2521,9 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
     (or inenv (setq inenv "document"))	;is the default environment
     (cond
      ((and (YaTeX-on-begin-end-p) (match-beginning 2)) ;if \end
-      (save-excursion
-	(beginning-of-line)
-	(YaTeX-reindent (YaTeX-current-indentation))))
+      (YaTeX-reindent (YaTeX-current-indentation)))
      ((string-match YaTeX-equation-env-regexp inenv)
-      (YaTeX-indent-line-equation))	;autoload-ed from yatex.env
+      (YaTeX-indent-line-equation))	;autoload-ed from yatexenv
      (;(YaTeX-in-environment-p '("itemize" "enumerate" "description" "list"))
       (string-match YaTeX-itemizing-env-regexp inenv)
       ;;(YaTeX-on-item-p) ??
@@ -2510,15 +2531,16 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
       (if (save-excursion
 	    (beginning-of-line)
 	    (re-search-forward YaTeX-item-regexp peol t))
-	  (save-excursion
-	    (goto-char (1+ (match-beginning 0)))
-	    (setq depth
-		  (* YaTeX-environment-indent
-		     (cond
-		      ((looking-at "subsubsub")	3)
-		      ((looking-at "subsub")	2)
-		      ((looking-at "sub")	1)
-		      (t			0))))
+	  (progn
+	    (save-excursion
+	      (goto-char (1+ (match-beginning 0)))
+	      (setq depth
+		    (* YaTeX-environment-indent
+		       (cond
+			((looking-at "subsubsub")	3)
+			((looking-at "subsub")	2)
+			((looking-at "sub")	1)
+			(t			0)))))
 	    (funcall indent-relative depth))
 	(YaTeX-reindent (or (car (cdr (YaTeX-get-item-info nil inenv)))
 			    (+ (save-excursion
@@ -2532,10 +2554,13 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
       (funcall indent-relative))
      ((YaTeX-on-section-command-p YaTeX-sectioning-regexp)
       (require 'yatexsec)		;to know YaTeX-sectioning-level
+      (setq sect (YaTeX-match-string 1))
+      (if (string-match "\\*$" sect)
+	  (setq sect (substring sect 0 -1)))
       (YaTeX-reindent
        (* (max
 	   (1-				;I want chapter to have indentation 0
-	    (or (cdr (assoc (YaTeX-match-string 1) YaTeX-sectioning-level))
+	    (or (cdr (assoc sect YaTeX-sectioning-level))
 		0))
 	   0)
 	  YaTeX-environment-indent)))

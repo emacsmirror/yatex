@@ -801,6 +801,7 @@ r		カラムを一つ指定し、そのカラムを右寄せ
 		\arraycolsep や \tabcolsep のスペーシングは抑制される
 *{N}{PRE}	PREを N 回書いたのと同様の作用
 p{LEN}		そのカラムをLENの長さのparboxエントリとして作成する
+		表の項目に長い説明分が含まれる場合に用いると良い。
 
 【array, tabular 環境で使えるコマンド】
 \multicolumn
@@ -832,6 +833,17 @@ p{LEN}		そのカラムをLENの長さのparboxエントリとして作成する
   a_{n1}  & a_{n2}  & \dots & a_{nn}		\ an1 an2 ..: ann /
  \end{array} 
 \right)\]
+
+\begin{tabular}{lp{0.7\textwidth}
+ \hline						----------------------------
+ \verb|.|	& ピリオドは任意の		.  ピリオドは任意の一文字
+		  一文字にマッチします。\\	   にマッチします。
+ \verb|*|	& アスタリスクは直前の		*  アスタリスクは直前の正規
+		  正規表現が0回以上繰り返し	   表現が回以上繰り返し現れ
+		  現れることを意味します。	   ることを意味します。
+\\ \hline					----------------------------
+\end{tabular}
+
 
 array環境を \right( \left) で囲むと配列自体を大きな括弧で括る。同様に、
 \right\{ \left\} で配列を中括弧で、\right[ \left] で配列を大括弧で、
@@ -1404,6 +1416,17 @@ jaybirdさん(asciinet)
 安藤利和さん(金沢工大)
 	野鳥を使うTipsをまとめた「あなたもわたしも野鳥の…」というWWWペー
 	ジを作成して下さいました。
+
+小原功任さん(神戸大学)
+	AMS-LaTeXでの数式環境の不足分定義と、\[ .. \] ではfillしない事を
+	指摘して頂きました。
+
+竹内 奏吾さん(電通大)
+	YaTeX-section-overview の不具合を修正するパッチを送って頂きました。
+
+宇佐見 Kousukeさん()
+	数式モードでのセクション型マクロ対応の要望と足すべきマクロ一覧を
+	頂きました。
 
 yatex
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))

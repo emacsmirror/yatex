@@ -1,6 +1,19 @@
 	What's new in YaTeX
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.66	\section*{} などの*つきセクションコマンドでインデントがずれるの
+	を修正。
+	[prefix] g でのlabel/ref検索をre-searchにしpagerefにも飛べるよう
+	にした。またsearch-ringではなくregexp-search-ringを更新するので
+	継続検索は M-C-s or M-C-r で行うようになった。
+	XEmacsでのラベル補完のバグフィクス。
+	tgif2tex(*.tps) への [prefix] g を追加。
+	Emacs20のsuppress-keymapの仕様が変わったので対処。
+	Emacs20+yahtml でアイテム化タグでのfillがうまく行かなかったのを修正。
+	yahtmlで <applet code=foo.class> という位置で [prefix] g したときに
+	foo.java へ、#include ではそのファイル、#execではCGIスクリプトファ
+	イルへジャンプするようにした。
+
 1.65	yahtmlのお任せ改行のバグフィクス。
 	a, body, img タグのオプション引数入力アドインの強化。
 	section型マクロの第一引数が改行によって分断されていても正しく

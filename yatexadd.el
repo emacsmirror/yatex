@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.13
+;;; yatexadd.el rev.14
 ;;; (c )1991-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Wed Jun 25 21:21:13 1997 on domani
+;;; Last modified Mon Sep 28 13:03:37 1998 on firestorm
 ;;; $Id$
 
 ;;;
@@ -67,7 +67,9 @@ YaTeX-make-begin-end."
     (while (not (string-match
 		 (setq loc (read-key-sequence
 			    (format "%s position (`%s') [%s]: "
-				    guide oneof pos)));name is in YaTeX-addin
+				    guide oneof pos));name is in YaTeX-addin
+		       loc (if (fboundp 'events-to-keys)
+			       (events-to-keys loc) loc))
 		 "\r\^g\n"))
       (cond
        ((string-match loc oneof)
@@ -91,7 +93,8 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:table ()
   "YaTeX add-in function for table environment."
-  (setq env-name "tabular")
+  (setq env-name "tabular"
+	section-name "caption")
   (YaTeX:read-position "htbp")
 )
 
@@ -345,7 +348,8 @@ YaTeX-make-begin-end."
 (defun YaTeX::label-setup-key-map ()
   (if YaTeX-label-select-map nil
     (message "Setting up label selection mode map...")
-    (setq YaTeX-label-select-map (copy-keymap global-map))
+    ;(setq YaTeX-label-select-map (copy-keymap global-map))
+    (setq YaTeX-label-select-map (make-keymap))
     (suppress-keymap YaTeX-label-select-map)
     (substitute-all-key-definition
      'previous-line 'YaTeX::label-previous YaTeX-label-select-map)
@@ -379,7 +383,8 @@ YaTeX-make-begin-end."
   (interactive) (forward-line -1) (message YaTeX-label-guide-msg))
 (defun YaTeX::label-search-tag ()
   (interactive)
-  (let ((case-fold-search t) (tag (regexp-quote (this-command-keys))))
+  (let ((case-fold-search t)
+	(tag (regexp-quote (char-to-string last-command-char))))
     (cond
      ((save-excursion
 	(forward-char 1)
@@ -447,6 +452,7 @@ YaTeX-make-begin-end."
 	  (use-local-map YaTeX-label-select-map)
 	  (message YaTeX-label-guide-msg)
 	  (goto-line (1+ initl)) ;goto recently defined label line
+	  (switch-to-buffer (current-buffer))
 	  (unwind-protect
 	      (progn
 		(recursive-edit)
@@ -833,6 +839,65 @@ YaTeX-make-begin-end."
 	    'YaTeX:documentclasses-local)))
       (if (string= "" sname) (setq sname YaTeX-default-documentclass))
       (setq YaTeX-default-documentclass sname)))))
+
+(defun YaTeX:caption ()
+  (setq section-name "label")
+  nil)
+
+;;; -------------------- math-mode stuff --------------------
+(defun YaTeX::tilde (&optional pos)
+  "For accent macros in mathmode"
+  (cond
+   ((equal pos 1)
+    (message "Put accent on variable: ")
+    (let ((v (char-to-string (read-char))) (case-fold-search nil))
+      (message "")
+      (cond
+       ((string-match "i\\|j" v)
+	(concat "\\" v "math"))
+       ((string-match "[\r\n\t ]" v)
+	"")
+       (t v))))
+   (nil "")))
+
+(fset 'YaTeX::hat	'YaTeX::tilde)
+(fset 'YaTeX::check	'YaTeX::tilde)
+(fset 'YaTeX::bar	'YaTeX::tilde)
+(fset 'YaTeX::dot	'YaTeX::tilde)
+(fset 'YaTeX::ddot	'YaTeX::tilde)
+(fset 'YaTeX::vec	'YaTeX::tilde)
+
+(defun YaTeX::widetilde (&optional pos)
+  "For multichar accent macros in mathmode"
+  (cond
+   ((equal pos 1)
+    (let ((m "Put over chars[%s ]: ") v v2)
+      (message m " ")
+      (setq v (char-to-string (read-char)))
+      (message "")
+      (if (string-match "[\r\n\t ]" v)
+	  ""
+	(message m v)
+	(setq v2 (char-to-string (read-char)))
+	(message "")
+	(if (string-match "[\r\n\t ]" v2)
+	    v
+	  (concat v v2)))))
+   (nil "")))
+
+(fset 'YaTeX::widehat		'YaTeX::widetilde)
+(fset 'YaTeX::overline		'YaTeX::widetilde)
+(fset 'YaTeX::overrightarrow	'YaTeX::widetilde)
+	
+
+;;;
+;; Add-in functions for large-type command.
+;;;
+(defun YaTeX:em ()
+  (cond
+   ((eq YaTeX-current-completion-type 'large) "\\/")
+   (t nil)))
+(fset 'YaTeX:it 'YaTeX:em)
 
 ;;; -------------------- End of yatexadd --------------------
 (provide 'yatexadd)

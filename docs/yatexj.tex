@@ -6,8 +6,9 @@
 @iftex
 @c @syncodeindex fn cp
 @c いつも忘れるのでここに書いとくか。
-@c ノードいじったら C-l C-u C-e
-@c メニュー増やしたら C-l C-u C-m
+@c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
+@c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
+@c フォーマットするときは C-l C-e C-b
 @syncodeindex vr cp
 @end iftex
 
@@ -82,6 +83,14 @@ section型補完
 * Enclose section-type command::  括り補完
 * Recursive completion::        再帰補完
 * view-sectioning::             セクション区切りのアウトライン表示
+
+カーソルジャンプ
+
+* 対応オブジェクトへのジャンプ::  
+* お絵描きツール起動::          
+* メインファイルへのジャンプ::  
+* 環境を単位としたジャンプ::    
+* 最後の補完位置へのジャンプ::  
 
 変更/削除
 
@@ -288,7 +297,7 @@ LaTeXソースの編集中、次のキー入力により、jlatex などのタイプセットプログラ
 @node Calling typesetter, Calling previewer, Invocation, Invocation
 @comment  node-name,  next,  previous,  up
 @section タイプセッタ起動
-@cindex タイプセッタ起動
+@cindex タイプセッタ起動[たいふせつたきとう]
 @cindex タイプセットエラー[たいふせつとえらあ]
 @cindex エラー修正[えらあしゆうせい]
 
@@ -317,7 +326,7 @@ LaTeXソースの編集中、次のキー入力により、jlatex などのタイプセットプログラ
 @subsection 領域タイプセット
 
   ポイントとマークの間、あるいはテキスト中に埋め込んだ @code{%#BEGIN} と
-@code{%#END}の間の領域(@ref{%#記法})だけを切り取ってタイプセットすることが
+@code{%#END}の間の領域(@ref{%#notation})だけを切り取ってタイプセットすることが
 できます。この場合の documentstyle は、単一ファイルの La@TeX{} ソースの編
 集時にはそのファイルの documentstyle が、別ファイルから include している場
 合にはメインファイルの documentstyle が自動的に選択されます。指定領域は、
@@ -534,7 +543,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 @node Editing %# notation,  , lpr format, %#notation
 @comment  node-name,  next,  previous,  up
 @section %#記法自体の編集
-@cindex %#きほうじたいのへんしゅう[%#きほうしたいのへんしゆう]
+@cindex %#記法自体の編集[%#きほうしたいのへんしゆう]
 
 以上のような@code{%#}で始まる各種制御記法を編集するためには
 
@@ -824,12 +833,14 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 示します(実際にやって見れば分かります)。
 
 @code{*Sectioning Lines*}バッファは、
+
 @table @kbd
 @item M-x YaTeX-section-overview
         @dots{} セクション区切り一覧バッファを生成
 @end table
-@cindex セクション区切り一覧バッファ[せくしよんくきりいちらんはつは]
-で作成することができます。このバッファをを選択し任意の行でスペースを押すと、
+
+@cindex セクション区切り一覧バッファ[せくしよんくきりいちらんはつふあ]
+で作成することができます。このバッファを選択し任意の行でスペースを押すと、
 該当するセクション区切りのある本文中の場所にジャンプします。さらに、同バッ
 ファで @kbd{u} を押すと、ソーステキストの対応するセクションコマンドが一階
 層上がり(例: subsection が section に変わる)、@kbd{d}を押すと一階層下がり
@@ -1185,6 +1196,17 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 @cindex カーソルジャンプ[かあそるしやんふ]
 @cindex prefix g
 
+
+@menu
+* 対応オブジェクトへのジャンプ::  
+* お絵描きツール起動::          
+* メインファイルへのジャンプ::  
+* 環境を単位としたジャンプ::    
+* 最後の補完位置へのジャンプ::  
+@end menu
+
+@node 対応オブジェクトへのジャンプ, お絵描きツール起動, Cursor jump, Cursor jump
+@comment  node-name,  next,  previous,  up
 @section 対応オブジェクトへのジャンプ
 
   文書中のいろいろな場所で
@@ -1212,7 +1234,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 ない場合はエラーになります。またこれは、領域固定のための @code{%#BEGIN} と 
 @code{%#END} のペアに対しても同様に動作します。なお、@code{label/ref}や
 @code{cite/bibitem}対応するものが別ファイルにある時は、ジャンプ先となるファ
-イルがオープンされていなければなりません。@xref{%#記法}
+イルがオープンされていなければなりません。@xref{%#notation}
 メインの .tex ファイルの @code{\include{chap1}} などにカーソルを合わせ、
 @kbd{[prefix] g} を押すと、@file{chap1.tex} にジャンプします。
 
@@ -1228,8 +1250,10 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 この機能は @code{begin/end}, @code{%#BEGIN/%#END} 間のジャンプに対しては
 (意味がないと思われるので)機能しないので注意してください。
 
-@section{お絵描きツール起動}
-@cindex お絵描きツール起動[おえかきつーるきとう]
+@node お絵描きツール起動, メインファイルへのジャンプ, 対応オブジェクトへのジャンプ, Cursor jump
+@comment  node-name,  next,  previous,  up
+@section お絵描きツール起動
+@cindex お絵描きツール起動[おえかきつうるきとう]
 
 上記の「画像ファイルの取り込みマクロ」とは、例えば 
 @code{\epsfile@{file=foo@}} のような挿絵取り込みコマンドのことで、この行に
@@ -1262,6 +1286,8 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 ルにかぎらず、任意の形式のファイルを任意のプロセッサで処理するコマンドを簡
 単に呼び出すことができます。
 
+@node メインファイルへのジャンプ, 環境を単位としたジャンプ, お絵描きツール起動, Cursor jump
+@comment  node-name,  next,  previous,  up
 @section メインファイルへのジャンプ
 
 @file{chap1.tex}のようなサブファイルで、
@@ -1278,6 +1304,8 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 オープンしていない場合は、カレントディレクトリから探して自動的にオープンし
 ます。
 
+@node 環境を単位としたジャンプ, 最後の補完位置へのジャンプ, メインファイルへのジャンプ, Cursor jump
+@comment  node-name,  next,  previous,  up
 @section 環境を単位としたジャンプ
 
 さらに現在の環境を単位として機能するコマンドに以下のものがあります。
@@ -1300,7 +1328,14 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 上記のコマンドは通常の@kbd{[prefix]}キーではなく@kbd{META}キーをプリフィク
 スとして機能するのでご注意下さい。
 
-  
+@node 最後の補完位置へのジャンプ,  , 環境を単位としたジャンプ, Cursor jump
+@comment  node-name,  next,  previous,  up
+@section 最後の補完位置へのジャンプ
+
+野鳥は補完入力した位置を常にレジスタ @code{3}に保存しています。
+入力途中で如何なるファイルの如何なる位置に行ったとしても、
+@kbd{C-x j 3}(@code{jump-to-register})を使って直ちに最後の補完入力位置に戻
+ることができます。
 
 @node Modifying/Deleting, Filling, Cursor jump, Top
 @comment  node-name,  next,  previous,  up
@@ -1486,14 +1521,14 @@ description環境:
 
 @noindent 
 現在編集中のファイルを @code{\includeonly} のリストに加えたい時には@kbd{a}
-を、現在編集中のファイルだけを @code{\includeonly} にしたい時は@kbd{R}を、
+を、現在編集中のファイルだけを @code{\includeonly} にしたい時は@kbd{r}を、
 @code{\includeonly} の行をコメントアウトして無効化したい時には、@kbd{%}を
 それぞれ押して下さい。
 
 @node What column, Intelligent newline, Includeonly, Top
 @comment  node-name,  next,  previous,  up
 @chapter ここはどこ?
-@cindex ここどこ?[ここはとこ]
+@cindex ここはどこ?[ここはとこ?]
 @cindex prefix &
 @cindex 複雑なtabular[ふくさつなtabular]
 
@@ -1531,7 +1566,6 @@ description環境:
 @chapter おまかせ改行
 @cindex おまかせ改行[おまかせかいきよう]
 @cindex &入力[&にゆうりよく]
-@cindex prefix &
 
   tabular[*], array, itemize, enumerate, tabbing 環境をbegin型補完で入力し
 た時、または各環境内で
@@ -1576,7 +1610,7 @@ tabular環境では、その環境のカラム数に対応した個数の @code{&} に加え、行末
 @node Changing mode of YaTeX, Online help, Intelligent newline, Top
 @comment  node-name,  next,  previous,  up
 @chapter 野鳥の動作モード切り替え
-@cindex モード切り替え[もーときりかえ]
+@cindex モード切り替え[もうときりかえ]
 @cindex prefix w
 
 @table @kbd

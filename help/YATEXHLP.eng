@@ -800,7 +800,8 @@ Make tabular.
            spacing is suppressed.
   *{N}{PRE} : equivalent to writing N copies of PRE in the preamble.  PRE
               may contain *{N'}{EXP'} expressions.
-  p{LEN} : makes entry in parbox of width LEN.
+  p{LEN} : makes entry in parbox of width LEN.  This is useful when
+	   each column contains long sentences.
 
 [[Usable commands in array, tabular environment]]
 \multicolumn
@@ -815,7 +816,7 @@ Make tabular.
 <refer extracolsep>
 
 
-See below as sample.
+See below as an example.
 
 \LaTeX Expression				Printed image
 \begin{array}{ccr}
@@ -832,6 +833,18 @@ See below as sample.
   a_{n1}  & a_{n2}  & \dots & a_{nn}		\ an1 an2 ..: ann /
  \end{array} 
 \right)\]
+
+\begin{tabular}{lp{0.7\textwidth}
+ \hline						----------------------------
+ \verb|.|	& Period matches with		.  Period matches with any
+		  any single character.\\	   single character.
+ \verb|*|	& Asterisk matches with		*  Asterisk matches with 0
+		  0 or more  repetition	   	   or  more repetition  of 
+		  of preceding regexp.	   	   preceding regexp.
+\\ \hline					----------------------------
+\end{tabular}
+
+(End of example)
 
 \right(, \left) or \right{, left} or \right[, \left] or \right|, \left|
 can enclose whole of array environment by parentheses, braces, brackets,

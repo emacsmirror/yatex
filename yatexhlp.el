@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX helper with LaTeX commands and macros.
 ;;; yatexhlp.el
-;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Apr  1 03:34:23 1996 on NSR
+;;; (c )1994,1998 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Thu Mar 12 11:10:07 1998 on crx
 ;;; $Id$
 
 (let ((help-file (concat "YATEXHLP."
@@ -10,6 +10,7 @@
 			       (t "eng"))))
       (help-dir
        (cond
+	((and (boundp 'site-directory) site-directory) site-directory)
 	(YaTeX-emacs-19 (expand-file-name "../../site-lisp" doc-directory))
 	(t exec-directory))))
   (defvar YaTeX-help-file
@@ -17,8 +18,8 @@
     "*Help file of LaTeX/TeX commands or macros.")
   (defvar YaTeX-help-file-private
     (expand-file-name (concat "~/" help-file))
-    "*Private help file of LaTeX/TeX macros.")
-)
+    "*Private help file of LaTeX/TeX macros."))
+
 (defvar YaTeX-help-delimiter "\C-_" "Delimiter of each help entry.")
 (defvar YaTeX-help-entry-map (copy-keymap YaTeX-mode-map)
   "Key map used in help entry.")

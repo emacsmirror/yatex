@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c ) 1994-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Wed Jun 25 21:30:45 1997 on domani
+;;; Last modified Wed Jan 14 16:44:36 1998 on firestorm
 ;;; $Id$
 
 ;;;
@@ -230,7 +230,7 @@ Return the list of (No.ofCols PointEndofFormat)"
 	  (looking-at "\\\\right\\b"))
 	(progn (YaTeX-reindent
 		(save-excursion (YaTeX-goto-corresponding-leftright)
-				(current-column))))
+				(1- (current-column)))))
       (save-excursion
 	(forward-line -1)
 	(while (and (not (bobp)) (YaTeX-on-comment-p))
@@ -250,7 +250,7 @@ Return the list of (No.ofCols PointEndofFormat)"
 	  (setq depth (+ (YaTeX-current-indentation) mp)))
 	 ((> l-r 0)
 	  (beginning-of-line)
-	  (search-forward "\\left" peol)
+	  (search-forward "\\left" peol nil l-r)
 	  (goto-char (1+ (match-beginning 0)))
 	  (setq depth (current-column)))
 	 ((< l-r 0)
@@ -258,7 +258,8 @@ Return the list of (No.ofCols PointEndofFormat)"
 	  (YaTeX-goto-corresponding-leftright)
 	  (beginning-of-line)
 	  (skip-chars-forward " \t")
-	  (setq depth (+ (current-column) mp))) ;+mp is good?
+	  ;(setq depth (+ (current-column) mp)) ;+mp is good?
+	  (setq depth (current-column)))
 	 (t				;if \left - \right = 0
 	  (cond
 	   ((re-search-forward "\\\\\\\\\\s *$" peol t)

@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
-;;; (c )1993-1997 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Nov 25 12:33:05 1997 on firestorm
+;;; (c )1993-1998 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
+;;; Last modified Wed Sep 30 21:26:29 1998 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -124,6 +124,7 @@
    ("!"		"neg"		("--+\n  |" YaTeX-image-neg))
    ("oo"	"infty"		("oo"		"Åá"))
    ("\\"	"backslash"	("\\"		"Å_"))
+   ("..."	"cdots"		("..."		"Åc"))
 
    ;;binary operators
    ("+-"	"pm"		("+\n-" "Å}"))
@@ -232,12 +233,36 @@
    ;;left and right
    ("left"	"left"		"(leftmark)")
    ("right"	"right"		"(rightmark)")
-   ;other marks
+   ;;accent marks
+   ("tilde"	"tilde"		"~\n?")
+   ("T"		"tilde"		"~\n?")
+   ("wtilde"	"widetilde"	"~\n?")
+   ("hat"	"hat"		"^\n?")
+   ("what"	"widehat"	"/\\\n??")
+   ("w^"	"widehat"	"/\\\n?")
+   ("check"	"check"		"v\n?")
+   ("bar"	"bar"		"_\n?")
+   ("overline"	"overline"	"_\n?")
+   ("wbar"	"overline"	"--\n??")
+   ("dot"	"dot"		".\n?")
+   ("ddot"	"ddot"		"..\n??")
+   ("vec"	"vec"		("->\n??" "Å®\n??"))
+   ("~>"	"overrightarrow" ("-->\nAB" "Å®\nAB"))
+   ("VEC"	"overrightarrow" ("-->\nAB" "Å®\nAB"))
+   ;;rage-aware stuffs
+   ("prod"	"prod"		("-+--+-\n |  |" "ÉÆ"))
+   ("CUP"	"bigcup"	"|~~|\n|  |\n|  |")
+   ("union"	"bigcup"	"|~~|\n|  |\n|  |")
+   ("CAP"	"bigcap"	"|  |\n|  |\n|__|")
+   ("isc"	"bigcap"	"|  |\n|  |\n|__|")
+   ("O+"	"bigoplus"	"/~~~\\\n| + |\n\\___/")
+   ("Ox"	"bigotimes"	"/~~~\\\n| X |\n\\___/")
+   ;;other marks
    ("Z"		"aleph"		"|\\|")
    ("|\\|"	"aleph"		"|\\|")
    ("h-"	"hbar"		"_\nh")
-   ("i"		"imath"		"i")
-   ("j"		"jmath"		"j")
+ ;  ("i"		"imath"		"i") ;These chars are appeared only
+ ;  ("j"		"jmath"		"j") ;as section-type arguments
    ("l"		"ell"		"l")
    ("wp"	"wp"		"???")
    ("R"		"Re"		")R")
@@ -674,31 +699,25 @@ at least you get to read the beginning."
 			 )
 		nil)
 	      )))
+    (delete-region beg (point))
     (cond
-     ((eq result t)
-      (setq YaTeX-current-completion-type 'maketitle)
-
-      ;;;(sit-for 1)
-      (setq unread-command-char last-char)
-      (insert (YaTeX-addin single-command)))
+     ((memq result '(t select))
+      (if (eq result t)
+	  (setq unread-command-char last-char)
+	(message "Done."))
+      (if (assoc single-command section-table)
+	  (YaTeX-make-section nil nil nil single-command)
+	(setq YaTeX-current-completion-type 'maketitle)
+	(YaTeX-make-singlecmd single-command)))
      ((eq result 'abort)
-      (delete-region beg (point))
       (message "Abort."))
      ((eq result 'escape)
-      (delete-region beg (point))
       (call-interactively (global-key-binding this-key)))
-     ((eq result 'select)
-      (message "Done.")
-      (setq YaTeX-current-completion-type 'maketitle)
-      (insert (YaTeX-addin single-command)))
      ((eq result 'exit)
-      (delete-region beg (point))
       (YaTeX-toggle-math-mode))
      ((eq result 'menu)
-      (delete-region beg (point))
       (setq key (concat "^" (regexp-quote (substring key 0 -1))))
-      (insert (YaTeX-math-show-menu key)))))
-)
+      (insert (YaTeX-math-show-menu key))))))
 
 ;; ----- Change image completion types -----
 (defun YaTeX-math-member-p (item)

@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c )1994-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Dec 16 14:48:22 1997 on firestorm
+;;; Last modified Mon Oct 19 13:41:29 1998 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -30,8 +30,8 @@
 	   1 (cond (YaTeX-dos 'shift_jis-dos)
 		   ((member 'shift_jis (coding-system-list)) 'shift_jis-unix)
 		   (t 'sjis)))
-	  '(2 . iso-2022-7bit-unix)
-	  '(3 . euc-japan))))
+	  '(2 . iso-2022-jp-unix)
+	  '(3 . euc-jp-unix))))
   "Kanji-code expression translation table.")
 (defvar YaTeX-inhibit-prefix-letter nil
   "*T for changing key definitions from [prefix] Letter to [prefix] C-Letter.")
@@ -190,11 +190,11 @@ YaTeX-user-completion-table."
 	(message
 	 (cond
 	  (YaTeX-japan
-	   "`%s'$B$NEPO?@h(B: U)$B%f!<%6<-=q(B L)$B%m!<%+%k<-=q(B N)$B%a%b%j(B D)$B$7$J$$(B")
+	   "`%s'‚Ì“o˜^æ: U)ƒ†[ƒUŽ«‘ L)ƒ[ƒJƒ‹Ž«‘ N)ƒƒ‚ƒŠ D)‚µ‚È‚¢")
 	  (t
 	   "Register `%s' into: U)serDic L)ocalDic N)one D)iscard"))
 	 (if (> (length car-v) 23)
-	     (concat (substring car-v 0 10) "..." (substring car-v -10))
+	     (concat (substring car-v 0 10) "..." (substring car-v -9))
 	   car-v))
 	(setq answer (char-to-string (read-char))))
       (cond
@@ -486,10 +486,11 @@ Otherwise split window conventionally."
   "Replace recursively OLDDEF with NEWDEF for any keys in KEYMAP now
 defined as OLDDEF. In other words, OLDDEF is replaced with NEWDEF
 where ever it appears."
-  (mapcar
-   (function (lambda (key) (define-key keymap key newdef)))
-   (where-is-internal olddef keymap))
-)
+  (if YaTeX-emacs-19
+      (substitute-key-definition olddef newdef keymap global-map)
+    (mapcar
+     (function (lambda (key) (define-key keymap key newdef)))
+     (where-is-internal olddef keymap))))
 
 ;;;###autoload
 (defun YaTeX-match-string (n &optional m)
@@ -798,11 +799,17 @@ See yatex19.el for example."
      bindlist))))
 
 
+;;;
+;; Functions for the Installation time
+;;;
 
 (defun bcf-and-exit ()
   "Byte compile rest of argument and kill-emacs."
   (if command-line-args-left
-      (progn
+      (let ((load-path (cons "." load-path)))
+	(and (fboundp 'set-language-environment)
+	     (featurep 'mule)
+	     (set-language-environment "Japanese"))
 	(mapcar 'byte-compile-file command-line-args-left)
 	(kill-emacs))))
 

@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c )1994-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sun Dec 14 21:51:14 1997 on firestorm
+;;; Last modified Thu Jan 29 10:55:12 1998 on crx
 ;;; $Id$
 
 ;;; ‚Æ‚è‚ ‚¦‚¸ hilit19 ‚ğg‚Á‚Ä‚¢‚é‚ÉF‚ª•t‚­‚æ‚¤‚É‚µ‚Ä
@@ -314,8 +314,8 @@ Assumes PATTERN begins with `{'."
     ;; formulas
     ("[^\\]\\\\("  "\\\\)" formula)                   ; \( \)
     ("[^\\]\\\\\\[" "\\\\\\]" formula)                ; \[ \]
-    ("\\\\begin{\\(eqn\\|equation\\|x?x?align\\|split\\|multiline\\|gather\\)"
-     "\\\\end{\\(eqn\\|equation\\|x?x?align\\|split\\|multiline\\|gather\\).*}"
+    ("\\\\begin{\\(eqn\\|equation\\|x?x?align\\|split\\|multline\\|gather\\)"
+     "\\\\end{\\(eqn\\|equation\\|x?x?align\\|split\\|multline\\|gather\\).*}"
      formula)
     ("[^\\$]\\($\\($[^$]*\\$\\|[^$]*\\)\\$\\)" 1 formula); '$...$' or '$$...$$'
 

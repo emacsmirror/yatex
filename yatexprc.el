@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Dec 11 16:16:21 1997 on crx
+;;; Last modified Mon Mar  9 11:44:29 1998 on crx
 ;;; $Id$
 
 ;(require 'yatex)
@@ -22,6 +22,7 @@
 
 (defvar YaTeX-shell-command-option
   (or (and (boundp 'shell-command-option) shell-command-option)
+      (and (boundp 'shell-command-switch) shell-command-switch)
       (if YaTeX-dos "/c" "-c"))
   "Shell option for command execution.")
 
@@ -329,8 +330,8 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
   "Kill process PROC after sending signal to PROC.
 PROC should be process identifier."
   (cond
-   (YaTeX-dos
-    (error "MS-DOS can't have concurrent process."))
+   ((not (fboundp 'start-process))
+    (error "This system can't have concurrent process."))
    ((or (null proc) (not (eq (process-status proc) 'run)))
     (message "Typesetting process is not running."))
    (t
@@ -477,7 +478,7 @@ error or warning lines in reverse order."
 	 nil t)
 	nil
       (select-window cur-win)
-      (error "No more erros on %s" cur-buf))
+      (error "No more errors on %s" cur-buf))
     (goto-char (match-beginning 0))
     (skip-chars-forward "^0-9" (match-end 0))
     (setq error-line

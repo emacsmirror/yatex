@@ -29,7 +29,7 @@
 * Main features::               What YaTeX can do
 * Installation::                Guide to install
 * Typesetting::                 Call typesetting processes
-* %# notation::                 Quick notation of controlling YaTeX
+* %#notation::                  
 * Completion::                  Input LaTeX commands with completion
 * Local dictionaries::          Directory dependent completion
 * Commenting out::              Commenting/uncommenting text
@@ -77,10 +77,18 @@ Section-type completion
 
 * view-sectioning::             
 
+Cursor jump
+
+* Jump to corresponding object::  
+* Invoking image processor::    
+* Jump to main file::           
+* Jumping around the environment::  
+* Jumping to last completion position::  
+
 Changing and Deleting
 
-* Changing La@TeX{} commands::  
-* Killing La@TeX{} commands::   
+* Changing LaTeX commands::     
+* Killing LaTeX commands::      
 
 Customizations
 
@@ -104,8 +112,8 @@ Procedure
 
 How the add-in function works
 
-* Defining `option add-in'::    
-* Defining `argument add-in'::  
+* Defining option-add-in::      
+* Defining argument-add-in::    
 @end menu
 
 @node What is YaTeX?, Main features, Top, Top
@@ -181,7 +189,7 @@ file which has extension @file{.tex}.  If yatex-mode is successfully
 loaded, mode string on mode line will be turned to "YaTeX".
 
 
-@node Typesetting, %# notation, Installation, Top
+@node Typesetting, %#notation, Installation, Top
 @comment  node-name,  next,  previous,  up
 @chapter Typesetting
 @cindex typesetting
@@ -220,7 +228,7 @@ strokes execute typeset or preview command.
 
 @node Calling typesetter, Calling previewer, Typesetting, Typesetting
 @comment  node-name,  next,  previous,  up
-@section{Calling typesetter}
+@section Calling typesetter
 
   Typing @kbd{[prefix] t j}, the current editing window will be divided
 horizontally when you invoke latex command, and log message of La@TeX{}
@@ -246,7 +254,7 @@ makes the cursor move to corresponding source line.
   Since @kbd{[prefix] tr} pastes the region into the file
 @file{texput.tex} in the current directory, you should be careful of
 overwriting.  The method of specification of the region is shown in the
-section @xref{%#NOTATION}.
+section @xref{%#notation}.
 
   The documentstyle  for typeset-region is the same as that of editing
 file if you edit one  file,  and is the same as main file's if you
@@ -254,7 +262,7 @@ edit splitting files.
 
 @node Calling previewer, Printing out, Calling typesetter, Typesetting
 @comment  node-name,  next,  previous,  up
-@section{Calling previewer}
+@section Calling previewer
 
   @kbd{[prefix] t p} invokes the TeX previewer.  And if you are using
 xdvi-remote, which can be controled from other terminals, @kbd{[prefix] t
@@ -264,7 +272,7 @@ window.  You can get xdvi with `-remote feature' from;
 
 @node Printing out,  , Calling previewer, Typesetting
 @comment  node-name,  next,  previous,  up
-@section{Printing out}
+@section Printing out
 
   When you type @code{[preifx] t l}, YaTeX asks you the range of
 dvi-printing by default.  You can skip this by invoking it with
@@ -274,7 +282,7 @@ universal-argument as follows:
         C-u [prefix] tl
 @end example
 
-@node %# notation, Completion, Typesetting, Top
+@node %#notation, Completion, Typesetting, Top
 @comment  node-name,  next,  previous,  up
 @chapter %# notation
 @cindex %# notation
@@ -289,7 +297,7 @@ notations in the source text.
 * Editing %# notation::         
 @end menu
 
-@node Changing typesetter, Static region for typesetting, %# notation, %# notation
+@node Changing typesetter, Static region for typesetting, %#notation, %#notation
 @comment  node-name,  next,  previous,  up
 @section To change the `latex' command or to split a source text.
 @cindex typesetter
@@ -304,7 +312,7 @@ notations in the source text.
 anywhere in the source text.  This is useful for changing
 typesetter.
 
-@node Splitting input files, Static region for typesetting, Changing typesetter, %# notation
+@node Splitting input files, Static region for typesetting, Changing typesetter, %#notation
 @comment  node-name,  next,  previous,  up
 
   And if you split the source text and
@@ -341,7 +349,7 @@ consideration.
  is in the parent directory(not %#!latex ../main.tex).
 @end itemize
 
-@node Static region for typesetting, Lpr format, Changing typesetter, %# notation
+@node Static region for typesetting, Lpr format, Changing typesetter, %#notation
 @comment  node-name,  next,  previous,  up
 @section Static region
 @cindex static region
@@ -391,7 +399,7 @@ environment such as `tabular' many times.  It is also useful to put only
 @code{%#BEGIN} alone at the middle of very long text.  Do not forget to
 erase @code{%#BEGIN} @code{%#END} pair.
 
-@node Lpr format, Editing %# notation, Static region for typesetting, %# notation
+@node Lpr format, Editing %# notation, Static region for typesetting, %#notation
 @comment  node-name,  next,  previous,  up
 @section Lpr format
 @cindex lpr format
@@ -429,7 +437,7 @@ out, the next example may be helpful.
         %#LPR dvi2ps %s | lpr
 @end example
 
-@node Editing %# notation,  , Lpr format, %# notation
+@node Editing %# notation,  , Lpr format, %#notation
 @comment  node-name,  next,  previous,  up
 @section Editing %# notation
 
@@ -453,7 +461,7 @@ Type @kbd{!} to edit @code{%#!} entry, @code{b} to enclose the region with
 When you type @kbd{b}, all @code{%#BEGIN} and @code{%#END} are
 automatically erased.
 
-@node Completion, Local dictionaries, %# notation, Top
+@node Completion, Local dictionaries, %#notation, Top
 @comment  node-name,  next,  previous,  up
 @chapter Completion
 @cindex completion
@@ -725,7 +733,7 @@ and @kbd{U} shifts down.  Here are all the key bindings of
         @dots{} Shift up sectioning lines in region
 @item D
         @dots{} Shift down sectioning lines in region
-@item 0〜6
+@item 0@dots{}6
         @dots{} Hide sectioning commands whose level is lower than n
 @end table
 
@@ -1029,6 +1037,17 @@ work in `commenting out from @code{\begin} to @code{\end}' mode.
 @cindex cursor jump
 @cindex prefix g
 
+
+@menu
+* Jump to corresponding object::  
+* Invoking image processor::    
+* Jump to main file::           
+* Jumping around the environment::  
+* Jumping to last completion position::  
+@end menu
+
+@node Jump to corresponding object, Invoking image processor, Cursor jump, Cursor jump
+@comment  node-name,  next,  previous,  up
 @section Jump to corresponding object
 
   Typing
@@ -1072,7 +1091,9 @@ do the same job as @kbd{[prefix] g} except it's done in other window.
 Note that this function doesn't work on @code{begin/end},
 @code{%#BEGIN/%#END} pairs because it is meaningless.
 
-@section{Invoking image processor}
+@node Invoking image processor, Jump to main file, Jump to corresponding object, Cursor jump
+@comment  node-name,  next,  previous,  up
+@section Invoking image processor
 @cindex{Drawing tool invocation}
 
 `image-including line' described above means such lines as
@@ -1102,6 +1123,8 @@ extension in the cdr part of each list of
 image viewer or drawing tool.
 @end enumerate
 
+@node Jump to main file, Jumping around the environment, Invoking image processor, Cursor jump
+@comment  node-name,  next,  previous,  up
 @section Jump to main file
 
   Typing
@@ -1118,7 +1141,9 @@ image viewer or drawing tool.
 in a sub text switch the buffer to the main text specified by
 @code{%#!}  notation.
 
-@section Other jumping features
+@node Jumping around the environment, Jumping to last completion position, Jump to main file, Cursor jump
+@comment  node-name,  next,  previous,  up
+@section Jumping around the environment
 
   And these are the functions which work on the current La@TeX{}
 environment:
@@ -1134,6 +1159,16 @@ environment:
 @cindex M-C-a
 @cindex M-C-e
 @cindex M-C-@@
+
+@node Jumping to last completion position,  , Jumping around the environment, Cursor jump
+@comment  node-name,  next,  previous,  up
+@section Jumping to last completion position
+
+YaTeX always memorize the position of completion into register @code{3}.
+So every time you make a trip to any other part of text other than you are
+writing, you can return to the editing paragraph by calling
+register-to-point with argument YaTeX-current-position-register, which is
+achieved by typing @kbd{C-x j 3}(by default).
 
 @node Changing and Deleting, Filling, Cursor jump, Top
 @comment  node-name,  next,  previous,  up
@@ -1152,11 +1187,11 @@ already entered.
 @cindex prefix k
 
 @menu
-* Changing La@TeX{} commands::  
-* Killing La@TeX{} commands::   
+* Changing LaTeX commands::     
+* Killing LaTeX commands::      
 @end menu
 
-@node Changing La@TeX{} commands, Killing La@TeX{} commands, Changing and Deleting, Changing and Deleting
+@node Changing LaTeX commands, Killing LaTeX commands, Changing and Deleting, Changing and Deleting
 @comment  node-name,  next,  previous,  up
 @section Changing La@TeX{} commands
 
@@ -1183,7 +1218,7 @@ the La@TeX{} commands can be nested and braces can freely emerge.  So keep
 it mind to put the cursor on a brace when you are thinking of changing a
 complicated argument.
 
-@node Killing La@TeX{} commands,  , Changing La@TeX{} commands, Changing and Deleting
+@node Killing LaTeX commands,  , Changing LaTeX commands, Changing and Deleting
 @comment  node-name,  next,  previous,  up
 @section Killing La@TeX{} commands
 @cindex Killing La@TeX{} commands
@@ -1908,11 +1943,11 @@ command is being read.  Thus the add-in should determine the
 job referring the value of its argument.
 
 @menu
-* Defining `option add-in'::    
-* Defining `argument add-in'::  
+* Defining option-add-in::      
+* Defining argument-add-in::    
 @end menu
 
-@node Defining `option add-in', Defining `argument add-in', How the add-in function works, How the add-in function works
+@node Defining option-add-in, Defining argument-add-in, How the add-in function works, How the add-in function works
 @comment  node-name,  next,  previous,  up
 @subsubsection Defining `option add-in'
 
@@ -1939,7 +1974,7 @@ Emacs-Lisp.  The next example reads the tabular format from keyboard.
           (concat "{" (read-string "Rule: ") "}"))
 @end lisp
 
-@node Defining `argument add-in',  , Defining `option add-in', How the add-in function works
+@node Defining argument-add-in,  , Defining option-add-in, How the add-in function works
 @comment  node-name,  next,  previous,  up
 @subsubsection Defining `argument add-in'
 
@@ -2050,7 +2085,7 @@ is recommendable to type @kbd{C-g} and start afresh.
 @center @kbd{M-x YaTeX-generate-simple}
 This generator can make both ``option add-in'' and ``argument add-in''
 (@emph{refer the section add-in functions}
-@ref{How the add-in function works?}), whereas @code{YaTeX-generate}
+@ref{How the add-in function works}), whereas @code{YaTeX-generate}
 cannot make ``argument addin''.
 
   For example, assume you have the LaTeX command as follows.
