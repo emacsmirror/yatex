@@ -38,17 +38,17 @@ package:
 
 ci:
 	ci -r$(VERSION) -sRel -f $(RCSFILE)
-	ci -r$(VERSION) -u makefile
+	ci -u$(VERSION) makefile
 co:
 	co $(RCSFILE)
 co-l:
 	co -l $(RCSFILE)
 
 tci:
-	ci -r$(VERSION).0 -l -Ncurrent $(RCSFILE) makefile
+	ci -l$(VERSION).0 -Ncurrent $(RCSFILE) makefile
 
 dostci:
-	ci -r$(MVER).0 -Ncurrent -l @rcsfile
+	ci -l$(MVER).0 -Ncurrent @rcsfile
 
 gohome:
 	zip -u -r /com/okoma/yuuji/tmp/dosconv/yatex.zip . \
