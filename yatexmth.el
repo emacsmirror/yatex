@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el rev.2
 ;;; (c )1993-1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jul  8 00:48:24 1994 on figaro
+;;; Last modified Thu Jul 14 22:42:05 1994 on figaro
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -459,7 +459,8 @@
 		    (if (or (= (char-after (1- me0)) ?\))
 			    (= (char-after (1- me0)) ?\]))
 			(setq nest (1+ nest))
-		      (setq nest (1- nest)))))
+		      (if (= (preceding-char) ?\\ ) nil;;\\[5pt]
+			(setq nest (1- nest))))))
 		(if (< nest 0) (throw 'open t))))
 	    t)
 	   (t (catch 'dollar
