@@ -2,17 +2,20 @@
 # Makefile for YaTeX.
 #
 
+MVER	= 1.50
 LISP	= comment.el yatex.el yatexadd.el yatexgen.el yatexenv.el yatexlib.el \
 	  yatexmth.el yatexhks.el yatexhlp.el yatexprc.el \
 	  yatexm-o.el yatexsec.el
 #	\  yahatml.el 
-DOCS	= yatex.new docs/yatexj docs/yatexj.tex docs/yatexe docs/yatexe.tex \
+DOCS	= $(DOCSRC) $(DOCOBJ)
+DOCSRC	= yatex.new docs/yatexj.tex docs/yatexe.tex \
 	  docs/yatex.ref docs/yatexadd.doc docs/yatexgen.doc docs/qanda
+DOCOBJ	= docs/yatexj docs/yatexe
 HELP	= help/YATEXHLP.jp
 MANIFEST= manifest
-EXTRA	= dir #00readme
+EXTRA	= dir install 00readme
 DISTRIB = $(EXTRA) $(LISP) $(DOCS) $(MANIFEST) $(HELP)
-RCSFILE	= $(LISP) $(DOCS) $(HELP)
+RCSFILE	= $(LISP) $(DOCSRC) $(HELP)
 PACK	= `echo $(DISTRIB)|xargs ls`
 TAR	= gtar
 TMPDIR	= /tmp
@@ -40,3 +43,10 @@ co:
 	co $(RCSFILE)
 co-l:
 	co -l $(RCSFILE)
+
+tci:
+	ci -r$(VERSION).0 -l -Ncurrent $(RCSFILE) makefile
+
+dostci:
+	ci -r$(MVER).0 -Ncurrent -l @rcsfile
+
