@@ -1,6 +1,6 @@
 textfloatsep
 \addtolength{\textfloatsep}{LENGTH}
-Length between the text and, float of the top or bottom of page
+Length between the text and a float at the top or bottom of page
 
 floatsep
 \addtolength{\floatsep}{LENGTH}
@@ -8,50 +8,52 @@ Length between two floats
 
 oddsidemargin
 \setlength{\oddsidemargin}{LENGTH}
-右ページの左端から1インチ(2.54cm)の線と本文の距離
+Length between text and a line 1 inch from the left of page, on the
+right page
+
 
 pagestyle
-\pagestyle{スタイル}
-出力ページのヘッダとフッタのスタイルを決める。スタイルには以下のものがある:
-plain		標準スタイル. フッタにページ番号だけつける.
-empty		ヘッダにもフッタにも何も出力しない.
-headings	ヘッダにセクションに応じた見出しとページ番号をつけ
-		フッタには何も出力しない.
-myheadings	headingsのスタイルで、ヘッダの情報を \markbpth と
-		\markright で指定できる.
+\pagestyle{STYLE}
+Determines header and footer styles on output page.  There are the
+following styles
+plain		Standard style.  Page number only in footer.
+empty		No headers or footers are output.
+headings	Puts page number and headings according to section in header.
+			No footer is output.
+myheadings	User defines what goes into headings using \markbpth and \markright
 
 thispagestyle
-\thispagestyle{スタイル}
-現在のページだけのスタイルを決定する。
+\thispagestyle{STYLE}
+Determines the STYLE for the current page only
 
 pagenumbering
-\pagenumbering{スタイル}
-ページ番号のスタイルを決める。スタイルには以下のものがある:
-arabic		アラビア数字
-alph		小文字の英字
-Alph		大文字の英字
-roman		小文字のローマ数字
-Roman		大文字のローマ数字
+\pagenumbering{STYLE}
+Determines the STYLE of page numbers.  Type of STYLEs are,
+arabic		arabic numerals
+alph		lowercase alphabets
+Alph		uppercase alphabets
+roman		lowercase roman numerals
+Roman		uppercase roman numerals
 
 shortstack
-\shortstack[場所]{重ねて\\表示する\\内容}
-{}内の内容を\\で区切られた単位毎に積み重ねて表示する。
-[場所]は、l(左寄せ)、c(センタリング)、r(右寄せ)のいずれか。
+\shortstack[POSITION]{TEXT\\TO BE\\STACKED}
+Stack and display contents within {}, separated by \\.
+Possible [POSITION]s are, l(left), c(center), r(right).
 
 newlength
 \newlength{NAME}
-NAMEという長さコマンドを新たに宣言する。
+Declare NAME as a length command.
 
 addtolength
-\addtolength{長さコマンド}{数値}
-第1引数の長さを第2に引数の数値を足す。
-代表的なスタイルパラメータについては \setlength の項を参照せよ。
+\addtolength{LENGTH COMMAND}{VALUE}
+Adds VALUE to LENGTH COMMAND.
+See \setlength for major style parameters.
 
 setlength
-\setlength{長さコマンド}{数値}
-第1引数の長さを第2に引数の数値に設定する。
-代表的なスタイルパラメータは以下の通り:
-(スタイルパラメータの変更はプリアンブルで行うこと)
+\setlength{LENGTH COMMAND}{VALUE}
+Set the value of LENGTH COMMAND to VALUE.
+Major style parameters are:
+(Style parameters must be changed in the preamble)
 \evensidemargin	\footheight	\footskip	\headheight
 \headsep	\marginparsep	\marginparwidth	\oddsidemargin
 \textheight	\textwidth	\topmargin	\topskip
@@ -59,180 +61,175 @@ NAMEという長さコマンドを新たに宣言する。
 \columnsep	\columnseprule	\mathindent
 
 settowidth{\NAME}{TEXT}
-\hbox{TEXT}の出力結果と同じ幅に長さ\NAME をセットする。
+Set the value of \NAME to the width of \hbox{TEXT}.
 
 evensidemargin
 \setlength{\evensidemargin}{LENGTH}
-左ページの左端から1インチ(2.54cm)の線と本文の距離
+Length between body and a line 1 inch from the left of page, on the
+left page.
 
 footheight
 \setlength{\footheight}{LENGTH}
-フッタの高さ
+Height of footer.
 
 footskip
 \setlength{\footskip}{LENGTH}
-本文の箱の下端とフッタの距離
+Length between bottom of body and footer.
 
 headheight
 \addtolength{\headheight}{LENGTH}
-ヘッダの高さ
+Height of header.
 
 headsep
 \setlength{\headsep}{LENGTH}
-ヘッダと本文の間隔
+Length between top of body and header.
 
 marginparsep
 \addtolength{\marginparsep}{LENGTH}
-傍注と本文の間隔
+Length between the body and marginal notes
 
 marginparwidth
 \addtolength{\marginparwidth}{LENGTH}
-傍注の幅
+Width of marginal notes.
 
 oddsidemargin
 \addtolength{\oddsidemargin}{LENGTH}
-右ページの左端から1インチ(2.54cm)の線と本文の距離
+Length between body and a line 1 inch from the left of page, on the
+right page.
+
 
 textheight
 \addtolength{\textheight}{LENGTH}
-本文の高さ
+Height of text.
 
 textwidth
 \addtolength{\textwidth}{LENGTH}
-本文の幅
+Width of body.
 
 topmargin
 \addtolength{\topmargin}{LENGTH}
-ページ上端から1インチの線とヘッダの距離
+Length between the header and a line one inch from the top of the page.
 
 topskip
 \addtolength{\topskip}{LENGTH}
-本文の箱の上端と一行目のテキストとの間隔
+Length between top of the body to the first line of the text.
 
 parindent
 \setlength{\parindent}{LENGTH}
-\parindent	段落の先頭の字下げ幅.
+Width of indentation at the beginning of a paragraph.
 
 linewidth
 \addtolength{\linewidth}{LENGTH}
-\linewidth	行の幅.
+Width of lines.
 
 baselineskip
 \addtolength{baselineskip}{LENGTH}
-\baselineskip	行のベースライン間の最低限の高さ.
+Minimum height between baselines (bottom of a line).
 
 baselinestretch
 \renewcommand{baselinestretch}{1.5}
-\baselinestretch \baselineskip に乗ずる係数.		(default=1)
-(* \setlengthなどではなく、\renewcommandで再定義する。)
+Value to multiply \baselineskip.  (default is 1)
+(* Redefine using \renewcommand.  Don't use \setlength.
 
 parskip
 \addtolength{\parskip}{LENGTH}
-\parskip	段落前の垂直スペース.
+Vertical space before a paragraph.
 
 columnsep
 \addtolength{\columnsep}{LENGTH}
-\columnsep	2段組みの時の段間の幅.
+Width between columns in a two column environment.
 
 columnseprule
 \addtolength{\columnseprule}{LENGTH}
-二段組の時の段間の罫線の太さ.
+Width of ruler to separate columns in a two column environment.
+(default is 0pt)
 
 columnwidth
 \addtolength{\columnwidth}{LENGTH}
-二段組の時には (\textwidth - \columnsep)/2
-そうでない時は、\textwidth
-
-
-columnseprule
-\addtolength{columnseprule}{LENGTH}
-\columnseprule	2段組みの時の段間の罫線の幅.		(default=0pt)
+(\textwidth - \columnsep)/2 in a two column environment.
+Otherwise, equal to \textwidth.
 
 mathindent
 \addtolength{mathindent}{LENGTH}
-\mathindent	スタイルオプションで fleqn を指定した場合の、
-		左マージンからの数式の字下げ幅.
+Width of indentation of a equation from the left margin, when fleqn is
+defined as style option.
 
 LaTeX
 \LaTeX
-\LaTeX のロゴを表示。\LaTeX の定義は以下の通り。
+Display \LaTeX logo. Definition of \LaTeX is;
 \def\LaTeX{{\rm L\kern-.36em\raise.3ex\hbox{\sc a}\kern-.15em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 fragile
-** LaTeX用語 **
-引数によって展開結果が変わるようなコマンドをいう。
-その逆は robust なコマンド。
+** LaTeX term **
+Any command which expanded result changes by an argument.
+Opposite is a robust command.
 
 robust
-** LaTeX用語 **
-展開結果が常に変わらないようなコマンドをいう。
-フォント/サイズ指定子、長さコマンド、数式モード中に使う多くのコマンドは
-robustなコマンド。
-(maketitle型コマンドのうちオプション引数を全くとらないものと考えて良い)
+** LaTeX term **
+Commands which expanded results are always the same.
+Font type/size selection commands, length commands, and most commands
+used within math mode is robust.
+(maketitle type commands that don't take any arguments)
 
 protect
-\protect「fragileなコマンド」
-引数によって結果が変わるようなコマンドを「fragileなコマンド」と言う。
-一方、引数がいろいろな箇所で参照されるコマンドを「動く引数を取るコマンド
-と言う。これは chapter や caption など目次などから参照される引数をとるも
-のや、tabular/array 環境の @ 表現が該当する。
+\protect `a fragile command'
+Commands that the result changes according to it's arguments are
+called "fragile commands".  When an argument is referenced in more
+than one place, the command is said to "take a moving argument".
+chapter and caption, whose argument will be used in the table of
+contents, or an @ in an tabular/array environment are examples.
 
-さて、これらの「動く引数を取るコマンド」の引数に「fragileなコマンド」を
-与える時に(fragileなコマンドの直前に)使うのが \protect である。以下は典
-型的な利用例である。
+When a "fragile command" is used in a "moving argument", it must be
+preceded by a \protect.  Following is an example.
 
 \newcommand{\thissystem}[1]{YaTeX version #1}
-\chapter{\protect \thissystem{1.50}について}
+\chapter{About \protect \thissystem{1.50}}
 
 newcommand
-\newcommand{\コマンド名}[引数の数]{定義}
-「コマンド名」を「引数の数」個の引数を取る「定義」であるマクロとして定義
-する。定義中でn番目の引数は #n として参照する。
+\newcommand{\NAME}[ARGS]{DEF}
+Define a macro \NAME as DEF, taking ARGS number of arguments.  The nth
+argument will be referred as #n in the definition.
+If used as
 	\newcommand{\foo}[1]{\underline{#1}}
-とすると \foo{bar} は \underline{bar} と展開される。したがってフォント指
-定子を含む場合newcommandの{}につられて、
+\foo{bar} will be expanded to \underline{bar}.  When a font selection
+command is used as
 	\newcommand{\foo}[1]{\bf #1}
-とすると \foo{bar} がテキスト中で \bf bar と展開されてしまうので、
+\foo{bar} will be expanded as \bf bar in the text, so, it must be used as
 	\newcommand{\foo}[1]{{\bf #1}}
-としなければならない。
 
-  「コマンド名」のマクロが既に定義されている場合はエラーとなる。再定義す
-る場合は、\renewcommandを使う。
+If NAME is already defined as a macro, it will return an error.  To
+redefine, use \renewcommand.
 
 renewcommand
-\renewcommand{\コマンド名}[引数の数]{定義}
-既に定義されているコマンドを別の内容で再定義する。
-以下は \newcommand の説明。
+\renewcommand{\NAME}[ARGS]{DEF}
+Redefine an already defined command.
 <refer newcommand>
 
 newenvironment
-\newenvironment{環境名}[引数の数]{定義1}{定義2}
-新たな環境を定義する。
-\begin{環境名}の時の展開内容を「定義1」に\end{環境名}の時の展開内容を
-「定義2」に記述する。
-	\newcommand{\環境名}{定義1} \def{\end環境名}{定義2}
-と同値。
+\newenvironment{NAME}[ARGS]{DEF1}{DEF2}
+Define a new environment.
+\begin{NAME} will be replaced by DEF1 and \end{NAME} will be replaced
+by DEF2.  Same as
+	\newcommand{\NAME}{DEF1} \def{\end{\NAME}}{DEF2}
 
 renewenvironment
-\renewenvironment{環境名}[引数の数]{定義1}{定義2}
-既に定義されている「環境名」を別の内容で再定義する。
-以下は、\newenvironmentの説明。
-
+\renewenvironment{NAME}[ARGS]{DEF1}{DEF2}
+Redefine an environment NAME that already exists.
 <refer newenvironment>
 
 typeout
-\typeout{メッセージ}
-タイプセット中に「メッセージ」を端末に出力する。
+\typeout{MESSAGE}
+Output MESSAGE to the terminal while typesetting.
 
 typein
-\typein{メッセージ}	\typein[\マクロ]{メッセージ}
-タイプセット中に「メッセージ」をプロンプトに出し、入力した結果を実行する。
-第二の書式では、「\マクロ」を入力したものに定義する。
+\typein{MESSAGE}	\typein[\MACRO]{MESSAGE}
+Output MESSAGE to terminal and execute the input.
+In the second form, \MACRO will be defined as the input.
 
 par
 \par
-段落の区切りの役割をする。空行と同じ。
+Used to separate paragraphs.  Same as a blank line.
 
 everypar
 \everypar
@@ -240,264 +237,269 @@ RTFM
 
 nopagebreak
 \nopagebreak[i]		(i = 0,1,2,3,4)
-改頁を強さiで抑制する([i]を省略すると4)。
+Prevents pages to be broken by the strength of i.  (default is 4)
 
 pagebreak
 \pagebreak[i]		(i = 0,1,2,3,4)
-改頁を強さiで促す([i]を省略すると4)。
+Forces pages to be broken by the strength of i.  (default is 4)
 
 linebreak
 \linebreak[i]		(i = 0,1,2,3,4)
-改行を強さiで促す([i]を省略すると4)。
+Forces lines to be broken by the strength of i.  (default is 4)
 
 nolinebreak
 \nolinebreak[i]		(i = 0,1,2,3,4)
-改行を強さiで抑制する([i]を省略すると4)。
+Prevents lines to be broken by the strength of i.  (default is 4)
 
 samepage
 \samepage
-改頁を禁止する。
+Prevents page to be broken.
 RTFM
 
 obeycr
 \obeycr
-<CR> を \\. に定義する。→\restorecr
+Define <CR> as \\.  see \restorecr
 
 restorecr
 \restorecr
-\obeycrで変更した<CR>の定義を元に戻す。
+Restore <CR>'s definition changed by \obeycr.
 
 \
-\\		\\[長さ]
-(任意の場所で)改行する。段落中では、\newline と同じ。
-オプション引数の[長さ]を指定すると、次の行との間隔を
-\vspace{LENGTH}によって確保する。
+\\		\\[LENGTH]
+
+Breaks a line at any given point.  Same as \newline if used within a
+paragraph.  If an option argument LENGTH is given, vertical space to
+next line will be \vspace{LENGTH}.
 
 addvspace
-\addvspace{スキップ}
-縦方向の間隔に「スキップ」の値を足す。ただし
-\addvspace{S1} \addvspace{S2} と複数の値を同時に指定しても
-\addvspace{S1,S2のうち大きいほう} と同値になる。
+\addvspace{SKIP}
+Adds space equal to SKIP to vertical space.  If more than one values
+are given as \addvspace{S1} \addvspace{S2}, it will be the same as
+\addvspace{the larger of S1, S2}.
 
 vspace
-\vspace{間隔}		\vspace*{間隔}
-垂直方向に「間隔」ぶんのスペースを足す。
-\vspace* はどんな場所でもスペースを足すが、\vspace はページの先頭や
-末尾でははたらかない。
+\vspace{LENGTH}		\vspace*{LENGTH}
+Adds vertical space of LENGTH.
+\vspace* will add space at any given position, but \vspace will not
+add at beginning or end of a page.
 
 vspace*
-\vspace{間隔}		\vspace*{間隔}
-垂直方向に「間隔」ぶんのスペースを足す。
-\vspace* はどんな場所でもスペースを足すが、\vspace はページの先頭や
-末尾でははたらかない。
+\vspace{LENGTH}		\vspace*{LENGTH}
+Adds vertical space of LENGTH.
+\vspace* will add space at any given position, but \vspace will not
+add at beginning or end of a page.
 
 hspace
-\hspace{間隔}		\hspace*{間隔}
-水平方向に「間隔」ぶんのスペースを足す。
-\hspace* はどんな場所でもスペースを足すが、\hspace は行の先頭や末尾では
-はたらかない。
+\hspace{LENGTH}		\hspace*{LENGTH}
+Adds horizontal space of LENGTH.
+\hspace* will add space at any given position, but \hspace will not add
+at beginning or end of a line.
 
 hspace*
-\hspace{間隔}		\hspace*{間隔}
-水平方向に「間隔」ぶんのスペースを足す。
-\hspace* はどんな場所でもスペースを足すが、\hspace は行の先頭や末尾では
-はたらかない。
+\hspace{LENGTH}		\hspace*{LENGTH}
+Adds horizontal space of LENGTH.
+\hspace* will add space at any given position, but \hspace will not add
+at beginning or end of a line.
 
 smallskip
 \smallskip
-垂直方向に小さな間隔を空ける。
+Put a small vertical space.
 \def\smallskip{\vspace\smallskipamount}
 
 medskip
 \medskip
-垂直方向に中くらいの間隔を空ける。
+Put a medium vertical space.
 \def\medskip{\vspace\medskipamount}
 
 bigskip
 \bigskip
-垂直方向に大きな間隔を空ける。
+Put a big vertical skip.
 \def\bigskip{\vspace\bigskipamount}
 
 ,
 \,
-狭いスペースを空ける。段落モード、LRモード、数式モードいずれでも利用可。
-クォートの中にクォートを書くときなどに用いる。
-例: ``\,`Foo', he said.''
-数式モードで使えるスペースには以下のものがある:
-	\:	少し広い
-	\!	負で狭い
-	\;	広い
+Opens a thin space.  Can be used in paragraph mode, LR mode, or math mode.
+Used to write a quote within a quote.
+example: ``\,`Foo', he said.''
+Spaces that can be used in math mode are:
+	\:	medium space
+	\!	negative and thin space
+	\;	thick space
 
 :
 $\:$
-少し広いスペース。数式モードのみ。
+Medium space.  Math mode only.
 
 !
 $\!$
-狭い負のスペース。数式モードのみ。
+Negative thin space.  Math mode only.
 
 ;
 $\;$
-広いスペース。数式モードのみ。
+Thick space.  Math mode only.
 
-@whilenum
-\@whilenum TEST \do {BODY}  
-この辺あとで
+whiledo{TEST}{BODY}
+Repeat BODY while TEST is true.
 
 nofiles
 \nofiles
-プリアンブルで宣言すると、.aux, .idx, .lof, .lot, .toc ファイルの作成が
-抑制される。
+If \nofiles is in the preamble, .aux, .idx, .lof, .lot, .toc files will
+not be made.
 
 includeonly
 \includeonly{sub1}	\includeonly{sub1,sub3}
-\include{}で読み込むファイルのうち、実際に読み込み処理するものを指定する。
-(.texは省略可)
-\includeonlyの引数リストにないファイルはまったく処理されない、または前回
-以前に処理されている場合そこから全く変更がないものとして扱われる。
+Appoints actual files to be read and processed by \include{}.  (.tex can
+be suppressed)
+Files not given in the argument list of \includeonly will not be
+processed at all.  If the file has been processed before, it will be
+treated as if there were no changes from then.
 
 include
 \include{FILE}
+Same as
 \clearpage \input{FILE} \clearpage
-と同じはたらきをする。
 
 input
 \input{FILE}
-FILE.tex がそこにあるかのように処理を続ける。
+Process as if FILE.tex has been inserted at that point.
 
 setcounter
 \setcounter{FOO}{VAL}
-カウンタFOOの値をVALに設定する。
+Set counter FOO's value to VAL.
 
 addtocounter
 \addtocounter{FOO}{VAL}
-カウンタFOOの値にVALを加える。
+Add value VAL to counter FOO.
 
 newcounter
 \newcounter{COUNTER}[OLDCTR]
-新しいカウンタCOUNTERを設定する。
-オプション引数[OLDCTR]を指定すると、既存のカウンタOLDCTRの値が
-\stepcounter もしくは \addtocounter で変更されるたびにCOUNTERの値もリセッ
-トされる。
+Defines a new counter COUNTER.
+If an optional argument OLDCTR is given, COUNTER's value will be reset
+every time OLDCTR's value is changed by \stepcounter or \addtocounter.
 
 value
 \value{COUNTER}
-COUNTERの値を返す。\protect を前置してはならない。
+Returns value of COUNTER.  Must not be preceded by \protect.
 
 stepcounter
 \stepcounter{FOO}
-カウンタFOOの値をインクリメントする。FOOに従うカウンタがあればそれらをリ
-セットする。
+Increments value of counter FOO.  Also resets any counter dependent to FOO.
 
 refstepcounter
 \refstepcounter{FOO}
-カウンタFOOの値をインクリメントする。FOOに従うカウンタがあればそれらをリ
-セットする。\stepcounterとの違いは、\refstepcounter{FOO} の直後に 
-\label{hoge} があった場合に、\ref{hoge} の値が \value{FOO} を持つように
-「\ref値」を設定することである。
+Increments value of counter FOO.  Also resets any counter dependent to
+FOO.  Defers with \stepcounter as; if \label{hoge} follows immediately
+after \refstepcounter{FOO}, \ref{hoge}'s value will be set to \value{FOO}.
 
 arabic
 \arabic{COUNTER}
-アラビア数字でCOUNTERの値を出力。
+Output COUNTER's value in arabic numerals.
 
 roman
 \roman{COUNTER}
-小文字のローマ数字でCOUNTERの値を出力。
+Output COUNTER's value in lower case roman numerals.
 
 Roman
 \Roman{COUNTER}
-大文字のローマ数字でCOUNTERの値を出力。
+Output COUNTER's value in upper case roman numerals.
 
 alph
 \alph{COUNTER}
-小文字の英字でCOUNTERの値を出力。
+Output COUNTER's value in lower case alphabet.
 
 Alph
 \Alph{COUNTER}
-大文字の英字でCOUNTERの値を出力。
+Output COUNTER's value in upper case alphabet.
 
 fnsymbol
 \fnsymbol{COUNTER}
-脚注シンボル(1 = *, 2 = \dagger, ...) でCOUNTERの値を出力。数式モードのみ。
+Output COUNTER's value in footnote symbols (1 = *, 2 = \dagger, ...).
+Math mode only.
 
 label
 \label{LABEL}
-ラベルLABELの値をその時の「\ref値」に設定する。
-この値は、\ref{LABEL}によって参照される。また\pageref{LABEL}により
-\label{LABEL}の存在するページ番号が参照される。
-「\ref値」とは \section などのセクションコマンド、enumerate環境での
-\item コマンド、theorem環境などによって設定される値である。例えば、
-enumerate環境中の \item の直後ではそのitemの番号が「\ref値」となり、
-そこにある \label{LABEL} はitemの番号をLABELにセットする。
+Set value of LABEL to \ref VALUE.
+This value is referred by \ref{VALUE}.  \pageref{LABEL} refers to the
+page number \label{LABEL} exists. 
+``\ref VALUEs'' are, section commands as \section, \item commands within
+an enumerate environment, values set by a theorem environment.  For
+example, immediately after a \item of a enumerate environment, the item
+number will be the ``\ref VALUE''.  \label{LABEL} will set the item
+number to LABEL.
 
 ref
 \ref{LABEL}
-\label{LABEL}で設定したLABELの値を参照する。
-本文中で設定されたラベルにたいしてはページ番号が、
-図表中で設定されたラベルは図表番号が、
-enumerateされたitemで設定されたラベルにたいしては、item番号が返される。
+Refer to LABEL's value set by \label{LABEL}.
+Examples of values returned are; page numbers for LABELs set in the main
+text, table numbers for LABELs set in a table, and the item number for
+LABELs set in an item of the enumerate environment.
 
 pageref
 pageref{LABEL}
-\label{LABEL}の存在するページ番号を参照する。
+Refer to the page number where \label{LABEL} exists.
 
 (
-\( 数式 \)
-文中数式を組む。
-\begin{math} 数式 \end{math}
-と同値。\( および \)は fragile.
+\( EQUATION \)
+Produce an in-text equation.
+Same as
+\begin{math} EQUATION \end{math}
+\( and \) are fragile.
 
 )
 \( x^2 = 4 \)
-文中数式を組む。
-\begin{math} 数式 \end{math}
-と同値。\( および \)は fragile.
+Produce an in-text equation.
+Same as
+\begin{math} EQUATION \end{math}
+\( and \) are fragile.
 
 [
-ディスプレイ数式を組む。
-\[ 数式 \]
-\begin{displaymath} 数式 \end{displaymath}
-と同値。\[ および \]は fragile.
+\[ EQUATION \]
+Produce an equation in display mode.
+Same as 
+\begin{displaymath} EQUATION \end{displaymath}
+\[ and \] are fragile.
 
 )
-\[ 数式 \]
-ディスプレイ数式を組む。
-\begin{displaymath} 数式 \end{displaymath}
-と同値。\[ および \]は fragile.
+\[ EQUATION \]
+Produce an equation in display mode.
+Same as 
+\begin{displaymath} EQUATION \end{displaymath}
+\[ and \] are fragile.
 
 equation
-\begin{equation} 数式 \end{equation}
-番号つきの数式をdisplaymath環境で組む。
+\begin{equation} EQUATION \end{equation}
+Produce a numbered equation in displaymath mode.
 
 eqnarray
-\begin{eqnarray} 方程式の並び \end{eqnarray}
-方程式の並びを3つの桁に整理して出力する。3つの桁は&記号によって、
-「左辺 & 等不等号 & 右辺」のように区切られる。例えば以下のようにする。
+\begin{eqnarray} EQNS \end{eqnarray}
+Produce equations aligned in three columns. The columns are separated by
+& as ``left member & sign & right member''.  For example,
 \begin{eqnarray}
  3x + 2y & = & 4 \\
   x - 4y & = & -5
 \end{eqnarray}
-eqnarray* 環境は数式番号を出力しないほかはeqnarray環境と同じである。
 
 eqnarray*
-\begin{eqnarray*} 方程式の並び \end{eqnarray*}
-数式番号を出力しないほかはeqnarray環境と同じである。
+\begin{eqnarray*} EQNS \end{eqnarray*}
+Same as eqnarray, except no equation numbers are produced.
 
 frac
-\frac{分子}{分母}
- 分子
-------   のような分数形式を組む。{分子 \over 分母} と同じ。
- 分母
+\frac{NUMER}{DENOM}
+Produce a fraction as
+ NUMER
+------ 
+ DENOM
+Same as {NUMER \over DENOM}
 
 sqrt
-\sqrt[N]{式}
-「式」のN乗根をあらわす数式。[N]を省略すると平方根。
+\sqrt[N]{EQUATION}
+Produces the Nth power of EQUATION.  Gives a square root if [N] is not given.
 
 lefteqn
-\lefteqn{式}
-ディスプレイ数式モードにおいて、「式」が幅ゼロであるとみなして、左寄せす
-る。たとえばeqnarray環境において、左辺が長くなってしまう場合に、行を
-折り畳むために利用する。
+\lefteqn{EQUATION}
+In display math mode, presume EQUATION has zero width and print it flush left.
+Used in eqnarray environment when the left member is too long and needs
+folding.
 \begin{eqnarray}
  \lefteqn{a_1 + a_2 + \cdots + a_n =} \\
  	&	&	a_1 + b_1 + \cdots + z_1 + \\
@@ -505,209 +507,208 @@ eqnarray* 環境は数式番号を出力しないほかはeqnarray環境と同じである。
 \end{eqnarray}
 
 center
-\begin{center} 内容 \end{center}
-「内容」を中央寄せする。各行は\\によって改行位置を指定する。
-→ \centering
+\begin{center} TEXT \end{center}
+Center TEXT.  Each line must be separated by \\.
+<refer \centering>
 
 flushright
-\begin{flushright} 内容 \end{flushright}
-「内容」を右寄せする。各行は\\によって改行位置を指定する。
-→ \raggedright
+\begin{flushright} TEXT \end{flushright}
+Align end of each line with right margin.  Each line must be separated by \\.
+<refer \raggedright>
 
 flushleft
-\begin{flushleft} 内容 \end{flushleft}
-「内容」を左寄せする。各行を\\によって改行位置を指定するとその位置で改行
-するが、指定しないと適当な行長のところで改行してくれる。
-→ \raggedleft
+\begin{flushleft} TEXT \end{flushleft}
+Align start of each line with left margin.  \\ can be given to decide
+point of line break.  Otherwise lines will be broken at an appropriate
+length.
+<refer \raggedleft>
 
 centering
 \centering 
-段落をセンタリングして組版する。
-たとえば table環境、figura環境の先頭で宣言すると環境の終りまでをセンタリ
-ングして組む。
+Produce a centered paragraph.
+Declared at the beginning of a table/figura environment, it will center
+until the end of the environment.
 
 raggedright
 \raggedright
-段落を右寄せして組版する。
+Produce flush-left paragraphs.
 
 raggedleft
 \raggedleft
-段落を左寄せして組版する。
+Produce flush-right paragraphs.
 
 raggedbottom
 \raggedbottom
-組版する時に各ページの高さに多少のずれがあっても許容する。
-プリアンブルで指定する。
-→\flushbottom
+Allow height of each page to vary.
+Declared in the preamble.
+<refer \flushbottom>
 
 flushbottom
 \flushbottom
-組版する時に各ページの高さを正確にそろえる。
-プリアンブルで指定する。
-→\raggedbottom
+Make all text pages the same height.
+Declared in the preamble.
+<refer \raggedbottom>
 
 sloppy
 \sloppy
-\sloppy を指定すると、各行を必ず右マージンで折り返す代わりに、
-単語間の空白を大目に見る。
-→\fussy
+Always breaks the line at the right-hand margin, but allows too much
+space between words.
+<refer \fussy>
 
 fussy
 \fussy
-通常の組版規則に戻る。
-→\sloppy
+Return to normal line breaking.
+<refer \sloppy>
 
 sloppypar
-\begin{sloppypar} 段落 \end{sloppypar}
-段落を \sloppy で組む。
-→\sloppy
+\begin{sloppypar} PARAGRAPH \end{sloppypar}
+Produce PARAGRAPH in \sloppy.
+<refer \sloppy>
 
 verbatim
 \begin{verbatim} ... \end{verbatim}
 The verbatim environment uses the fixed-width \tt font, turns blanks into 
-spaces, starts a new line for each carrige return (or sequence of 
+spaces, starts a new line for each carriage return (or sequence of 
 consecutive carriage returns), and interprets EVERY character literally.
 I.e., all special characters \, {, $, etc. are \catcode'd to 'other'.
 
 verbatim*
 \begin{verbatim*} ... \end{verbatim*}
+The verbatim* environment is the same to verbatim, except that spaces
+print as the TeXbook's space character instead of as blank spaces.
 <refer verbatim>
 
-The verbatim* environment is the same, except that spaces
-print as the TeXbook's space character instead of as blank spaces.
-
 list
-\begin{list}{デフォルトラベル}{整形パラメータ} ... \end{list}
-リスト環境に入る。リスト環境では \item で指定された各項目を一定の字下げ
-で列挙する。第1引数には \item のオプション引数のラベルが省略された時のデ
-フォルトラベルを指定し、第2引数には各itemを置く時に処理されるパラメータ
-を指定する。
-例:
+\begin{list}{LABEL}{PARAMETER} ... \end{list}
+Enter list environment.  Each \item will be listed with an indent.
+First argument gives the default label when \item's optional argument is
+omitted. Second argument gives parameters to be processed for each item.
+example:
 \begin{list}%
  {$\diamond$}
  {\addtolength{\leftmargin}{4em}}
- \item 第1引数には\verb|\item| にオプション引数をつけなかった時にふる、
-       デフォルトのラベルを与える。
- \item 第2引数には各itemを置く時に処理されるパラメータを与える。
- \item[*] のようにオプション引数をつけるとそれがラベルとなる。
+ \item First argument is the default label when \verb|\item|'s optional
+	   argument is given.
+ \item Second argument will be processed for each item.
+ \item[*] If a optional argument is given such as this, it will be the label.
 \end{list}
 
-  list環境の体裁を制御する変数には以下のものがある(括弧内は既定値)。
-水平方向:
-<refer list環境の体裁を制御する変数>
+  Variables to control the list environment are as follow; (default value)
+horizontal:
+<refer variables to control list environment>
 
-list環境の体裁を制御する変数
-\labelwidth	itemのラベルの幅
-\labelsep	ラベルの右端と最初のアイテムのテキストとの間隔
-\leftmargin	list環境内での左マージン
-\rightmargin	同右マージン (0pt)
-\itemindent	itemの直前に加えられるインデント幅 (0pt)
-\linewidth	一行の幅
-\listparindent	各パラグラフの先頭のインデント(ただし\itemの付いている先
-		頭のパラグラフを除く)(0pt)
+variables to control list environment
+\labelwidth	width of label
+\labelsep	space between right of label and text of first item
+\leftmargin	left margin within list environment
+\rightmargin	right margin within list environment (0pt)
+\itemindent	width of indent preceding item (0pt)
+\linewidth	width of line
+\listparindent	indent for each paragraph (except first paragraph with \item)
+                (0pt)
 
-垂直方向:
-\topsep		list環境に入る前のパラグラフと最初のitemとの間隔
-\partopsep	list環境で新しいパラグラフをはじめる時に\topsepに加えら
-		れる付加的な間隔
-\itemsep	連続するitemどうしの間隔
-\parsep		一つのitem内でのパラグラフどうしの間隔
-
+vertical:
+\topsep		space between last paragraph before list environment and
+            first item
+\partopsep	space added to \topsep when starting a new paragraph in list
+            environment
+\itemsep	space between successive items
+\parsep		space between paragraphs within the same item
 
 itemize
-\begin{itemize} \item アイテム1 ... \item アイテムn \end{itemize}
-項目を列挙するための環境。
-最大4つまでネストできる。
-各レベルのitemの頭につく記号は、\labelitemi, \labelitemii,
-\labelitemiii, \labelitemiv で制御される。
+\begin{itemize} \item ITEM1 ... \item ITEMn \end{itemize}
+Produce a bulleted list.
+Can be nested to four levels.
+``bullets'' shown at top of each item of the four levels are controlled
+by \labelitemi, \labelitemii, \labelitemiii, \labelitemiv.
 
-itemize環境の体裁を制御する変数には以下のものがある。
-<refer list環境の体裁を制御する変数>
-
+Variables to control the itemize environment are;
+<refer variables to control list environment>
 
 enumerate
-\begin{enumerate} \item アイテム1 ... \item アイテムn \end{enumerate}
-項目を番号つきで列挙するための環境。
-最大4つまでネストできる。
-各レベルのitemの頭につく番号は、enumi, enumii, enumiii, enumiv
-が保持していて、各itemのラベルは、\labelenumi, ..., \labelenumiv
-で生成される。また、\p@enumN\theenumN は \ref値を設定する。
-(Nはレベルの深さ。\ref値については\refの説明を参照せよ)
-たとえば
+\begin{enumerate} \item ITEM1 ... \item ITEMn \end{enumerate}
+Produce a numbered list.
+Can be nested to four levels.
+Numbers for items on each level are held in enumi, enumii, enumiii, enumiv.
+Each item's label are produced by \labelenumi, ..., \labelenumiv.
+\p@enumN\theenumN will set \ref's value.  (N is the depth of level.
+refer \ref for value of \ref)
+For example, if declared
 \def\theenumii{\alph{enumii}}
 \def\p@enumii{\theenumi\theenumii}
 \def\labelenumii{(\theenumii)}
-とすると \ref値が 3a などのように設定される。
+\ref's value will be 3a.
 
-enumerate環境の体裁を制御する変数には以下のものがある。
-<refer list環境の体裁を制御する変数>
+Variables to control enumerate environment are,
+<refer variables to control list environment>
 
 item
 \item			\item[LABEL]
-itemize, enumerate, description 環境などで項目を開始する。
-[LABEL]を指定するとラベルとしてLABELを出力する。
+Start an item in itemize, enumerate, description environment.
+Output LABEL if [LABEL] is given.
 
 description
-\begin{description} \item[見出し単語] 説明 ... \end{description}
-[見出し単語]を見出しとする
+\begin{description} \item[LABEL] CONTENTS ... \end{description}
+Produce [LABEL] as a label.
 
 subitem
-\subitem 項目
-サブアイテムを定義。
+\subitem ITEM
+Define a subitem.
 
 subsubitem
-\subsubitem 項目
-サブサブアイテムを定義。
+\subsubitem ITEM
+Define a subsubitem.
 
 makebox
-\makebox[WID][POS]{オブジェクト}	\makebox(X,Y)[POS]{オブジェクト}
-第1の書式では、オブジェクトをWIDで指定した幅として、\hbox 内の
-POSで指定した場所に配置する。POSにlを指定すると左寄せ、rを指定すると右寄せ、
-何も指定しないとセンタリングされる。
-第2の書式では、picuture環境で大きさ(X,Y)の(\unitlengthを基準とする)
-\hbox にオブジェクトを配置する。配置位置POSは第1の書式と同様。
+\makebox[WID][POS]{OBJECT}	\makebox(X,Y)[POS]{OBJECT}
+First form will place OBJECT at position POS and width WID in a \box.
+For POS, object will be placed flush-left if l, flush-right if r, and
+centered if nothing is given
+In the second form, object will be placed in a \hbox sized (X,Y) (in
+\unitlength) within a picture environment.  POS is the same as the first form.
 
 mbox
-\mbox{オブジェクト}
-\makebox{オブジェクト}と同じ。
+\mbox{OBJECT}
+Same as \makebox{OBJECT}.
 
 newsavebox
 \newsavebox{\CMD}
-新規のボックス保存用コマンドを定義する。\CMDは \savebox コマンドで
-ボックスを保存するために使う。\newsaveboxで宣言したコマンド名は
-常にグローバルとなる。
+Define a new box saving command.  \CMD is used in a \savebox command to
+save boxes.  Commands defined by \newsavebox are always global.
 
 savebox
-\savebox{\CMD}{テキスト}
-ボックスを組む内容である「テキスト」の結果を\CMDに保存する。
-「テキスト」は \makebox への引数と全く同じであるが、「テキスト」を
-処理した結果はその場に表示はしない。\usebox{\CMD}により処理したボックス
-が置かれる。
+\savebox{\CMD}{TEXT}
+Save results of TEXT in \CMD to be boxed.
+TEXT is the same as the argument of \makebox, but the results of
+processing TEXT is not displayed in-place.  Boxes processed by
+\usebox{\CMD} will be placed.
 
 sbox
-\sbox{\CMD}{テキスト}
-\saveboxと同じ。sboxはrobust, saveboxはfragile
+\sbox{\CMD}{TEXT}
+Same as \savebox.  \sbox is robust, and \savebox is fragile.
 
 framebox
-\framebox{オブジェクト}
-「オブジェクト」に枠をつけて\makeboxと同様の処理をする。
-枠の線の太さは \framerule、オブジェクトとの間隔は \framesep で決まる。た
-だしpicture環境で \framebox(X,Y){オブジェクト}とした場合は、picture環境
-用の線の太さに従い、外枠とオブジェクトとの間隔は空けられない。
+\framebox{OBJECT}
+Do the same thing as \makebox with a frame.
+The frame's width and space between the object are decided by \framerule
+and \framesep.  If used as \framebox(X,Y){OBJECT} in a picture
+environment, width of frame will be dependant to the picture
+environment's line width, and space between the object and frame can not
+be opened.
 
 fbox
-\fbox{オブジェクト}
-\framebox{オブジェクト}と同じ。
-\fboxはrobust, \frameboxはfragile
+\fbox{OBJECT}
+Same as \framebox{OBJECT}.
+\fbox is robust, \framebox fragile.
 
 parbox
 \parbox[POS]{WIDTH}{TEXT}
-TEXTをWIDThの幅で組んでボックスを作成する。ボックスの位置はPOSによって
-c : センタリング(デフォルト)
-b : ボックスの一番下の線が現テキストのラインに合う
-t : ボックスの一番上の線が現テキストのラインに合う
-のように決められる。\parboxではパラメータが以下のようにリセットされる。
+Make a box of width WIDTH using TEXT.  The box's position by POS is;
+c : centering (default)
+b : bottom of box matches present text
+t : top of box matches present text
 
+In \parbox, parameters will be reset as;
 \parskip          = 0pt
 \linewidth        = \hsize
 \@totalleftmargin = 0pt
@@ -720,64 +721,65 @@ t : ボックスの一番上の線が現テキストのラインに合う
 
 minipage
 \begin{minipage}[pos]{WIDTH}  TEXT   \end{minipage}
-\parbox とほぼ同様WIDTHの幅のTEXTをボックスとして組む。ボックスの位置は
-POSによって
-c : センタリング(デフォルト)
-b : ボックスの一番下の線が現テキストのラインに合う
-t : ボックスの一番上の線が現テキストのラインに合う
-のように決められる。
-parboxと違い、TEXTは通常のパラグラフとして組まれる。
+Make a box of width WIDTH using TEXT as \parbox.  The box's position by
+POS is; 
+c : centering (default)
+b : bottom of box matches present text
+t : top of box matches present text
+TEXT will be processed as a normal paragraph, differing from \parbox.
 
 rule
 \rule[RAISED]{WIDTH}{HEIGHT}
-幅 WIDTH x 高さ HEIGHT の罫線を作る。RAISEDが指定された場合、その分だけ
-上に上げられる。
+Make a rule of WIDTH x HEIGHT.  If RAISED is given, will be raised that
+amount.
 
 underline
 \underline{TEXT}
-TEXTに下線をつけて表示。
+Underline TEXT.
 
 raisebox
 \raisebox{DISTANCE}[HEIGHT][DEPTH]{BOX}
-BOXをDISTANCEだけ上げて組む。
-HEIGHT, DEPTH を指定すると、TeXから見たBOXの「高さ」と「深さ」
-(註:これらの用語についてはTeXBookなどを参照のこと)
-を HEIGHT, DEPTH に指定する。
+Raise BOX by DISTANCE.
+If HEIGHT and DEPTH are given, TeX will take it as the height and depth
+of the box.
+(see TeXBook for more info)
 
 tabbing
 \begin{tabbing} \= text1.1 \= text1.2 \\ \> text2.1 \> text2.2 \end{tabbing}
-桁揃えを行う環境を作る(入れ子不可)。例えば、
+Creates an environment of aligned columns (nesting allowed).  For example,
 \begin{tabbing}
- \= 項目1 \hspace*{2em} \= 項目2 \hspace*{3em}	\= 項目3 \\
- \> いろは		\> にほへ		\> とちり \+ \\
- 			\> ぬるを		\> わかよ \\
-			\> たれそ \- \\
- \> つねな		\> らむう		\> ゐのお
+ \= ITEM1 \hspace*{2em} \= ITEM2 \hspace*{3em}	\= ITEM3 \\
+ \> aabbcc		\> ddeeff		\> gghhii \+ \\
+ 			\> jjkkll		\> mmnnoo \\
+			\> ppqqrr \- \\
+ \> ssttuu		\> vvwwxx		\> yyzzzz
 \end{tabbing}
-上のtabbing環境は以下のように3つのタブ位置で組まれる。
-  (1番目)   (2番目)     (3番目)
-   いろは    にほへ      とちり
-             ぬるを      をかよ
-             たれそ
-   つねな    らむう      ゐのお
-        \2em/      \3em/
-tabbing環境におけるタブ位置操作コマンドは以下の通り(nは1から):
-\=	n番目のタブ位置を現在位置に設定しタブカウンタ(n)を1進める
-\\	改行してタブカウンタをリセットする(n=1)
-\>	位置をn番目のタブ位置に設定し、カウンタを1進める
-\+	次の行のタブカウンタの初期値に1加える \+ \\ とすると次の行の最初
-	の \> は2番目のタブ位置を示す. \+ を複数書くとその数だけタブカウ
-	ンタの初期値が増える
-\-	\+とは逆に、次の行のタブカウンタの初期値から1引く
-\<	一つ前のタブカウンタに戻ってそのタブ位置をセット. 行頭のみ
-\'	\'以降を通常のタブ位置より \tabbingsep 分だけ右寄せして出力
-\`	\`以降のテキストをすべて右寄せして出力
-\pushtabs それまで用いていたタブストップ位置を全てpush
-\poptabs  それまで用いていたタブストップ位置を全てpop. \pushtabs と 
-	\poptabs は必ず対になっていなければならない. 入れ子可
-\aX	
-Xは = か ' か `   tabbing環境でない通常のアクセントは
-	\a= \a' \a` で表わす
+will be processed with three tab stops as,
+  (1st item)   (2nd item)     (3rd item)
+   aabbcc      ddeeff      gghhii
+               jjkkll      mmnnoo
+               ppqqrr
+   ssttuu      vvwwxx      yyzzzz
+         \2em/       \3em/
+Commands to control the tabbing environment are; (n starts from 1)
+\=	Sets the nth tab stop position to the current position and increment
+    the tab counter (n) by 1.
+\\	Start a new line and reset the tab counter (n=1)
+\>	Set the position to the nth tab stop and increment the tab counter by 1.
+\+	Add 1 to the next line's tab counter's initial value.  If written as
+    \+ \\, the next line's \> will give the position of the second tab
+    stop.  Multiple \+ will accumulate tab counter's initial value.
+
+\-	Reverse of \+.  Decrease initial value of tab counter for next line
+    by 1.
+\<	Decrease value of tab counter by 1 and set the tab stop.  Can be
+    only used at the beginning of a line.
+\'	Output at a position \tabbinsep right from the normal tab stop.
+\`	Output remaining text flush-right.
+\pushtabs Push all tab stop positions being used.
+\poptabs  Push all tab stop positions being used. \pushtabs and \poptabs
+          must be used in pairs.  Nesting allowed.
+\aX	In a tabbing environment, accents are produced by \a=, \a', \a`
 \kill	Without outputting text, parse tabbing definition.
 
 array
@@ -851,10 +853,10 @@ Here are the style parameters for the tabular environment.
 \arraystretch   : line spacing in array and tabular environments is done by
                   placing a strut in every row of height and depth 
                   \arraystretch times the height and depth of the strut
-                  produced by an ordinary \strut commmand.
+                  produced by an ordinary \strut command.
 
 Tabular environment cannot spread across pages.  `supertabular.sty'
-allow this.
+allows this.
 
 tabular*
 \begin{tabular*}{WIDTH}{PREAMBLE} ... \end{tabular*}
@@ -1125,8 +1127,8 @@ Specifies the bibdata files.
 bibliographystyle
 \bibliographystyle{STYLE}
 Style of numbering of bibliographies.
-plain	nomal
-unsrt	without sortingg
+plain	normal
+unsrt	without sorting
 alpha	gives tag like "Foo94"
 abbrv	omit the first name of author, publishing month, book title
 
@@ -1208,7 +1210,6 @@ The *-variants of these commands is the same, except that spaces
 print as the TeXbook's space character instead of as blank spaces.
 
 styleparameter
-まだ訳していないスタイルパラメータ。
 
 topfigrule
 \topfigrule
@@ -1279,83 +1280,15 @@ This is useful to make a page-acrossing title in a twocolumn page.
 
 YaTeX
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))
-おそらくあなたが今使っているこのモード。
-LaTeXを効率的に使うための多くの機能を盛り込んでいます。
+The mode you are probably using now.
+Bells and whistles for using LaTeX at a breeze.
 
-【発音について】
-yatex.elなどプログラムを指す時は「やてっく」、システムを指す時は「やちょ
-う」と読みます。
-
-【謝辞】
-以下の方々の御協力を頂きました。ここに感謝申し上げます。
-
-(順不同)
-峯恒憲さん(九州大)
-	Bibtex起動、typeset process の kill、エラー箇所の正しい判定
-	の要望その他を頂きました。
-
-森中秀明さん(アンリツ)
-	タイプセットバッファでの実行継続、lpq, bibtex起動、領域指定タイ
-	プセット後のプレビュー対象ファイルのデフォルト値の変更、
-	describe-mode、\verb の補完の要望、verbatim環境や\verbの中にある
-	\begin{}, \end{} を数えないようにする要望、などを頂きました。
-
-石坂裕毅さん(富士通)
-	YaTeX-get-error-file のバグレポートなどを頂きました。
-
-Bayardさん(asciinet)
-	min-outとの連係の不具合の報告を頂きました。
-
-Ｋけんさん(asciinet)
-	ms-dos固有の設定に関するバグレポートを頂きました。
-
-sa2cさん(asciinet)
-	Mule用のパッチを頂きました。
-
-桂川直己さん(筑波大)
-	数え切れないバグレポートと要望を頂きました。またVzへの移植版であ
-	る laitex(雷鳥) を作成されました。
-
-三平善郎さん(慶応大)
-	開き括弧の入力時の処理のモード分けのアイデアを頂きました。
-
-萩庭崇さん(慶応大)
-	begin型補完の内側に文字があった場合それらをインデントしてほしい
-	という要望を頂きました。
-
-田中健次郎さん(慶応大)
-	タイプセット時に未セーブ状態の関連ファイルをセーブして欲しいとい
-	う要望を頂きました。
-
-bauerさん(asciinet)
-	アクセント補完の要望とアクセント記号の規則の情報等を頂きました。
-
-佐々木たろうさん(asciinet)
-	数式環境の処理に関する多様なアイデア、ウィンドウ選択処理に関する
-	ユーザインタフェースの繊細な改善案などを頂きました。
-
-Deslarさん(asciinet)
-	byte-compile関係のバグ報告などを頂きました。
-
-tadfさん(asciinet)
-	Demacsでのプロセス起動時のインタフェースの不具合の報告などを頂き
-	ました。
-
-ほんまたけるさん(asciinet)
-	パラグラフ境界をLaTeX用に設定しなおす要望などを頂きました。
-
-TUSKさん(asciinet)
-	Texinfoドキュメント(初版)を作成して頂きました。
-
-横田和也さん(asciinet)
-	dviout起動時の工夫の案、ミニバッファで読み込むもののヒストリを分
-	けるアイデアのきっかけをいただき、ヘルプファイルの項目の提供をし
-	て頂きました。
-
-kanbai-anさん(asciinet)
-	日本語入力モード判定関数のバグを直すパッチなどを頂きました。
+[pronunciation]
+``ya-tek'' for programs as yatex.el, ``ya-cho'' when referring to the
+whole system. ``ya-cho'' in Japanese stands for ``wild bird''
 
 
 yatex
+(setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))
 <refer YaTeX>
 

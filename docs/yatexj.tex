@@ -1865,6 +1865,11 @@ Hierarchy バッファは通常ファイルヘッダとして、LaTeXのセクション宣言コマン
 ド指定行(-*- xxx -*-)が設定されている。
 @end defvar
 
+@defvar YaTeX-skip-default-reader
+Non-nil に設定するとsection型コマンドの引数入力時、アドイン関数がなければ
+ミニバッファでの読み込みをせずに入力を完了させる。
+@end defvar
+
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection カスタマイズ変数設定例

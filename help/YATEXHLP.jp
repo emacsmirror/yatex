@@ -136,17 +136,12 @@ NAMEという長さコマンドを新たに宣言する。
 
 columnseprule
 \addtolength{\columnseprule}{長さ}
-二段組の時の段間の罫線の太さ.
+二段組の時の段間の罫線の太さ.		(default=0pt)
 
 columnwidth
 \addtolength{\columnwidth}{長さ}
 二段組の時には (\textwidth - \columnsep)/2
 そうでない時は、\textwidth
-
-
-columnseprule
-\addtolength{columnseprule}{長さ}
-\columnseprule	2段組みの時の段間の罫線の幅.		(default=0pt)
 
 mathindent
 \addtolength{mathindent}{長さ}
@@ -343,6 +338,10 @@ $\;$
 @whilenum
 \@whilenum TEST \do {BODY}  
 この辺あとで
+
+whiledo{TEST}{BODY}
+TESTが真の間BODYを繰り返す。
+
 
 nofiles
 \nofiles
@@ -938,12 +937,12 @@ NAME環境のカウンタ形式は \theNAME コマンドを再定義する。これのデフォルトは
 
 author
 \author{著者名}
-\maketitleコマンドで出力する日付を設定する。
+\maketitleコマンドで出力する著者を設定する。
 複数の著者を書くときは \and で区切って名前を書く。
 
 date
 \date{日付}
-\maketitleコマンドで出力する著者名を設定する。
+\maketitleコマンドで出力する日付を設定する。
 \date を省略するとタイプセットした日の日付が出力される。
 
 thanks
@@ -1254,6 +1253,9 @@ sa2cさん(asciinet)
 るねきちさん(asciinet)
 	占い師だそうです。
 
+柱川さん(prc)
+	各所で暴れています。
+
 三平善郎さん(慶應大)
 	開き括弧の入力時の処理のモード分けのアイデアを頂きました。
 
@@ -1293,6 +1295,9 @@ TUSKさん(asciinet)
 
 Nop.Mさん(asciinet)
 	異なる環境での設定の不具合等のレポートを数多く頂きました。
+
+jaybirdさん(asciinet)
+	英語版のヘルプファイルを作成して頂きました。
 
 内山滋さん(成蹊大学)
 	日本語入力モード判定関数のバグを直すパッチ、section-view のバグ
