@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c ) 1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jul  8 00:48:40 1994 on figaro
+;;; Last modified Mon Jul 11 02:01:18 1994 on 98fa
 ;;; $Id$
 
 ;;;
@@ -75,6 +75,65 @@ When calling from a program, make sure to be in array/tabular environment."
     (YaTeX-array-what-column))
    (t (message "Not in array/tabuar environment.")))
 )
+
+(defun YaTeX-tabular-parse-format (&optional tabular*)
+  "Parse `tabular' format.
+Return the list of (No.ofCols PointEndofFormat)"
+  (let ((p (point)) elt boform eoform (cols 0))
+    (save-excursion
+      (if (null (YaTeX-beginning-of-environment t))
+	  (error "Beginning of tabular not found."))
+      (skip-chars-forward "^{")
+      (forward-list 1)
+      (if tabular*
+	  (progn (skip-chars-forward "^{")
+		 (forward-list 1)))
+      (skip-chars-forward "^{" p)
+      (if (/= (following-char) ?\{) (error "Tabular format not found."))
+      (setq boform (1+ (point))
+	    eoform (progn (forward-list 1) (1- (point))))
+      (if (> eoform p) (error "Non-terminated tabular format."))
+      (goto-char boform)
+      (while (< (point) eoform)
+	(setq elt (following-char))
+	(cond
+	 ((string-match (char-to-string elt) "clr") ;normal indicators.
+	  (setq cols (1+ cols))
+	  (forward-char 1))
+	 ((equal elt ?|)		;vertical
+	  (forward-char 1))
+	 ((string-match (char-to-string elt) "p@") ;p or @ expression
+	  (setq cols (+ (if (eq elt ?p) 1 0) cols))
+	  (skip-chars-forward "^{" p)
+	  (forward-list 1))))
+      (list cols (1+ eoform))))
+)
+;; Insert &
+(defun YaTeX-intelligent-newline-tabular (&optional tabular*)
+  "Parse current tabular format and insert that many `&'s."
+  (let*((p (point)) (format (YaTeX-tabular-parse-format tabular*))
+	(cols (car format)) (beg (car (cdr format)))
+	space hline)
+    (setq hline (search-backward "\\hline" beg t))
+    (goto-char p)
+    (setq space (if (search-backward "\t&" beg t) "\t" " "))
+    (goto-char p)
+    (YaTeX-indent-line)
+    (setq p (point))
+    (while (> (1- cols) 0)
+      (insert "&" space)
+      (setq cols (1- cols)))
+    (insert "\\\\")
+    (if hline (insert " \\hline"))
+    (goto-char p))
+)
+
+(defun YaTeX-intelligent-newline-tabular* ()
+  "Parse current tabular* format and insert that many `&'s."
+  (YaTeX-intelligent-newline-tabular t)
+)
+
+(fset 'YaTeX-intelligent-newline-array 'YaTeX-intelligent-newline-tabular)
 
 ;;;
 ;; Functions for tabbing environment
