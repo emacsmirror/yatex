@@ -2,7 +2,7 @@
 ;;; YaTeX sectioning browser.
 ;;; yatexsec.el
 ;;; (c ) 1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Jul  7 01:26:26 1994 on 98fa
+;;; Last modified Tue Sep 20 01:35:32 1994 on figaro
 ;;; $Id$
 
 (defvar YaTeX-sectioning-level

@@ -2,7 +2,7 @@
 ;;; YaTeX library of general functions.
 ;;; yatexlib.el
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jul  8 00:44:41 1994 on figaro
+;;; Last modified Fri Sep 16 01:50:34 1994 on figaro
 ;;; $Id$
 
 ;;;###autoload
@@ -53,7 +53,9 @@ Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
 		   (file-name-nondirectory file))
 	  buf)
       (if (file-exists-p file)
-	  (progn (find-file file) (current-buffer))
+	  (funcall
+	   (if setbuf 'find-file-noselect 'find-file)
+	   file)
 	(message "%s was not found in this directory." file)
 	nil)))
 )

@@ -1,9 +1,10 @@
+\def\lang{jp} % -*- texinfo -*-
 \input texinfo.tex
 @setfilename yatexe
 @settitle Yet Another tex-mode for Emacs
 
 @iftex
-@syncodeindex fn cp
+@c @syncodeindex fn cp
 @syncodeindex vr cp
 @end iftex
 
@@ -98,7 +99,7 @@ Language Enhancement to GNU Emacs), and latex on DOS.
 @chapter Main features
 
 @itemize
-@item Invocation of typesetter,  previewer and related programs(C-c t)
+@item Invocation of typesetter,  previewer and related programs(@kbd{C-c t})
 @item Typesetting on static region which is independent from point
 @item Semiautomatic replacing of @code{\include only}
 @item Jumping to error line(@kbd{C-c '})
@@ -132,7 +133,7 @@ Language Enhancement to GNU Emacs), and latex on DOS.
 
 @lisp
         (setq auto-mode-alist
-	      (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
+              (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
         (autoload 'yatex-mode "yatex" "Yet Another La@TeX{} mode" t)
 @end lisp
 
@@ -168,17 +169,17 @@ strokes execute typeset or preview command.
 
 @table @kbd
 @item [prefix] tj
-	@dots{}	invoke latex
+        @dots{} invoke latex
 @item [prefix] tr
-	@dots{}	invoke latex on region
+        @dots{} invoke latex on region
 @item [prefix] tk
-	@dots{}	kill current typesetting process
+        @dots{} kill current typesetting process
 @item [prefix] tb
-	@dots{}	invoke bibtex
+        @dots{} invoke bibtex
 @item [prefix] tp
-	@dots{}	preview
+        @dots{} preview
 @item [prefix] tl
-	@dots{}	lpr dvi-file
+        @dots{} lpr dvi-file
 @end table
 
   The current editing window will be divided horizontally when you
@@ -195,7 +196,7 @@ move the cursor to the line where La@TeX{} error is detected.
 @item [prefix] '
 @itemx ([prefix]+single quotation)
 
-	@dots{}	jump to the previous error or warning
+        @dots{} jump to the previous error or warning
 @end table
 
   If you find a noticeable error, move to the typesetting buffer and move
@@ -241,7 +242,7 @@ notations in the source text.
   To change the typesetting command, write
 
 @example
- 	%#!latex-big
+        %#!latex-big
 @end example
 
 @noindent
@@ -249,7 +250,7 @@ anywhere in the source text.  And if you split the source text and
 edit subfile that should be included from main text.
 
 @example
- 	%#!latex main.tex
+        %#!latex main.tex
 @end example
 
 @noindent
@@ -258,7 +259,7 @@ this command line after @kbd{%#!} will be sent to shell literally, next
 description makes it convenient to use ghostview as dvi-previewer.
 
 @example
- 	%#!latex main ; dvi2ps main.dvi > main
+        %#!latex main ; dvi2ps main.dvi > main
 @end example
 
 @noindent
@@ -290,9 +291,9 @@ static region, enclose the region by @code{%#BEGIN} and @code{%#END} as
 follows.
 
 @example
-	%#BEGIN
-	  TheRegionYouWantToTypesetManyTimes
-	%#END
+        %#BEGIN
+          TheRegionYouWantToTypesetManyTimes
+        %#END
 @end example
 
 This is the rule of deciding the region.
@@ -338,11 +339,11 @@ default values of them.
 
 @table @code
 @item (1)dviprint-command-format
-	@code{"dvi2ps %f %t %s | lpr"}
+        @code{"dvi2ps %f %t %s | lpr"}
 @item (2)dviprint-from-format
-	@code{"-f %b"}
+        @code{"-f %b"}
 @item (3)dviprint-to-format
-	@code{"-t %e"}
+        @code{"-t %e"}
 @end table
 
   On YaTeX-lpr, @code{%s} in (1) is replaced by the file name of main
@@ -356,14 +357,14 @@ by @kbd{C-u [prefix] tl}.
 such as follows somewhere in the text:
 
 @example
-	%#LPR dvi2ps %f %t %s | 4up -page 4 | texfix | lpr -Plp2
+        %#LPR dvi2ps %f %t %s | 4up -page 4 | texfix | lpr -Plp2
 @end example
 
   And if you want YaTeX not to ask you the range of printing
 out, the next example may be helpful.
 
 @example
-	%#LPR dvi2ps %s | lpr
+        %#LPR dvi2ps %s | lpr
 @end example
 
 @node Editing %# notation,  , Lpr format, %# notation
@@ -374,14 +375,14 @@ out, the next example may be helpful.
 
 @table @kbd
 @item [prefix] %
-	@dots{}	editing %# notation menu
+        @dots{} editing %# notation menu
 @end table
 
 @noindent
 and select one of the entry of the menu as follows.
 
 @example
-	!)Edit-%#! B)EGIN-END-region L)Edit-%#LPR
+        !)Edit-%#! B)EGIN-END-region L)Edit-%#LPR
 @end example
 
 @noindent
@@ -423,7 +424,7 @@ sequence.
 
 @table @kbd
 @item [prefix] b
-	@dots{}	start begin-type completion
+        @dots{} start begin-type completion
 @end table
 
 @noindent
@@ -432,39 +433,39 @@ La@TeX{} @code{\begin@{@}}...@code{\@code{end}@{@}} environment.
 
 @table @kbd
 @item [prefix] b c
-	@dots{}  @code{\begin@{center@}...\end@{center@}}
+        @dots{}  @code{\begin@{center@}...\end@{center@}}
 @item [prefix] b d
-	@dots{}  @code{\begin@{document@}...\end@{document@}}
+        @dots{}  @code{\begin@{document@}...\end@{document@}}
 @item [prefix] b D
-	@dots{}  @code{\begin@{description@}...\end@{description@}}
+        @dots{}  @code{\begin@{description@}...\end@{description@}}
 @item [prefix] b e
-	@dots{}  @code{\begin@{enumerate@}...\end@{enumerate@}}
+        @dots{}  @code{\begin@{enumerate@}...\end@{enumerate@}}
 @item [prefix] b E
-	@dots{}  @code{\begin@{equation@}...\end@{equation@}}
+        @dots{}  @code{\begin@{equation@}...\end@{equation@}}
 @item [prefix] b i
-	@dots{}  @code{\begin@{itemize@}...\end@{itemize@}}
+        @dots{}  @code{\begin@{itemize@}...\end@{itemize@}}
 @item [prefix] b l
-	@dots{}  @code{\begin@{flushleft@}...\end@{flushleft@}}
+        @dots{}  @code{\begin@{flushleft@}...\end@{flushleft@}}
 @item [prefix] b m
-	@dots{}  @code{\begin@{minipage@}...\end@{minipage@}}
+        @dots{}  @code{\begin@{minipage@}...\end@{minipage@}}
 @item [prefix] b t
-	@dots{}  @code{\begin@{tabbing@}...\end@{tabbing@}}
+        @dots{}  @code{\begin@{tabbing@}...\end@{tabbing@}}
 @item [prefix] b T
-	@dots{}  @code{\begin@{tabular@}...\end@{tabular@}}
+        @dots{}  @code{\begin@{tabular@}...\end@{tabular@}}
 @item [prefix] b^T
-	@dots{}  @code{\begin@{table@}...\end@{table@}}
+        @dots{}  @code{\begin@{table@}...\end@{table@}}
 @item [prefix] b p
-	@dots{}  @code{\begin@{picture@}...\end@{picture@}}
+        @dots{}  @code{\begin@{picture@}...\end@{picture@}}
 @item [prefix] b q
-	@dots{}  @code{\begin@{quote@}...\end@{quote@}}
+        @dots{}  @code{\begin@{quote@}...\end@{quote@}}
 @item [prefix] b Q
-	@dots{}  @code{\begin@{quotation@}...\end@{quotation@}}
+        @dots{}  @code{\begin@{quotation@}...\end@{quotation@}}
 @item [prefix] b r
-	@dots{}  @code{\begin@{flushright@}...\end@{flushright@}}
+        @dots{}  @code{\begin@{flushright@}...\end@{flushright@}}
 @item [prefix] b v
-	@dots{}  @code{\begin@{verbatim@}...\end@{verbatim@}}
+        @dots{}  @code{\begin@{verbatim@}...\end@{verbatim@}}
 @item [prefix] b V
-	@dots{}  @code{\begin@{verse@}...\end@{verse@}}
+        @dots{}  @code{\begin@{verse@}...\end@{verse@}}
 @end table
 
   Any other La@TeX{} environments are made by  completing-read of the
@@ -472,14 +473,14 @@ Emacs function.
 
 @table @kbd
 @item [prefix] b SPACE
-	@dots{}	begin-type completion
+        @dots{} begin-type completion
 @end table
 
 @noindent
 The next message will show up in the minibuffer
 
 @example
-	Begin environment(default document): 
+        Begin environment(default document): 
 @end example
 
 @noindent
@@ -504,7 +505,7 @@ environment.
 @itemx (or ESC 1 [prefix] b D)
 @itemx (or  C-u  [prefix] b D)
 
-	@dots{}	begin-type completion for region
+        @dots{} begin-type completion for region
 @end table
 
   This enclosing holds good for the completing input by @kbd{[prefix] b
@@ -523,14 +524,14 @@ completion, type
 
 @table @kbd
 @item [prefix] s
-	@dots{}	section-type completion
+        @dots{} section-type completion
 @end table
 
 @noindent
 then the prompt
 
 @example
-	(C-v for view) \???@{@} (default documentstyle):
+        (C-v for view) \???@{@} (default documentstyle):
 @end example
 
 @noindent
@@ -541,7 +542,7 @@ type nothing in the minibuffer.
   Next, 
 
 @example
-	\section@{???@}:
+        \section@{???@}:
 @end example
 
 @noindent
@@ -549,28 +550,28 @@ prompts you the argument of section-type La@TeX{} command.  For
 example, the following inputs
 
 @example
-	\???@{@} (default documentstyle): section
-	\section{???}: Hello world.
+        \???@{@} (default documentstyle): section
+        \section{???}: Hello world.
 @end example
 
 @noindent
 will insert the string
 
 @example
-	\section@{Hello world.@}
+        \section@{Hello world.@}
 @end example
 
 in your La@TeX{} source.  When you neglect argument such as
 
 @example
-	(C-v for view) \???@{@} (default section): vspace*
-	\vspace*@{???@}: 
+        (C-v for view) \???@{@} (default section): vspace*
+        \vspace*@{???@}: 
 @end example
 
 YaTeX puts
 
 @example
-	\vspace*@{@}
+        \vspace*@{@}
 @end example
 
 @noindent
@@ -589,9 +590,9 @@ C-u 2 [prefix] s (or ESC 2 [prefix] s)
 and make answers in minibuffer like this.
 
 @example
-	(C-v for view) \???@{@} (default vspace*): addtolength
-	\addtolength@{???@}: \topmargin
-	Argument 2: 8mm
+        (C-v for view) \???@{@} (default vspace*): addtolength
+        \addtolength@{???@}: \topmargin
+        Argument 2: 8mm
 @end example
 
 @code{\addtolength} and the first argument @code{\topmargin} can be typed
@@ -646,14 +647,14 @@ descriptions such as @code{@{\large @}}.  When you type
 
 @table @kbd
 @item [prefix] l
-	@dots{}	large-type completion
+        @dots{} large-type completion
 @end table
 
 @noindent
 the message in the minibuffer
 
 @example
-	@{\??? @} (default large): 
+        @{\??? @} (default large): 
 @end example
 
 prompts prompts you large-type command with completing-read.  There are
@@ -675,7 +676,7 @@ arguments.  Then, typing
 
 @table @kbd
 @item [prefix] m
-	@dots{}	maketitle-type completion
+        @dots{} maketitle-type completion
 @end table
 
 @noindent
@@ -694,7 +695,7 @@ completing method as described, by typing
 
 @table @kbd
 @item [prefix] SPC
-	@dots{}	arbitrary completion
+        @dots{} arbitrary completion
 @end table
 
 @noindent
@@ -713,7 +714,7 @@ manually.  In that case, type
 
 @table @kbd
 @item [prefix] e
-	@dots{}	@code{end} completion
+        @dots{} @code{end} completion
 @end table
 
 @noindent
@@ -728,14 +729,14 @@ at the end of the opened environment.
 
 @table @kbd
 @item [prefix] a
-	@dots{}	accent completion
+        @dots{} accent completion
 @end table
 
 @noindent
 shows the menu
 
 @example
-	1:` 2:' 3:^ 4:" 5:~ 6:= 7:. u v H t c d b
+        1:` 2:' 3:^ 4:" 5:~ 6:= 7:. u v H t c d b
 @end example
 
 @noindent
@@ -743,7 +744,7 @@ in the minibuffer.  Chose one character or corresponding numeric,
 and you will see
 
 @example
-	\`{}
+        \`{}
 @end example
 
 @noindent
@@ -751,7 +752,7 @@ in the editing buffer with the cursor positioned  in braces.  Type
 one more character `o' for example, then
 
 @example
-	\`{o}
+        \`{o}
 @end example
 
 @noindent
@@ -848,9 +849,9 @@ with the configuration of your text, and avoid it temporarily by typing
 
 @table @kbd
 @item [prefix] >
-	@dots{}	comment out region by %
+        @dots{} comment out region by %
 @item [prefix] <
-	@dots{}	uncomment region
+        @dots{} uncomment region
 @end table
 
 @noindent
@@ -858,9 +859,9 @@ cause an operation to the region between point and mark.
 
 @table @kbd
 @item [prefix] .
-	@dots{}	comment out current paragraph
+        @dots{} comment out current paragraph
 @item [prefix] ,
-	@dots{}	uncomment current paragraph
+        @dots{} uncomment current paragraph
 @end table
 
 @noindent
@@ -877,9 +878,9 @@ following key strokes on the line where @code{\begin@{@}} or
 
 @table @kbd
 @item [prefix] >
-	@dots{}	comment out from \begin to \@code{end}
+        @dots{} comment out from \begin to \@code{end}
 @item [prefix] <
-	@dots{}	uncomment from \begin to \@code{end}
+        @dots{} uncomment from \begin to \@code{end}
 @end table
 
 @noindent
@@ -887,9 +888,9 @@ comment whole the contents of environment.  Moreover,
 
 @table @kbd
 @item [prefix] .
-	@dots{}	comment out \begin and \@code{end}
+        @dots{} comment out \begin and \@code{end}
 @item [prefix] ,
-	@dots{}	uncomment \begin and \@code{end}
+        @dots{} uncomment \begin and \@code{end}
 @end table
 
 @noindent
@@ -909,7 +910,7 @@ work in `commenting out from @code{\begin} to @code{\end}' mode.
 
 @table @kbd
 @item [prefix] g
-	@dots{}	go to corresponding object
+        @dots{} go to corresponding object
 @end table
 
 @noindent
@@ -918,14 +919,14 @@ its partner really exists.  It is also applicable to A @code{%#BEGIN} and
 @code{%#END} pair.
 
   If you type @code{[prefix] g} on the line of @code{\include@{chap1@}},
-maybe	in main text, YaTeX switches buffer to @file{chap1.tex}.  On the
+maybe   in main text, YaTeX switches buffer to @file{chap1.tex}.  On the
 contrary, the key strokes
 
 @table @kbd
 @item [prefix] ^
-	@dots{}	visit main file
+        @dots{} visit main file
 @item [prefix] 4^
-	@dots{}	visit main file in other buffer
+        @dots{} visit main file in other buffer
 @end table
 @cindex prefix ^
 @cindex prefix 4 ^
@@ -938,11 +939,11 @@ environment:
 
 @table @kbd
 @item M-C-a
-	@dots{}	beginning of environment
+        @dots{} beginning of environment
 @item M-C-e
-	@dots{}	@code{end} of environment
+        @dots{} @code{end} of environment
 @item M-C-@@
-	@dots{}	mark environment
+        @dots{} mark environment
 @end table
 @cindex M-C-a
 @cindex M-C-e
@@ -957,9 +958,9 @@ already entered.
 
 @table @kbd
 @item [prefix] c
-	@dots{}	change La@TeX{} command
+        @dots{} change La@TeX{} command
 @item [prefix] k
-	@dots{}	kill La@TeX{} command
+        @dots{} kill La@TeX{} command
 @end table
 @cindex prefix c
 @cindex prefix k
@@ -980,8 +981,8 @@ text, universal argument (@kbd{C-u}) for these commands kills not only
 `containers' but also `contents' of them.  See below as a sample.
 
 @example
-Original text:			[prefix] k	C-u [prefix] k
-Main \footnote@{note@} here.	Main note here.	Main  here.
+Original text:                  [prefix] k      C-u [prefix] k
+Main \footnote@{note@} here.    Main note here. Main  here.
        ~(cursor)
 @end example
 
@@ -995,7 +996,7 @@ Main \footnote@{note@} here.	Main note here.	Main  here.
 
 @table @kbd
 @item [prefix] i
-	@dots{}	fill item
+        @dots{} fill item
 @end table
 
 @noindent
@@ -1006,8 +1007,8 @@ regular expression to search item header  in  itemize environment.
 If you make a newcommand to itemize terms(eg. @code{\underlineitem}), put
 
 @lisp
- 	(setq YaTeX-item-regexp
-	      "\\(\\\\item\\)\\|\\(\\\\underlineitem\\)")
+        (setq YaTeX-item-regexp
+              "\\(\\\\item\\)\\|\\(\\\\underlineitem\\)")
 @end lisp
 @cindex YaTeX-item-regexp
 
@@ -1041,7 +1042,7 @@ local dictionary, and `n' updates no dictionary and throws the word away.
 next expression into your @file{~/.emacs}
 
 @lisp
- 	(setq YaTeX-nervous nil)
+        (setq YaTeX-nervous nil)
 @end lisp
 
 @node Updation of @code{\includeonly}, What column?, Local dictionaries, Top
@@ -1052,7 +1053,7 @@ next expression into your @file{~/.emacs}
   When you edit splitting source texts, the notation
 
 @example
-	\includeonly@{CurrentEditingFileName@}
+        \includeonly@{CurrentEditingFileName@}
 @end example
 
 @noindent
@@ -1060,7 +1061,7 @@ in the main file reduces the time of typesetting.  If you want
 to hack other file a little however, you have to rewrite it to
 
 @example
-	\includeonly@{OtherFileNameYouWantToFix@}
+        \includeonly@{OtherFileNameYouWantToFix@}
 @end example
 
 @noindent
@@ -1068,7 +1069,7 @@ in the main file.  YaTeX automatically detects that the current
 edited text is not in includeonly list and prompts you
 
 @example
- 	A)dd R)eplace %)comment?
+        A)dd R)eplace %)comment?
 @end example
 
 in the minibuffer.  Type @kbd{a} if you want to add the current file name
@@ -1104,7 +1105,7 @@ type
 
 @table @kbd
 @item [prefix] &
-	@dots{}	What column
+        @dots{} What column
 @end table
 
 @noindent
@@ -1125,7 +1126,7 @@ commenting that line with @code{%}.
 
 @table @kbd
 @item ESC RET
-	@dots{} Intelligent newline
+        @dots{} Intelligent newline
 @end table
 
 @noindent 
@@ -1138,16 +1139,16 @@ contents v.s. environments.
 @itemize
 @item @code{tabular}, @code{tabular*}, @code{array}
 
-	Corresponding number of @code{&} and  @code{\\}.
-	And @code{\hline} if needed.
+        Corresponding number of @code{&} and  @code{\\}.
+        And @code{\hline} if needed.
 
 @item @code{tabbing}
 
-	The same number of @code{\>} as @code{\=} in the first line.
+        The same number of @code{\>} as @code{\=} in the first line.
 
 @item @code{itemize}, @code{enumerate}, @code{description}, @code{list}
 
-	@code{\item} or @code{item[]}.
+        @code{\item} or @code{item[]}.
 @end itemize
 
   Note that since this function works seeing the contents of the first
@@ -1178,9 +1179,9 @@ useful.  See the definition of the function
 
 @table @kbd
 @item [prefix] ?
-	@dots{}	Online help
+        @dots{} Online help
 @item [prefix] /
-	@dots{}	Online apropos
+        @dots{} Online apropos
 @end table
 
 @section Online help
@@ -1285,143 +1286,141 @@ that variable to 1 instead of @code{t}).
 in @file{~/.emacs} is preferred and that of defined in @file{yatex.el} is
 neglected.  Parenthesized contents stands for the default value.
 
-@table @samp
-@item YaTeX-prefix
+@defvar YaTeX-prefix
+        Prefix key stroke (@kbd{C-c})
+@end defvar
 
-	Prefix key stroke (@kbd{C-c})
-
-@item YaTeX-inhibit-prefix-letter
-
+@defvar YaTeX-inhibit-prefix-letter
         Change key stroke from @kbd{C-c letter} to @kbd{C-c C-letter}
         (@code{nil})
+@end defvar
 
-@item YaTeX-fill-prefix
+@defvar YaTeX-fill-prefix
+        Fill-prefix used in yatex-mode (@code{nil})
+@end defvar
 
-	Fill-prefix used in yatex-mode (@code{nil})
-
-@item YaTeX-open-lines
-
-	Number of blank lines between cursor and @code{\begin@{@}},
+@defvar YaTeX-open-lines
+        Number of blank lines between cursor and @code{\begin@{@}},
         @code{\@code{end}@{@}} (0)
+@end defvar
 
-@item YaTeX-user-completion-table
-
-	Name of user dictionary where learned completion table will be stored.
+@defvar YaTeX-user-completion-table
+        Name of user dictionary where learned completion table will be stored.
         (@code{"~/.yatexrc"})
+@end defvar
 
-@item YaTeX-item-regexp
+@defvar YaTeX-item-regexp
+        Regular expression of item command(@code{"\\\\item"})
+@end defvar
 
-	Regular expression of item command(@code{"\\\\item"})
+@defvar tex-command
+        La@TeX{} typesetter command (@code{"latex"})
+@end defvar
 
-@item tex-command
-
-	La@TeX{} typesetter command (@code{"latex"})
-
-@item dvi2-command
-
-	Preview command
+@defvar dvi2-command
+        Preview command
         (@code{"xdvi -geo +0+0 -s 4 -display (getenv"DISPLAY")"})
+@end defvar
 
-@item dviprint-command-format
+@defvar dviprint-command-format
+        Command format to print dvi file (@code{"dvi2ps %f %t %s | lpr"})
+@end defvar
 
-	Command format to print dvi file (@code{"dvi2ps %f %t %s | lpr"})
-
-@item dviprint-from-format
-
-	Start page format of above %f. %b will turn to start page
+@defvar dviprint-from-format
+        Start page format of above %f. %b will turn to start page
         (@code{"-f %b"})
+@end defvar
 
-@item dviprint-to-format
-
-	End page format of above %t. %e will turn to @code{end} page
+@defvar dviprint-to-format
+        End page format of above %t. %e will turn to @code{end} page
         (@code{"-t %e"})
+@end defvar
 
-@item section-name
-
-	Initial default value at the first section-type completion
+@defvar section-name
+        Initial default value at the first section-type completion
         (@code{"documentstyle"})
+@end defvar
 
-@item env-name
-
-	Initial default value at the first begin-type completion
+@defvar env-name
+        Initial default value at the first begin-type completion
         (@code{"document"})
+@end defvar
 
-@item fontsize-name
+@defvar fontsize-name
+        Ditto of large-type (@code{"large"})
+@end defvar
 
-	Ditto of large-type (@code{"large"})
+@defvar single-command
+        Ditto of maketitle-type (@code{"maketitle"})
+@end defvar
 
-@item single-command
+@defvar YaTeX-need-nonstop
+        Put @code{\nonstopmode@{@}} or not (@code{nil})
+@end defvar
 
-	Ditto of maketitle-type (@code{"maketitle"})
-
-@item YaTeX-need-nonstop
-
-	Put @code{\nonstopmode@{@}} or not (@code{nil})
-
-@item latex-warning-regexp
-
-	Regular expression of warning message latex command puts out
+@defvar latex-warning-regexp
+        Regular expression of warning message latex command puts out
         (@code{"line.* [0-9]*"})
+@end defvar
 
-@item latex-error-regexp
+@defvar latex-error-regexp
+        Regular expression of error message (@code{"l\\.[1-9][0-9]*"})
+@end defvar
 
-	Regular expression of error message (@code{"l\\.[1-9][0-9]*"})
-
-@item latex-dos-emergency-message
-
-	Message latex command running on DOS puts at abort
+@defvar latex-dos-emergency-message
+        Message latex command running on DOS puts at abort
         (@code{"Emergency stop"})
+@end defvar
 
-@item YaTeX-item-regexp
+@defvar YaTeX-item-regexp
+        Regexp of La@TeX{} itemization command (@code{"\\\\(sub\\)*item"})
+@end defvar
 
-	Regexp of La@TeX{} itemization command (@code{"\\\\(sub\\)*item"})
+@defvar         YaTeX-nervous
+        T for using local dictionary (@code{t})
+@end defvar
 
-@item 	YaTeX-nervous
+@defvar YaTeX-sectioning-regexp
+        Regexp of La@TeX{} sectioning command
 
-	T for using local dictionary (@code{t})
+        (@code{"part\\|chapter\\|\\(sub\\)*\\(section\\|paragraph\\)"})
+@end defvar
 
-@item YaTeX-sectioning-regexp
-
-	Regexp of La@TeX{} sectioning command
-
-	(@code{"part\\|chapter\\|\\(sub\\)*\\(section\\|paragraph\\)"})
-
-@item YaTeX-fill-inhibit-environments
-
+@defvar YaTeX-fill-inhibit-environments
         Inhibit fill in these environments (@code{'("verbatim" "tabular")})
+@end defvar
 
-@item YaTeX-uncomment-once
+@defvar YaTeX-uncomment-once
+        @code{T} for deleting all preceding @code{%} (@code{nil})
+@end defvar
 
-	@code{T} for deleting all preceding @code{%} (@code{nil})
-
-@item YaTeX-close-paren-always
-
-	@code{T} for always close all parenthesis automatically,
+@defvar YaTeX-close-paren-always
+        @code{T} for always close all parenthesis automatically,
         @code{nil} for only eol(@code{t})
+@end defvar
 
-@item YaTeX-auto-math-mode
+@defvar YaTeX-auto-math-mode
+        Switch math-mode automatically(@code{t})
+@end defvar
 
-	Switch math-mode automatically(@code{t})
-
-@item YaTeX-default-pop-window-height
-
+@defvar YaTeX-default-pop-window-height
         Initial height of typesetting buffer when one-window.
         Number for the lines of the buffer, numerical string for
         the percentage of the screen-height.
         @code{nil} for half height(10)
+@end defvar
 
-@item YaTeX-help-file
+@defvar YaTeX-help-file
+        Global online help file name (@file{$EMACS/etc/YATEXHLP.jp})
+@end defvar
 
-	Global online help file name (@file{$EMACS/etc/YATEXHLP.jp})
+@defvar YaTeX-help-file-private
+        Private online help file name (@file{"~/YATEXHLP.jp"})
+@end defvar
 
-@item YaTeX-help-file-private
-
-	Private online help file name (@file{"~/YATEXHLP.jp"})
-
-@item YaTeX-no-begend-shortcut
-
-	Disable [prefix] b ?? shortcut (@code{nil)}
-@end table
+@defvar YaTeX-no-begend-shortcut
+        Disable [prefix] b ?? shortcut (@code{nil)}
+@end defvar
 
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
 @comment  node-name,  next,  previous,  up
@@ -1434,9 +1433,9 @@ the user dictionary @file{~/src/emacs/yatexrc}, and set @code{fill-prefix}
 to single TAB character, add the following @code{setq} to @file{~/.emacs}.
 
 @lisp
- 	(setq YaTeX-prefix "\e"
-	      YaTeX-user-completion-table "~/src/emacs/yatexrc"
-	      YaTeX-fill-prefix "	")
+        (setq YaTeX-prefix "\e"
+              YaTeX-user-completion-table "~/src/emacs/yatexrc"
+              YaTeX-fill-prefix "       ")
 @end lisp
 
 @node Hook variables, Hook file, Sample definitions, Lisp variables
@@ -1452,12 +1451,12 @@ to enter @code{\begin@{abstract@}} ...  @code{=end@{abstract@}}
 immediately.
 
 @lisp
- 	(setq yatex-mode-hook
-	      '(lambda() (YaTeX-define-begend-key "ba" "abstract")))
+        (setq yatex-mode-hook
+              '(lambda() (YaTeX-define-begend-key "ba" "abstract")))
 @end lisp
 
-	You should use functions @code{YaTeX-define-key}, or
-@code{YaTeX-define-begend-key} 	to define all the key sequences of
+        You should use functions @code{YaTeX-define-key}, or
+@code{YaTeX-define-begend-key}  to define all the key sequences of
 yatex-mode.
 
 @node Hook file,  , Hook variables, Lisp variables

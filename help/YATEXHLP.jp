@@ -1044,6 +1044,13 @@ unsrt	ソートしない
 alpha	"Foo94" のようなタグをつける
 abbrv	著者のファーストネーム、発行月、書籍名が省略される
 
+thebibliography
+\begin{thebibliography} \bibitem{アイテム}… \end{thebibliography}
+参考文献データの登録環境を開始する。
+データは \bibitem コマンドによって登録する。
+\bibitem コマンドの用法は以下の通り。
+<refer bibitem>
+
 bibitem
 \bibitem{NAME}			\bibitem[LABEL]{NAME}
 \bibitem{NAME}の書式では、NAMEで参照され、[1],[2] のような形で引用記号が

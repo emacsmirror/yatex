@@ -1,9 +1,10 @@
-\input texinfo @c -*- texinfo -*-
+\def\lang{jp} % -*- texinfo -*- for Texinfo V.3.1 
+\input texinfo
 @setfilename yatexj
 @settitle Yet Another tex-mode for Emacs
 
 @iftex
-@syncodeindex fn cp
+@c @syncodeindex fn cp
 @syncodeindex vr cp
 @end iftex
 
@@ -16,38 +17,39 @@
 @author @copyright{} 1991-1994 by    HIROSE, Yuuji [yuuji@@ae.keio.ac.jp]
 @end titlepage
 
-@node Top, Intro - はじめに, (dir), (dir)
+@node Top, Intro, (dir), (dir)
 @comment  node-name,  next,  previous,  up
 
 @menu
-* Intro - はじめに::            
-* Main features - 主な機能::    
-* Installation - インストール::  
-* Invocation - 外部コマンドの起動::  
+* Intro::                       はじめに
+* Main features::               主な機能
+* Installation::                インストール
+* Invocation::                  外部コマンドの起動
 * %#記法::                      
-* Completion - 補完入力::       
-* Commenting out - コメントアウト::  
-* Cursor jump - カーソルジャンプ::  
-* Modifying/Deleting - 変更/削除::  
-* Filling item - itemの桁揃え::  
-* Local dictionary - ローカル辞書::  
-* Includeonly - 勝手にincludeonly::  
-* Where am I? - 今はどこ?::     
-* Intelligent newline - おまかせ改行::  
-* Online help - オンラインヘルプ::  
-* Cooperation with other packages - 他パッケージとの連携::  
-* Customizations - カスタマイズ::  
-* Etc - その他::                
-* Copying - 取り扱い::          
+* Completion::                  補完入力
+* Commenting out::              コメントアウト
+* Cursor jump::                 カーソルジャンプ
+* Modifying/Deleting::          変更/削除
+* Filling item::                itemの桁揃え
+* Local dictionary::            ローカル辞書
+* Includeonly::                 勝手にincludeonly
+* Where am I?::                 
+* Intelligent newline::         おまかせ改行
+* Online help::                 オンラインヘルプ
+* Cooperation with other packages::  他パッケージとの連携
+* Customizations::              カスタマイズ
+* Etc::                         その他
+* Copying::                     取り扱い
+* Concept Index::               索引
 @end menu
 
-@node Intro - はじめに, Main features - 主な機能, Top, Top
+@node Intro, Main features, Top, Top
 @comment  node-name,  next,  previous,  up
 @chapter はじめに
 @cindex Demacs
 @cindex Mule
 @cindex LaTeX
-@cindex やちょう
+@cindex やちょう[やちよう]
 
   野鳥は、GNU Emacs で La@TeX{} 用の文書を作成する時に jLa@TeX{} などの
 タイプセットコマンドや、プレヴューアの起動を Emacs 編集画面中から
@@ -56,15 +58,15 @@
 よりマニュアルを調べる手間を軽減します。
 
 
-@node Main features - 主な機能, Installation - インストール, Intro - はじめに, Top
+@node Main features, Installation, Intro, Top
 @comment  node-name,  next,  previous,  up
 @chapter 主な機能
 
 @itemize @bullet
-@item タイプセッタやプレヴューアなどの編集画面からの起動(C-c t)
+@item タイプセッタやプレヴューアなどの編集画面からの起動(@kbd{C-c t})
 @item カーソル位置によらない固定リジョンの部分タイプセット
 @item \includeonlyのワンタッチ更新
-@item エラー箇所への自動ジャンプ(C-c ')
+@item エラー箇所への自動ジャンプ(@kbd{C-c '})
 @item @code{\begin@{@}, \end@{@}, \section...} などの La@TeX{}
 コマンドの補完入力
 (@kbd{C-c b}, @kbd{C-c s}, @kbd{C-c l}, @kbd{C-c m})
@@ -75,20 +77,20 @@
 @item 野鳥にないガイド付き引数入力関数の自動生成(@file{yatexgen.el})
 @item La@TeX{} コマンドの削除/変更(@kbd{C-c k}, @kbd{C-c c})
 @item ファイル間、@code{\begin}<->@code{\end}間、
-        @code{\ref}<->@code{\label}間ジャンプ(@code{C-c g})
+        @code{\ref}<->@code{\label}間ジャンプ(@kbd{C-c g})
 @item 一括コメントアウト/アンコメントアウト
-        (@code{C-c >}, @code{C-c <}, @code{C-c ,}, @code{C-c .})
+        (@kbd{C-c >}, @kbd{C-c <}, @kbd{C-c ,}, @kbd{C-c .})
 @item アクセント記号/数式環境用コマンド/ギリシャ文字の入力支援
-        (@code{C-c a}, @code{;}, @code{/})
+        (@kbd{C-c a}, @code{;}, @code{/})
 @item tabular/array環境のカラム位置ガイド
-@item 標準的 La@TeX{} コマンドのオンラインヘルプ(@code{C-c ?}, @code{C-c /})
+@item 標準的 La@TeX{} コマンドのオンラインヘルプ(@kbd{C-c ?}, @kbd{C-c /})
 @end itemize
 
-@node Installation - インストール, Invocation - 外部コマンドの起動, Main features - 主な機能, Top
+@node Installation, Invocation, Main features, Top
 @comment  node-name,  next,  previous,  up
 @chapter 起動法
 @cindex Install
-@cindex インストール[いんすとーる]
+@cindex インストール[いんすとおる]
 @cindex .emacs
 @cindex auto-mode-alist
 @cindex autoload
@@ -96,13 +98,13 @@
   ~/.emacsに下の2項目を加えます。
 
 @lisp
- (setq auto-mode-alist
+(setq auto-mode-alist
       (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
- (autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
+(autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
 @end lisp
 
-次に野鳥の emacs-lisp ファイル群を置くディレクトリを load-path に
-加えます。たとえば、@file{~/src/emacs/yatex}に置くのであれば、
+次に野鳥の emacs-lisp ファイル群を置くディレクトリを load-path に加えます。
+たとえば、 @file{~/src/emacs/yatex}に置くのであれば、
 
 @lisp
 (setq load-path (cons (expand-file-name "~/src/emacs/yatex") load-path))
@@ -116,15 +118,15 @@
 に変わります。
 
 
-@node Invocation - 外部コマンドの起動, %#記法, Installation - インストール, Top
+@node Invocation, %#記法, Installation, Top
 @comment  node-name,  next,  previous,  up
 @chapter latexコマンド起動
 @cindex prefix key
 @cindex C-c
-@cindex タイプセッタ[たいぷせった]
-@cindex プレヴューア[ぷれびゅーあ]
+@cindex タイプセッタ[たいふせつた]
+@cindex プレヴューア[ふれひゆうあ]
 @cindex jlatex
-@cindex プリントアウト[ぷりんとあうと]
+@cindex プリントアウト[ふりんとあうと]
 
  yatex-mode の prefix キーは、標準状態で @kbd{C-c} (Ctrlキーを押しながらc)
 です。以下、標準のキー割当の場合、@kbd{[prefix]} は @kbd{C-c} と読み換えて
@@ -133,30 +135,30 @@
 
 @table @kbd
 @item [prefix] t j
-	@dots{}	タイプセッタ(jlatex)起動
+        @dots{} タイプセッタ(jlatex)起動
 @item [prefix] t r
-	@dots{}	タイプセッタ起動(領域指定)
+        @dots{} タイプセッタ起動(領域指定)
 @item [prefix] t k
-	@dots{}	動作中のタイプセッタの停止
+        @dots{} 動作中のタイプセッタの停止
 @item [prefix] t b
-	@dots{}	jbibtex起動
+        @dots{} jbibtex起動
 @item [prefix] t p
-	@dots{}	プレヴューア起動
+        @dots{} プレヴューア起動
 @item [prefix] t l
-	@dots{}	lpr(プリントアウト用)コマンド起動
+        @dots{} lpr(プリントアウト用)コマンド起動
 @end table
 
 @menu
-* Calling typesetter - タイプセッタ起動::  
-* Print out - プリントアウト用コマンドの起動::  
+* Calling typesetter::          タイプセッタ起動
+* Print out::                   プリントアウト用コマンドの起動
 @end menu
 
-@node Calling typesetter - タイプセッタ起動, Print out - プリントアウト用コマンドの起動, Invocation - 外部コマンドの起動, Invocation - 外部コマンドの起動
+@node Calling typesetter, Print out, Invocation, Invocation
 @comment  node-name,  next,  previous,  up
 @section タイプセッタ起動
 @cindex タイプセッタ起動
-@cindex タイプセットエラー[たいぷせっとえらー]
-@cindex エラー修正[えらーしゅうせい]
+@cindex タイプセットエラー[たいふせつとえらあ]
+@cindex エラー修正[えらあしゆうせい]
 
   タイプセッタを起動すると、編集ウィンドウが2つに分割され、片方のウィンド
 ウにタイプセット画面が表示されます。出力されるメッセージと連動しタイプセッ
@@ -168,7 +170,7 @@
 @table @kbd
 @item [prefix] '
 @itemx (prefix+アポストロフィ)
-	@dots{}	直前のエラー発生行へジャンプ
+        @dots{} 直前のエラー発生行へジャンプ
 @end table
 
 を入力することにより、タイプセッタがエラーを発生した行に移ることができます。
@@ -184,27 +186,27 @@
 にはそのファイルの documentstyle が、別ファイルから include している場合に
 はメインファイルの documentstyle が自動的に選択されます。指定領域は、メイ
 ンファイルのあるディレクトリの@file{texput.tex}という臨時ファイルに出力さ
-れますので、上書きには注意してください。領域の指定方法は@xref{%#記法}の項を
+れますので、上書きには注意してください。領域の指定方法は@ref{%#記法}の項を
 参照してください。
 
-@node Print out - プリントアウト用コマンドの起動,  , Calling typesetter - タイプセッタ起動, Invocation - 外部コマンドの起動
+@node Print out,  , Calling typesetter, Invocation
 @comment  node-name,  next,  previous,  up
 @section プリントアウト
 
   プリントアウトする時は、出力開始/終了ページを聞いてきますが、こ
 れを省略したい時は、universal-argument をつけて下さい。
 
-@cindex 出力開始ページ[しゅつりょくかいしぺーじ]
-@cindex 出力終了ページ[しゅつりょくしゅうりょうぺーじ]
+@cindex 出力開始ページ[しゆつりよくかいしへえし]
+@cindex 出力終了ページ[しゆつりよくしゆうりようへえし]
 
 
 @table @kbd
 @item C-u [prefix] t l
-	@dots{}	ページ確認省略lpr起動
+        @dots{} ページ確認省略lpr起動
 @end table
-@cindex ページ確認省略lpr起動[ぺーじかくにんしょうりゃくlprきどう]
+@cindex ページ確認省略lpr起動[へえしかくにんしようりやくlprきとう]
 
-@node %#記法, Completion - 補完入力, Invocation - 外部コマンドの起動, Top
+@node %#記法, Completion, Invocation, Top
 @comment  node-name,  next,  previous,  up
 @chapter %#記法
 
@@ -212,30 +214,30 @@
 の制御をすることができます。
 
 @menu
-* Changing typesetter - タイプセット用コマンドの変更::  
-* Splitting input files - 入力ファイル分割::  
-* Fix region for typesetting - 領域の固定::  
-* lpr format - プリントアウトコマンド用フォーマット::  
-* Editing %# notation - %#記法の編集::  
+* Changing typesetter::         タイプセット用コマンドの変更
+* Splitting input files::       入力ファイル分割
+* Fix region for typesetting::  領域の固定
+* lpr format::                  プリントアウトコマンド用フォーマット
+* Editing %# notation::         %#記法の編集
 @end menu
 
-@node Changing typesetter - タイプセット用コマンドの変更, Splitting input files - 入力ファイル分割, %#記法, %#記法
+@node Changing typesetter, Splitting input files, %#記法, %#記法
 @comment  node-name,  next,  previous,  up
 @section タイプセット用コマンド変更
 
   起動するコマンドを変えたい時は本文中に次のような行を書きます。
 
-@cindex 起動するコマンドを変える[きどうするこまんどをかえる]
+@cindex 起動するコマンドを変える[きとうするこまんとをかえる]
 
 @example
- 	%#!jlatex-ntt example
+        %#!jlatex-ntt example
 @end example
 
 NTT jTeX と、ASCII jTeX を使い分けたいような場合に便利でしょう。
 
-@cindex タイプセッタの使い分け[たいぷせったのつかいわけ]
+@cindex タイプセッタの使い分け[たいふせつたのつかいわけ]
 
-@node Splitting input files - 入力ファイル分割, Fix region for typesetting - 領域の固定, Changing typesetter - タイプセット用コマンドの変更, %#記法
+@node Splitting input files, Fix region for typesetting, Changing typesetter, %#記法
 @comment  node-name,  next,  previous,  up
 @section 入力ファイル分割
 
@@ -244,10 +246,10 @@ NTT jTeX と、ASCII jTeX を使い分けたいような場合に便利でしょう。
 位置に次のような行を埋め込みます。
 
 @example
- 	%#!jlatex main.tex
+        %#!jlatex main.tex
 @end example
 
-@cindex 入力ファイル分割[にゅうりょくふぁいるぶんかつ]
+@cindex 入力ファイル分割[にゆうりよくふあいるふんかつ]
 
 上の例のようにコマンド名だけでなく引数も書いた場合には、全てをそのまま 
 shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
@@ -256,7 +258,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 @cindex ghostview
 
 @example
- 		%#!jlatex main ; dvi2ps main.dvi > main
+                %#!jlatex main ; dvi2ps main.dvi > main
 @end example
 
 なお、この行の最後の単語のピリオド以前を「メインファイル」のベース
@@ -281,10 +283,10 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 
 
 
-@node Fix region for typesetting - 領域の固定, lpr format - プリントアウトコマンド用フォーマット, Splitting input files - 入力ファイル分割, %#記法
+@node Fix region for typesetting, lpr format, Splitting input files, %#記法
 @comment  node-name,  next,  previous,  up
 @section 領域の固定
-@cindex 固定領域のタイプセット[こていりょういきのたいぷせっと]
+@cindex 固定領域のタイプセット[こていりよういきのたいふせつと]
 @cindex %#BEGIN
 @cindex %#END
 
@@ -293,9 +295,9 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 すが、必ず決まった領域をタイプセットしたい場合は、その領域を
 
 @example
- 		%#BEGIN
-		 <渡したい領域>
-		%#END
+                %#BEGIN
+                 <渡したい領域>
+                %#END
 @end example
 
 @noindent 
@@ -312,17 +314,17 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 @item
 @code{%#BEGIN}よりバッファの末尾方向に@code{%#END}というキーワードが見つかっ
 た場合。
-→@code{%#BEGIN} から、その @code{%#END} のある位置まで。
+@result{}@code{%#BEGIN} から、その @code{%#END} のある位置まで。
 @item
 @code{%#END} が見つからなかった場合。
-→バッファの最後尾まで。
+@result{}バッファの最後尾まで。
 @end enumerate
-@cindex 領域決定規則[りょういきけっていきそく]
+@cindex 領域決定規則[りよういきけつていきそく]
 
 @item
 カーソル位置よりバッファの先頭方向に @code{%#BEGIN} というキーワードが
 見つからなかった場合。
-→マーク(C-SPC位置)とポイント(カーソル位置)の間の領域。
+@result{}マーク(@kbd{C-SPC}位置)とポイント(カーソル位置)の間の領域。
 @end enumerate
 
   tabular 環境を何度も試行錯誤しているような場合は、@code{\begin}の前の行
@@ -330,16 +332,16 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 と簡単に作表結果をテストすることができます。また、長い .tex ファイルの後半
 に @code{%#BEGIN} を書いておけば、前半の部分は無視できます。このBEGINとEND
 の消し忘れには十分ご注意下さい。
-@cindex 長いファイルの編集[ながいふぁいるのへんしゅう]
+@cindex 長いファイルの編集[なかいふあいるのへんしゆう]
 
-@node  Require, lpr format - プリントアウトコマンド用フォーマット, Fix region for typesetting - 領域の固定, %#記法
+@node  Require, lpr format, Fix region for typesetting, %#記法
 @comment  node-name,  next,  previous,  up
 
-@node lpr format - プリントアウトコマンド用フォーマット, Editing %# notation - %#記法の編集, Fix region for typesetting - 領域の固定, %#記法
+@node lpr format, Editing %# notation, Fix region for typesetting, %#記法
 @comment  node-name,  next,  previous,  up
 @section lprフォーマット
-@cindex lprふぉーまっと
-@cindex lprフォーマット
+@cindex lprふぉーまっと[lprふおおまつと]
+@cindex lprフォーマット[lprふおおまつと]
 @cindex lpr format
 
   まず、プリントアウト用コマンド列のフォーマットについて説明します。
@@ -347,14 +349,14 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 フォルトの dvi2ps 用のフォーマットを例に説明します。
 
 @table @code
-@item dviprint-command-format
-"dvi2ps %f %t %s | lpr"
+@item (1)dviprint-command-format
+@code{"dvi2ps %f %t %s | lpr"}
 
-@item dviprint-from-format
-"-f %b"
+@item (2)dviprint-from-format
+@code{"-f %b"}
 
-@item dviprint-to-format
-"-t %e"
+@item (3)dviprint-to-format
+@code{"-t %e"}
 @end table
 
 実際にプリントアウトする時は、(1)中の %s がファイル名に置き換えられ、%f が
@@ -374,29 +376,29 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 にする時に
 
 @example
- 	%#LPR dvi2ps %s | lpr
+        %#LPR dvi2ps %s | lpr
 @end example
 
 @noindent 
 などとするのも便利かもしれません。
 
-@node Editing %# notation - %#記法の編集,  , lpr format - プリントアウトコマンド用フォーマット, %#記法
+@node Editing %# notation,  , lpr format, %#記法
 @comment  node-name,  next,  previous,  up
 @section %#記法自体の編集
-@cindex %#きほうじたいのへんしゅう
+@cindex %#きほうじたいのへんしゅう[%#きほうしたいのへんしゆう]
 
 以上のような@code{%#}で始まる各種制御記法を編集するためには
 
 @table @kbd
 @item [prefix] %
-	@dots{}	%#記法編集メニュー
+        @dots{} @code{%#}@var{記法編集メニュー}
 @end table
 
 @noindent 
 を押します。
 
 @example
- 	!)Edit-%#! B)EGIN-END-region L)Edit-%#LPR
+        !)Edit-%#! B)EGIN-END-region L)Edit-%#LPR
 @end example
 
 @noindent 
@@ -405,9 +407,9 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 じめ設定したリジョンを @code{%#BEGIN} ～ @code{%#END} で括りたい時は、
 @kbd{b}を押します。@kbd{b}を選んだ時には、それまでバッファ中に置かれていた 
 @code{%#BEGIN}, @code{%#END} が自動的に消去されます。
-@cindex lprフォーマットの変更[lprふぉーまっとのへんこう]
+@cindex lprフォーマットの変更[lprふおおまつとのへんこう]
 
-@node Completion - 補完入力, Commenting out - コメントアウト, %#記法, Top
+@node Completion, Commenting out, %#記法, Top
 @comment  node-name,  next,  previous,  up
 @chapter 補完入力
 
@@ -419,18 +421,18 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 * section型補完::               
 * large型補完::                 
 * maketitle型補完::             
-* Arbitrary completion - 随時補完::  
+* Arbitrary completion::        随時補完
 * end補完::                     
-* Accent mark completion - アクセント記号補完::  
-* Image completion - 数式記号イメージ補完::  
-* Greek letter completion - ギリシャ文字補完::  
+* Accent mark completion::      アクセント記号補完
+* Image completion::            数式記号イメージ補完
+* Greek letter completion::     ギリシャ文字補完
 @end menu
 
-@node begin型補完, section型補完, Completion - 補完入力, Completion - 補完入力
+@node begin型補完, section型補完, Completion, Completion
 @comment  node-name,  next,  previous,  up
 @section begin型補完
-@cindex begin型補完[beginがたほかん]
-@cindex 環境名の補完[かんきょうめいのほかん]
+@cindex begin型補完[beginかたほかん]
+@cindex 環境名の補完[かんきようめいのほかん]
 @cindex prefix b
 
   @code{\begin@{env@}...\end@{env@}}の様な形式の入力の補完をbegin型補完と
@@ -438,7 +440,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 
 @table @kbd
 @item [prefix] b
-	@dots{}	begin 型補完開始(標準では C-c b)
+        @dots{} begin 型補完開始(標準では @kbd{C-c b})
 @end table
 
 @noindent 
@@ -448,39 +450,39 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 
 @table @kbd
 @item [prefix] b c
-	@dots{}	@code{\begin@{center@}...\end@{center@}}
+        @dots{} @code{\begin@{center@}...\end@{center@}}
 @item [prefix] b d
-	@dots{}	@code{\begin@{document@}...\end@{document@}}
+        @dots{} @code{\begin@{document@}...\end@{document@}}
 @item [prefix] b D
-	@dots{}	@code{\begin@{description@}...\end@{description@}}
+        @dots{} @code{\begin@{description@}...\end@{description@}}
 @item [prefix] b e
-	@dots{}	@code{\begin@{enumerate@}...\end@{enumerate@}}
+        @dots{} @code{\begin@{enumerate@}...\end@{enumerate@}}
 @item [prefix] b E
-	@dots{}	@code{\begin@{equation@}...\end@{equation@}}
+        @dots{} @code{\begin@{equation@}...\end@{equation@}}
 @item [prefix] b i
-	@dots{}	@code{\begin@{itemize@}...\end@{itemize@}}
+        @dots{} @code{\begin@{itemize@}...\end@{itemize@}}
 @item [prefix] b l
-	@dots{}	@code{\begin@{flushleft@}...\end@{flushleft@}}
+        @dots{} @code{\begin@{flushleft@}...\end@{flushleft@}}
 @item [prefix] b m
-	@dots{}	@code{\begin@{minipage@}...\end@{minipage@}}
+        @dots{} @code{\begin@{minipage@}...\end@{minipage@}}
 @item [prefix] b t
-	@dots{}	@code{\begin@{tabbing@}...\end@{tabbing@}}
+        @dots{} @code{\begin@{tabbing@}...\end@{tabbing@}}
 @item [prefix] b T
-	@dots{}	@code{\begin@{tabular@}...\end@{tabular@}}
+        @dots{} @code{\begin@{tabular@}...\end@{tabular@}}
 @item [prefix] b ^T
-	@dots{}	@code{\begin@{table@}...\end@{table@}}
+        @dots{} @code{\begin@{table@}...\end@{table@}}
 @item [prefix] b p
-	@dots{}	@code{\begin@{picture@}...\end@{picture@}}
+        @dots{} @code{\begin@{picture@}...\end@{picture@}}
 @item [prefix] b q
-	@dots{}	@code{\begin@{quote@}...\end@{quote@}}
+        @dots{} @code{\begin@{quote@}...\end@{quote@}}
 @item [prefix] b Q
-	@dots{}	@code{\begin@{quotation@}...\end@{quotation@}}
+        @dots{} @code{\begin@{quotation@}...\end@{quotation@}}
 @item [prefix] b r
-	@dots{}	@code{\begin@{flushright@}...\end@{flushright@}}
+        @dots{} @code{\begin@{flushright@}...\end@{flushright@}}
 @item [prefix] b v
-	@dots{}	@code{\begin@{verbatim@}...\end@{verbatim@}}
+        @dots{} @code{\begin@{verbatim@}...\end@{verbatim@}}
 @item [prefix] b V
-	@dots{}	@code{\begin@{verse@}...\end@{verse@}}
+        @dots{} @code{\begin@{verse@}...\end@{verse@}}
 @end table
 
   上記のもの以外の環境名は Emacs の持つインクリメンタルな補完機能を用いて
@@ -488,7 +490,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 
 @table @kbd
 @item [prefix] b @key{SPC}
-	@dots{}	begin 型補完入力
+        @dots{} begin 型補完入力
 @end table
 
 @kbd{[prefix] b @key{SPC}} と入力すると、最下行のミニバッファに
@@ -506,7 +508,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 入力の手間が省けます。内部テーブルに存在しない環境名を入力した時はユーザ専
 用のテーブルに登録され、さらにそのテーブルを自動的に、ユーザ辞書(デフォル
 トでは @file{~/.yatexrc})に保存します。
-@cindex ユーザ辞書[ゆーざじしょ]
+@cindex ユーザ辞書[ゆうさししよ]
 
 @subsection 既に書いたテキストを環境で括る
 
@@ -515,8 +517,8 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 閉じこめたい段落をマークして、begin 型補完の各コマンドの @kbd{[prefix]}
 の次の『小文字の 'b'』 を『大文字』に変えて起動して下さい。(または、
 @kbd{C-u} を先に打ち、universal argument をつけても可能です)
-@cindex ブロック[ぶろっく]
-@cindex 閉じ込める[とじこめる]
+@cindex ブロック[ふろつく]
+@cindex 閉じ込める[としこめる]
 
   例えばあるパラグラフを description 環境の中に入れたいときは、
 そのパラグラフをマークしてから、
@@ -531,10 +533,10 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 @kbd{b} を大文字に変えて、@kbd{[prefix] B SPC} とタイプすれば、あらかじめ
 マークしておいたリジョンを、begin と end の環境で括ります。
 
-@node section型補完, large型補完, begin型補完, Completion - 補完入力
+@node section型補完, large型補完, begin型補完, Completion
 @comment  node-name,  next,  previous,  up
 @section section型補完
-@cindex  section型補完[sectionがたほかん]
+@cindex  section型補完[sectionかたほかん]
 @cindex prefix s
 
   @code{\section@{目的@}} のような形式の入力の補完を section 型補完と呼ぶこ
@@ -542,7 +544,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 
 @table @kbd
 @item [prefix] s
-	@dots{}	section 型補完
+        @dots{} section 型補完
 @end table
 
 @noindent 
@@ -559,7 +561,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 る補完機能が有効です。 次に、@{@}の中身の入力を促す、
 
 @example
- 		\section@{???@}:
+                \section@{???@}:
 @end example
 
 @noindent 
@@ -567,30 +569,30 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 たとえば、
 
 @example
- 		(C-v for view) \???@{@} (default documentstyle): section
-		\section@{???@}: 目的
+                (C-v for view) \???@{@} (default documentstyle): section
+                \section@{???@}: 目的
 @end example
 
 @noindent 
 のように入力した場合は、文章中に
 
 @example
- 		\section@{目的@}
+                \section@{目的@}
 @end example
 
 @noindent 
 が挿入され、
 
 @example
- 		(C-v for view) \???@{@} (default section): vspace*
-		\vspace*@{???@}: 
+                (C-v for view) \???@{@} (default section): vspace*
+                \vspace*@{???@}: 
 @end example
 
 @noindent 
 のように@{@}の中身を省略したときは、
 
 @example
- 		\vspace*@{@}
+                \vspace*@{@}
 @end example
 
 @noindent 
@@ -598,13 +600,13 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 
 @menu
 * 2個以上の引数をとる section型コマンド::  
-* Input argument without copletion - 引数入力時に補完しない::  
-* Enclose region -type command - 既に書いたテキストを括る::  
-* Recursive completion - 再帰補完::  
-* view-sectioning - セクション区切りのアウトライン表示::  
+* Input argument without copletion::  引数入力時に補完しない
+* Enclose region-type command::  
+* Recursive completion::        再帰補完
+* view-sectioning::             セクション区切りのアウトライン表示
 @end menu
 
-@node 2個以上の引数をとる section型コマンド, Input argument without copletion - 引数入力時に補完しない, section型補完, section型補完
+@node 2個以上の引数をとる section型コマンド, Input argument without copletion, section型補完, section型補完
 @comment  node-name,  next,  previous,  up
 @subsection 2個以上の引数をとる section型コマンド
 @cindex 引数[ひきすう]
@@ -628,19 +630,19 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 @end example
 
 @noindent 
-のように入力してください。最初の addtolength の部分と、第一引数で
-ある \topmargin の入力は当然スペースによる補完入力が可能です。ユー
-ザ辞書に登録される La@TeX{} コマンドには、この引数の数も学習されるの
-で、最初の補完の時引数の数を指定して起動しておけば、以後の補完時に
-は、記憶された個数だけ引数を聞いて来るようになります。あとで引数の
-個数を変えたい時は、再び C-u を用いて個数を指定し直すことで、自動
-的に辞書中の引数の個数の部分を更新します。
+のように入力してください。最初の addtolength の部分と、第一引数である 
+\topmargin の入力は当然スペースによる補完入力が可能です。ユーザ辞書に登録
+される La@TeX{} コマンドには、この引数の数も学習されるので、最初の補完の時
+引数の数を指定して起動しておけば、以後の補完時には、記憶された個数だけ引数
+を聞いて来るようになります。あとで引数の個数を変えたい時は、再び @kbd{C-u} 
+を用いて個数を指定し直すことで、自動的に辞書中の引数の個数の部分を更新しま
+す。
 @cindex 引数の個数を変える[ひきすうのこすうをかえる]
 
-@node Input argument without copletion - 引数入力時に補完しない, Enclose region -type command - 既に書いたテキストを括る, 2個以上の引数をとる section型コマンド, section型補完
+@node Input argument without copletion, Enclose region-type command, 2個以上の引数をとる section型コマンド, section型補完
 @comment  node-name,  next,  previous,  up
 @subsection 引数入力時に補完しない
-@cindex 引数入力時に補完しない[ひきすうにゅうりょくじにほかんしない]
+@cindex 引数入力時に補完しない[ひきすうにゆうりよくしにほかんしない]
 
   なお、特別な例として引数0を指定すると、第一引数の入力時に補完入力ではな
 く、単純な文字列入力を使用するようになります。段落を指定する@samp{chapter}
@@ -649,7 +651,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 指定コマンド(chapter, section, paragraph など)に引数0の指定が埋め込まれて
 います。
 
-@node Enclose region -type command - 既に書いたテキストを括る, Recursive completion - 再帰補完, Input argument without copletion - 引数入力時に補完しない, section型補完
+@node Enclose region-type command, Recursive completion, Input argument without copletion, section型補完
 @comment  node-name,  next,  previous,  up
 @subsection 既に書いたテキストを括る
 @cindex 括る[くくる]
@@ -657,7 +659,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
   また、起動コマンドの@kbd{s}を大文字に変えて起動すると、あらかじめ書
 いた文章を section 型コマンドの第一引数として括ります。
 
-@node Recursive completion - 再帰補完, view-sectioning - セクション区切りのアウトライン表示, Enclose region -type command - 既に書いたテキストを括る, section型補完
+@node Recursive completion, view-sectioning, Enclose region-type command, section型補完
 @comment  node-name,  next,  previous,  up
 @subsection 再帰補完
 @cindex 再帰補完[さいきほかん]
@@ -667,7 +669,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 型コマンドの引数に更に La@TeX{} コマンドが来る場合にはミニバッファで野鳥の
 補完キーを再帰的に入力することで引数の入力も効率的に行なえます。
 
-@node view-sectioning - セクション区切りのアウトライン表示,  , Recursive completion - 再帰補完, section型補完
+@node view-sectioning,  , Recursive completion, section型補完
 @comment  node-name,  next,  previous,  up
 @subsection セクション区切りのアウトライン表示
 @cindex アウトライン[あうとらいん]
@@ -682,35 +684,35 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 この一覧バッファにカーソルを移しスペースを押すと、該当するセクション区切り
 のある本文中の場所にジャンプします。
 @cindex 論理階層[ろんりかいそう]
-@cindex セクション区切り[せくしょんくぎり]
-@cindex ジャンプ[じゃんぷ]
+@cindex セクション区切り[せくしよんくきり]
+@cindex ジャンプ[しやんふ]
 
-@node large型補完, maketitle型補完, section型補完, Completion - 補完入力
+@node large型補完, maketitle型補完, section型補完, Completion
 @comment  node-name,  next,  previous,  up
 @section large型補完
-@cindex large型補完[largeがたほかん]
+@cindex large型補完[largeかたほかん]
 @cindex prefix l
 
   @code{@{\large @}} のような形式の補完を large 型補完と呼ぶことにします。
 
 @table @kbd
 @item [prefix] l
-	@dots{}	large 型補完開始
+        @dots{} large 型補完開始
 @end table
 
 @noindent 
 がlarge型補完の開始です。@kbd{[prefix] l} を押すと、ミニバッファに
 
 @example
- 		@{\??? @} (default large): 
+                @{\??? @} (default large): 
 @end example
 
 @noindent 
 と表示されるので、上記のものと同じ要領で補完入力して下さい。補完候補に用意
 されているのは、@samp{footnotesize} や @samp{huge} のような文字サイズ指定
 子と、@samp{bf}や@samp{dg}のようなフォント指定子です。
-@cindex 文字サイズ指定子[もじさいずしていし]
-@cindex フォント指定子[ふぉんとしていし]
+@cindex 文字サイズ指定子[もしさいすしていし]
+@cindex フォント指定子[ふおんとしていし]
 
 @subsection 既に書いた文字を括る
 @cindex 括る[くくる]
@@ -720,27 +722,27 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 字の範囲をマークしてから、呼び出しキーを @kbd{[prefix] L} と、大文字の L 
 に変えて呼び出せば、そのリジョン全体が、ブレースで囲まれます。
 
-@node maketitle型補完, Arbitrary completion - 随時補完, large型補完, Completion - 補完入力
+@node maketitle型補完, Arbitrary completion, large型補完, Completion
 @comment  node-name,  next,  previous,  up
 @section maketitle型補完
-@cindex maketitle型補完[maketitleがたほかん]
+@cindex maketitle型補完[maketitleかたほかん]
 @cindex prefix m
 
   @code{\maketitle} の形式の補完を maketitle 型補完と呼ぶことにします。
 
 @table @kbd
 @item [prefix] m
-	@dots{}	maketitle 型補完開始
+        @dots{} maketitle 型補完開始
 @end table
 
 @noindent 
 で、maketitle 型補完を開始します。補完の要領は今までのものとまったく同じで
 す。La@TeX{} 用のコマンド名が補完候補として用意されています。
 
-@node Arbitrary completion - 随時補完, end補完, maketitle型補完, Completion - 補完入力
+@node Arbitrary completion, end補完, maketitle型補完, Completion
 @comment  node-name,  next,  previous,  up
 @section 随時補完
-@cindex 随時補完[ずいじほかん]
+@cindex 随時補完[すいしほかん]
 @cindex prefix SPC
 
   さて、今まで述べた典型的な La@TeX{} コマンド形式の補完入力を用いずに、今
@@ -749,14 +751,14 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 
 @table @kbd
 @item [prefix] SPC
-	@dots{}	随時補完
+        @dots{} 随時補完
 @end table
 
 @noindent 
 を入力すれば、全ての補完候補の中から一致するものが選ばれカーソル位置に挿入
 されます。
 
-@node end補完, Accent mark completion - アクセント記号補完, Arbitrary completion - 随時補完, Completion - 補完入力
+@node end補完, Accent mark completion, Arbitrary completion, Completion
 @comment  node-name,  next,  previous,  up
 @section end補完
 @cindex end補完[endほかん]
@@ -769,31 +771,31 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 
 @table @kbd
 @item [prefix] e
-	@dots{}	end 補完
+        @dots{} end 補完
 @end table
 
 @noindent 
-	とすることで、現在開いている環境名で \end{} が補われます。
+        とすることで、現在開いている環境名で \end{} が補われます。
 
-@node Accent mark completion - アクセント記号補完, Image completion - 数式記号イメージ補完, end補完, Completion - 補完入力
+@node Accent mark completion, Image completion, end補完, Completion
 @comment  node-name,  next,  previous,  up
 @section アクセント記号補完
-@cindex アクセント記号補完[あくせんときごうほかん]
+@cindex アクセント記号補完[あくせんときこうほかん]
 @cindex prefix a
-@cindex 欧文[おうぶん]
+@cindex 欧文[おうふん]
 
   欧文のアクセント記号(@code{\`@{o@}}など)を入力する時は、
 
 @table @kbd
 @item [prefix] a
-	@dots{}	アクセント記号入力
+        @dots{} アクセント記号入力
 @end table
 
 @noindent 
 を押すと、ミニバッファに
 
 @example
- 		1:` 2:' 3:^ 4:" 5:~ 6:= 7:. u v H t c d b
+                1:` 2:' 3:^ 4:" 5:~ 6:= 7:. u v H t c d b
 @end example
 
 @noindent 
@@ -801,30 +803,30 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 して下さい。すると編集バッファに、
 
 @example
- 		\`@{@}
+                \`@{@}
 @end example
 
 @noindent 
 があらわれ、カーソルが@{@}内に位置するので、さらに一文字入力する事で、
 
 @example
- 		\`@{o@}
+                \`@{o@}
 @end example
 
 @noindent 
 が完成され、カーソルは@{@}の外に戻ります。
 
-@node Image completion - 数式記号イメージ補完, Greek letter completion - ギリシャ文字補完, Accent mark completion - アクセント記号補完, Completion - 補完入力
+@node Image completion, Greek letter completion, Accent mark completion, Completion
 @comment  node-name,  next,  previous,  up
 @section 数式記号イメージ補完
-@cindex  数式記号イメージ補完[すうしききごういめーじほかん]
-@cindex イメージ補完[いめーじほかん]
+@cindex  数式記号イメージ補完[すうしききこういめえしほかん]
+@cindex イメージ補完[いめえしほかん]
 @cindex ;
-@cindex 数式モード[すうしきもーど]
-@cindex 矢印[やじるし]
-@cindex Σ[しぐま]
+@cindex 数式モード[すうしきもおと]
+@cindex 矢印[やしるし]
+@cindex Σ[しくま]
 @cindex leftarrow
-@cindex ∞[むげんだい]
+@cindex ∞[むけんたい]
 
   主に数式モードで使用される、矢印やΣなどの記号を擬似的に表現するキー入力
 で、La@TeX{} コマンドを入力できます。これは野鳥自身の「数式モード」でのみ
@@ -860,7 +862,7 @@ INPUT                   入力される La@TeX{} コマンド
 入力の途中でTABを押すと、それまで入力した文字で始まるもの一覧が表示されま
 す。ここで目的の La@TeX{} コマンドまでカーソルを移動し再度TABを押すことで
 その La@TeX{} コマンドがバッファに挿入されます。
-@cindex ;自身[;じしん]
+@cindex ;自身[;ししん]
 
   どのキー入力にどの記号が対応しているか全て知りたい時は、@kbd{;}を押した
 直後にリターンキーを押してください。以下の例は、@kbd{;<}と押した後にTAB
@@ -888,10 +890,10 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 照してください。
 @cindex YaTeX-math-sign-alist-private
 
-@node Greek letter completion - ギリシャ文字補完,  , Image completion - 数式記号イメージ補完, Completion - 補完入力
+@node Greek letter completion,  , Image completion, Completion
 @comment  node-name,  next,  previous,  up
 @section ギリシャ文字補完
-@cindex ギリシャ文字補完[ぎりしゃもじほかん]
+@cindex ギリシャ文字補完[きりしやもしほかん]
 @cindex /
 
   もう一つ、数式環境中で@kbd{/}を押すとギリシャ文字入力モードに入ります。
@@ -906,7 +908,7 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 とにより、強制的にイメージ補完に入ることができます。また、この時にどのよう
 な状態で数式環境内判定に失敗したかをご連絡下さい。
 
-@node Commenting out - コメントアウト, Cursor jump - カーソルジャンプ, Completion - 補完入力, Top
+@node Commenting out, Cursor jump, Completion, Top
 @comment  node-name,  next,  previous,  up
 @chapter コメントアウト
 @cindex コメントアウト[こめんとあうと]
@@ -921,9 +923,9 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 
 @table @kbd
 @item [prefix] >
-	@dots{}	リジョンを % でコメントアウト
+        @dots{} リジョンを % でコメントアウト
 @item [prefix] <
-	@dots{}	リジョンの % のコメントを外す
+        @dots{} リジョンの % のコメントを外す
 @end table
 
 @noindent 
@@ -931,9 +933,9 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 
 @table @kbd
 @item [prefix] .
-	@dots{}	現在のパラグラフをコメントアウト
+        @dots{} 現在のパラグラフをコメントアウト
 @item [prefix] ,
-	@dots{}	現在のパラグラフのコメントを外す
+        @dots{} 現在のパラグラフのコメントを外す
 @end table
 
 @noindent 
@@ -949,9 +951,9 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 
 @table @kbd
 @item [prefix] >
-	@dots{}	@code{\begin@{@}}～@code{\end@{@}} 全てコメントアウト
+        @dots{} @code{\begin@{@}}～@code{\end@{@}} 全てコメントアウト
 @item [prefix] <
-	@dots{}	@code{\begin@{@}}～@code{\end@{@}} 全てコメントを外す
+        @dots{} @code{\begin@{@}}～@code{\end@{@}} 全てコメントを外す
 @end table
 
 @noindent 
@@ -959,9 +961,9 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 
 @table @kbd
 @item [prefix] .
-	@dots{}	@code{\begin@{@}} と @code{\end@{@}} をコメントアウト
+        @dots{} @code{\begin@{@}} と @code{\end@{@}} をコメントアウト
 @item [prefix] ,
-	@dots{}	@code{\begin@{@}} と @code{\end@{@}} のコメントを外す
+        @dots{} @code{\begin@{@}} と @code{\end@{@}} のコメントを外す
 @end table
 
 は、対応する @code{\begin} と @code{\end} 2行だけを、コメント操作の対象と
@@ -970,17 +972,17 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 ると@code{\begin@{@}}～@code{\end@{@}}モードでコメント機能が働いてしまうの
 で注意して下さい。
 
-@node Cursor jump - カーソルジャンプ, Modifying/Deleting - 変更/削除, Commenting out - コメントアウト, Top
+@node Cursor jump, Modifying/Deleting, Commenting out, Top
 @comment  node-name,  next,  previous,  up
 @chapter カーソルジャンプ
-@cindex カーソルジャンプ[かーそるじゃんぷ]
+@cindex カーソルジャンプ[かあそるしやんふ]
 @cindex prefix g
 
   @code{\begin@{@}} や @code{\end@{@}} の行にカーソルを合わせ、
 
 @table @kbd
 @item [prefix] g
-	@dots{}	対応するオブジェクトにジャンプ
+        @dots{} 対応するオブジェクトにジャンプ
 @end table
 
 @noindent 
@@ -995,9 +997,9 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 
 @table @kbd
 @item [prefix] ^
-	@dots{}	メインファイルにジャンプ
+        @dots{} メインファイルにジャンプ
 @item [prefix] 4 ^
-	@dots{}	別ウィンドウでメインファイルにジャンプ
+        @dots{} 別ウィンドウでメインファイルにジャンプ
 @end table
 
 @noindent 
@@ -1007,15 +1009,15 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 
 @table @kbd
 @item M-C-a
-	@dots{}	環境の先頭(@code{\begin})へジャンプ
+        @dots{} 環境の先頭(@code{\begin})へジャンプ
 @item M-C-e
-	@dots{}	環境の末尾(@code{\end})へジャンプ
+        @dots{} 環境の末尾(@code{\end})へジャンプ
 @item M-C-@@
-	@dots{}	環境全体をマーク
+        @dots{} 環境全体をマーク
 @end table
-@cindex 環境の先頭へ[かんきょうのせんとうへ]
-@cindex 環境の末尾へ[かんきょうのまつびへ]
-@cindex 環境をマーク[かんきょうをまーく]
+@cindex 環境の先頭へ[かんきようのせんとうへ]
+@cindex 環境の末尾へ[かんきようのまつひへ]
+@cindex 環境をマーク[かんきようをまあく]
 @cindex M-C-a
 @cindex M-C-e
 @cindex M-C-@@
@@ -1023,10 +1025,10 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 上記のコマンドは通常の@kbd{[prefix]}キーではなく@kbd{META}キーをプリフィク
 スとして機能するのでご注意下さい。
 
-@node Modifying/Deleting - 変更/削除, Filling item - itemの桁揃え, Cursor jump - カーソルジャンプ, Top
+@node Modifying/Deleting, Filling item, Cursor jump, Top
 @comment  node-name,  next,  previous,  up
 @chapter 変更/削除
-@cindex 変更/削除[へんこう/さくじょ]
+@cindex 変更/削除[へんこう/さくしよ]
 @cindex prefix c
 @cindex prefix k
 
@@ -1035,9 +1037,9 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 
 @table @kbd
 @item [prefix] c
-	@dots{}	カーソル位置の La@TeX{} コマンドの変更
+        @dots{} カーソル位置の La@TeX{} コマンドの変更
 @item [prefix] k
-	@dots{}	カーソル位置の La@TeX{} コマンドの削除
+        @dots{} カーソル位置の La@TeX{} コマンドの削除
 @end table
 
 @noindent 
@@ -1047,8 +1049,8 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 @kbd{[prefix] c} は、@code{\begin@{@}} または @code{\end@{@}} のある場所で
 起動すると、環境名の変更を行います。@kbd{[prefix] k} は起動する位置により
 次のような動作を行います。
-@cindex 環境名の変更[かんきょうめいのへんこう]
-@cindex 環境の削除[かんきょうのさくじょ]
+@cindex 環境名の変更[かんきようめいのへんこう]
+@cindex 環境の削除[かんきようのさくしよ]
 
 
 @example
@@ -1067,15 +1069,15 @@ universal-argument (@kbd{C-u}) を打った後で@kbd{[prefix] k}をタイプすると、
 て下さい。
 
 @example
- 	元のテキスト:                   [prefix] k      C-u [prefix] k
-	本文\footnote@{脚注@}です。     本文脚注です。  本文です。
-	        ↑(カーソル位置)
+        元のテキスト:                   [prefix] k      C-u [prefix] k
+        本文\footnote@{脚注@}です。     本文脚注です。  本文です。
+                ↑(カーソル位置)
 @end example
 
-@node Filling item - itemの桁揃え, Local dictionary - ローカル辞書, Modifying/Deleting - 変更/削除, Top
+@node Filling item, Local dictionary, Modifying/Deleting, Top
 @comment  node-name,  next,  previous,  up
 @chapter itemの桁揃え
-@cindex itemの桁揃え[itemのけたぞろえ]
+@cindex itemの桁揃え[itemのけたそろえ]
 @cindex prefix i
 
   itemize 環境中にある@code{\item}の項目(文章)が複数行に渡る場合に、項
@@ -1083,14 +1085,14 @@ universal-argument (@kbd{C-u}) を打った後で@kbd{[prefix] k}をタイプすると、
 
 @table @kbd
 @item [prefix] i
-	@dots{}	itemの桁揃え
+        @dots{} itemの桁揃え
 @end table
 
 @noindent 
 によって、その item のインデントの深さに応じて fill されます。なお、NTT
 jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 て下さい。
-@cindex NTT-jTeX[えぬてぃーてぃーじぇーてっく]
+@cindex NTT-jTeX[えぬていいていいしえいてつく]
 
   このとき、変数@code{YaTeX-item-regexp}の値(標準では @code{"\\\\item"})を
 項目指定コマンドの正規表現として検索に使用します。itemize 環境で、独自のコ
@@ -1099,20 +1101,20 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 @cindex YaTeX-item-regexp
 
 @lisp
- 	(setq YaTeX-item-regexp
-	      "\\(\\\\item\\)\\|\\(\\\\underlineitem\\)")
+        (setq YaTeX-item-regexp
+              "\\(\\\\item\\)\\|\\(\\\\underlineitem\\)")
 @end lisp
 
 @noindent 
 この変数の指定の仕方がよく分からない場合は、独自の項目列挙コマンドの名前を
 @code{@code{"\item"}で始まるものにして下さい(例えば"\itembf"})。
 
-@node Local dictionary - ローカル辞書, Includeonly - 勝手にincludeonly, Filling item - itemの桁揃え, Top
+@node Local dictionary, Includeonly, Filling item, Top
 @comment  node-name,  next,  previous,  up
 @chapter ローカル辞書
-@cindex ローカル辞書[ろーかるじしょ]
+@cindex ローカル辞書[ろおかるししよ]
 @cindex .yatexrc
-@cindex へんなたんご[へんなたんご]
+@cindex 変な単語[へんなたんこ]
 
   補完入力用の候補は三種類の辞書から構成されています。一つは
 @file{yatex.el}に組み込まれた「標準辞書」、もう一つはユーザが個人的に常用
@@ -1135,32 +1137,32 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 合には@file{~/.emacs}などで、
 
 @lisp
- 	(setq YaTeX-nervous nil)
+        (setq YaTeX-nervous nil)
 @end lisp
 @cindex YaTeX-nervous
 
 @noindent 
 として下さい。
 
-@node Includeonly - 勝手にincludeonly, Where am I? - 今はどこ?, Local dictionary - ローカル辞書, Top
+@node Includeonly, Where am I?, Local dictionary, Top
 @comment  node-name,  next,  previous,  up
 @chapter 勝手にincludeonly
-@cindex 勝手にincludeonly[かってにincludeonly]
+@cindex 勝手にincludeonly[かつてにincludeonly]
 @cindex includeonly
 
   ファイルを分割して文章を入力している時には、メインファイル中に
 
 @example
-	\includeonly@{現在編集中のファイル名@}
+        \includeonly@{現在編集中のファイル名@}
 @end example
 
 @noindent 
 のように書いておくことで、タイプセットの時間を節約できますが、ちょっと他の
 ファイルを手直ししたい時には
-@cindex 他のファイルの手直し[ほかのふぁいるのてなおし]
+@cindex 他のファイルの手直し[ほかのふあいるのてなおし]
 
 @example
- 	\includeonly@{ちょっと手直ししたいファイル名@}
+        \includeonly@{ちょっと手直ししたいファイル名@}
 @end example
 
 @noindent 
@@ -1169,7 +1171,7 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 を仰ぎます。
 
 @example
- 	A)dd R)eplace %)comment?
+        A)dd R)eplace %)comment?
 @end example
 
 @noindent 
@@ -1178,26 +1180,26 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 @code{\includeonly} の行をコメントアウトして無効化したい時には、@kbd{%}を
 それぞれ押して下さい。
 
-@node Where am I? - 今はどこ?, Intelligent newline - おまかせ改行, Includeonly - 勝手にincludeonly, Top
+@node Where am I?, Intelligent newline, Includeonly, Top
 @comment  node-name,  next,  previous,  up
 @chapter 今はどこ?
-@cindex 今はどこ?[いまはどこ]
+@cindex 今はどこ?[いまはとこ]
 @cindex prefix &
-@cindex 複雑なtabular[ふくざつなtabular]
+@cindex 複雑なtabular[ふくさつなtabular]
 
   項目数の多い tabular などをたくさん書いていると下の方の行で、いま書いて
 いる桁がどこに対応するのかわからなくなってしまうことがあります。例えば、以
 下のような tabular において、
 
 @example
- 	\begin@{tabular@}{|c|c|c|c|c|c|c|c|}\hline
-	 氏名&所属&〒&住所&電話&FAX&帰省先&帰省先電話\\ \hline
-	 矢上二郎 & 6 & 223 & 横浜市港北区日吉 & xxx-yyy &
-	        zzz-www & トンガ & 9876-54321 \\
-	 日吉小僧 & 2 & \multicolumn@{2@}@{c|@}@{教えない@}
-	        &&&(???)
-	 \\ \hline
-	\end@{tabular@}
+        \begin@{tabular@}{|c|c|c|c|c|c|c|c|}\hline
+         氏名&所属&〒&住所&電話&FAX&帰省先&帰省先電話\\ \hline
+         矢上二郎 & 6 & 223 & 横浜市港北区日吉 & xxx-yyy &
+                zzz-www & トンガ & 9876-54321 \\
+         日吉小僧 & 2 & \multicolumn@{2@}@{c|@}@{教えない@}
+                &&&(???)
+         \\ \hline
+        \end@{tabular@}
 @end example
 
 @noindent 
@@ -1205,16 +1207,16 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 
 @table @kbd
 @item [prefix] &
-	@dots{}	現在のカラム表示
+        @dots{} 現在のカラム表示
 @end table
-@cindex 現在のカラム表示[げんざいのからむひょうじ]
+@cindex 現在のカラム表示[けんさいのからむひようし]
 
 を押すとカーソル位置のカラムがどの項目に該当するかをミニバッファに表示しま
 す。tabular/array環境の第1行目を項目名の並びとみなして対応するものを探しま
 す。もし項目名として別のものを与えたい場合は、行頭を@code{%}にしてダミーの
 項目並びを作っておくと良いでしょう。
 
-@node Intelligent newline - おまかせ改行, Online help - オンラインヘルプ, Where am I? - 今はどこ?, Top
+@node Intelligent newline, Online help, Where am I?, Top
 @comment  node-name,  next,  previous,  up
 @chapter おまかせ改行
 @cindex おまかせ改行[おまかせかいぎょう]
@@ -1225,7 +1227,7 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 
 @table @kbd
 @item ESC RET
-	@dots{} おまかせ改行
+        @dots{} おまかせ改行
 @end table
 
 @noindent 
@@ -1237,15 +1239,15 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 @itemize
 @item @code{tabular}, @code{tabular*}, @code{array}
 
-	カラム数-1 だけの @code{&} と @code{\\}。必要に応じて @code{\hline}
+        カラム数-1 だけの @code{&} と @code{\\}。必要に応じて @code{\hline}
 
 @item @code{tabbing}
 
-	一行目で定義している @code{\=} と同じ個数の @code{\>}。
+        一行目で定義している @code{\=} と同じ個数の @code{\>}。
 
 @item @code{itemize}, @code{enumerate}, @code{description}, @code{list}
 
-	@code{\item} または @code{item[]}
+        @code{\item} または @code{item[]}
 @end itemize
 
   tabular 環境の例のように、本機能は各環境の一行目の内容を参考にして動作す
@@ -1259,12 +1261,12 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 いでしょう。関数 @code{YaTeX-intelligent-newline-itemize} の定義などを参考
 にしてください。
 
-@node Online help - オンラインヘルプ, Cooperation with other packages - 他パッケージとの連携, Intelligent newline - おまかせ改行, Top
+@node Online help, Cooperation with other packages, Intelligent newline, Top
 @comment  node-name,  next,  previous,  up
 @chapter オンラインヘルプ
-@cindex オンラインヘルプ[おんらいんへるぷ]
+@cindex オンラインヘルプ[おんらいんへるふ]
 @cindex apropos
-@cindex キーワード検索[きーわーどけんさく]
+@cindex キーワード検索[きいわあとけんさく]
 @cindex prefix ?
 @cindex prefix /
 
@@ -1273,14 +1275,14 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 
 @table @kbd
 @item [prefix] ?
-	@dots{}	オンラインヘルプ
+        @dots{} オンラインヘルプ
 @item [prefix] /
-	@dots{}	オンラインapropos
+        @dots{} オンラインapropos
 @end table
 
 @section オンラインヘルプ
-@cindex グローバルヘルプ[ぐろーばるへるぷ]
-@cindex プライベートヘルプ[ぷらいべーとへるぷ]
+@cindex グローバルヘルプ[くろおはるへるふ]
+@cindex プライベートヘルプ[ふらいへえとへるふ]
 
   「オンラインヘルプ」は、一般的な La@TeX{} コマンド(デフォルトでカーソル
 位置のコマンド)に対する説明を隣のバッファに表示します。この時参照されるヘ
@@ -1306,14 +1308,14 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
 対する説明を書いたならばぜひ私までその説明をお送り下さい。次回の配布に含め
 たいと思います。
 
-@node Cooperation with other packages - 他パッケージとの連携, Customizations - カスタマイズ, Online help - オンラインヘルプ, Top
+@node Cooperation with other packages, Customizations, Online help, Top
 @comment  node-name,  next,  previous,  up
 @chapter 他パッケージとの連携
-@cindex  他パッケージとの連携[たぱっけーじとのれんけい]
+@cindex  他パッケージとの連携[たはつけえしとのれんけい]
 
 @section gmhist
 @cindex gmhist
-@cindex コマンドヒストリ[こまんどひすとり]
+@cindex コマンドヒストリ[こまんとひすとり]
 @cindex ヒストリ[ひすとり]
 
   @file{gmhist.el}と@file{gmhist-mh.el} をロードしている場合、プレヴューコ
@@ -1327,28 +1329,28 @@ jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセットし
   @file{min-out.el} (@code{outline-minor-mode}) と野鳥を組み合わせて使うこ
 とももちろん可能です。設定の方法に関しては@file{yatexm-o.el}をご覧ください。
 
-@node Customizations - カスタマイズ, Etc - その他, Cooperation with other packages - 他パッケージとの連携, Top
+@node Customizations, Etc, Cooperation with other packages, Top
 @comment  node-name,  next,  previous,  up
 @chapter カスタマイズ
-@cindex カスタマイズ[かすたまいず]
-@cindex キーアサイン[きーあさいん]
+@cindex カスタマイズ[かすたまいす]
+@cindex キーアサイン[きいあさいん]
 
   野鳥の動作を制御する種々の変数を独自に設定することにより、補完入
 力を起動するキーアサインを変えたり、環境名の補完候補をさらに充実さ
 せることなどができます。
 
 @menu
-* Lisp variables - lisp 変数::  
-* Add-in functions - 付加関数(アドイン関数)::  
+* Lisp variables::              lisp 変数
+* Add-in functions::            付加関数(アドイン関数)
 @end menu
 
-@node Lisp variables - lisp 変数, Add-in functions - 付加関数(アドイン関数), Customizations - カスタマイズ, Customizations - カスタマイズ
+@node Lisp variables, Add-in functions, Customizations, Customizations
 @comment  node-name,  next,  previous,  up
 @section lisp 変数
-@cindex prefixキー変更[prefixきーへんこう]
+@cindex prefixキー変更[prefixきいへんこう]
 
   例えば prefix キーを @kbd{C-c} 以外のキーにしたい場合は、
-@code{YaTeX-prefix }に prefix キーにしたいシンボルを定義してください。さら
+@code{YaTeX-prefix}に prefix キーにしたいシンボルを定義してください。さら
 に、「@kbd{C-c 英字}」というキーバインドは独自の関数が割り当ててあるので使
 いたくない。このような時は、@code{YaTeX-inhibit-prefix-letter} を @code{t} 
 に設定することにより、@kbd{C-c 英字…}のバインドが全て、対応する@kbd{C-c
@@ -1357,184 +1359,183 @@ C-英字…}に変わります(ただし、begin型 large型補完の大文字起動によるリジョ
 トして下さい。)。
 
 @menu
-* All customizable variables - カスタマイズ変数一覧::  
-* Sample definitions - カスタマイズ変数設定例::  
-* Hook variables - hook変数::   
-* Hook file - hook用ファイル::  
+* All customizable variables::  カスタマイズ変数一覧
+* Sample definitions::          カスタマイズ変数設定例
+* Hook variables::              hook変数
+* Hook file::                   hook用ファイル
 @end menu
 
-@node All customizable variables - カスタマイズ変数一覧, Sample definitions - カスタマイズ変数設定例, Lisp variables - lisp 変数, Lisp variables - lisp 変数
+@node All customizable variables, Sample definitions, Lisp variables, Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection カスタマイズ変数一覧
-@cindex カスタマイズ変数一覧[かすたまいずへんすういちらん]
+@cindex カスタマイズ変数一覧[かすたまいすへんすういちらん]
 
   yatex-mode における次の変数がカスタマイズ可能です。@file{~/.emacs} で 
 @code{setq} しておけば、そちらの定義が優先されます。括弧の中はデフォルト値
 です。
 
-@table @samp
-@item YaTeX-prefix
-
+@defvar YaTeX-prefix
 yatex-mode 中のプリフィクスキー(@kbd{C-c})
+@end defvar
 
-@item YaTeX-inhibit-prefix-letter
-
+@defvar YaTeX-inhibit-prefix-letter
 prefix キーの直後のキーバインドで@kbd{英字}のものを@kbd{C-英字}に変更
 (@code{nil})
+@end defvar
 
-@item YaTeX-fill-prefix
-
+@defvar YaTeX-fill-prefix
 本文を書く時の行頭に挿入する接頭辞すなわち fill-prefix (@code{""(nil)})
+@end defvar
 
-@item YaTeX-open-lines
-
+@defvar YaTeX-open-lines
 \begin{環境}と\end{環境}のあいだの空白行数 (0)
+@end defvar
 
-@item YaTeX-user-completion-table
-
+@defvar YaTeX-user-completion-table
 学習したLa@TeX{}コマンド保存ファイル名(@code{"~/.yatexrc"})
+@end defvar
 
-@item YaTeX-kanji-code
-
+@defvar YaTeX-kanji-code
 文書を作成する時の漢字コード1=Shift JIS, 2=JIS, 3=EUC(2 (MS-DOSでは1))
+@end defvar
 
-@item YaTeX-item-regexp
-
+@defvar YaTeX-item-regexp
 itemの桁揃えの時に用いる、itemの正規表現(@code{"\\\\item"})
+@end defvar
 
-@item tex-command
-
+@defvar tex-command
 La@TeX{}タイプセッタコマンド名 (@code{"jlatex"})
+@end defvar
 
-@item dvi2-command
-
+@defvar dvi2-command
 プレヴューアコマンド名(@code{"xdvi -geo +0+0 -s 4 -display (getenv"DISPLAY")"})
+@end defvar
 
-@item dviprint-command-format
-
+@defvar dviprint-command-format
 dviファイルの印刷に使われるコマンド式(@code{"dvi2ps %f %t %s | lpr"})
+@end defvar
 
-@item dviprint-from-format
-
+@defvar dviprint-from-format
 上の@code{%f}に相当する開始ページ指定書式、@code{%b} が開始ページ番号に変
 わる(@code{"-f %b"})
+@end defvar
 
-@item dviprint-to-format
-
+@defvar dviprint-to-format
 @code{%t} に相当する終了ページ指定書式、@code{%e}が終了ページ番号に変わる
 (@code{"-t %e"})
+@end defvar
 
-@item section-name
-
+@defvar section-name
 最初のsection型補完の規定値(@code{"documentstyle"})
+@end defvar
 
-@item env-name
-
+@defvar env-name
 最初のbegin型補完の規定値(@code{"document"})
+@end defvar
 
-@item fontsize-name
-
+@defvar fontsize-name
 最初のlarge型補完の規定値(@code{"large"})
+@end defvar
 
-@item single-command
-
+@defvar single-command
+@end defvar
 最初のmaketitle型補完の規定値(@code{"maketitle"})
-@item YaTeX-need-nonstop
 
+@defvar YaTeX-need-nonstop
 @code{\nonstopmode@{@}}を自動的に付加するか(@code{nil})
+@end defvar
 
-@item latex-warning-regexp
-
+@defvar latex-warning-regexp
 latexコマンドの出力するウォーニング行の正規表現(@code{"line.* [0-9]*"})
+@end defvar
 
-@item latex-error-regexp
-
+@defvar latex-error-regexp
 同じくエラー行の正規表現(@code{"l\\.[1-9][0-9]*"})
+@end defvar
 
-@item latex-dos-emergency-message
-
+@defvar latex-dos-emergency-message
 MS-DOS上で動作する latex コマンドが、エラーにより停止するとき出力するメッ
 セージ (@code{"Emergency stop"})
+@end defvar
 
-@item latex-message-kanji-code
-
+@defvar latex-message-kanji-code
 jlatex コマンドの出力するメッセージの漢字コード.タイプセットバッファ
 の出力が化ける時は、これを設定する(2, Nemacsでのみ有効)
+@end defvar
 
-@item NTT-jTeX
-
+@defvar NTT-jTeX
 NTT-j@TeX{}使用時@code{t}にする(@code{nil})
+@end defvar
 
-@item YaTeX-item-regexp
-
+@defvar YaTeX-item-regexp
 item化コマンドの正規表現(@code{"\\\\(sub\\)*item"})
+@end defvar
 
-@item YaTeX-nervous
-
+@defvar YaTeX-nervous
 ローカル辞書を用いる時 @code{t} (@code{t})
+@end defvar
 
-@item YaTeX-sectioning-regexp
-
+@defvar YaTeX-sectioning-regexp
 セクション区切り設定コマンドの正規表現
 (@code{"part\\|chapter\\|\\(sub\\)*\\(section\\|paragraph\\)"})
+@end defvar
 
-@item YaTeX-fill-inhibit-environments
-
+@defvar YaTeX-fill-inhibit-environments
 fill を抑止する環境名のリスト(@code{'("verbatim" "tabular")})
+@end defvar
 
-@item YaTeX-uncomment-once
-
+@defvar YaTeX-uncomment-once
 領域uncommentで行頭の複数の@code{%}を全て削除するか(@code{nil})
+@end defvar
 
-@item YaTeX-close-paren-always
-
+@defvar YaTeX-close-paren-always
 開き括弧の入力で常に閉じ括弧を入力する(@code{t})
+@end defvar
 
-@item YaTeX-auto-math-mode
-
+@defvar YaTeX-auto-math-mode
 数式モードの切り替えを自動的に行う。(@code{nil})
+@end defvar
 
-@item YaTeX-default-pop-window-height
-
+@defvar YaTeX-default-pop-window-height
 1画面の時にタイプセットバッファを初めて作成する時の高さ。数値で行数、数字
 文字列でEmacsウィンドウに対する百分率(10)。
+@end defvar
 
-@item YaTeX-help-file
-
+@defvar YaTeX-help-file
 共用ヘルプファイル(@file{$EMACS/etc/YATEXHLP.jp})
+@end defvar
 
-@item YaTeX-help-file-private
-
+@defvar YaTeX-help-file-private
 個人用ヘルプファイル(@file{"~/YATEXHLP.jp"})
+@end defvar
 
-@item YaTeX-no-begend-shortcut
-
+@defvar YaTeX-no-begend-shortcut
 @kbd{[prefix] b ??} のショートカットを使わず、@kbd{[prefix] b} だけで補完
 入力に入る(@kbd{nil})
-@end table
+@end defvar
 
-@node Sample definitions - カスタマイズ変数設定例, Hook variables - hook変数, All customizable variables - カスタマイズ変数一覧, Lisp variables - lisp 変数
+@node Sample definitions, Hook variables, All customizable variables, Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection カスタマイズ変数設定例
-@cindex 設定例[せっていれい]
+@cindex 設定例[せつていれい]
 
   たとえば、prefix キーとして@kbd{ESC}を使用し、新たな補完候補を格納するファ
 イルを、@file{~/src/emacs/yatexrc} にし、行頭の prefix をタブ文字一つに変
 えたいときは、
 
 @lisp
- 	(setq YaTeX-prefix "\e"
-	      YaTeX-user-completion-table "~/src/emacs/yatexrc"
-	      YaTeX-fill-prefix "	")
+        (setq YaTeX-prefix "\e"
+              YaTeX-user-completion-table "~/src/emacs/yatexrc"
+              YaTeX-fill-prefix "       ")
 @end lisp
 
 @noindent 
 を @file{~/.emacs} に加えます。
 
-@node Hook variables - hook変数, Hook file - hook用ファイル, Sample definitions - カスタマイズ変数設定例, Lisp variables - lisp 変数
+@node Hook variables, Hook file, Sample definitions, Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection hook変数
-@cindex hook変数[hook変数]
+@cindex hook変数[hookへんすう]
 @cindex yatex-mode-hook
 @cindex yatex-mode-load-hook
 
@@ -1547,8 +1548,8 @@ fill を抑止する環境名のリスト(@code{'("verbatim" "tabular")})
 のように設定します。
 
 @lisp
- 	(setq yatex-mode-hook
-	      '(lambda () (outline-minor-mode t)))
+        (setq yatex-mode-hook
+              '(lambda () (outline-minor-mode t)))
 @end lisp
 
 @noindent 
@@ -1559,14 +1560,14 @@ fill を抑止する環境名のリスト(@code{'("verbatim" "tabular")})
 挿入します。
 
 @lisp
- 	(setq yatex-mode-load-hook
-	      '(lambda() (YaTeX-define-begend-key "ba" "abstract")))
+        (setq yatex-mode-load-hook
+              '(lambda() (YaTeX-define-begend-key "ba" "abstract")))
 @end lisp
 
 なお、新たなキーの定義には、関数 @code{YaTeX-define-key}
 @code{YaTeX-define-begend-key}を利用するようにしてください。
 
-@node Hook file - hook用ファイル,  , Hook variables - hook変数, Lisp variables - lisp 変数
+@node Hook file,  , Hook variables, Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection hook用ファイル
 
@@ -1575,7 +1576,7 @@ fill を抑止する環境名のリスト(@code{'("verbatim" "tabular")})
 初期化の時に自動的にロードします。
 
 
-@node Add-in functions - 付加関数(アドイン関数),  , Lisp variables - lisp 変数, Customizations - カスタマイズ
+@node Add-in functions,  , Lisp variables, Customizations
 @comment  node-name,  next,  previous,  up
 @section 付加関数(アドイン関数)
 
@@ -1583,7 +1584,7 @@ fill を抑止する環境名のリスト(@code{'("verbatim" "tabular")})
 るための関数を作成することができます。この関数の作成方法や、組み込み方法に
 関しては、@code{yatexadd.doc} をご覧ください。
 
-@node Etc - その他, Copying - 取り扱い, Customizations - カスタマイズ, Top
+@node Etc, Copying, Customizations, Top
 @comment  node-name,  next,  previous,  up
 @chapter その他
 
@@ -1594,7 +1595,7 @@ fill を抑止する環境名のリスト(@code{'("verbatim" "tabular")})
 せることで、あなたの La@TeX{} スタイルにあった野鳥へと育っていくことでしょ
 う。
 
-@node Copying - 取り扱い,  , Etc - その他, Top
+@node Copying, Concept Index, Etc, Top
 @comment  node-name,  next,  previous,  up
 @chapter 取り扱い
 
@@ -1612,6 +1613,19 @@ yuuji@@ae.keio.ac.jpまで(1995年3月現在)。
 @flushright
 広瀬雄二
 @end flushright
+
+@node    Concept Index,  , Copying, Top
+@comment node-name, next, previous, up
+@unnumbered 索引
+@printindex cp
+
+@c カスタマイズ変数索引を索引と分離する場合にはコメントアウトを外す!!!
+@c @node    Variable Index
+@c @comment node-name, next, previous, up
+@c @unnumbered カスタマイズ変数索引
+@c @printindex vr
+
+@contents
 
 @bye
 

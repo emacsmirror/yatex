@@ -141,6 +141,13 @@ Read type(1): (S)tring (C)omplete (F)ile ([)option (P)osition co(O)rd. (q)uit
 		Item[3](RET to exit):		dframe RET
 		Item[4](RET to exit):		RET
 
+	さらに補完候補以外の選択を認めるかを聞いて来るので、y か n で答え
+	ます。この場合 plain, frame, dframe 以外は選べないので
+
+		Require match? (y or n)		y
+
+	のように y と答えます。
+
 	最後の引数は単に文字列を読めば良いので、補完タイプは String。
 	「default:」ではミニバッファで入力する時にデフォルトで入力されてい
 	る文字列を入れます。必要なければRETを空打ちします。
@@ -148,13 +155,6 @@ Read type(1): (S)tring (C)omplete (F)ile ([)option (P)osition co(O)rd. (q)uit
 		Read type(3)....		s
 		Prompt for argument#3		Caption RET
 		default:			の絵 RET
-
-	さらに補完候補以外の選択を認めるかを聞いて来るので、y か n で答え
-	ます。この場合 plain, frame, dframe 以外は選べないので
-
-		Require match? (y or n)		y
-
-	のように y と答えます。
 
 	  これで隣のウィンドウに \epsinput 用の引数型付加関数が生成されま
 	す。

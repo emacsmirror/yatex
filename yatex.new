@@ -1,6 +1,11 @@
 	Yet Another tex-mode for Emacs
 	yatex.el 各バージョンの変更点について。
 
+1.51	メニューバーへのメニュー登録。
+	YaTeX-fill-item(C-c C-i) と YaTeX-indent-line (C-i)が賢くなった。
+	hilit19をロードしておくとセクション区切りが目立つように色が付く。
+	YaTeX-generate-simple のバグフィクス。
+
 1.50	YaTeX-math モードの記号用 prefix を , から ; に変えた(注意!)。
 	イメージ補完の一覧表示キーを RET から TAB に変えた(注意!)。
 	[prefix] / の YaTeX-apropos の追加。

@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c ) 1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Jul 11 02:01:18 1994 on 98fa
+;;; Last modified Tue Sep 20 01:35:46 1994 on figaro
 ;;; $Id$
 
 ;;;

@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sun Jul 24 01:24:08 1994 on figaro
+;;; Last modified Fri Sep 16 01:50:36 1994 on figaro
 ;;; $Id$
 
 (require 'yatex)

@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.9
 ;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Jul 25 00:04:43 1994 on figaro
+;;; Last modified Mon Aug 22 14:19:39 1994 on figaro
 ;;; $Id$
 
 ;;;
@@ -98,6 +98,10 @@ YaTeX-make-begin-end."
   "YaTeX add-in function for table environment."
   (YaTeX:read-position "htbp")
 )
+
+(fset 'YaTeX:figure 'YaTeX:table)
+(fset 'YaTeX:figure* 'YaTeX:table)
+
 
 (defun YaTeX:description ()
   "Truly poor service:-)"
