@@ -50,3 +50,6 @@ tci:
 dostci:
 	ci -r$(MVER).0 -Ncurrent -l @rcsfile
 
+gohome:
+	zip -u -r /com/okoma/yuuji/tmp/dosconv/yatex.zip . \
+	-x '*RCS/*' -x 'texinfo/*'
