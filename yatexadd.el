@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.9
 ;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Oct 31 12:55:54 1994 on pajero
+;;; Last modified Sat Nov 12 07:03:15 1994 on VFR
 ;;; $Id$
 
 ;;;
@@ -566,17 +566,22 @@ YaTeX-make-begin-end."
   "Alist of LaTeX style parameters.")
 (defvar YaTeX:style-parameters-private nil
   "*User definable alist of style parameters.")
-(defvar YaTeX:style-parameters-private nil
-  "Holds the union of LaTeX style parameters.")
-(setq YaTeX:style-parameters
-      (append YaTeX:style-parameters-private YaTeX:style-parameters-default))
+(defvar YaTeX:style-parameters-local nil
+  "*User definable alist of local style parameters.")
 
 (defvar YaTeX:length-history nil "Holds history of length.")
 (defun YaTeX::setlength (&optional argp)
   "YaTeX add-in function for arguments of \\setlength."
   (cond
    ((equal 1 argp)
-    (completing-read "Length variable: " YaTeX:style-parameters nil nil "\\"))
+    ;;(completing-read "Length variable: " YaTeX:style-parameters nil nil "\\")
+    (YaTeX-cplread-with-learning
+     "Length variable: "
+     'YaTeX:style-parameters-default
+     'YaTeX:style-parameters-private
+     'YaTeX:style-parameters-local
+     nil nil "\\")
+    )
    ((equal 2 argp)
     (let ((minibuffer-history-symbol 'YaTeX:length-history))
       (read-string "Length: "))))
@@ -587,7 +592,12 @@ YaTeX-make-begin-end."
   "YaTeX add-in function for arguments of \\settowidth."
   (cond
    ((equal 1 argp)
-    (completing-read "Length variable: " YaTeX:style-parameters nil nil "\\"))
+    (YaTeX-cplread-with-learning
+     "Length variable: "
+     'YaTeX:style-parameters-default
+     'YaTeX:style-parameters-private
+     'YaTeX:style-parameters-local
+     nil nil "\\"))
    ((equal 2 argp)
     (read-string "Text: ")))
 )
@@ -596,12 +606,14 @@ YaTeX-make-begin-end."
   (cond
    ((equal argp 1)
     (let ((length (read-string "Length variable: " "\\")))
-      (or (assoc length YaTeX:style-parameters-private)
-	  (setq YaTeX:style-parameters-private
-		(cons (list length) YaTeX:style-parameters-private)
-		YaTeX:style-parameters
-		(cons (list length) YaTeX:style-parameters)))
-      length)))
+      (if (string< "" length)
+	  (YaTeX-update-table
+	   (list length)
+	   'YaTeX:style-parameters-default
+	   'YaTeX:style-parameters-private
+	   'YaTeX:style-parameters-local))
+      length)
+    ))
 )
 
 ;; \multicolumn's arguments
@@ -619,6 +631,76 @@ YaTeX-make-begin-end."
       c))
    ((equal 3 argp)
     (read-string "Item: ")))
+)
+
+(defvar YaTeX:documentstyles-default
+  '(("article") ("jarticle") ("j-article")
+    ("book") ("jbook") ("j-book")
+    ("report") ("jreport") ("j-report")
+    ("letter") ("ascjletter"))
+  "List of LaTeX documentstyles.")
+(defvar YaTeX:documentstyles-private nil
+  "*User defined list of LaTeX documentstyles.")
+(defvar YaTeX:documentstyles-local nil
+  "*User defined list of local LaTeX documentstyles.")
+(defvar YaTeX:documentstyle-options-default
+  '(("a4j") ("a5j") ("b4j") ("b5j")
+    ("twocolumn") ("jtwocolumn") ("epsf") ("epsfig") ("epsbox") ("nfig"))
+  "List of LaTeX documentstyle options.")
+(defvar YaTeX:documentstyle-options-private nil
+  "*User defined list of LaTeX documentstyle options.")
+(defvar YaTeX:documentstyle-options-local nil
+  "List of LaTeX local documentstyle options.")
+
+(defvar YaTeX-minibuffer-completion-map nil
+  "Minibuffer completion key map that allows comma completion.")
+(if YaTeX-minibuffer-completion-map nil
+  (setq YaTeX-minibuffer-completion-map
+	(copy-keymap minibuffer-local-completion-map))
+  (define-key YaTeX-minibuffer-completion-map " "
+    'YaTeX-minibuffer-complete)
+  (define-key YaTeX-minibuffer-completion-map "\t"
+    'YaTeX-minibuffer-complete))
+
+(defun YaTeX:documentstyle ()
+  (let*((delim ",")
+	(dt (append YaTeX:documentstyle-options-local
+		    YaTeX:documentstyle-options-private
+		    YaTeX:documentstyle-options-default))
+	(minibuffer-completion-table dt)
+	(opt (read-from-minibuffer
+	      "Style options ([opt1,opt2,...]): "
+	      nil YaTeX-minibuffer-completion-map))
+	(substr opt) o)
+    (if (string< "" opt)
+	(progn
+	  (while substr
+	    (setq o (substring substr 0 (string-match delim substr)))
+	    (or (assoc o dt)
+		(YaTeX-update-table
+		 (list o)
+		 'YaTeX:documentstyle-options-default
+		 'YaTeX:documentstyle-options-private
+		 'YaTeX:documentstyle-options-local))
+	    (setq substr
+		  (if (string-match delim substr)
+		      (substring substr (1+ (string-match delim substr))))))
+	  (concat "[" opt "]"))
+      "")))
+
+(defun YaTeX::documentstyle (&optional argp)
+  "YaTeX add-in function for arguments of \\socumentstyle."
+  (cond
+   ((equal argp 1)
+    (let ((sname
+	   (YaTeX-cplread-with-learning
+	    (format "Documentstyle (default %s): "
+		    YaTeX-default-document-style)
+	    'YaTeX:documentstyles-default
+	    'YaTeX:documentstyles-private
+	    'YaTeX:documentstyles-local)))
+      (if (string= "" sname) (setq sname YaTeX-default-document-style))
+      (setq YaTeX-default-document-style sname))))
 )
 
 ;;; -------------------- End of yatexadd --------------------

@@ -1161,9 +1161,25 @@ pt		ポイント(72.27pt=1インチ)
 新しいページを開始し、\textwidthのBOXをparboxで作成する。
 二段組みページでぶち抜きタイトルを作成する時に用いるとよい。
 
+LaiTeX
+a Little Assistant Interface for TeX
+おそらくあなたが今 Vz 上で使っているこのモード。
+LaTeXを効率的に使うための多くの機能を盛り込んでいます。
+
+【発音について】
+
+laitex.defなどプログラムを指す時は「らいてっく」、システムを指す時は「ら
+いちょう」と読みます。
+
+【補足】
+「雷鳥」の旧仮名遣いは「らいてう」だそうです。
+
+laitex
+<refer LaiTeX>
+
 YaTeX
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))
-おそらくあなたが今使っているこのモード。
+おそらくあなたが今 Emacs で使っているこのモード。
 LaTeXを効率的に使うための多くの機能を盛り込んでいます。
 
 【発音について】

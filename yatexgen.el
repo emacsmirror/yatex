@@ -2,7 +2,7 @@
 ;;; YaTeX add-in function generator.
 ;;; yatexgen.el rev.3
 ;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Sep 20 01:34:46 1994 on figaro
+;;; Last modified Thu Nov 17 03:54:56 1994 on VFR
 ;;; $Id$
 
 (require 'yatex)
@@ -587,7 +587,10 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
 	      singlecmd-table user-singlecmd-table tmp-singlecmd-table)
 	     nil nil)
 	    command (if (string= "" command) section-name command)))
-  (message "(o)’Ç‰ÁŒ^? (a)ˆø”Œ^? (yatexadd.doc‚ğQÆ‚Ì‚±‚Æ) :")
+  (message
+   (cond
+    (YaTeX-japan "(o)’Ç‰ÁŒ^? (a)ˆø”Œ^? (yatexadd.doc‚ğQÆ‚Ì‚±‚Æ) :")
+    (t "(O)ption? (A)rgument?")))
   (YaTeX-showup-buffer
    (if (= (read-char) ?o)
        (YaTeX-generate-option-type command)

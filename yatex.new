@@ -1,13 +1,31 @@
-	Yet Another tex-mode for Emacs
-	yatex.el 各バージョンの変更点について。
+	What's new in YaTeX
+	yatex.el 各バージョンの変更点について
+
+1.54	section 型コマンドの引数のデフォルトの入力には通常の文字列入力を
+	行うようにし、変数 user-article-table を廃止した。これにより
+	Emacs-19(Mule2) でのデフォルトのヘルプファイルの格納場所をetcディ
+	レクトリから、site-lisp ディレクトリに変更した(注意!!)。
+	~/.yatexrc に任意の elisp を入れておいても消えないようになった。
+	documentstyle のアドイン関数を充実させ、スタイルオプションやスタ
+	イルの学習を行うようにした。
+	ユーザ辞書も新単語の入力と同時に更新するようにし、kill-emacs を
+	トラップするのをやめた。
+	[prefix] c で section 型コマンドとその引数/オプション、large型
+	コマンドを変更できるようにした。
+	数式モード自動判定時にコメントアウトされた $ は数えないようにし
+	た。また、変数 YaTeX-verbatim-environments を用意し、LaTeX コマ
+	ンドが無効となる環境名のリストを列挙できるようにした。
+	YaTeX-hilit-pattern-adjustment-private で独自カラーを定義可能に。
+	YaTeX-sectioning-level で独自に定義したセクション区切りコマンド
+	を登録してもうまく動作するようにした。
 
 1.53	Emacs-19で新単語の更新がうまくいかなかったのを今度こそ直した。
 	ref/labelジャンプで別のバッファのref/labelに飛べるようにした。
 	ref/labelジャンプと同形式でcite/bibitem間で飛べるようにした。
 	cite/bibitemのアドイン関数の追加。
 
-1.52	外部プロセス用テンポラリバッファが別frameにある時には現frameにテ
-	ンポラリバッファをpopupしないようにした。
+1.52	外部プロセス用テンポラリバッファが別 frame にある時には現 frame
+	にテンポラリバッファを popup しないようにした。
 	Hilightening に独自のタグを導入し、reverseVideo がON/OFFの時両方
 	に対応した。
 	Emacs-19で新単語の更新がうまくいかなかったのを直した。

@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Oct 20 16:48:41 1994 on figaro
+;;; Last modified Fri Nov 25 03:31:46 1994 on VFR
 ;;; $Id$
 
 (require 'yatex)
@@ -18,6 +18,11 @@
 
 (defvar YaTeX-current-TeX-buffer nil
   "Keeps the buffer on which recently typeset run.")
+
+(defvar YaTeX-shell-command-option
+  (or (and (boundp 'shell-command-option) shell-command-option)
+      (if YaTeX-dos "/c" "-c"))
+  "Shell option for command execution.")
 
 (if YaTeX-typeset-buffer-syntax nil
   (setq YaTeX-typeset-buffer-syntax
@@ -50,12 +55,14 @@
       (cond
        (YaTeX-dos			;if MS-DOS
 	(YaTeX-put-nonstopmode)
-	(call-process shell-file-name nil buffer nil "/c" command)
+	(call-process
+	 shell-file-name nil buffer nil YaTeX-shell-command-option command)
 	(YaTeX-remove-nonstopmode))
        (t				;if UNIX
 	(set-process-buffer
 	 (setq YaTeX-typeset-process
-	       (start-process "LaTeX" buffer shell-file-name "-c" command))
+	       (start-process "LaTeX" buffer shell-file-name
+			      YaTeX-shell-command-option command))
 	 (get-buffer buffer))
 	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)))
       (message (format "Calling `%s'..." command))
@@ -302,9 +309,11 @@ PROC should be process identifier."
     (set-buffer (get-buffer-create buffer))
     (erase-buffer)
     (if YaTeX-dos
-	(call-process shell-file-name nil buffer nil "/c " command)
+	(call-process
+	 shell-file-name nil buffer nil YaTeX-shell-command-option command)
       (set-process-buffer
-       (start-process "system" buffer shell-file-name "-c" command)
+       (start-process
+	"system" buffer shell-file-name YaTeX-shell-command-option command)
        (get-buffer buffer))))
 )
 
@@ -330,21 +339,24 @@ PROC should be process identifier."
   (setq dvi2-command preview-command)	;`dvi2command' is buffer local
   (save-excursion
     (YaTeX-visit-main t)
-    (let ((pbuffer "*dvi-preview*"))
+    (let ((pbuffer "*dvi-preview*") (dir default-directory))
       (YaTeX-showup-buffer
        pbuffer (function (lambda (x) (nth 3 (window-edges x)))))
       (set-buffer (get-buffer-create pbuffer))
       (erase-buffer)
+      (setq default-directory dir)	;for 18
+      (cd dir)				;for 19
       (cond
        (YaTeX-dos			;if MS-DOS
 	(send-string-to-terminal "\e[2J\e[>5h") ;CLS & hide cursor
 	(call-process shell-file-name "con" "*dvi-preview*" nil
-		      "/c " preview-command preview-file)
+		      YaTeX-shell-command-option preview-command preview-file)
 	(send-string-to-terminal "\e[>5l") ;show cursor
 	(redraw-display))
        (t				;if UNIX
 	(set-process-buffer
-	 (start-process "preview" "*dvi-preview*" shell-file-name "-c"
+	 (start-process "preview" "*dvi-preview*" shell-file-name
+			YaTeX-shell-command-option
 			(concat preview-command " " preview-file))
 	 (get-buffer pbuffer))
 	(message
@@ -594,14 +606,15 @@ page range description."
       (erase-buffer)
       (cond
        (YaTeX-dos
-	(call-process shell-file-name "con" "*dvi-printing*" nil "/c " cmd))
+	(call-process shell-file-name "con" "*dvi-printing*" nil
+		      YaTeX-shell-command-option cmd))
        (t
 	(set-process-buffer
-	 (start-process "print" "*dvi-printing*" shell-file-name "-c" cmd)
+	 (start-process "print" "*dvi-printing*" shell-file-name
+			YaTeX-shell-command-option cmd)
 	 (get-buffer lbuffer))
-	(message (concat "Starting " cmd " to printing "
-			 (YaTeX-get-preview-file-name)))))
-    ))
+	(message "Starting printing command: %s..." cmd)))
+      ))
 )
 
 (defun YaTeX-main-file-p ()

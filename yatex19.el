@@ -1,13 +1,13 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Sep 23 04:30:27 1994 on figaro
+;;; Last modified Mon Nov 21 21:52:16 1994 on figaro
 ;;; $Id$
 
-;;; $B$H$j$"$($:(B hilit19 $B$r;H$C$F$$$k;~$K?'$,IU$/$h$&$K$7$F(B
-;;; $B%a%K%e!<%P!<$G$4$K$g$4$K$g$G$-$k$h$&$K$7$?$@$1!#(B
-;;; $B$$$C$?$$C/$,%a%K%e!<%P!<;H$C$F(BLaTeX$B%=!<%9=q$/$s$@$m$&$+(B?
-;;; $B$^$"$$$$$dN}=,N}=,!#8e$m$NJ}$K$A$g$C$H%3%a%s%H$"$j!#(B
+;;; ‚Æ‚è‚ ‚¦‚¸ hilit19 ‚ğg‚Á‚Ä‚¢‚é‚ÉF‚ª•t‚­‚æ‚¤‚É‚µ‚Ä
+;;; ƒƒjƒ…[ƒo[‚Å‚²‚É‚å‚²‚É‚å‚Å‚«‚é‚æ‚¤‚É‚µ‚½‚¾‚¯B
+;;; ‚¢‚Á‚½‚¢’N‚ªƒƒjƒ…[ƒo[g‚Á‚ÄLaTeXƒ\[ƒX‘‚­‚ñ‚¾‚ë‚¤‚©?
+;;; ‚Ü‚ ‚¢‚¢‚â—ûK—ûKBŒã‚ë‚Ì•û‚É‚¿‚å‚Á‚ÆƒRƒƒ“ƒg‚ ‚èB
 
 (require 'yatex)
 
@@ -203,17 +203,21 @@ where
 	 '(lambda (x y) (string< (car x) (car y))))))
 
 ;; Highlightening
-;; $B%m!<%+%k$J%^%/%m$rFI$_9~$s$@8e(B redraw $B$9$k$H(B
-;; $B%m!<%+%k%^%/%m$r(B keyword $B$H$7$F8w$i$;$k(B(keyword$B$8$c$^$:$$$+$J!D(B)$B!#(B
+;; ƒ[ƒJƒ‹‚Èƒ}ƒNƒ‚ğ“Ç‚İ‚ñ‚¾Œã redraw ‚·‚é‚Æ
+;; ƒ[ƒJƒ‹ƒ}ƒNƒ‚ğ keyword ‚Æ‚µ‚ÄŒõ‚ç‚¹‚é(keyword‚¶‚á‚Ü‚¸‚¢‚©‚Èc)B
 (defvar YaTeX-hilit-pattern-adjustment
   (list
-   ;;\def $B$,(B define $B$J$s$@$+$i(B new* $B$b(B define $B$G$7$g$&!#(B
+   ;;\def ‚ª define ‚È‚ñ‚¾‚©‚ç new* ‚à define ‚Å‚µ‚å‚¤B
    '("\\\\\\(re\\)?new\\(environment\\|command\\){" "}" define)
    '("\\\\new\\(length\\|theorem\\|counter\\){" "}" define)
-   ;;$B%;%/%7%g%s%3%^%s%I$,C1$J$k%-!<%o!<%I$C$F$3$H$O$J$$$G$7$g$&!#(B
+   ;;ƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚ª’P‚È‚éƒL[ƒ[ƒh‚Á‚Ä‚±‚Æ‚Í‚È‚¢‚Å‚µ‚å‚¤B
    (list
     (concat "\\\\\\(" YaTeX-sectioning-regexp "\\){") "}"
-    'sectioning))
+    'sectioning)
+   ;;eqnarray ‚È‚Ç‚Ì”®ŠÂ‹«‚ª“ü‚Á‚Ä‚È‚¢‚İ‚½‚¢c
+   '("\\\\begin{\\(eqnarray\\*?\\)\\|\\(equation\\*?\\)}"
+     "\\\\end{\\(eqnarray\\*?\\)\\|\\(equation\\*?\\)}"
+     formula))
   "Adjustment for hilit19's LaTeX hilit pattern.")
 (defvar YaTeX-hilit-sectioning-face
   '(yellow/dodgerblue yellow/cornflowerblue))
@@ -269,10 +273,10 @@ where
 			(define-key YaTeX-mode-map key 'YaTeX-hilit-recenter)))
 	    (where-is-internal 'hilit-recenter)))
 
-;;; reverseVideo $B$K$7$F(B hilit-background-mode $B$r(B 'dark
-;;; $B$K$7$F$$$k?M$O?t<0$J$I$,0E$/$J$j$9$.$F8+$E$i$$$+$b$7$l$J$$!#(B
-;;; $B<!$N%3!<%I$r(B hilit19 $B$r%m!<%I$7$F$$$k>l=j$ND>8e$KCV$/$H$A$g$C(B
-;;; $B$H$O$^$7!#(B
+;;; reverseVideo ‚É‚µ‚Ä hilit-background-mode ‚ğ 'dark
+;;; ‚É‚µ‚Ä‚¢‚él‚Í”®‚È‚Ç‚ªˆÃ‚­‚È‚è‚·‚¬‚ÄŒ©‚Ã‚ç‚¢‚©‚à‚µ‚ê‚È‚¢B
+;;; Ÿ‚ÌƒR[ƒh‚ğ hilit19 ‚ğƒ[ƒh‚µ‚Ä‚¢‚éêŠ‚Ì’¼Œã‚É’u‚­‚Æ‚¿‚å‚Á
+;;; ‚Æ‚Í‚Ü‚µB
 ;;;  (if (eq hilit-background-mode 'dark)
 ;;;      (hilit-translate
 ;;;       string 'mediumspringgreen

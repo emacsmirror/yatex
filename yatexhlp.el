@@ -2,15 +2,16 @@
 ;;; YaTeX helper with LaTeX commands and macros.
 ;;; yatexhlp.el
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Sep 20 01:35:12 1994 on figaro
+;;; Last modified Sat Nov 12 04:20:26 1994 on VFR
 ;;; $Id$
 
 (let ((help-file (concat "YATEXHLP."
 			 (cond (YaTeX-japan "jp")
 			       (t "eng"))))
       (help-dir
-       (cond (YaTeX-emacs-19 (expand-file-name "../etc" exec-directory))
-	     (t exec-directory))))
+       (cond
+	(YaTeX-emacs-19 (expand-file-name "../../site-lisp" exec-directory))
+	(t exec-directory))))
   (defvar YaTeX-help-file
     (expand-file-name help-file help-dir)
     "*Help file of LaTeX/TeX commands or macros.")

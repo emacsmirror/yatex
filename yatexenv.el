@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c ) 1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Sep 20 01:35:46 1994 on figaro
+;;; Last modified Thu Nov 24 04:33:18 1994 on 98fa
 ;;; $Id$
 
 ;;;
@@ -13,7 +13,8 @@
 (defun YaTeX-array-what-column ()
   "Show matching columne title of array environment.
 When calling from a program, make sure to be in array/tabular environment."
-  (let ((p (point)) beg eot bor (nlptn "\\\\\\\\") (andptn "[^\\]&") (n 0)
+  (let ((p (point)) beg eot bor (nlptn "\\\\\\\\") (andptn "[^\\]&")
+	(n 0) j
 	(firsterr "This line might be the first row."))
     (save-excursion
       (YaTeX-beginning-of-environment)
@@ -46,24 +47,23 @@ When calling from a program, make sure to be in array/tabular environment."
 		     -1)))))
       (message "%s" n)
       (goto-char (1- beg))
-      (cond
-       ((= n 1) (message "Here is the FIRST column!"))
-       (t (while (> n 1)
-	    (or (re-search-forward andptn p nil)
-		(error "This column exceeds the limit."))
-	    (setq n (1- n)))
-	  (skip-chars-forward "\\s ")
-	  (message
-	   "Here is the column of: %s"
-	   (buffer-substring
-	    (point)
-	    (progn
-	      (re-search-forward (concat andptn "\\|" nlptn) eot)
-	      (goto-char (match-beginning 0))
-	      (if (looking-at andptn)
-		  (forward-char 1))
-	      (skip-chars-backward "\\s ")
-	      (point))))))))
+      (setq j n)
+      (while (> j 1)
+	(or (re-search-forward andptn p nil)
+	    (error "This column exceeds the limit."))
+	(setq j (1- j)))
+      (skip-chars-forward "\\s ")
+      (message
+       "This is the column(#%d) of: %s" n
+       (buffer-substring
+	(point)
+	(progn
+	  (re-search-forward (concat andptn "\\|" nlptn) eot)
+	  (goto-char (match-beginning 0))
+	  (if (looking-at andptn)
+	      (forward-char 1))
+	  (skip-chars-backward "\\s ")
+	  (point))))))
 )
 
 ;;;###autoload

@@ -2,7 +2,7 @@
 ;;; YaTeX library of general functions.
 ;;; yatexlib.el
 ;;; (c )1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Oct 10 22:14:14 1994 on VFR
+;;; Last modified Thu Nov 24 02:20:45 1994 on VFR
 ;;; $Id$
 
 ;;;###autoload
@@ -11,7 +11,7 @@
 Optional arguments after BOUND, ERR, CNT are passed literally to search-forward
 or search-backward.
 Optional sixth argument FUNC changes search-function."
-  (let ((sfunc (if func func 'search-forward)) found md)
+  (let ((sfunc (or func 'search-forward)) found md)
     (while (and (prog1
 		    (setq found (funcall sfunc string bound err cnt))
 		  (setq md (match-data)))
@@ -122,7 +122,7 @@ corresponding real arguments ARGS."
   "Make BUFFER show up in certain window (but current window)
 that gives the maximum value by the FUNC.  FUNC should take an argument
 of its window object.  Non-nil for optional third argument SELECT selects
-that window."
+that window.  This function never selects minibuffer window."
   (or (and (if YaTeX-emacs-19
 	       (get-buffer-window buffer t)
 	     (get-buffer-window buffer))
@@ -158,7 +158,8 @@ that window."
 	  (switch-to-buffer buffer)
 	  (or select (select-window window)))
 	 ((= (length wlist) 2)
-	  (other-window 1)
+	  ;(other-window 1);This does not work properly on Emacs-19
+	  (select-window (get-lru-window))
 	  (switch-to-buffer buffer)
 	  (or select (select-window window)))
 	 (t				;if one-window
@@ -208,23 +209,33 @@ where ever it appears."
   "Return (buffer-substring (match-beginning n) (match-beginning m))."
   (if (match-beginning n)
       (buffer-substring (match-beginning n)
-			(match-end (if m m n))))
+			(match-end (or m n))))
 )
 
 ;;;###autoload
 (defun YaTeX-minibuffer-complete ()
-  "Complete in minibuffer"
+  "Complete in minibuffer.
+If the symbol 'delim is bound and is string, its value is assumed to be
+the character class of delimiters.  Completion will be performed on
+the last field separated by those delimiters."
   (interactive)
-  (let (beg word compl)
-    (setq beg (if (and (boundp 'delim) delim)
+  (let (beg word compl (md (match-data)))
+    (setq beg (if (and (boundp 'delim) (stringp delim))
 		  (save-excursion
 		    (skip-chars-backward (concat "^" delim))
-		    (1- (point)))
+		    (point))
 		(point-min))
 	  word (buffer-substring beg (point-max))
 	  compl (try-completion word minibuffer-completion-table))
     (cond
-     ((eq compl t) nil)
+     ((eq compl t)
+      (let ((p (point)) (max (point-max)))
+	(goto-char max)
+	(insert " [Sole completion]")
+	(goto-char p)
+	(sit-for 1)
+	(delete-region max (point-max))
+	(goto-char p)))
      ((eq compl nil)
       (ding)
       (save-excursion
@@ -240,7 +251,8 @@ where ever it appears."
 	 (all-completions word minibuffer-completion-table))))
      (t (delete-region beg (point-max))
 	(insert compl))
-     ))
+     )
+    (store-match-data md))
 )
 
 

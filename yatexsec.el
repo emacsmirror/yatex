@@ -2,13 +2,25 @@
 ;;; YaTeX sectioning browser.
 ;;; yatexsec.el
 ;;; (c ) 1994 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Sep 20 01:35:32 1994 on figaro
+;;; Last modified Fri Nov 25 04:46:42 1994 on VFR
 ;;; $Id$
 
 (defvar YaTeX-sectioning-level
-  '(("part" . 0) ("chapter" . 1) ("section" . 2) ("subsection" . 3)
-    ("subsubsection" . 4) ("paragraph" . 5) ("subparagraph" . 6))
-  "Sectioning level.")
+  '(("part" . 0)
+    ("chapter" . 1)
+    ("section" . 2)
+    ("subsection" . 3)
+    ("subsubsection" . 4)
+    ("paragraph" . 5)
+    ("subparagraph" . 6))
+  "*Alist of LaTeX's sectioning command and its level.
+This value must be written in numerically ascending order and consecutive.
+Needn't define the level of `*' commands such as `section*'.")
+
+(defvar YaTeX-sectioning-max-level
+  (cdr (nth (1- (length YaTeX-sectioning-level)) YaTeX-sectioning-level))
+  "*The heighest(numerically) level of sectioning command.
+This must be the heighest number in YaTeX-sectioning-level.")
 
 (defun YaTeX-sectioning-map-hide (map)
   (let ((ch ?0))
@@ -17,40 +29,40 @@
       (setq ch (1+ ch))))
 )
 
-(defvar YaTeX-minibuffer-sectioning-map nil
+(defvar YaTeX-sectioning-minibuffer-map nil
   "Key map used in minibuffer for sectioning.")
-(if YaTeX-minibuffer-sectioning-map nil
-  (setq YaTeX-minibuffer-sectioning-map
+(if YaTeX-sectioning-minibuffer-map nil
+  (setq YaTeX-sectioning-minibuffer-map
 	(copy-keymap minibuffer-local-completion-map))
-  (define-key YaTeX-minibuffer-sectioning-map "\C-p"
+  (define-key YaTeX-sectioning-minibuffer-map "\C-p"
     'YaTeX-sectioning-up)
-  (define-key YaTeX-minibuffer-sectioning-map "\C-e"
+  (define-key YaTeX-sectioning-minibuffer-map "\C-e"
     'YaTeX-sectioning-up)
-  (define-key YaTeX-minibuffer-sectioning-map "\C-i"
+  (define-key YaTeX-sectioning-minibuffer-map "\C-i"
     'YaTeX-minibuffer-complete)
-  (define-key YaTeX-minibuffer-sectioning-map " "
+  (define-key YaTeX-sectioning-minibuffer-map " "
     'YaTeX-minibuffer-complete)
-  (define-key YaTeX-minibuffer-sectioning-map "\C-n"
+  (define-key YaTeX-sectioning-minibuffer-map "\C-n"
     'YaTeX-sectioning-down)
-  (define-key YaTeX-minibuffer-sectioning-map "\C-x"
+  (define-key YaTeX-sectioning-minibuffer-map "\C-x"
     'YaTeX-sectioning-down)
-  (define-key YaTeX-minibuffer-sectioning-map "\C-v"
+  (define-key YaTeX-sectioning-minibuffer-map "\C-v"
     'YaTeX-sectioning-scroll-up)
-  (define-key YaTeX-minibuffer-sectioning-map "\C-c"
+  (define-key YaTeX-sectioning-minibuffer-map "\C-c"
     'YaTeX-sectioning-scroll-up)
-  (define-key YaTeX-minibuffer-sectioning-map "\M-v"
+  (define-key YaTeX-sectioning-minibuffer-map "\M-v"
     'YaTeX-sectioning-scroll-down)
-  (define-key YaTeX-minibuffer-sectioning-map "\C-r"
+  (define-key YaTeX-sectioning-minibuffer-map "\C-r"
     'YaTeX-sectioning-scroll-down)
-  (define-key YaTeX-minibuffer-sectioning-map "\C-w"
+  (define-key YaTeX-sectioning-minibuffer-map "\C-w"
     '(lambda () (interactive) (YaTeX-sectioning-scroll-down 1)))
-  (define-key YaTeX-minibuffer-sectioning-map "\C-z"
+  (define-key YaTeX-sectioning-minibuffer-map "\C-z"
     '(lambda () (interactive) (YaTeX-sectioning-scroll-up 1)))
-  (define-key YaTeX-minibuffer-sectioning-map "\C-l"
+  (define-key YaTeX-sectioning-minibuffer-map "\C-l"
     'YaTeX-sectioning-recenter)
-  (define-key YaTeX-minibuffer-sectioning-map "?"
+  (define-key YaTeX-sectioning-minibuffer-map "?"
     'YaTeX-sectioning-help)
-  (YaTeX-sectioning-map-hide YaTeX-minibuffer-sectioning-map)
+  (YaTeX-sectioning-map-hide YaTeX-sectioning-minibuffer-map)
 )
 
 (defvar YaTeX-sectioning-buffer-map nil
@@ -85,13 +97,13 @@
   "Hide sectioning commands under level N."
   (let ((cw (selected-window)))
     (YaTeX-showup-buffer YaTeX-sectioning-buffer nil t)
-    (if (>= n (1- (length YaTeX-sectioning-level)))
+    (if (>= n YaTeX-sectioning-max-level)
 	(progn
 	  (set-selective-display nil)
 	  (message "Show all."))
       (set-selective-display (1+ n))
-      (if (nth n YaTeX-sectioning-level)
-	  (message "Hide lower than %s" (car (nth n YaTeX-sectioning-level)))
+      (if (rassq n YaTeX-sectioning-level)
+	  (message "Hide lower than %s" (car (rassq n YaTeX-sectioning-level)))
 	(message "")))
     (if (numberp selective-display)
 	(setq mode-name (format "level %d" (1- selective-display)))
@@ -118,9 +130,11 @@ C-p	Up sectioning level.			0	Show only \\part,
 C-n	Down sectioning level.			1	 and \\chapter,
 C-v	Scroll up *Sectioning line* buffer.	2	 and \\section,
 M-v	Scroll down *Sectioning line* buffer.	3	 and \\subsection,
-SPC	Complete word.				4	 and \\subsubsection,
-TAB	Complete word.				5	 and \\paragraph.
-C-l	Recenter recent line.			6	Show all.
+C-z	Scroll up by 1 line.			4	 and \\subsubsection,
+C-w	Scroll down by 1 line.			5	 and \\paragraph.
+SPC	Complete word.				6	Show all.
+TAB	Complete word.
+C-l	Recenter recent line.
 RET	Select.
 ==== End of HELP =====
 ")
@@ -138,15 +152,18 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
   (interactive "p")
   (if (eq (selected-window) (minibuffer-window))
       (let*((command (buffer-string))
+	    (aster (equal (substring command -1) "*"))
+	    (command (if aster (substring command 0 -1) command))
 	    (alist YaTeX-sectioning-level)
-	    (level (cdr-safe (assoc command alist))))
-	(or level (error "No such sectioning command."))
+	    (level 0))
+	(or (assoc command alist) (error "No such sectioning command."))
+	(while (not (string= (car (nth level alist)) command))
+	  (setq level (1+ level)))	;I want to use `member'....
 	(setq level (- level n))
 	(if (or (< level 0) (>= level (length alist)))
 	    (ding)
 	  (erase-buffer)
-	  (insert (car (nth level alist))))
-    ))
+	  (insert (concat (car (nth level alist)) (if aster "*" ""))))))
 )
 
 (defun YaTeX-sectioning-down (n)
@@ -183,18 +200,19 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 	(progn
 	  (YaTeX-showup-buffer YaTeX-sectioning-buffer nil t)
 	  (or (search-forward "<<--" nil t)
-	      (search-backward "<<--" nil t))
+	      (search-backward "<<--" nil))
 	  (recenter (or arg (/ (window-height) 2))))
       (select-window cw)))
 )
 
 (defvar YaTeX-sectioning-minibuffer " *sectioning*"
   "Miniuffer used for sectioning")
+;;;###autoload
 (defun YaTeX-read-section-in-minibuffer (prompt table &optional default delim)
   (interactive)
   (let ((minibuffer-completion-table table))
     (read-from-minibuffer
-     prompt default YaTeX-minibuffer-sectioning-map))
+     prompt default YaTeX-sectioning-minibuffer-map))
 )
 
 (defun YaTeX-get-sectioning-level ()
@@ -265,6 +283,7 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
       command))
 )
 
+;;;###autoload
 (defun YaTeX-make-section-with-overview ()
   "Input sectining command with previous overview."
   (interactive)
@@ -278,4 +297,3 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
 )
 
 (provide 'yatexsec)
-;;(YaTeX-define-key "o" 'YaTeX-make-section-with-overview)
