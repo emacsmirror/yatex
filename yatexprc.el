@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Jul  1 02:44:32 1994 on figaro
+;;; Last modified Sat Jul  9 18:24:42 1994 on figaro
 ;;; $Id$
 
 (require 'yatex)
@@ -310,7 +310,7 @@ PROC should be process identifier."
     (YaTeX-visit-main t)
     (let ((pbuffer "*dvi-preview*"))
       (YaTeX-showup-buffer
-       pbuffer (function (x) (nth 3 (window-edges x))))
+       pbuffer (function (lambda (x) (nth 3 (window-edges x)))))
       (with-output-to-temp-buffer pbuffer
 	(if YaTeX-dos			;if MS-DOS
 	    (progn (send-string-to-terminal "\e[2J\e[>5h") ;CLS & hide cursor
