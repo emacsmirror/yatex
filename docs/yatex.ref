@@ -129,6 +129,10 @@
 	◆tabular/array桁位置表示	[prefix] &
 	◆オンラインヘルプ		[prefix] ?
 	◆オンラインヘルプ		[prefix] /
+	◆おまかせ改行			ESC RET
+
+	  「おまかせ改行」は tabular, array, itemize, enumerate, list,
+	description 環境でで有効です。
 
 							       広瀬雄二
 						    yuuji@ae.keio.ac.jp
