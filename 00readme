@@ -1,0 +1,18 @@
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+・1997年3月10日、「雷鳥」の作者であり、「野鳥」の成長に大きな貢献をして
+  下さった桂川直己さんが交通事故によりお亡くなりになりました。野鳥ファミ
+  リーはかけがえの無い大きな存在を失ってしまいました。もしよろしければ、
+  彼のゲストブックに感謝と追悼の気持ちを残して下さいませんか。
+  http://www.comp.ae.keio.ac.jp/~lune/
+  から「guest book」というリンクをたどって下さい。
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+・「野鳥」およびその Vz への移植版である「雷鳥」、Wzへの移植版である「白
+  鳥」に関する情報交換のためのメイリングリスト「fj野鳥の会」に是非御参加
+  ください。詳しくは docs/qanda ファイルを御覧ください。
+
+・makefile の先頭部分を編集し、
+	mule2(emacs-19) を使う場合は make install
+	それ以外の場合は make install-nw
+  にてバイトコンパイルとLispディレクトリへのインストールが
+  行われます(たぶん... Nemacsはなぜかうまくいかない)。
+  詳細は、install ファイルを御覧下さい。
