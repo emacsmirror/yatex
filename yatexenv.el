@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
-;;; (c ) 1994, 1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Apr 15 16:24:00 1996 on supra
+;;; (c ) 1994-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Fri Jan 24 18:00:38 1997 on supra
 ;;; $Id$
 
 ;;;
@@ -74,7 +74,7 @@ When calling from a program, make sure to be in array/tabular environment."
   (cond
    ((YaTeX-quick-in-environment-p '("tabular" "tabular*" "array" "array*"))
     (YaTeX-array-what-column))
-   (t (message "Not in array/tabuar environment.")))
+   (t (message "Not in array/tabular environment.")))
 )
 
 (defun YaTeX-tabular-parse-format (&optional tabular*)

@@ -32,6 +32,8 @@
   '(lambda () (interactive) (YaTeX-make-singlecmd "leftarrow")))
 (define-key YaTeX-user-extensional-map "l"
   '(lambda () (interactive) (YaTeX-make-section nil nil nil "label")))
+(define-key YaTeX-user-extensional-map "f"
+  '(lambda () (interactive) (YaTeX-make-section nil nil nil "frac")))
 (define-key YaTeX-user-extensional-map "S"
   '(lambda () (interactive) (YaTeX-make-section nil nil nil "setlength")))
 (define-key YaTeX-user-extensional-map "b"

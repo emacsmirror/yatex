@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el rev.4
-;;; (c )1993-1995 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Tue Apr 23 23:17:24 1996 on inspire
+;;; (c )1993-1997 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
+;;; Last modified Fri Jan 24 18:00:08 1997 on supra
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -541,6 +541,7 @@ This value is appended with YaTeX-verbatim-environments.")
 	(setq list (cdr list)))
       (goto-line 4)
       (use-local-map YaTeX-math-menu-map)
+      (setq buffer-read-only t)
       (unwind-protect
 	  (recursive-edit)
 	(skip-chars-backward "^ \t\n")
@@ -597,9 +598,14 @@ at least you get to read the beginning."
   (let*((key (or initial "")) regkey str  last-char list i
 	(case-fold-search nil) match sign
 	(this-key (char-to-string last-command-char))
-	(alist (symbol-value (cdr (assoc this-key YaTeX-math-key-list))))
+	(alistsym (cdr (assoc this-key YaTeX-math-key-list)))
+	(alistname (symbol-name alistsym))
+	(alist (symbol-value alistsym))
 	(n (length alist)) (beg (point)) result)
     (if initial (insert YaTeX-ec (car (cdr (assoc initial alist)))))
+    (if (string-match "^YaTeX-" alistname)
+	(setq alistname (substring alistname (length "YaTeX-"))))
+    (setq alistname (substring alistname 0 (string-match "-" alistname)))
     (setq result
 	  (catch 'complete
 	    (if (and (not force)
@@ -608,7 +614,8 @@ at least you get to read the beginning."
 		       (not YaTeX-math-mode)))
 		(throw 'complete 'escape));this tag should be exit, but...
 	    (while t
-	      (message "Sequence%s: %s"
+	      (message "%ssequence%s: %s"
+		       (if YaTeX-simple-messages "" (concat alistname " "))
 		       (if YaTeX-simple-messages "" "(TAB for menu)") key)
 	      (setq last-char (read-char)
 		    key (concat key (char-to-string last-char))

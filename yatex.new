@@ -1,6 +1,18 @@
 	What's new in YaTeX
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.63	数式モードに入ったら漢字モードをOFFにするようにした(本来1.62)
+	yahtmlで [prefix] t j で(j)weblintを呼ぶようにした。
+	yahtmlのブラウザ起動は、[prefix] t p に変更。
+	yahtmlで、<pre>の中でfillした場合、<a>タグなどを文字数にカウント
+	せずにfillするようにした。
+	LaTeX2eのフォント設定マクロを正しくhilitするようにした。
+	yahtmlで src="??" や align="???" などのchangeができるようにした。
+	yahtmlのNAME補完のときにauto-hilightが効かないようにした。
+	数式モードのときはauto-fillが効かないようにした。
+	\のあとに{を入れたときは\}を入れるようにした。
+	yahtmlでブラウザにIEを指定したときの不具合を修正。
+
 1.62	\ref の引数が二行に渡る時行末に%を付けるようにした
 	yahtmlでおまかせ改行が不必要に起動するのを修正
 	href の補完文字列に # が含まれる時は name を補完

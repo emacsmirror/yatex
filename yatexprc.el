@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c )1993-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Fri Mar 29 00:15:35 1996 on inspire
+;;; (c )1993-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Fri Jan 24 17:59:44 1997 on supra
 ;;; $Id$
 
 (require 'yatex)
@@ -33,16 +33,20 @@
   (modify-syntax-entry ?\] "w" YaTeX-typeset-buffer-syntax)
 )
 
-(defun YaTeX-typeset (command buffer)
+(defun YaTeX-typeset (command buffer &optional prcname modename)
   "Execute jlatex (or other) to LaTeX typeset."
   (interactive)
   (save-excursion
-    (let ((p (point)) (window (selected-window)) execdir (cb (current-buffer)))
+    (let ((p (point)) (window (selected-window)) execdir (cb (current-buffer))
+	  (map YaTeX-typesetting-mode-map))
       (if (and YaTeX-typeset-process
 	       (eq (process-status YaTeX-typeset-process) 'run))
 	  ;; if tex command is halting.
 	  (YaTeX-kill-typeset-process YaTeX-typeset-process))
-      (YaTeX-visit-main t) ;;execution directory
+      (YaTeX-put-nonstopmode)
+      (setq prcname (or prcname "LaTeX")
+	    modename (or modename "typeset"))
+      (if (eq major-mode 'yatex-mode) (YaTeX-visit-main t)) ;;execution dir
       (setq execdir default-directory)
       ;;Select lower-most window if there are more than 2 windows and
       ;;typeset buffer not seen.
@@ -54,23 +58,24 @@
       (erase-buffer)
       (cond
        (YaTeX-dos			;if MS-DOS
-	(YaTeX-put-nonstopmode)
+	;(YaTeX-put-nonstopmode)
 	(call-process
 	 shell-file-name nil buffer nil YaTeX-shell-command-option command)
-	(YaTeX-remove-nonstopmode))
+	;(YaTeX-remove-nonstopmode)
+	)
        (t				;if UNIX
 	(set-process-buffer
 	 (setq YaTeX-typeset-process
-	       (start-process "LaTeX" buffer shell-file-name
+	       (start-process prcname buffer shell-file-name
 			      YaTeX-shell-command-option command))
 	 (get-buffer buffer))
 	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)))
       (message (format "Calling `%s'..." command))
       (setq YaTeX-current-TeX-buffer (buffer-name))
-      (use-local-map YaTeX-typesetting-mode-map)
+      (use-local-map map)		;map may be localized
       (set-syntax-table YaTeX-typeset-buffer-syntax)
-      (setq mode-name "typeset")
-      (if YaTeX-typeset-process		; if process is running (maybe on UNIX)
+      (setq mode-name modename)
+      (if YaTeX-typeset-process		;if process is running (maybe on UNIX)
 	  (cond ((boundp 'MULE)
 		 (set-current-process-coding-system
 		  YaTeX-latex-message-code YaTeX-coding-system))
@@ -92,7 +97,8 @@
 	(goto-char (point-max))
 	(recenter -1))
       (select-window window)
-      (switch-to-buffer cb)))
+      (switch-to-buffer cb)
+      (YaTeX-remove-nonstopmode)))
 )
 
 (defun YaTeX-typeset-sentinel (proc mes)
@@ -114,14 +120,14 @@
 		 ;;(YaTeX-showup-buffer pbuf nil t)
                  (goto-char (point-max))
 		 (if pwin (recenter -3))
-                 (insert ?\n "latex typesetting " mes)
+                 (insert ?\n mode-name " " mes)
                  (forward-char -1)
                  (insert " at " (substring (current-time-string) 0 -5) "\n")
                  (forward-char 1)
                  (setq mode-line-process
                        (concat ": "
                                (symbol-name (process-status proc))))
-		 (message "latex typesetting %s."
+		 (message mode-name " %s."
 			  (if (eq (process-status proc) 'exit)
 			      "done" "ceased"))
                  ;; If buffer and mode line shows that the process
@@ -226,7 +232,8 @@ operation to the region."
 )
 
 (defun YaTeX-typeset-buffer ()
-  "Typeset whole buffer.  If %#! usage says other buffer is main text,
+  "Typeset whole buffer.
+If %#! usage says other buffer is main text,
 visit main buffer to confirm if its includeonly list contains current
 buffer's file.  And if it doesn't contain editing text, ask user which
 action wants to be done, A:Add list, R:Replace list, %:comment-out list."
@@ -382,7 +389,8 @@ PROC should be process identifier."
        (YaTeX-dos			;if MS-DOS
 	(send-string-to-terminal "\e[2J\e[>5h") ;CLS & hide cursor
 	(call-process shell-file-name "con" "*dvi-preview*" nil
-		      YaTeX-shell-command-option preview-command preview-file)
+		      YaTeX-shell-command-option
+		      (concat preview-command preview-file))
 	(send-string-to-terminal "\e[>5l") ;show cursor
 	(redraw-display))
        (t				;if UNIX
@@ -478,7 +486,7 @@ error or warning lines in reverse order."
     (select-window typeset-win)
     (skip-chars-backward "0-9")
     (recenter (/ (window-height) 2))
-    (sit-for 3)
+    (sit-for 1)
     (goto-char (match-beginning 0))
     (select-window error-win))
 )
@@ -565,18 +573,19 @@ error or warning lines in reverse order."
 )
       
 (defun YaTeX-put-nonstopmode ()
-  (if YaTeX-need-nonstop
+  (if (and YaTeX-need-nonstop (eq major-mode 'yatex-mode))
       (if (re-search-backward "\\\\nonstopmode{}" (point-min) t)
 	  nil                    ;if already written in text then do nothing
 	(save-excursion
 	  (YaTeX-visit-main t)
 	  (goto-char (point-min))
-	  (insert "\\nonstopmode{}%_YaTeX_%\n")))
+	  (insert "\\nonstopmode{}%_YaTeX_%\n")
+	  (if (buffer-file-name) (basic-save-buffer))))
     )
 )
 
 (defun YaTeX-remove-nonstopmode ()
-  (if YaTeX-need-nonstop ;for speed
+  (if (and YaTeX-need-nonstop (eq major-mode 'yatex-mode)) ;for speed
       (save-excursion
 	(YaTeX-visit-main t)
 	(goto-char (point-min))
@@ -776,17 +785,18 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
 )
 
 (defun YaTeX-save-buffers ()
-  "Save buffers which is in yatex-mode."
+  "Save buffers whose major-mode is equal to current major-mode."
   (basic-save-buffer)
-  (save-excursion
-    (mapcar '(lambda (buf)
-	       (set-buffer buf)
-	       (if (and (buffer-file-name buf)
-			(eq major-mode 'yatex-mode)
-			(buffer-modified-p buf)
-			(y-or-n-p (format "Save %s" (buffer-name buf))))
-		   (save-buffer buf)))
-	    (buffer-list)))
+  (let ((cmm major-mode))
+    (save-excursion
+      (mapcar '(lambda (buf)
+		 (set-buffer buf)
+		 (if (and (buffer-file-name buf)
+			  (eq major-mode cmm)
+			  (buffer-modified-p buf)
+			  (y-or-n-p (format "Save %s" (buffer-name buf))))
+		     (save-buffer buf)))
+	      (buffer-list))))
 )
 
 (provide 'yatexprc)

@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
-;;; (c )1994-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Mar 14 10:51:00 1996 on supra
+;;; (c )1994-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Fri Jan 24 18:00:49 1997 on supra
 ;;; $Id$
 
 ;;; とりあえず hilit19 を使っている時に色が付くようにして
@@ -270,9 +270,10 @@ Assumes PATTERN begins with `{'."
 
     ;; (re-)define new commands/environments/counters
     (YaTeX-19-region-section-type
-     "\\\\\\(re\\)?new\\(environment\\|command\\|theorem\\){" defun)
+     "\\\\\\(re\\)?new\\(environment\\|command\\|theorem\\|length\\|counter\\){"
+     defun)
     (YaTeX-19-region-section-type
-     "\\\\\\(re\\)?new\\(length\\|counter\\){" define)
+     "\\\\textbf{" bold)
 
     ;; various declarations/definitions
     (YaTeX-19-region-section-type
@@ -342,6 +343,9 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 ;;; セクションコマンドを、構造レベルの高さに応じて色の濃度を変える
 ;;; 背景が黒でないと何が嬉しいのか分からないに違いない.
 ;;; もしかして白地の時は構造レベルに応じて色を明るくしたほうが良いのか?
+;(if (fboundp 'win32-color-values)
+;    (fset 'x-color-values 'win32-color-values))
+
 (cond
  ((and (featurep 'hilit19) (fboundp 'x-color-values))
   (let*((sectface

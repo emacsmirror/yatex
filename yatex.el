@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs.
-;;; yatex.el rev. 1.62
-;;; (c )1991-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu May  2 00:13:21 1996 on supra
+;;; yatex.el rev. 1.63
+;;; (c )1991-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Fri Jan 24 17:57:14 1997 on supra
 ;;; $Id$
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -20,7 +20,7 @@
 ;; the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
 
 (require 'comment)
-(defconst YaTeX-revision-number "1.62"
+(defconst YaTeX-revision-number "1.63"
   "Revision number of running yatex.el"
 )
 
@@ -258,7 +258,7 @@ If nil, use default pop-to-buffer."
     ("setcounter" 2) ("addtocounter" 2) ("stepcounter" 2)
     ("newcommand" 2) ("renewcommand" 2)
     ("setcounter" 2) ("newenvironment" 3) ("newtheorem" 2)
-    ("cline") ("framebox") ("savebox") ("date") ("put") ("ref")
+    ("cline") ("framebox") ("savebox" 2) ("date") ("put") ("ref")
     ("frac" 2) ("multicolumn" 3) ("shortstack")
     )
   "Default completion table for section-type completion."
@@ -634,12 +634,14 @@ more features are available and they are documented in the manual.
 	paragraph-separate YaTeX-paragraph-separate
 	indent-line-function 'YaTeX-indent-line
 	comment-start YaTeX-comment-prefix
+	comment-end ""
 	;;comment-start-skip "[^\\\\]%+[ \t]*"
 	)
   (use-local-map YaTeX-mode-map)
   (if YaTeX-dos (setq YaTeX-saved-screen-height (screen-height)))
   (YaTeX-read-user-completion-table)
   (and (fboundp 'YaTeX-19-collect-macros) (YaTeX-19-collect-macros))
+  (turn-on-auto-fill)			;1.63
   (run-hooks 'text-mode-hook 'yatex-mode-hook)
 )
 
@@ -694,6 +696,7 @@ more features are available and they are documented in the manual.
 (autoload 'YaTeX-main-file-p "yatexprc" "Check if the file is main." t)
 (autoload 'YaTeX-get-builtin "yatexprc" "Get %# built-in." t)
 (autoload 'YaTeX-system "yatexprc" "Call system command" t)
+(autoload 'YaTeX-save-buffers "yatexprc" "Save buffers of same major mode" t)
 
 ;;autoload from yatexmth.el
 (autoload 'YaTeX-math-insert-sequence "yatexmth" "Image input." t)
@@ -722,6 +725,9 @@ more features are available and they are documented in the manual.
 ;;autoload from yatexhie.el
 (autoload 'YaTeX-display-hierarchy "yatexhie"
   "YaTeX document hierarchy browser" t)
+
+;; autoload from yahtml.el
+(autoload 'yahtml-inner-environment-but "yahtml" "yahtml internal func." t)
 
 ;;;
 ;; YaTeX-mode functions
@@ -822,7 +828,8 @@ of 'YaTeX-inner-environment, which can be referred by
 	(open
 	 (concat "^" (or (cdr (assq major-mode '((yahtml-mode . "<")))) "{")))
 	(close
-	 (concat "^" (or (cdr(assq major-mode '((yahtml-mode . " >")))) "}"))))
+	 (concat "^"
+		 (or (cdr(assq major-mode '((yahtml-mode . "\n\t >")))) "}"))))
     (save-excursion
       (if quick
 	  (setq bound
@@ -855,10 +862,7 @@ of 'YaTeX-inner-environment, which can be referred by
 (defun YaTeX-end-environment ()
   "Close opening environment"
   (interactive)
-  (let ((curp (point))
-	(env (YaTeX-inner-environment))
-	(md (match-data)))
-
+  (let ((env (YaTeX-inner-environment)))
     (if (not env) (error "No premature environment")
       (save-excursion
 	(if (YaTeX-search-active-forward
@@ -870,18 +874,14 @@ of 'YaTeX-inner-environment, which can be referred by
 		nil
 	      (error "end environment aborted."))))
       (message "")			;Erase (y or n) message.
-      ;(insert "\\end{" env "}")
       (YaTeX-insert-struc 'end env)
-      (store-match-data md)
-      (setq curp (point))
-      (goto-char (match-end 0))
-      (if (pos-visible-in-window-p)
-	  (sit-for (if YaTeX-dos 2 1))
-	(message "Matches with %s at line %d"
-		 (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
-		 (count-lines (point-min) (point))))
-      (goto-char curp))
-    )
+      (save-excursion
+	(goto-char (or (get 'YaTeX-inner-environment 'point) (match-end 0)))
+	(if (pos-visible-in-window-p)
+	    (sit-for (if YaTeX-dos 2 1))
+	  (message "Matches with %s at line %d"
+		   (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
+		   (count-lines (point-min) (point)))))))
 )
 
 ;;;VER2
@@ -1210,7 +1210,11 @@ into {\\xxx } braces.
       (insert (or open "{") env (or close "}")))
      (t
       (insert (or open "{") (or close "}"))
-      (forward-char -1))))
+      (forward-char -1)
+      (if (and (eq (char-after (point)) ?\})
+	       (eq (char-after (- (point) 2)) ?\\ ))
+	  (progn (insert "\\") (forward-char -1)))
+      )))
 )
 
 (defun YaTeX-jmode ()
@@ -1224,7 +1228,8 @@ into {\\xxx } braces.
     (canna-toggle-japanese-mode))
    ((and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*)
     (egg:toggle-egg-mode-on-off))
-   ((and (fboundp 'skk-mode)) (skk-mode -1))
+   ((and (fboundp 'skk-mode) (boundp 'skk-mode) skk-mode)
+    (if (fboundp 'skk-mode-off) (skk-mode-off) (j-mode-off)))
    ((and (fboundp 'fep-force-off) (fep-force-off))))
 )
 
@@ -1556,28 +1561,28 @@ Optional third argument NOERR causes no error for unballanced environment."
 	      nil)))))
 )
 
-;(defun YaTeX-goto-corresponding-file (&optional other)
-;  "Visit or switch buffer of corresponding file,
-;looking at \\input or \\include or \includeonly on current line."
-;  (if (not (YaTeX-on-includes-p)) nil
-;    (let ((parent buffer-file-name) input-file)
-;      (save-excursion
-;	(if (search-forward "{" (point-end-of-line) t)
-;	    nil
-;	  (skip-chars-backward "^,{"))
-;	(setq input-file
-;	      (buffer-substring
-;	       (point) (progn (skip-chars-forward "^ ,}") (point))))
-;	(if (not (string-match "\\.\\(tex\\|sty\\)$" input-file))
-;	    (setq input-file (concat input-file ".tex"))))
-;      (cond
-;       (other (YaTeX-switch-to-buffer-other-window input-file))
-;       ((get-file-buffer input-file) (goto-buffer-window input-file))
-;       (t (YaTeX-switch-to-buffer input-file)))
-;      (or (YaTeX-get-builtin "!")
-;	  YaTeX-parent-file
-;	  (setq YaTeX-parent-file parent))))
-;)
+(defun YaTeX-goto-corresponding-file (&optional other)
+  "Visit or switch buffer of corresponding file,
+looking at \\input or \\include or \includeonly on current line."
+  (if (not (YaTeX-on-includes-p)) nil
+    (let ((parent buffer-file-name) input-file)
+      (save-excursion
+	(if (search-forward "{" (point-end-of-line) t)
+	    nil
+	  (skip-chars-backward "^,{"))
+	(setq input-file
+	      (buffer-substring
+	       (point) (progn (skip-chars-forward "^ ,}") (point))))
+	(if (not (string-match "\\.\\(tex\\|sty\\)$" input-file))
+	    (setq input-file (concat input-file ".tex"))))
+      (cond
+       (other (YaTeX-switch-to-buffer-other-window input-file))
+       ((get-file-buffer input-file) (goto-buffer-window input-file))
+       (t (YaTeX-switch-to-buffer input-file)))
+      (or (YaTeX-get-builtin "!")
+	  YaTeX-parent-file
+	  (setq YaTeX-parent-file parent))))
+)
 
 (defun YaTeX-goto-corresponding-BEGIN-END ()
   (if (not (YaTeX-on-BEGIN-END-p)) nil
@@ -1619,11 +1624,11 @@ fj–ì’¹‚Ì‰ï‚Å•·‚±‚¤!
 ")
 
 (defvar YaTeX-processed-file-regexp-alist-default
-  '(("\\\\epsfile{[^},]*file=\\([^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 1)
-    ("\\\\epsfig{[^},]*fi\\(le\\|gure\\)=\\([^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 2)
-    ("\\\\postscriptbox{[^}]*}{[^}]*}{\\([^} ]+\\)\\(\\.e?ps\\)?}" 1)
-    ("\\\\\\(epsfbox\\|includegraphics\\){\\([^} ]+\\)\\(\\.e?ps\\)?}" 2)
-    ("\\\\\\(include\\|input\\){\\([^},.]+\\)\\(\\.\\(tex\\|sty\\)\\)?}" 2 t)
+  '(("\\\\epsfile{[^},]*file=\\(\\([^,} ]*/\\)?[^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 1)
+    ("\\\\epsfig{[^},]*fi\\(le\\|gure\\)=\\(\\([^,} ]*/\\)?[^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 2)
+    ("\\\\postscriptbox{[^}]*}{[^}]*}{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 1)
+    ("\\\\\\(epsfbox\\|includegraphics\\){\\(\\([^,} ]*/\\)?[^} ]+\\)\\(\\.e?ps\\)?}" 2)
+    ("\\\\\\(psbox\\)\\(\\[[^]]+\\]\\)?{\\(\\([^,} ]*/\\)?[^} ]+\\)\\(\\.e?ps\\)}" 3) ;\psbox[options...]{hoge.eps} (97/1/11)
     )
   "See the documentation of YaTeX-processed-file-regexp-alist."
 )
@@ -1674,7 +1679,8 @@ See also the documentation of YaTeX-processed-file-regexp-alist."
 			      (cdr (assoc cmd YaTeX-file-processor-alist))))
 	      (while plist		;if processor is not specified
 		(setq ext (cdr (car plist)))
-		(if (file-exists-p (concat file ext))
+		(if (and (string< "" (concat file ext))
+			 (file-exists-p (concat file ext)))
 		      (setq cmd (car (car plist))
 			    src (concat file ext) plist nil))
 		(setq plist (cdr plist)))
@@ -1702,7 +1708,7 @@ See also the documentation of YaTeX-processed-file-regexp-alist."
 		 ((symbolp cmd)
 		  (cond
 		   ((symbol-function cmd)
-		    (funcall cmd src)))
+		    (funcall cmd src other)))
 		  t)))))))
 )
 
@@ -1729,7 +1735,8 @@ Section command name is stored in match-data #1."
       (if (and
 	   (looking-at (concat YaTeX-ec-regexp "\\(" command "\\)"
 			       "\\(\\(\\[[^]]+\\]\\)*\\)"	;optional arg
-			       "[ \t\n\r]*{[^}]+}")) ;arg braces
+			       ;"[ \t\n\r]*{[^}]+}")) ;arg braces
+			       "[ \t\n\r]*{[^}]*}")) ;arg braces
 	   (not (YaTeX-lookup-table
 		 (setq word (YaTeX-match-string 1)) 'singlecmd)))
 	  (progn
@@ -1813,8 +1820,8 @@ even if on `%#' notation."
   (cond
    ((YaTeX-goto-corresponding-label arg))
    ((YaTeX-goto-corresponding-environment))
+   ((YaTeX-goto-corresponding-file arg))
    ((YaTeX-goto-corresponding-file-processor arg))
-   ;;((YaTeX-goto-corresponding-file))
    ((YaTeX-goto-corresponding-BEGIN-END))
    ((and (string-match
 	  YaTeX-equation-env-regexp	;to delay loading
@@ -2368,11 +2375,11 @@ This function returns correct result only if ENV is NOT nested."
 (defun YaTeX-remove-trailing-comment (start end)
   "Remove trailing comment from START to end."
   (save-excursion
-    (let ((trcom (concat YaTeX-comment-prefix "+$")))
+    (let ((trcom (concat YaTeX-comment-prefix "$")))
       (goto-char start)
       (while (re-search-forward trcom end t)
 	(if (/= (char-after (1- (match-beginning 0))) ?\\ )
-	    (replace-match "")))))
+	    (replace-match "\\1")))))
 )
 
 (defun YaTeX-get-item-info (&optional recent thisenv)
@@ -2539,14 +2546,20 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
   "Tuned `indent-new-comment-line' function for yatex.
 See the documentation of `YaTeX-saved-indent-new-comment-line'."
   (cond
-   ((or (not (eq major-mode 'yatex-mode))
+   ((or (not (memq major-mode '(yatex-mode yahtml-mode)))
 	(string-match
 	 "document"
 	 (or (and (boundp 'inenv) inenv)
 	     (or (YaTeX-inner-environment t) "document"))))
     (apply 'YaTeX-saved-indent-new-comment-line (if soft (list soft))))
+;   ((and (eq major-mode 'yahtml-mode)
+;	 (string-match
+;	  "^[Pp][Rr][Ee]" (yahtml-inner-environment-but "^[Aa]\\b" t)))
+;    (yahtml-indent-new-commnet-line))
+   ((YaTeX-in-math-mode-p) nil)		;1996/12/30
    (t (let (fill-prefix)
-	(apply 'YaTeX-saved-indent-new-comment-line (if soft (list soft)))))))
+	(apply 'YaTeX-saved-indent-new-comment-line (if soft (list soft))))))
+)
 
 (defun YaTeX-fill-* ()
   "Fill paragraph according to its condition."
@@ -2750,7 +2763,7 @@ Copy its corresponding directory dependent completion table to SYMBOL."
     (if YaTeX-user-table-is-read nil
       (message "Loading user completion table")
       (if (file-exists-p user-table) (load-file user-table)
-	(message "Personal completion table not found.")))
+	(message "Welcome to the field of YaTeX.  I'm glad to see you!")))
     (setq YaTeX-user-table-is-read t)
     (cond
      ((file-exists-p local-table)

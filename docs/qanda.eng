@@ -3,6 +3,9 @@
 %%
 %% C-u C-x $ shows only questions.  C-x $ shows all.
 %%
+(New Item
+     *It is bothering for me to determine I should call bibtex or latex...
+     *Filling a paragraph doesn't work as I expected.
 
 [Installation]
 ==============
@@ -200,6 +203,32 @@
 	You can get auto-insert-tkld via anonymous ftp
 	ftp://ftp.ae.keio.ac.jp/pub/emacs-lisp/util/
 	ftp://archive.cis.ohio-state.edu/pub/gnu/elisp-archive/
+	
+*It is bothering for me to determine I should call bibtex or latex...
+	
+	Why don't you try `latexmk' perl script, which is a TeX specific 
+	tool as `make'?  It detects the dependency among the TeX-related 
+	files such as .tex, .bib, and so on, and will execute suitable
+	commands in a suitable sequence.  You can find `latexmk' script
+	in a directory of supports/latexmk in some CTAN ftp directory.
+	
+*Filling a paragraph doesn't work as I expected.	
+	
+	It is because the indentation  depth  is different from  default
+	depth.    Please keep  turning   on auto-fill   to  make filling
+	function  work  well.  If  you bring  some  paragraph  which has
+	different  indentation from other part  of document, you have to
+	re-indent it with the default indentation by  typing TAB on each
+	line.  If the paragraph is large, try the next operation;
+	
+	       (1)Type C-x . on the beginning of line
+	       (2)Mark paragraph to be re-indented
+	       (3)Type M-C-\
+	
+	then fill the paragraph.  If  you want fill that paragraph  with
+	current   indentation depth,  move the     cursor on the   first
+	appearance  of  non-white-space  character  on  the  line before
+	filling.
 	
 [About Emacs-19/Mule2]
 ======================

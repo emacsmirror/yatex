@@ -126,7 +126,7 @@ Language Enhancement to GNU Emacs), and latex on DOS.
 @itemize
 @item Invocation of typesetter,  previewer and related programs(@kbd{C-c t})
 @item Typesetting on static region which is independent from point
-@item Semiautomatic replacing of @code{\include only}
+@item Semiautomatic replacing of @code{\includeonly}
 @item Jumping to error line(@kbd{C-c '})
 @item Completing-read of La@TeX{} commands such as @code{\begin@{@}},
         @code{\section} etc. 
@@ -1562,9 +1562,9 @@ add-in functions.
 @section Lisp variables
 @cindex customizable variables
 
-  You   can change the   key assignments or   make completion more
-comfortable  by  setting the values   of   various variables which
-control the movement of yatex-mode.
+  You can change the key assignments or make completion more comfortable
+by setting the values of various variables which control the movement of
+yatex-mode.
 
   For example, if you want to change the prefix key stroke from @kbd{C-c}
 to any other sequence, set YaTeX-prefix to whatever you want to use.  If
@@ -1595,145 +1595,137 @@ are to change some of these variables,  see more detailed documentation of
 the variable by @kbd{M-x describe-variable}.
 
 @defvar YaTeX-prefix
-        Prefix key stroke (@kbd{C-c})
+Prefix key stroke (@kbd{C-c})
 @end defvar
 
 @defvar YaTeX-inhibit-prefix-letter
-        Change key stroke from @kbd{C-c letter} to @kbd{C-c C-letter}
-        (@code{nil})
+Change key stroke from @kbd{C-c letter} to @kbd{C-c C-letter} (@code{nil})
 @end defvar
 
 @defvar YaTeX-fill-prefix
-        Fill-prefix used in yatex-mode (@code{nil})
+Fill-prefix used in yatex-mode (@code{nil})
 @end defvar
 
 @defvar YaTeX-user-completion-table
-        Name of user dictionary where learned completion table will be stored.
-        (@code{"~/.yatexrc"})
-@end defvar
-
-@defvar YaTeX-item-regexp
-        Regular expression of item command(@code{"\\\\item"})
+Name of user dictionary where learned completion table will be stored. 
+(@code{"~/.yatexrc"})
 @end defvar
 
 @defvar tex-command
-        La@TeX{} typesetter command (@code{"latex"})
+La@TeX{} typesetter command (@code{"latex"})
 @end defvar
 
 @defvar dvi2-command
-        Preview command
-        (@code{"xdvi -geo +0+0 -s 4 -display (getenv"DISPLAY")"})
+Preview command (@code{"xdvi -geo +0+0 -s 4"})
 @end defvar
 
 @defvar dviprint-command-format
-        Command format to print dvi file (@code{"dvi2ps %f %t %s | lpr"})
+Command format to print dvi file (@code{"dvi2ps %f %t %s | lpr"})
 @end defvar
 
 @defvar dviprint-from-format
-        Start page format of above %f. %b will turn to start page
-        (@code{"-f %b"})
+Start page format of above %f. %b will turn to start page (@code{"-f %b"})
 @end defvar
 
 @defvar dviprint-to-format
-        End page format of above %t. %e will turn to @code{end} page
-        (@code{"-t %e"})
+End page format of above %t. %e will turn to @code{end} page (@code{"-t %e"})
+@end defvar
+
+@defvar makeindex-command
+Default makeindex command (@code{"makeindex"} (@code{"makeind"} on MS-DOS))
 @end defvar
 
 @defvar section-name
-        Initial default value at the first section-type completion
-        (@code{"documentstyle"})
+Initial default value at the first section-type completion 
+(@code{"documentstyle"})
 @end defvar
 
 @defvar env-name
-        Initial default value at the first begin-type completion
-        (@code{"document"})
+Initial default value at the first begin-type completion (@code{"document"})
 @end defvar
 
 @defvar fontsize-name
-        Ditto of large-type (@code{"large"})
+Ditto of large-type (@code{"large"})
 @end defvar
 
 @defvar single-command
-        Ditto of maketitle-type (@code{"maketitle"})
+Ditto of maketitle-type (@code{"maketitle"})
 @end defvar
 
 @defvar YaTeX-need-nonstop
-        Put @code{\nonstopmode@{@}} or not (@code{nil})
+Put @code{\nonstopmode@{@}} or not (@code{nil})
 @end defvar
 
 @defvar latex-warning-regexp
-        Regular expression of warning message latex command puts out
-        (@code{"line.* [0-9]*"})
+Regular expression of warning message latex command puts out 
+(@code{"line.* [0-9]*"})
 @end defvar
 
 @defvar latex-error-regexp
-        Regular expression of error message (@code{"l\\.[1-9][0-9]*"})
+Regular expression of error message (@code{"l\\.[1-9][0-9]*"})
 @end defvar
 
 @defvar latex-dos-emergency-message
-        Message latex command running on DOS puts at abort
-        (@code{"Emergency stop"})
+Message latex command running on DOS puts at abort (@code{"Emergency stop"})
 @end defvar
 
 @defvar YaTeX-item-regexp
-        Regexp of La@TeX{} itemization command (@code{"\\\\(sub\\)*item"})
+Regular expression of item command (@code{"\\\\item"})
 @end defvar
 
 @defvar YaTeX-verb-regexp
-        Regexp of La@TeX{} verb command family.  Omit \\\\.
-        (@code{"verb\\*?\\|path"})
+Regexp of verb family.  Omit \\\\. (@code{"verb\\*?\\|path"})
 @end defvar
 
-@defvar         YaTeX-nervous
-        T for using local dictionary (@code{t})
+@defvar YaTeX-nervous
+T for using local dictionary (@code{t})
 @end defvar
 
 @defvar YaTeX-sectioning-regexp
-        Regexp of La@TeX{} sectioning command
-
-        (@code{"part\\|chapter\\|\\(sub\\)*\\(section\\|paragraph\\)"})
+Regexp of La@TeX{} sectioning command 
+(@code{"\\(part\\|chapter\\*?\\|\\(sub\\)*\\(section\\|paragraph\\)\\*?\\)\\b"})
 @end defvar
 
 @defvar YaTeX-fill-inhibit-environments
-        Inhibit fill in these environments (@code{'("verbatim" "tabular")})
+Inhibit fill in these environments 
+(@code{'("tabular" "tabular*" "array" "picture" "eqnarray" "eqnarray*" "equation" "math" "displaymath" "verbatim" "verbatim*")})
 @end defvar
 
 @defvar YaTeX-uncomment-once
-        @code{T} for deleting all preceding @code{%} (@code{nil})
+T for deleting all preceding @code{%} (@code{nil})
 @end defvar
 
 @defvar YaTeX-close-paren-always
-        @code{T} for always close all parenthesis automatically,
-        @code{nil} for only eol(@code{t})
+T for always close all parenthesis automatically, @code{nil} for only eol 
+(@code{t})
 @end defvar
 
 @defvar YaTeX-auto-math-mode
-        Switch math-mode automatically(@code{t})
+Switch math-mode automatically (@code{t})
 @end defvar
 
 @defvar YaTeX-math-key-list-private
-        User defined alist, math-mode-prefix vs completion alist
-        used in image completion(@code{nil}).  See @file{yatexmth.el}
-        for the information about how to define a completion alist.
+User defined alist, math-mode-prefix vs completion alist
+used in image completion (@code{nil}).  See @file{yatexmth.el}
+for the information about how to define a completion alist.
 @end defvar
 
 @defvar YaTeX-default-pop-window-height
-        Initial height of typesetting buffer when one-window.
-        Number for the lines of the buffer, numerical string for
-        the percentage of the screen-height.
-        @code{nil} for half height(10)
+Initial height of typesetting buffer when one-window.
+Number for the lines of the buffer, numerical string for
+the percentage of the screen-height. @code{nil} for half height (10)
 @end defvar
 
 @defvar YaTeX-help-file
-        Global online help file name (@file{$EMACS/etc/YATEXHLP.jp})
+Global online help file name (@file{$EMACS/etc/YATEXHLP.jp})
 @end defvar
 
 @defvar YaTeX-help-file-private
-        Private online help file name (@file{"~/YATEXHLP.jp"})
+Private online help file name (@file{"~/YATEXHLP.jp"})
 @end defvar
 
 @defvar YaTeX-no-begend-shortcut
-        Disable [prefix] b ?? shortcut (@code{nil)}
+Disable [prefix] b ?? shortcut (@code{nil)}
 @end defvar
 
 @defvar YaTeX-hilit-pattern-adjustment-private
@@ -1758,16 +1750,17 @@ this variable is RCS header expressions and mode specifying line `-*- xxxx
 
 @defvar YaTeX-skip-default-reader
 Non-nil for this variable skips the default argument reader of
-section-type command when add-in function for it is not defined.
+section-type command when add-in function for it is not defined 
+(@code{nil})
 @end defvar
 
 @defvar YaTeX-create-file-prefix-g
 When typing @kbd{prefix g} on the @code{\include} line,
-open the target file even if the file doesn't exist(@code{nil}).
+open the target file even if the file doesn't exist (@code{nil})
 @end defvar
 
 @defvar YaTeX-simple-messages
-Simplyfy messages of various completions(@code{nil})。
+Simplyfy messages of various completions (@code{nil})
 @end defvar
 
 @defvar YaTeX-hilit-sectioning-face
@@ -1781,12 +1774,12 @@ for @code{'dark}.  You should specify both color as `forecolor/backcolor'.
 
 @defvar YaTeX-hilit-sectioning-attenuation-rate
 When color mode, this variable specifies how much attenuate the color
-density of @code{\subparagraph} compared with that of @code{\chapter}.
-See also 。@code{YaTeX-hilit-sectioning-face}.
+density of @code{\subparagraph} compared with that of @code{\chapter} 
+(@code{'(15 40)}) See also @code{YaTeX-hilit-sectioning-face}.
 @end defvar
 
 @defvar YaTeX-use-AMS-LaTeX
-If you use AMS-LaTeX, set to @code{t}(@code{nil}).
+If you use AMS-LaTeX, set to @code{t} (@code{nil})
 @end defvar
 
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables

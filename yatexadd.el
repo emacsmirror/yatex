@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.13
-;;; (c )1991-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Sat Apr 27 21:38:36 1996 on NSR
+;;; (c )1991-1997 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
+;;; Last modified Fri Jan 24 18:00:45 1997 on supra
 ;;; $Id$
 
 ;;;
@@ -91,6 +91,7 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:table ()
   "YaTeX add-in function for table environment."
+  (setq env-name "tabular")
   (YaTeX:read-position "htbp")
 )
 
@@ -388,16 +389,25 @@ YaTeX-make-begin-end."
 (defun YaTeX::ref (argp &optional labelcmd refcmd)
   (cond
    ((= argp 1)
-    (save-excursion
-      (let ((lnum 0) e0 label label-list (buf (current-buffer))
-	    (labelcmd (or labelcmd "label")) (refcmd (or refcmd "ref"))
-	    (p (point)) initl line)
-	(goto-char (point-min))
-	(message "Collecting labels...")
-	(save-window-excursion
-	  (YaTeX-showup-buffer
-	   YaTeX-label-buffer (function (lambda (x) (window-width x))))
+    (let ((lnum 0) e0 label label-list (buf (current-buffer))
+	  (labelcmd (or labelcmd "label")) (refcmd (or refcmd "ref"))
+	  (p (point)) initl line cf)
+      (message "Collecting labels...")
+      (save-window-excursion
+	(YaTeX-showup-buffer
+	 YaTeX-label-buffer (function (lambda (x) (window-width x))))
+	(if (fboundp 'select-frame) (setq cf (selected-frame)))
+	(if (eq (window-buffer (minibuffer-window)) buf)
+	    (progn
+	      (other-window 1)
+	      (setq buf (current-buffer))
+	      (set-buffer buf)
+	      ;(message "cb=%s" buf)(sit-for 3)
+	      ))
+	(save-excursion
+	  (goto-char (point-min))
 	  (with-output-to-temp-buffer YaTeX-label-buffer
+	    (princ (format "=== LABELS in [%s] ===\n" (buffer-name buf)))
 	    (while (YaTeX-re-search-active-forward
 		    (concat "\\\\" labelcmd "\\b")
 		    (regexp-quote YaTeX-comment-prefix) nil t)
@@ -422,21 +432,24 @@ YaTeX-make-begin-end."
 	    (princ YaTeX-label-menu-any)
 	    );with
 	  (goto-char p)
+	  (or initl (setq initl lnum))
 	  (message "Collecting %s...Done" labelcmd)
+	  (if (fboundp 'select-frame) (select-frame cf))
 	  (YaTeX-showup-buffer YaTeX-label-buffer nil t)
 	  (YaTeX::label-setup-key-map)
 	  (setq truncate-lines t)
 	  (setq buffer-read-only t)
 	  (use-local-map YaTeX-label-select-map)
 	  (message YaTeX-label-guide-msg)
-	  (goto-line (or initl lnum))	;goto recently defined label line
+	  (goto-line (1+ initl)) ;goto recently defined label line
 	  (unwind-protect
 	      (progn
 		(recursive-edit)
 		(set-buffer (get-buffer YaTeX-label-buffer)) ;assertion
 		(beginning-of-line)
-		(setq line (count-lines (point-min)(point)))
+		(setq line (1- (count-lines (point-min)(point))))
 		(cond
+		 ((= line -1) (setq label ""))
 		 ((= line lnum) (setq label (YaTeX-label-other)))
 		 ((= line (1+ lnum))
 		  (save-excursion
