@@ -72,7 +72,9 @@
 
 	・\begin{}, \end{}の上		対応する \end{},\begin{} へ
 	・%#BEGIN, %#END の上		対応する %#BEGIN, %#END へ
-	・\include(only), \input の上	対応するファイル
+	・\include(only), \input の上   対応するファイルへ
+	・\ref, \label の上             対応する \label, \ref へ
+	・\cite, \bibitem の上          対応する \bibitem, \cite へ
 
 	◆メインファイルへジャンプ	[prefix] ^
 	◆別ウィンドウで   〃		[prefix] 4^

@@ -1054,8 +1054,8 @@ abbrv	著者のファーストネーム、発行月、書籍名が省略される
 bibitem
 \bibitem{NAME}			\bibitem[LABEL]{NAME}
 \bibitem{NAME}の書式では、NAMEで参照され、[1],[2] のような形で引用記号が
-出力される、\bibitem[LABEL]{NAME}の書式では、\cite{LABEL}で参照され、
-[Knuth82] のような引用記号が出力される。
+出力される、\bibitem[LABEL]{NAME}の書式では、\cite{NAME}で参照され、
+[LABEL] のような引用記号が出力される。
 
 footnote
 \footnote{NOTE}

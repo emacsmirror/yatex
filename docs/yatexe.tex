@@ -906,7 +906,7 @@ work in `commenting out from @code{\begin} to @code{\end}' mode.
 @cindex cursor jump
 @cindex prefix g
 
-  On a @code{\begin},@code{\end} line, the key stroke
+  Typing
 
 @table @kbd
 @item [prefix] g
@@ -914,13 +914,26 @@ work in `commenting out from @code{\begin} to @code{\end}' mode.
 @end table
 
 @noindent
+in a certain place move the cursor to the place corresponding to the
+La@TeX{} command of last place.  YaTeX recognize the followings as pairs
+that have relation each other.
+
+@table
+@item @code{\begin@{@}} <-> @code{\end@{@}}
+@item @code{%#BEGIN} <-> @code{%#END}
+@item @code{\label@{@}} <-> @code{\ref@{@}}
+@item @code{\include(\input)} -> included file
+@item @code{\bibitem@{@}} <-> @code{\cite@{@}}
+@end table
+
+  On a @code{\begin},@code{\end} line, typing @kbd{[prefix] g}
 moves the cursor to the corresponding @code{\end},@code{\begin} line, if
-its partner really exists.  It is also applicable to A @code{%#BEGIN} and
-@code{%#END} pair.
+its partner really exists.  The movement on the line @code{%#BEGIN} and
+@code{%#END} are the same.
 
   If you type @code{[prefix] g} on the line of @code{\include@{chap1@}},
-maybe   in main text, YaTeX switches buffer to @file{chap1.tex}.  On the
-contrary, the key strokes
+typically in the main text, YaTeX switches buffer to @file{chap1.tex}.
+The key strokes below work to the contrary.  Typing
 
 @table @kbd
 @item [prefix] ^

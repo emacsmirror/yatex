@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.9
 ;;; (c )1991-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Mon Aug 22 14:19:39 1994 on figaro
+;;; Last modified Mon Oct 31 12:55:54 1994 on pajero
 ;;; $Id$
 
 ;;;
@@ -246,6 +246,18 @@ YaTeX-make-begin-end."
   nil
 )
 
+(defun YaTeX:cite ()
+  (let ((comment (read-string "Comment for citation: ")))
+    (if (string= comment "") ""
+      (concat "[" comment "]")))
+)
+
+(defun YaTeX:bibitem ()
+  (let ((label (read-string "Citation label: ")))
+    (if (string= label "") ""
+      (concat "[" label "]")))
+)
+
 ;;;
 ;;Subroutine
 ;;;
@@ -327,11 +339,12 @@ YaTeX-make-begin-end."
       (goto-char (match-beginning 0))))
     (message YaTeX-label-guide-msg))
 )
-(defun YaTeX::ref (argp)
+(defun YaTeX::ref (argp &optional labelcmd refcmd)
   (cond
    ((= argp 1)
     (save-excursion
-      (let ((lnum 0) e0 m1 e1 label label-list (buf (current-buffer))
+      (let ((lnum 0) e0 label label-list (buf (current-buffer))
+	    (labelcmd (or labelcmd "label")) (refcmd (or refcmd "ref"))
 	    (p (point)) initl line)
 	(goto-char (point-min))
 	(message "Collecting labels...")
@@ -339,27 +352,31 @@ YaTeX-make-begin-end."
 	  (YaTeX-showup-buffer
 	   YaTeX-label-buffer (function (lambda (x) (window-width x))))
 	  (with-output-to-temp-buffer YaTeX-label-buffer
-	    (while (re-search-forward "\\label{\\([^}]+\\)}" nil t)
-	      (setq e0 (match-end 0) m1 (match-beginning 1) e1 (match-end 1))
-	      (if (search-backward
-		   YaTeX-comment-prefix (point-beginning-of-line) t) nil
-		(setq label (buffer-substring m1 e1)
-		      label-list (cons label label-list))
-		(or initl
-		    (if (< p (point)) (setq initl lnum)))
-		(beginning-of-line)
-		(skip-chars-forward " \t\n" nil)
-		(princ (format "%c:{%s}\t<<%s>>\n" (+ (% lnum 26) ?A) label
-			       (buffer-substring (point) (point-end-of-line))))
-		(setq lnum (1+ lnum))
-		(message "Collecting \\label{}... %d" lnum))
+	    (while (YaTeX-re-search-active-forward
+		    (concat "\\\\" labelcmd)
+		    (regexp-quote YaTeX-comment-prefix) nil t)
+	      (goto-char (match-beginning 0))
+	      (skip-chars-forward "^{")
+	      (setq label
+		    (buffer-substring
+		     (1+ (point))
+		     (prog2 (forward-list 1) (setq e0 (1- (point)))))
+		    label-list (cons label label-list))
+	      (or initl
+		  (if (< p (point)) (setq initl lnum)))
+	      (beginning-of-line)
+	      (skip-chars-forward " \t\n" nil)
+	      (princ (format "%c:{%s}\t<<%s>>\n" (+ (% lnum 26) ?A) label
+			     (buffer-substring (point) (point-end-of-line))))
+	      (setq lnum (1+ lnum))
+	      (message "Collecting \\%s{}... %d" labelcmd lnum)
 	      (goto-char e0))
 	    (princ YaTeX-label-menu-other)
 	    (princ YaTeX-label-menu-repeat)
 	    (princ YaTeX-label-menu-any)
 	    );with
 	  (goto-char p)
-	  (message "Collecting labels...Done")
+	  (message "Collecting %s...Done" labelcmd)
 	  (pop-to-buffer YaTeX-label-buffer)
 	  (YaTeX::label-setup-key-map)
 	  (setq truncate-lines t)
@@ -379,12 +396,12 @@ YaTeX-make-begin-end."
 		  (save-excursion
 		    (switch-to-buffer buf)
 		    (goto-char p)
-		    (if (re-search-backward "\\\\ref{\\([^}]+\\)}" nil t)
-			(setq label (buffer-substring
-				     (match-beginning 1) (match-end 1)))
+		    (if (re-search-backward
+			 (concat "\\\\" refcmd "{\\([^}]+\\)}") nil t)
+			(setq label (YaTeX-match-string 1))
 		      (setq label ""))))
 		 ((>= line (+ lnum 2))
-		  (setq label (read-string "\\ref{???}: ")))
+		  (setq label (read-string (format "\\%s{???}: " refcmd))))
 		 (t (setq label (nth (- lnum line 1) label-list)))))
 	    (bury-buffer YaTeX-label-buffer)))
 	label
@@ -392,19 +409,33 @@ YaTeX-make-begin-end."
     ))
 )
 (fset 'YaTeX::pageref 'YaTeX::ref)
+(defun YaTeX::cite (argp)
+  (cond
+   ((eq argp 1)
+    (YaTeX::ref argp "bibitem\\(\\[.*\\]\\)?" "cite"))
+   (t nil)))
 
-(defun YaTeX-label-other ()
-  (let ((lbuf "*YaTeX mode buffers*") (blist (buffer-list)) (lnum -1) buf rv
+(defun YaTeX-yatex-buffer-list ()
+  (save-excursion
+    (delq nil (mapcar (function (lambda (buf)
+				  (set-buffer buf)
+				  (if (eq major-mode 'yatex-mode) buf)))
+		      (buffer-list))))
+)
+
+(defun YaTeX-select-other-yatex-buffer ()
+  "Select buffer from all yatex-mode's buffers interactivelly."
+  (interactive)
+  (let ((lbuf "*YaTeX mode buffers*") (blist (YaTeX-yatex-buffer-list))
+	(lnum -1) buf rv
 	(ff "**find-file**"))
     (YaTeX-showup-buffer
      lbuf (function (lambda (x) 1)))	;;Select next window surely.
     (with-output-to-temp-buffer lbuf
       (while blist
-	(if (and (buffer-file-name (setq buf (car blist)))
-		 (progn (set-buffer buf) (eq major-mode 'yatex-mode)))
-	    (princ
-	     (format "%c:{%s}\n" (+ (% (setq lnum (1+ lnum)) 26) ?A)
-		     (buffer-name buf))))
+	(princ
+	 (format "%c:{%s}\n" (+ (% (setq lnum (1+ lnum)) 26) ?A)
+		 (buffer-name (car blist))))
 	(setq blist (cdr blist)))
       (princ (format "':{%s}" ff)))
     (pop-to-buffer lbuf)
@@ -421,14 +452,20 @@ YaTeX-make-begin-end."
 		(if (re-search-forward "{\\([^\\}]+\\)}" (point-end-of-line) t)
 		    (buffer-substring (match-beginning 1) (match-end 1)) nil)))
       (kill-buffer lbuf))
+    (if (string= rv ff)
+	(progn
+	  (call-interactively 'find-file)
+	  (current-buffer))
+      rv))
+)
+
+(defun YaTeX-label-other ()
+  (let ((rv (YaTeX-select-other-yatex-buffer)))
     (cond
      ((null rv) "")
-     ((string= rv ff)
-      (call-interactively 'find-file)
-      (YaTeX::ref argp))
      (t
       (set-buffer rv)
-      (YaTeX::ref argp)))
+      (YaTeX::ref argp labelcmd refcmd)))
     )
 )
 

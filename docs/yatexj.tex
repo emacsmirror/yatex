@@ -77,7 +77,8 @@
 @item 野鳥にないガイド付き引数入力関数の自動生成(@file{yatexgen.el})
 @item La@TeX{} コマンドの削除/変更(@kbd{C-c k}, @kbd{C-c c})
 @item ファイル間、@code{\begin}<->@code{\end}間、
-        @code{\ref}<->@code{\label}間ジャンプ(@kbd{C-c g})
+        @code{\ref}<->@code{\label}間、
+        @code{\cite}<->@code{\bibitem}ジャンプ(@kbd{C-c g})
 @item 一括コメントアウト/アンコメントアウト
         (@kbd{C-c >}, @kbd{C-c <}, @kbd{C-c ,}, @kbd{C-c .})
 @item アクセント記号/数式環境用コマンド/ギリシャ文字の入力支援
@@ -978,7 +979,7 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 @cindex カーソルジャンプ[かあそるしやんふ]
 @cindex prefix g
 
-  @code{\begin@{@}} や @code{\end@{@}} の行にカーソルを合わせ、
+  文書中のいろいろな場所で
 
 @table @kbd
 @item [prefix] g
@@ -986,9 +987,21 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 @end table
 
 @noindent 
+を押すことにより、カーソル位置のLa@TeX{}コマンドに対応する場所にジャンプ
+します。対応関係が存在すると解釈されるコマンドには以下のものがあります。
+
+@table
+@item @code{\begin@{@}}←→@code{\end@{@}}
+@item @code{%#BEGIN}←→@code{%#END}
+@item @code{\label@{@}}←→@code{\ref@{@}}
+@item @code{\include(\input)}→対応するファイル
+@item @code{\bibitem@{@}}←→@code{\cite@{@}}
+@end table
+
+  @code{\begin@{@}} か @code{\end@{@}} の行で@kbd{[prefix] g}
 を押すことにより、対応する@code{end/begin}の行にジャンプします。もちろん対
 応するものがない場合はエラーになります。またこれは、領域固定のための 
-@code{%#BEGIN} と @code{%#END} のペアに対しても使えます。
+@code{%#BEGIN} と @code{%#END} のペアに対しても同様に動作します。
 @xref{%#記法}
 
   メインの .tex ファイルの @code{\include{chap1}} などにカーソルを合わせ、
@@ -1024,6 +1037,8 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 
 上記のコマンドは通常の@kbd{[prefix]}キーではなく@kbd{META}キーをプリフィク
 スとして機能するのでご注意下さい。
+
+  
 
 @node Modifying/Deleting, Filling item, Cursor jump, Top
 @comment  node-name,  next,  previous,  up
