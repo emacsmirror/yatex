@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
-;;; (c )1994-1999 by HIROSE Yuuji.[yuuji@gentei.org]
-;;; Last modified Tue May  4 10:25:55 1999 on firestorm
+;;; (c )1994-2000 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sun Apr  9 12:36:25 2000 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -15,6 +15,9 @@
 
 (defvar YaTeX-japan (or (boundp 'NEMACS) (boundp 'MULE) YaTeX-emacs-20)
   "Whether yatex mode is running on Japanese environment or not.")
+
+;; autoload from yahtml.el
+(autoload 'yahtml-inner-environment-but "yahtml" "yahtml internal func." t)
 
 (defvar YaTeX-kanji-code-alist
   (cond
@@ -318,7 +321,14 @@ See also YaTeX-search-active-forward."
   "Switch to buffer if buffer exists, find file if not.
 Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
   (interactive "Fswitch to file: ")
-  (if (bufferp file) (setq file (buffer-file-name file)))
+  (if (bufferp file)
+      (setq file (buffer-file-name file))
+    (and (string-match "^[^/].*/" file)
+	 (eq major-mode 'yatex-mode)
+	 YaTeX-search-file-from-top-directory
+	 (save-excursion
+	   (YaTeX-visit-main t)
+	   (setq file (expand-file-name file)))))
   (let (buf (hilit-auto-highlight (not setbuf)))
     (cond
      ((setq buf (get-file-buffer file))
@@ -337,6 +347,13 @@ Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
 (defun YaTeX-switch-to-buffer-other-window (file)
   "Switch to buffer if buffer exists, find file if not."
   (interactive "Fswitch to file: ")
+  (and (eq major-mode 'yatex-mode)
+       (stringp file)
+       (string-match "^[^/].*/" file)
+       YaTeX-search-file-from-top-directory
+       (save-excursion
+	 (YaTeX-visit-main t)
+	 (setq file (expand-file-name file))))
   (if (bufferp file) (setq file (buffer-file-name file)))
   (cond
    ((get-file-buffer file)
@@ -347,13 +364,24 @@ Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
    (t (message "%s was not found in this directory." file)
       nil)))
 
+(defun YaTeX-get-file-buffer (file)
+  "Return the FILE's buffer.
+Base directory is that of main file or current directory."
+  (let (dir main (cdir default-directory))
+    (or (and (eq major-mode 'yatex-mode)
+	     YaTeX-search-file-from-top-directory
+	     (save-excursion
+	       (YaTeX-visit-main t)
+	       (get-file-buffer file)))
+	(get-file-buffer file))))
+
 (defun YaTeX-replace-format-sub (string format repl)
   (let ((beg (or (string-match (concat "^\\(%" format "\\)") string)
 		 (string-match (concat "[^%]\\(%" format "\\)") string)))
 	(len (length format)))
     (if (null beg) string ;no conversion
       (concat
-       (substring string 0 (match-beginning 1)) repl
+       (substring string 0 (match-beginning 1)) (or repl "")
        (substring string (match-end 1))))))
 
 ;;;###autoload
@@ -364,6 +392,15 @@ function `format' does.  FORMAT does not contain `%'"
     (while (not (string=
 		 ans (setq string (YaTeX-replace-format-sub ans format repl))))
       (setq ans string))
+    string))
+
+;;;###autoload
+(defun YaTeX-replace-formats (string replace-list)
+  (let ((list replace-list))
+    (while list
+      (setq string (YaTeX-replace-format
+		    string (car (car list)) (cdr (car list)))
+	    list (cdr list)))
     string))
 
 ;;;###autoload
@@ -643,13 +680,49 @@ If no such window exist, switch to buffer BUFFER."
 (fset 'YaTeX-rassoc
       (if (and nil (fboundp 'rassoc) (subrp (symbol-function 'rassoc)))
 	  (symbol-function 'rassoc)
-	(lambda (key list)
-	  (let ((l list))
-	    (catch 'found
-	      (while l
-		(if (equal key (cdr (car l)))
-		    (throw 'found (car l)))
-		(setq l (cdr l))))))))
+	(function
+	 (lambda (key list)
+	   (let ((l list))
+	     (catch 'found
+	       (while l
+		 (if (equal key (cdr (car l)))
+		     (throw 'found (car l)))
+		 (setq l (cdr l)))))))))
+
+(defun YaTeX-insert-file-contents (file visit &optional beg end)
+  (cond
+   ((string< "19" emacs-version)
+    (insert-file-contents file visit beg end))
+   ((string-match "unix" (symbol-name system-type))
+    (let ((default-process-coding-system
+	    (and (boundp '*noconv*) (list *noconv*)))
+	  file-coding-system (and (boundp '*noconv*) *noconv*)
+	  kanji-fileio-code
+	  (default-process-kanji-code 0))
+      (call-process shell-file-name file (current-buffer) nil
+		    (or (and (boundp 'shell-command-option)
+			     shell-command-option)
+			"-c")
+		    (format "head -c %d | tail -c +%d" end beg))))
+    (t (insert-file-contents file))))
+
+(defun YaTeX-split-string (str &optional sep null)
+  "Split string STR by every occurrence of SEP(regexp).
+If the optional second argument SEP is nil, it defaults to \"[ \f\t\n\r\v]+\".
+Do not include null string by default.  Non-nil for optional third argument
+NULL includes null string in a list."
+  (let ((sep (or sep "[ \f\t\n\r\v]+"))
+	list m)
+    (while str
+      (if (setq m (string-match sep str))
+	  (progn
+	    (if (or (> m 0) null)
+		(setq list (cons (substring str 0 m) list)))
+	    (setq str (substring str (match-end 0))))
+	(if (or null (string< "" str))
+	    (setq list (cons str list)))
+	(setq str nil)))
+    (nreverse list)))
 
 ;;;
 ;; Interface function for windows.el
@@ -752,6 +825,52 @@ of 'YaTeX-inner-environment, which can be referred by
 		   (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
 		   (count-lines (point-min) (point))))))))
 
+(defun YaTeX-beginning-of-environment (&optional limit-search-bound end)
+  "Goto the beginning of the current environment.
+Optional argument LIMIT-SEARCH-BOUND non-nil limits the search bound to
+most recent sectioning command.  Non-nil for optional third argument END
+goes to end of environment."
+  (interactive)
+  (let ((op (point)))
+    (if (YaTeX-inner-environment limit-search-bound)
+	(progn
+	  (goto-char (get 'YaTeX-inner-environment 'point))
+	  (and end (YaTeX-goto-corresponding-environment))
+	  (if (interactive-p) (push-mark op))
+	  t))))
+
+(defun YaTeX-end-of-environment (&optional limit-search-bound)
+  "Goto the end of the current environment.
+Optional argument LIMIT-SEARCH-BOUND non-nil limits the search bound
+to most recent sectioning command."
+  (interactive)
+  (YaTeX-beginning-of-environment limit-search-bound t))
+
+(defun YaTeX-mark-environment ()
+  "Mark current position and move point to end of environment."
+  (interactive)
+  (let ((curp (point)))
+    (if (and (YaTeX-on-begin-end-p) (match-beginning 1)) ;if on \\begin
+	(forward-line 1)
+      (beginning-of-line))
+    (if (not (YaTeX-end-of-environment))   ;arg1 turns to match-beginning 1
+	(progn
+	  (goto-char curp)
+	  (error "Cannot found the end of current environment."))
+      (YaTeX-goto-corresponding-environment)
+      (beginning-of-line)		;for confirmation
+      (if (< curp (point))
+	  (progn
+	    (message "Mark this environment?(y or n): ")
+	    (if (= (read-char) ?y) nil
+	      (goto-char curp)
+	      (error "Abort.  Please call again at more proper position."))))
+      (set-mark-command nil)
+      (YaTeX-goto-corresponding-environment)
+      (end-of-line)
+      (if (eobp) nil (forward-char 1)))))
+
+
 ;;;VER2
 (defun YaTeX-insert-struc (what env)
   (cond
@@ -817,5 +936,4 @@ See yatex19.el for example."
 	(mapcar 'byte-compile-file command-line-args-left)
 	(kill-emacs))))
 
-	
 (provide 'yatexlib)

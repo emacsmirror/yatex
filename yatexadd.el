@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.14
-;;; (c )1991-1999 by HIROSE Yuuji.[yuuji@gentei.org]
-;;; Last modified Tue Jul 13 13:57:45 1999 on firestorm
+;;; (c )1991-1999 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Fri Mar 17 20:21:45 2000 on firestorm
 ;;; $Id$
 
 ;;;
@@ -371,12 +371,212 @@ YaTeX-make-begin-end."
       (goto-char (match-beginning 0))))
     (message YaTeX-label-guide-msg)))
 
+; (defun YaTeX::ref (argp &optional labelcmd refcmd)
+;   (cond
+;    ((= argp 1)
+;     (let ((lnum 0) e0 label label-list (buf (current-buffer))
+; 	  (labelcmd (or labelcmd "label")) (refcmd (or refcmd "ref"))
+; 	  (p (point)) initl line cf)
+;       (message "Collecting labels...")
+;       (save-window-excursion
+; 	(YaTeX-showup-buffer
+; 	 YaTeX-label-buffer (function (lambda (x) (window-width x))))
+; 	(if (fboundp 'select-frame) (setq cf (selected-frame)))
+; 	(if (eq (window-buffer (minibuffer-window)) buf)
+; 	    (progn
+; 	      (other-window 1)
+; 	      (setq buf (current-buffer))
+; 	      (set-buffer buf)
+; 	      ;(message "cb=%s" buf)(sit-for 3)
+; 	      ))
+; 	(save-excursion
+; 	  (set-buffer (get-buffer-create YaTeX-label-buffer))
+; 	  (setq buffer-read-only nil)
+; 	  (erase-buffer))
+; 	(save-excursion
+; 	  (goto-char (point-min))
+; 	  (let ((standard-output (get-buffer YaTeX-label-buffer)))
+; 	    (princ (format "=== LABELS in [%s] ===\n" (buffer-name buf)))
+; 	    (while (YaTeX-re-search-active-forward
+; 		    (concat "\\\\" labelcmd "\\b")
+; 		    (regexp-quote YaTeX-comment-prefix) nil t)
+; 	      (goto-char (match-beginning 0))
+; 	      (skip-chars-forward "^{")
+; 	      (setq label
+; 		    (buffer-substring
+; 		     (1+ (point))
+; 		     (prog2 (forward-list 1) (setq e0 (1- (point)))))
+; 		    label-list (cons label label-list))
+; 	      (or initl
+; 		  (if (< p (point)) (setq initl lnum)))
+; 	      (beginning-of-line)
+; 	      (skip-chars-forward " \t\n" nil)
+; 	      (princ (format "%c:{%s}\t<<%s>>\n" (+ (% lnum 26) ?A) label
+; 			     (buffer-substring (point) (point-end-of-line))))
+; 	      (setq lnum (1+ lnum))
+; 	      (message "Collecting \\%s{}... %d" labelcmd lnum)
+; 	      (goto-char e0))
+; 	    (princ YaTeX-label-menu-other)
+; 	    (princ YaTeX-label-menu-repeat)
+; 	    (princ YaTeX-label-menu-any)
+; 	    );standard-output
+; 	  (goto-char p)
+; 	  (or initl (setq initl lnum))
+; 	  (message "Collecting %s...Done" labelcmd)
+; 	  (if (fboundp 'select-frame) (select-frame cf))
+; 	  (YaTeX-showup-buffer YaTeX-label-buffer nil t)
+; 	  (YaTeX::label-setup-key-map)
+; 	  (setq truncate-lines t)
+; 	  (setq buffer-read-only t)
+; 	  (use-local-map YaTeX-label-select-map)
+; 	  (message YaTeX-label-guide-msg)
+; 	  (goto-line (1+ initl)) ;goto recently defined label line
+; 	  (switch-to-buffer (current-buffer))
+; 	  (unwind-protect
+; 	      (progn
+; 		(recursive-edit)
+; 		(set-buffer (get-buffer YaTeX-label-buffer)) ;assertion
+; 		(beginning-of-line)
+; 		(setq line (1- (count-lines (point-min)(point))))
+; 		(cond
+; 		 ((= line -1) (setq label ""))
+; 		 ((= line lnum) (setq label (YaTeX-label-other)))
+; 		 ((= line (1+ lnum))
+; 		  (save-excursion
+; 		    (switch-to-buffer buf)
+; 		    (goto-char p)
+; 		    (if (re-search-backward
+; 			 (concat "\\\\" refcmd "{\\([^}]+\\)}") nil t)
+; 			(setq label (YaTeX-match-string 1))
+; 		      (setq label ""))))
+; 		 ((>= line (+ lnum 2))
+; 		  (setq label (read-string (format "\\%s{???}: " refcmd))))
+; 		 (t (setq label (nth (- lnum line 1) label-list)))))
+; 	    (bury-buffer YaTeX-label-buffer)))
+; 	label)))))
+
+(defun YaTeX::ref-generate-label ()
+  "Generate a label string which is unique in current buffer."
+  (let ((default (substring (current-time-string) 4)))
+    (read-string "Give a label for this line: "
+		 (if YaTeX-emacs-19 (cons default 1) default))))
+
+(defun YaTeX::ref-getset-label (buffer point)
+  "Get label string in the BUFFER near the POINT.
+Make \\label{xx} if no label."
+  (let (boundary inspoint cc newlabel (labelholder "label") mathp env)
+    ;(set-buffer buffer)
+    (switch-to-buffer buffer)
+    (save-excursion
+      (goto-char point)
+      (setq cc (current-column))
+      (if (= (char-after (point)) ?\\) (forward-char 1))
+      (cond
+       ((looking-at YaTeX-sectioning-regexp)
+	(skip-chars-forward "^{")
+	(forward-list 1)
+	(skip-chars-forward " \t\n")
+	(setq boundary "\\S "))
+       ((looking-at "item\\s ")
+	(setq cc (+ cc 6))
+	(setq boundary (concat YaTeX-ec-regexp "\\(item\\|begin\\|end\\)\\b")))
+       ((looking-at "bibitem")
+	(setq labelholder "bibitem"))	; label holder is bibitem itself
+       ((string-match YaTeX::ref-mathenv-regexp
+		      (setq env (or (YaTeX-inner-environment t) "document")))
+	(setq mathp t)
+	(setq boundary (concat YaTeX-ec-regexp "\\(\\\\\\|end{" env "}\\)")))
+       ((looking-at "caption\\|\\(begin\\)")
+	(skip-chars-forward "^{")
+	(if (match-beginning 1) (forward-list 1))
+	(setq boundary (concat YaTeX-ec-regexp "\\(begin\\|end\\)\\b")))
+       (t ))
+      (if (save-excursion (skip-chars-forward " \t") (looking-at "%"))
+	  (forward-line 1))
+      (if (and (save-excursion
+		 (YaTeX-re-search-active-forward
+		  (concat "\\(" labelholder "\\)\\|\\(" boundary "\\)")
+		  (regexp-quote YaTeX-comment-prefix)
+		  nil 1))
+	       (match-beginning 1))
+	  ;; if \label{hoge} found, return it
+	  (buffer-substring
+	   (progn
+	     (goto-char (match-end 0))
+	     (skip-chars-forward "^{") (1+ (point)))
+	   (progn
+	     (forward-sexp 1) (1- (point))))
+	;;else make a label
+	(goto-char (match-beginning 0))
+	(skip-chars-backward " \t\n")
+	(save-excursion (setq newlabel (YaTeX::ref-generate-label)))
+	(delete-region (point) (progn (skip-chars-backward " \t") (point)))
+	(if mathp nil 
+	  (insert "\n")
+	  (YaTeX-reindent cc))
+	(insert (format "\\label{%s}" newlabel))
+	newlabel))))
+
+(defvar YaTeX::ref-labeling-regexp-alist
+  '(("\\\\begin{java}{\\([^}]+\\)}" . 1)
+    ("\\\\elabel{\\([^}]+\\)}" . 1)))
+(defvar YaTeX::ref-labeling-regexp
+  (mapconcat 'car YaTeX::ref-labeling-regexp-alist "\\|"))
+(defvar YaTeX::ref-mathenv-regexp
+  "equation\\|eqnarray\\|align\\|gather\\|alignat\\|xalignat")
+(defvar YaTeX::ref-enumerateenv-regexp
+  "enumerate")
+
+(defvar YaTeX::ref-labeling-section-level 2
+  "ref補完で収集するセクショニングコマンドの下限レベル
+YaTeX-sectioning-levelの数値で指定.")
+
 (defun YaTeX::ref (argp &optional labelcmd refcmd)
+  (setplist 'YaTeX::ref-labeling-regexp nil) ;erase memory cache
+  (require 'yatexsec)
   (cond
    ((= argp 1)
-    (let ((lnum 0) e0 label label-list (buf (current-buffer))
-	  (labelcmd (or labelcmd "label")) (refcmd (or refcmd "ref"))
-	  (p (point)) initl line cf)
+    (let*((lnum 0) e0 x cmd label match-point point-list boundary
+	  (buf (current-buffer))
+	  (llv YaTeX::ref-labeling-section-level)
+	  (mathenvs YaTeX::ref-mathenv-regexp)
+	  (enums YaTeX::ref-enumerateenv-regexp)
+	  (counter
+	   (or labelcmd
+	       (concat
+		YaTeX-ec-regexp "\\(\\("
+		(mapconcat
+		 'concat
+		 (delq nil
+		       (mapcar
+			(lambda (s)
+			  (if (>= llv (cdr s))
+			      (car s)))
+			YaTeX-sectioning-level))
+		 "\\|")
+		"\\|caption\\){"
+		"\\|\\(begin{\\(" mathenvs "\\|" enums  "\\)\\)\\)")))
+	  (regexp (concat "\\(" counter
+			  "\\)\\|\\(" YaTeX::ref-labeling-regexp "\\)"))
+	  (itemsep (concat YaTeX-ec-regexp
+			   "\\(\\(bib\\)?item\\|begin\\|end\\)"))
+	  (refcmd (or refcmd "ref"))
+	  (p (point)) initl line cf
+	  (percent (regexp-quote YaTeX-comment-prefix))
+	  (output
+	   (function
+	    (lambda (label p)
+	      (while (setq x (string-match "\n" label))
+		(aset label x ? ))
+	      (while (setq x (string-match "[ \t\n][ \t\n]+" label))
+		(setq label (concat
+			     (substring label 0 (1+ (match-beginning 0)))
+			     (substring label (match-end 0)))))
+	      (princ (format "%c: <<%s>>\n" (+ (% lnum 26) ?A) label))
+	      (setq point-list (cons p point-list))
+	      (message "Collecting labels... %d" lnum)
+	      (setq lnum (1+ lnum)))))
+	  )
       (message "Collecting labels...")
       (save-window-excursion
 	(YaTeX-showup-buffer
@@ -386,35 +586,106 @@ YaTeX-make-begin-end."
 	    (progn
 	      (other-window 1)
 	      (setq buf (current-buffer))
-	      (set-buffer buf)
-	      ;(message "cb=%s" buf)(sit-for 3)
-	      ))
+	      (set-buffer buf)))
 	(save-excursion
 	  (set-buffer (get-buffer-create YaTeX-label-buffer))
 	  (setq buffer-read-only nil)
 	  (erase-buffer))
 	(save-excursion
+	  (set-buffer buf)
 	  (goto-char (point-min))
 	  (let ((standard-output (get-buffer YaTeX-label-buffer)))
 	    (princ (format "=== LABELS in [%s] ===\n" (buffer-name buf)))
 	    (while (YaTeX-re-search-active-forward
-		    (concat "\\\\" labelcmd "\\b")
-		    (regexp-quote YaTeX-comment-prefix) nil t)
-	      (goto-char (match-beginning 0))
-	      (skip-chars-forward "^{")
-	      (setq label
-		    (buffer-substring
-		     (1+ (point))
-		     (prog2 (forward-list 1) (setq e0 (1- (point)))))
-		    label-list (cons label label-list))
-	      (or initl
-		  (if (< p (point)) (setq initl lnum)))
-	      (beginning-of-line)
-	      (skip-chars-forward " \t\n" nil)
-	      (princ (format "%c:{%s}\t<<%s>>\n" (+ (% lnum 26) ?A) label
-			     (buffer-substring (point) (point-end-of-line))))
-	      (setq lnum (1+ lnum))
-	      (message "Collecting \\%s{}... %d" labelcmd lnum)
+		    regexp ;;counter
+		    percent nil t)
+	      ;(goto-char (match-beginning 0))
+	      (setq e0 (match-end 0))
+	      (cond
+	       ((match-string 1)
+		;;if standard counter commands found 
+		(setq cmd (YaTeX-match-string 2))
+		(setq match-point (match-beginning 0))
+		(or initl
+		    (if (< p (point)) (setq initl lnum)))
+		(cond
+		 ((string-match mathenvs cmd) ;;if matches mathematical env
+		  ;(skip-chars-forward "} \t\n")
+		  (forward-line 1)
+		  (setq x (point))
+		  (catch 'scan
+		    (while (YaTeX-re-search-active-forward
+			    (concat "\\\\\\\\$\\|\\\\end{\\(" mathenvs "\\)")
+			    percent nil t)
+		      (let ((quit (match-beginning 1)))
+			(funcall output
+				 (buffer-substring x (match-beginning 0))
+				 x)
+			(if quit (throw 'scan t)))
+		      (setq x (point))))
+		  (setq e0 (point)))
+		 ((string-match enums cmd)
+		  ;(skip-chars-forward "} \t\n")
+		  (save-restriction
+		    (narrow-to-region
+		     (point)
+		     (save-excursion
+		       (YaTeX-goto-corresponding-environment) (point)))
+		    (forward-line 1)
+		    (while (YaTeX-re-search-active-forward
+			    (concat YaTeX-ec-regexp "item\\s ")
+			    percent nil t)
+		      (setq x (match-beginning 0))
+		      (funcall
+		       output
+		       (buffer-substring
+			(match-beginning 0)
+			(if (re-search-forward itemsep nil t)
+			    (progn (goto-char (match-beginning 0))
+				   (skip-chars-backward " \t")
+				   (1- (point)))
+			  (point-end-of-line)))
+		       x))))
+
+		 ((= (char-after (1- (point))) ?{)
+		  (setq label (buffer-substring
+			       (match-beginning 0)
+			       (progn (forward-char -1)
+				      (forward-list 1)
+				      (point))))
+		  (funcall output label match-point))
+		 (t
+		  (skip-chars-forward " \t")
+		  (setq label (buffer-substring
+			       (match-beginning 0)
+			       (if (re-search-forward
+				    itemsep
+				    nil t)
+				   (progn
+				     (goto-char (match-beginning 0))
+				     (skip-chars-backward " \t")
+				     (1- (point)))
+				 (point-end-of-line))))
+		  (funcall output label match-point)
+		  ))
+		) ;;put label buffer
+	       ;;
+	       ;; if user defined label found
+	       (t
+		;; memorize line number and label into property
+		(goto-char (match-beginning 0))
+		(let ((list YaTeX::ref-labeling-regexp-alist)
+		      (cache (symbol-plist 'YaTeX::ref-labeling-regexp)))
+		  (while list
+		    (if (looking-at (car (car list)))
+			(progn
+			  (setq label (YaTeX-match-string 0))
+			  (put 'YaTeX::ref-labeling-regexp lnum
+			       (YaTeX-match-string (cdr (car list))))
+			  (funcall output label 0) ;;0 is dummy, never used
+			  (setq list nil)))
+		    (setq list (cdr list))))
+		))
 	      (goto-char e0))
 	    (princ YaTeX-label-menu-other)
 	    (princ YaTeX-label-menu-repeat)
@@ -422,7 +693,7 @@ YaTeX-make-begin-end."
 	    );standard-output
 	  (goto-char p)
 	  (or initl (setq initl lnum))
-	  (message "Collecting %s...Done" labelcmd)
+	  (message "Collecting labels...Done")
 	  (if (fboundp 'select-frame) (select-frame cf))
 	  (YaTeX-showup-buffer YaTeX-label-buffer nil t)
 	  (YaTeX::label-setup-key-map)
@@ -435,6 +706,7 @@ YaTeX-make-begin-end."
 	  (unwind-protect
 	      (progn
 		(recursive-edit)
+
 		(set-buffer (get-buffer YaTeX-label-buffer)) ;assertion
 		(beginning-of-line)
 		(setq line (1- (count-lines (point-min)(point))))
@@ -451,16 +723,111 @@ YaTeX-make-begin-end."
 		      (setq label ""))))
 		 ((>= line (+ lnum 2))
 		  (setq label (read-string (format "\\%s{???}: " refcmd))))
-		 (t (setq label (nth (- lnum line 1) label-list)))))
+		 (t ;(setq label (nth (- lnum line 1) label-list))
+		  (setq label
+			(or (get 'YaTeX::ref-labeling-regexp line)
+			    (YaTeX::ref-getset-label
+			     buf (nth (- lnum line 1) point-list))))
+		  )))
 	    (bury-buffer YaTeX-label-buffer)))
 	label)))))
 
 (fset 'YaTeX::pageref 'YaTeX::ref)
+
+(defun YaTeX::cite-collect-bibs-external (&rest files)
+  "Collect bibentry from FILES(variable length argument);
+and print them to standard output."
+  ;;Thanks; http://icarus.ilcs.hokudai.ac.jp/comp/biblio.html
+  (let ((tb (get-buffer-create " *bibtmp*")))
+    (save-excursion
+      (set-buffer tb)
+      (while files
+	(erase-buffer)
+	(cond
+	 ((file-exists-p (car files))
+	  (insert-file-contents (car files)))
+	 ((file-exists-p (concat (car files) ".bib"))
+	  (insert-file-contents (concat (car files) ".bib"))))
+	(save-excursion
+	  (goto-char (point-min))
+	  (while (re-search-forward "^\\s *@[A-Za-z]" nil t)
+	    (skip-chars-forward "^{,")
+	    (if (= (char-after (point)) ?{)
+		(princ (format "%sbibitem{%s}%s\n"
+			       YaTeX-ec
+			       (buffer-substring
+				(1+ (point))
+				(progn (skip-chars-forward "^,\n")
+				       (point)))
+			       (if (re-search-forward "title\\s *=" nil t)
+				   (buffer-substring
+				    (progn
+				      (goto-char (match-end 0))
+				      (skip-chars-forward " \t\n")
+				      (point))
+				    (progn
+				      (if (looking-at "[{\"]")
+					  (forward-sexp 1)
+					(forward-char 1)
+					(skip-chars-forward "^,"))
+				      (point)))))))))
+	(setq files (cdr files))))))
+
+(defun YaTeX::cite-collect-bibs-internal ()
+  "Collect bibentry in the current buffer and print them to standard output."
+  (let ((ptn (concat YaTeX-ec-regexp "bibitem\\b"))
+	(pcnt (regexp-quote YaTeX-comment-prefix)))
+    (save-excursion
+      (while (YaTeX-re-search-active-forward ptn pcnt nil t)
+	(skip-chars-forward "^{\n")
+	(or (eolp)
+	    (princ (format "%sbibitem{%s}\n"
+			   YaTeX-ec
+			   (buffer-substring
+			    (1+ (point))
+			    (progn (forward-sexp 1) (point))))))))))
+
 (defun YaTeX::cite (argp)
   (cond
    ((eq argp 1)
-    (YaTeX::ref argp "bibitem\\(\\[.*\\]\\)?" "cite"))
+    (let* ((cb (current-buffer))
+	   (f (file-name-nondirectory buffer-file-name))
+	   (d default-directory)
+	   (hilit-auto-highlight nil)
+	   (pcnt (regexp-quote YaTeX-comment-prefix))
+	   (bibrx (concat YaTeX-ec-regexp "bibliography{\\([^}]+\\)}"))
+	   (bbuf (get-buffer-create " *bibitems*"))
+	   (standard-output bbuf)
+	   bibs files)
+      (set-buffer bbuf)(erase-buffer)(set-buffer cb)
+      (save-excursion
+	(goto-char (point-min))
+	;;(1)search external bibdata
+	(while (YaTeX-re-search-active-forward bibrx pcnt nil t)
+	  (apply 'YaTeX::cite-collect-bibs-external
+		 (YaTeX-split-string
+		  (YaTeX-match-string 1) ",")))
+	;;(2)search direct \bibitem usage
+	(YaTeX::cite-collect-bibs-internal)
+	(if (progn
+	      (YaTeX-visit-main t)
+	      (not (eq (current-buffer) cb)))
+	    (save-excursion
+	      (goto-char (point-min))
+	      ;;(1)search external bibdata
+	      (while (YaTeX-re-search-active-forward bibrx pcnt nil t)
+		(apply 'YaTeX::cite-collect-bibs-external
+		       (YaTeX-split-string
+			(YaTeX-match-string 1) ",")))
+	      ;;(2)search internal
+	      (YaTeX::cite-collect-bibs-internal)))
+	;;Now bbuf holds the list of bibitem
+	(set-buffer bbuf)
+	(YaTeX::ref argp "\\\\\\(bibitem\\)\\(\\[.*\\]\\)?" "cite"))))
+  
    (t nil)))
+
+(and YaTeX-use-AMS-LaTeX (fset 'YaTeX::eqref 'YaTeX::ref))
 
 (defun YaTeX-yatex-buffer-list ()
   (save-excursion
@@ -749,9 +1116,10 @@ YaTeX-make-begin-end."
 
 ;;; -------------------- LaTeX2e stuff --------------------
 (defvar YaTeX:documentclass-options-default
-  '(("a4paper") ("a5paper") ("b5paper") ("10pt") ("11pt") ("12pt")
+  '(("a4paper") ("a5paper") ("b4paper") ("b5paper") ("10pt") ("11pt") ("12pt")
     ("latterpaper") ("legalpaper") ("executivepaper") ("landscape")
     ("oneside") ("twoside") ("draft") ("final") ("leqno") ("fleqn") ("openbib")
+    ("tombow") ("titlepage") ("notitlepage") ("dvips")
     ("clock")				;for slides class only
     )
     "Default options list for documentclass")
@@ -773,6 +1141,7 @@ YaTeX-make-begin-end."
     (if (string< "" opt)
 	(progn
 	  (while substr
+
 	    (setq o (substring substr 0 (string-match delim substr)))
 	    (or (assoc o dt)
 		(YaTeX-update-table
@@ -811,6 +1180,77 @@ YaTeX-make-begin-end."
       (if (string= "" sname) (setq sname YaTeX-default-documentclass))
       (setq YaTeX-default-documentclass sname)))))
 
+(defvar YaTeX:latex2e-named-color-alist
+  '(("GreenYellow") ("Yellow") ("Goldenrod") ("Dandelion") ("Apricot")
+    ("Peach") ("Melon") ("YellowOrange") ("Orange") ("BurntOrange")
+    ("Bittersweet") ("RedOrange") ("Mahogany") ("Maroon") ("BrickRed")
+    ("Red") ("OrangeRed") ("RubineRed") ("WildStrawberry") ("Salmon")
+    ("CarnationPink") ("Magenta") ("VioletRed") ("Rhodamine") ("Mulberry")
+    ("RedViolet") ("Fuchsia") ("Lavender") ("Thistle") ("Orchid")("DarkOrchid")
+    ("Purple") ("Plum") ("Violet") ("RoyalPurple") ("BlueViolet")
+    ("Periwinkle") ("CadetBlue") ("CornflowerBlue") ("MidnightBlue")
+    ("NavyBlue") ("RoyalBlue") ("Blue") ("Cerulean") ("Cyan") ("ProcessBlue")
+    ("SkyBlue") ("Turquoise") ("TealBlue") ("Aquamarine") ("BlueGreen")
+    ("Emerald") ("JungleGreen") ("SeaGreen") ("Green") ("ForestGreen")
+    ("PineGreen") ("LimeGreen") ("YellowGreen") ("SpringGreen") ("OliveGreen")
+    ("RawSienna") ("Sepia") ("Brown") ("Tan") ("Gray") ("Black") ("White"))
+  "Colors defined in $TEXMF/tex/plain/colordvi.tex")
+
+(defvar YaTeX:latex2e-basic-color-alist
+  '(("black") ("white") ("red") ("blue") ("yellow") ("green") ("cyan")
+    ("magenta"))
+  "Basic colors")
+
+(defun YaTeX:textcolor ()
+  "Add-in for \\color's option"
+  (if (y-or-n-p "Use `named' color? ")
+      "[named]"))
+
+(defun YaTeX::color-completing-read (prompt)
+  (let ((completion-ignore-case t)
+	(namedp (save-excursion
+		  (skip-chars-backward "^\n\\[\\\\")
+		  (looking-at "named"))))
+    (completing-read
+     prompt
+     (if namedp
+	 YaTeX:latex2e-named-color-alist
+       YaTeX:latex2e-basic-color-alist)
+     nil t)))
+
+(defun YaTeX::textcolor (argp)
+  "Add-in for \\color's argument"
+  (cond
+   ((= argp 1) (YaTeX::color-completing-read "Color: "))
+   ((= argp 2) (read-string "Colored string: "))))
+
+(fset 'YaTeX:color 'YaTeX:textcolor)
+(fset 'YaTeX::color 'YaTeX::textcolor)
+(fset 'YaTeX:colorbox 'YaTeX:textcolor)
+(fset 'YaTeX::colorbox 'YaTeX::textcolor)
+(fset 'YaTeX:fcolorbox 'YaTeX:textcolor)
+
+(defun YaTeX::fcolorbox (argp)
+  (cond
+   ((= argp 1) (YaTeX::color-completing-read "Frame color: "))
+   ((= argp 2) (YaTeX::color-completing-read "Inner color: "))
+   ((= argp 3) (read-string "Colored string: "))))
+
+(defun YaTeX:scalebox ()
+  "Add-in for \\rotatebox"
+  (let ((vmag (read-string (if YaTeX-japan "倍率: " "Magnification: ")))
+	(hmag (read-string (if YaTeX-japan "横倍率(省略可): "
+			     "Horizontal magnification(Optional): "))))
+    (if (and hmag (string< "" hmag))
+	(format "{%s}[%s]" vmag hmag)
+      (format "{%s}" vmag))))
+
+(defun YaTeX::includegraphics (argp)
+  "Add-in for \\includegraphics"
+  (cond
+   ((= argp 1)
+    (read-file-name "EPS File: " ""))))
+ 
 (defun YaTeX:caption ()
   (setq section-name "label")
   nil)

@@ -10,6 +10,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
+@c Last modified Thu Mar 16 01:04:48 2000 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -19,7 +20,7 @@
 @subtitle Yet Another tex-mode for emacs
 @title 『野鳥』
 @subtitle // YaTeX //
-@author @copyright{} 1991-1999 by    HIROSE, Yuuji [yuuji@@gentei.org]
+@author @copyright{} 1991-1999 by    HIROSE, Yuuji [yuuji@@yatex.org]
 @end titlepage
 
 @node Top, Intro, (dir), (dir)
@@ -125,7 +126,7 @@ lisp 変数
 ストの編集を支援します。さらに La@TeX{} コマンドのオンラインヘルプに
 よりマニュアルを調べる手間を軽減します。
 
-  English manual @xref{Top, , , yatexe,YaTeX English info}
+  English manual @xref{Top, , , yatexe,YaTeX English info}.
 
 @node Terminology, Main features, Intro, Top
 @comment  node-name,  next,  previous,  up
@@ -434,7 +435,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 @item
 メインファイルからサブディレクトリ内のファイルを include
 する時には、相対パス指定を用いて、
-@code{\include{chap1/sub}}のように記述。
+@code{\include@{chap1/sub@}}のように記述。
 @item
 メインファイルが一つ上のディレクトリにある場合も、サブファイルには
 %#!jlatex main.tex のように記述する(../mainではない)。
@@ -493,7 +494,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 の消し忘れには十分ご注意下さい。
 @cindex 長いファイルの編集[なかいふあいるのへんしゆう]
 
-@node  Require, lpr format, Fix region for typesetting, %#notation
+@c @node  Require, lpr format, Fix region for typesetting, %#notation
 @comment  node-name,  next,  previous,  up
 
 @node lpr format, Editing %# notation, Fix region for typesetting, %#notation
@@ -773,7 +774,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 @subsection 2個以上の引数をとる section型コマンド
 @cindex 引数[ひきすう]
 
-  ところで、@samp{\addtolength{\topmargin}{8mm}} などのように、引数を二つ
+  ところで、@samp{\addtolength@{\topmargin@}@{8mm@}} などのように、引数を二つ
 以上取る La@TeX{} コマンドがあります。このようなコマンドの補完入力には、
 section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength} 
 の例であれば、引数2を指定します。つまり、
@@ -959,7 +960,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 @end table
 
 @noindent 
-とすることで、現在開いている環境名で \end{} が補われます。
+とすることで、現在開いている環境名で \end@{@} が補われます。
 
 @node Accent mark completion, Image completion, end補完, Completion
 @comment  node-name,  next,  previous,  up
@@ -1235,8 +1236,8 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 ない場合はエラーになります。またこれは、領域固定のための @code{%#BEGIN} と 
 @code{%#END} のペアに対しても同様に動作します。なお、@code{label/ref}や
 @code{cite/bibitem}対応するものが別ファイルにある時は、ジャンプ先となるファ
-イルがオープンされていなければなりません。@xref{%#notation}
-メインの .tex ファイルの @code{\include{chap1}} などにカーソルを合わせ、
+イルがオープンされていなければなりません。@xref{%#notation}.
+メインの .tex ファイルの @code{\include@{chap1@}} などにカーソルを合わせ、
 @kbd{[prefix] g} を押すと、@file{chap1.tex} にジャンプします。
 
 また、
@@ -1538,7 +1539,7 @@ description環境:
 下のような tabular において、
 
 @example
-        \begin@{tabular@}{|c|c|c|c|c|c|c|c|}\hline
+        \begin@{tabular@}@{|c|c|c|c|c|c|c|c|@}\hline
          氏名&所属&〒&住所&電話&FAX&帰省先&帰省先電話\\ \hline
          矢上二郎 & 6 & 223 & 横浜市港北区日吉 & xxx-yyy &
                 zzz-www & トンガ & 9876-54321 \\
@@ -2018,6 +2019,10 @@ Non-nil に設定するとsection型コマンドの引数入力時、アドイン関数がなければ
 AMS-LaTeX を使用する場合は @code{t} に設定する (@code{nil})
 @end defvar
 
+@defvar YaTeX-use-LaTeX2e
+LaTeX2e を使用する場合は @code{t} に設定する (@code{nil})
+@end defvar
+
 @defvar YaTeX-template-file
 新規ファイル作成時に自動挿入するファイル名 (@code{~/work/template.tex})
 @end defvar
@@ -2113,7 +2118,7 @@ AMS-LaTeX を使用する場合は @code{t} に設定する (@code{nil})
 ただくと、作者は喜んでサポートに励むことでしょう。
 
   苦情、希望、バグ報告、感想等は歓迎いたします。
-連絡は yuuji@@gentei.org まで(1999年5月現在)。
+連絡は yuuji@@yatex.org まで(1999年8月現在)。
 継続的に使用してくださる方はメイリングリスト「fj野鳥の会」に
 是非加入してください。加入方法については本パッケージの @file{docs/qanda}
 ファイルの「その他」の章を御覧ください。

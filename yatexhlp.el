@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX helper with LaTeX commands and macros.
 ;;; yatexhlp.el
-;;; (c )1994,1998 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Mar 12 11:10:07 1998 on crx
+;;; (c )1994,1998 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Aug 26 18:15:39 1999 on firestorm
 ;;; $Id$
 
 (let ((help-file (concat "YATEXHLP."

@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
-;;; (c )1994-1999 by HIROSE Yuuji.[yuuji@gentei.org]
-;;; Last modified Thu Apr 29 18:40:26 1999 on firestorm
+;;; (c )1994-1999 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Fri Nov 26 09:56:09 1999 on firestorm
 ;;; $Id$
 
 ;;; とりあえず hilit19 を使っている時に色が付くようにして
@@ -12,6 +12,10 @@
 ;;; とかいってるうちに hilit19 って obsolete になってしまった…
 
 ;(require 'yatex)
+
+(defvar YaTeX-use-hilit19 (and (featurep 'hilit19) (fboundp 'x-color-values)
+			       (fboundp 'hilit-translate))
+  "*Use hilit19 to fontify buffer or not.")
 
 (defvar YaTeX-mode-menu-map (make-sparse-keymap "YaTeX"))
 (defvar YaTeX-mode-menu-map-process (make-sparse-keymap "Process"))
@@ -360,7 +364,7 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 ;    (fset 'x-color-values 'win32-color-values))
 
 (cond
- ((and (featurep 'hilit19) (fboundp 'x-color-values))
+ (YaTeX-use-hilit19
   (let*((sectface
 	 (car (if (eq hilit-background-mode 'dark)
 		  (cdr YaTeX-hilit-sectioning-face)
@@ -412,7 +416,7 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 ;; ローカルマクロを keyword として光らせる(keywordじゃまずいかな…)。
 (defun YaTeX-19-collect-macros ()
   (cond
-   ((and (featurep 'hilit19) (fboundp 'hilit-translate))
+   (YaTeX-use-hilit19
     (let ((get-face
 	   (function
 	    (lambda (table)

@@ -7,6 +7,7 @@
 @c @syncodeindex fn cp
 @c Infoって最近読む人が増えたらしい
 @c まだ書き終わっていません。
+@c Last modified Mon Nov 29 15:43:04 1999 on buell
 @syncodeindex vr cp
 @end iftex
 
@@ -16,7 +17,7 @@
 @subtitle Yet Another html-mode for emacs
 @title 『HTML屋』
 @subtitle // yahtml //
-@author @copyright{} 1994-1997 by    HIROSE, Yuuji [yuuji@@gentei.org]
+@author @copyright{} 1994-1997 by    HIROSE, Yuuji [yuuji@@yatex.org]
 @end titlepage
 
 @node Top, Intro, (dir), (dir)
@@ -29,6 +30,7 @@
 * Completion::                  補完入力
 * Jump::                        カーソルジャンプ
 * Changing and Deleting::       変更と削除
+* CSS Support::                 スタイルシート補完
 * Customizations::              カスタマイズ変数一覧
 * Copying::                     とりあつかい
 * Concept Index::               索引
@@ -221,7 +223,7 @@ HTMLタグの補完入力ができます。それぞれの型の補完は順に、
 @c @item @code{\include(\input)} → 対応するファイル
 @end itemize
 
-@node Changing and Deleting, Customizations, Jump, Top
+@node Changing and Deleting, CSS Support, Jump, Top
 @comment  node-name,  next,  previous,  up
 @chapter 変更/削除
 
@@ -249,7 +251,7 @@ HTMLタグの補完入力ができます。それぞれの型の補完は順に、
 @itemize @bullet
 @item @code{<TAG>}～@code{</TAG>}
 @dots{} @code{TAG} の変更
-@item @code{<img src="画像ファイル"> alt="photo"} などの属性値
+@item @code{<img src="画像ファイル" alt="photo">} などの属性値
 @dots{} 属性値の変更
 @end itemize
 
@@ -279,8 +281,65 @@ HTML以外のファイルからこれらの文字を含むテキストを張り込んだ場合
         エンコード表記に置換。
 @end table
 
+@node CSS Support, Customizations, Changing and Deleting, Top
+@comment  node-name,  next,  previous,  up
+@chapter CSS(スタイルシート)サポート
 
-@node Customizations, Copying, Changing and Deleting, Top
+@menu
+* CSS-class completion::        
+* Reread CSS file::             
+@end menu
+
+@node CSS-class completion, Reread CSS file, CSS Support, CSS Support
+@comment  node-name,  next,  previous,  up
+@section CSSクラス名補完
+HTML屋はCSS(Cascading Style Sheets)のクラス名を補完入力することができます。
+スタイル定義として
+
+@display
+ h1.foo, h2.foo @{ background-color: 0xffffff; @}
+ h1.bar, h2.bar @{ font-size: 120%; @}
+@end display
+
+のようなものがあった場合に、h1またはh2タグを [prefix] b や [prefix] l で補
+完入力した場合に、それらに有効な class 名である foo, bar を候補として補完
+入力することが可能です。また
+
+@display
+ .caution @{ font-size: 120%; background-color: 0xc00000;@}
+@end display
+
+のような全てのエレメントに働くclassが定義されていた場合は、全てのタグの補
+完入力時にclass参照入力を求められます。これが煩わしい場合はエレメント名入
+力確定のときにリターンキー(またはC-m)ではなく、C-jを押せばclass補完入力を
+キャンセルできます。たとえば
+
+@display
+ @kbd{[prefix] l}                    行内タグ補完を起動
+    (または@kbd{[prefix] l SPC})
+ tt                                  <tt></tt>をいれたいのでttと入力
+ @kbd{C-m}
+@end display
+
+とした場合は続いて class= と補完プロンプトが出ますが、
+
+@display
+ @kbd{[prefix] l}                    行内タグ補完を起動
+    (または@kbd{[prefix] l SPC})
+ tt                                  <tt></tt>をいれたいのでttと入力
+ @kbd{C-j}
+@end display
+
+と最後を @kbd{C-j} で入力した場合は class 補完プロンプトは出ません。
+
+@node Reread CSS file,  , CSS-class completion, CSS Support
+@comment  node-name,  next,  previous,  up
+@section CSS定義ファイルの読み直し
+htmlファイルを編集中にCSS定義ファイルを修正し、追加した
+classを補完候補として直ちに読み込ませたい場合は、
+@kbd{M-x yahtml-mode} として再起動を行ってください。
+
+@node Customizations, Copying, CSS Support, Top
 @comment  node-name,  next,  previous,  up
 @chapter カスタマイズ
 @cindex カスタマイズ[かすたまいす]
@@ -414,7 +473,7 @@ alistで並べる。デフォルトで @code{<}, @code{>}, @code{&}, @code{'},
 ただくと、作者は喜んでサポートに励むことでしょう。
 
   苦情、希望、バグ報告、感想等は歓迎いたします。
-連絡は gentei.org まで(1999年7月現在)。
+連絡は yuuji@@yatex.org まで(1999年7月現在)。
 継続的に使用してくださる方はメイリングリスト「fj野鳥の会」に
 是非加入してください。加入方法については本パッケージの @file{docs/yahtmlqa}
 ファイルの「その他」の章を御覧ください。

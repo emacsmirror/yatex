@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c )1993-1999 by HIROSE Yuuji.[yuuji@gentei.org]
-;;; Last modified Tue Jul 13 13:47:46 1999 on firestorm
+;;; (c )1993-1999 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sat Dec 18 22:16:11 1999 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -479,7 +479,7 @@ error or warning lines in reverse order."
 	   (buffer-substring
 	    (point)
 	    (progn (skip-chars-forward "0-9" (match-end 0)) (point))))
-	  error-buffer (YaTeX-get-error-file cur-buf))
+	  error-buffer (expand-file-name (YaTeX-get-error-file cur-buf)))
     (if (or (null error-line) (equal 0 error-line))
 	(error "Can't detect error position."))
     (YaTeX-set-virtual-error-position 'error-buffer 'error-line)
@@ -517,7 +517,8 @@ error or warning lines in reverse order."
       (goto-char (match-beginning 0))
       (setq error-line (string-to-int
 			(buffer-substring (match-beginning 1) (match-end 1)))
-	    error-file (YaTeX-get-error-file YaTeX-current-TeX-buffer))
+	    error-file (expand-file-name
+			(YaTeX-get-error-file YaTeX-current-TeX-buffer)))
       (YaTeX-set-virtual-error-position 'error-file 'error-line)
       (setq error-buf (YaTeX-switch-to-buffer error-file t)))
       (if (null error-buf)
@@ -710,7 +711,9 @@ page range description."
    (YaTeX-parent-file
     (eq (get-file-buffer YaTeX-parent-file) (current-buffer)))
    ((YaTeX-get-builtin "!")
-    (string-match (YaTeX-guess-parent (YaTeX-get-builtin "!")) (buffer-name)))
+    (string-match
+     (concat "^" (YaTeX-guess-parent (YaTeX-get-builtin "!")))
+     (buffer-name)))
    (t
     (save-excursion
       (let ((latex-main-id
@@ -724,7 +727,11 @@ Use set-buffer instead of switch-to-buffer if the optional second argument
 SETBUF is t(Use it only from Emacs-Lisp program)."
   (interactive "P")
   (if (and (interactive-p) setbuf) (setq YaTeX-parent-file nil))
-  (let (b-in main-file)
+  (let ((ff (function (lambda (f)
+			(if setbuf (set-buffer (find-file-noselect f))
+			  (find-file f)))))
+	b-in main-file YaTeX-create-file-prefix-g
+	(hilit-auto-highlight (not setbuf)))
     (if (setq b-in (YaTeX-get-builtin "!"))
 	(setq main-file (YaTeX-guess-parent b-in)))
     (if YaTeX-parent-file
@@ -733,18 +740,30 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
     (if (YaTeX-main-file-p)
 	(if (interactive-p) (message "I think this is main LaTeX source.") nil)
       (cond
-       ((and (interactive-p) main-file (get-file-buffer main-file))
-	(goto-buffer-window main-file))
-       ((and main-file (YaTeX-switch-to-buffer main-file setbuf)))
+       ((and ;;(interactive-p) 
+	     main-file
+	     (cond ((get-file-buffer main-file)
+		    (cond
+		     (setbuf (set-buffer (get-file-buffer main-file)))
+		     ((get-buffer-window (get-file-buffer main-file))
+		      (select-window
+		       (get-buffer-window (get-file-buffer main-file))))
+		     (t (switch-to-buffer (get-file-buffer main-file)))))
+		   ((file-exists-p main-file)
+		    (funcall ff main-file)))))
+       ;;((and main-file (YaTeX-switch-to-buffer main-file setbuf)))
        ((and main-file
 	     (file-exists-p (setq main-file (concat "../" main-file)))
 	     (y-or-n-p (concat (expand-file-name main-file)
 			       " is main file?:")))
 	(setq YaTeX-parent-file main-file)
-	(YaTeX-switch-to-buffer main-file setbuf))
+	;(YaTeX-switch-to-buffer main-file setbuf)
+	(funcall ff main-file)
+	)
        (t (setq main-file (read-file-name "Enter your main text: " nil nil 1))
 	  (setq YaTeX-parent-file main-file)
-	  (YaTeX-switch-to-buffer main-file setbuf))
+	 ; (YaTeX-switch-to-buffer main-file setbuf))
+	  (funcall ff main-file))
        )))
   nil)
 

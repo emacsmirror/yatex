@@ -19,6 +19,17 @@
 	(After that, M-x info  [RET] m yatex  [RET]  will give you  Wild
 	Bird's manual.  Hitting ? will show how to use info)
 
+*I'm a Meadow(Emacs on Win32) user.  I don't have `make' utility
+	
+	Make program is needed only for byte-compiling.  So if you do
+	not care the subtle speed difference, you don't have to
+	byte-compile.  You don't have to look for `make' utility.  The
+	simplest way to install yatex without `make'.
+	
+	1 Extract this yatex*tar.gz to your Meadow's site-lisp dir.
+	2 Add the yatex installed path to your load-path according to
+	  `install' file in this package.
+	
 *I ain't got the privilege to write in the Info directory...
 	
 	 Get yourself made root.  If you can't, have them install Mule2
@@ -352,23 +363,22 @@
 	
 	A  question, so  an answer.   The mailing  list for  YaTeX (Wild
 	Bird)  and it's  implementation to  Vz; Raicho  (by KATSURAGAWA,
-	Naoki; katsura@prc.tsukuba.ac.jp),  implementation to Wz Editor;
-	HackTeX  (by TAKKENAKA,  Hiroshi),  implementation to  Hidemaru;
-	HiTeX (by YASUDA,  Haruyuki) is "fj Wild Bird  Society".  Send a
-	mail like
+	Naoki),  implementation  to Wz  Editor;  HackTeX (by  TAKKENAKA,
+	Hiroshi),   implementation  to   Hidemaru;  HiTeX   (by  YASUDA,
+	Haruyuki) is "fj Wild Bird Society".  Send a mail like
 	
-		To: yatex@jaist.ac.jp
+		To: yatex@yatex.org
 		Subject: append
 		-----
-		Hi!  My name is yuuji.
+		Hi!
+		My name is yuuji.
 		See any birds fly by?
 	
-	and you're in.  The text will be used as  your profile. (you can
-	change it later) Once  you're in, you'll get  a reply with lists
-	of  commands  used in the  mailing   list.  Join along and  help
-	adding new feathers to  Wild Bird.  BTW,  if you haven't guessed
-	it yet, yes, this mailing  list is in  Japanese.  But give us  a
-	try anyway.  You're always welcome.
+	and you're in.  Once you're in, you'll get a reply with lists of
+	commands used in  the mailing list.  Join along  and help adding
+	new feathers to Wild Bird.   BTW, if you haven't guessed it yet,
+	yes,  this mailing  list  is in  Japanese.   But give  us a  try
+	anyway.  You're always welcome.
 	
 *How to get the up-to-date information on YaTeX?
 	
@@ -386,7 +396,7 @@
 
 	*Look for someone near you who knows what's he/she's doing.
 	*Post a question to the mailing list.
-	*Send mail to yuuji@gentei.org
+	*Send mail to yuuji@yatex.org
 	
 	take a pick.
 	

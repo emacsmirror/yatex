@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX hierarchy browser.
 ;;; yatexhie.el
-;;; (c )1995 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Sep 17 21:46:29 1998 on firestorm
+;;; (c )1995 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Wed Dec  1 23:41:01 1999 on firestorm
 ;;; $Id$
 
 ;; ----- Customizable variables -----
@@ -55,10 +55,14 @@ If FILE is nil, use current buffer."
       (set-buffer cb)
       (nreverse list))))
 
-(defun YaTeX-document-hierarchy (&optional file)
+(defun YaTeX-document-hierarchy (&optional file basedir)
   "Return the document hierarchy beginning from FILE as a list.
 If FILE is nil, beginning with current buffer's file."
   (setq file (or file buffer-file-name))
+  (and YaTeX-search-file-from-top-directory
+       (not (file-exists-p file))
+       (string-match "^[^/].*/" file)
+       (setq file (expand-file-name file basedir)))
   (message "Parsing [%s]..." (file-name-nondirectory file))
   (prog1
       (save-excursion
@@ -71,7 +75,8 @@ If FILE is nil, beginning with current buffer's file."
 			(YaTeX-get-builtin "!")
 			(setq YaTeX-parent-file parent))))
 	      (cons (buffer-file-name (current-buffer))
-		    (mapcar 'YaTeX-document-hierarchy	;return value
+		    (mapcar '(lambda (f) 	;return value
+			       (YaTeX-document-hierarchy f basedir))
 			    (YaTeX-all-included-files))))))
     (message "Parsing [%s]...done" (file-name-nondirectory file))))
 
@@ -145,12 +150,11 @@ LEVEL is including depth."
 		   (boundp 'win:current-config)
 		   win:current-config)))
   (let*((b-in (YaTeX-get-builtin "!"))
-	(default (or YaTeX-parent-file
-		     (and b-in (YaTeX-guess-parent b-in))
-		     buffer-file-name)))
+	default)
     ;;むーん↓このへんの仕様どうしたらいいか良く分からん...
     (if default (setq default (expand-file-name default)))
     (YaTeX-visit-main t)		;move to parent file
+    (setq default buffer-file-name)
     (setq file
 	  (or (if use-default default file)
 	      (read-file-name
@@ -162,13 +166,14 @@ LEVEL is including depth."
 	       "" default 1))))
   (setq file (expand-file-name file))
   (setq YaTeX-hierarchy-current-main file)
-  (let ((dbuf "*document hierarchy*"))
+  (let ((dbuf "*document hierarchy*")
+	(topdir default-directory))
     (YaTeX-showup-buffer dbuf nil t)
     (set-buffer (get-buffer dbuf))
     (setq truncate-lines t)
     (let ((buffer-read-only nil))
       (erase-buffer)
-      (YaTeX-display-a-hierachy (YaTeX-document-hierarchy file) 0))
+      (YaTeX-display-a-hierachy (YaTeX-document-hierarchy file topdir) 0))
     (goto-char (point-min))
     (YaTeX-hierarchy-next 0)
     (set-buffer-modified-p nil)

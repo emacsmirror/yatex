@@ -1,3 +1,9 @@
+%%%
+%%% 野鳥-LaTeXヘルプファイル(c)HIROSE Yuuji [yuuji@yatex.org]
+%%% 機械的に変換して野鳥以外のデバイスで利用することを許可します。
+%%% その際にコピーライト表示と含まれている項目を削除しないでください。
+%%%
+
 textfloatsep
 \addtolength{\textfloatsep}{長さ}
 ページ先頭のfloatまたは、ページ最下部のfloatとテキストとの間隔。
@@ -1344,8 +1350,8 @@ TUSKさん(asciinet)
 Nop.Mさん(asciinet)
 	異なる環境での設定の不具合等のレポートを数多く頂きました。
 
-jaybirdさん(asciinet)
-	英語版のヘルプファイルを作成して頂きました。
+jaybirdさん(asciinet, bekkoame)
+	ドキュメントの多くを英訳して下さいました。
 
 内山滋さん(成蹊大学)
 	日本語入力モード判定関数のバグを直すパッチ、section-view のバグ

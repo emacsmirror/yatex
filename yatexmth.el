@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
-;;; (c )1993-1999 by HIROSE Yuuji [yuuji@gentei.org]
-;;; Last modified Thu Apr 29 17:39:10 1999 on firestorm
+;;; (c )1993-1999 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Thu Sep 23 16:39:40 1999 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -551,7 +551,7 @@ This value is appended with YaTeX-verbatim-environments.")
 (defun YaTeX-math-show-menu (match-str)
   (save-window-excursion
     (YaTeX-showup-buffer YaTeX-math-menu-buffer nil t)
-    (let ((maxcols (max 1 (/ (screen-width) YaTeX-math-sign-width)))
+    (let ((maxcols (max 1 (/ (YaTeX-screen-width) YaTeX-math-sign-width)))
 	  (case-fold-search nil)
 	  (cols 0) (list alist) command)
       (erase-buffer)
@@ -560,7 +560,7 @@ This value is appended with YaTeX-verbatim-environments.")
       (insert YaTeX-math-indicator "\t")
       (insert YaTeX-math-indicator)
       (newline 1)
-      (insert-char ?- (1- (screen-width)))
+      (insert-char ?- (1- (YaTeX-screen-width)))
       (newline 1)
       (while list
 	(if (string-match match-str (car (car list)))

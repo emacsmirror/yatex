@@ -1,12 +1,11 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in function generator.
 ;;; yatexgen.el rev.5
-;;; (c )1991-1995 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Feb 15 01:44:24 1996 on nsr
+;;; (c )1991-1995,1999 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Aug 26 18:15:14 1999 on firestorm
 ;;; $Id$
 
 (require 'yatex)
-(provide 'yatexgen)
 
 (defmacro YaTeX-setq (var japanese english)
   (list 'setq var
@@ -143,7 +142,7 @@ Send bug report to me."
   10 "Window height of YaTeX-generate-message-buffer")
 
 ;; Do you need learning for generated function?
-;; If you need, please tell me (yuuji@ae.keio.ac.jp)
+;; If you need, please tell me (yuuji@yatex.org)
 ;;(defvar YaTeX-generate-variables-for-learning nil)
 ;;(defvar YaTeX-generate-current-completion-table nil)
 
@@ -153,7 +152,7 @@ Send bug report to me."
 (defun YaTeX-generate ()
   "Genarate YaTeX add-in function with enquiry."
   (interactive)
-  (if (< (screen-height) (+ YaTeX-generate-message-height 10))
+  (if (< (YaTeX-screen-height) (+ YaTeX-generate-message-height 10))
       (error YaTeX-generate-narrow-message))
   (put 'YaTeX-generate 'disabled t)
   (save-window-excursion
@@ -609,3 +608,4 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
       command
       (string-to-int (read-string "How many arguments?: ")))) nil)
 )
+(provide 'yatexgen)

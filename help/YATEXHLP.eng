@@ -1,3 +1,10 @@
+%%%
+%%% YaTeX-LaTeX Help File(c)HIROSE Yuuji [yuuji@yatex.org]
+%%% You can translate this file for any device other than YaTeX via
+%%% any filter program.  But it is not allowed to remove copyright
+%%% notice and any existing dictionary entiries.
+%%%
+
 textfloatsep
 \addtolength{\textfloatsep}{LENGTH}
 Length between the text and a float at the top or bottom of page

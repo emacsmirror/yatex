@@ -1,6 +1,26 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.68	=== yatex ===
+	XEmacsでyatexgenが動かなくなったのに対処。
+	Windowsでのインストールが少し楽になるように makefile を修正。
+	ref/cite ラベル補完で全てのカウンタを補完候補にあげてなおかつ
+	labelが設定していないところには自動的にラベルを付加するようにした。
+	\cite の補完を BibTeX データベースファイルからも探すようにした。
+	LaTeX2eの多くのコマンドに、本体/アドイン共に対応。
+	=== yahtml ===
+	英語版info、Q&Aの添付(by Jun Ohyaさん)
+	<img src="..">補完でsrcとなる画像ファイルのピクセルサイズを自前
+	で調べて width, height 属性の補完のデフォルトとなるようにした。
+	M-C-a(beginning-of-environment), M-C-e(end-of-environment),
+	M-C-@(mark-environment) が yatex.el 内に定義されていてyahtmlだけ
+	をロードしているときにエラーになったので、これら関数定義を
+	yatexlibに移動。
+	css定義ファイル中ピリオドで始まるエントリを全てのエレメントに共
+	通なclass補完候補として出すようにした。
+	yahtmlを使用するとYaTeXでのインデントがおかしくなるのを直した。
+	& でchar-entity reference補完。
+
 1.67	[[[ http://www.yatex.org/ が誕生しました ]]]
 	=== yahtml ===
 	href入力でSPCなどのunsafe-charを%エンコードに置換するかを

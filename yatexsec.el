@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX sectioning browser.
 ;;; yatexsec.el
-;;; (c ) 1994, 1998 by HIROSE Yuuji [yuuji@ae.keio.ac.jp]
-;;; Last modified Wed Sep 30 20:09:35 1998 on firestorm
+;;; (c ) 1994, 1998 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Sun Dec 19 13:13:17 1999 on firestorm
 ;;; $Id$
 
 (defvar YaTeX-sectioning-level
@@ -287,6 +287,7 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
     (save-excursion
       (set-buffer (get-buffer-create YaTeX-sectioning-buffer))
       (setq buffer-read-only nil)
+      (erase-buffer)
       (set-buffer cb)
       (YaTeX-showup-buffer YaTeX-sectioning-buffer) ;show buffer
       (goto-char (point-min))
