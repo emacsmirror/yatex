@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c )1993-1994 by HIROSE Yuuji.[yuuji@ae.keio.ac.jp]
-;;; Last modified Thu Jul 14 21:00:27 1994 on figaro
+;;; Last modified Sun Jul 24 01:24:08 1994 on figaro
 ;;; $Id$
 
 (require 'yatex)
@@ -188,6 +188,7 @@ operation to the region."
       (kill-buffer (current-buffer))
       (set-buffer main)		;return to parent file or itself.
       (YaTeX-typeset cmd YaTeX-typeset-buffer)
+      (switch-to-buffer buffer)		;for Emacs-19
       (put 'dvi2-command 'region t)))
 )
 
