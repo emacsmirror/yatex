@@ -1,0 +1,8 @@
+
+		Yet Another tex-mode for Emacs. 
+		yatex.el 各バージョンの変更点
+
+1.28:	%#! により、起動する latex コマンドを指定できるようにした。
+	デフォルトの fill-prefix を "" (null strings) にした。
+
+1.27:	正式リリース
