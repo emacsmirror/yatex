@@ -2,7 +2,8 @@
 %%% YaTeX-LaTeX Help File(c)HIROSE Yuuji [yuuji@yatex.org]
 %%% You can translate this file for any device other than YaTeX via
 %%% any filter program.  But it is not allowed to remove copyright
-%%% notice and any existing dictionary entiries.
+%%% notice and any existing dictionary entiries which describes the
+%%% source of this file.
 %%%
 
 textfloatsep
@@ -374,15 +375,29 @@ Process as if FILE.tex has been inserted at that point.
 \setcounter{FOO}{VAL}
 Set counter FOO's value to VAL.
 
+<refer How to Introduce new counter>
+
 addtocounter
 \addtocounter{FOO}{VAL}
 Add value VAL to counter FOO.
+
+<refer How to Introduce new counter>
 
 newcounter
 \newcounter{COUNTER}[OLDCTR]
 Defines a new counter COUNTER.
 If an optional argument OLDCTR is given, COUNTER's value will be reset
 every time OLDCTR's value is changed by \stepcounter or \addtocounter.
+
+<refer How to Introduce new counter>
+
+How to Introduce new counter
+You'll get `Question n.' increasing n with \mondai, by setting as below.
+
+\newcounter{toi}
+\renewcommand{\thetoi}{Question \arabic{toi}.~ }
+\setcounter{toi}{0}
+\newcommand{\mondai}{\refstepcounter{toi}\thetoi}
 
 value
 \value{COUNTER}
@@ -442,7 +457,7 @@ text, table numbers for LABELs set in a table, and the item number for
 LABELs set in an item of the enumerate environment.
 
 pageref
-pageref{LABEL}
+\pageref{LABEL}
 Refer to the page number where \label{LABEL} exists.
 
 (
@@ -669,10 +684,12 @@ Define a subsubitem.
 makebox
 \makebox[WID][POS]{OBJECT}	\makebox(X,Y)[POS]{OBJECT}
 First form will place OBJECT at position POS and width WID in a \box.
-For POS, object will be placed flush-left if l, flush-right if r, and
-centered if nothing is given
-In the second form, object will be placed in a \hbox sized (X,Y) (in
+For POS, object will be placed flush-left if `l', flush-right if `r', 
+splattering words in the same space if `s', and centered if nothing is given
+in the second form, object will be placed in a \hbox sized (X,Y) (in
 \unitlength) within a picture environment.  POS is the same as the first form.
+
+
 
 mbox
 \mbox{OBJECT}
@@ -695,7 +712,7 @@ processing TEXT is not displayed in-place.  Boxes processed by
 Same as \savebox.  \sbox is robust, and \savebox is fragile.
 
 framebox
-\framebox{OBJECT}
+\framebox[WID][POS]{OBJECT}	\framebox(X,Y)[POS]{OBJECT}
 Do the same thing as \makebox with a frame.
 The frame's width and space between the object are decided by \framerule
 and \framesep.  If used as \framebox(X,Y){OBJECT} in a picture
@@ -707,6 +724,13 @@ be opened.
 \fbox{OBJECT}
 Same as \framebox{OBJECT}.
 \fbox is robust, \framebox fragile.
+
+Rule width of \fbox can be controled by setting \fboxrule
+
+  {
+    \fboxrule=2\fboxrule
+    \fbox{contents of double width of rule}
+  }
 
 parbox
 \parbox[POS]{WIDTH}{TEXT}
@@ -1218,8 +1242,17 @@ it occupies.  (See PLAIN.TEX.)
 
 documentstyle
 \documentstyle[OPTION1,OPTION2, ... ,OPTIONn]{STYLE}
-The user starts his file with the command as above
-which saves the OPTION's and \input's the file STYLE.STY.
+The user starts one's file with the command as above
+which loads the OPTION's respectively and \input's the file STYLE.sty.
+
+documentclass
+\documentclass[OPTION1,OPTION2, ... ,OPTIONn]{STYLE}
+In LaTeX2e, user starts one's file with the command as above
+which loads the OPTION's respectively and \input's the file STYLE.cls.
+
+usepackage
+\usepackage[OPTIONS]{PACKAGE}
+Use additional package `PACKAGE' with option `OPTION'.
 
 verb
 \verb#CONTENTS#
@@ -1287,6 +1320,17 @@ pt		point (72.27pt=1 inch)
 \twocolumn[STRING]
 Clear page and start two-column typesetting.
 Optional argument [STRING] specifies the page-acrossing title.
+
+If you want to output one-column title page with two-column body,
+describe like this;
+\twocolumn[
+\begin{titlepage}
+{\LARGE YourTitle}
+\vspace*{1em}
+\begin{abstract} Your Abstract blah blah... \end{abstract}
+\end{titlepage}
+]
+
 ->onecolumn
 
 onecolumn
@@ -1457,7 +1501,255 @@ Require `\usepackage{fancybox}`
 
 <ref fancybox>
 
+quote
+\begin{quote} ... \end{quote}
+quotation without paragraph
 
+quotation
+\begin{quotation} ... \end{quotation}
+quoted environment which might contains paragraphs
+
+textcircled
+\textcircled{CHAR}
+Enclose `char' with small circle.  Because this circle is as large as one
+character, you had better encolose `CHAR' with {\small ...}, {\tiny ...},
+{\scriptsize ...}.
+
+hfill
+\hfill
+Insert a space as wide as possible.  Same as \hspace{\fill}.
+
+foo\hfill bar
+produces;
+        foo                                                     bar
+
+foo\hfill bar\hfill baz
+produces;
+        foo                        bar                          baz
+
+\hfill can't produce space at the beginning of the line because \hfill
+is a kind of \hspace{}.  If you make right-justified world in a line,
+write \hspace*{\fill}.
+
+hfil
+\hfil
+Same as \hfill, but little bit weak.
+
+vfill
+\vfill
+Make vertical space in utmost length , the same as \vspace{\fill}.
+cf. \hfill
+
+hrulefill
+\hrulefill
+Draw underline in utmost length.
+
+backslashbox
+\usepackage{slashbox}   \backslashbox{A}{B}
+Draw a back-slash in a column of tabular.
+\begin{tabular}
+\hline
+\backslashbox{A}{B} & hoge \\ \hline
+\end{tabular}
+
+     +----+--------+
+     | \ B|        |
+     | A\ |  hoge  |
+     +----+--------+
+
+
+slashbox
+\slashbox{A}{B}
+Draw long slash line in a column of tabular.
+See also backslashbox.
+
+ooalign
+{\ooalign{String1\crcr String2...}
+Set line spacing to zero and shift to double-strike mode.
+This can be used for generating circled character.
+Look this;
+
+\newcommand{\maru}[1]{{\ooalign {\hfill$\scriptstyle#1$\hfill\crcr$\bigcirc$}}}
+
+\crcr is the equivalent of \\ for tabulars.
+Note that \ooalign change the spacing parameters.  So you should enclose
+\ooalign itself with { }.
+
+maru
+\maru{R}
+Circle one character.
+Declare the \newcommand as below;
+\newcommand{\maru}[1]{{\ooalign {\hfill$\scriptstyle#1$\hfill\crcr$\bigcirc$}}}
+
+today
+\date{\today}
+Use this as the argument of \date{}.
+Set the document's date in title to today.
+
+NamedColor
+\textcolor[named]{COLOR}{TEXT}, for example.
+With `\usepackage{color}', you can use colors listed below.
+
+GreenYellow Yellow Goldenrod Dandelion Apricot Peach Melon YellowOrange
+Orange BurntOrange Bittersweet RedOrange Mahogany Maroon BrickRed Red
+OrangeRed RubineRed WildStrawberry Salmon CarnationPink Magenta
+VioletRed Rhodamine Mulberry RedViolet Fuchsia Lavender Thistle
+OrchidDarkOrchid Purple Plum Violet RoyalPurple BlueViolet Periwinkle
+CadetBlue CornflowerBlue MidnightBlue NavyBlue RoyalBlue Blue Cerulean
+Cyan ProcessBlue SkyBlue Turquoise TealBlue Aquamarine BlueGreen Emerald
+JungleGreen SeaGreen Green ForestGreen PineGreen LimeGreen YellowGreen
+SpringGreen OliveGreen RawSienna Sepia Brown Tan Gray Black White)
+
+See also http://www.yatex.org/help/color.tex
+
+textcolor
+\textcolor{COLOR}{TEXT}
+Put the TEXT colored with COLOR.
+
+<refer NamedColor>
+
+pagecolor
+\pagecolor{COLOR}
+Set background color of the page to COLOR.
+
+<refer NamedColor>
+
+color
+\color{COLOR}
+Set text color of the page to COLOR.
+
+<refer NamedColor>
+
+colorbox
+\colorbox{COLOR}{TEXT}
+Put TEXT in the box whose background color is COLRO.
+
+<refer NamedColor>
+
+fcolorbox
+\fcolorbox{FCOLOR}{BGCOLOR}{TEXT}
+Put text int the box whose frame color is FCOLOR and background BGCOLOR.
+
+<refer NamedColor>
+
+rotatebox
+\rotatebox{ANGLE}{TEXT}
+Put TEXT with rotated by ANGLE-degrees, unclockwise.
+Require `\usepackage{graphicx}'.
+
+resizebox
+\resizebox{WIDTH}{HEIGHT}{TEXT}
+Put TEXT enlarging/shrinking to WIDTH and HEIGHT.
+You can omit either of WIDHT or HEIGHT.  In that case, specify `!'.
+\resizebox{!}{40mm}{TEXT} outputs TEXT with 40mm in height.
+Require `\usepackage{graphicx}'.
+
+scalebox
+\scalebox{MAG}[V-MAG]{TEXT}
+Put TEXT maginifiyng by MAG.  V-MAG for vertical magnification factor is
+optional.  Negative values for magnification factor flip the TEXT
+in that direction.
+
+Require `\usepackage{graphicx}'.
+
+reflectbox
+\reflectbox{TEXT}
+Flip TEXT horizontally.
+Equivalent to \scalebox{-1}[1]{TEXT}.
+Require `\usepackage{graphicx}'.
+
+ulem
+\usepackage{ulem}
+\usepackage{ulem}
+The `ulem' package provides macros listed below.
+\uline{Underlined Text}
+\uwave{Waved-Unlderlined Text}
+\uuline{Double Underlined Text} 
+
+(Information by TSUCHIYA Masatoshi <tsuchiya@pine.kuee.kyoto-u.ac.jp>)
+uline
+\uline{TEXT}
+Put TEXT with underline.
+
+<refer ulem>
+
+uwave
+\uwave{TEXT}
+Put TEXT with waved underline.
+
+<refer ulem>
+
+uuline
+\uuline{TEXT}
+Put TEXT with double underline.
+
+<refer ulem>
+showkeys.sty
+\usepackage[options]{showkeys}
+In margin area, output `(?)' marks for unlabeled math-expressions,
+`?label?' marks for unreferred labels.
+Optional arguments are one of;
+showrefs, norefs, showcites, nocites, msgs, nomsgs, chkunlbld,
+ignoreunlbld.
+msgs/nomsgs specifies whether output messages in  *.log file or not.
+
+`\usepackage{showkeys}' should be located before the declaration
+for AMS-LaTeX or HyperRef, if any.
+
+Another style `refcheck.sty' can also output labeling information
+including `\ref{***}' macros themselves.
+
+(Information by Masaki Shigemori <mshige@ucla.edu>)
+
+table*
+\begin{table*} ... \end{table*}
+Put tabular in one column at the top of page even if in twocolumn mode.
+
+figure*
+\begin{figure*} ... \end{figure*}
+Put figure in one column at the top of page even if in twocolumn mode.
+If you put figure bottom of page instead of top, use nidanfloat.sty
+instead.
+\begin{figure*}[b]
+ \includegraphics{blahblahblah}
+ \caption{foo bar baz}
+\end{figure*}
+
+includegraphics
+\usepackage{graphicx}  ... \includegraphics[Options]{graphicfile.eps}
+Include graphics。Requires `graphicx' package.
+Possible [Options] are as follows.
+scale=X
+width=W
+height=H
+draft     (Frame only)
+angle=R
+origin=RotationOrigin  (One of `c', `tl', `tr', `bl' or `br')
+bb=llx lly urx ury    (Specify BoundingBox)
+viewport=llx lly urx ury  (Rerative to BoundingBox)
+trim=left bottom right top
+
+abstract
+\begin{abstract} ... \end{abstract}
+Output abstract
+
+\langle
+$\langle$
+         
+`<' in math-modes.
+
+\langle
+$rlangle$
+         
+`>' in math-modes.
+
+\slash
+\slash
+slash(/) itself.
+
+\textbackslash
+\textbackslash
+backslash(\) itself.
 
 YaTeX
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))

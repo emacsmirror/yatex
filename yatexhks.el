@@ -41,6 +41,13 @@
   '(lambda () (interactive) (YaTeX-make-section nil nil nil "setlength")))
 (define-key YaTeX-user-extensional-map "b"
   '(lambda () (interactive) (YaTeX-make-fontsize nil "bf")))
+(define-key YaTeX-user-extensional-map "I" 'YaTeX-browse-info)
+
+(defun YaTeX-browse-info ()
+  "Browse YaTeX's info"
+  (interactive)
+  (require 'info)
+  (Info-goto-node (if YaTeX-japan "(yatexj)Top" "(yatexe)Top")))
 
 
 ;

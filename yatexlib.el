@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
-;;; (c)1994-2002 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Aug 19 22:20:40 2003 on firestorm
+;;; (c)1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sun Dec 24 15:12:20 2006 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -32,6 +32,10 @@
 ;; autoload from yahtml.el
 (autoload 'yahtml-inner-environment-but "yahtml" "yahtml internal func." t)
 
+(defvar latex-message-kanji-code 2
+  "*Kanji coding system latex command types out.
+1 = Shift JIS, 2 = JIS, 3 = EUC. 4 = UTF-8")
+
 (defvar YaTeX-kanji-code-alist
   (cond
    ((boundp '*junet*)
@@ -43,7 +47,7 @@
 	    (YaTeX-macos (if (boundp '*sjis-mac*) *sjis-mac* *sjis*mac))
 	    (t *sjis*)))
 	  '(2 . *junet*) '(3 . *euc-japan*)))
-   (YaTeX-emacs-20
+   ((and YaTeX-emacs-20 (featurep 'mule))
     ;;(cdr-safe(assq 'coding-system (assoc "Japanese" language-info-alist)))
     (list '(0 . no-conversion)
 	  (cons
@@ -52,7 +56,8 @@
 		   ((member 'shift_jis (coding-system-list)) 'shift_jis-unix)
 		   (t 'sjis)))
 	  '(2 . iso-2022-jp-unix)
-	  '(3 . euc-jp-unix))))
+	  '(3 . euc-jp-unix)
+	  '(4 . utf-8))))
   "Kanji-code expression translation table.")
 (defvar YaTeX-inhibit-prefix-letter nil
   "*T for changing key definitions from [prefix] Letter to [prefix] C-Letter.")
@@ -79,6 +84,16 @@ This variable is effective when font-lock is used.
 \it, \bf ì‡ïîÇ≈ÇÃì˙ñ{åÍÇ™Å†Ç…Ç»Ç¡ÇƒÇµÇ‹Ç§èÍçáÇÕÇ±ÇÍÇnilÇ…ÇµÇƒâ∫Ç≥Ç¢ÅB")
 
 ;----------- work variables ----------------------------------------
+(defvar YaTeX-minibuffer-completion-map nil
+  "Minibuffer completion key map that allows comma completion.")
+(if YaTeX-minibuffer-completion-map nil
+  (setq YaTeX-minibuffer-completion-map
+	(copy-keymap minibuffer-local-completion-map))
+  (define-key YaTeX-minibuffer-completion-map " "
+    'YaTeX-minibuffer-complete)
+  (define-key YaTeX-minibuffer-completion-map "\t"
+    'YaTeX-minibuffer-complete))
+
 (defvar YaTeX-typesetting-mode-map nil
   "Keymap used in YaTeX typesetting buffer")
 
@@ -127,6 +142,7 @@ Copy its corresponding directory dependent completion table to SYMBOL."
 ;;;###autoload
 (defun YaTeX-read-user-completion-table (&optional forcetoread)
   "Append user completion table of LaTeX macros"
+  (interactive)
   (let*((user-table (expand-file-name YaTeX-user-completion-table))
 	(local-table (expand-file-name (file-name-nondirectory user-table)))
 	var localvar localbuf (curbuf (current-buffer)) sexp)
@@ -140,7 +156,7 @@ Copy its corresponding directory dependent completion table to SYMBOL."
       (set-buffer (setq localbuf (find-file-noselect local-table)))
       (widen)
       (goto-char (point-min))
-      (while (re-search-forward "(setq \\([^ ]+\\)" nil t)
+      (while (re-search-forward "(setq \\([^ \t\n]+\\)" nil t)
 	(setq var (intern (buffer-substring
 			   (match-beginning 1) (match-end 1)))
 	      localvar (YaTeX-local-table-symbol var))
@@ -340,6 +356,13 @@ See also YaTeX-search-active-forward."
   (YaTeX-search-active-forward
    regexp cmntrx bound err cnt 're-search-backward))
 
+(defun YaTeX-relative-path-p (path)
+  "Return non-nil if PATH is not absolute one."
+  (let ((md (match-data)))
+    (unwind-protect
+	(not (string-match "^\\(/\\|[a-z]:\\|\\\\\\).*/" file))
+      (store-match-data md))))
+
 ;;;###autoload
 (defun YaTeX-switch-to-buffer (file &optional setbuf)
   "Switch to buffer if buffer exists, find file if not.
@@ -347,7 +370,7 @@ Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
   (interactive "Fswitch to file: ")
   (if (bufferp file)
       (setq file (buffer-file-name file))
-    (and (string-match "^[^/].*/" file)
+    (and (YaTeX-relative-path-p file)
 	 (eq major-mode 'yatex-mode)
 	 YaTeX-search-file-from-top-directory
 	 (save-excursion
@@ -373,7 +396,7 @@ Optional second arg SETBUF t make use set-buffer instead of switch-to-buffer."
   (interactive "Fswitch to file: ")
   (and (eq major-mode 'yatex-mode)
        (stringp file)
-       (string-match "^[^/].*/" file)
+       (YaTeX-relative-path-p file)
        YaTeX-search-file-from-top-directory
        (save-excursion
 	 (YaTeX-visit-main t)
@@ -412,7 +435,7 @@ Base directory is that of main file or current directory."
 (defun YaTeX-replace-format (string format repl)
   "In STRING, replace first appearance of FORMAT to REPL as if
 function `format' does.  FORMAT does not contain `%'"
-  (let ((ans string))
+  (let ((ans string) (case-fold-search nil))
     (while (not (string=
 		 ans (setq string (YaTeX-replace-format-sub ans format repl))))
       (setq ans string))
@@ -569,7 +592,7 @@ where ever it appears."
 (defun YaTeX-match-string (n &optional m)
   "Return (buffer-substring (match-beginning n) (match-beginning m))."
   (if (match-beginning n)
-      (buffer-substring (match-beginning n)
+      (YaTeX-buffer-substring (match-beginning n)
 			(match-end (or m n)))))
 
 ;;;###autoload
@@ -979,7 +1002,7 @@ goes to end of environment."
 	  (goto-char (get 'YaTeX-inner-environment 'point))
 	  (and end (YaTeX-goto-corresponding-environment))
 	  (if (interactive-p) (push-mark op))
-	  t))))
+	  (point)))))
 
 (defun YaTeX-end-of-environment (&optional limit-search-bound)
   "Goto the end of the current environment.
@@ -993,8 +1016,10 @@ to most recent sectioning command."
   (interactive)
   (let ((curp (point)))
     (if (and (YaTeX-on-begin-end-p) (match-beginning 1)) ;if on \\begin
-	(forward-line 1)
-      (beginning-of-line))
+	(progn (goto-char (match-end 0)))
+      (if (= (char-after (point)) ?\\) nil	;if on \\end
+	(skip-chars-backward "^\n\\\\")
+	(or (bolp) (forward-char -1))))
     (if (not (YaTeX-end-of-environment))   ;arg1 turns to match-beginning 1
 	(progn
 	  (goto-char curp)
@@ -1032,6 +1057,17 @@ to most recent sectioning command."
    ((eq what 'end)
     (insert (YaTeX-replace-format-args YaTeX-struct-end env)))
    (t nil)))
+
+(defun YaTeX-string-width (str)
+  "Return the display width of string."
+  (if (fboundp 'string-width)
+      (string-width str)
+    (length str)))
+(defun YaTeX-truncate-string-width (str width)
+  (cond
+   ((fboundp 'truncate-string-to-width) (truncate-string-to-width str width))
+   ((fboundp 'truncate-string) (truncate-string str width))
+   (t (substring str 0 width))))
 
 ;;; Function for menu support
 (defun YaTeX-define-menu (keymap bindlist)
@@ -1093,9 +1129,17 @@ See yatex19.el for example."
   (if (eq (selected-window) (minibuffer-window))
       (if (fboundp 'delete-field) (delete-field) (erase-buffer))))
 
+(fset 'YaTeX-buffer-substring
+      (if (fboundp 'buffer-substring-no-properties)
+	  'buffer-substring-no-properties
+	'buffer-substring))
+
 ;;;
 ;; hilit19 vs. font-lock
 ;;;
+(defvar YaTeX-19-functions-font-lock-direct
+  '(YaTeX-19-re-search-in-env))
+
 (defun YaTeX-convert-pattern-hilit2fontlock (h19pa)
   "Convert hilit19's H19PA patterns alist to font-lock's one.
 This function is a makeshift for YaTeX and yahtml."
@@ -1113,6 +1157,7 @@ This function is a makeshift for YaTeX and yahtml."
 	   (crossref . YaTeX-font-lock-crossref-face)
 	   (include . YaTeX-font-lock-include-face)
 	   (formula . YaTeX-font-lock-formula-face)
+	   (delimiter . YaTeX-font-lock-delimiter-face)
 	   (string . ignore) (comment . ignore)
 	   )))
     (while (setq i (car palist))
@@ -1138,33 +1183,45 @@ This function is a makeshift for YaTeX and yahtml."
 		  0 (list 'quote newface) nil)) ;;'keep))
 	       flpa)))
        ((and (symbolp (car i)) (fboundp (car i)))
-	(setq flpa
-	      (cons
-	       (list (car (cdr i))	;regexp
-		     (list
-		      (list
-		       'lambda (list 'dummy)
-		       '(goto-char (match-beginning 0))
-		       '(remove-text-properties
-			 (point) (min (point-max) (1+ (point)))
-			 '(face nil font-lock-multiline nil))
+	(if (memq (car i) YaTeX-19-functions-font-lock-direct)
+	    ;; Put direct function call for it.
+	    ;; When calling this function, fontify entire matched string.
+	    (setq flpa
+		  (cons
+		   (list
+		    (list 'lambda (list 'dummy) ;dummy should be boundary
+			  (list (car i) (list 'quote (car (cdr i)))))
+		    (list 0 newface))
+		   flpa))
+	  (setq flpa
+		(cons
+		 (list (car (cdr i))	;regexp
 		       (list
-			'let (list '(e (match-end 0))
-				   (list 'm (list (car i) (car (cdr i)))))
 			(list
-			 'if 'm
+			 'lambda (list 'dummy)
+			 '(goto-char (match-beginning 0))
+			 (if (eq (nth 3 i) 'overwrite)
+			     nil
+			   '(remove-text-properties
+			     (point) (min (point-max) (1+ (point)))
+			     '(face nil font-lock-multiline nil)))
 			 (list
-			  'YaTeX-font-lock-fillin
-			  (list 'car 'm)
-			  (list 'cdr 'm)
-			  (list 'quote 'face)
-			  (list 'quote 'font-lock)
-			  (list 'quote newface))
-			 '(goto-char e)
-			 ))
-		       nil)		;retun nil to cheat font-lock
-		      nil nil))		;pre-match, post-match both nil
-	       flpa))))
+			  'let (list '(e (match-end 0))
+				     (list 'm (list (car i) (car (cdr i)))))
+			  (list
+			   'if 'm
+			   (list
+			    'YaTeX-font-lock-fillin
+			    (list 'car 'm)
+			    (list 'cdr 'm)
+			    (list 'quote 'face)
+			    (list 'quote 'font-lock)
+			    (list 'quote newface))
+			   '(goto-char e)
+			   ))
+			 nil)		;retun nil to cheat font-lock
+			nil nil))	;pre-match, post-match both nil
+		 flpa)))))
       (setq palist (cdr palist)));while
     (if (featurep 'xemacsp)
 	(nreverse flpa)
@@ -1214,11 +1271,46 @@ This function is a makeshift for YaTeX and yahtml."
     :group 'font-lock-faces)
   (defvar YaTeX-font-lock-formula-face 'YaTeX-font-lock-formula-face)
 
+  (defface YaTeX-font-lock-delimiter-face
+    '((((class static-color)) (:bold t))
+      (((type tty)) (:bold t))
+      (((class color) (background dark))
+       (:foreground "saddlebrown" :background "ivory" :bold t))
+      (((class color) (background light)) (:foreground "red"))
+      (t (:bold t :underline t)))
+    "Font Lock mode face used to highlight delimiters."
+    :group 'font-lock-faces)
+  (defvar YaTeX-font-lock-delimiter-face 'YaTeX-font-lock-delimiter-face)
+
+  (defface YaTeX-font-lock-math-sub-face
+    '((((class static-color)) (:bold t))
+      (((type tty)) (:bold t))
+      (((class color) (background dark))
+       (:foreground "khaki" :bold t :underline t))
+      (((class color) (background light))
+       (:foreground "Goldenrod" :underline t))
+      (t (:bold t :underline t)))
+    "Font Lock mode face used to highlight subscripts in formula."
+    :group 'font-lock-faces)
+  (defvar YaTeX-font-lock-math-sub-face 'YaTeX-font-lock-math-sub-face)
+
+  (defface YaTeX-font-lock-math-sup-face
+    '((((class static-color)) (:bold t))
+      (((type tty)) (:bold t))
+      (((class color) (background dark))
+       (:bold nil :foreground "ivory" :background "lightyellow4"))
+      (((class color) (background light))
+       (:underline t :foreground "gold"))
+      (t (:bold t :underline t)))
+    "Font Lock mode face used to highlight superscripts in formula."
+    :group 'font-lock-faces)
+  (defvar YaTeX-font-lock-math-sup-face 'YaTeX-font-lock-math-sup-face)
+
   (defface YaTeX-font-lock-crossref-face
     '((((class color) (background dark)) (:foreground "lightgoldenrod"))
       (((class color) (background light)) (:foreground "DarkGoldenrod"))
       (t (:bold t :underline t)))
-    "Font Lock mode face used to highlight cress references."
+    "Font Lock mode face used to highlight cross references."
     :group 'font-lock-faces)
   (defvar YaTeX-font-lock-crossref-face 'YaTeX-font-lock-crossref-face)
 
@@ -1300,6 +1392,17 @@ Optional argument OBJECT is the string or buffer containing the text."
       (select-window sw)))
   ))
 
+(defun YaTeX-assoc-regexp (elt alist)
+  "Like assoc, return a list of whose car match with ELT.  Search from ALIST.
+Note that each car of cons-cell is regexp.  ELT is a plain text to be
+compared by regexp."
+  (let (x)
+    (catch 'found
+      (while alist
+	(setq x (car (car alist)))
+	(if (string-match x elt)
+	    (throw 'found (car alist)))
+	(setq alist (cdr alist))))))
 
 ;;;
 ;; Functions for the Installation time
@@ -1315,10 +1418,25 @@ Optional argument OBJECT is the string or buffer containing the text."
 	(mapcar 'byte-compile-file command-line-args-left)
 	(kill-emacs))))
 
+(defun tfb-and-exit ()
+  "Texinfo-format-buffer and kill-emacs."
+  (if command-line-args-left
+      (let ((load-path (cons ".." load-path)))
+	(and (fboundp 'set-language-environment)
+	     (featurep 'mule)
+	     (set-language-environment "Japanese"))
+	(mapcar (function
+		 (lambda (arg)
+		   (find-file arg)
+		   (texinfo-format-buffer)
+		   (basic-save-buffer)))
+		command-line-args-left)
+	(kill-emacs))))
+
 (provide 'yatexlib)
 ; Local variables:
 ; fill-prefix: ";;; "
 ; paragraph-start: "^$\\|\\|;;;$"
 ; paragraph-separate: "^$\\|\\|;;;$"
-; buffer-file-coding-system: sjis
+; coding: sjis
 ; End:

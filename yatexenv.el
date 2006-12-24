@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
-;;; (c) 1994-2003 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jun 27 12:09:30 2003 on firestorm
+;;; (c) 1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sat Jun 24 08:14:11 2006 on firestorm
 ;;; $Id$
 
 ;;;
@@ -10,8 +10,8 @@
 ;;;
 
 ;; Showing the matching column of tabular environment.
-(defun YaTeX-array-what-column ()
-  "Show matching columne title of array environment.
+(defun YaTeX-array-what-column-internal ()
+  "Return the cons of matching column and its title of array environment.
 When calling from a program, make sure to be in array/tabular environment."
   (let ((p (point)) beg eot bor (nlptn "\\\\\\\\") (andptn "[^\\]&")
 	(n 0) j
@@ -54,18 +54,23 @@ When calling from a program, make sure to be in array/tabular environment."
 	    (error "This column exceeds the limit."))
 	(setq j (1- j)))
       (skip-chars-forward "\\s ")
-      (message
-       "This is the column(#%d) of: %s" n
-       (buffer-substring
-	(point)
-	(progn
-	  (re-search-forward (concat andptn "\\|" nlptn) eot)
-	  (goto-char (match-beginning 0))
-	  (if (looking-at andptn)
-	      (forward-char 1))
-	  (skip-chars-backward "\\s ")
-	  (point))))))
-)
+      (list n
+	    (buffer-substring
+	     (point)
+	     (progn
+	       (re-search-forward (concat andptn "\\|" nlptn) eot)
+	       (goto-char (match-beginning 0))
+	       (if (looking-at andptn)
+		   (forward-char 1))
+	       (skip-chars-backward "\\s ")
+	       (point)))))))
+
+(defun YaTeX-array-what-column ()
+  "Show matching column title of array environment.
+When calling from a program, make sure to be in array/tabular environment."
+  (apply 'message
+	 "This is the column(#%d) of: %s"
+	 (YaTeX-array-what-column-internal)))
 
 ;;;###autoload
 (defun YaTeX-what-column ()
@@ -74,28 +79,12 @@ When calling from a program, make sure to be in array/tabular environment."
   (cond
    ((YaTeX-quick-in-environment-p '("tabular" "tabular*" "array" "array*"))
     (YaTeX-array-what-column))
-   (t (message "Not in array/tabular environment.")))
-)
+   (t (message "Not in array/tabular environment."))))
 
-(defun YaTeX-tabular-parse-format (&optional tabular*)
-  "Parse `tabular' format.
-Return the list of (No.ofCols PointEndofFormat)"
-  (let ((p (point)) elt boform eoform (cols 0))
-    (save-excursion
-      (if (null (YaTeX-beginning-of-environment t))
-	  (error "Beginning of tabular not found."))
-      (skip-chars-forward "^{")
-      (forward-list 1)
-      (if tabular*
-	  (progn (skip-chars-forward "^{")
-		 (forward-list 1)))
-      (skip-chars-forward "^{" p)
-      (if (/= (following-char) ?\{) (error "Tabular format not found."))
-      (setq boform (1+ (point))
-	    eoform (progn (forward-list 1) (1- (point))))
-      (if (> eoform p) (error "Non-terminated tabular format."))
-      (goto-char boform)
-      (while (< (point) eoform)
+(defun YaTeX-tabular-parse-format-count-cols (beg end)
+  (goto-char beg)
+  (let (elt (cols 0))
+    (while (< (point) end)
 	(setq elt (following-char))
 	(cond
 	 ((string-match (char-to-string elt) "clr") ;normal indicators.
@@ -105,16 +94,60 @@ Return the list of (No.ofCols PointEndofFormat)"
 	  (forward-char 1))
 	 ((string-match (char-to-string elt) "p@") ;p or @ expression
 	  (setq cols (+ (if (eq elt ?p) 1 0) cols))
-	  (skip-chars-forward "^{" p)
+	  ;;(skip-chars-forward "^{" p)
+	  (skip-chars-forward "^{" end)
 	  (forward-list 1))
+	 ((equal elt ?*)		;*{N}{EXP} -> Repeat EXP N times
+	  (skip-chars-forward "^{" end)
+	  (setq cols (* (string-to-int
+			 (buffer-substring
+			  (1+ (point))
+			  (progn (forward-list 1) (1- (point)))))
+			(YaTeX-tabular-parse-format-count-cols
+			 (progn (skip-chars-forward "^{" end) (1+ (point)))
+			 (progn (forward-list 1) (1- (point)))))))
 	 (t (forward-char 1))		;unknown char
 	 ))
-      (list cols (1+ eoform))))
-)
+    cols))
+
+(defun YaTeX-tabular-parse-format (&optional type)
+  "Parse `tabular' format.
+Return the list of (No.ofCols PointEndofFormat)"
+  (let ((p (point)) boform eoform (cols 0))
+    (save-excursion
+      (if (null (YaTeX-beginning-of-environment t))
+	  (error "Beginning of tabular not found."))
+      (skip-chars-forward "^{")
+      (forward-list 1)
+      (cond
+       ((eq type 'tabular*)
+	(skip-chars-forward "^{")
+	(forward-list 1)))
+      (skip-chars-forward "^{" p)
+      (if (/= (following-char) ?\{) (error "Tabular format not found."))
+      (setq boform (1+ (point))
+	    eoform (progn (forward-list 1) (1- (point))))
+      (if (> eoform p) (error "Non-terminated tabular format."))
+      (goto-char boform)
+      (setq cols
+	    (cond
+	     ((eq type 'alignat)
+	      (max
+	       1
+	       (1-
+		(* 2
+		   (string-to-int
+		    (buffer-substring
+		     (point)
+		     (progn (up-list -1) (forward-list 1) (1- (point)))))))))
+	     (t
+	      (YaTeX-tabular-parse-format-count-cols (point) eoform))))
+      (list cols (1+ eoform)))))
+
 ;; Insert &
-(defun YaTeX-intelligent-newline-tabular (&optional tabular*)
+(defun YaTeX-intelligent-newline-tabular (&optional type)
   "Parse current tabular format and insert that many `&'s."
-  (let*((p (point)) (format (YaTeX-tabular-parse-format tabular*))
+  (let*((p (point)) (format (YaTeX-tabular-parse-format type))
 	(cols (car format)) (beg (car (cdr format)))
 	space hline)
     (cond
@@ -132,16 +165,43 @@ Return the list of (No.ofCols PointEndofFormat)"
     (insert "\\\\")
     (if hline (insert " \\hline"))
     (goto-char p)
-    (YaTeX-indent-line)
-)
-)
+    (YaTeX-indent-line)))
 
 (defun YaTeX-intelligent-newline-tabular* ()
   "Parse current tabular* format and insert that many `&'s."
-  (YaTeX-intelligent-newline-tabular t)
-)
+  (YaTeX-intelligent-newline-tabular 'tabular*))
 
 (fset 'YaTeX-intelligent-newline-array 'YaTeX-intelligent-newline-tabular)
+(fset 'YaTeX-intelligent-newline-supertabular 'YaTeX-intelligent-newline-tabular)
+
+(defun YaTeX-intelligent-newline-alignat ()
+  (YaTeX-intelligent-newline-tabular 'alignat))
+(fset 'YaTeX-intelligent-newline-alignat* 'YaTeX-intelligent-newline-alignat)
+
+(defun YaTeX-intelligent-newline-align ()
+  "Intelligent newline function for align.
+Count the number of & in the first align line and insert that many &s."
+  (let*((p (point)) (cols 0))
+    (save-excursion
+      (YaTeX-beginning-of-environment)
+      (catch 'done
+	(while (YaTeX-re-search-active-forward
+		"\\(&\\)\\|\\(\\\\\\\\\\)" YaTeX-comment-prefix p t)
+	  (if (match-beginning 1) (setq cols (1+ cols)) (throw 'done t)))))
+    (save-excursion
+      (if (= cols 0)
+	  (insert "&")
+	(while (>= (setq cols (1- cols)) 0)
+	  (insert "& "))))
+    (YaTeX-indent-line)))
+
+(mapcar
+ '(lambda (s)
+    (fset (intern (concat  "YaTeX-intelligent-newline-"
+			   (symbol-name s)))
+	  'YaTeX-intelligent-newline-align))
+ '(align* flalign  flalign* matrix pmatrix bmatrix Bmatrix vmatrix Vmatrix
+   cases))
 
 ;;;
 ;; Functions for tabbing environment
@@ -214,8 +274,7 @@ Return the list of (No.ofCols PointEndofFormat)"
     (newline)
     (undo-boundary)
     (if (and env func (fboundp func))
-	(funcall func)))
-)
+	(funcall func))))
 
 ;;;
 ;; Environment-specific line indenting functions

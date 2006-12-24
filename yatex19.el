@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
-;;; (c)1994-2003 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jun 27 12:07:46 2003 on firestorm
+;;; (c)1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Jun 26 11:31:34 2006 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -13,21 +13,23 @@
 (defvar YaTeX-use-highlighting (or YaTeX-use-font-lock YaTeX-use-hilit19)
   "*Use highlighting buffer or not.")
 (defvar YaTeX-background-mode
-  (cond
-   ((boundp 'hilit-background-mode) hilit-background-mode)
-   ((boundp 'frame-background-mode) frame-background-mode)
-   ((fboundp 'get-frame-background-mode)
-    (get-frame-background-mode (selected-frame)))
-   ((face-background 'default)
-    (if (> (+ 32768 32768 32768)
-	   (apply '+
-		  (funcall (if (fboundp 'color-rgb-components)
-			       'color-rgb-components
-			     'x-color-values)
-			   (face-background 'default))))
-	'dark
-      'light))
-   (t nil)))
+  (or (if (fboundp 'get-frame-background-mode)
+          (get-frame-background-mode (selected-frame)))
+      (if (fboundp 'frame-parameters)
+          (cdr (assq 'background-mode (frame-parameters))))
+      (if (boundp 'frame-background-mode)
+          frame-background-mode)
+      (if (boundp 'hilit-background-mode)
+          hilit-background-mode)
+      (if (face-background 'default)
+          (if (> (+ 32768 32768 32768)
+                 (apply '+
+                        (funcall (if (fboundp 'color-rgb-components)
+                                     'color-rgb-components
+                                   'x-color-values)
+                                 (face-background 'default))))
+              'dark
+            'light))))
 
 (defvar YaTeX-mode-menu-map (make-sparse-keymap "YaTeX"))
 (defvar YaTeX-mode-menu-map-process (make-sparse-keymap "Process"))
@@ -250,7 +252,7 @@
 ;; 引数を数えて正しい位置までピカピカさせるよ～ん!
 
 (defun YaTeX-19-region-section-type (pattern)
-  "Return list of starting and end point of section-type commands of PATTERN."
+  "Return cons of starting and end point of section-type commands of PATTERN."
   (if (re-search-forward pattern nil t)
       (let ((m0 (match-beginning 0)) (e0 (match-end 0)) cmd (argc 1))
 	(setq cmd (substring (YaTeX-match-string 0) 1)
@@ -277,7 +279,7 @@
 	    (goto-char e0))))))
 
 (defun YaTeX-19-region-large-type (pattern)
-  "Return list of large-type contents.
+  "Return cons of large-type contents.
 Assumes PATTERN begins with `{'."
   (if (re-search-forward pattern nil t)
       (let ((m0 (match-beginning 0)) (e0 (match-end 0))p)
@@ -292,6 +294,60 @@ Assumes PATTERN begins with `{'."
 	  ;;move to re-search end not to make font-lock confused
 	  (goto-char e0)))))
 
+(defun YaTeX-19-region-env-type (envptn)
+  "Return cons of environment contents specified by ENVPTN as regexp."
+  (if (and (looking-at envptn) ;;re-search-forward envptn nil t)
+	   (save-excursion
+	     (not(search-backward YaTeX-comment-prefix
+				  (point-beginning-of-line) t))))
+      (let ((m0 (match-beginning 0)) (e0 (match-end 0))
+	    (env (YaTeX-match-string 1))
+	    (nextline (progn (forward-line 1) (point))))
+	(goto-char m0)
+	;(message "max=%d" (point-max))(sit-for 2)
+	(condition-case err
+	    (if (YaTeX-goto-corresponding-environment)
+		(prog1
+		    (cons nextline (match-beginning 0))
+		  (goto-char e0)))
+	  (error nil)))))
+
+(defun YaTeX-19-region-paren-math (ptn)
+  "Return cons of \(...\) or \[...\] type math environment."
+  (if (looking-at "\\\\\\([\[(]\\)")
+      (let*((ptype (cdr (assoc (YaTeX-match-string 1)
+			       '(("(" . ")") ("[" "]")))))
+	    (b (match-beginning 0))
+	    (e (match-end 0)))
+	(condition-case err
+	    (if (re-search-forward
+		 (concat "[^\\]\\\\" (regexp-quote ptype))
+		 nil t)
+		(prog1 (cons b (match-beginning 0))
+		  (goto-char e)))
+	  (error nil)))))
+
+(defun YaTeX-19-region-math-sub (ptn)
+  "Return cons of _{...}"
+  (if (and (looking-at ptn) 
+	   (eq YaTeX-font-lock-formula-face
+	       (get-text-property (point) 'face)))
+      (let ((e (match-end 0)) (p (point)))
+	(goto-char e)
+	(prog1
+	    (condition-case ()
+		(if (looking-at "{")
+		    (cons (1+ (point))
+			  (progn (forward-list 1) (1- (point))))
+		  (cons e
+			(cond
+			 ((looking-at (concat YaTeX-ec-regexp
+					      YaTeX-TeX-token-regexp))
+			  (match-end 0))
+			 ;; other case??
+			 (t (1+ (point)))))))
+	  (goto-char e)))))
+
 ;; 些細なことだが % の前の文字もピカリとさせてしまうようで… >hilit19
 ;; ↓この関数は下の hilit-set-mode-patterns の "[^\\]\\(%\\).*$" に
 ;; 依存している
@@ -300,12 +356,38 @@ Assumes PATTERN begins with `{'."
   (if (re-search-forward pattern nil t)
       (cons (match-beginning 2) (match-end 0))))
 
+;; 2006/6/23 match only if it's in specified envrironment.
+(defun YaTeX-19-re-search-in-env (ptn_env)
+  (catch 'done
+    ;; For font-lock, this function should find it.
+    (let (md r)
+      (while (YaTeX-re-search-active-forward
+	      (car ptn_env) YaTeX-comment-prefix nil t)
+	(setq md (match-data)
+	      r (string-match (cdr ptn_env)
+			      (or (YaTeX-inner-environment 'quick) "")))
+	(store-match-data md)
+	(if r (setq r (cons (match-beginning 0) (match-end 0))))
+	(if (or YaTeX-use-hilit19 r) (throw 'done r))
+	(goto-char (match-end 0)))
+      (throw 'done r))))
+
 ;;(make-face 'tt)
 ;;(set-face-font 'tt "-schumacher-clean-medium-r-normal--*-*-*-*-*-*-*-*")
 ;;(hilit-translate 'tt "white")
 
+;; font-lockの関数呼びパターンの場合は正規表現が行末までマッチすると
+;; hilit候補対象外にされてしまうので1字手前で正規表現を止める
 (defvar YaTeX-hilit-patterns-alist
   '(
+    ;; formulas
+    (YaTeX-19-region-math-sub "[^\\]^" YaTeX-font-lock-math-sup-face overwrite)
+    (YaTeX-19-region-math-sub "[^\\]_" YaTeX-font-lock-math-sub-face overwrite)
+    (YaTeX-19-region-env-type
+     "\\\\begin{\\(equation\\|eqnarray\\|displaymath\\|\\(x?x?\\|fl\\)align\\|multline\\|gather\\)" formula)
+    ;(YaTeX-19-region-paren-math "\\\\" formula)
+    ;;("[^\\]\\\\("  "\\\\)" formula)                   ; \( \)
+    ;;("[^\\]\\\\\\[" "\\\\\\]" formula)                ; \[ \]
     ;; comments
     (YaTeX-19-region-comment "\\([^\\]\\|^\\)\\(%\\).*$" comment)
 
@@ -341,22 +423,19 @@ Assumes PATTERN begins with `{'."
     ;;this should be customized by YaTeX-item-regexp
     ("\\\\\\(sub\\)*item\\b\\(\\[[^]]*\\]\\)?" 0 label)
     (YaTeX-19-region-section-type
-     "\\\\caption\\(\\[[^]]*\\]\\)?\\>" label)
+     "\\\\\\(caption\\|bibitem\\)\\(\\[[^]]*\\]\\)?\\>" label)
 
     ;; things that do some sort of cross-reference
     (YaTeX-19-region-section-type
-     "\\\\\\(\\(no\\)?cite\\|\\(page\\)?ref\\|label\\|index\\|glossary\\)\\>"
+     "\\\\\\(\\(no\\|possessive\\)?cite[a-z]*\\|[a-z]*ref\\|label\\|index\\|glossary\\)\\>"
      crossref)
 
     ;; things that bring in external files
-    ("\\\\\\(include\\|input\\|bibliography\\){" "}" include)
+    ("\\\\\\(include\\|input\\|bibliography\\(style\\)?\\){" "}" include)
 
-    ;; formulas
-    ("[^\\]\\\\("  "\\\\)" formula)                   ; \( \)
-    ("[^\\]\\\\\\[" "\\\\\\]" formula)                ; \[ \]
-    ("\\\\begin{\\(eqn\\|equation\\|x?x?align\\|split\\|multline\\|gather\\)"
-     "\\\\end{\\(eqn\\|equation\\|x?x?align\\|split\\|multline\\|gather\\).*}"
-     formula)
+   ;; ("\\\\begin{\\(eqn\\|equation\\|x?x?align\\|split\\|multline\\|gather\\)"
+   ;;  "\\\\end{\\(eqn\\|equation\\|x?x?align\\|split\\|multline\\|gather\\).*}"
+   ;;  formula)
     ("\\([^\\$]\\|^\\)\\($\\($[^$]*\\$\\|[^$]*\\)\\$\\)" 2 formula); '$...$' or '$$...$$'
 
     ;; "wysiwyg" emphasis -- these don't work on nested expressions
@@ -365,7 +444,13 @@ Assumes PATTERN begins with `{'."
     ;;;(YaTeX-19-region-large-type "{\\\\tt" tt)
     ;;;("\\\\begin{verbatim" "\\\\end{verbatim" tt)
 
-    ("``" "''" string))
+    ("``" "''" string)
+    ("\\\\\\(new\\|clear\\(double\\)?\\)page\\>\\|\\\\\\(\\\\\\|cr\\)\\>"
+     0 delimiter)
+    (YaTeX-19-re-search-in-env
+     ("&\\|\\\\hline" . "tabular\\|equation\\|eqn\\|array\\|align") delimiter)
+    (YaTeX-19-re-search-in-env ("\\\\[+-=><'`]" . "tabbing") delimiter)
+    )
   "*Hiliting pattern alist for LaTeX text.")
 
 ;;(defvar YaTeX-hilit-pattern-adjustment-default nil)
@@ -419,7 +504,15 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
     sym)
    ((and YaTeX-use-hilit19 (and (fboundp 'hilit-translate)))
     (let ((face (intern (concat fgcolor "/" bgcolor))))
-      (hilit-translate sym face)
+      (if (facep sym)
+	  (hilit-translate sym face)
+	(make-face sym)
+	(or (memq sym hilit-predefined-face-list)
+	    (progn
+	      (set-face-foreground sym fgcolor)
+	      (set-face-background sym bgcolor)
+	      (setq hilit-predefined-face-list
+		    (cons sym hilit-predefined-face-list)))))
       face))))
 
 (cond
@@ -533,6 +626,10 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 			      sect
 			      'keyword))
 		    (if single (list single 0 'macro))))))))))
+
+;;2006/6/23 new face, `delimiter' introduced
+(YaTeX-19-create-face 'delimiter "saddlebrown" "ivory")
+
 ;;(YaTeX-19-collect-macros)	;causes an error
 (defun YaTeX-hilit-setup-alist ()
   (cond
@@ -575,12 +672,47 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
   (setq YaTeX-font-lock-keywords
 	(YaTeX-convert-pattern-hilit2fontlock
 	 (cdr (YaTeX-19-collect-macros)))
-	font-lock-keywords nil)
-  ;(save-excursion
-   ; (font-lock-fontify-region (window-start) (window-end)))
+;;; Keep this section for debugging.
+;;    YaTeX-font-lock-keywords
+;;    (append (YaTeX-convert-pattern-hilit2fontlock
+;; 	    (cdr (YaTeX-19-collect-macros)))
+;; 	   '(((lambda (lim)
+;; 		(YaTeX-19-re-search-in-env '("foo" . "tabular"))
+;; 		;(search-forward "foo" nil t)
+;; 	       )
+;; 	      (0 YaTeX-font-lock-delimiter-face))))
+	;;font-lock-keywords nil
+	font-lock-set-defaults nil)
+  ;;(save-excursion
+  ;; (font-lock-fontify-region (window-start) (window-end))
   (font-lock-mode -1)			;is stupid, but sure.
   (font-lock-mode 1)
   (recenter arg))
+
+(defun YaTeX-font-lock-fontify-region (beg end)
+  (interactive "r")
+  (save-excursion (font-lock-fontify-region beg end)))
+
+(defun YaTeX-font-lock-fontify-environment ()
+  (interactive)
+  (save-excursion
+    (save-match-data			;is safe after emacs-19
+      (YaTeX-mark-environment)
+      (message "")
+      (YaTeX-font-lock-fontify-region (region-beginning) (region-end)))))
+
+(defun YaTeX-font-lock-highlight-menu ()
+  (interactive)
+  (message "Force Highlight: R)egion E)nvironment")
+  (let ((c (read-char)))
+    (cond
+     ((memq c '(?R ?r))
+      (YaTeX-font-lock-fontify-region (region-beginning) (region-end)))
+     ((memq c '(?e ?e))
+      (YaTeX-font-lock-fontify-environment)))))
+
+(if YaTeX-use-font-lock
+    (YaTeX-define-key "u" 'YaTeX-font-lock-highlight-menu))
 
 (defvar YaTeX-font-lock-keywords nil
   "Pattern-face alist of yahtml-mode for font-lock")
@@ -678,5 +810,5 @@ WARNING, This code is not perfect."
 ; fill-prefix: ";;; "
 ; paragraph-start: "^$\\|\\|;;;$"
 ; paragraph-separate: "^$\\|\\|;;;$"
-; buffer-file-coding-system: sjis
+; coding: sjis
 ; End:

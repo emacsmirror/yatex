@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
-;;; (c)1993-2003 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Mar 30 19:56:00 2003 on firestorm
+;;; (c)1993-2006 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Sun Dec 24 15:13:15 2006 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -107,6 +107,11 @@
 (YaTeX-setq-math-sym YaTeX-image-neg		"Ü≤"		"Å ")
 (YaTeX-setq-math-sym YaTeX-image-flat		"ÇÇ"		"ÅÛ")
 (YaTeX-setq-math-sym YaTeX-image-sqrt		"áï"		"Å„")
+(defvar YaTeX-image-nearrow '("__\n /|\n/" "  ÅQ\n  Å^|\nÅ^" ))
+(defvar YaTeX-image-nwarrow '(" __\n|\\\n  \\" " ÅQ\n|Å_\n   Å_"))
+(defvar YaTeX-image-searrow '("\\\n \\|\n--`" "Å_\n  Å_|\n  ÅP"))
+(defvar YaTeX-image-swarrow '("  /\n|/\n'~~" "   Å^\n|Å^\n ÅP"))
+
 
 (defvar
  YaTeX-math-sign-alist-default
@@ -202,6 +207,7 @@
    ("-<"	"prec"		("-<"		"Ç≠"))
    ("-<="	"preceq"	("-<\n-"	"Ç≠\n="))
    ("<<"	"ll"		("<<"		"Ås"))
+   (">>"	"gg"		(">>"		"Åt"))
    ;	:
    ;;arrows
    ("<-"	"leftarrow"	("<-"		"Å©"))
@@ -224,6 +230,18 @@
    ("\C-n"	"downarrow"	("|\nv" "Å´"))
    ("v|"	"downarrow"	("|\nv" "Å´"))
    ("v||"	"Downarrow"	"||\n\\/")
+   ("\C-p\C-f"	"nearrow"	YaTeX-image-nearrow)
+   ("\C-f\C-p"	"nearrow"	YaTeX-image-nearrow)
+   ("ne"	"nearrow"	YaTeX-image-nearrow)
+   ("\C-p\C-b"	"nwarrow"	YaTeX-image-nwarrow)
+   ("\C-b\C-p"	"nwarrow"	YaTeX-image-nwarrow)
+   ("nw"	"nwarrow"	YaTeX-image-nwarrow)
+   ("\C-n\C-f"	"searrow"	YaTeX-image-searrow)
+   ("\C-f\C-n"	"searrow"	YaTeX-image-searrow)
+   ("se"	"searrow"	YaTeX-image-searrow)
+   ("\C-n\C-b"	"swarrow"       YaTeX-image-swarrow)
+   ("\C-b\C-n"	"swarrow"	YaTeX-image-swarrow)
+   ("sw"	"swarrow"	YaTeX-image-swarrow)
    ("|->"	"mapsto"	("|->"		"|Å®"))
    ("<-)"	"hookleftarrow"	("   ,\n<--+"	"   ÅR\n<--/"))
    ("(->"	"hookrightarrow" ("`\n+-->"	"Å^\nÅ_-->"))
@@ -259,6 +277,8 @@
    ("O+"	"bigoplus"	"/~~~\\\n| + |\n\\___/")
    ("Ox"	"bigotimes"	"/~~~\\\n| X |\n\\___/")
    ;;other marks
+   ("angle"	"angle"		("/\n~" "Å⁄"))
+   ("/_"	"angle"		("/\n~" "Å⁄"))
    ("Z"		"aleph"		"|\\|")
    ("|\\|"	"aleph"		"|\\|")
    ("h-"	"hbar"		"_\nh")
@@ -282,6 +302,8 @@
    ("partial"	"partial"	(" -+\n+-+\n+-+" YaTeX-image-partial))
    ("round"	"partial"	(" -+\n+-+\n+-+" YaTeX-image-partial))
    ("[]"	"Box"		"[]")
+   ("no"	"notag"		"\\notag")
+   (":"		"colon"		":")
    ("Diamond"	"Diamond"	"/\\\n\\/")
    ("3"		"triangle"	"/\\\n~~")
    ("C"		"clubsuit"	" o\no+o\n |")
@@ -380,8 +402,8 @@
 (defvar YaTeX-math-display-width
   (* 8 (1+ (/ YaTeX-math-sign-width 8))))
 (defvar YaTeX-math-menu-map nil
-  "Keymap used in YaTeX mathematical sign menu mode."
-)
+  "Keymap used in YaTeX mathematical sign menu mode.")
+
 (if YaTeX-math-menu-map nil
   (setq YaTeX-math-menu-map (make-sparse-keymap))
   (define-key YaTeX-math-menu-map "n"	'next-line)
@@ -400,8 +422,7 @@
   (define-key YaTeX-math-menu-map "q"	'abort-recursive-edit))
 
 (defvar YaTeX-math-exit-key "\e"
-  "*Key sequence after prefix key of YaTeX-math-mode to exit from math-mode."
-)
+  "*Key sequence after prefix key of YaTeX-math-mode to exit from math-mode.")
 
 (defmacro YaTeX-math-japanese-sign (list)
   (list 'nth 1 list))
@@ -438,8 +459,7 @@ This value is appended with YaTeX-verbatim-environments.")
 		   " $'")))
       (setq YaTeX-math-mode nil)
       (message "Exit from math mode."))
-    (set-buffer-modified-p (buffer-modified-p)))
-)
+    (set-buffer-modified-p (buffer-modified-p))))
 
 (defun YaTeX-math-forward (arg)
   (interactive "p")
@@ -460,77 +480,81 @@ This value is appended with YaTeX-verbatim-environments.")
     (YaTeX-math-gets sign))
    ((symbolp sign)
     (YaTeX-math-gets (symbol-value sign)))
-   (t sign))
-)
+   (t sign)))
 
 (defun YaTeX-math-get-sign (list)
-  (YaTeX-math-gets (car (cdr-safe (cdr-safe list))))
-)
+  (YaTeX-math-gets (car (cdr-safe (cdr-safe list)))))
+
 (defvar YaTeX-math-section-type-regexp
   "eqn\\\\\\sw+\\b"
   "*Regexp of section-type math-mode macro")
 
 (defun YaTeX-in-math-mode-p ()
-  "If current position is supposed to be in LaTeX-math-mode, return t."
-  (or (YaTeX-quick-in-environment-p
-       (append
-	'("math" "eqnarray" "equation" "eqnarray*" "displaymath");LaTeX
-	(if YaTeX-use-AMS-LaTeX
-	    ;; And math modes of AMS-LaTeX
-	    '("align" "align*" "split" "multline" "multline*" "gather"
-	      "gather*" "aligned*" "gathered" "gathered*" "alignat"
-	      "equation*" "cases" 
-	      "alignat*" "xalignat" "xalignat*" "xxalignat" "xxalignat*"))))
-      (let*((p (point)) (nest 0) me0 r
-	    (delim (concat YaTeX-sectioning-regexp "\\|^$\\|^\C-l"))
-	    (boundary
-	     (save-excursion
-	       (if (looking-at delim)
-		   (goto-char (max (point-min) (1- (point)))))
-	       (re-search-backward delim nil 1)
-	       (point))))
-	(save-excursion
-	  (cond
-	   ((catch 'open
-	      (save-excursion
-		(while (and (>= nest 0)
-			    (re-search-backward
-			     (concat YaTeX-ec-regexp	;\
-				     "\\([()]\\|[][]\\)") boundary t))
-		  (setq me0 (match-end 0))
-		  (if (or (YaTeX-on-comment-p)
-			  (YaTeX-literal-p)) nil
-		    (if (or (= (char-after (1- me0)) ?\))
-			    (= (char-after (1- me0)) ?\]))
-			(setq nest (1+ nest))
-		      (if (= (preceding-char) ?\\ ) nil;;\\[5pt]
-			(setq nest (1- nest))))))
-		(if (< nest 0) (throw 'open t))))
-	    t)
-	   ((and (setq r (YaTeX-on-section-command-p
-			  YaTeX-math-section-type-regexp))
-		 (numberp r)
-		 (> r 0))
-	    t)
-	   (t (catch 'dollar
-		(while ;(search-backward "$" boundary t);little bit fast.
-		    (YaTeX-re-search-active-backward ;;;;;; Too slow???
-		     "\\$" (concat "[^\\\\]" YaTeX-comment-prefix) boundary t)
-		  (cond
-		   ((equal (char-after (1- (point))) ?$) ; $$ equation $$
-		    (backward-char 1)
-		    (setq nest (1+ nest)))
-		   ((let ((YaTeX-verbatim-environments
-			   (append YaTeX-math-verbatim-environments
-				   YaTeX-verbatim-environments)))
-		      (YaTeX-literal-p))
-		    nil)
-		   ((and (equal (char-after (1- (point))) ?\\ )
-			 (not (equal (char-after (- (point) 3)) ?\\ )))
-		    nil)		;\$
-		   (t (setq nest (1+ nest)))))
-		(if (= (% nest 2) 1) (throw 'dollar t))))))))
-)
+  "If current position is supposed to be in LaTeX-math-mode, return t.
+This function refers a local variable `source-window' in YaTeX-make-section."
+  (save-excursion
+    (and (boundp 'source-window) source-window
+	 (set-buffer (window-buffer source-window)))
+    (or (YaTeX-quick-in-environment-p
+	 (append
+	  '("math" "eqnarray" "equation" "eqnarray*" "displaymath") ;LaTeX
+	  (if YaTeX-use-AMS-LaTeX
+	      ;; And math modes of AMS-LaTeX
+	      ;;'("align" "align*" "split" "multline" "multline*" "gather"
+	      ;;  "gather*" "aligned*" "gathered" "gathered*" "alignat"
+	      ;;  "equation*" "cases" "flalign" "flalign*"
+	      ;;  "alignat*" "xalignat" "xalignat*" "xxalignat" "xxalignat*"
+	      YaTeX-math-begin-list
+	    )))
+	(let*((p (point)) (nest 0) me0 r
+	      (delim (concat YaTeX-sectioning-regexp "\\|^$\\|^\C-l"))
+	      (boundary
+	       (save-excursion
+		 (if (looking-at delim)
+		     (goto-char (max (point-min) (1- (point)))))
+		 (re-search-backward delim nil 1)
+		 (point))))
+	  (save-excursion
+	    (cond
+	     ((catch 'open
+		(save-excursion
+		  (while (and (>= nest 0)
+			      (re-search-backward
+			       (concat YaTeX-ec-regexp ;\
+				       "\\([()]\\|[][]\\)") boundary t))
+		    (setq me0 (match-end 0))
+		    (if (or (YaTeX-on-comment-p)
+			    (YaTeX-literal-p)) nil
+		      (if (or (= (char-after (1- me0)) ?\))
+			      (= (char-after (1- me0)) ?\]))
+			  (setq nest (1+ nest))
+			(if (= (preceding-char) ?\\ ) nil ;;\\[5pt]
+			  (setq nest (1- nest))))))
+		  (if (< nest 0) (throw 'open t))))
+	      t)
+	     ((and (setq r (YaTeX-on-section-command-p
+			    YaTeX-math-section-type-regexp))
+		   (numberp r)
+		   (> r 0))
+	      t)
+	     (t (catch 'dollar
+		  (while ;(search-backward "$" boundary t);little bit fast.
+		      (YaTeX-re-search-active-backward ;;;;;; Too slow???
+		       "\\$" (concat "[^\\\\]" YaTeX-comment-prefix) boundary t)
+		    (cond
+		     ((equal (char-after (1- (point))) ?$) ; $$ equation $$
+		      (backward-char 1)
+		      (setq nest (1+ nest)))
+		     ((let ((YaTeX-verbatim-environments
+			     (append YaTeX-math-verbatim-environments
+				     YaTeX-verbatim-environments)))
+			(YaTeX-literal-p))
+		      nil)
+		     ((and (equal (char-after (1- (point))) ?\\ )
+			   (not (equal (char-after (- (point) 3)) ?\\ )))
+		      nil)		;\$
+		     (t (setq nest (1+ nest)))))
+		  (if (= (% nest 2) 1) (throw 'dollar t))))))))))
 
 (defun YaTeX-math-display-list (list cols)
   (goto-char (point-max))
@@ -589,8 +613,7 @@ This value is appended with YaTeX-verbatim-environments.")
 		   (prog2 (skip-chars-forward "^ \t\n") (point)))
 		nil))
 	(kill-buffer YaTeX-math-menu-buffer))
-      command))
-)
+      command)))
 
 ;
 (defun YaTeX-math-show-image (image &optional exit-char)
@@ -702,8 +725,8 @@ at least you get to read the beginning."
 
 	      (if match
 		  (progn (delete-region beg (point))
-			 (setq single-command (car (cdr match)))
-			 (insert YaTeX-ec single-command)
+			 (setq YaTeX-single-command (car (cdr match)))
+			 (insert YaTeX-ec YaTeX-single-command)
 			 (if (and YaTeX-math-need-image
 				  (setq sign (YaTeX-math-get-sign match)))
 			     (YaTeX-math-show-image (concat sign "\n")))
@@ -716,14 +739,14 @@ at least you get to read the beginning."
       (if (eq result t)
 	  (setq unread-command-char last-char)
 	(message "Done."))
-      (if (assoc single-command section-table)
-	  (YaTeX-make-section nil nil nil single-command)
+      (if (assoc YaTeX-single-command section-table)
+	  (YaTeX-make-section nil nil nil YaTeX-single-command)
 	(setq YaTeX-current-completion-type 'maketitle)
-	(YaTeX-make-singlecmd single-command)))
+	(YaTeX-make-singlecmd YaTeX-single-command)))
      ((eq result 'abort)
       (message "Abort."))
      ((eq result 'escape)
-      (call-interactively (global-key-binding this-key)))
+      (call-interactively (lookup-key global-map this-key)))
      ((eq result 'exit)
       (YaTeX-toggle-math-mode))
      ((eq result 'menu)
@@ -782,7 +805,7 @@ If so return the cons of its invocation key and image-string."
 				       (+ (point) 3 longest) t))
 	  (progn
 	    (setq move (- (point) point))
-	    (setq paren (match-string 0))
+	    (setq paren (YaTeX-match-string 0))
 	    (setq list YaTeX-ams-paren-modifier)
 	    ;; criterion for whether on [] () \{\} or not.
 	    (if (string-match YaTeX-left-paren paren)
@@ -830,8 +853,8 @@ If so return the cons of its invocation key and image-string."
 						 paren-regexp "\\)")))
 			(setq flag nil)))
 		  (setq list (cdr list)))))
-	    (if (<= move (length (match-string 0)))
-		(match-string 0)))))))
+	    (if (<= move (length (YaTeX-match-string 0)))
+		(YaTeX-match-string 0)))))))
 
 (defun YaTeX-goto-open-paren (&optional jumpto-co)
   "Jump to the exact position of open parenthesis.
@@ -872,8 +895,8 @@ If optional argument JUMPTO-CO is non-nil, goto corresponding parentheses."
   (interactive)
   (if (not (and YaTeX-use-AMS-LaTeX (YaTeX-on-parenthesis-p)))
       nil
-    (let* ((mod (match-string 1)) ;; modifier
-	   (paren (if mod (match-string 2) (match-string 0))) ;; paren
+    (let* ((mod (YaTeX-match-string 1)) ;; modifier
+	   (paren (if mod (YaTeX-match-string 2) (YaTeX-match-string 0))) ;; paren
 	   (mod-length (if (or (string= mod "\\left") (string= mod "\\right"))
 			   5            ;; 5 in case left or right
 			 (length mod))) ;; length of modifier

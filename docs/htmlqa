@@ -126,7 +126,7 @@
 	の機能強化版 auto-insert-tkld を使いましょう。後者は、
 	ftp://ftp.ae.keio.ac.jp/pub/emacs-lisp/util/auto-inset-tkld.tar.Z
 	で入手できます。
-	http://www-nagao.kuee.kyoto-u.ac.jp/member/tsuchiya/elisp/yahtml-mode.html
+	http://namazu.org/~tsuchiya/elisp/yahtml-mode.html
 	に設定例が書いてあります。
 	
 ■その他

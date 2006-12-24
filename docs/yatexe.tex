@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Fri Sep 12 12:04:11 2003 on firestorm
+@c Last modified Wed Jul 20 21:27:50 2005 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -88,6 +88,10 @@ Language Enhancement to GNU Emacs), and latex on DOS.
 @item Online help for the popular La@TeX{} commands
       (@kbd{C-c ?}, @kbd{C-c /})
 @item Document files hierarchy browser (@kbd{C-c d})
+@item Adding automatically \usepackage corresponding to inputting LaTeX
+      macro with completion
+@item Allow you to forget creating \label{}s, \ref or \cite completion
+      automatically generate labels.
 @end itemize
 
 @node Installation, Typesetting, Main features, Top
@@ -268,6 +272,10 @@ description makes it convenient to use ghostview as dvi-previewer.
 @noindent
 Note that YaTeX  assumes the component  before the  last period of
 the last word in this line as base name of the main La@TeX{} source.
+The @code{%f} notation in this line is replaced by main file name, and
+@code{%r} replaced by root name of main file name.  If you specify
+@code{%f} or @code{%r}, YaTeX always ask you the name of main file at the
+first typesetting.
 
   To make best use of the feature of inter-file jumping by
 @kbd{[prefix] g} (see @ref{Cursor jump}), take described below into
@@ -1812,6 +1820,53 @@ completionType is one of @code{env, section, maketitle}.
 Consult the value of @code{YaTeX-package-alist-default} as an example.
 @end defvar
 
+@defvar YaTeX-tabular-indentation
+At indentation by @kbd{C-i} in tabular or array environment, 
+YaTeX put the additional spaces to the normail indentation depth.
+The number of additional spaces is the product of YaTeX-tabular-indentation
+and the number of column position in tabular.
+@end defvar
+
+@defvar YaTeX-noindent-env-regexp
+Regexp of environment names that should begin with no indentation.
+All verbatime-like environment name should match with.
+@end defvar
+
+@defvar YaTeX-ref-default-label-string
+Default \\ref time string format.
+This format is like strftime(3) but allowed conversion char are as follows;
+%y -> Last 2 digit of year,  %b -> Month name,  %m -> Monthe number(1-12),
+%d -> Day,  %H -> Hour,  %M -> Minute,  %S -> Second,
+%qx -> alphabetical-decimal conversion of yymmdd.
+%qX -> alphabetical-decimal conversion of HHMMSS.
+Beware defualt label-string should be always unique.  So this format string
+should have both time part (%H+%M+%S or %qX) and date
+part (%y+(%b|%m)+%d or %qx).
+@end defvar
+
+@defvar YaTeX-ref-generate-label-function
+Function to generate default label string for unnamed \\label{}s.
+The function pointed to this value should take two arguments.
+First argument is LaTeX macro's name, second is macro's argument.
+Here is an example for using this value.
+@lisp
+  (setq YaTeX-ref-generate-label-function 'my-yatex-generate-label)
+  (defun my-yatex-generate-label (command value)
+    (and (string= command "caption")
+         (re-search-backward "\\\\begin{\\(figure\\|table\\)}" nil t)
+         (setq command (match-string 1)))
+    (let ((alist '(("chapter" . "chap")
+                   ("section" . "sec")
+                   ("subsection" . "subsec")
+                   ("figure" . "fig")
+                   ("table" . "tbl"))))
+      (if (setq command (cdr (assoc command alist)))
+          (concat command ":" value)
+        (YaTeX::ref-generate-label nil nil))))
+@end lisp
+@end defvar
+
+
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection Sample definitions
@@ -2315,16 +2370,18 @@ title `Yachou', which is a trick on words of Japanese.
 @comment  node-name,  next,  previous,  up
 @chapter Copying
 
-  This program  is distributed   as a   free  software.   You  can
-redistribute this software freely but with NO warranty to anything
-as a result  of using this  software.   However, any  reports  and
-suggestions are  welcome as  long as I   feel  interests in   this
-software.   My possible  e-mail address is  `yuuji@@yatex.org'.
-(up to Sep.2003 at least)  And there is mailing list for YaTeX.
-Although the common language is Japanese, questions in English will be
-welcome.  To join the ML, send the mail whose subject is `append' to
-the address `yatex@@yatex.org.  If you have some
-question, please ask to `yatex-admin@@yatex.org'.
+  This   program   is  distributed   as   a   free   software.   You   can
+use/copy/modify/redistribute this software freely  but with NO warranty to
+anything  as a result  of using  this software.   Adopting code  from this
+program is  also free.  But  I would not  do contract act.
+
+Any reports  and suggestions are  welcome as long  as I feel  interests in
+this software.  My possible  e-mail address is `yuuji@@yatex.org'.  (as of
+Jan.2004)  And there  is  mailing  list for  YaTeX.   Although the  common
+language is Japanese,  questions in English will be  welcome.  To join the
+ML,   send  the   mail  whose   subject   is  `append'   to  the   address
+`yatex@@yatex.org.    If   you  have   some   question,   please  ask   to
+`yatex-admin@@yatex.org'.
 
   The specification of this software will be surely modified
 (depending on my feelings) without notice :-p.

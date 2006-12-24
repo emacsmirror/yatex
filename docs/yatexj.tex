@@ -10,7 +10,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Fri Aug 29 01:55:00 2003 on firestorm
+@c Last modified Wed Jul 20 21:25:48 2005 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -20,7 +20,7 @@
 @subtitle Yet Another tex-mode for emacs
 @title 『野鳥』
 @subtitle // YaTeX //
-@author @copyright{} 1991-2003 by    HIROSE, Yuuji [yuuji@@yatex.org]
+@author @copyright{} 1991-2004 by    HIROSE, Yuuji [yuuji@@yatex.org]
 @end titlepage
 
 @node Top, Intro, (dir), (dir)
@@ -139,6 +139,9 @@ large型コマンド
 @item 標準的 La@TeX{} コマンドのオンラインヘルプ(@kbd{C-c ?}, @kbd{C-c /})
 @item ドキュメントのインクルード構造の視覚的表示とバッファ切り替え
 (@kbd{C-c d})
+@item 補完入力したマクロに応じて必要な \userpackage を入れてくれる先回り
+userpackage
+@item \labelを打つことはもう忘れよう! refやcite補完入力で自動生成します
 @end itemize
 
 @node Installation, Invocation, Main features, Top
@@ -368,6 +371,10 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 
 なお、この行の最後の単語のピリオド以前を「メインファイル」のベース
 ネームであると仮定します(上の2つの場合どちらも@file{main})。
+この行に記述した、@code{%f}はメインファイル名に、
+@code{%r} はメインファイルの拡張子を取り除いた部分に置換されます。
+ただし、@code{%f,%r}を利用した場合、初回タイプセット時に必ずメインファイル
+名の入力を促されます。
 
   @kbd{[prefix] g} (@ref{Cursor jump}参照) での
 ファイル間ジャンプを有効に機能させるため、入力ファイル分割時には次のことに
@@ -712,6 +719,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 * Enclose section-type command::  括り補完
 * Recursive completion::        再帰補完
 * view-sectioning::             セクション区切りのアウトライン表示
+* label-generation::            ラベル自動生成
 @end menu
 
 @node 2個以上の引数をとる section型コマンド, Enclose section-type command, section型補完, section型補完
@@ -765,7 +773,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 型コマンドの引数に更に La@TeX{} コマンドが来る場合にはミニバッファで野鳥の
 補完キーを再帰的に入力することで引数の入力も効率的に行なえます。
 
-@node view-sectioning,  , Recursive completion, section型補完
+@node view-sectioning, label-generation, Recursive completion, section型補完
 @comment  node-name,  next,  previous,  up
 @subsection セクション区切りのアウトライン表示
 @cindex アウトライン[あうとらいん]
@@ -816,6 +824,19 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 @cindex 論理階層[ろんりかいそう]
 @cindex セクション区切り[せくしよんくきり]
 @cindex ジャンプ[しやんふ]
+
+@node label-generation,  , view-sectioning, section型補完
+@comment  node-name,  next,  previous,  up
+@subsection ラベル自動生成
+@cindex ラベル自動生成[らへるしとうせいせい]
+
+  @code{\ref@{@}} や @code{\cite{@@}} マクロをsection型補完で入れた場合
+参照先となり得るものを全て探してメニューにして選択できます。参照先には
+@code{\label@{@}}をつけておく必要はありません。もしあれば、そのラベルを
+使い、なければその場で参照先に@code{\label@{@}}を作らせてくれます。
+ラベル名を考えるのは苦痛に感じるものです。全てのカウンタにラベルを
+つけるのもたいへんです。もうラベル名に何をつけるか、ラベルをつけるかつけま
+いか、などということは忘れましょう!
 
 @node large型補完, maketitle型補完, section型補完, Completion
 @comment  node-name,  next,  previous,  up
@@ -1554,6 +1575,7 @@ tabular環境では、その環境のカラム数に対応した個数の @code{&} に加え、行末
 いでしょう。@file{yatexenv.el}内の関数 
 @code{YaTeX-intelligent-newline-itemize} の定義などを参考にしてください。
 
+
 @node Usepackage cheker, Changing mode of YaTeX, Intelligent newline, Top
 @comment  node-name,  next,  previous,  up
 @chapter 先回りusepackage
@@ -2017,6 +2039,50 @@ LaTeX2eのパッケージ名とその中に含まれるマクロのリスト。
 の値参照。
 @end defvar
 
+@defvar YaTeX-tabular-indentation
+tabular/array 環境で現在行の先頭位置が表の第Nカラムのときは
+標準インデント位置から N*YaTeX-tabular-indentation 桁下げた
+インデントにする。
+@end defvar
+
+@defvar YaTeX-noindent-env-regexp
+別の環境内にあっても \begin{} が行頭から始まるべき環境名の正規表現。
+verbatim環境などを指定する。
+@end defvar
+
+@defvar YaTeX-ref-default-label-string
+\ref{} のラベル補完でラベル未設定のものに自動的に生成する
+ラベル名の書式。strftime(3)関数に似た日付ベースで指定する。
+利用できる書式は以下のとおり。
+%y -> 西暦下二桁,  %b -> 月の英名,  %m -> 月(1～12)
+%d -> 日,  %H -> 時,  %M -> 分,  %S -> 秒,
+%qx -> アルファベットで26進数化した yymmdd.
+%qX -> アルファベットで26進数化した HHMMSS.
+デフォルトは "%H%M%S_%d%b%y"
+@end defvar
+
+@defvar YaTeX-ref-generate-label-function
+\ref{}のラベル名自動生成のときに使う関数のシンボル。
+デフォルトは標準の YaTeX::ref-generate-label 関数が割り当ててある。
+引数を2つ取る関数を定義して、この変数にセットするとその関数を呼んだ
+結果をデフォルトのラベル名候補とする。設定例:
+@lisp
+  (setq YaTeX-ref-generate-label-function 'my-yatex-generate-label)
+  (defun my-yatex-generate-label (command value)
+    (and (string= command "caption")
+         (re-search-backward "\\\\begin{\\(figure\\|table\\)}" nil t)
+         (setq command (match-string 1)))
+    (let ((alist '(("chapter" . "chap")
+                   ("section" . "sec")
+                   ("subsection" . "subsec")
+                   ("figure" . "fig")
+                   ("table" . "tbl"))))
+      (if (setq command (cdr (assoc command alist)))
+          (concat command ":" value)
+        (YaTeX::ref-generate-label nil nil))))
+@end lisp
+@end defvar
+
 @node Sample definitions, Hook variables, All customizable variables, Lisp variables
 @comment  node-name,  next,  previous,  up
 @subsection カスタマイズ変数設定例
@@ -2104,11 +2170,15 @@ LaTeX2eのパッケージ名とその中に含まれるマクロのリスト。
 
   本プログラムはフリーソフトウェアです。本プログラムを使用して生じたいかな
 る結果に対しても作者は責任を負わないこととします。転載等に関しては制限いた
-しません。常識的に扱ってください。また、使用している旨をメイルでお知らせい
-ただくと、作者は喜んでサポートに励むことでしょう。
+しません。常識的に扱ってください。また、本プログラムに含まれるコードを利用
+すること、改造することも自由に行なって構いませんが、流用することにより契約
+締結の必要が生じる場合、私はいかなる契約も締結しません。具体的にはGPLへの
+サインはしませんので、GNUに寄贈するものを作っている場合私の作品から取り込
+んだコードを流用すると苦労するかもしれません。いかなるコード流用も拒否しま
+せんが契約締結は辞退します。
 
   苦情、希望、バグ報告、感想等は歓迎いたします。
-連絡は yuuji@@yatex.org まで(2003年9月現在)。
+連絡は yuuji@@yatex.org まで(2004年1月現在)。
 継続的に使用してくださる方はメイリングリスト「fj野鳥の会」に
 是非加入してください。加入方法については本パッケージの @file{docs/qanda}
 ファイルの「その他」の章を御覧ください。

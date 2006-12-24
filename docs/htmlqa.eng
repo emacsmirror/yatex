@@ -63,7 +63,7 @@
 	option is to use auto-insert-tkld.  The latter can be found at
 	ftp://ftp.ae.keio.ac.jp/pub/emacs-lisp/util/auto-inset-tkld.tar.Z
 	Examples in Japanese are at
-	http://www-nagao.kuee.kyoto-u.ac.jp/member/tsuchiya/elisp/yahtml-mode.html
+	http://namazu.org/~tsuchiya/elisp/yahtml-mode.html
 	
 [ETC]
 ============

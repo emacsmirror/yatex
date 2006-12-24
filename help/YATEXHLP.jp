@@ -44,6 +44,9 @@ Roman		大文字のローマ数字
 {}内の内容を\\で区切られた単位毎に積み重ねて表示する。
 [場所]は、l(左寄せ)、c(センタリング)、r(右寄せ)のいずれか。
 
+表(tabular)の中で縦書きに項目を入れたいときにも便利。
+
+
 newlength
 \newlength{NAME}
 NAMEという長さコマンドを新たに宣言する。
@@ -390,9 +393,14 @@ FILE.tex がそこにあるかのように処理を続ける。
 \setcounter{FOO}{VAL}
 カウンタFOOの値をVALに設定する。
 
+<refer 新しいカウンタの作り方>
+
 addtocounter
 \addtocounter{FOO}{VAL}
 カウンタFOOの値にVALを加える。
+
+<refer 新しいカウンタの作り方>
+
 
 newcounter
 \newcounter{COUNTER}[OLDCTR]
@@ -400,6 +408,18 @@ FILE.tex がそこにあるかのように処理を続ける。
 オプション引数[OLDCTR]を指定すると、既存のカウンタOLDCTRの値が
 \stepcounter もしくは \addtocounter で変更されるたびにCOUNTERの値もリセッ
 トされる。
+
+<refer 新しいカウンタの作り方>
+
+新しいカウンタの作り方
+以下の定義で \mondai とすると、自動的にnをインクリメントして「第n問」を
+出力する。
+
+\newcounter{toi}
+\renewcommand{\thetoi}{第\arabic{toi}問~ }
+\setcounter{toi}{0}
+\newcommand{\mondai}{\refstepcounter{toi}\thetoi}
+
 
 value
 \value{COUNTER}
@@ -459,7 +479,7 @@ enumerate環境中の \item の直後ではそのitemの番号が「\ref値」となり、
 enumerateされたitemで設定されたラベルにたいしては、item番号が返される。
 
 pageref
-pageref{LABEL}
+\pageref{LABEL}
 \label{LABEL}の存在するページ番号を参照する。
 
 (
@@ -692,6 +712,18 @@ POSで指定した場所に配置する。POSにlを指定すると左寄せ、rを指定すると右寄せ、
 第2の書式では、picuture環境で大きさ(X,Y)の(\unitlengthを基準とする)
 \hbox にオブジェクトを配置する。配置位置POSは第1の書式と同様。
 
+LaTeX2e以降では第1の書式のPOSにsを指定でき、ボックス内に文字を均等割り付け
+してくれる。ボックスの幅は全角1字を表すzwを単位にすると便利だろう。
+\makebox[7zw][s]{山田太郎}\\
+\makebox[7zw][s]{木村花}\\
+\makebox[7zw][s]{広瀬 雄二}
+とすると
+	|山  田  太  郎|
+	|木    村    花|
+	|広 瀬    雄 二|
+
+という感じになる。
+
 mbox
 \mbox{オブジェクト}
 \makebox{オブジェクト}と同じ。
@@ -718,16 +750,39 @@ POSで指定した場所に配置する。POSにlを指定すると左寄せ、rを指定すると右寄せ、
 \saveboxで\CMDに保存されたテキストを配置する。
 
 framebox
-\framebox{オブジェクト}
+\framebox[WID][POS]{オブジェクト}	\framebox(X,Y)[POS]{オブジェクト}
 「オブジェクト」に枠をつけて\makeboxと同様の処理をする。
 枠の線の太さは \framerule、オブジェクトとの間隔は \framesep で決まる。た
 だしpicture環境で \framebox(X,Y){オブジェクト}とした場合は、picture環境
 用の線の太さに従い、外枠とオブジェクトとの間隔は空けられない。
 
+LaTeX2e以降では第1の書式のPOSにsを指定でき、ボックス内に文字を均等割付
+してくれる。ボックスの幅は全角1字を表すzwを単位にすると便利だろう。
+\framebox[7zw][s]{山田太郎}\\
+\framebox[7zw][s]{木村花}\\
+\framebox[7zw][s]{広瀬 雄二}
+とすると
+	+--------------+
+	|山  田  太  郎|
+	+--------------+
+	|木    村    花|
+	+--------------+
+	|広 瀬    雄 二|
+	+--------------+
+
+という感じになる。
+
 fbox
 \fbox{オブジェクト}
 \framebox{オブジェクト}と同じ。
 \fboxはrobust, \frameboxはfragile
+
+\fbox の罫線の太さを変えるには，\fboxrule を変更します．
+
+  {
+    \fboxrule=2\fboxrule
+    \fbox{2倍の太さの罫線で囲まれたボックス}
+  }
 
 parbox
 \parbox[POS]{WIDTH}{TEXT}
@@ -894,6 +949,18 @@ array環境を制御する変数には以下のものがある:
 
 tabular環境は、ページを跨ることができない。これを可能にするスタイルファ
 イルとして、supertab.styがある。
+
+l, c, r 指定した1つのカラムに2行以上の項目を入れたいときはparboxを利用する
+(shortstackを利用すると上にずれるのでraiseboxで調整しなければならない)。
+\begin{tabular}{lp{0.5\columnwidth}}
+ \parbox[t]{7em}{あ\\い} & あぶらかだぶらあぶらかだぶらあぶらかだぶら
+\end{tabular}
+は、以下のようにレイアウトされる。
+
+	あ	あぶらかだ
+	い	ぶらあぶら
+		かだぶら
+
 
 tabular*
 \begin{tabular*}{幅}{プリアンブル} ... \end{tabular*}
@@ -1166,6 +1233,17 @@ fragile
 [OPTION...] を指定すると、STYLE.sty を読んだ後に、
 OPTIONn.sty が順次読み込まれる。
 
+documentclass
+\documentclass[OPTION1,OPTION2, ... ,OPTIONn]{STYLE}
+文書スタイルを指定する(LaTeX2e)。
+[OPTION...] を指定すると、STYLE.cls を読んだ後に、
+OPTIONn.sty が順次読み込まれる。
+
+usepackage
+\usepackage[オプション]{パッケージ}
+LaTeX2e の記法を拡張する「パッケージ」をロードする。
+
+
 verb
 \verb#内容#
 \verbの直後に来る文字と、次にあらわれる同じ文字とのあいだに挟まれたもの
@@ -1215,6 +1293,8 @@ in		インチ(約2.54cm)
 mm		ミリメートル
 pc		パイカ(=12pt)
 pt		ポイント(72.27pt=1インチ)
+zw		日本語全角1字の幅
+zh		日本語全角1字の高さ
 \fill		自然長は0だが、任意の長さに伸びることのできる伸縮長
 \stretch{X}	\fill のX倍
 
@@ -1226,6 +1306,17 @@ pt		ポイント(72.27pt=1インチ)
 \twocolumn[STRING]
 改頁したあと二段組みでの組版を開始する。
 [STRING]を指定すると、STRINGを二段ぶち抜きのタイトルとして出力。
+本文が二段組みでタイトルとアブストラクトのみを1段組にしたい場合は
+\twocolumn[
+\begin{titlepage}
+{\LARGE 和文タイトル等}
+\vspace*{1em}
+\begin{abstract} 和文抄録 \end{abstract}
+\renewcommand{\abstractname}{\textbf{Abstract}}
+\begin{abstract} 英文アブストラクト \end{abstract}
+\end{titlepage}
+]
+のようにすると良い。
 →onecolumn
 
 onecolumn
@@ -1396,10 +1487,288 @@ STRINGをその幅で影つきボックスで囲む。
 \doublebox{STRING}
 二重四角枠で STRING を囲む。
 
+quote
+\begin{quote} ... \end{quote}
+段落を含まない引用
+
+quotation
+\begin{quotation} ... \end{quotation}
+段落を含む引用
+
+
 要 `\usepackage{fancybox}`
 
 <ref fancybox>
 
+textcircled
+\textcircled{文字}
+「文字」を丸枠で囲む。1文字と同じ大きさの丸枠なので
+{\small ...}, {\tiny ...}, {\scriptsize ...} などで括った方が良い。
+
+hfill
+\hfill
+できるだけ広い間隔を開ける。\hspace{\fill} と同じ。
+あ\hfill い
+とすると
+        あ                                                      い
+
+あ\hfill い\hfill う
+とすると
+        あ                         い                           う
+
+のように最大限に間隔を延ばしてくれる。ただし \hspace{} 相当なので
+行頭だとうまく行かない。右寄せしたいなら \hspace*{\fill} とする。
+
+hfil
+\hfil
+\hfill より弱い間隔開け。
+\hfill も参照のこと。
+
+vfill
+\vfill
+縦方向に最大限の空白を開ける。\vspace{\fill} と同じ。
+\hfill も参照のこと。
+
+hrulefill
+\hrulefill
+可能な限り長い下付罫線を引く。
+あんまりいい説明じゃないな。
+
+backslashbox
+\backslashbox{A}{B}
+tabular環境の(主に)左上のカラムで用いて右下がり斜線で区切った2項目を書く。
+要 \usepackage{slashbox}
+\begin{tabular}
+\hline
+\backslashbox{A}{B} & hoge \\ \hline
+\end{tabular}
+
+     +------+--------+
+     | ＼ B |        |
+     | A ＼ |  hoge  |
+     +------+--------+
+
+
+slashbox
+\slashbox{A}{B}
+tabular環境の(主に)右上のカラムで用いて右上がり斜線で区切った2項目を書く。
+backslashboxも参照せよ。
+
+ooalign
+{\ooalign{文字列1\crcr 文字列2……}
+行送りゼロの設定に変更して文字の重ね打ちを可能にする。
+○つき文字を作るための有名なマクロ \maru{} は便利。
+
+\newcommand{\maru}[1]{{\ooalign {\hfill$\scriptstyle#1$\hfill\crcr$\bigcirc$}}}
+
+\crcr は\ooalign内での改行を意味する。\hfill は「最大に延びる空白」とい
+うことで、文字の左右に配置することでセンタリングの効果が得られる。
+\ooalign は改行幅などの長さパラメータをいじってしまうので全体を {} で
+括る必要があることに注意。
+
+maru
+\maru{あ}
+文字(1文字に限る)を○で囲む。プリアンブルで以下の \newcommand をせよ。
+\newcommand{\maru}[1]{{\ooalign {\hfill$\scriptstyle#1$\hfill\crcr$\bigcirc$}}}
+
+today
+\date{\today}
+作成日の日付けの出力を指定する。プリアンブルで \date とともに使う。
+
+和暦
+\和暦
+\和暦 は日付けを元号での表記にする。
+\西暦 は西暦での表記にする。
+\maketitle より先に指定する。
+
+西暦
+\西暦
+<refer 和暦>
+
+colorの名前つきカラー
+\textcolor[named]{色名}{内容} など、[named] を指定する。
+
+\usepackage{color} によって使用可能。
+使える色は以下の通り。
+GreenYellow Yellow Goldenrod Dandelion Apricot Peach Melon YellowOrange
+Orange BurntOrange Bittersweet RedOrange Mahogany Maroon BrickRed Red
+OrangeRed RubineRed WildStrawberry Salmon CarnationPink Magenta
+VioletRed Rhodamine Mulberry RedViolet Fuchsia Lavender Thistle
+OrchidDarkOrchid Purple Plum Violet RoyalPurple BlueViolet Periwinkle
+CadetBlue CornflowerBlue MidnightBlue NavyBlue RoyalBlue Blue Cerulean
+Cyan ProcessBlue SkyBlue Turquoise TealBlue Aquamarine BlueGreen Emerald
+JungleGreen SeaGreen Green ForestGreen PineGreen LimeGreen YellowGreen
+SpringGreen OliveGreen RawSienna Sepia Brown Tan Gray Black White)
+
+色見本を出すソースが
+http://www.yatex.org/help/color.tex にあるので、試すと良い。
+
+textcolor
+\textcolor{色}{内容}
+文字の色を「色」に設定して「内容」を出力。
+
+<refer colorの名前つきカラー>
+
+pagecolor
+\pagecolor{色}
+ページの背景色を「色」に設定する。
+
+<refer colorの名前つきカラー>
+
+color
+\color{色}
+
+ページの文字食を「色」に設定する。
+
+<refer colorの名前つきカラー>
+
+colorbox
+\colorbox{色}{内容}
+「色」が背景のボックスを作りその中に「内容」を出力。
+
+
+<refer colorの名前つきカラー>
+
+fcolorbox
+\fcolorbox{枠の色}{背景色}{内容}
+枠と背景色を指定して「内容」を出力。
+
+<refer colorの名前つきカラー>
+
+rotatebox
+\rotatebox{角度}{内容}
+「内容」を「角度」回転して出力。
+要 `\usepackage{graphicx}'
+
+resizebox
+\resizebox{横の長さ}{縦の長さ}{内容}
+縦か横を省略したいときは ! を指定する。
+\resizebox{!}{40mm}{内容} とすると縦が40mmで縦横比を保存して拡大する。
+要 `\usepackage{graphicx}'
+
+scalebox
+\scalebox{倍率}[縦倍率]{内容}
+「内容」を「倍率」倍して出力。縦倍率は省略可能。
+倍率として負の数を指定すると反転。
+要 `\usepackage{graphicx}'
+
+reflectbox
+\reflectbox{内容}
+「内容」を左右反転して出力。\scalebox{-1}[1]{内容} と同じ。
+要 `\usepackage{graphicx}'
+
+ulem
+\usepackage{ulem}
+\usepackage{ulem} すると 以下のマクロが使える。
+\uline{通常の下線}
+\uwave{波線}
+\uuline{二重の下線} 
+
+\underlineと\ulineは前後に単語空白が挿入されるかどうかが異なっている。
+
+前\underline{中}後
+前\uline{中}後
+
+を typeset して比較してみると分かる。
+
+(情報提供 TSUCHIYA Masatoshi <tsuchiya@pine.kuee.kyoto-u.ac.jp>)
+
+uline
+\uline{内容}
+「内容」にアンダーラインをつける。
+
+<refer ulem>
+
+uwave
+\uwave{内容}
+「内容」に波下線をつける。
+
+<refer ulem>
+
+uuline
+\uuline{内容}
+「内容」に二重アンダーラインをつける。
+
+<refer ulem>
+
+showkeys.sty
+\usepackage[options]{showkeys}
+ラベルが無い（unlabeled）数式には {?} がマージンに印刷される。
+引用されなかったラベルは ?label? のように印刷される。
+オプションには showrefs, norefs, showcites, nocites, msgs, nomsgs,
+chkunlbld, ignoreunlbld がある。msgs/nomsgs は .log ファイルに
+メッセージを書き込むか否か。その他のオプションは自明。
+
+AMS-LaTeX や HyperRef と同時に使えるが、これらよりも後に
+\usepackage しなくてはならない。
+
+似たような package に refcheck.sty というのがある。
+これだと \ref まで見える（でもかえってうざったいかも）。
+(情報提供 Masaki Shigemori <mshige@ucla.edu>)
+
+dots
+\dots
+点々
+\dotsにはいくつも種類があるので適切に使いわけましょう。
+
+\dotsc ... コンマで区切られた列が続くことを表わす点々． $A_1, A_2, \dotsc$
+\dotsb ... 二項演算子(+など)が続くことを表わす点々．$A_1+A_2+\dotsb$
+\dotsm ... 掛け算(演算子省略)が続くことを表わす点々．$A_1 A_2 \dotsm$
+\dotsi ... 積分が続くことを表わす点々 \[ \int_{A_1} int_{A_2} \dotsi \]
+
+(情報提供 Ryohei SETO <setoryohei@mac.com>)
+
+table*
+\begin{table*} ... \end{table*}
+二段組環境でも表を上段ぶち抜きで配置
+
+figure*
+\begin{figure*} ... \end{figure*}
+二段組環境でも図を上段ぶち抜きで配置([t]のみ)。
+下段([b])に置きたいときは nidanfloat.sty を使う。
+\begin{figure*}[b]
+ ～～\includegraphicsとか図をいれるマクロ～～
+ \caption{標題}
+\end{figure*}
+
+includegraphics
+\usepackage{graphicx}  ... \includegraphics[オプション]{graphicfile.eps}
+画像を取り込む。要 graphicx パッケージ。
+「オプション」は以下のものが指定可能。
+scale=拡大率
+width=幅
+height=高さ
+draft     (草稿モード; 枠だけ表示)
+angle=回転角
+origin=回転の中心位置  (c, tl, tr, bl, brのどれか)
+bb=llx lly urx ury    (BoundingBoxとなる矩形対角座標を指定)
+viewport=llx lly urx ury  (BoundingBox内の相対的座標で切り取る)
+trim=left bottom right top  (指定した幅を切り取る)
+
+abstract
+\begin{abstract} ... \end{abstract}
+抄録(アブストラクト)を出力する。
+和文抄録から英文に切り替えたいときは和文のabstract環境を終えたあとで
+\renewcommand{\abstractname}{\textbf{Abstract}}
+としてから再度abstract環境を始めると良い。
+
+\langle
+$\langle$
+         
+数式モードでの`〈'
+
+\langle
+$rlangle$
+         
+数式モードでの`〉'
+
+\slash
+\slash
+スラッシュそのもの
+
+\textbackslash
+\textbackslash
+バックスラッシュそのもの
 
 LaiTeX
 a Little Assistant Interface for TeX on Vz
@@ -1632,6 +2001,16 @@ jaybirdさん(asciinet, bekkoame)
 太田康広さん(buffalo.edu)
 山尾貴則さん(東北大)
 	Meadowユーザのための詳細インストールドキュメントを書いて下さいました。
+
+重森正樹さん(東京大)
+	数え切れないバグレポートとコメントを頂きました。
+
+瀬戸亮平さん(立命館大)
+	Carbon Emacs(MacOS X) での使用のための情報をたくさん頂きました。
+	AMS-LaTeXで使う重要なマクロの情報をたくさん頂きました。
+
+
+
 
 yatex
 (setq auto-mode-alist (cons '("\\.tex$" . yatex-mode) auto-mode-alist))

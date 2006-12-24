@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.17
-;;; (c)1991-2003 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Nov 27 11:11:30 2003 on firestorm
+;;; yatexadd.el rev.18
+;;; (c)1991-2006 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sun Dec 24 15:12:30 2006 on firestorm
 ;;; $Id$
 
 ;;;
@@ -56,9 +56,18 @@ YaTeX-make-begin-end."
     (format "%s%s{%s}" width loc rule)))
 
 (fset 'YaTeX:tabular* 'YaTeX:tabular)
+(fset 'YaTeX:supertabular 'YaTeX:tabular)
+(defun YaTeX:alignat ()
+  (concat "{" (read-string "Number of columns: ") "}"))
 (defun YaTeX:array ()
   (concat (YaTeX:read-position "tb")
 	  "{" (read-string "Column format: ") "}"))
+(defun YaTeX:subequations ()
+  (message (if YaTeX-japan "分かりやすいコメントに変えるとref補完が楽よ"
+	     "Changing comment string reduces effort at `ref' completion"))
+  (concat " " YaTeX-comment-prefix
+	  (YaTeX::ref-default-label "%H:%M")
+	  (if YaTeX-japan "の式群" "equations")))
 
 (defun YaTeX:read-oneof (oneof &optional quick allow-dup)
   (let ((pos "") loc (guide ""))
@@ -137,6 +146,12 @@ YaTeX-make-begin-end."
 	  YaTeX:alignat YaTeX:alignat* YaTeX:xalignat YaTeX:xalignat*
 	  YaTeX:xxalignat YaTeX:xxalignat*))
 
+(defun YaTeX:alignat ()
+  (YaTeX:equation)
+  (concat "{" (read-string "Number of cols: ") "}"))
+
+
+
 (defun YaTeX:list ()
   "%\n{} %default label\n{} %formatting parameter")
 
@@ -147,6 +162,9 @@ YaTeX-make-begin-end."
 (defun YaTeX:thebibliography ()
   (setq YaTeX-section-name "bibitem")
   (concat "{" (read-string "Longest label: ") "}"))
+
+(defun YaTeX:multicols ()
+  (concat "{" (read-string "Number of columns: ") "}"))
 
 ;;;
 ;;Sample functions for section-type command.
@@ -163,22 +181,32 @@ YaTeX-make-begin-end."
   (cond
    ((YaTeX-in-environment-p "picture")
     (concat (YaTeX:read-coordinates "Dimension")
-	    (YaTeX:read-position "lrtb")))
+	    (YaTeX:read-position "lsrtb")))
    (t
     (let ((width (read-string "Width: ")))
       (if (string< "" width)
 	  (progn
 	    (or (equal (aref width 0) ?\[)
 		(setq width (concat "[" width "]")))
-	    (concat width (YaTeX:read-position "lr"))))))))
+	    (concat width (YaTeX:read-position
+			   (if YaTeX-use-LaTeX2e "lrs" "lr")))))))))
 
-(defun YaTeX:framebox ()
-  (if (YaTeX-quick-in-environment-p "picture")
-      (YaTeX:makebox)))
+;; (defun YaTeX:framebox ()
+;;   (if (YaTeX-quick-in-environment-p "picture")
+;;       (YaTeX:makebox)))
+(fset 'YaTeX:framebox 'YaTeX:makebox)
+
+(defun YaTeX:parbox ()
+  (YaTeX:read-position "tbc"))
 
 (defun YaTeX:dashbox ()
   (concat "{" (read-string "Dash dimension: ") "}"
 	  (YaTeX:read-coordinates "Dimension")))
+
+(defun YaTeX:savebox (argp)
+  (cond
+   ((= argp 1) (read-string "Saved into name: " "\\"))
+   ((= argp 2) (read-string "Text: "))))
 
 (defvar YaTeX-minibuffer-quick-map nil)
 (if YaTeX-minibuffer-quick-map nil
@@ -219,6 +247,10 @@ YaTeX-make-begin-end."
     delimiter))
 
 (fset 'YaTeX:right 'YaTeX:left)
+
+(defun YaTeX:langle ()
+  (setq YaTeX-single-command "rangle")
+  nil)
 
 (defun YaTeX:read-coordinates (&optional mes varX varY)
   (concat
@@ -471,29 +503,90 @@ YaTeX-make-begin-end."
 ; 	    (bury-buffer YaTeX-label-buffer)))
 ; 	label)))))
 
-(defun YaTeX::ref-generate-label ()
+(defvar YaTeX-ref-default-label-string "%H%M%S_%d%b%y"
+  "*Default \\ref time string format.
+This format is like strftime(3) but allowed conversion char are as follows;
+%y -> Last 2 digit of year,  %b -> Month name,  %m -> Monthe number(1-12),
+%d -> Day,  %H -> Hour,  %M -> Minute,  %S -> Second,
+%qx -> alphabetical-decimal conversion of yymmdd.
+%qX -> alphabetical-decimal conversion of HHMMSS.
+Beware defualt label-string should be always unique.  So this format string
+should have both time part (%H+%M+%S or %qX) and date
+part (%y+(%b|%m)+%d or %qx).")
+
+(defun YaTeX::ref-alphabex (n)
+  (let ((alphabex ""))
+    (while (> n 0)
+      (setq alphabex (concat (char-to-string (+ ?a (% n 26))) alphabex)
+	    n (/ n 26)))
+    alphabex))
+
+(defun YaTeX::ref-default-label (&optional format)
+  "Default auto-genarated label string."
+  ;; We do not use (format-time-string) for emacs-19
+  (let*((ts (substring (current-time-string) 4))
+	(y (substring ts -2))
+	(b (substring ts 0 3))
+	(d (format "%d" (string-to-int (substring ts 4 6))))
+	(H (substring ts 7 9))
+	(M (substring ts 10 12))
+	(S (substring ts 13 15))
+	(HMS (+ (* 10000 (string-to-int H))
+		(* 100 (string-to-int M))
+		(string-to-int S)))
+	(talphabex (YaTeX::ref-alphabex HMS))
+	(mnames "JanFebMarAprMayJunJulAugSepOctNovDec")
+	(m (format "%02d" (/ (string-match b mnames) 3)))
+	(ymd (+ (* 10000 (string-to-int y))
+		(* 100 (string-to-int m))
+		(string-to-int d)))
+	(dalphabex (YaTeX::ref-alphabex ymd)))
+    (YaTeX-replace-formats
+     (or format YaTeX-ref-default-label-string)
+     (list (cons "y" y)
+	   (cons "b" b)
+	   (cons "m" m)
+	   (cons "d" d)
+	   (cons "H" H)
+	   (cons "M" M)
+	   (cons "S" S)
+	   (cons "qX" talphabex)
+	   (cons "qx" dalphabex)))))
+
+(defvar YaTeX-ref-generate-label-function 'YaTeX::ref-generate-label
+  "*Function to generate default label for unnamed \\label{}s.
+The function pointed to this value should take two arguments.
+First argument is LaTeX macro's name, second is macro's argument.")
+
+(defun YaTeX::ref-generate-label (command arg)
   "Generate a label string which is unique in current buffer."
-  (let ((default (substring (current-time-string) 4)))
+  (let ((default (condition-case nil
+		     (YaTeX::ref-default-label)
+		   (error (substring (current-time-string) 4)))))
     (read-string "Give a label for this line: "
 		 (if YaTeX-emacs-19 (cons default 1) default))))
 
-(defun YaTeX::ref-getset-label (buffer point)
+(defun YaTeX::ref-getset-label (buffer point &optional noset)
   "Get label string in the BUFFER near the POINT.
-Make \\label{xx} if no label."
+Make \\label{xx} if no label.
+If optional third argument NOSET is non-nil, do not generate new label."
   ;;Here, we rewrite the LaTeX source.  Therefore we should be careful
   ;;to decide the location suitable for \label.  Do straightforward!
-  (let (boundary inspoint cc newlabel (labelholder "label") mathp env
-       (r-escape (regexp-quote YaTeX-comment-prefix)))
-    ;;(set-buffer buffer)
-    (switch-to-buffer buffer)
+  (let (boundary inspoint cc newlabel (labelholder "label") mathp exp1 env
+       (r-escape (regexp-quote YaTeX-comment-prefix))
+       command arg alreadysought foundpoint)
+    (set-buffer buffer)
     (save-excursion
       (goto-char point)
       (setq cc (current-column))
       (if (= (char-after (point)) ?\\) (forward-char 1))
       (cond
        ((looking-at YaTeX-sectioning-regexp)
+	(setq command (YaTeX-match-string 0))
 	(skip-chars-forward "^{")
-	(forward-list 1)
+	(setq arg (buffer-substring
+		   (1+ (point))
+		   (progn (forward-list 1) (1- (point)))))
 	(skip-chars-forward " \t\n")
 	;(setq boundary "[^\\]")
 	(setq inspoint (point))
@@ -507,7 +600,8 @@ Make \\label{xx} if no label."
 		    (match-beginning 0)
 		  (1- (point))))))
        ((looking-at "item\\s ")
-	(setq cc (+ cc 6))
+	(setq command "item"
+	      cc (+ cc 6))
 	;(setq boundary (concat YaTeX-ec-regexp "\\(item\\|begin\\|end\\)\\b"))
 	(setq boundary
 	      (save-excursion
@@ -518,7 +612,8 @@ Make \\label{xx} if no label."
 		  (1- (point))))
 	      inspoint boundary))
        ((looking-at "bibitem")
-	(setq labelholder "bibitem")	; label holder is bibitem itself
+	(setq labelholder "bibitem"	; label holder is bibitem itself
+	      command "bibitem")
 	(setq boundary
 	      (save-excursion
 		(if (YaTeX-re-search-active-forward
@@ -527,19 +622,50 @@ Make \\label{xx} if no label."
 		    (match-beginning 0)
 		  (1- (point))))
 	      inspoint boundary))
-       ((string-match YaTeX::ref-mathenv-regexp
+       ((string-match YaTeX::ref-nestable-counter-regexp
 		      (setq env (or (YaTeX-inner-environment t) "document")))
-	(setq mathp t)
+	(let ((curtop (get 'YaTeX-inner-environment 'point))
+	      (end (point-max)) label)
+	  (skip-chars-forward " \t\n")
+	  (setq inspoint (point)	;initial candidate
+		cc (current-column)
+		command env
+		alreadysought t)
+	  (if (condition-case nil
+		  (progn
+		    (goto-char curtop)
+		    (YaTeX-goto-corresponding-environment))
+		(error nil))
+	      (setq end (point)))
+	  (goto-char inspoint)
+	  (while (YaTeX-re-search-active-forward
+		  (concat YaTeX-ec-regexp "label{\\([^}]+\\)}" )
+		  r-escape end t)
+	    (setq label (YaTeX-match-string 1))
+	    (if (and (equal env (YaTeX-inner-environment t))
+		     (= curtop (get 'YaTeX-inner-environment 'point)))
+		;;I found the label
+		(setq alreadysought label
+		      foundpoint (match-end 0))))
+	  ))
+       ((string-match YaTeX::ref-mathenv-regexp env) ;env is set in above case
+	(setq command env
+	      mathp t
+	      exp1 (string-match YaTeX::ref-mathenv-exp1-regexp env))
 	;;(setq boundary (concat YaTeX-ec-regexp "\\(\\\\\\|end{" env "}\\)"))
 	(setq boundary
 	      (save-excursion
 		(if (YaTeX-re-search-active-forward
-		     (concat YaTeX-ec-regexp "\\(\\\\\\|end{" env "}\\)")
+		     (concat
+		      YaTeX-ec-regexp "\\("
+		      (if exp1 "" "\\\\\\|")
+		      "end{" env "}\\)")
 		     r-escape nil 1)
 		    (match-beginning 0)
 		  (1- (point))))
 	      inspoint boundary))
        ((looking-at "footnote\\s *{")
+	(setq command "footnote")
 	(skip-chars-forward "^{")	;move onto `{'
 	(setq boundary
 	      (save-excursion
@@ -550,10 +676,13 @@ Make \\label{xx} if no label."
 		(1- (point)))
 	      inspoint boundary))
        ((looking-at "caption\\|\\(begin\\)")
+	(setq command (YaTeX-match-string 0))
 	(skip-chars-forward "^{")
 	;;;;;;(if (match-beginning 1) (forward-list 1))
 	;; caption can be treated as mathenv, is it right??
-	(forward-list 1)
+	(setq arg (buffer-substring
+		   (1+ (point))
+		   (progn (forward-list 1) (1- (point)))))
 	;;(setq boundary (concat YaTeX-ec-regexp "\\(begin\\|end\\)\\b"))
 	(setq inspoint (point))
 	(setq boundary
@@ -566,55 +695,81 @@ Make \\label{xx} if no label."
        (t ))
       (if (save-excursion (skip-chars-forward " \t") (looking-at "%"))
 	  (forward-line 1))
-      (if (and (save-excursion
-		 (YaTeX-re-search-active-forward
-		  ;;(concat "\\(" labelholder "\\)\\|\\(" boundary "\\)")
-		  labelholder
-		  (regexp-quote YaTeX-comment-prefix)
-		  boundary 1))
-	       (match-beginning 0))
+      (cond
+       ((stringp alreadysought)
+	(put 'YaTeX::ref-getset-label 'foundpoint foundpoint) ;ugly...
+	alreadysought)
+       ((and (null alreadysought)
+	     (> boundary (point))
+	     (save-excursion
+	       (YaTeX-re-search-active-forward
+		;;(concat "\\(" labelholder "\\)\\|\\(" boundary "\\)")
+		labelholder
+		(regexp-quote YaTeX-comment-prefix)
+		boundary 1))
+	     (match-beginning 0))
 	  ;; if \label{hoge} found, return it
-	  (buffer-substring
-	   (progn
-	     (goto-char (match-end 0))
-	     (skip-chars-forward "^{") (1+ (point)))
-	   (progn
-	     (forward-sexp 1) (1- (point))))
+	(put 'YaTeX::ref-getset-label 'foundpoint (1- (match-beginning 0)))
+	(buffer-substring
+	 (progn
+	   (goto-char (match-end 0))
+	   (skip-chars-forward "^{") (1+ (point)))
+	 (progn
+	   (forward-sexp 1) (1- (point)))))
 	;;else make a label
 	;(goto-char (match-beginning 0))
+       (noset    nil)				;do not set label if noset
+       (t
 	(goto-char inspoint)
 	(skip-chars-backward " \t\n")
-	(save-excursion (setq newlabel (YaTeX::ref-generate-label)))
+	(save-excursion
+	  (setq newlabel
+		(funcall YaTeX-ref-generate-label-function command arg)))
 	(delete-region (point) (progn (skip-chars-backward " \t") (point)))
 	(if mathp nil 
 	  (insert "\n")
 	  (YaTeX-reindent cc))
 	(insert (format "\\label{%s}" newlabel))
-	newlabel))))
+	newlabel)))))
 
+(defvar YaTeX::ref-labeling-regexp-alist-default
+  '(("\\\\begin{\\(java\\|program\\)}{\\([^}]+\\)}" . 2)
+    ("\\\\label{\\([^}]+\\)}" . 1))
+  "Alist of labeling regexp vs. its group number points to label string.
+This alist is used in \\ref's argument's completion.")
+(defvar YaTeX::ref-labeling-regexp-alist-private nil
+  "*Private extesion to YaTeX::ref-labeling-regexp-alist.
+See the documetation of YaTeX::ref-labeling-regexp-alist.")
 (defvar YaTeX::ref-labeling-regexp-alist
-  '(("\\\\begin{java}{\\([^}]+\\)}" . 1)
-    ("\\\\label{\\([^}]+\\)}" . 1)))
+  (append YaTeX::ref-labeling-regexp-alist-default
+	  YaTeX::ref-labeling-regexp-alist-private))
 (defvar YaTeX::ref-labeling-regexp
   (mapconcat 'car YaTeX::ref-labeling-regexp-alist "\\|"))
 (defvar YaTeX::ref-mathenv-regexp
-  "equation\\|eqnarray\\|align\\|gather\\|alignat\\|xalignat")
+  ;; See also YaTeX-ams-math-begin-alist in yatex.el
+  ;; Define only envs which has counter.(without *)
+  "equation\\|eqnarray\\|align\\(at\\)?\\|flalign\\|gather\\|xx?alignat\\|multline")
+(defvar YaTeX::ref-mathenv-exp1-regexp
+  "\\(equation\\|multline\\)\\b"
+  "*Regexp of math-envname which has only one math-expression.")
 (defvar YaTeX::ref-enumerateenv-regexp
   "enumerate")
+(defvar YaTeX::ref-nestable-counter-regexp
+  "subequations")
 
 (defvar YaTeX::ref-labeling-section-level 2
   "*ref補完で収集するセクショニングコマンドの下限レベル
 YaTeX-sectioning-levelの数値で指定.")
 
-(defun YaTeX::ref (argp &optional labelcmd refcmd)
+(defun YaTeX::ref (argp &optional labelcmd refcmd predf)
   (setplist 'YaTeX::ref-labeling-regexp nil) ;erase memory cache
   (require 'yatexsec)
   (cond
    ((= argp 1)
-    (let*((lnum 0) e0 x cmd label match-point point-list boundary
+    (let*((lnum 0) m0 e0 x cmd label match-point point-list boundary
 	  (buf (current-buffer))
 	  (llv YaTeX::ref-labeling-section-level)
-	  (mathenvs YaTeX::ref-mathenv-regexp)
+	  (mathenvs YaTeX::ref-mathenv-regexp) envname endrx
 	  (enums YaTeX::ref-enumerateenv-regexp)
 	  (counter
 	   (or labelcmd
@@ -631,7 +786,12 @@ YaTeX-sectioning-levelの数値で指定.")
 			YaTeX-sectioning-level))
 		 "\\|")
 		"\\|caption\\(\\[[^]]+\\]\\)?\\|footnote\\){"
-		"\\|\\(begin{\\(" mathenvs "\\|" enums  "\\)\\)\\)")))
+		"\\|\\(begin{\\(" mathenvs "\\|" enums  "\\)}\\)"
+		(if YaTeX-use-AMS-LaTeX
+		    (concat
+		     "\\|\\(begin{"
+		     YaTeX::ref-nestable-counter-regexp "}\\)"))
+		"\\)")))
 	  (regexp (concat "\\(" counter
 			  "\\)\\|\\(" YaTeX::ref-labeling-regexp "\\)"))
 	  (itemsep (concat YaTeX-ec-regexp
@@ -642,9 +802,9 @@ YaTeX-sectioning-levelの数値で指定.")
 	  (output
 	   (function
 	    (lambda (label p)
-	      (while (setq x (string-match "\n" label))
+	      (while (setq x (string-match "[\n\t]" label))
 		(aset label x ? ))
-	      (while (setq x (string-match "[ \t\n][ \t\n]+" label))
+	      (while (setq x (string-match "  +" label))
 		(setq label (concat
 			     (substring label 0 (1+ (match-beginning 0)))
 			     (substring label (match-end 0)))))
@@ -652,6 +812,7 @@ YaTeX-sectioning-levelの数値で指定.")
 	      (setq point-list (cons p point-list))
 	      (message "Collecting labels... %d" lnum)
 	      (setq lnum (1+ lnum)))))
+	  (me (if (boundp 'me) me 'YaTeX::ref))
 	  )
       (message "Collecting labels...")
       (save-window-excursion
@@ -665,12 +826,16 @@ YaTeX-sectioning-levelの数値で指定.")
 	      (set-buffer buf)))
 	(save-excursion
 	  (set-buffer (get-buffer-create YaTeX-label-buffer))
+	  (condition-case ()
+	      (if (and YaTeX-use-font-lock (fboundp 'font-lock-mode))
+		  (font-lock-mode 1))
+	    (error nil))
 	  (setq buffer-read-only nil)
 	  (erase-buffer))
 	(save-excursion
 	  (set-buffer buf)
 	  (goto-char (point-min))
-	  (let ((standard-output (get-buffer YaTeX-label-buffer)))
+	  (let ((standard-output (get-buffer YaTeX-label-buffer)) existlabel)
 	    (princ (format "=== LABELS in [%s] ===\n" (buffer-name buf)))
 	    (while (YaTeX-re-search-active-forward
 		    regexp ;;counter
@@ -678,28 +843,118 @@ YaTeX-sectioning-levelの数値で指定.")
 	      ;(goto-char (match-beginning 0))
 	      (setq e0 (match-end 0))
 	      (cond
+	       ;; 
+	       ;;2005/10/21 Skip it if predicate function returns nil
+	       ((and predf
+		     (let ((md (match-data)))
+		       (prog1
+			   (condition-case nil
+			       (not (funcall predf))
+			     (error nil))
+			 (store-match-data md)))))
 	       ((YaTeX-literal-p) nil)
 	       ((YaTeX-match-string 1)
 		;;if standard counter commands found 
-		(setq cmd (YaTeX-match-string 2))
+		(setq cmd (YaTeX-match-string 2)
+		      m0 (match-beginning 0))
 		(setq match-point (match-beginning 0))
 		(or initl
 		    (if (< p (point)) (setq initl lnum)))
 		(cond
+		 ;; In any case, variables e0 should be set
+		 ((and YaTeX-use-AMS-LaTeX
+		       (string-match YaTeX::ref-nestable-counter-regexp cmd))
+		  (let (label)
+		    (skip-chars-forward "}")
+		    (setq label (buffer-substring
+				 (point) (min (+ 80 (point)) (point-max))))
+		    ;; to skip (maybe)auto-generated comment
+		    (skip-chars-forward " \t")
+		    (if (looking-at YaTeX-comment-prefix)
+			(forward-line 1))
+		    (setq e0 (point))
+		    (skip-chars-forward " \t\n")
+		    (if (looking-at "\\\\label{\\([^}]+\\)}")
+			(setq label (format "(labe:%s)" (YaTeX-match-string 1))
+			      e0 (match-end 1)))
+		    (funcall output (format "--subequation--%s" label) e0)))
 		 ((string-match mathenvs cmd) ;;if matches mathematical env
 		  ;(skip-chars-forward "} \t\n")
-		  (forward-line 1)
-		  (setq x (point))
-		  (catch 'scan
-		    (while (YaTeX-re-search-active-forward
-			    (concat "\\\\\\\\$\\|\\\\end{\\(" mathenvs "\\)")
-			    percent nil t)
-		      (let ((quit (match-beginning 1)))
-			(funcall output
-				 (buffer-substring x (match-beginning 0))
-				 x)
-			(if quit (throw 'scan t)))
-		      (setq x (point))))
+		  ;(forward-line 1) ;2004/1/25
+		  (skip-chars-forward "}")
+		  (setq x (point)
+			envname (substring
+				 cmd (match-beginning 0) (match-end 0)))
+		  (save-restriction
+		    (narrow-to-region
+		     m0
+		     (save-excursion
+		       (YaTeX-re-search-active-forward
+			(setq endrx (format "%send{%s}" YaTeX-ec-regexp
+					    (regexp-quote envname)))
+			percent nil t)))
+		    (catch 'scan
+		      (while (YaTeX-re-search-active-forward
+			      (concat
+			       "\\\\end{\\(" (regexp-quote envname) "\\)";;(1)
+			       (if YaTeX-use-AMS-LaTeX
+				   "\\|\\\\\\(notag\\)") ;;2
+			       (if (string-match
+				    YaTeX::ref-mathenv-exp1-regexp  cmd)
+				   "" "\\|\\\\\\\\$")
+			       )
+			      percent nil t)
+			(let*((quit (match-beginning 1))
+			      (notag (match-beginning 2))
+			      (label ".......................") l2
+			      (e (point)) (m0 (match-beginning 0))
+			      (ln (YaTeX-string-width label)))
+			  (cond
+			   (notag
+			    (YaTeX-re-search-active-forward
+			     "\\\\\\\\" percent nil 1)
+			    (setq x (point)))
+			   (t
+			    (if (YaTeX-re-search-active-backward
+				 YaTeX::ref-labeling-regexp
+				 percent x t)
+				;; if \label{x} in math-expression, display it
+				;; because formula source is hard to recognize
+				(progn
+				  (goto-char (match-end 0))
+				  (setq l2 (format "\"label:%s\""
+						   (buffer-substring
+						    (1- (point))
+						    (progn (forward-sexp -1)
+							   (1+ (point))))))
+				  (setq label
+					(if (< (YaTeX-string-width l2) ln)
+					    (concat
+					     l2
+					     (substring
+					      label
+					      0 (- ln (YaTeX-string-width l2))))
+					  l2))
+				  (goto-char e)))
+			    (funcall output
+				     (concat
+				      label " "
+				      (buffer-substring x m0))
+				     x)
+			    (cond
+			     ((YaTeX-quick-in-environment-p
+			       YaTeX-math-gathering-list)
+			      ;; if here is inner split/cases/gathered env.,
+			      ;; counter for here is only one.
+			      ;; Go out this environment and,
+			      (YaTeX-end-of-environment)
+			      ;; search next expression unit boundary.
+			      (YaTeX-re-search-active-forward
+			       (concat endrx "\\|\\\\begin{")
+			       percent nil 1)
+			      (end-of-line)))
+			    (if quit (throw 'scan t)))))
+			(setq x (point)))))
 		  (setq e0 (point)))
 		 ((string-match enums cmd)
 		  ;(skip-chars-forward "} \t\n")
@@ -715,15 +970,51 @@ YaTeX-sectioning-levelの数値で指定.")
 		      (setq x (match-beginning 0))
 		      (funcall
 		       output
-		       (buffer-substring
-			(match-beginning 0)
-			(if (re-search-forward itemsep nil t)
-			    (progn (goto-char (match-beginning 0))
-				   (skip-chars-backward " \t")
-				   (1- (point)))
-			  (point-end-of-line)))
+		       (concat
+			existlabel
+			(buffer-substring
+			 (match-beginning 0)
+			 (if (re-search-forward itemsep nil t)
+			     (progn (goto-char (match-beginning 0))
+				    (skip-chars-backward " \t")
+				    (1- (point)))
+			   (point-end-of-line))))
 		       x))
 		    (setq e0 (point-max))))
+		 ((string-match "bibitem" cmd) ;maybe generated by myself
+		  (setq label "")
+		  (skip-chars-forward " \t")
+		  (if (looking-at "{")	;sure to be true!!
+		      (forward-list 1))
+		  (let ((list '(30 10 65))
+			(delim ";") q lim len l str)
+		    (save-excursion
+		      (setq lim (if (re-search-forward itemsep nil 1)
+				    (match-beginning 0) (point))))
+		    (while list
+		      (skip-chars-forward " \t\n\\")
+		      (setq q (looking-at "[\"'{]")
+			    len (car list)
+			    str
+			    (buffer-substring
+			     (point)
+			     (progn
+			       (if q (forward-sexp 1)
+				 (search-forward delim lim 1)
+				 (forward-char -1))
+			       (point))))
+		      (if (> (setq l (YaTeX-string-width str)) len)
+			  (setq str (concat
+				     (YaTeX-truncate-string-width
+				      str (- len (if q 5 4)))
+				     "... "
+				     (if q (substring str -1)))))
+		      (if (< (setq l (YaTeX-string-width str)) len)
+			  (setq str (concat str (make-string (- len l) ? ))))
+		      (if (looking-at delim) (goto-char (match-end 0)))
+		      (setq label (concat label " " str)
+			    list (cdr list)))
+		    (funcall output label match-point)))
 		 ;;else, simple section-type counter
 		 ((= (char-after (1- (point))) ?{)
 		  (setq label (buffer-substring
@@ -733,6 +1024,8 @@ YaTeX-sectioning-levelの数値で指定.")
 				      (point))))
 		  (funcall output label match-point)
 		  ;; Skip preceding label if exists
+		  (if (YaTeX::ref-getset-label (current-buffer) match-point t)
+		      (goto-char (get 'YaTeX::ref-getset-label 'foundpoint)))
 		  (if (save-excursion
 			(skip-chars-forward "\t \n")
 			(looking-at YaTeX::ref-labeling-regexp))
@@ -819,14 +1112,45 @@ YaTeX-sectioning-levelの数値で指定.")
 	label)))))
 
 (fset 'YaTeX::pageref 'YaTeX::ref)
+(defun YaTeX::tabref (argp)	    ; For the style file of IPSJ journal
+  (YaTeX::ref
+   argp nil nil
+   (function
+    (lambda ()
+      (YaTeX-quick-in-environment-p "table")))))
+(defun YaTeX::figref (argp)	    ; For the style file of IPSJ journal
+  (YaTeX::ref
+   argp nil nil
+   (function
+    (lambda ()
+      (YaTeX-quick-in-environment-p "figure")))))
 
-(defun YaTeX::cite-collect-bibs-external (&rest files)
-  "Collect bibentry from FILES(variable length argument);
+(defun YaTeX::cite-collect-bibs-external (bibptn &rest files)
+  "Collect bibentry from FILES(variable length argument) ;
 and print them to standard output."
   ;;Thanks; http://icarus.ilcs.hokudai.ac.jp/comp/biblio.html
-  (let ((tb (get-buffer-create " *bibtmp*")))
+  (let*((tb (get-buffer-create " *bibtmp*"))
+	(bibitemsep "^\\s *@[A-Za-z]")
+	(target (if (string< "" bibptn) bibptn bibitemsep))
+	(checkrx (concat "\\(" bibptn "\\)\\|" bibitemsep))
+	beg
+	(searchnext
+	 (if (string< "" bibptn)
+	     (function
+	      (lambda()
+		(setq beg (point))
+		(and
+		 (prog1
+		     (re-search-forward target nil t)
+		   (end-of-line))
+		 (re-search-backward bibitemsep beg t))))
+	   (function
+	    (lambda()
+	      (re-search-forward target nil t)))))
+	)
     (save-excursion
       (set-buffer tb)
+      (princ (format "%sbegin{thebibliography}\n" YaTeX-ec))
       (while files
 	(erase-buffer)
 	(cond
@@ -836,8 +1160,9 @@ and print them to standard output."
 	  (insert-file-contents (concat (car files) ".bib"))))
 	(save-excursion
 	  (goto-char (point-min))
-	  (while (re-search-forward "^\\s *@[A-Za-z]" nil t)
+	  (while (funcall searchnext)
 	    (skip-chars-forward "^{,")
+	    (setq beg (point))
 	    (if (= (char-after (point)) ?{)
 		(princ (format "%sbibitem{%s}%s\n"
 			       YaTeX-ec
@@ -845,39 +1170,64 @@ and print them to standard output."
 				(1+ (point))
 				(progn (skip-chars-forward "^,\n")
 				       (point)))
-			       (if (re-search-forward "title\\s *=" nil t)
-				   (buffer-substring
-				    (progn
-				      (goto-char (match-end 0))
-				      (skip-chars-forward " \t\n")
-				      (point))
-				    (progn
-				      (if (looking-at "[{\"]")
-					  (forward-sexp 1)
-					(forward-char 1)
-					(skip-chars-forward "^,"))
-				      (point)))))))))
-	(setq files (cdr files))))))
+			       (mapconcat
+				(function
+				 (lambda (kwd)
+				   (goto-char beg)
+				   (if (re-search-forward
+					(concat kwd "\\s *=") nil t)
+				       (buffer-substring
+					(progn
+					  (goto-char (match-end 0))
+					  (skip-chars-forward " \t\n")
+					  (point))
+					(progn
+					  (if (looking-at "[{\"]")
+					      (forward-sexp 1)
+					    (forward-char 1)
+					    (skip-chars-forward "^,}"))
+					  (point))))))
+				'("author" "year" "title" )
+				";"))))
+	    (and (re-search-forward bibitemsep nil t)
+		 (forward-line -1))))
+	(setq files (cdr files)))
+      (princ (format "%sbegin{thebibliography}\n" YaTeX-ec)))))
 
 (defvar YaTeX::cite-bibitem-macro-regexp "bibitem\\|harvarditem"
   "*Regexp of macro name of bibitem definition")
 
-(defun YaTeX::cite-collect-bibs-internal ()
+(defun YaTeX::cite-collect-bibs-internal (bibptn)
   "Collect bibentry in the current buffer and print them to standard output."
   (let ((ptn (concat YaTeX-ec-regexp
 		     "\\(" YaTeX::cite-bibitem-macro-regexp "\\)\\b"))
+	(lim (concat YaTeX-ec-regexp
+		     "\\(" YaTeX::cite-bibitem-macro-regexp "\\b\\)"
+		     "\\|\\(end{\\)"))
 	(pcnt (regexp-quote YaTeX-comment-prefix)))
+    ;; Using bibptn not yet implemented.
+    ;; Do you need it?? 2005/11/22
     (save-excursion
       (while (YaTeX-re-search-active-forward ptn pcnt nil t)
 	(skip-chars-forward "^{\n")
 	(or (eolp)
-	    (princ (format "%sbibitem{%s}\n"
+	    (princ (format "%sbibitem%s %s\n"
 			   YaTeX-ec
 			   (buffer-substring
-			    (1+ (point))
-			    (progn (forward-sexp 1) (point))))))))))
+			    (point)
+			    (progn (forward-sexp 1) (point)))
+			   (buffer-substring
+			    (progn (skip-chars-forward "\n \t") (point))
+			    (save-excursion
+			      (if (YaTeX-re-search-active-forward
+				   lim pcnt nil t)
+				  (progn
+				    (goto-char (match-beginning 0))
+				    (skip-chars-backward "\n \t")
+				    (point))
+				(point-end-of-line)))))))))))
 
-(defun YaTeX::cite (argp)
+(defun YaTeX::cite (argp &rest dummy)
   (cond
    ((eq argp 1)
     (let* ((cb (current-buffer))
@@ -886,8 +1236,10 @@ and print them to standard output."
 	   (hilit-auto-highlight nil)
 	   (pcnt (regexp-quote YaTeX-comment-prefix))
 	   (bibrx (concat YaTeX-ec-regexp "bibliography{\\([^}]+\\)}"))
+	   (bibptn (read-string "Pattern: "))
 	   (bbuf (get-buffer-create " *bibitems*"))
 	   (standard-output bbuf)
+	   (me 'YaTeX::cite)		;shuld set this for using YaTeX::ref
 	   bibs files)
       (set-buffer bbuf)(erase-buffer)(set-buffer cb)
       (save-excursion
@@ -895,10 +1247,11 @@ and print them to standard output."
 	;;(1)search external bibdata
 	(while (YaTeX-re-search-active-forward bibrx pcnt nil t)
 	  (apply 'YaTeX::cite-collect-bibs-external
+		 bibptn
 		 (YaTeX-split-string
 		  (YaTeX-match-string 1) ",")))
 	;;(2)search direct \bibitem usage
-	(YaTeX::cite-collect-bibs-internal)
+	(YaTeX::cite-collect-bibs-internal bibptn)
 	(if (progn
 	      (YaTeX-visit-main t)
 	      (not (eq (current-buffer) cb)))
@@ -907,12 +1260,15 @@ and print them to standard output."
 	      ;;(1)search external bibdata
 	      (while (YaTeX-re-search-active-forward bibrx pcnt nil t)
 		(apply 'YaTeX::cite-collect-bibs-external
+		       bibptn
 		       (YaTeX-split-string
 			(YaTeX-match-string 1) ",")))
 	      ;;(2)search internal
-	      (YaTeX::cite-collect-bibs-internal)))
+	      (YaTeX::cite-collect-bibs-internal bibptn)))
 	;;Now bbuf holds the list of bibitem
 	(set-buffer bbuf)
+	;;;(switch-to-buffer bbuf)
+	(if (fboundp 'font-lock-fontify-buffer) (font-lock-fontify-buffer))
 	(YaTeX::ref
 	 argp 
 	 (concat "\\\\\\("
@@ -929,6 +1285,8 @@ and print them to standard output."
 (fset 'YaTeX::possessivecite 'YaTeX::cite)
 (fset 'YaTeX::citeyear 'YaTeX::cite)
 (fset 'YaTeX::citename 'YaTeX::cite)
+(fset 'YaTeX::citep 'YaTeX::cite)
+(fset 'YaTeX::citet 'YaTeX::cite)
 
 (defun YaTeX-yatex-buffer-list ()
   (save-excursion
@@ -982,7 +1340,7 @@ and print them to standard output."
      ((null rv) "")
      (t
       (set-buffer rv)
-      (YaTeX::ref argp labelcmd refcmd)))))
+      (funcall me argp labelcmd refcmd)))))
 
 ;;
 ; completion for the arguments of \newcommand
@@ -1018,6 +1376,12 @@ and print them to standard output."
       (message "")
       def				;return command name
       ))
+   (t "")))
+
+(defun YaTeX::newcounter (&optional argp)
+  (cond
+   ((= argp 1)
+    (read-string "New counter name: "))
    (t "")))
 
 ;;
@@ -1159,16 +1523,6 @@ and print them to standard output."
 (defvar YaTeX:documentstyle-options-local nil
   "List of LaTeX local documentstyle options.")
 
-(defvar YaTeX-minibuffer-completion-map nil
-  "Minibuffer completion key map that allows comma completion.")
-(if YaTeX-minibuffer-completion-map nil
-  (setq YaTeX-minibuffer-completion-map
-	(copy-keymap minibuffer-local-completion-map))
-  (define-key YaTeX-minibuffer-completion-map " "
-    'YaTeX-minibuffer-complete)
-  (define-key YaTeX-minibuffer-completion-map "\t"
-    'YaTeX-minibuffer-complete))
-
 (defun YaTeX:documentstyle ()
   (let*((delim ",")
 	(dt (append YaTeX:documentstyle-options-local
@@ -1209,6 +1563,16 @@ and print them to standard output."
 	    'YaTeX:documentstyles-local)))
       (if (string= "" sname) (setq sname YaTeX-default-document-style))
       (setq YaTeX-default-document-style sname)))))
+
+(defun YaTeX::include (argp &optional prompt)
+  (cond
+   ((= argp 1)
+    (let*((insert-default-directory)
+	  (file (read-file-name (or prompt "Input file: ") "")))
+      (setq file (substring file 0 (string-match "\\.tex$" file)))))))
+
+(fset 'YaTeX::input 'YaTeX::include)
+
 
 ;;; -------------------- LaTeX2e stuff --------------------
 (defvar YaTeX:documentclass-options-default
@@ -1325,6 +1689,8 @@ and print them to standard output."
 (fset 'YaTeX:colorbox 'YaTeX:textcolor)
 (fset 'YaTeX::colorbox 'YaTeX::textcolor)
 (fset 'YaTeX:fcolorbox 'YaTeX:textcolor)
+(fset 'YaTeX:pagecolor 'YaTeX:textcolor)
+(fset 'YaTeX::pagecolor 'YaTeX::textcolor)
 
 (defun YaTeX::fcolorbox (argp)
   (cond
@@ -1333,13 +1699,45 @@ and print them to standard output."
    ((= argp 3) (read-string "Colored string: "))))
 
 (defun YaTeX:scalebox ()
-  "Add-in for \\rotatebox"
-  (let ((vmag (read-string (if YaTeX-japan "倍率: " "Magnification: ")))
-	(hmag (read-string (if YaTeX-japan "横倍率(省略可): "
-			     "Horizontal magnification(Optional): "))))
+  "Add-in for \\scalebox"
+  (let ((vmag (read-string
+	       (if YaTeX-japan "倍率(負で反転): "
+		 "Magnification(Negative for flipped): ")))
+	(hmag (read-string (if YaTeX-japan "縦倍率(省略可): "
+			     "Vertical magnification(Optional): "))))
     (if (and hmag (string< "" hmag))
 	(format "{%s}[%s]" vmag hmag)
       (format "{%s}" vmag))))
+
+(defun YaTeX:rotatebox ()
+  "Optional argument add-in for \\rotatebox"
+  (message "Rotate origin? (N)one (O)rigin (X)-Y: ")
+  (let ((c (read-char)) r (defx "x=mm") x (defy "y=mm") y something)
+    (cond
+     ((memq c '(?O ?o))
+      (if (string< "" (setq r (YaTeX:read-oneof "htbpB")))
+	  (concat "[origin=" r "]")))
+     ((memq c '(?X ?x ?Y ?y))
+      (setq r (read-string "" (if YaTeX-emacs-19 (cons defx 3) defx))
+	    x (if (string< "x=" r) r)
+	    r (read-string "" (if YaTeX-emacs-19 (cons defy 3) defy))
+	    y (if (string< "y=" r) r)
+	    something (or x y))
+      (format "%s%s%s%s%s"
+	      (if something "[" "")
+	      (if x x "")
+	      (if (and x y) "," "")
+	      (if y y "")
+	      (if something "]" ""))))))
+
+(defun YaTeX::rotatebox (argp)
+  "Argument add-in for \\rotatebox"
+  (cond
+   ((= argp 1)
+    (read-string (if YaTeX-japan "回転角(度; 左回り): "
+		   "Angle in degree(unclockwise): ")))
+   ((= argp 2)
+	(read-string (if YaTeX-japan "テキスト: " "Text: ")))))
 
 (defun YaTeX:includegraphics ()
   "Add-in for \\includegraphics's option"
@@ -1364,21 +1762,21 @@ and print them to standard output."
 
 (defun YaTeX::includegraphics (argp)
   "Add-in for \\includegraphics"
-  (cond
-   ((= argp 1)
-    (read-file-name "EPS File: " ""))))
+  (YaTeX::include argp "Image File: "))
  
 (defun YaTeX:caption ()
   (setq YaTeX-section-name "label")
   nil)
+
 
 (defvar YaTeX::usepackage-alist-default
   '(("version") ("plext") ("url") ("fancybox") ("pifont") ("longtable")
     ("ascmac") ("bm") ("graphics") ("graphicx") ("alltt") ("misc") ("eclbkbox")
     ("amsmath") ("amssymb") ("xymtex") ("chemist")
     ("a4j") ("array") ("epsf") ("color") ("epsfig") ("floatfig")
-    ("landscape") ("path") ("supertabular") ("twocolumn"))
-  "Default completion table for arguments of \usepackage")
+    ("landscape") ("path") ("supertabular") ("twocolumn")
+    ("latexsym") ("times") ("makeidx"))
+  "Default completion table for arguments of \\usepackage")
 
 (defvar YaTeX::usepackage-alist-private nil
   "*Private completion list of the argument for usepackage")
@@ -1390,11 +1788,14 @@ and print them to standard output."
   (cond
    ((equal argp 1)
     (setq YaTeX-env-name "document")
-    (YaTeX-cplread-with-learning
-     "Use package: "
-     'YaTeX::usepackage-alist-default
-     'YaTeX::usepackage-alist-private
-     'YaTeX::usepackage-alist-local))))
+    (let ((minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
+	  (delim ","))
+      (YaTeX-cplread-with-learning
+       (if YaTeX-japan "Use package(カンマで区切ってOK): "
+	 "Use package(delimitable by comma): ")
+       'YaTeX::usepackage-alist-default
+       'YaTeX::usepackage-alist-private
+       'YaTeX::usepackage-alist-local)))))
 
 (defun YaTeX::mask (argp)
   (cond
@@ -1422,8 +1823,20 @@ and print them to standard output."
    ((equal argp 4)
     (YaTeX:read-oneof "lcr" 'quick))
    ((equal argp 5)
-    (read-string "String: "))
-))
+    (read-string "String: "))))
+
+(defun YaTeX::textcircled (argp)
+  (cond
+   ((equal argp 1)
+    (let ((char (read-string "Circled char: "))
+	  (left "") (right "") c)
+      (setq c (read-char
+	       "Enclose also with (s)mall (t)iny s(C)riptsize (N)one:"))
+      (cond
+       ((memq c '(?s ?S)) (setq left "{\\small " right "}"))
+       ((memq c '(?t ?T)) (setq left "{\\tiny " right "}"))
+       ((memq c '(?c ?C)) (setq left "{\\scriptsize " right "}")))
+      (format "%s%s%s" left char right)))))
 
 ;;; -------------------- math-mode stuff --------------------
 (defun YaTeX::tilde (&optional pos)
@@ -1509,6 +1922,11 @@ and print them to standard output."
 		(YaTeX-kill-paren nil))))))
   (message ""))
 
+(defun YaTeX::DeclareMathOperator (argp)
+  (cond
+   ((equal argp 1)
+    (read-string "Operator: " "\\"))))
+
 ;;;
 ;; Add-in functions for large-type command.
 ;;;
@@ -1524,5 +1942,5 @@ and print them to standard output."
 ; fill-prefix: ";;; "
 ; paragraph-start: "^$\\|\\|;;;$"
 ; paragraph-separate: "^$\\|\\|;;;$"
-; buffer-file-coding-system: sjis
+; coding: sjis
 ; End:

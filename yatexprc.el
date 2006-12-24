@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c)1993-2003 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Nov  2 08:09:44 2003 on firestorm
+;;; (c)1993-2006 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sun Dec 24 15:12:50 2006 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -37,6 +37,7 @@
 ;;    ((boundp 'NEMACS)
 ;;     (cdr (assq (if YaTeX-dos 1 2) YaTeX-kanji-code-alist))))
   (cond
+   (YaTeX-dos (cdr (assq 1 YaTeX-kanji-code-alist)))
    (YaTeX-emacs-20
     (cdr (assoc latex-message-kanji-code YaTeX-kanji-code-alist)))
    ((boundp 'MULE)
@@ -317,7 +318,11 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
   (YaTeX-typeset
    (read-string-with-history
     "Call command: "
-    (concat base-cmd " " (YaTeX-get-preview-file-name))
+    (concat base-cmd " "
+	    (let ((me (file-name-nondirectory buffer-file-name)))
+	      (if (string-match "\\.tex" me)
+		  (substring me 0 (match-beginning 0))
+		me)))
     'YaTeX-call-command-history)
    buffer))
 
@@ -429,12 +434,13 @@ PROC should be process identifier."
 		  (YaTeX-get-paper-type)))
      'YaTeX-preview-command-history)
     (read-string-with-history
-     "Preview file[.dvi]: "
+     "Preview file: "
      (if (get 'dvi2-command 'region)
 	 (substring YaTeX-texput-file
 		    0 (rindex YaTeX-texput-file ?.))
        (YaTeX-get-preview-file-name))
      'YaTeX-preview-file-history)))
+  (if YaTeX-dos (setq preview-file (expand-file-name preview-file)))
   (setq dvi2-command preview-command)	;`dvi2command' is buffer local
   (save-excursion
     (YaTeX-visit-main t)
@@ -511,7 +517,7 @@ by region."
 error or warning lines in reverse order."
   (interactive)
   (let ((cur-buf (buffer-name)) (cur-win (selected-window))
-	error-line typeset-win error-buffer error-win)
+	b0 errorp error-line typeset-win error-buffer error-win)
     (if (null (get-buffer YaTeX-typeset-buffer))
 	(error "There is no typesetting buffer."))
     (YaTeX-showup-buffer YaTeX-typeset-buffer nil t)
@@ -520,10 +526,10 @@ error or warning lines in reverse order."
 	 (concat "\\(" latex-error-regexp "\\)\\|\\("
 		 latex-warning-regexp "\\)")
 	 nil t)
-	nil
+	(setq errorp (match-beginning 1))
       (select-window cur-win)
       (error "No more errors on %s" cur-buf))
-    (goto-char (match-beginning 0))
+    (goto-char (setq b0 (match-beginning 0)))
     (skip-chars-forward "^0-9" (match-end 0))
     (setq error-line
 	  (string-to-int
@@ -545,13 +551,13 @@ error or warning lines in reverse order."
     (setq error-win (selected-window))
     (goto-line error-line)
     (message "LaTeX %s in `%s' on line: %d."
-	     (if (match-beginning 1) "error" "warning")
+	     (if errorp "error" "warning")
 	     error-buffer error-line)
     (select-window typeset-win)
     (skip-chars-backward "0-9")
     (recenter (/ (window-height) 2))
     (sit-for 1)
-    (goto-char (match-beginning 0))
+    (goto-char b0)
     (select-window error-win)))
 
 (defun YaTeX-jump-error-line ()
@@ -653,18 +659,27 @@ error or warning lines in reverse order."
 	(delete-matching-lines "^\\\\nonstopmode\\{\\}%_YaTeX_%$")
 	(widen))))
 
+(defvar YaTeX-dvi2-command-ext-alist
+ '(("[agx]dvi\\|dviout" . ".dvi")
+   ("ghostview\\|gv" . ".ps")
+   ("acroread\\|pdf\\|Preview\\|TeXShop" . ".pdf")))
+
 (defun YaTeX-get-preview-file-name ()
   "Get file name to preview by inquiring YaTeX-get-latex-command"
   (let* ((latex-cmd (YaTeX-get-latex-command t))
 	 (rin (rindex latex-cmd ? ))
 	 (fname (if (> rin -1) (substring latex-cmd (1+ rin)) ""))
+	 (r (YaTeX-assoc-regexp dvi2-command YaTeX-dvi2-command-ext-alist))
+	 (ext (if r (cdr r) ""))
 	 (period))
-    (if (string= fname "")
+    (concat
+     (if (string= fname "")
 	(setq fname (substring (file-name-nondirectory
 				(buffer-file-name))
 			       0 -4))
       (setq period (rindex fname ?.))
-      (setq fname (substring fname 0 (if (eq -1 period) nil period))))))
+      (setq fname (substring fname 0 (if (eq -1 period) nil period))))
+     ext)))
 
 (defun YaTeX-get-latex-command (&optional switch)
   "Specify the latex-command name and its argument.
@@ -680,21 +695,27 @@ is non-nil, then
 	\"jlatex main.tex\"
 
 will be given to the shell."
-  (let (magic command target)
+  (let (parent tparent magic)
     (setq parent
 	  (cond
-	   (YaTeX-parent-file YaTeX-parent-file)
+	   (YaTeX-parent-file
+	    (if YaTeX-dos (expand-file-name YaTeX-parent-file)
+	      YaTeX-parent-file))
 	   (t (save-excursion
 		(YaTeX-visit-main t)
 		(file-name-nondirectory (buffer-file-name)))))
-	  magic (YaTeX-get-builtin "!"))
-    (cond
-     (magic
-      (cond
-       (switch (if (string-match "\\s " magic) magic
-		 (concat magic " " parent)))
-       (t (concat (substring magic 0 (string-match "\\s " magic)) " "))))
-     (t (concat tex-command " " (if switch parent))))))
+	  magic (YaTeX-get-builtin "!")
+	  tparent (file-name-nondirectory parent))
+    (YaTeX-replace-formats
+     (cond
+      (magic
+       (cond
+	(switch (if (string-match "\\s " magic) magic
+		  (concat magic " " parent)))
+	(t (concat (substring magic 0 (string-match "\\s " magic)) " "))))
+      (t (concat tex-command " " (if switch parent))))
+     (list (cons "f" tparent)
+	   (cons "r" (substring tparent 0 (rindex tparent ?.)))))))
 
 (defvar YaTeX-lpr-command-history nil
   "Holds command line history of YaTeX-lpr.")
@@ -813,8 +834,9 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
        ;;((and main-file (YaTeX-switch-to-buffer main-file setbuf)))
        ((and main-file
 	     (file-exists-p (setq main-file (concat "../" main-file)))
-	     (y-or-n-p (concat (expand-file-name main-file)
-			       " is main file?:")))
+	     (or b-in
+		 (y-or-n-p (concat (expand-file-name main-file)
+				   " is main file?:"))))
 	(setq YaTeX-parent-file main-file)
 	;(YaTeX-switch-to-buffer main-file setbuf)
 	(funcall ff main-file)
@@ -851,7 +873,7 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
     (if (and (re-search-forward
 	      (concat "^" (regexp-quote (concat "%#" key))) nil t)
 	     (not (eolp)))
-	(buffer-substring
+	(YaTeX-buffer-substring
 	 (progn (skip-chars-forward " 	" (point-end-of-line))(point))
 	 (point-end-of-line))
       nil)))

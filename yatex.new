@@ -1,6 +1,49 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.73	=== yatex ===
+	C-i (YaTeX-indent-line) のtabular/array環境対応。行頭位置の
+	tabular的カラム位置に応じてインデントの深さを4桁ずつ深くする。
+	深くする桁数を制御する変数 YaTeX-tabular-indentation 新設。
+	\ref補完で出る一覧で数式は\label文字列も出すようにした。
+	\ref補完で自動的に生成するラベル名を短くした。カスタマイズも可。
+	生成するラベル名の書式を変える変数YaTeX-ref-default-label-string新設。
+	ラベル名生成関数そのものは YaTeX-ref-generate-label-function で変更可。
+	AMS-LaTeX独自のカウンタつき数式環境も全てref補完でlabel打ち可能
+	な場所を検出できるようにした。
+	AMS-LaTeX独自の数式環境でのお任せ改行サポート。
+	tabularのお任せ改行で *{N}{REP} もカラム数を取れるようにした。
+	verbatim環境/alltt環境宣言はTABインデントで行頭に来るようにした。
+	インデントなしの環境宣言を決める変数 YaTeX-noindent-env-regexp 新設。
+	[prefix] c, [prefix] g などがセクション型マクロの英字のみの引数
+	で動かないのを修正。
+	先回りusepackageでパッケージのオプションを確認できるようにした。
+	[prefix] k でセクション型マクロの引数の数を考慮して消すようにした。
+	[prefix] k ではマクロの最後の引数の中味のみを残すようにした。
+	[prefix] S ではリジョンをセクション型マクロの最後の引数に括り入
+	れるようにしてそれ以前の引数入力にアドイン関数を呼ぶようにした。
+	数式モード内の _添字 ^上字 を変えるfaceを作成。とりあえず色だけ
+	変えるようにした(Emacs21.4なら上下にスライドできるだろう)。
+	変数 YaTeX-dvi2-command-ext-alist 新設。Previewerコマンドと、そ
+	れでPreviewするファイルのデフォルト拡張子を指定できるようにした。
+	tabular中のカラム内に\begin\endがある場合はfill-paragraph境界を
+	そこまでに絞るようにした。
+	\cite上での[prefix] g で\bibliography{}で指定したBibファイルの対
+	応エントリに飛べるようにした。
+
+	=== yahtml ===
+	cssの @import に対応(たぶん)。
+	class補完でクラス名をSPCで区切った複数指定の補完入力を可能に。
+	Emacs-21.3 以降のため insert-default-directory をnilに。
+	single-cmd-tableから p を削除。
+	変数 yahtml-html4-strict を新設。HTML4Strict準拠をできるだけ補助。
+	script, noscript要素の補完を追加。script要素のアドインも追加。
+	[prefix] m に <!--#include ...--> <!--#exec ...--> 補完を追加。
+	[prefix] m でもアドイン補完を呼ぶようにしたので M-C-m の<li>挿入
+	でクラス名補完が起きる。これを回避するために M-C-j にも intelligent
+	newline を割り当ててクラス名補完を飛ばせるようにした。
+	[prefix] g に universal arg を指定しても隣窓で開かないのを修正。
+
 1.72	=== yatex ===
 	YaTeX-kanji-code が nil なら coding-system に感知しない
 	補完したマクロがLaTeX2eの特定のpackageに依存している場合
