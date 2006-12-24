@@ -1,12 +1,19 @@
-$B!&!VLnD;!W$*$h$S$=$N(B Vz $B$X$N0\?"HG$G$"$k!VMkD;!W!"(BWz$B$X$N0\?"HG$G$"$k!VGr(B
-  $BD;!W$K4X$9$k>pJs8r49$N$?$a$N%a%$%j%s%0%j%9%H!V(Bfj$BLnD;$N2q!W$K@'Hs8f;22C(B
-  $B$/$@$5$$!#>\$7$/$O(B docs/qanda $B%U%!%$%k!"$^$?$O(B
-  http://www.comp.ae.keio.ac.jp/~yuuji/yatex/
-  $B$r8fMw$/$@$5$$!#(B
+Eyatex-1.69 ‚æ‚èƒoƒCƒgƒRƒ“ƒpƒCƒ‹‚µ‚È‚¢‚Ì‚ðƒfƒtƒHƒ‹ƒg‚Æ‚µ‚Ü‚µ‚½B
+  “®ì‘¬“x‚ª(”FŽ¯‚Å‚«‚È‚¢’ö“x‚É)’x‚­‚È‚è‚Ü‚·‚ªAƒCƒ“ƒXƒg[ƒ‹‚µ‚Ä‚ ‚é‘S‚Ä‚Ì
+  Emacs‚Å—˜—p‚Å‚«‚Ü‚·B‚Ù‚ñ‚Ì­‚µ‘¬‚­‚È‚é‚¾‚¯‚Å‚à‚¢‚¢AEmacs‚ÌŽí—Þ–ˆ‚É
+  ‰½‰ñ‚àƒCƒ“ƒXƒg[ƒ‹‚µ‚Ä‚à‚¢‚¢A‚ÆŽv‚¤ê‡‚Í make elc ‚µ‚Ä‚©‚ç
+  make install ‚ðs‚È‚Á‚Ä‰º‚³‚¢B
 
-$B!&(Bmakefile $B$N@hF,ItJ,$rJT=8$7!"(B
-	mule2(emacs-19) $B$r;H$&>l9g$O(B make install
-	$B$=$l0J30$N>l9g$O(B make install-nw
-  $B$K$F%P%$%H%3%s%Q%$%k$H(BLisp$B%G%#%l%/%H%j$X$N%$%s%9%H!<%k$,(B
-  $B9T$o$l$^$9(B($B$?$V$s(B... Nemacs$B$O$J$<$+$&$^$/$$$+$J$$(B)$B!#(B
-  $B>\:Y$O!"(Binstall $B%U%!%$%k$r8fMw2<$5$$!#(B
+Emakefile ‚Ìæ“ª•”•ª‚ð•ÒW‚µA
+	mule2(emacs-19), emacs20, XEmacs ‚ðŽg‚¤ê‡‚Í make install
+	‚»‚êˆÈŠO‚Ìê‡‚Í make install-nw
+  ‚É‚ÄLispƒfƒBƒŒƒNƒgƒŠ‚Ö‚ÌƒCƒ“ƒXƒg[ƒ‹‚ªs‚í‚ê‚Ü‚·B
+  Ú×‚ÍAinstall ƒtƒ@ƒCƒ‹‚ðŒä——‰º‚³‚¢B
+  Meadow ‚ðŽg‚¤l‚Í readme.meadow.j ‚àŒä——‰º‚³‚¢B
+
+Eu–ì’¹v‚¨‚æ‚Ñ‚»‚Ì Vz ‚Ö‚ÌˆÚA”Å‚Å‚ ‚éu—‹’¹vAWz‚Ö‚ÌˆÚA”Å‚Å‚ ‚éu”’
+  ’¹vAHidemaru‚Ö‚ÌˆÚA”Å‚Å‚ ‚éu”ò’¹vAxyzzy‚Ö‚ÌˆÚA”Å‚Å‚ ‚éu‰Ô’¹v
+  ‚ÉŠÖ‚·‚éî•ñŒðŠ·‚Ì‚½‚ß‚ÌƒƒCƒŠƒ“ƒOƒŠƒXƒgufj–ì’¹‚Ì‰ïv‚É¥”ñŒäŽQ‰Á‚­‚¾‚³‚¢B
+  Ú‚µ‚­‚Í docs/qanda ƒtƒ@ƒCƒ‹A‚Ü‚½‚Í
+  http://www.yatex.org/
+  ‚ðŒä——‚­‚¾‚³‚¢B
