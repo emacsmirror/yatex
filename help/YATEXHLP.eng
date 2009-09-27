@@ -1210,6 +1210,12 @@ etc.  For example, if footnotes are numbered
 *, **, etc. within pages, then \footnote[2]{...}
 produces footnote '**'.  This command does not
 step the footnote counter.
+
+If you want footnote number as marks, define as follows in preamble;
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+The next definition produces dagger marks followed by sequential number.
+\renewcommand{\thefootnote}{$\dagger$\arabic{footnote}}
 (fragile)
 
 footnotemark

@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c)1993-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 24 15:12:50 2006 on firestorm
+;;; (c)1993-2007 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu May  7 13:47:28 2009 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -313,13 +313,16 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
 (defvar YaTeX-call-command-history nil
   "Holds history list of YaTeX-call-command-on-file.")
 (put 'YaTeX-call-command-history 'no-default t)
-(defun YaTeX-call-command-on-file (base-cmd buffer)
+(defun YaTeX-call-command-on-file (base-cmd buffer &optional file)
+  "Call external command BASE-CMD int the BUFFER.
+By default, pass the basename of current file.  Optional 3rd argument
+FILE changes the default file name."
   (YaTeX-save-buffers)
   (YaTeX-typeset
    (read-string-with-history
     "Call command: "
     (concat base-cmd " "
-	    (let ((me (file-name-nondirectory buffer-file-name)))
+	    (let ((me (file-name-nondirectory (or file buffer-file-name))))
 	      (if (string-match "\\.tex" me)
 		  (substring me 0 (match-beginning 0))
 		me)))
@@ -330,7 +333,9 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
   "Pass the bibliography data of editing file to bibtex."
   (interactive)
   (YaTeX-save-buffers)
-  (YaTeX-call-command-on-file cmd "*YaTeX-bibtex*" ))
+  (let ((main (or YaTeX-parent-file
+		  (progn (YaTeX-visit-main t) buffer-file-name))))
+    (YaTeX-call-command-on-file cmd "*YaTeX-bibtex*" main)))
 
 (defun YaTeX-kill-typeset-process (proc)
   "Kill process PROC after sending signal to PROC.
@@ -423,27 +428,27 @@ PROC should be process identifier."
 (defun YaTeX-preview (preview-command preview-file)
   "Execute xdvi (or other) to tex-preview."
   (interactive
-   (list
-    (read-string-with-history
-     "Preview command: "
-     (YaTeX-replace-format
-      (or (YaTeX-get-builtin "PREVIEW") dvi2-command)
-      "p" (format (cond
-		   (YaTeX-dos "-y:%s")
-		   (t "-paper %s"))
-		  (YaTeX-get-paper-type)))
-     'YaTeX-preview-command-history)
-    (read-string-with-history
-     "Preview file: "
-     (if (get 'dvi2-command 'region)
-	 (substring YaTeX-texput-file
-		    0 (rindex YaTeX-texput-file ?.))
-       (YaTeX-get-preview-file-name))
-     'YaTeX-preview-file-history)))
-  (if YaTeX-dos (setq preview-file (expand-file-name preview-file)))
+   (let* ((command (read-string-with-history
+		    "Preview command: "
+		    (YaTeX-replace-format
+		     (or (YaTeX-get-builtin "PREVIEW") dvi2-command)
+		     "p" (format (cond
+				  (YaTeX-dos "-y:%s")
+				  (t "-paper %s"))
+				 (YaTeX-get-paper-type)))
+		    'YaTeX-preview-command-history))
+	  (file (read-string-with-history
+		 "Preview file: "
+		 (if (get 'dvi2-command 'region)
+		     (substring YaTeX-texput-file
+				0 (rindex YaTeX-texput-file ?.))
+		   (YaTeX-get-preview-file-name command))
+		 'YaTeX-preview-file-history)))
+     (list command file)))
   (setq dvi2-command preview-command)	;`dvi2command' is buffer local
   (save-excursion
     (YaTeX-visit-main t)
+    (if YaTeX-dos (setq preview-file (expand-file-name preview-file)))
     (let ((pbuffer "*dvi-preview*") (dir default-directory))
       (YaTeX-showup-buffer
        pbuffer (function (lambda (x) (nth 3 (window-edges x)))))
@@ -467,9 +472,10 @@ PROC should be process identifier."
 		      (concat preview-command " " preview-file)))
        (t				;if UNIX
 	(set-process-buffer
-	 (start-process "preview" "*dvi-preview*" shell-file-name
-			YaTeX-shell-command-option
-			(concat preview-command " " preview-file))
+	 (let ((process-connection-type nil))
+	   (start-process "preview" "*dvi-preview*" shell-file-name
+			  YaTeX-shell-command-option
+			  (concat preview-command " " preview-file)))
 	 (get-buffer pbuffer))
 	(message
 	 (concat "Starting " preview-command
@@ -662,14 +668,15 @@ error or warning lines in reverse order."
 (defvar YaTeX-dvi2-command-ext-alist
  '(("[agx]dvi\\|dviout" . ".dvi")
    ("ghostview\\|gv" . ".ps")
-   ("acroread\\|pdf\\|Preview\\|TeXShop" . ".pdf")))
+   ("acroread\\|pdf\\|Preview\\|TeXShop\\|Skim" . ".pdf")))
 
-(defun YaTeX-get-preview-file-name ()
+(defun YaTeX-get-preview-file-name (&optional preview-command)
   "Get file name to preview by inquiring YaTeX-get-latex-command"
+  (if (null preview-command) (setq preview-command dvi2-command))
   (let* ((latex-cmd (YaTeX-get-latex-command t))
 	 (rin (rindex latex-cmd ? ))
 	 (fname (if (> rin -1) (substring latex-cmd (1+ rin)) ""))
-	 (r (YaTeX-assoc-regexp dvi2-command YaTeX-dvi2-command-ext-alist))
+	 (r (YaTeX-assoc-regexp preview-command YaTeX-dvi2-command-ext-alist))
 	 (ext (if r (cdr r) ""))
 	 (period))
     (concat
@@ -780,8 +787,9 @@ page range description."
 		      YaTeX-shell-command-option cmd))
        (t
 	(set-process-buffer
-	 (start-process "print" "*dvi-printing*" shell-file-name
-			YaTeX-shell-command-option cmd)
+	 (let ((process-connection-type nil))
+	   (start-process "print" "*dvi-printing*" shell-file-name
+			  YaTeX-shell-command-option cmd))
 	 (get-buffer lbuffer))
 	(message "Starting printing command: %s..." cmd))))))
 

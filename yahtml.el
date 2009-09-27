@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2006 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Dec 24 15:12:35 2006 on firestorm
+;;; Last modified Tue Jun 16 10:11:50 2009 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.72"
@@ -235,7 +235,7 @@ Consult your site's WWW administrator.")
 
 (defvar yahtml-use-css t "*Use stylesheet or not")
 
-(defvar yahtml-image-inspection-bytes 10000 ;256
+(defvar yahtml-image-inspection-bytes 50000 ;256
   "*Number of bytes to inspect the image for geometry information")
 (defvar yahtml:img-default-alt-format "%xx%y(%sbytes)"
   "*Default format of img entity's ALT attributes.
@@ -1739,7 +1739,8 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	      "browser" pb shell-file-name yahtml-shell-command-option
 	      (format "%s \"%s\"" yahtml-www-browser href)))
        'yahtml-netscape-sentinel))
-     ((and (string-match "[Nn]etscape" yahtml-www-browser)
+     ((and (string-match
+	    "[Nn]etscape\\|[Ff]irefox\\|[Mm]ozilla" yahtml-www-browser)
 	   (not (eq system-type 'windows-nt)))
       (if (get-buffer pb)
 	  (progn (set-buffer pb) (erase-buffer) (set-buffer cb)))
@@ -2688,6 +2689,56 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 	    (open-line 1)
 	    (YaTeX-reindent c))))))
 
+(defun yahtml-intelligent-newline-table ()
+  (let ((cp (point)) (p (point)) tb rb (cols 0) th line (i 0) fmt
+	(ptn "\\(<t[dh]\\>\\)\\|<t\\(r\\|head\\|body\\)\\>"))
+    (cond
+     ((save-excursion (setq tb (YaTeX-beginning-of-environment "table")))
+      (while (and (setq rb (re-search-backward ptn tb t))
+		  (match-beginning 1))
+	(setq th (looking-at "<th"))	;Remember if first-child is tr or not
+	(goto-char (match-end 0))
+	(skip-chars-forward " \t\n")
+	(if (and (search-forward "colspan\\s *=" p t)
+		 (progn
+		   (skip-chars-forward "\"' \t\n")
+		   (looking-at "[0-9]+")))
+	    (setq cols (+ (string-to-int (YaTeX-match-string 0)) cols))
+	  (setq cols (1+ cols)))
+	(goto-char rb)
+	(setq p (point)))
+      (if (> cols 0)
+	  (message "%s columns found.  %s"
+		   cols (if YaTeX-japan "V‚µ‚¢tr(N)? ‘O‚Ìtr‚Ì•¡ŽÊ?(D)?: "
+			  "New tr?(N) or Duplicate")))
+      (cond
+       ((and (> cols 0)
+	     (memq (read-char) '(?d ?D))) ;Duplication mode
+	(setq line (YaTeX-buffer-substring (point) cp)))
+       (t				;empty cells
+	(setq line "<tr>" i 0)
+	(if (> cols 0)
+	    (while (> cols i)
+	      (setq line (concat line (if (and (= i 0) th) "<th></th>"
+					"<td></td>"))
+		    th nil i (1+ i)))
+	  (setq fmt (read-string "`th' or `td' format: " "th td td"))
+	  (while (string-match "t\\(h\\)\\|td" fmt i)
+	    (setq line (concat line (if (match-beginning 1) "<th></th>"
+				      "<td></td>"))
+		  i (match-end 0))))
+	(setq line (concat line "</tr>"))))
+      (goto-char cp)
+      (if th
+	  (message
+	   "Type `%s' to change td from/to th."
+	   (key-description (car (where-is-internal 'yahtml-change-*)))))
+      (if (string< "" line)
+	  (progn
+	    (insert line)
+	    (goto-char (+ 8 cp))
+	    (yahtml-indent-line)))))))
+
 ;;; ---------- Marking ----------
 (defun yahtml-mark-begend ()
   "Mark current tag"
@@ -2765,13 +2816,13 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 	    (setq e (point))
 	    (goto-char b)
 	    (while (re-search-forward	;‚¿‚å‚Æ‚¢‚¢‰ÁŒ¸‚ÈREGEXP
-		    "\\([a-z][-a-z0-9]*\\)?\\.\\([-a-z0-9][-a-z0-9]*\\)\\>"
+		    "\\([a-z*][-a-z0-9]*\\)?\\.\\([-a-z0-9][-a-z0-9]*\\)\\>"
 		    e t)
 	      (setq element (YaTeX-match-string 1)
 		    class (YaTeX-match-string 2))
 	      ;;if starts with period (match-string 1 is nil),
 	      ;;this is global class
-	      (setq element (downcase (or element "global")))
+	      (setq element (downcase (or element "*")))
 	      (if (setq a (assoc element alist))
 		  (or (assoc class (cdr a))
 		      (setcdr a (cons (list class) (cdr a))))
@@ -2787,13 +2838,19 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 
 (defun yahtml-css-collect-classes-file (file &optional initial)
   (let*((hilit-auto-highlight nil)
-	(openedp (get-file-buffer file))
-	(cb (current-buffer))
-	(buf (set-buffer (find-file-noselect file))))
-    (prog1
-	(yahtml-css-collect-classes-buffer initial)
-      (or openedp (kill-buffer buf))
-      (set-buffer cb))))
+	(buf (get-buffer-create
+	      (format " *css-collection*%s" (file-name-nondirectory file))))
+	(cb (current-buffer)))
+    (unwind-protect
+	(progn
+	  (set-buffer buf)
+	  (insert-file-contents file)
+	  (cd (or (file-name-directory file) "."))
+	  (yahtml-css-collect-classes-buffer initial))
+      (if (eq buf cb)
+	  nil
+	(kill-buffer buf)
+	(set-buffer cb)))))
 
 (defun yahtml-css-scan-styles ()
   (save-excursion
@@ -2825,7 +2882,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 
 (defun yahtml-css-get-element-completion-alist (element)
   (let ((alist (cdr-safe (assoc (downcase element) yahtml-css-class-alist)))
-	(global (cdr-safe (assoc "global" yahtml-css-class-alist))))
+	(global (cdr-safe (assoc "*" yahtml-css-class-alist))))
     (and (or alist global)
 	 (append alist global))))
 

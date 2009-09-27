@@ -1,15 +1,15 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.73
-;;; (c)1991-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 24 15:12:43 2006 on firestorm
+;;; yatex.el rev. 1.73.1
+;;; (c)1991-2007 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Tue Nov  6 10:17:53 2007 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.73"
+(defconst YaTeX-revision-number "1.73.1"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -383,6 +383,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("Sigma") ("Upsilon") ("Phi") ("Psi") ("Omega")))
    (if YaTeX-use-LaTeX2e
        '(("return") ("Return") ("yen")))	;defined in ascmac
+   (if YaTeX-use-AMS-LaTeX
+       '(("nonumber")))
    )
   "Default completion table for maketitle-type completion.")
 
@@ -543,7 +545,8 @@ nil: Do not care (Preserve coding-system)
 0: no-converion (mule)
 1: Shift JIS
 2: JIS
-3: EUC")
+3: EUC
+4: UTF-8")
 
 (defvar YaTeX-coding-system nil "File coding system used by Japanese TeX.")
 (cond
@@ -1454,9 +1457,9 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?j) (YaTeX-typeset-buffer))
      ((= c ?r) (YaTeX-typeset-region))
      ((= c ?b) (YaTeX-call-command-on-file
-		bibtex-command "*YaTeX-bibtex*"))
+		bibtex-command "*YaTeX-bibtex*" YaTeX-parent-file))
      ((= c ?i) (YaTeX-call-command-on-file
-		makeindex-command "*YaTeX-makeindex*"))
+		makeindex-command "*YaTeX-makeindex*" YaTeX-parent-file))
      ((= c ?k) (YaTeX-kill-typeset-process YaTeX-typeset-process))
      ((= c ?p) (call-interactively 'YaTeX-preview))
      ((= c ?q) (YaTeX-system "lpq" "*Printer queue*"))
@@ -1648,7 +1651,8 @@ looking at \\input or \\include or \includeonly on current line."
   (if (not (YaTeX-on-includes-p)) nil
     (let ((parent buffer-file-name) input-file b)
       (save-excursion
-	(if (search-forward "{" (point-end-of-line) t)
+	(if (and (re-search-forward "[{%]" (point-end-of-line) t)
+		 (= ?{ (char-after (match-beginning 0))))
 	    nil
 	  (skip-chars-backward "^,{"))
 	(setq input-file
@@ -1917,7 +1921,7 @@ Call this function after YaTeX-on-section-command-p."
 (defun YaTeX-on-includes-p ()
   (save-excursion
     (beginning-of-line)
-    (re-search-forward "\\(\\(include.*\\)\\|\\(input\\)\\){.*}"
+    (re-search-forward "\\(\\(include[^}]*\\)\\|\\(input\\)\\){[^}]*}"
 		       (point-end-of-line) t)))
 
 (defun YaTeX-on-comment-p (&optional sw)

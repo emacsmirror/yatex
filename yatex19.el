@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19
 ;;; (c)1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jun 26 11:31:34 2006 on firestorm
+;;; Last modified Sun Feb 11 09:19:12 2007 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -447,9 +447,11 @@ Assumes PATTERN begins with `{'."
     ("``" "''" string)
     ("\\\\\\(new\\|clear\\(double\\)?\\)page\\>\\|\\\\\\(\\\\\\|cr\\)\\>"
      0 delimiter)
-    (YaTeX-19-re-search-in-env
-     ("&\\|\\\\hline" . "tabular\\|equation\\|eqn\\|array\\|align") delimiter)
-    (YaTeX-19-re-search-in-env ("\\\\[+-=><'`]" . "tabbing") delimiter)
+    ;; re-search-in-env seems to make it slow down. 2007/2/11
+    ;;(YaTeX-19-re-search-in-env
+    ;; ("&\\|\\\\hline" . "tabular\\|equation\\|eqn\\|array\\|align") delimiter)
+    ;;(YaTeX-19-re-search-in-env ("\\\\[+-=><'`]" . "tabbing") delimiter)
+    ("&\\|\\\\hline\\|\\\\[+-=><'`]" 0 delimiter)
     )
   "*Hiliting pattern alist for LaTeX text.")
 

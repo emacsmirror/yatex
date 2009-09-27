@@ -1203,6 +1203,12 @@ NOTEという内容の脚注を生成する。
 脚注がうまく出力されないような場所では \footnotemark と \footnotetext を
 組み合わせて出力する。
 fragile
+ダガー(†)にするなど，記号にしたいときはプリアンブルで
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+とする。
+†1, †2, ...にしたいときは
+\renewcommand{\thefootnote}{$\dagger$\arabic{footnote}}
+
 
 footnotemark
 \footnotemark[NUM]
@@ -1618,7 +1624,7 @@ http://www.yatex.org/help/color.tex にあるので、試すと良い。
 color
 \color{色}
 
-ページの文字食を「色」に設定する。
+ページの文字色を「色」に設定する。
 
 <refer colorの名前つきカラー>
 

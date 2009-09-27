@@ -1,6 +1,12 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.74	=== yahtml ===
+	[prefix] Return Intelligent-newline をtable対応にした。
+	cssファイル中に@importがあったときのバグを除去。
+	cssの *.class 解釈を修正。
+	yahtml-image-inspection-bytes を50000に増やした。
+
 1.73	=== yatex ===
 	C-i (YaTeX-indent-line) のtabular/array環境対応。行頭位置の
 	tabular的カラム位置に応じてインデントの深さを4桁ずつ深くする。

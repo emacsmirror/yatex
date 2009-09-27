@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 24 15:12:20 2006 on firestorm
+;;; Last modified Sat Apr 18 07:32:45 2009 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -313,8 +313,9 @@ history list variable."
 
 ;;;###autoload
 (defun YaTeX-define-begend-key (key env &optional map)
-  "Define short cut key for begin type completion both for normal
-and region mode.  To customize YaTeX, user should use this function."
+  "Define short cut key for begin type completion.
+Define both strokes for normal and region mode.
+To customize YaTeX, user should use this function."
   (YaTeX-define-begend-key-normal key env map)
   (if YaTeX-inhibit-prefix-letter nil
     (YaTeX-define-begend-region-key
@@ -487,7 +488,7 @@ corresponding real arguments ARGS."
 that gives the maximum value by the FUNC.  FUNC should take an argument
 of its window object.  Non-nil for optional third argument SELECT selects
 that window.  This function never selects minibuffer window."
-  (or (and (if (and YaTeX-emacs-19 select)
+  (or (and (if (and YaTeX-emacs-19 select window-system)
 	       (get-buffer-window buffer t)
 	     (get-buffer-window buffer))
 	   (progn
@@ -516,7 +517,7 @@ that window.  This function never selects minibuffer window."
 	  (or select (select-window window)))
 	 (t				;if one-window
 	  (cond
-	   ((and YaTeX-emacs-19 (get-buffer-window buffer t))
+	   ((and YaTeX-emacs-19 window-system (get-buffer-window buffer t))
 	    nil)			;if found in other frame
 	   (YaTeX-default-pop-window-height
 	    (split-window-calculate-height YaTeX-default-pop-window-height)

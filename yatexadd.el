@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.18
 ;;; (c)1991-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 24 15:12:30 2006 on firestorm
+;;; Last modified Fri Sep 21 11:44:42 2007 on firestorm
 ;;; $Id$
 
 ;;;
@@ -796,7 +796,7 @@ YaTeX-sectioning-levelの数値で指定.")
 			  "\\)\\|\\(" YaTeX::ref-labeling-regexp "\\)"))
 	  (itemsep (concat YaTeX-ec-regexp
 			   "\\(\\(bib\\)?item\\|begin\\|end\\)"))
-	  (refcmd (or refcmd "ref"))
+	  (refcmd (or refcmd "\\(page\\)?ref"))
 	  (p (point)) initl line cf
 	  (percent (regexp-quote YaTeX-comment-prefix))
 	  (output
@@ -1097,8 +1097,12 @@ YaTeX-sectioning-levelの数値で指定.")
 		    (switch-to-buffer buf)
 		    (goto-char p)
 		    (if (re-search-backward
-			 (concat "\\\\" refcmd "{\\([^}]+\\)}") nil t)
-			(setq label (YaTeX-match-string 1))
+			 (concat "\\\\" refcmd "{") nil t)
+			(setq label (YaTeX-buffer-substring
+				     (progn (goto-char (1- (match-end 0)))
+					    (1+ (point)))
+				     (progn (forward-list 1)
+					    (1- (point)))))
 		      (setq label ""))))
 		 ((>= line (+ lnum 2))
 		  (setq label (read-string (format "\\%s{???}: " refcmd))))
@@ -1565,11 +1569,14 @@ and print them to standard output."
       (setq YaTeX-default-document-style sname)))))
 
 (defun YaTeX::include (argp &optional prompt)
+  "Read file name setting default directory to that of main file."
   (cond
    ((= argp 1)
-    (let*((insert-default-directory)
-	  (file (read-file-name (or prompt "Input file: ") "")))
-      (setq file (substring file 0 (string-match "\\.tex$" file)))))))
+    (save-excursion
+      (YaTeX-visit-main t)
+      (let*((insert-default-directory)
+	    (file (read-file-name (or prompt "Input file: ") "")))
+	(setq file (substring file 0 (string-match "\\.tex$" file))))))))
 
 (fset 'YaTeX::input 'YaTeX::include)
 
@@ -1763,6 +1770,10 @@ and print them to standard output."
 (defun YaTeX::includegraphics (argp)
   "Add-in for \\includegraphics"
   (YaTeX::include argp "Image File: "))
+ 
+(defun YaTeX::verbfile (argp)
+  "Add-in for \\verbfile"
+  (YaTeX::include argp "Virbatim File: "))
  
 (defun YaTeX:caption ()
   (setq YaTeX-section-name "label")
