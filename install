@@ -61,7 +61,7 @@ have to byte-compile it.
 About yahtml / yahtmlについて
 *****************************
 
-Yahtml is a brand new package for writing  HTML files with Emacs.  It is
+Yahtml is a different package for writing  HTML files with Emacs.  It is
 very far from html-mode, html-helper-mode  or other existing HTML modes.
 It is a good successor of YaTeX in HTML world.  Do not want it to behave
 as modes you used.   Yahtml doesn't lessen  the number of initial typing
@@ -74,7 +74,7 @@ philosophy of YaTeX, please take a look at the info file of YaTeX.
 yahtml.el は html-mode とか html-helper-mode とかとはじぇえ～～んじぇん
 違います。「html-helper-mode でいうところのあの機能はないの～」とかそう
 いう気持で使うと、すげー調子悪いです。逆に、野鳥のインタフェースを知って
-使っているとかなり調子良いです。古いものに拘る人にはお薦めしません。
+使っているとかなり調子良いです。
 
 Installation of yahtml / yahtmlのインストール
 *********************************************
