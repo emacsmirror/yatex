@@ -86,6 +86,8 @@ Then the set some variables correctly.  Here are the major of them.
 Parenthesized values are default.
 以下の変数を環境に合わせて設定して下さい(括弧内はデフォルト値)。
 
+ * yahtml-kanji-code		HTML文書のデフォルト漢字コード
+ 				1=SJIS, 2=JIS, 3=EUC, 4=UTF-8
  * yahtml-image-viewer		Image viewer / 画像ヴューア
  * yahtml-www-browser		WWW browser / WWWブラウザ
  * yahtml-path-url-alist	List of unix path name vs. its URL name
