@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
-;;; (c) 1994-2006 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Tue Jun 16 10:11:50 2009 on firestorm
+;;; (c) 1994-2009 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Sep 28 10:45:04 2009 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.72"
@@ -176,7 +176,7 @@
 (defvar yahtml-image-viewer "display" "*Image viewer program")
 (defvar yahtml-www-browser "firefox" "*WWW Browser command")
 (defvar yahtml-kanji-code 2
-  "*Kanji coding system number of html file; 1=sjis, 2=jis, 3=euc")
+  "*Kanji coding system number of html file; 1=sjis, 2=jis, 3=euc, 4=UTF-8")
 ;;(defvar yahtml-coding-system
 ;;  (cdr (assq yahtml-kanji-code YaTeX-kanji-code-alist))
 ;;  "Kanji coding system")

@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
-;;; YaTeX facilities for Emacs 19
-;;; (c)1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Feb 11 09:19:12 2007 on firestorm
+;;; YaTeX facilities for Emacs 19 or later
+;;; (c)1994-2009 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Sep 28 10:45:30 2009 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)

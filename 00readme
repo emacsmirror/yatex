@@ -1,3 +1,7 @@
+・Mercurialリポジトリでも公開しています(1.74以降)。
+  % hg clone http://www.yatex.org/hgrepos/yatex yatex
+  でコピーし、その後は yatex/ ディレクトリ内で hg pull -u して下さい。
+
 ・yatex-1.69 よりバイトコンパイルしないのをデフォルトとしました。
   動作速度が(認識できない程度に)遅くなりますが、インストールしてある全ての
   Emacsで利用できます。ほんの少し速くなるだけでもいい、Emacsの種類毎に

@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c)1993-2007 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu May  7 13:47:28 2009 on firestorm
+;;; (c)1993-2009 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Sep 28 10:47:11 2009 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)

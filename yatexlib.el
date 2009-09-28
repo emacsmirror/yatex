@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
-;;; (c)1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Apr 18 07:32:45 2009 on firestorm
+;;; (c)1994-2009 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Sep 28 10:46:39 2009 on firestorm
 ;;; $Id$
 
 ;; General variables

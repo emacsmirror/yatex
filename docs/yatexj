@@ -1941,8 +1941,8 @@ File: yatexj, Node: Concept Index, Prev: Copying, Up: Top
 * LaTeX:                        Intro.                  4.
 * leftarrow:                    Image completion.       4.
 * lpr format:                   lpr format.             4.
-* lprフォーマット[lprふおおまつと]: lpr format.         4.
 * lprふぉーまっと[lprふおおまつと]: lpr format.         4.
+* lprフォーマット[lprふおおまつと]: lpr format.         4.
 * lprフォーマットの変更[lprふおおまつとのへんこう]: Editing %# notation.  18.
 * maketitle型補完[maketitleかたほかん]: maketitle型補完.  4.
 * M-C-@:                        環境を単位としたジャンプ.  7.
@@ -1955,8 +1955,8 @@ File: yatexj, Node: Concept Index, Prev: Copying, Up: Top
 * platex:                       Invocation.             4.
 * prefix ,:                     Commenting out.         4.
 * prefix .:                     Commenting out.         4.
-* prefix >:                     Commenting out.         4.
 * prefix <:                     Commenting out.         4.
+* prefix >:                     Commenting out.         4.
 * prefix /:                     Online help.            4.
 * prefix ?:                     Online help.            4.
 * prefix &:                     What column.            4.

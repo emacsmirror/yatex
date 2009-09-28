@@ -1,7 +1,13 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
-1.74	=== yahtml ===
+1.74	=== yatex ===
+	YaTeX-kanji-code が 4 のときは UTF-8 とした。
+	Previewファイルの拡張子が.dviであるという仮定を弱くした(pdf等)。
+	pdfopenを呼ぶときの問題への対策追加(by松田さん)。
+	拡張子 pdf に対するデフォルトヴューアを追加。
+	=== yahtml ===
+	yahtml-kanji-code が 4 のときは UTF-8 とした。
 	[prefix] Return Intelligent-newline をtable対応にした。
 	cssファイル中に@importがあったときのバグを除去。
 	cssの *.class 解釈を修正。
