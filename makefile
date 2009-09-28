@@ -6,11 +6,11 @@
 PREFIX	= /usr/local
 
 ## mule2
-EMACS	= mule
-EMACSDIR= ${PREFIX}/lib/${EMACS}
+#EMACS	= mule
+#EMACSDIR= ${PREFIX}/lib/${EMACS}
 ## emacs20
-#EMACS	= emacs
-#EMACSDIR= ${PREFIX}/share/${EMACS}
+EMACS	= emacs
+EMACSDIR= ${PREFIX}/share/${EMACS}
 ## XEmacs
 #EMACS	= xemacs
 #EMACSDIR= ${PREFIX}/lib/${EMACS}
