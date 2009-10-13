@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2009 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Thu Oct  8 21:46:07 2009 on firestorm
+;;; Last modified Tue Oct 13 11:52:40 2009 on firestorm
 ;;; $Id: yahtml.el,v ce2deaceb818 2009/09/28 02:37:27 yuuji $
 
 (defconst yahtml-revision-number "1.72"
@@ -2157,6 +2157,7 @@ This function should be able to treat white spaces in value, but not yet."
 	  (forward-line 1))
 	(set-marker e (point))
 	;(comment-region beg (point) (if uncom (list 4)))))
+	))
      (t ;(comment-region (region-beginning) (region-end) (if uncom (list 4)))
       (setq beg (region-beginning))
       (set-marker e (region-end))))
