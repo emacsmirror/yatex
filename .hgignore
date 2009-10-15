@@ -1,0 +1,7 @@
+syntax: glob
+*,v
+RCS
+CVS
+[._]win*
+docs/*
+*.swp
