@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.18
 ;;; (c)1991-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Oct 15 09:17:50 2009 on firestorm
+;;; Last modified Thu Oct 15 09:18:40 2009 on firestorm
 ;;; $Id: yatexadd.el,v f14ec50103d0 2009/09/27 22:55:44 yuuji $
 
 ;;;
@@ -203,11 +203,11 @@ YaTeX-make-begin-end."
    ((= argp 1) (read-string "Width: "))
    ((= argp 2) (read-string "Text: "))))
 
-(defun YaTeX:dashbox ()
+(defun YaTeX::dashbox ()
   (concat "{" (read-string "Dash dimension: ") "}"
 	  (YaTeX:read-coordinates "Dimension")))
 
-(defun YaTeX:savebox (argp)
+(defun YaTeX::savebox (argp)
   (cond
    ((= argp 1) (read-string "Saved into name: " "\\"))
    ((= argp 2) (read-string "Text: "))))
