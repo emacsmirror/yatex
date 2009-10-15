@@ -8,7 +8,8 @@
 # incoming.cvsci = ./hg2cvsci.sh
 
 node=${HG_NODE:-tip}
+hg=${HG:-hg}
 msg=`hg log -r $node --template '{desc}\n'`
 cd `dirname $0`
-$HG up -r $node
+$hg up -r $node
 cvs ci -m "$msg"
