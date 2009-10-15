@@ -3,5 +3,7 @@ syntax: glob
 RCS
 CVS
 [._]win*
+__emacs
 docs/*
 *.swp
+trashbox
