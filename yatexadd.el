@@ -2,8 +2,8 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.18
 ;;; (c)1991-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Sep 21 11:44:42 2007 on firestorm
-;;; $Id$
+;;; Last modified Thu Oct 15 09:17:50 2009 on firestorm
+;;; $Id: yatexadd.el,v f14ec50103d0 2009/09/27 22:55:44 yuuji $
 
 ;;;
 ;;Sample functions for LaTeX environment.
@@ -198,6 +198,10 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:parbox ()
   (YaTeX:read-position "tbc"))
+(defun YaTeX::parbox (argp)
+  (cond
+   ((= argp 1) (read-string "Width: "))
+   ((= argp 2) (read-string "Text: "))))
 
 (defun YaTeX:dashbox ()
   (concat "{" (read-string "Dash dimension: ") "}"
