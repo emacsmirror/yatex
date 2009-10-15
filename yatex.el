@@ -2,8 +2,8 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74
 ;;; (c)1991-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Sep 28 10:44:35 2009 on firestorm
-;;; $Id$
+;;; Last modified Thu Oct 15 14:23:10 2009 on firestorm
+;;; $Id: yatex.el,v ce2deaceb818 2009/09/28 02:37:27 yuuji $
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
@@ -363,7 +363,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 
 (defvar singlecmd-table
   (append
-   '(("maketitle") ("makeindex") ("sloppy") ("protect")
+   '(("maketitle") ("makeindex") ("sloppy") ("protect") ("par")
      ("LaTeX") ("TeX") ("item") ("item[]") ("appendix") ("hline") ("kill")
      ;;("rightarrow") ("Rightarrow") ("leftarrow") ("Leftarrow")
      ("pagebreak") ("nopagebreak") ("tableofcontents")
