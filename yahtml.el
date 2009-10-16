@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2009 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Oct 16 21:48:53 2009 on firestorm
+;;; Last modified Fri Oct 16 21:55:45 2009 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.1"
@@ -2956,17 +2956,6 @@ If no matches found in yahtml-path-url-alist, return raw file name."
   (interactive "P")
   (font-lock-mode -1)			;is stupid, but sure.
   (font-lock-mode 1))
-
-;; (defun yahtml-fontify-to-tagend (lim)
-;;   "*Fontify any tag including < and >.
-;; This is invalid use of font-lock function.  Therefore
-;; this fontifying will loose effectiveness soon or later."
-;;   (let ((start (match-beginning 0))
-;; 	(end (progn (skip-chars-forward "^>") (1+ (point)))))
-;;     (or nil; (font-lock-any-faces-p start end)
-;; 	(font-lock-fillin-text-property
-;; 	 start end 'face 'font-lock font-lock-keyword-face)))
-;;   nil)
 
 (run-hooks 'yahtml-load-hook)
 (provide 'yahtml)
