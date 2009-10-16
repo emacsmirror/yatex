@@ -1,9 +1,9 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2009 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Tue Oct 13 11:52:40 2009 on firestorm
-;;; $Id: yahtml.el,v ce2deaceb818 2009/09/28 02:37:27 yuuji $
+;;; Last modified Fri Oct 16 21:48:53 2009 on firestorm
+;;; $Id$
 
-(defconst yahtml-revision-number "1.72"
+(defconst yahtml-revision-number "1.74.1"
   "Revision number of running yahtml.el")
 
 ;;;[Installation]
@@ -14,8 +14,8 @@
 ;;; 	(setq auto-mode-alist
 ;;; 		(cons (cons "\\.html$" 'yahtml-mode) auto-mode-alist))
 ;;; 	(autoload 'yahtml-mode "yahtml" "Yet Another HTML mode" t)
-;;; 	(setq yahtml-www-browser "netscape")
-;;;      ;Write your favorite browser.  But netscape is advantageous.
+;;; 	(setq yahtml-www-browser "firefox")
+;;;      ;Write your favorite browser.  But firefox is advantageous.
 ;;; 	(setq yahtml-path-url-alist
 ;;; 	      '(("/home/yuuji/public_html" . "http://www.mynet/~yuuji")
 ;;; 		("/home/staff/yuuji/html" . "http://www.othernet/~yuuji")))
@@ -30,8 +30,8 @@
 ;;; 	(setq auto-mode-alist
 ;;; 		(cons (cons "\\.html$" 'yahtml-mode) auto-mode-alist))
 ;;; 	(autoload 'yahtml-mode "yahtml" "Yet Another HTML mode" t)
-;;; 	(setq yahtml-www-browser "netscape")
-;;;      ;お気に入りのブラウザを書いて下さい。netscapeが便利です。
+;;; 	(setq yahtml-www-browser "firefox")
+;;;      ;お気に入りのブラウザを書いて下さい。firefoxが便利です。
 ;;; 	(setq yahtml-path-url-alist
 ;;; 	      '(("/home/yuuji/public_html" . "http://www.mynet/~yuuji")
 ;;; 		("/home/staff/yuuji/html" . "http://www.othernet/~yuuji")))
@@ -91,7 +91,7 @@
 ;;;  * [prefix] t p	View current html with WWW browser
 ;;; 			(To activate this, never fail to set the lisp
 ;;; 			 variable yahtml-www-browser.  Recommended value
-;;; 			 is "netscape")
+;;; 			 is "firefox")
 ;;;  * [prefix] a	YaTeX's accent mark's equivalent of yahtml.
 ;;;			This function can input $lt, $gt or so.
 ;;;  * [prefix] ;	Translate chars of `>', `<', `&', and `"' to 
@@ -144,9 +144,7 @@
 ;;;			す。
 ;;;  * [prefix] t p	WWW ブラウザでカレントファイルを表示します。
 ;;;			(lisp変数 yahtml-www-browser の設定をお忘れな
-;;;			く。お推めは "netscape" で、ねすけの場合既にねす
-;;;			けが起動されていた場合そのねすけに Reload 命令を
-;;;			送るという芸当が出来ます)
+;;;			く。お推めは "firefox" です)
 ;;;  * [prefix] a	YaTeX のアクセント記号補完と同じです。
 ;;;			&lt; &gt; 等が入力できます。
 ;;;  * [prefix] ;	指定したリジョン中の > < & " をそれぞれ
@@ -2544,7 +2542,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
   (yahtml-browse-html (yahtml-file-to-url (buffer-file-name))))
 
 (defun yahtml-browse-reload ()
-  "Send `reload' event to netzscape."
+  "Send `reload' event to netscape."
   (let ((pb "* WWW Browser *") (cb (current-buffer)))
     (cond
      ((string-match "[Nn]etscape" yahtml-www-browser)
