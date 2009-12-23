@@ -2,8 +2,8 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.1
 ;;; (c)1991-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Oct 15 14:27:41 2009 on firestorm
-;;; $Id: yatex.el,v ce2deaceb818 2009/09/28 02:37:27 yuuji $
+;;; Last modified Wed Dec 23 20:05:55 2009 on firestorm
+;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
@@ -2205,7 +2205,8 @@ But kill its contents if the argument KILL-CONTENTS is non-nil."
 
 (defun YaTeX-read-section-with-overview ()
   "Read sectioning command with overview.
-This function refers a local variable `source-window' in YaTeX-make-section"
+This function refers a local variable `source-window' in YaTeX-make-section,
+because this function is called with no argument."
   (interactive)
   (require 'yatexsec)			;some case needs this
   (if (> (minibuffer-depth) 1)
@@ -2265,7 +2266,7 @@ This function refers a local variable `source-window' in YaTeX-make-section"
 	(beg (make-marker)) (end (make-marker)) old new)
     (if (null where) nil
       (unwind-protect
-	  (progn
+	  (let ((source-window (selected-window)))
 	    (cond
 	     ((equal where 0);;if point is on section command
 	      (set-marker beg (match-beginning 1))
