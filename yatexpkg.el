@@ -192,6 +192,7 @@ Search the usepackage for MACRO of the TYPE."
 		   (format "%s{%s}\t%% required for `\\%s' (yatex added)\n"
 			   option pkg macro))
 		  (funcall register))
+	      (funcall register)
 	      (message "Don't forget to put \\usepackage{%s} yourself later"
 		       (car (car pkglist)))) ;doing car car is negligence...
     ))))))
