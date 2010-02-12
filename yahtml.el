@@ -1,9 +1,9 @@
 ;;; -*- Emacs-Lisp -*-
-;;; (c) 1994-2009 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Oct 16 21:55:45 2009 on firestorm
-;;; $Id: yahtml.el,v 55b263b905b8 2009-10-16 21:56 +0900 yuuji $
+;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
+;;; Last modified Fri Feb 12 21:30:03 2010 on firestorm
+;;; $Id$
 
-(defconst yahtml-revision-number "1.74.1"
+(defconst yahtml-revision-number "1.74.2"
   "Revision number of running yahtml.el")
 
 ;;;[Installation]
@@ -2602,7 +2602,8 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 	  (yahtml-insert-single "dt")
 	  (or yahtml-always-/dt yahtml-faithful-to-htmllint (insert " "))
 	  (setq yahtml-last-single-cmd "dd")))
-      (insert (if yahtml-prefer-upcases "<DT> " "<dt> "))
+      (yahtml-insert-single "dt")
+      (or yahtml-always-/li yahtml-faithful-to-htmllint (insert " "))
       (setq yahtml-last-single-cmd "dd"))
     (yahtml-indent-line)
     (and (string-match yahtml-p-prefered-env-regexp "dl")
