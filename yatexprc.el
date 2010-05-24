@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Sep 28 10:47:11 2009 on firestorm
+;;; Last modified Mon May 24 14:50:24 2010 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -811,7 +811,7 @@ page range description."
 
 (defun YaTeX-visit-main (&optional setbuf)
   "Switch buffer to main LaTeX source.
-Use set-buffer instead of switch-to-buffer if the optional second argument
+Use set-buffer instead of switch-to-buffer if the optional argument
 SETBUF is t(Use it only from Emacs-Lisp program)."
   (interactive "P")
   (if (and (interactive-p) setbuf) (setq YaTeX-parent-file nil))
@@ -876,15 +876,25 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
 
 (defun YaTeX-get-builtin (key)
   "Read source built-in command of %# usage."
-  (save-excursion
-    (goto-char (point-min))
-    (if (and (re-search-forward
-	      (concat "^" (regexp-quote (concat "%#" key))) nil t)
-	     (not (eolp)))
-	(YaTeX-buffer-substring
-	 (progn (skip-chars-forward " 	" (point-end-of-line))(point))
-	 (point-end-of-line))
-      nil)))
+  (catch 'builtin
+    (let ((bl (delq nil (list (current-buffer)
+			      (and YaTeX-parent-file
+				   (get-file-buffer YaTeX-parent-file))))))
+      (save-excursion
+	(while bl
+	  (set-buffer (car bl))
+	  (save-excursion
+	    (goto-char (point-min))
+	    (if (and (re-search-forward
+		      (concat "^" (regexp-quote (concat "%#" key))) nil t)
+		     (not (eolp)))
+		(throw 'builtin
+		       (YaTeX-buffer-substring
+			(progn
+			  (skip-chars-forward " \t" (point-end-of-line))
+			  (point))
+			(point-end-of-line)))))
+	  (setq bl (cdr bl)))))))
 
 (defun YaTeX-save-buffers ()
   "Save buffers whose major-mode is equal to current major-mode."
