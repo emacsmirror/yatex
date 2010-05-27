@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.3
 ;;; (c)1991-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu May 27 10:09:18 2010 on firestorm
+;;; Last modified Thu May 27 13:45:10 2010 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -2471,7 +2471,8 @@ ENV is given in the form of environment's name or its list."
 		    (if (match-beginning 2)
 			(setq nest (1+ nest))
 		      (setq nest (1- nest)))
-		    (if (< nest 0) (throw 'open t)))))))
+		    (if (< nest 0)
+			(throw 'open (cons env (match-beginning 0)))))))))
      ((listp env)
       (setq p
 	    (or (YaTeX-in-environment-p (car env))
@@ -2485,21 +2486,25 @@ ENV is given in the form of environment's name or its list."
 ENV is given in the form of environment's name or its list.
 This function returns correct result only if ENV is NOT nested."
   (save-excursion
-    (let ((md (match-data)) (p (point)) rc clfound)
+    (let ((md (match-data)) m0 (p (point)) rc clfound)
       (cond
        ((listp env)
 	(or (YaTeX-quick-in-environment-p (car env))
 	    (and (cdr env) (YaTeX-quick-in-environment-p (cdr env)))))
        (t
-	(if (YaTeX-search-active-backward
-	     (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
-	     YaTeX-comment-prefix nil t)
-	    (setq rc (not (YaTeX-search-active-forward
-			   (YaTeX-replace-format-args
-			    YaTeX-struct-end env)
-			   YaTeX-comment-prefix p t nil))))
-	(store-match-data md)
-	rc)))))
+	(unwind-protect
+	    (if (prog1
+		    (YaTeX-search-active-backward
+		     (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
+		     YaTeX-comment-prefix nil t)
+		  (setq m0 (match-beginning 0)))
+		(if (YaTeX-search-active-forward
+		     (YaTeX-replace-format-args
+		      YaTeX-struct-end env)
+		     YaTeX-comment-prefix p t nil)
+		    nil			;if \end{env} found, return nil
+		  (cons env m0)))	;else, return meaningful values
+	  (store-match-data md)))))))
 
 ;; Filling \item
 (defun YaTeX-remove-trailing-comment (start end)
