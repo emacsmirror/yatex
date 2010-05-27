@@ -1,15 +1,15 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.74.1
-;;; (c)1991-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Dec 23 20:05:55 2009 on firestorm
+;;; yatex.el rev. 1.74.3
+;;; (c)1991-2010 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu May 27 10:09:18 2010 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.74.1"
+(defconst YaTeX-revision-number "1.74.3"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -81,6 +81,10 @@ specify the `from usage' and `to usage' with their option by format string
 (defvar dviprint-to-format
   (if YaTeX-dos "%e" "-t %e")
   "*`To' page format of dvi filter.  %e will turn to end page number.")
+
+(defvar YaTeX-dvipdf-command
+  "dvipdfmx"
+  "*Command name to convert dvi file to PDF.")
 
 (defvar YaTeX-default-document-style
   (concat (if YaTeX-japan "j") "article")
@@ -1445,11 +1449,12 @@ into {\\xxx } braces.
 Optional second argument CHAR is for non-interactive call from menu."
   (interactive "P")
   (message
-   (concat "J)latex R)egion B)ibtex mk(I)ndex "
-	   (if (fboundp 'start-process) "K)ill-latex ")
+   (concat "J)latex R)egion B)ibtex mk(I)dx "
+	   "latex+p(D)f "
+	   (if (fboundp 'start-process) "K)ill ")
 	   "P)review "
 	   (and (boundp 'window-system) window-system "S)earch ")
-	   "V)iewerr L)pr"))
+	   "V)iewErr L)pr"))
   (let ((sw (selected-window)) (c (or char (read-char))))
     (require 'yatexprc)			;for Nemacs's bug
     (select-window sw)
@@ -1463,6 +1468,7 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?k) (YaTeX-kill-typeset-process YaTeX-typeset-process))
      ((= c ?p) (call-interactively 'YaTeX-preview))
      ((= c ?q) (YaTeX-system "lpq" "*Printer queue*"))
+     ((= c ?d) (YaTeX-typeset-buffer YaTeX-dvipdf-command))
      ((= c ?v) (YaTeX-view-error))
      ((= c ?l) (YaTeX-lpr arg))
      ((= c ?m) (YaTeX-switch-mode-menu arg))

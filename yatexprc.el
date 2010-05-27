@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c)1993-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon May 24 14:50:24 2010 on firestorm
+;;; (c)1993-2010 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu May 27 09:58:17 2010 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -55,7 +55,7 @@
   (modify-syntax-entry ?\[ "w" YaTeX-typeset-buffer-syntax)
   (modify-syntax-entry ?\] "w" YaTeX-typeset-buffer-syntax))
 
-(defun YaTeX-typeset (command buffer &optional prcname modename)
+(defun YaTeX-typeset (command buffer &optional prcname modename ppcmd)
   "Execute jlatex (or other) to LaTeX typeset."
   (interactive)
   (save-excursion
@@ -91,7 +91,12 @@
 	       (start-process prcname buffer shell-file-name
 			      YaTeX-shell-command-option command))
 	 (get-buffer buffer))
-	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)))
+	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)
+	(let ((ppprop (get 'YaTeX-typeset-process 'ppcmd)))
+	  (setq ppprop (delq (assq YaTeX-typeset-process ppprop) ppprop))
+	  (if ppcmd
+	      (setq ppprop (cons (cons YaTeX-typeset-process ppcmd) ppprop)))
+	  (put 'YaTeX-typeset-process 'ppcmd ppprop))))
       (message (format "Calling `%s'..." command))
       (setq YaTeX-current-TeX-buffer (buffer-name))
       (use-local-map map)		;map may be localized
@@ -150,7 +155,6 @@
                  (insert ?\n mode-name " " mes)
                  (forward-char -1)
                  (insert " at " (substring (current-time-string) 0 -5) "\n")
-                 (forward-char 1)
                  (setq mode-line-process
                        (concat ": "
                                (symbol-name (process-status proc))))
@@ -161,8 +165,27 @@
                  ;; is dead, we can delete it now.  Otherwise it
                  ;; will stay around until M-x list-processes.
                  (delete-process proc)
-		 )
-             (setq YaTeX-typeset-process nil)
+		 ;; If ppcmd is active, call it.
+		 (let* ((ppprop (get 'YaTeX-typeset-process 'ppcmd))
+			(ppcmd (cdr (assq proc ppprop))))
+		   (put 'YaTeX-typeset-process 'ppcmd ;erase ppcmd
+			(delq (assq proc ppprop) ppprop))
+		   (cond
+		    ((and ppcmd (string-match "finish" mes))
+		     (insert (format "=======> Success! Calling %s\n" ppcmd))
+		     (setq mode-name	; set process name
+			   (substring ppcmd 0 (string-match " " ppcmd)))
+		     ; to reach here, 'start-process exists on this emacsen
+		     (set-process-sentinel
+		      (start-process
+		       mode-name
+		       pbuf		; Use this buffer twice.
+		       shell-file-name YaTeX-shell-command-option
+		       ppcmd)
+		      'YaTeX-typeset-sentinel))))
+		 
+		 (forward-char 1))
+	     (setq YaTeX-typeset-process nil)
              ;; Force mode line redisplay soon
              (set-buffer-modified-p (buffer-modified-p))
 	     )
@@ -256,17 +279,30 @@ operation to the region."
       (put 'dvi2-command 'file buffer)
       (put 'dvi2-command 'offset lineinfo))))
 
-(defun YaTeX-typeset-buffer ()
+(defun YaTeX-typeset-buffer (&optional pp)
   "Typeset whole buffer.
 If %#! usage says other buffer is main text,
 visit main buffer to confirm if its includeonly list contains current
 buffer's file.  And if it doesn't contain editing text, ask user which
-action wants to be done, A:Add list, R:Replace list, %:comment-out list."
+action wants to be done, A:Add list, R:Replace list, %:comment-out list.
+If optional argument PP given as string, PP is considered as post-process
+command and call it with the same command argument as typesetter without
+last extension.
+eg. if PP is \"dvipdfmx\", called commands as follows.
+  platex foo.tex
+  dvipdfmx foo
+PP command will be called iff typeset command exit successfully"
   (interactive)
   (YaTeX-save-buffers)
   (let*((me (substring (buffer-name) 0 (rindex (buffer-name) ?.)))
 	(mydir (file-name-directory (buffer-file-name)))
-	(cmd (YaTeX-get-latex-command t)) (cb (current-buffer)))
+	(cmd (YaTeX-get-latex-command t)) ppcmd
+	(cb (current-buffer)))
+    (and pp
+	 (stringp pp)
+	 (let ((tex-command pp))
+	   (setq ppcmd (YaTeX-get-latex-command t)
+		 ppcmd (substring ppcmd 0 (rindex ppcmd ?.)))))
     (if (YaTeX-main-file-p) nil
       (save-excursion
 	(YaTeX-visit-main t)	;search into main buffer
@@ -307,8 +343,16 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
 		  (basic-save-buffer))))
 	  (exchange-point-and-mark)))
       (switch-to-buffer cb))		;for 19
-    (YaTeX-typeset cmd YaTeX-typeset-buffer)
+    (YaTeX-typeset cmd YaTeX-typeset-buffer nil nil ppcmd)
     (put 'dvi2-command 'region nil)))
+
+(defun YaTeX-typeset+pp-buffer (cmd)
+  "Call typeset buffer and if it exits successfully, call the next JOB."
+  (let ((x))
+	  
+  (unwind-protect
+      (put 'YaTeX-typeset-buffer 'foo nil)
+    nil)))
 
 (defvar YaTeX-call-command-history nil
   "Holds history list of YaTeX-call-command-on-file.")
