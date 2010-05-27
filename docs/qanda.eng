@@ -393,6 +393,22 @@
 	errors.  The author   cannot    respond to  your  query    about
 	yatex-current.
 	
+	If you want to catch up to latest version, using yatex-current
+	is inefficient.  Use yatex's mercurial repository instead.
+	
+		hg clone http://www.yatex.org:/hgrepos/yatex
+		cd yatex
+		hg up -C dev
+	
+	Then, getting all updates by `hg pull'.
+	
+		hg pull -uv
+	
+	Okay to set load-path of yatex to local copy of repository.
+	Two branch names are mostly in use.  The `default' branch is for
+	release versions, the `dev' branch is for development.
+	
+	
 *Help, help HELP!!
 	
 	Ways of getting answers in fastest order.
