@@ -170,9 +170,14 @@ cursor to the line where LaTeX error is detected.
 the cursor on the line of error message and type `SPACE' key.  This makes
 the cursor move to corresponding source line.
 
-  Since `[prefix] tr' pastes the region into the file `texput.tex' in the
-current directory, you should be careful of overwriting.  The method of
-specification of the region is shown in the section *Note %#notation::.
+  YaTeX-typeset-region invoked by `[prefix] tr' call typesetter for
+region.  The region is specified by standard point and mark, or by
+`%#BEGIN' and `%#END' marks.  Selected region will be copied to the
+temporary file `texput.tex' with the same preamble as the main file of
+current editing sources.  Be sure to put all local macro settings in
+preamble, not after `\begin{document}'.
+  The method of specification of the region is shown in the section *Note
+%#notation::.
 
   The documentclass for typeset-region is the same as that of editing file
 if you edit one file, and is the same as main file's if you edit splitting
@@ -182,7 +187,11 @@ files.
 inner math mode and then call typeset-region with marked region.  This is
 convenient to quick view of current tabular environment or current editing
 formulas.  Keeping previewer window for `texput.dvi' is handy for
-debugging.
+debugging.  Since `[prefix] te' selects the inner-most environment as
+region, it is not suitable for partial typesetting of doubly or more
+composed environment.  If you want to do partial typesetting for a nested
+environment, use `[prefix] tr' for static-region, which is described in
+the section *Note %#notation::.
 
 
 File: yatexe, Node: Calling previewer, Next: Printing out, Prev: Calling typesetter, Up: Typesetting
@@ -2094,60 +2103,60 @@ Node: Main features1865
 Node: Installation3456
 Node: Typesetting4232
 Node: Calling typesetter5300
-Node: Calling previewer6945
-Node: Printing out7305
-Node: %#notation7596
-Node: Changing typesetter7971
-Node: Splitting input files8334
-Node: Static region for typesetting9761
-Node: Lpr format10889
-Node: Editing %# notation11945
-Node: Completion12463
-Node: Begin-type completion13022
-Node: Section-type completion16065
-Node: view-sectioning18499
-Node: Large-type completion20078
-Node: Maketitle-type completion20808
-Node: Arbitrary completion21359
-Node: End completion21748
-Node: Accent completion22217
-Node: Image completion22833
-Node: Greek letters completion25089
-Node: Local dictionaries25815
-Node: Commenting out26751
-Node: Cursor jump28209
-Node: Jump to corresponding object28520
-Node: Invoking image processor29920
-Node: Jump to main file31262
-Node: Jumping around the environment31626
-Node: Jumping to last completion position32043
-Node: Changing and Deleting32551
-Node: Changing LaTeX commands32942
-Node: Killing LaTeX commands34118
-Node: Filling35302
-Node: Updation of includeonly37152
-Node: What column37948
-Node: Intelligent newline39032
-Node: Usepackage checker40692
-Node: Online help41282
-Node: Browsing file hierarchy42956
-Node: Cooperation with other packages44692
-Node: Customizations45396
-Node: Lisp variables45729
-Node: All customizable variables46732
-Node: Sample definitions56615
-Node: Hook variables57127
-Node: Hook file57830
-Node: Add-in functions58168
-Node: How the add-in function works59027
-Node: Defining option-add-in61225
-Node: Defining argument-add-in61946
-Node: Defining enclosing-add-in62827
-Node: How the function is called63680
-Node: Useful functions for creating add-in64355
-Node: Contribution65759
-Node: Add-in generator66032
-Node: Etcetera71425
-Node: Copying72029
+Node: Calling previewer7504
+Node: Printing out7864
+Node: %#notation8155
+Node: Changing typesetter8530
+Node: Splitting input files8893
+Node: Static region for typesetting10320
+Node: Lpr format11448
+Node: Editing %# notation12504
+Node: Completion13022
+Node: Begin-type completion13581
+Node: Section-type completion16624
+Node: view-sectioning19058
+Node: Large-type completion20637
+Node: Maketitle-type completion21367
+Node: Arbitrary completion21918
+Node: End completion22307
+Node: Accent completion22776
+Node: Image completion23392
+Node: Greek letters completion25648
+Node: Local dictionaries26374
+Node: Commenting out27310
+Node: Cursor jump28768
+Node: Jump to corresponding object29079
+Node: Invoking image processor30479
+Node: Jump to main file31821
+Node: Jumping around the environment32185
+Node: Jumping to last completion position32602
+Node: Changing and Deleting33110
+Node: Changing LaTeX commands33501
+Node: Killing LaTeX commands34677
+Node: Filling35861
+Node: Updation of includeonly37711
+Node: What column38507
+Node: Intelligent newline39591
+Node: Usepackage checker41251
+Node: Online help41841
+Node: Browsing file hierarchy43515
+Node: Cooperation with other packages45251
+Node: Customizations45955
+Node: Lisp variables46288
+Node: All customizable variables47291
+Node: Sample definitions57174
+Node: Hook variables57686
+Node: Hook file58389
+Node: Add-in functions58727
+Node: How the add-in function works59586
+Node: Defining option-add-in61784
+Node: Defining argument-add-in62505
+Node: Defining enclosing-add-in63386
+Node: How the function is called64239
+Node: Useful functions for creating add-in64914
+Node: Contribution66318
+Node: Add-in generator66591
+Node: Etcetera71984
+Node: Copying72588
 
 End tag table

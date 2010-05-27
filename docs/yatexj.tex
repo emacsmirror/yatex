@@ -10,7 +10,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Thu May 27 16:31:56 2010 on firestorm
+@c Last modified Thu May 27 18:24:30 2010 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -282,11 +282,13 @@ LaTeXソースの編集中、次のキー入力により、platex などのタイプセットプログラ
 
   ポイントとマークの間、あるいはテキスト中に埋め込んだ @code{%#BEGIN} と
 @code{%#END}の間の領域(@ref{%#notation})だけを切り取ってタイプセットすることが
-できます。この場合の documentclass は、単一ファイルの La@TeX{} ソースの編
-集時にはそのファイルの documentclass が、別ファイルから include している場
-合にはメインファイルの documentclass が自動的に選択されます。指定領域は、
-メインファイルのあるディレクトリの@file{texput.tex}という臨時ファイルに出
-力されますので、上書きには注意してください。
+できます。この場合メインファイルのプリアンブルが一時ファイルの
+プリアンブルとして使われます。したがってプリアンブルにないマクロ定義が
+領域内にあるとエラーになります。領域タイプセットを使う場合、
+必ずマクロ定義はプリアンブル(@code{\begin{document}}より前)に置くよう
+にして下さい。一時ファイルはメインファイルのある
+ディレクトリの@file{texput.tex}という名前で出力されるので、
+上書きには注意してください。
 
 @subsection{環境タイプセット}
 

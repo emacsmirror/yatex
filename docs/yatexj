@@ -241,11 +241,12 @@ File: yatexj, Node: Calling typesetter, Next: Calling previewer, Prev: Invocatio
 
   ポイントとマークの間、あるいはテキスト中に埋め込んだ `%#BEGIN' と`%#END'
 の間の領域(*Note %#notation::)だけを切り取ってタイプセットすることができま
-す。この場合の documentclass は、単一ファイルの LaTeX ソースの編集時にはそ
-のファイルの documentclass が、別ファイルから include している場合にはメイ
-ンファイルの documentclass が自動的に選択されます。指定領域は、メインファ
-イルのあるディレクトリの`texput.tex'という臨時ファイルに出力されますので、
-上書きには注意してください。
+す。この場合メインファイルのプリアンブルが一時ファイルのプリアンブルとして
+使われます。したがってプリアンブルにないマクロ定義が領域内にあるとエラーに
+なります。領域タイプセットを使う場合、必ずマクロ定義はプリアンブル
+(`\begin{document}'より前)に置くようにして下さい。一時ファイルはメインファ
+イルのあるディレクトリの`texput.tex'という名前で出力されるので、上書きには
+注意してください。
 
 
 環境タイプセット
@@ -2018,58 +2019,58 @@ Node: Main features3186
 Node: Installation5035
 Node: Invocation7121
 Node: Calling typesetter8352
-Node: Calling previewer11116
-Node: Print out11713
-Node: %#notation12158
-Node: Changing typesetter12725
-Node: Splitting input files13114
-Node: Fix region for typesetting15019
-Node: lpr format16764
-Node: Editing %# notation18164
-Node: Completion18916
-Node: begin型補完19560
-Node: section型補完23690
-Node: 2個以上の引数をとる section型コマンド25476
-Node: Enclose section-type command26974
-Node: Recursive completion27374
-Node: view-sectioning27926
-Node: label-generation30387
-Node: large型補完31132
-Node: maketitle型補完32259
-Node: Arbitrary completion32741
-Node: end補完33347
-Node: Accent mark completion33984
-Node: Image completion34715
-Node: Greek letter completion38249
-Node: Local dictionary39244
-Node: Commenting out40484
-Node: Cursor jump42716
-Node: 対応オブジェクトへのジャンプ43090
-Node: お絵描きツール起動44987
-Node: メインファイルへのジャンプ46952
-Node: 環境を単位としたジャンプ47621
-Node: 最後の補完位置へのジャンプ48285
-Node: Modifying/Deleting48763
-Node: Changing LaTeX command49417
-Node: Killing LaTeX command50433
-Node: Filling51866
-Node: Includeonly54335
-Node: What column55424
-Node: Intelligent newline56773
-Node: Usepackage cheker58708
-Node: Changing mode of YaTeX59489
-Node: Online help60636
-Node: Inclusion hierarchy browser62779
-Node: Cooperation with other packages65234
-Node: Customizations65992
-Node: Lisp variables66478
-Node: All customizable variables67512
-Node: Sample definitions78641
-Node: Hook variables79220
-Node: Hook file80580
-Node: Add-in functions80915
-Node: Etc81333
-Node: Copying81974
-Node: Concept Index83419
+Node: Calling previewer11223
+Node: Print out11820
+Node: %#notation12265
+Node: Changing typesetter12832
+Node: Splitting input files13221
+Node: Fix region for typesetting15126
+Node: lpr format16871
+Node: Editing %# notation18271
+Node: Completion19023
+Node: begin型補完19667
+Node: section型補完23797
+Node: 2個以上の引数をとる section型コマンド25583
+Node: Enclose section-type command27081
+Node: Recursive completion27481
+Node: view-sectioning28033
+Node: label-generation30494
+Node: large型補完31239
+Node: maketitle型補完32366
+Node: Arbitrary completion32848
+Node: end補完33454
+Node: Accent mark completion34091
+Node: Image completion34822
+Node: Greek letter completion38356
+Node: Local dictionary39351
+Node: Commenting out40591
+Node: Cursor jump42823
+Node: 対応オブジェクトへのジャンプ43197
+Node: お絵描きツール起動45094
+Node: メインファイルへのジャンプ47059
+Node: 環境を単位としたジャンプ47728
+Node: 最後の補完位置へのジャンプ48392
+Node: Modifying/Deleting48870
+Node: Changing LaTeX command49524
+Node: Killing LaTeX command50540
+Node: Filling51973
+Node: Includeonly54442
+Node: What column55531
+Node: Intelligent newline56880
+Node: Usepackage cheker58815
+Node: Changing mode of YaTeX59596
+Node: Online help60743
+Node: Inclusion hierarchy browser62886
+Node: Cooperation with other packages65341
+Node: Customizations66099
+Node: Lisp variables66585
+Node: All customizable variables67619
+Node: Sample definitions78748
+Node: Hook variables79327
+Node: Hook file80687
+Node: Add-in functions81022
+Node: Etc81440
+Node: Copying82081
+Node: Concept Index83526
 
 End tag table
