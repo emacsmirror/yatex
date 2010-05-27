@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Thu May 27 10:33:22 2010 on firestorm
+@c Last modified Thu May 27 16:25:29 2010 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -145,6 +145,9 @@ strokes execute typeset or preview command.
         @dots{} invoke latex
 @item [prefix] t r
         @dots{} invoke latex on region
+@item [prefix] t e
+        @dots{} invoke latex on current environment or whole
+         portion of current formulas in math-mode.
 @item [prefix] t k
         @dots{} kill current typesetting process
 @item [prefix] t b
@@ -200,6 +203,12 @@ section @xref{%#notation}.
   The documentclass  for typeset-region is the same as that of editing
 file if you edit one  file,  and is the same as main file's if you
 edit splitting files.
+
+  The @kbd{[prefix] te} key automatically marks current inner environment
+or inner math mode and then call typeset-region with marked region.  This
+is convenient to quick view of current tabular environment or current
+editing formulas.  Keeping previewer window for @file{texput.dvi} is
+handy for debugging.
 
 @node Calling previewer, Printing out, Calling typesetter, Typesetting
 @comment  node-name,  next,  previous,  up

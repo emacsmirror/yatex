@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Sep 28 10:46:39 2009 on firestorm
+;;; Last modified Thu May 27 15:09:44 2010 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -1015,28 +1015,31 @@ to most recent sectioning command."
 (defun YaTeX-mark-environment ()
   "Mark current position and move point to end of environment."
   (interactive)
+  (require 'yatexmth)
   (let ((curp (point)))
-    (if (and (YaTeX-on-begin-end-p) (match-beginning 1)) ;if on \\begin
-	(progn (goto-char (match-end 0)))
-      (if (= (char-after (point)) ?\\) nil	;if on \\end
-	(skip-chars-backward "^\n\\\\")
-	(or (bolp) (forward-char -1))))
-    (if (not (YaTeX-end-of-environment))   ;arg1 turns to match-beginning 1
-	(progn
-	  (goto-char curp)
-	  (error "Cannot found the end of current environment."))
-      (YaTeX-goto-corresponding-environment)
-      (beginning-of-line)		;for confirmation
-      (if (< curp (point))
+    (if (YaTeX-in-math-mode-p)
+	(YaTeX-mark-mathenv)
+      (if (and (YaTeX-on-begin-end-p) (match-beginning 1)) ;if on \\begin
+	  (progn (goto-char (match-end 0)))
+	(if (= (char-after (point)) ?\\) nil ;if on \\end
+	  (skip-chars-backward "^\n\\\\")
+	  (or (bolp) (forward-char -1))))
+      (if (not (YaTeX-end-of-environment)) ;arg1 turns to match-beginning 1
 	  (progn
-	    (message "Mark this environment?(y or n): ")
-	    (if (= (read-char) ?y) nil
-	      (goto-char curp)
-	      (error "Abort.  Please call again at more proper position."))))
-      (set-mark-command nil)
-      (YaTeX-goto-corresponding-environment)
-      (end-of-line)
-      (if (eobp) nil (forward-char 1)))))
+	    (goto-char curp)
+	    (error "Cannot found the end of current environment."))
+	(YaTeX-goto-corresponding-environment)
+	(beginning-of-line)		;for confirmation
+	(if (< curp (point))
+	    (progn
+	      (message "Mark this environment?(y or n): ")
+	      (if (= (read-char) ?y) nil
+		(goto-char curp)
+		(error "Abort.  Please call again at more proper position."))))
+	(set-mark-command nil)
+	(YaTeX-goto-corresponding-environment)
+	(end-of-line)
+	(if (eobp) nil (forward-char 1))))))
 
 (defun YaTeX-kill-buffer (buffer)
   "Make effort to show parent buffer after kill."

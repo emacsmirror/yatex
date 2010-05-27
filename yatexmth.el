@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
 ;;; (c)1993-2006 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Thu May 27 11:32:20 2010 on firestorm
+;;; Last modified Thu May 27 16:33:55 2010 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -506,7 +506,7 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 	      ;;  "alignat*" "xalignat" "xalignat*" "xxalignat" "xxalignat*"
 	      YaTeX-math-begin-list
 	    )))
-	(let*((p (point)) (nest 0) me0 r
+	(let*((p (point)) (nest 0) me0 r firstp dollar
 	      (delim (concat YaTeX-sectioning-regexp "\\|^$\\|^\C-l"))
 	      (boundary
 	       (save-excursion
@@ -530,8 +530,8 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 			  (setq nest (1+ nest))
 			(if (= (preceding-char) ?\\ ) nil ;;\\[5pt]
 			  (setq nest (1- nest))))))
-		  (if (< nest 0) (throw 'open t))))
-	      t)
+		  (if (< nest 0)
+		      (throw 'open (cons (YaTeX-match-string 0) (point)))))))
 	     ((and (setq r (YaTeX-on-section-command-p
 			    YaTeX-math-section-type-regexp))
 		   (numberp r)
@@ -541,8 +541,10 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 		  (while ;(search-backward "$" boundary t);little bit fast.
 		      (YaTeX-re-search-active-backward ;;;;;; Too slow???
 		       "\\$" (concat "[^\\\\]" YaTeX-comment-prefix) boundary t)
+		    (setq dollar "$")
 		    (cond
 		     ((equal (char-after (1- (point))) ?$) ; $$ equation $$
+		      (setq dollar "$$")
 		      (backward-char 1)
 		      (setq nest (1+ nest)))
 		     ((let ((YaTeX-verbatim-environments
@@ -553,8 +555,37 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 		     ((and (equal (char-after (1- (point))) ?\\ )
 			   (not (equal (char-after (- (point) 3)) ?\\ )))
 		      nil)		;\$
-		     (t (setq nest (1+ nest)))))
-		  (if (= (% nest 2) 1) (throw 'dollar t))))))))))
+		     (t (setq nest (1+ nest))))
+		    (if (and (= nest 1) (null firstp))
+			(setq firstp (cons dollar (point)))))
+		  (if (= (% nest 2) 1)
+		      (throw 'dollar firstp))))))))))
+
+(defun YaTeX-mark-mathenv ()
+  "Mark current mathematic environment."
+  (interactive)
+  (let ((mmp (YaTeX-in-math-mode-p)) type bpt)
+    (if (or (null mmp) (not (stringp (setq type (car mmp)))))
+	nil				;if nil or not string, do nothing
+     (setq bpt (cdr mmp))
+     (goto-char bpt)
+     (cond
+      ((string-match "\\$" type)
+       (set-mark-command nil)
+       (skip-chars-forward "$")
+       (YaTeX-search-active-forward
+	type YaTeX-comment-prefix nil)	;if it cause error, obey it
+       (goto-char (match-end 0)))
+      ;;
+      ((string-match "^\\\\[\\[(]" type)
+       (set-mark-command nil)
+       (YaTeX-goto-corresponding-leftright)
+       (skip-chars-forward "])\\\\"))
+      ;;
+      ((string-match "^[a-z]" type)	; \begin\end type math
+       (set-mark-command nil)
+       (YaTeX-goto-corresponding-environment)
+       (goto-char (match-end 0)))))))
 
 (defun YaTeX-math-display-list (list cols)
   (goto-char (point-max))

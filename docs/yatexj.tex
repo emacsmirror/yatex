@@ -10,7 +10,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Thu May 27 10:32:20 2010 on firestorm
+@c Last modified Thu May 27 16:31:56 2010 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -224,6 +224,9 @@ LaTeXソースの編集中、次のキー入力により、platex などのタイプセットプログラ
         @dots{} タイプセッタ(platex)起動
 @item [prefix] t r
         @dots{} タイプセッタ起動(領域指定)
+@item [prefix] t e
+        @dots{} タイプセッタ起動
+        (ポイント位置の環境または数式モードのみ対称)
 @item [prefix] t k
         @dots{} 動作中のタイプセッタの停止
 @item [prefix] t b
@@ -284,6 +287,15 @@ LaTeXソースの編集中、次のキー入力により、platex などのタイプセットプログラ
 合にはメインファイルの documentclass が自動的に選択されます。指定領域は、
 メインファイルのあるディレクトリの@file{texput.tex}という臨時ファイルに出
 力されますので、上書きには注意してください。
+
+@subsection{環境タイプセット}
+
+  @kbd{[prefix] te} を押すと、ポイント位置の最も内側の環境、または数式モー
+ド内の場合はその数式モード全体が自動的に領域選択されて、領域タイプセットを
+呼び出します。tabular環境や数式モードで複雑なものを作っている場合は確かめた
+い部分だけを確認できるので便利です。これも @file{texput.tex} に該当部分を
+書き出します。プレヴューアで @file{texput.dvi} を開いたままにしておけば
+修正と確認が素早くできるでしょう。
 
 @node Calling previewer, Print out, Calling typesetter, Invocation
 @comment  node-name,  next,  previous,  up

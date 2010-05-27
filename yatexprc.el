@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu May 27 10:26:59 2010 on firestorm
+;;; Last modified Thu May 27 14:55:49 2010 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -278,6 +278,13 @@ operation to the region."
       (put 'dvi2-command 'region t)
       (put 'dvi2-command 'file buffer)
       (put 'dvi2-command 'offset lineinfo))))
+
+(defun YaTeX-typeset-environment ()
+  "Typeset current math environment"
+  (interactive)
+  (save-excursion
+    (YaTeX-mark-environment)
+    (YaTeX-typeset-region)))
 
 (defun YaTeX-typeset-buffer (&optional pp)
   "Typeset whole buffer.

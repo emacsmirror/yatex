@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.3
 ;;; (c)1991-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu May 27 13:45:10 2010 on firestorm
+;;; Last modified Thu May 27 14:55:07 2010 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -750,6 +750,7 @@ more features are available and they are documented in the manual.
 (autoload 'YaTeX-goto-open-paren "yatexmth" "Goto opening paren" t)
 (autoload 'YaTeX-change-parentheses "yatexmth" "Change corresponding parens" t)
 (autoload 'YaTeX-goto-corresponding-paren "yatexmth" "\bigl\bigr jumps" t)
+(autoload 'YaTeX-typeset-math-region "yatexmth" "Typeset math-region" t)
 
 ;;autoload from yatexhlp.el
 (autoload 'YaTeX-help "yatexhlp" "YaTeX helper with LaTeX commands." t)
@@ -1449,7 +1450,7 @@ into {\\xxx } braces.
 Optional second argument CHAR is for non-interactive call from menu."
   (interactive "P")
   (message
-   (concat "J)latex R)egion B)ibtex mk(I)dx "
+   (concat "J)latex R)egion E)nv B)ibtex mk(I)dx "
 	   "latex+p(D)f "
 	   (if (fboundp 'start-process) "K)ill ")
 	   "P)review "
@@ -1461,6 +1462,7 @@ Optional second argument CHAR is for non-interactive call from menu."
     (cond
      ((= c ?j) (YaTeX-typeset-buffer))
      ((= c ?r) (YaTeX-typeset-region))
+     ((= c ?e) (YaTeX-typeset-environment))
      ((= c ?b) (YaTeX-call-command-on-file
 		bibtex-command "*YaTeX-bibtex*" YaTeX-parent-file))
      ((= c ?i) (YaTeX-call-command-on-file
