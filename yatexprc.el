@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu May 27 09:58:17 2010 on firestorm
+;;; Last modified Thu May 27 10:26:59 2010 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -345,14 +345,6 @@ PP command will be called iff typeset command exit successfully"
       (switch-to-buffer cb))		;for 19
     (YaTeX-typeset cmd YaTeX-typeset-buffer nil nil ppcmd)
     (put 'dvi2-command 'region nil)))
-
-(defun YaTeX-typeset+pp-buffer (cmd)
-  "Call typeset buffer and if it exits successfully, call the next JOB."
-  (let ((x))
-	  
-  (unwind-protect
-      (put 'YaTeX-typeset-buffer 'foo nil)
-    nil)))
 
 (defvar YaTeX-call-command-history nil
   "Holds history list of YaTeX-call-command-on-file.")
