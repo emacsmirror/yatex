@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
 ;;; (c)1993-2006 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Dec 24 15:13:15 2006 on firestorm
+;;; Last modified Thu May 27 11:32:20 2010 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -152,7 +152,7 @@
    ("\\\\"	"setminus"	"\\")
    (")("	"wr"		" )\n(")
    ("<>"	"diamond"	"<>")
-   ("/\-"	"bigtriangleup"	("/\\\n~~" "Å¢"))
+   ("/\\-"	"bigtriangleup"	("/\\\n~~" "Å¢"))
    ("-\\/"	"bigtriangledown" ("__\n\\/" "Å§"))
    ("<|"	"triangleleft"	"<|")
    ("|>"	"triangleright"	"|>")
