@@ -1,6 +1,11 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.75	=== yatex ===
+	[prefix] t e でポイント位置を含む環境か数式環境をタイプセット。
+	M-C-SPC で環境だけでなく数式環境もマークする。
+	[prefix] t d でタイプセッタ起動成功のあと dvipdfmx を起動。
+
 1.74	=== yatex ===
 	YaTeX-kanji-code が 4 のときは UTF-8 とした。
 	Previewファイルの拡張子が.dviであるという仮定を弱くした(pdf等)。
