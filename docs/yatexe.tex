@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Fri Nov 20 07:20:18 2009 on firestorm
+@c Last modified Thu May 27 10:33:22 2010 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -149,6 +149,10 @@ strokes execute typeset or preview command.
         @dots{} kill current typesetting process
 @item [prefix] t b
         @dots{} invoke bibtex
+@item [prefix] t i
+        @dots{} invoke makeindex
+@item [prefix] t d
+        @dots{} invoke latex && dvipdfmx
 @item [prefix] t p
         @dots{} preview
 @item [prefix] t l
@@ -1636,6 +1640,10 @@ End page format of above %t. %e will turn to @code{end} page (@code{"-t %e"})
 
 @defvar makeindex-command
 Default makeindex command (@code{"makeindex"} (@code{"makeind"} on MS-DOS))
+@end defvar
+
+@defvar YaTeX-dvipdf-command
+Default command name to convert .dvi to PDF (@code{"dvipdfmx"})
 @end defvar
 
 @defvar YaTeX-need-nonstop

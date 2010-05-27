@@ -10,7 +10,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Fri Nov 20 07:19:56 2009 on firestorm
+@c Last modified Thu May 27 10:32:20 2010 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -228,6 +228,10 @@ LaTeXソースの編集中、次のキー入力により、platex などのタイプセットプログラ
         @dots{} 動作中のタイプセッタの停止
 @item [prefix] t b
         @dots{} jbibtex起動
+@item [prefix] t i
+        @dots{} makeindex起動
+@item [prefix] t d
+        @dots{} タイプセッタとdvipdfmx起動
 @item [prefix] t p
         @dots{} プレヴューア起動
 @item [prefix] t l
@@ -1849,6 +1853,10 @@ dviファイルの印刷に使われるコマンド式 (@code{"dvi2ps %f %t %s | lpr"})
 
 @defvar makeindex-command
 makeindexコマンド (@code{"makeindex"} (MS-DOSでは@code{"makeind"}))
+@end defvar
+
+@defvar YaTeX-dvipdf-command
+dviをPDFに変換するコマンド (@code{"dvipdfmx"})
 @end defvar
 
 @defvar YaTeX-need-nonstop

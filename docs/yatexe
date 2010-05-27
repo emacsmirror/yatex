@@ -125,6 +125,10 @@ strokes execute typeset or preview command.
              ... kill current typesetting process
 `[prefix] t b'
              ... invoke bibtex
+`[prefix] t i'
+             ... invoke makeindex
+`[prefix] t d'
+             ... invoke latex && dvipdfmx
 `[prefix] t p'
              ... preview
 `[prefix] t l'
@@ -1403,6 +1407,9 @@ variable by `M-x describe-variable'.
  -- Variable: makeindex-command
      Default makeindex command (`"makeindex"' (`"makeind"' on MS-DOS))
 
+ -- Variable: YaTeX-dvipdf-command
+     Default command name to convert .dvi to PDF (`"dvipdfmx"')
+
  -- Variable: YaTeX-need-nonstop
      Put `\nonstopmode{}' or not (`nil')
 
@@ -2077,61 +2084,61 @@ Node: What is YaTeX?1493
 Node: Main features1865
 Node: Installation3456
 Node: Typesetting4232
-Node: Calling typesetter5061
-Node: Calling previewer6406
-Node: Printing out6766
-Node: %#notation7057
-Node: Changing typesetter7432
-Node: Splitting input files7795
-Node: Static region for typesetting9222
-Node: Lpr format10350
-Node: Editing %# notation11406
-Node: Completion11924
-Node: Begin-type completion12483
-Node: Section-type completion15526
-Node: view-sectioning17960
-Node: Large-type completion19539
-Node: Maketitle-type completion20269
-Node: Arbitrary completion20820
-Node: End completion21209
-Node: Accent completion21678
-Node: Image completion22294
-Node: Greek letters completion24550
-Node: Local dictionaries25276
-Node: Commenting out26212
-Node: Cursor jump27670
-Node: Jump to corresponding object27981
-Node: Invoking image processor29381
-Node: Jump to main file30723
-Node: Jumping around the environment31087
-Node: Jumping to last completion position31504
-Node: Changing and Deleting32012
-Node: Changing LaTeX commands32403
-Node: Killing LaTeX commands33579
-Node: Filling34763
-Node: Updation of includeonly36613
-Node: What column37409
-Node: Intelligent newline38493
-Node: Usepackage checker40153
-Node: Online help40743
-Node: Browsing file hierarchy42417
-Node: Cooperation with other packages44153
-Node: Customizations44857
-Node: Lisp variables45190
-Node: All customizable variables46193
-Node: Sample definitions55976
-Node: Hook variables56488
-Node: Hook file57191
-Node: Add-in functions57529
-Node: How the add-in function works58388
-Node: Defining option-add-in60586
-Node: Defining argument-add-in61307
-Node: Defining enclosing-add-in62188
-Node: How the function is called63041
-Node: Useful functions for creating add-in63716
-Node: Contribution65120
-Node: Add-in generator65393
-Node: Etcetera70786
-Node: Copying71390
+Node: Calling typesetter5167
+Node: Calling previewer6512
+Node: Printing out6872
+Node: %#notation7163
+Node: Changing typesetter7538
+Node: Splitting input files7901
+Node: Static region for typesetting9328
+Node: Lpr format10456
+Node: Editing %# notation11512
+Node: Completion12030
+Node: Begin-type completion12589
+Node: Section-type completion15632
+Node: view-sectioning18066
+Node: Large-type completion19645
+Node: Maketitle-type completion20375
+Node: Arbitrary completion20926
+Node: End completion21315
+Node: Accent completion21784
+Node: Image completion22400
+Node: Greek letters completion24656
+Node: Local dictionaries25382
+Node: Commenting out26318
+Node: Cursor jump27776
+Node: Jump to corresponding object28087
+Node: Invoking image processor29487
+Node: Jump to main file30829
+Node: Jumping around the environment31193
+Node: Jumping to last completion position31610
+Node: Changing and Deleting32118
+Node: Changing LaTeX commands32509
+Node: Killing LaTeX commands33685
+Node: Filling34869
+Node: Updation of includeonly36719
+Node: What column37515
+Node: Intelligent newline38599
+Node: Usepackage checker40259
+Node: Online help40849
+Node: Browsing file hierarchy42523
+Node: Cooperation with other packages44259
+Node: Customizations44963
+Node: Lisp variables45296
+Node: All customizable variables46299
+Node: Sample definitions56182
+Node: Hook variables56694
+Node: Hook file57397
+Node: Add-in functions57735
+Node: How the add-in function works58594
+Node: Defining option-add-in60792
+Node: Defining argument-add-in61513
+Node: Defining enclosing-add-in62394
+Node: How the function is called63247
+Node: Useful functions for creating add-in63922
+Node: Contribution65326
+Node: Add-in generator65599
+Node: Etcetera70992
+Node: Copying71596
 
 End tag table

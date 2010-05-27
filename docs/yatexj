@@ -189,6 +189,10 @@ LaTeX$B%=!<%9$NJT=8Cf!"<!$N%-!<F~NO$K$h$j!"(Bplatex $B$J$I$N%?%$%W%;%C%H%W%m%
              ... $BF0:nCf$N%?%$%W%;%C%?$NDd;_(B
 `[prefix] t b'
              ... jbibtex$B5/F0(B
+`[prefix] t i'
+             ... makeindex$B5/F0(B
+`[prefix] t d'
+             ... $B%?%$%W%;%C%?$H(Bdvipdfmx$B5/F0(B
 `[prefix] t p'
              ... $B%W%l%t%e!<%"5/F0(B
 `[prefix] t l'
@@ -1551,6 +1555,9 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
  -- Variable: makeindex-command
      makeindex$B%3%^%s%I(B (`"makeindex"' (MS-DOS$B$G$O(B`"makeind"'))
 
+ -- Variable: YaTeX-dvipdf-command
+     dvi$B$r(BPDF$B$KJQ49$9$k%3%^%s%I(B (`"dvipdfmx"')
+
  -- Variable: YaTeX-need-nonstop
      `\nonstopmode{}'$B$r<+F0E*$KIU2C$9$k$+(B (`nil')
 
@@ -1995,59 +2002,59 @@ Node: Terminology2066
 Node: Main features3186
 Node: Installation5035
 Node: Invocation7121
-Node: Calling typesetter8100
-Node: Calling previewer10257
-Node: Print out10854
-Node: %#notation11299
-Node: Changing typesetter11866
-Node: Splitting input files12255
-Node: Fix region for typesetting14160
-Node: lpr format15905
-Node: Editing %# notation17305
-Node: Completion18057
-Node: begin$B7?Jd40(B18701
-Node: section$B7?Jd40(B22831
-Node: 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B24617
-Node: Enclose section-type command26115
-Node: Recursive completion26515
-Node: view-sectioning27067
-Node: label-generation29528
-Node: large$B7?Jd40(B30273
-Node: maketitle$B7?Jd40(B31400
-Node: Arbitrary completion31882
-Node: end$BJd40(B32488
-Node: Accent mark completion33125
-Node: Image completion33856
-Node: Greek letter completion37390
-Node: Local dictionary38385
-Node: Commenting out39625
-Node: Cursor jump41857
-Node: $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B42231
-Node: $B$*3(IA$-%D!<%k5/F0(B44128
-Node: $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B46093
-Node: $B4D6-$rC10L$H$7$?%8%c%s%W(B46762
-Node: $B:G8e$NJd400LCV$X$N%8%c%s%W(B47426
-Node: Modifying/Deleting47904
-Node: Changing LaTeX command48558
-Node: Killing LaTeX command49574
-Node: Filling51007
-Node: Includeonly53476
-Node: What column54565
-Node: Intelligent newline55914
-Node: Usepackage cheker57849
-Node: Changing mode of YaTeX58630
-Node: Online help59777
-Node: Inclusion hierarchy browser61920
-Node: Cooperation with other packages64375
-Node: Customizations65133
-Node: Lisp variables65619
-Node: All customizable variables66653
-Node: Sample definitions77689
-Node: Hook variables78268
-Node: Hook file79628
-Node: Add-in functions79963
-Node: Etc80381
-Node: Copying81022
-Node: Concept Index82467
+Node: Calling typesetter8216
+Node: Calling previewer10373
+Node: Print out10970
+Node: %#notation11415
+Node: Changing typesetter11982
+Node: Splitting input files12371
+Node: Fix region for typesetting14276
+Node: lpr format16021
+Node: Editing %# notation17421
+Node: Completion18173
+Node: begin$B7?Jd40(B18817
+Node: section$B7?Jd40(B22947
+Node: 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B24733
+Node: Enclose section-type command26231
+Node: Recursive completion26631
+Node: view-sectioning27183
+Node: label-generation29644
+Node: large$B7?Jd40(B30389
+Node: maketitle$B7?Jd40(B31516
+Node: Arbitrary completion31998
+Node: end$BJd40(B32604
+Node: Accent mark completion33241
+Node: Image completion33972
+Node: Greek letter completion37506
+Node: Local dictionary38501
+Node: Commenting out39741
+Node: Cursor jump41973
+Node: $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B42347
+Node: $B$*3(IA$-%D!<%k5/F0(B44244
+Node: $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B46209
+Node: $B4D6-$rC10L$H$7$?%8%c%s%W(B46878
+Node: $B:G8e$NJd400LCV$X$N%8%c%s%W(B47542
+Node: Modifying/Deleting48020
+Node: Changing LaTeX command48674
+Node: Killing LaTeX command49690
+Node: Filling51123
+Node: Includeonly53592
+Node: What column54681
+Node: Intelligent newline56030
+Node: Usepackage cheker57965
+Node: Changing mode of YaTeX58746
+Node: Online help59893
+Node: Inclusion hierarchy browser62036
+Node: Cooperation with other packages64491
+Node: Customizations65249
+Node: Lisp variables65735
+Node: All customizable variables66769
+Node: Sample definitions77898
+Node: Hook variables78477
+Node: Hook file79837
+Node: Add-in functions80172
+Node: Etc80590
+Node: Copying81231
+Node: Concept Index82676
 
 End tag table
