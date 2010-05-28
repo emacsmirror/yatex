@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu May 27 14:55:49 2010 on firestorm
+;;; Last modified Fri May 28 13:05:14 2010 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -259,7 +259,8 @@ operation to the region."
 	  "\\begin{document}")))
       (goto-char opoint)
       ;;(set-buffer buffer)		;for clarity
-      (let ((hilit-auto-highlight nil))
+      (let ((hilit-auto-highlight nil) (auto-mode-alist nil)
+	    (magic-mode-alist nil))	;Do not activate yatex-mode here
 	(set-buffer (find-file-noselect texput)))
       ;;(find-file YaTeX-texput-file)
       (erase-buffer)
