@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX package manager
 ;;; yatexpkg.el
-;;; (c)2003-2006 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Dec 24 15:13:29 2006 on firestorm
+;;; (c)2003-2010 by HIROSE, Yuuji [yuuji@yatex.org]
+;;; Last modified Fri May 28 15:16:04 2010 on firestorm
 ;;; $Id$
 
 (defvar YaTeX-package-ams-envs
@@ -31,6 +31,8 @@
     ("supertabular" (env "supertabular"))
     ("amsmath"	(env . YaTeX-package-ams-envs)
      		(section "tag" "tag*"))
+    ("amssymb"	(maketitle "leqq" "geqq" "mathbb" "mathfrak"
+			   "lll" "ggg")) ;very few.  Please tell us!
     ("graphicx" (section "includegraphics"
 			 "rotatebox" "scalebox" "resizebox" "reflectbox")
      		(option . YaTeX-package-graphics-driver-alist))

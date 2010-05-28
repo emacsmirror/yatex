@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
-;;; (c)1993-2006 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Thu May 27 16:33:55 2010 on firestorm
+;;; (c)1993-2010 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Fri May 28 15:21:26 2010 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -171,8 +171,10 @@
    ("II"	"amalg"		"II")
    ;	:
    ;;relational operators
-   ("<"		"leq"		("<\n-"		"ÅÖ"))
-   (">"		"geq"		(">\n-"		"ÅÜ"))
+   ("<"		"leq"		("<\n-"		"<\n-"))
+   ("=<"	"leqq"		("<\n="		"ÅÖ"))
+   (">"		"geq"		(">\n-"		">\n-"))
+   (">="	"geqq"		(">\n="		"ÅÜ"))
    ("-="	"equiv"		("=\n-"		YaTeX-image-equiv))
    ("=-"	"equiv"		("=\n-"		YaTeX-image-equiv))
    ("---"	"equiv"		("=\n-"		YaTeX-image-equiv))
@@ -207,7 +209,9 @@
    ("-<"	"prec"		("-<"		"Ç≠"))
    ("-<="	"preceq"	("-<\n-"	"Ç≠\n="))
    ("<<"	"ll"		("<<"		"Ås"))
+   ("<<"	"lll"		"<<<")
    (">>"	"gg"		(">>"		"Åt"))
+   (">>>"	"ggg"		">>>")
    ;	:
    ;;arrows
    ("<-"	"leftarrow"	("<-"		"Å©"))
