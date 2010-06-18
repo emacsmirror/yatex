@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Fri Feb 12 21:30:03 2010 on firestorm
+;;; Last modified Sat Jun 19 07:40:38 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -2685,7 +2685,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
       (cond
        ((and (> cols 0)
 	     (memq (read-char) '(?d ?D))) ;Duplication mode
-	(setq line (YaTeX-buffer-substring (point) cp)))
+	(setq line (YaTeX-buffer-substring (point) (1- cp))))
        (t				;empty cells
 	(setq line "<tr>" i 0)
 	(if (> cols 0)
