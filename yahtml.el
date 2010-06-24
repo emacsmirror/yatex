@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Thu Jun 24 14:42:29 2010 on firestorm
+;;; Last modified Thu Jun 24 16:00:42 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -1569,7 +1569,9 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
     "name" (yahtml-read-parameter "name"))
    (yahtml-make-optional-argument
     "type" (yahtml-read-parameter
-	    "type" "button" '(("submit")("reset")("button"))))))
+	    "type" "button" '(("submit")("reset")("button"))))
+   (yahtml-make-optional-argument
+    "value" (yahtml-read-parameter "value"))))
 
 ;;; ---------- Simple tag ----------
 (defun yahtml-insert-tag (region-mode &optional tag)
