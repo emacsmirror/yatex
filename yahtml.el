@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Sat Jun 19 07:40:38 2010 on firestorm
+;;; Last modified Thu Jun 24 14:42:29 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -417,7 +417,7 @@ normal and region mode.  To customize yahtml, user should use this function."
     ("DefinitionList" . "dl")
     ("Preformatted" . "pre")
     ("table") ("thead") ("tbody") ("tfoot") ("tr") ("th") ("td")
-    ("address") 
+    ("address") ("button")
     ("h1") ("h2") ("h3") ("h4") ("h5") ("h6")
     ;; ("p") ;This makes indentation screwed up!
     ("style") ("script") ("noscript") ("div") ("object") ("ins") ("del")
@@ -1562,6 +1562,14 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 (defun yahtml:abbr ()
   "Add-in function for abbr."
   (yahtml-make-optional-argument "title" (yahtml-read-parameter "title")))
+
+(defun yahtml:button ()
+  (concat
+   (yahtml-make-optional-argument
+    "name" (yahtml-read-parameter "name"))
+   (yahtml-make-optional-argument
+    "type" (yahtml-read-parameter
+	    "type" "button" '(("submit")("reset")("button"))))))
 
 ;;; ---------- Simple tag ----------
 (defun yahtml-insert-tag (region-mode &optional tag)
