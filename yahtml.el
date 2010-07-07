@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Thu Jun 24 16:00:42 2010 on firestorm
+;;; Last modified Wed Jul  7 22:12:55 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -880,6 +880,25 @@ T for static indentation depth")
 	"class(or class list delimited by \\[quoted-insert] SPC): "))
      nil YaTeX-minibuffer-completion-map nil)))
   
+(defvar yahtml-newpage-command "newpage.rb"
+  "*Command name to create new HTML file referring to index.html.
+This command should create new HTML file named argument 1 and
+output string like `<a href=\"newfile.html\">anchor tag</a>'.
+This program should take -o option to overwrite existing HTML file.")
+(defun yahtml-newpage (file ov)
+  "Create newpage via newpage script"
+  (interactive
+   (list
+    (let (insert-default-directory)
+      (read-file-name "New webpage file name: " ""))
+    current-prefix-arg))
+  (if (and (file-exists-p file) (not ov))
+      (error "%s already exists.  Call this with universal argument to force overwrite." file))
+  (insert (substring
+	   (YaTeX-command-to-string
+	    (concat yahtml-newpage-command " " (if ov "-o ") file))
+	   0 -1)))
+
 ;;; ---------- Add-in ----------
 (defun yahtml-addin (form)
   "Check add-in function's existence and call it if exists."
@@ -2463,9 +2482,9 @@ This function should be able to treat white spaces in value, but not yet."
 ;;; ---------- Lint and Browsing ----------
 ;;; 
 (defun yahtml-browse-menu ()
-  "Browsing menu"
+  "Browsing or other external process invokation menu."
   (interactive)
-  (message "J)weblint p)Browse R)eload...")
+  (message "J)weblint p)Browse R)eload N)ewpage...")
   (let ((c (char-to-string (read-char))))
     (cond
      ((string-match "j" c)
@@ -2473,7 +2492,9 @@ This function should be able to treat white spaces in value, but not yet."
      ((string-match "[bp]" c)
       (yahtml-browse-current-file))
      ((string-match "r" c)
-      (yahtml-browse-reload)))))
+      (yahtml-browse-reload))
+     ((string-match "n" c)
+      (call-interactively 'yahtml-newpage)))))
 
 (if (fboundp 'wrap-function-to-control-ime)
     (wrap-function-to-control-ime 'yahtml-browse-menu t nil))

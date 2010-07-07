@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu May 27 15:09:44 2010 on firestorm
+;;; Last modified Wed Jul  7 06:48:48 2010 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -821,6 +821,21 @@ NULL includes null string in a list."
   (or (featurep 'windows) (error "Why don't you use `windows.el'?"))
   (win-switch-to-window 1 (- last-command-char win:base-key)))
 
+;;;###autoload
+(defun YaTeX-command-to-string (cmd)
+  (if (fboundp 'shell-command-to-string)
+      (funcall 'shell-command-to-string cmd)
+    (let ((tbuf " *tmpout*"))
+      (if (get-buffer-create tbuf) (kill-buffer tbuf))
+      (let ((standard-output (get-buffer-create tbuf)))
+	(unwind-protect
+	    (save-excursion
+	      (call-process
+	       shell-file-name nil tbuf nil YaTeX-shell-command-option cmd)
+	      (set-buffer tbuf)
+	      (buffer-string))
+	  (kill-buffer tbuf))))))
+      
 ;;;###autoload
 (defun YaTeX-reindent (col)
   "Remove current indentation and reindento to COL column."
