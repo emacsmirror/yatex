@@ -1,6 +1,10 @@
 #!/usr/bin/env ruby
 # THIS is very very tentative.  Insufficient examination of function.
 # Create new HTML file referring other HTML file in the same directory.
+# (C)2010 by HIROSE Yuuji [yuuji@yatex.org]
+# Last modified Wed Jul  7 22:30:25 2010 on firestorm
+# $Id$
+# http://www.yatex.org
 # Example:
 #	newpage.rb		Create new index.html by copying template.
 #	newpage.rb foo.html	Create new foo.html whose by copying header
