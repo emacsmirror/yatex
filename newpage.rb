@@ -2,7 +2,7 @@
 # THIS is very very tentative.  Insufficient examination of function.
 # Create new HTML file referring other HTML file in the same directory.
 # (C)2010 by HIROSE Yuuji [yuuji@yatex.org]
-# Last modified Wed Jul  7 22:30:25 2010 on firestorm
+# Last modified Mon Sep  6 16:16:33 2010 on firestorm
 # $Id$
 # http://www.yatex.org
 # Example:
@@ -85,7 +85,7 @@ begin
       html = input.readlines.join
       html.sub!(%r|^<h1.*<\/h1>|i, sprintf("<h1>%s</h1>\n", name))
       if !html.gsub!("__CSSFILE__", cssfile)
-        html.gsub!(/href=(['\"])(.*\.css)\1/, 'href="\1"')
+        html.gsub!(/href=(['\"])(.*\.css)\1/, 'href="'+cssdir+'\2"')
       end
       html.gsub!("__TITLE__", name)
       out.print html
