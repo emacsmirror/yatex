@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Wed Jul  7 22:12:55 2010 on firestorm
+;;; Last modified Sun Sep 12 10:58:31 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -2276,6 +2276,39 @@ This function should be able to treat white spaces in value, but not yet."
 	(goto-char (get 'YaTeX-inner-environment 'point))))
     e))
 
+(defun yahtml-untranslate-string (str)
+  "Untranslate entity reference."
+  (let ((md (match-data)) (left "") (right str) b0 ch
+	(ct (append yahtml-entity-reference-chars-alist
+		    yahtml-entity-reference-chars-alist-default))
+	(revrex yahtml-entity-reference-chars-reverse-regexp))
+    (unwind-protect
+	(progn
+	  (while (string< "" right)
+	    (cond
+	     ((string-match revrex right)
+	      (setq ch (YaTeX-rassoc
+			(substring right (match-beginning 1) (match-end 1)))
+		    b0 (substring right 0 (match-beginning 0))
+		    right (substring right (match-end 0))
+		    left (concat left
+				 (substring right 0 (match-beginning 0))
+				 (char-to-string ch))))
+	     ((string-match "\\&#\\(x\\)?\\([0-9a-f]+\\);" right)
+	      (setq ch (substring right (match-beginning 2) (match-end 2))
+		    b0 (substring right 0 (match-beginning 0))
+		    right (substring right (match-end 0))
+		    left (concat left
+				 b0
+				 (char-to-string
+				  (if (match-beginning 1)
+				      (YaTeX-hex ch)
+				    (string-to-number ch))))))
+	     (t (setq left (concat left right)
+		      right ""))))
+	  left)
+      (store-match-data md))))
+
 ;;; ---------- filling ----------
 (defvar yahtml-saved-move-to-column (symbol-function 'move-to-column))
 (defun yahtml-move-to-column (col &optional force)
@@ -2507,10 +2540,12 @@ This function should be able to treat white spaces in value, but not yet."
   (interactive "bCall lint on buffer: ")
   (setq buf (get-buffer buf))
   (YaTeX-save-buffers)
-  (YaTeX-typeset
-   (concat yahtml-lint-program " "
-	   (file-name-nondirectory (buffer-file-name buf)))
-   yahtml-lint-buffer  "lint" "lint"))
+  (let ((bcmd (YaTeX-get-builtin "lint")))
+    (and bcmd (setq bcmd (yahtml-untranslate-string bcmd)))
+    (YaTeX-typeset
+     (concat (or bcmd yahtml-lint-program)
+	     " " (file-name-nondirectory (buffer-file-name buf)))
+     yahtml-lint-buffer  "lint" "lint")))
 
 (defun yahtml-file-to-url (file)
   "Convert local unix file name to URL.
