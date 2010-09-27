@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri May 28 13:05:14 2010 on firestorm
+;;; Last modified Mon Sep 27 17:03:24 2010 on duke
 ;;; $Id$
 
 ;(require 'yatex)
@@ -308,9 +308,8 @@ PP command will be called iff typeset command exit successfully"
 	(cb (current-buffer)))
     (and pp
 	 (stringp pp)
-	 (let ((tex-command pp))
-	   (setq ppcmd (YaTeX-get-latex-command t)
-		 ppcmd (substring ppcmd 0 (rindex ppcmd ?.)))))
+	 (setq ppcmd (concat pp (substring cmd (string-match "[ \t]" cmd)))
+	       ppcmd (substring ppcmd 0 (rindex ppcmd ?.))))
     (if (YaTeX-main-file-p) nil
       (save-excursion
 	(YaTeX-visit-main t)	;search into main buffer
