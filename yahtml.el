@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Fri Feb 12 21:30:03 2010 on firestorm
+;;; Last modified Mon Sep 13 08:09:46 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -417,7 +417,7 @@ normal and region mode.  To customize yahtml, user should use this function."
     ("DefinitionList" . "dl")
     ("Preformatted" . "pre")
     ("table") ("thead") ("tbody") ("tfoot") ("tr") ("th") ("td")
-    ("address") 
+    ("address") ("button")
     ("h1") ("h2") ("h3") ("h4") ("h5") ("h6")
     ;; ("p") ;This makes indentation screwed up!
     ("style") ("script") ("noscript") ("div") ("object") ("ins") ("del")
@@ -880,6 +880,25 @@ T for static indentation depth")
 	"class(or class list delimited by \\[quoted-insert] SPC): "))
      nil YaTeX-minibuffer-completion-map nil)))
   
+(defvar yahtml-newpage-command "newpage.rb"
+  "*Command name to create new HTML file referring to index.html.
+This command should create new HTML file named argument 1 and
+output string like `<a href=\"newfile.html\">anchor tag</a>'.
+This program should take -o option to overwrite existing HTML file.")
+(defun yahtml-newpage (file ov)
+  "Create newpage via newpage script"
+  (interactive
+   (list
+    (let (insert-default-directory)
+      (read-file-name "New webpage file name: " ""))
+    current-prefix-arg))
+  (if (and (file-exists-p file) (not ov))
+      (error "%s already exists.  Call this with universal argument to force overwrite." file))
+  (insert (substring
+	   (YaTeX-command-to-string
+	    (concat yahtml-newpage-command " " (if ov "-o ") file))
+	   0 -1)))
+
 ;;; ---------- Add-in ----------
 (defun yahtml-addin (form)
   "Check add-in function's existence and call it if exists."
@@ -888,6 +907,7 @@ T for static indentation depth")
       (and (setq a (yahtml-css-get-element-completion-alist form))
 	   (not (equal last-command-char ?\C-j))
 	   (memq yahtml-current-completion-type '(multiline inline))
+	   (not (string-match "#" form))
 	   (yahtml-make-optional-argument ;should be made generic?
 	    "class" (yahtml-read-css a)))
       (if (and (intern-soft addin) (fboundp (intern-soft addin))
@@ -1116,6 +1136,10 @@ Not used yet.")
      ((eq alist 'file)
       (let ((insert-default-directory))
 	(read-file-name prompt "" default nil "")))
+     ((eq alist 'command)
+      (if (fboundp 'read-shell-command)
+	  (read-shell-command prompt)
+	(read-string prompt)))
      ((and alist (symbolp alist))
       (completing-read prompt (symbol-value alist) nil nil default))
      (alist
@@ -1563,6 +1587,16 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
   "Add-in function for abbr."
   (yahtml-make-optional-argument "title" (yahtml-read-parameter "title")))
 
+(defun yahtml:button ()
+  (concat
+   (yahtml-make-optional-argument
+    "name" (yahtml-read-parameter "name"))
+   (yahtml-make-optional-argument
+    "type" (yahtml-read-parameter
+	    "type" "button" '(("submit")("reset")("button"))))
+   (yahtml-make-optional-argument
+    "value" (yahtml-read-parameter "value"))))
+
 ;;; ---------- Simple tag ----------
 (defun yahtml-insert-tag (region-mode &optional tag)
   "Insert <TAG> </TAG> and put cursor inside of them."
@@ -1656,7 +1690,8 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
     (format "%s=\"%s\"--" (if (string-match "/" file) "virtual" "file") file)))
 
 (defun yahtml:!--\#exec ()
-  (format "cmd=\"%s\"--" (yahtml-read-parameter "cmd" "" '(("cmd" . file)))))
+  (format "cmd=\"%s\"--"
+	  (yahtml-read-parameter "cmd" "" '(("cmd" . command)))))
 
 ;;; ---------- Jump ----------
 (defun yahtml-on-href-p ()
@@ -2247,6 +2282,39 @@ This function should be able to treat white spaces in value, but not yet."
 	(goto-char (get 'YaTeX-inner-environment 'point))))
     e))
 
+(defun yahtml-untranslate-string (str)
+  "Untranslate entity reference."
+  (let ((md (match-data)) (left "") (right str) b0 ch
+	(ct (append yahtml-entity-reference-chars-alist
+		    yahtml-entity-reference-chars-alist-default))
+	(revrex yahtml-entity-reference-chars-reverse-regexp))
+    (unwind-protect
+	(progn
+	  (while (string< "" right)
+	    (cond
+	     ((string-match revrex right)
+	      (setq ch (YaTeX-rassoc
+			(substring right (match-beginning 1) (match-end 1)))
+		    b0 (substring right 0 (match-beginning 0))
+		    right (substring right (match-end 0))
+		    left (concat left
+				 (substring right 0 (match-beginning 0))
+				 (char-to-string ch))))
+	     ((string-match "\\&#\\(x\\)?\\([0-9a-f]+\\);" right)
+	      (setq ch (substring right (match-beginning 2) (match-end 2))
+		    b0 (substring right 0 (match-beginning 0))
+		    right (substring right (match-end 0))
+		    left (concat left
+				 b0
+				 (char-to-string
+				  (if (match-beginning 1)
+				      (YaTeX-hex ch)
+				    (string-to-number ch))))))
+	     (t (setq left (concat left right)
+		      right ""))))
+	  left)
+      (store-match-data md))))
+
 ;;; ---------- filling ----------
 (defvar yahtml-saved-move-to-column (symbol-function 'move-to-column))
 (defun yahtml-move-to-column (col &optional force)
@@ -2453,9 +2521,9 @@ This function should be able to treat white spaces in value, but not yet."
 ;;; ---------- Lint and Browsing ----------
 ;;; 
 (defun yahtml-browse-menu ()
-  "Browsing menu"
+  "Browsing or other external process invokation menu."
   (interactive)
-  (message "J)weblint p)Browse R)eload...")
+  (message "J)weblint p)Browse R)eload N)ewpage...")
   (let ((c (char-to-string (read-char))))
     (cond
      ((string-match "j" c)
@@ -2463,7 +2531,9 @@ This function should be able to treat white spaces in value, but not yet."
      ((string-match "[bp]" c)
       (yahtml-browse-current-file))
      ((string-match "r" c)
-      (yahtml-browse-reload)))))
+      (yahtml-browse-reload))
+     ((string-match "n" c)
+      (call-interactively 'yahtml-newpage)))))
 
 (if (fboundp 'wrap-function-to-control-ime)
     (wrap-function-to-control-ime 'yahtml-browse-menu t nil))
@@ -2476,10 +2546,12 @@ This function should be able to treat white spaces in value, but not yet."
   (interactive "bCall lint on buffer: ")
   (setq buf (get-buffer buf))
   (YaTeX-save-buffers)
-  (YaTeX-typeset
-   (concat yahtml-lint-program " "
-	   (file-name-nondirectory (buffer-file-name buf)))
-   yahtml-lint-buffer  "lint" "lint"))
+  (let ((bcmd (YaTeX-get-builtin "lint")))
+    (and bcmd (setq bcmd (yahtml-untranslate-string bcmd)))
+    (YaTeX-typeset
+     (concat (or bcmd yahtml-lint-program)
+	     " " (file-name-nondirectory (buffer-file-name buf)))
+     yahtml-lint-buffer  "lint" "lint")))
 
 (defun yahtml-file-to-url (file)
   "Convert local unix file name to URL.
@@ -2685,7 +2757,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
       (cond
        ((and (> cols 0)
 	     (memq (read-char) '(?d ?D))) ;Duplication mode
-	(setq line (YaTeX-buffer-substring (point) cp)))
+	(setq line (YaTeX-buffer-substring (point) (1- cp))))
        (t				;empty cells
 	(setq line "<tr>" i 0)
 	(if (> cols 0)

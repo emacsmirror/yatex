@@ -2,8 +2,8 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.18
 ;;; (c)1991-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Oct 15 09:18:40 2009 on firestorm
-;;; $Id: yatexadd.el,v f14ec50103d0 2009/09/27 22:55:44 yuuji $
+;;; Last modified Thu Sep  9 09:08:19 2010 on firestorm
+;;; $Id$
 
 ;;;
 ;;Sample functions for LaTeX environment.
@@ -1665,7 +1665,7 @@ and print them to standard output."
     ("Emerald") ("JungleGreen") ("SeaGreen") ("Green") ("ForestGreen")
     ("PineGreen") ("LimeGreen") ("YellowGreen") ("SpringGreen") ("OliveGreen")
     ("RawSienna") ("Sepia") ("Brown") ("Tan") ("Gray") ("Black") ("White"))
-  "Colors defined in $TEXMF/tex/plain/colordvi.tex")
+  "Colors defined in $TEXMF/tex/plain/dvips/colordvi.tex")
 
 (defvar YaTeX:latex2e-basic-color-alist
   '(("black") ("white") ("red") ("blue") ("yellow") ("green") ("cyan")

@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
 ;;; (c)1993-2010 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Fri May 28 15:21:26 2010 on firestorm
+;;; Last modified Sat Sep 11 15:51:37 2010 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -175,6 +175,7 @@
    ("=<"	"leqq"		("<\n="		"ÅÖ"))
    (">"		"geq"		(">\n-"		">\n-"))
    (">="	"geqq"		(">\n="		"ÅÜ"))
+   ("=:"	"fallingdotseq"	(".\n==\n ."	"Å‡"))
    ("-="	"equiv"		("=\n-"		YaTeX-image-equiv))
    ("=-"	"equiv"		("=\n-"		YaTeX-image-equiv))
    ("---"	"equiv"		("=\n-"		YaTeX-image-equiv))
