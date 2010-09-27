@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Sun Sep 12 10:58:31 2010 on firestorm
+;;; Last modified Mon Sep 13 08:09:46 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -907,6 +907,7 @@ This program should take -o option to overwrite existing HTML file.")
       (and (setq a (yahtml-css-get-element-completion-alist form))
 	   (not (equal last-command-char ?\C-j))
 	   (memq yahtml-current-completion-type '(multiline inline))
+	   (not (string-match "#" form))
 	   (yahtml-make-optional-argument ;should be made generic?
 	    "class" (yahtml-read-css a)))
       (if (and (intern-soft addin) (fboundp (intern-soft addin))
@@ -1135,6 +1136,10 @@ Not used yet.")
      ((eq alist 'file)
       (let ((insert-default-directory))
 	(read-file-name prompt "" default nil "")))
+     ((eq alist 'command)
+      (if (fboundp 'read-shell-command)
+	  (read-shell-command prompt)
+	(read-string prompt)))
      ((and alist (symbolp alist))
       (completing-read prompt (symbol-value alist) nil nil default))
      (alist
@@ -1685,7 +1690,8 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
     (format "%s=\"%s\"--" (if (string-match "/" file) "virtual" "file") file)))
 
 (defun yahtml:!--\#exec ()
-  (format "cmd=\"%s\"--" (yahtml-read-parameter "cmd" "" '(("cmd" . file)))))
+  (format "cmd=\"%s\"--"
+	  (yahtml-read-parameter "cmd" "" '(("cmd" . command)))))
 
 ;;; ---------- Jump ----------
 (defun yahtml-on-href-p ()

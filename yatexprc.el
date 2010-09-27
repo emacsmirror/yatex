@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri May 28 13:05:14 2010 on firestorm
+;;; Last modified Fri Sep 10 17:47:38 2010 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -917,28 +917,6 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
   (if (YaTeX-main-file-p) (message "I think this is main LaTeX source.")
       (YaTeX-switch-to-buffer-other-window
        (concat (YaTeX-get-preview-file-name) ".tex"))))
-
-(defun YaTeX-get-builtin (key)
-  "Read source built-in command of %# usage."
-  (catch 'builtin
-    (let ((bl (delq nil (list (current-buffer)
-			      (and YaTeX-parent-file
-				   (get-file-buffer YaTeX-parent-file))))))
-      (save-excursion
-	(while bl
-	  (set-buffer (car bl))
-	  (save-excursion
-	    (goto-char (point-min))
-	    (if (and (re-search-forward
-		      (concat "^" (regexp-quote (concat "%#" key))) nil t)
-		     (not (eolp)))
-		(throw 'builtin
-		       (YaTeX-buffer-substring
-			(progn
-			  (skip-chars-forward " \t" (point-end-of-line))
-			  (point))
-			(point-end-of-line)))))
-	  (setq bl (cdr bl)))))))
 
 (defun YaTeX-save-buffers ()
   "Save buffers whose major-mode is equal to current major-mode."
