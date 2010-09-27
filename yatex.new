@@ -7,7 +7,7 @@
 	[prefix] t d でタイプセッタ起動成功のあと dvipdfmx を起動。
 	=== yahtml ===
 	[prefix] t ブラウザメニューに「n:新規ページ作成」を追加(実験)。
-	[prefix] t j のlintコマンドを <!-- #lint CmdLine --> で指定可。
+	[prefix] t j のlintコマンドを <!-- #lint CmdLine --> 行で指定可。
 
 1.74	=== yatex ===
 	YaTeX-kanji-code が 4 のときは UTF-8 とした。
