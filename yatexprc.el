@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Sep 27 17:07:41 2010 on duke
+;;; Last modified Wed Oct 20 12:32:44 2010 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -711,7 +711,7 @@ error or warning lines in reverse order."
 (defvar YaTeX-dvi2-command-ext-alist
  '(("[agx]dvi\\|dviout" . ".dvi")
    ("ghostview\\|gv" . ".ps")
-   ("acroread\\|pdf\\|Preview\\|TeXShop\\|Skim" . ".pdf")))
+   ("acroread\\|pdf\\|Preview\\|TeXShop\\|Skim\\|evince" . ".pdf")))
 
 (defun YaTeX-get-preview-file-name (&optional preview-command)
   "Get file name to preview by inquiring YaTeX-get-latex-command"
