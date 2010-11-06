@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon Sep 13 08:09:46 2010 on firestorm
+;;; Last modified Sat Nov  6 19:22:54 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -1051,6 +1051,21 @@ Not used yet.")
 	(setq str (substring str (1+ p))))
       (concat target str)))))
 
+(defun yahtml-unescape-string (str)
+  "Untranslate reserved URL-encoded string."
+  (let ((p 0) c (target "") (md (match-data)) (case-fold-search nil))
+    (unwind-protect
+	(progn
+	  (while (string-match "%\\([0-9a-f][0-9a-f]\\)" str p)
+	    (setq target (concat target
+				 (substring str p (1- (match-beginning 1))))
+		  p (match-end 0)
+		  c (YaTeX-hex (substring
+				str (match-beginning 1) (match-end 1)))
+		  target (concat target (format "%c" c))))
+	  (concat target (substring str p)))
+      (store-match-data md))))
+
 (defun yahtml-escape-chars-region (beg end)
   "Translate reserved chars to encoded string in the region."
   (interactive "r")
@@ -1711,7 +1726,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	     (skip-chars-forward " \t\n")
 	     (looking-at "\"?\\([^\"> \t\n]+\\)\"?"))
 	   (< p (match-end 0))
-	   (YaTeX-match-string 1)))))
+	   (yahtml-unescape-string (YaTeX-match-string 1))))))
 
 (defun yahtml-netscape-sentinel (proc mes)
   (cond
@@ -1889,7 +1904,8 @@ Optional argument NOERR causes no error for unballanced tag."
   (let ((tag (yahtml-current-tag)) image (p (point)) (case-fold-search t))
     (if (and tag
 	     (string-match "img" tag)
-	     (setq image (yahtml-get-attrvalue "src")))
+	     (setq image
+		   (yahtml-unescape-string (yahtml-get-attrvalue "src"))))
 	(progn
 	  (message "Invoking %s %s..." yahtml-image-viewer image)
 	  (start-process
@@ -1903,7 +1919,7 @@ Optional argument NOERR causes no error for unballanced tag."
   (let ((env (yahtml-current-tag)) s (p (point)))
     (cond
      ((string-match "applet" env)
-      (if (setq s (yahtml-get-attrvalue "code"))
+      (if (setq s (yahtml-unescape-string (yahtml-get-attrvalue "code")))
 	  (progn
 	    (setq s (YaTeX-match-string 1)
 		  s (concat
