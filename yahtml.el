@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Thu Dec  9 15:16:06 2010 on firestorm
+;;; Last modified Thu Dec  9 18:05:11 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -2384,7 +2384,6 @@ Interactive prefix argument consults enclosing element other than td."
 	(yahtml-td-region e delim (point) (point-end-of-line))
 	(end-of-line)
 	(insert "</tr>")
-	(yahtml-indent-line)
 	(forward-line 1)))))
 	
 ;;; ---------- filling ----------
