@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Thu Dec  9 18:05:11 2010 on firestorm
+;;; Last modified Thu Dec  9 20:16:49 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -141,7 +141,9 @@
 ;;;			参照しているリンクを補完機能を使いながら変更で
 ;;;			きます。
 ;;;  * [prefix] t j	カレントファイルに対して jweblint を呼び出しま
-;;;			す。
+;;;			す。ファイル先頭付近に
+;;; 			<!-- #lint コマンド -->
+;;; 			と書いておくとそのコマンドを呼びます。
 ;;;  * [prefix] t p	WWW ブラウザでカレントファイルを表示します。
 ;;;			(lisp変数 yahtml-www-browser の設定をお忘れな
 ;;;			く。お推めは "firefox" です)
@@ -152,6 +154,13 @@
 ;;;  * [prefix] :	指定したリジョン中で上と逆の変換をします。
 ;;;  * [prefix] #	指定したリジョン中で%エンコードの必要な文字が
 ;;;			あればそれらをエンコードします。
+;;;  * [prefix] }	リジョン内の特定文字区切りのレコードを <td> 並びに
+;;;			変換します。C-u (universal-argument) 付きで起動
+;;; 			するとtd以外の任意要素で括ります。thdを指定する
+;;; 			と最初の1つだけth，残りすべてをtdで括ります。
+;;;  * [prefix] ]	リジョン内のすべての行をフィールドごとにtdで括り，
+;;;    			さらに各行をtrで括ります。universal-argument を
+;;; 			付けるとフィールド括りをtd以外に指定できます。
 ;;;  * [prefix] ESC	yahtml-mode を抜け yahtml-mode に入る前に動作し
 ;;;			ていたメジャーモードに戻ります。
 ;;; 
