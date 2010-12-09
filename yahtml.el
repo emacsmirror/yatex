@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Thu Dec  9 12:21:27 2010 on firestorm
+;;; Last modified Thu Dec  9 13:50:21 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -2339,7 +2339,7 @@ This function should be able to treat white spaces in value, but not yet."
 Interactive prefix argument consults enclosing element other than td."
   (interactive "P\nsDelimiter(s): \nr")
   (let ((e (if (and e (listp e)) (read-string "Enclose with : " "td") "td"))
-	p q)
+	p q (ws "[ \t]"))
     (if (string= delim "") (setq delim " \t\n"))
     (setq delim (concat "[" delim "]+"))
     (save-excursion
@@ -2353,8 +2353,9 @@ Interactive prefix argument consults enclosing element other than td."
 	    (goto-char p)
 	    (insert "<" e ">"))
 	  (setq p (point))
-	  (while (and (not (eobp)) (looking-at delim))
-	    (delete-char 1)))
+	  (while (and (not (eobp)) (looking-at ws))
+	    (delete-char 1))
+	  (if (looking-at delim) (delete-char 1)))
 	(insert "<" e ">")
 	(goto-char (point-max))
 	(insert "</" e ">")))))
@@ -2375,6 +2376,7 @@ Interactive prefix argument consults enclosing element other than td."
 	  (yahtml-td-region e delim (point) (point-end-of-line))
 	  (end-of-line)
 	  (insert "</tr>")
+	  (yahtml-indent-line)
 	  (forward-line 1))))))
 	
 ;;; ---------- filling ----------
