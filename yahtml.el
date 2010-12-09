@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Sat Nov  6 19:22:54 2010 on firestorm
+;;; Last modified Thu Dec  9 12:21:27 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -369,6 +369,8 @@ normal and region mode.  To customize yahtml, user should use this function."
     (YaTeX-define-key ";" 'yahtml-translate-region map)
     (YaTeX-define-key ":" 'yahtml-translate-reverse-region map)
     (YaTeX-define-key "#" 'yahtml-escape-chars-region map)
+    (YaTeX-define-key "}" 'yahtml-td-region map)
+    (YaTeX-define-key "]" 'yahtml-tr-region map)
     ;;;;;(YaTeX-define-key "i" 'yahtml-fill-item map)
     (YaTeX-define-key "\e" 'yahtml-quit map))
   (substitute-all-key-definition
@@ -2331,6 +2333,50 @@ This function should be able to treat white spaces in value, but not yet."
 	  left)
       (store-match-data md))))
 
+;;; ---------- table-ize region ----------
+(defun yahtml-td-region (e delim beg end)
+  "Enclose each item in a region with <td>..</td>.
+Interactive prefix argument consults enclosing element other than td."
+  (interactive "P\nsDelimiter(s): \nr")
+  (let ((e (if (and e (listp e)) (read-string "Enclose with : " "td") "td"))
+	p q)
+    (if (string= delim "") (setq delim " \t\n"))
+    (setq delim (concat "[" delim "]+"))
+    (save-excursion
+      (save-restriction
+	(narrow-to-region beg end)
+	(goto-char (setq p (point-min)))
+	(while (re-search-forward delim nil t)
+	  (goto-char (match-beginning 0))
+	  (insert "</" e ">")
+	  (save-excursion
+	    (goto-char p)
+	    (insert "<" e ">"))
+	  (setq p (point))
+	  (while (and (not (eobp)) (looking-at delim))
+	    (delete-char 1)))
+	(insert "<" e ">")
+	(goto-char (point-max))
+	(insert "</" e ">")))))
+
+(defun yahtml-tr-region (e delim beg end)
+  "Enclose lines in a form tab-sv/csv with <tr><td>..</td></tr>."
+  (interactive "P\nsDelimiter(s): \nr")
+  (let ((e (if (and e (listp e)) (read-string "Enclose with : " "td") "td"))
+	p q)
+    (if (string= delim "") (setq delim " \t\n"))
+    ;; (setq delim (concat "[" delim "]+")) ;unnecessary here
+    (save-excursion
+      (save-restriction
+	(narrow-to-region (point) (mark))
+	(goto-char (point-min))
+	(while (not (eobp))
+	  (insert "<tr>")
+	  (yahtml-td-region e delim (point) (point-end-of-line))
+	  (end-of-line)
+	  (insert "</tr>")
+	  (forward-line 1))))))
+	
 ;;; ---------- filling ----------
 (defvar yahtml-saved-move-to-column (symbol-function 'move-to-column))
 (defun yahtml-move-to-column (col &optional force)
