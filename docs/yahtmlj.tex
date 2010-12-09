@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Fri Nov 20 07:20:46 2009 on firestorm
+@c Last modified Thu Dec  9 15:56:35 2010 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -229,6 +229,7 @@ HTMLタグの補完入力ができます。それぞれの型の補完は順に、
 * 対タグの変更::                
 * 文字参照への変更::            
 * リジョン内文字のURLencode::   
+* td括り/tr括り::               
 @end menu
 
 @node 対タグの変更, 文字参照への変更, Changing and Deleting, Changing and Deleting
@@ -253,7 +254,7 @@ HTMLタグの補完入力ができます。それぞれの型の補完は順に、
 @dots{} 属性値の変更
 @end itemize
 
-@node 文字参照への変更, リジョン内文字のURLencode, 対タグの変更, Changing and Deleting
+@node 文字参照への変更,  , 対タグの変更, Changing and Deleting
 @comment  node-name,  next,  previous,  up
 @section 文字参照への変更
 文字としての < や > を表現するときは、文字参照を用いて
@@ -270,7 +271,7 @@ HTML以外のファイルからこれらの文字を含むテキストを張り込んだ場合
 @end table
 
 
-@node リジョン内文字のURLencode,  , 文字参照への変更, Changing and Deleting
+@node リジョン内文字のURLencode, td括り/tr括り, 文字参照への変更, Changing and Deleting
 @comment  node-name,  next,  previous,  up
 @section リジョン内文字のURLencode
 @table
@@ -278,6 +279,29 @@ HTML以外のファイルからこれらの文字を含むテキストを張り込んだ場合
 	@dots{} 指定した領域内に URLencode すべき文字があればそれらを
         エンコード表記に置換。
 @end table
+
+@node  td括り/tr括り,  , リジョン内文字のURLencode, Changing and Deleting
+@comment  node-name,  next,  previous,  up
+@section td括り/tr括り
+空白区切りで書いた表形式の行レコードを <td> 括りの並び，
+あるいはそれらをさらに <tr> で括った行並びに変換できます。
+@table @kbd
+ @item [prefix] }
+	@dots{} 現在のリジョンにあるデータを空白区切りごとに
+        <td>...</td> で括る
+ @item [prefix] ]
+	@dots{} 現在のリジョンにある行を
+        上記td括りをほどこしてからさらに行ごとに <tr>...</tr> で括る
+@end table
+デフォルトでは空白区切りですが，これを変えるときは
+Delimiter: の問い合わせに区切り文字を指定します。たとえばカンマ(,)
+を指定するとCSVから表を作ることができます。
+
+td以外の要素，具体的には th で括りたい場合は universal-argument
+(@kbd{C-u}) をつけて上記2つのコマンドを呼びます。どの要素で括るかの
+質問が増えるのでそれに th と入れれば，各フィールドを <th>...</th>
+で括ります。もし，第1フィールドのみ th で，残りを全部 td 括りにしたいとき
+は thd と入力して下さい。
 
 @node CSS Support, Customizations, Changing and Deleting, Top
 @comment  node-name,  next,  previous,  up

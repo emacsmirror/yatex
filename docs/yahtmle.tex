@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Fri Nov 20 07:20:56 2009 on firestorm
+@c Last modified Thu Dec  9 16:12:43 2010 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -270,7 +270,7 @@ HTML files.
 @end table
 
 
-@node URLencoding of strings within region,  , Changing entities, Changing and Deleting
+@node URLencoding of strings within region, td-enclosure/tr-enclosure, Changing entities, Changing and Deleting
 @comment  node-name,  next,  previous,  up
 @section URLencoding of strings within region
 
@@ -278,6 +278,29 @@ HTML files.
 @item [prefix] #
 	@dots{} encode chars that needs to be URLencoded within region
 @end table
+
+@node  td-enclosure/tr-enclosure,  , URLencoding of strings within region, Changing and Deleting
+@comment  node-name,  next,  previous,  up
+@section td-enclosure/tr-enclosure
+If you wan to convert series of field into <td>...</td> repetitions for
+table element, td-enclosure or tr-enclosure is convenient.
+
+@table @kbd
+ @item [prefix] }
+	@dots{} Enclose each field in a region into <td>...</td>'s.
+ @item [prefix] ]
+	@dots{} Enclose each line in a region into <tr>...</tr>'s, with
+        every line converted to <td>...</td> repetition.
+@end table
+They presume white space as field separator by default.
+To change this, enter other delimiting character for a query.
+You can convert CSV, for example, into table by specifying
+comma(,) as a delimiter.
+
+If you want to enclose fields with th, call with
+universal-argument (@kbd{C-u}).  Enter `th' to enclose fields
+with <th>...</th>.  The special answer `thd' means that
+enclose the only first column with th, and the rest with td.
 
 @node CSS Support, Customizations, Changing and Deleting, Top
 @comment  node-name,  next,  previous,  up

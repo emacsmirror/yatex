@@ -1,10 +1,7 @@
 Info file: yahtmle,    -*-Text-*-
 produced by `texinfo-format-buffer'
 from file `yahtmle.tex'
-using `texinfmt.el' version 2.32 of 19 November 1993.
-
-
-
+using `texinfmt.el' version 2.42 of  7 Jul 2006.
 
 
 File: yahtmle, Node: Top, Next: Intro, Prev: (dir), Up: (dir)
@@ -22,6 +19,7 @@ File: yahtmle, Node: Top, Next: Intro, Prev: (dir), Up: (dir)
 * Copying::                     Copyright
 * Concept Index::               Index
 
+
 
 File: yahtmle, Node: Intro, Next: Installation, Prev: Top, Up: Top
 
@@ -35,6 +33,7 @@ the cursor position is its main features.
 
 (This Info is still incomplete)
 
+
 
 File: yahtmle, Node: Installation, Next: Command Invocation, Prev: Intro, Up: Top
 
@@ -42,9 +41,10 @@ Installing yahtml
 *****************
 * Menu:
 
-* Setting up yahtml::           
-* Setting environments for weblint browsers and image viewers::  
-* Setting environment variables for WWW pages::  
+* Setting up yahtml::
+* Setting environments for weblint browsers and image viewers::
+* Setting environment variables for WWW pages::
+
 
 
 File: yahtmle, Node: Setting up yahtml, Next: Setting environments for weblint browsers and image viewers, Prev: Installation, Up: Installation
@@ -71,6 +71,7 @@ By this, yahtml will be automatically loaded when editing files with .html
 extensions.  "yahtml" will be displayed on the mode line if no errors
 occurred.
 
+
 
 File: yahtmle, Node: Setting environments for weblint browsers and image viewers, Next: Setting environment variables for WWW pages, Prev: Setting up yahtml, Up: Installation
 
@@ -89,6 +90,7 @@ Defaults are in parenthesis.
 `yahtml-kanji-code'
              ... kanji code for HTML files
 
+
 
 File: yahtmle, Node: Setting environment variables for WWW pages, Prev: Setting environments for weblint browsers and image viewers, Up: Installation
 
@@ -100,8 +102,7 @@ Variables regarding path names for files that will be your home page.
              ... list of matching path name on file system and URLs
 `yahtml-directory-index'
              ... index file displayed when none is given in URL.  Usually
-             `index.html' on NCSA type httpd and `Welcome.html' on
-             CERN types.
+     `index.html' on NCSA type httpd and `Welcome.html' on CERN types.
 
 Examples for `yahtml-path-url-alist'.  If `/home/yuuji/http/' is
 `http://localhost/~yuuji' at home and `/usr/home/yuuji/www/' is
@@ -112,6 +113,7 @@ Examples for `yahtml-path-url-alist'.  If `/home/yuuji/http/' is
              ("/usr/home/yuuji/www" . "http://www.keio.ac.jp/~yuuji")))
 
 Any number of additions can be made to this list.
+
 
 
 File: yahtmle, Node: Command Invocation, Next: Completion, Prev: Installation, Up: Top
@@ -126,6 +128,7 @@ For easy use of commands that are handy when editing HTML files.
              ... Display current page in browser
 `[prefix] t r'
              ... Reload current page if browser is already running
+
 
 
 File: yahtmle, Node: Completion, Next: Jump, Prev: Command Invocation, Up: Top
@@ -157,7 +160,7 @@ entities.
      attributes.  Possible completions are, <img>, <input>.
 
 `[prefix] l (YaTeX large-type completion)'
-     ... 
+     ...
 
           <big> 〜 </big>
 
@@ -173,6 +176,7 @@ entities.
      ... Used to enter special or symbol entities.  By default completion
      for < (&lt;), > (&gt;), & (&amp;), " (&quot;), ' (&apos;), blank
      (&nbsp;) is possible.
+
 
 
 File: yahtmle, Node: Jump, Next: Changing and Deleting, Prev: Completion, Up: Top
@@ -192,6 +196,7 @@ Recognized contexts are
    * `<a href="link.to.somewhere">' -> move cursor to linked target
    * `<applet code="program">' -> open Java source
 
+
 
 File: yahtmle, Node: Changing and Deleting, Next: CSS Support, Prev: Jump, Up: Top
 
@@ -200,9 +205,10 @@ Changing and Deleting
 
 * Menu:
 
-* Changing tags in pairs::      
-* Changing entities::           
-* URLencoding of strings within region::  
+* Changing tags in pairs::
+* Changing entities::
+* URLencoding of strings within region::
+
 
 
 File: yahtmle, Node: Changing tags in pairs, Next: Changing entities, Prev: Changing and Deleting, Up: Changing and Deleting
@@ -222,6 +228,7 @@ where the cursor is located.
    * attributes such as `<img src="image.file" alt="photo">'
      ... change attributes
 
+
 
 File: yahtmle, Node: Changing entities, Next: URLencoding of strings within region, Prev: Changing tags in pairs, Up: Changing and Deleting
 
@@ -236,17 +243,40 @@ HTML files.
              ... convert char to special entity in marked region
 `[prefix] :'
              ... convert special entity to original char in marked region
-             (reverse of [prefix] ;)
+     (reverse of [prefix] ;)
+
 
 
 
-File: yahtmle, Node: URLencoding of strings within region, Prev: Changing entities, Up: Changing and Deleting
+File: yahtmle, Node: URLencoding of strings within region, Next: td-enclosure/tr-enclosure, Prev: Changing entities, Up: Changing and Deleting
 
 URLencoding of strings within region
 ====================================
 
 `[prefix] #'
-     	... encode chars that needs to be URLencoded within region
+        ... encode chars that needs to be URLencoded within region
+
+
+
+File: yahtmle, Node: td-enclosure/tr-enclosure, Prev: URLencoding of strings within region, Up: Changing and Deleting
+
+td-enclosure/tr-enclosure
+=========================
+If you wan to convert series of field into <td>...</td> repetitions for
+table element, td-enclosure or tr-enclosure is convenient.
+
+      `[prefix] '} ... Enclose each field in a region into
+<td>...</td>'s.  `[prefix] ]' ... Enclose each line in a region into
+<tr>...</tr>'s, with every line converted to <td>...</td> repetition.
+They presume white space as field separator by default.  To change this,
+enter other delimiting character for a query.  You can convert CSV, for
+example, into table by specifying comma(,) as a delimiter.
+
+If you want to enclose fields with th, call with universal-argument
+(`C-u').  Enter `th' to enclose fields with <th>...</th>.  The special
+answer `thd' means that enclose the only first column with th, and the
+rest with td.
+
 
 
 File: yahtmle, Node: CSS Support, Next: Customizations, Prev: Changing and Deleting, Up: Top
@@ -256,8 +286,9 @@ CSS(Style Sheets) Support
 
 * Menu:
 
-* CSS-class completion::        
-* Reread CSS definition::       
+* CSS-class completion::
+* Reread CSS definition::
+
 
 
 File: yahtmle, Node: CSS-class completion, Next: Reread CSS definition, Prev: CSS Support, Up: CSS Support
@@ -278,8 +309,9 @@ class like this;
       .caution { font-size: 120%; background-color: 0xc00000;}
 
 when you input any tags via completing-read, yahtml prompts you to input
-class name.  If this is bothering, typing `C-j' instead of `RET' (or
-`C-m') cancels the next prompt to class name completion.
+class name.  If this is bothering, typing `C-j' instead of
+`RET' (or `C-m') cancels the next prompt to class name completion.
+
 
 
 File: yahtmle, Node: Reread CSS definition, Prev: CSS-class completion, Up: CSS Support
@@ -288,6 +320,7 @@ Re-reading CSS definition
 =========================
 If you add some class to your CSS file and you want yahtml to load new
 definitions, type `M-x yahtml-mode RET' to make yahtml do.
+
 
 
 File: yahtmle, Node: Customizations, Next: Copying, Prev: CSS Support, Up: Top
@@ -301,6 +334,7 @@ Variables that modify yahtml's behavior.
 
 * All customizable variables::  List of customizable variables
 * Hook variables::              hook variables
+
 
 
 File: yahtmle, Node: All customizable variables, Next: Hook variables, Prev: Customizations, Up: Customizations
@@ -318,9 +352,9 @@ List of customizable variables.  Defaults in parenthesis
      Browser to view external pages with `[prefix]g'. (netscape)
 
  -- Variable: yahtml-kanji-code
-     Default kanji code. 1=sjis, 2=jis, 3=euc, 4=utf-8 (2) If
-           AddType "text/html; charset=xxx" .html is written in .htaccess,
-     this will override yahtml-kanji-code.
+     Default kanji code. 1=sjis, 2=jis, 3=euc, 4=utf-8 (2) If AddType
+     text/html; charset=xxx" .html is written in .htaccess, this will
+     override yahtml-kanji-code.
 
  -- Variable: yahtml-fill-column
      Columns to auto-fill (72)
@@ -410,11 +444,13 @@ List of customizable variables.  Defaults in parenthesis
  -- Variable: yahtml-indentation-boundary
      Boundary regexp for indentation calculation.  (`"^\\s *<h[1-3]>"')
 
+
 
 File: yahtmle, Node: Hook variables, Prev: All customizable variables, Up: Customizations
 
 hook variables
 ==============
+
 
 
 
@@ -440,6 +476,7 @@ section of `docs/htmlqa.eng' in this package.
                                                              HIROSE, Yuuji
 
 
+
 
 File: yahtmle, Node: Concept Index, Prev: Copying, Up: Top
 
@@ -448,12 +485,35 @@ Index
 
 * Menu:
 
-* Customize:                    Customizations.         4.
-* Demacs:                       Intro.                  4.
-* Key Assign:                   Customizations.         4.
-* LaTeX:                        Intro.                  4.
-* Mule:                         Intro.                  4.
-* yahtml:                       Intro.                  4.
-
-
-
+* Customize:                    Customizations.         (line   5)
+* Demacs:                       Intro.                  (line   5)
+* Key Assign:                   Customizations.         (line   5)
+* LaTeX:                        Intro.                  (line   5)
+* Mule:                         Intro.                  (line   5)
+* yahtml:                       Intro.                  (line   5)
+
+Tag table:
+Node: Top147
+Node: Intro724
+Node: Installation1122
+Node: Setting up yahtml1388
+Node: Setting environments for weblint browsers and image viewers2179
+Node: Setting environment variables for WWW pages2875
+Node: Command Invocation3846
+Node: Completion4274
+Node: Jump5790
+Node: Changing and Deleting6270
+Node: Changing tags in pairs6502
+Node: Changing entities6997
+Node: URLencoding of strings within region7533
+Node: td-enclosure/tr-enclosure7836
+Node: CSS Support8772
+Node: CSS-class completion8983
+Node: Reread CSS definition9836
+Node: Customizations10111
+Node: All customizable variables10387
+Node: Hook variables14154
+Node: Copying14280
+Node: Concept Index15071
+
+End tag table
