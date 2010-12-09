@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Thu Dec  9 14:40:52 2010 on firestorm
+;;; Last modified Thu Dec  9 15:16:06 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -2341,15 +2341,21 @@ Interactive prefix argument consults enclosing element other than td."
   (let ((e (cond
 	    ((null e) "td")
 	    ((stringp e) e)
-	    (t (read-string "Enclose with: " "td"))))
-	p q (ws "[ \t]"))
+	    (t (read-string "Enclose with(`thd' means th td td..): " "th"))))
+	(ws "[ \t]")
+	elm p i)
     (if (string= delim "") (setq delim " \t\n"))
-    (setq delim (concat "[" delim "]+"))
+    (setq delim (concat "[" delim "]+")
+	  elm (if (string= "thd" e)
+		  (cons "th" "td")
+		(cons e e)))
     (save-excursion
       (save-restriction
 	(narrow-to-region beg end)
 	(goto-char (setq p (point-min)))
+	(setq i 0 e (car elm))
 	(while (re-search-forward delim nil t)
+	  (setq e (if (= (setq i (1+ i)) 1) (car elm) (cdr elm)))
 	  (goto-char (match-beginning 0))
 	  (insert "</" e ">")
 	  (save-excursion
@@ -2366,7 +2372,9 @@ Interactive prefix argument consults enclosing element other than td."
 (defun yahtml-tr-region (e delim beg end)
   "Enclose lines in a form tab-sv/csv with <tr><td>..</td></tr>."
   (interactive "P\nsDelimiter(s): \nr")
-  (setq e (if (and e (listp e)) (read-string "Enclose with: " "th")))
+  (setq e (if (and e (listp e))
+	      (read-string "Enclose with(td or th, `thd' -> th td td td...: "
+			   "th")))
   (save-excursion
     (save-restriction
       (narrow-to-region (point) (mark))
