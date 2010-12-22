@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Thu Dec  9 20:16:49 2010 on firestorm
+;;; Last modified Wed Dec 22 22:14:28 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -243,7 +243,7 @@ Consult your site's WWW administrator.")
 
 (defvar yahtml-use-css t "*Use stylesheet or not")
 
-(defvar yahtml-image-inspection-bytes 50000
+(defvar yahtml-image-inspection-bytes 500000
   "*Number of bytes to inspect the image for geometry information")
 (defvar yahtml:img-default-alt-format "%xx%y(%sbytes)"
   "*Default format of img entity's ALT attributes.
