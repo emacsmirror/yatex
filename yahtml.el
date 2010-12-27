@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2010 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Wed Dec 22 22:14:28 2010 on firestorm
+;;; Last modified Sun Dec 26 23:04:53 2010 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -1379,8 +1379,14 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 (defun yahtml:form ()
   "Add-in function `form' input format"
   (concat
-   " " (if yahtml-prefer-upcase-attributes "METHOD" "method") "="
+   " " (if yahtml-prefer-upcase-attributes "METHOD" "method") "=\""
    (completing-read "Method: " '(("POST") ("GET")) nil t)
+   "\""
+   (yahtml-make-optional-argument
+    (if yahtml-prefer-upcase-attributes "ENCTYPE" "enctype")
+    (completing-read
+     "Enctype: "
+     '(("application/x-www-form-urlencoded") ("multipart/form-data"))))
    " " (if yahtml-prefer-upcase-attributes "ACTION" "action") "=\""
    (read-string "Action: ") "\""))
 
