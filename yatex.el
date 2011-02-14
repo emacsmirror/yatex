@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.3
 ;;; (c)1991-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu May 27 14:55:07 2010 on firestorm
+;;; Last modified Mon Feb 14 12:45:22 2011 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -459,8 +459,9 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   (YaTeX-define-key ")" 'YaTeX-insert-parens-region)
   (YaTeX-define-key "$" 'YaTeX-insert-dollars-region)
   (YaTeX-define-key "i" 'YaTeX-fill-item)
-  (YaTeX-define-key
-   "\\" '(lambda () (interactive) (insert "$\\backslash$")))
+  (YaTeX-define-key "\\"
+   '(lambda () (interactive)
+      (insert (if (YaTeX-in-math-mode-p) "\\backslash" "\\textbackslash"))))
   (if YaTeX-no-begend-shortcut
       (progn
 	(YaTeX-define-key "B" 'YaTeX-make-begin-end-region)
@@ -982,9 +983,11 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 	 'section-table 'user-section-table 'tmp-section-table)
 	(if YaTeX-current-position-register
 	    (point-to-register YaTeX-current-position-register))
-	(if (string= (buffer-substring (- (point) 2) (point)) "{}")
-	  (forward-char -1))
-	(while (string= (buffer-substring (- (point) 3) (1- (point))) "{}")
+	(if (string= (YaTeX-buffer-substring (- (point) 2) (point))
+		     "{}")
+	    (forward-char -1))
+	(while (string= (YaTeX-buffer-substring (- (point) 3) (1- (point)))
+			"{}")
 	  (forward-char -2))
 	(YaTeX-package-auto-usepackage section 'section))
     (if (<= (minibuffer-depth) 0) (use-global-map global-map))
@@ -1105,7 +1108,7 @@ into {\\xxx } braces.
        (t
 	(mapcar 'YaTeX-sync-local-table
 		'(tmp-section-table tmp-env-table tmp-singlecmd-table))
-	(let*((pattern (buffer-substring begin end))
+	(let*((pattern (YaTeX-buffer-substring begin end))
 	      (all-table
 	       (append
 		section-table user-section-table tmp-section-table
@@ -1119,8 +1122,9 @@ into {\\xxx } braces.
 	      ;; Next,
 	      ;; search completion with backslash
 	      (setq completion
-		    (try-completion (buffer-substring (1- begin) end)
-				    all-table nil)
+		    (try-completion
+		     (YaTeX-buffer-substring (1- begin) end)
+		     all-table nil)
 		    begin (1- begin)))
 	  (cond
 	   ((null completion)
@@ -1496,7 +1500,8 @@ Optional second argument CHAR is for non-interactive call from menu."
 			((= c ?l) "%#LPR")))
 	(if (re-search-forward key nil t)
 	    (progn
-	      (setq string (buffer-substring (point) (point-end-of-line)))
+	      (setq string (YaTeX-buffer-substring
+			    (point) (point-end-of-line)))
 	      (delete-region (point) (progn (end-of-line) (point))))
 	  (open-line 1)
 	  (delete-region (point) (progn (beginning-of-line)(point)));for 19 :-<
@@ -1565,7 +1570,7 @@ search-last-string, you can repeat search the same label/ref by typing
 		 "\\\\bibitem\\(\\[[^]]+\\]\\)?{%k}\\|^\\s *@[a-z]+{%k,")
 		("bibitem" . "\\\\cite\\(\\[[^]]+\\]\\)?")))))
       (goto-char (match-end 0))
-      (let ((label (buffer-substring 
+      (let ((label (YaTeX-buffer-substring 
 		    (1- (point)) (progn (backward-list 1) (1+ (point)))))
 	    (fp (make-marker))fl fn
 	    (goother (function (lambda (buffer point)
@@ -1664,7 +1669,7 @@ looking at \\input or \\include or \includeonly on current line."
 	    nil
 	  (skip-chars-backward "^,{"))
 	(setq input-file
-	      (buffer-substring
+	      (YaTeX-buffer-substring
 	       (point) (progn (skip-chars-forward "^ ,}") (point))))
 	(if (not (string-match "\\.\\(tex\\|sty\\)$" input-file))
 	    (setq input-file (concat input-file ".tex"))))
@@ -2248,8 +2253,8 @@ because this function is called with no argument."
   (if (not (YaTeX-on-begin-end-p)) nil
     (save-excursion
       (let (p env (m1 (match-beginning 1)) (m2 (match-beginning 2)))
-	(setq env (if m1 (buffer-substring m1 (match-end 1))
-		    (buffer-substring m2 (match-end 2))))
+	(setq env (if m1 (YaTeX-buffer-substring m1 (match-end 1))
+		    (YaTeX-buffer-substring m2 (match-end 2))))
 	(goto-char (match-beginning 0))
 	(set-mark-command nil)
 	(YaTeX-goto-corresponding-environment)
@@ -2293,7 +2298,7 @@ because this function is called with no argument."
 			(YaTeX-addin cmd)
 		      (concat "["
 			      (read-string (format "Change `%s' to: "
-						   (buffer-substring
+						   (YaTeX-buffer-substring
 						    (1+ beg) (1- end))))
 			      "]"))))
 
@@ -2304,7 +2309,7 @@ because this function is called with no argument."
 	      (forward-list 1)
 	      (forward-char -1)
 	      (set-marker end (point))
-	      (setq old (buffer-substring beg end))
+	      (setq old (YaTeX-buffer-substring beg end))
 	      (goto-char p)
 	      (if (> (length old) 40)
 		  (setq old (concat (substring old 0 12) "..."
@@ -2431,7 +2436,8 @@ Non-nil for ARG kills its contents too."
 	      nil
 	    (goto-char (match-end 2))
 	    (skip-chars-forward
-	     (concat "^" (buffer-substring (match-beginning 2) (match-end 2))))
+	     (concat "^" (YaTeX-buffer-substring
+			  (match-beginning 2) (match-end 2))))
 	    (and (< (match-beginning 2) point) (< (1- point) (point))))
 	(store-match-data md)))))
 
@@ -2590,7 +2596,7 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 	  (newline)
 	  (indent-to col)
 	  (setq fill-prefix
-		(buffer-substring (point-beginning-of-line)(point)))
+		(YaTeX-buffer-substring (point-beginning-of-line)(point)))
 	  (beginning-of-line)
 	  (delete-region (point) (progn (forward-line 1) (point)))
 	  (re-search-forward item-term nil 1)
@@ -2636,7 +2642,7 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 			  (setq end (point))  ;non-whitespace char
 			  (skip-chars-forward " \t")
 			  (equal (point) p))
-	  (setq fill-prefix (buffer-substring p end)))
+	  (setq fill-prefix (YaTeX-buffer-substring p end)))
 	 ((and ;;(not YaTeX-emacs-19)
 	       (string-match YaTeX-itemizing-env-regexp inenv)
 	       (setq ii (YaTeX-get-item-info)))
@@ -2644,7 +2650,7 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 	    (beginning-of-line)
 	    (indent-to-column (car (cdr ii)))
 	    (setq fill-prefix
-		  (buffer-substring (point) (point-beginning-of-line)))
+		  (YaTeX-buffer-substring (point) (point-beginning-of-line)))
 	    (delete-region (point) (progn (beginning-of-line) (point))))))
 	(cond
 	 ((string-match "tabular" inenv)
