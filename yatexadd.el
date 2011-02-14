@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.19
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Feb 14 12:48:47 2011 on firestorm
+;;; Last modified Mon Feb 14 14:48:30 2011 on firestorm
 ;;; $Id$
 
 ;;;
@@ -1119,14 +1119,16 @@ YaTeX-sectioning-levelÇÃêîílÇ≈éwíË.")
 	    (bury-buffer YaTeX-label-buffer)))
 	label)))))
 
-(defun YaTeX::label (argp &optional refname)
+(defun YaTeX::label (argp &optional labname refname)
   "Read label name and return it with copying \\ref{LABEL-NAME} to kill-ring."
   (cond
    ((= argp 1)
     (let*((dlab (if (boundp (intern-soft "old"))
 		    old ;if called via YaTeX-change-section (tricky...)
 		  (YaTeX::ref-default-label)))
-	  (label (read-string "New label name: " (cons dlab 1))))
+	  (label (read-string
+		  (format "New %s name: " (or labname "label"))
+		  (cons dlab 1))))
       (if (string< "" label)
 	  (let ((refstr (format "\\%s{%s}" (or refname "ref") label))
 		(key (key-description (where-is-internal 'yank nil t)))
@@ -1305,6 +1307,10 @@ and print them to standard output."
 	 "cite"))))
 
    (t nil)))
+
+(defun YaTeX::bibitem (argp)
+  "Add-in function to insert argument of \\bibitem."
+  (YaTeX::label argp "label" "cite"))
 
 ;;; for AMS-LaTeX
 (and YaTeX-use-AMS-LaTeX (fset 'YaTeX::eqref 'YaTeX::ref))
