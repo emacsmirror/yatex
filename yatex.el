@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.3
-;;; (c)1991-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Feb 14 12:45:22 2011 on firestorm
+;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Feb 14 12:48:33 2011 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/

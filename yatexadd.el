@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.18
-;;; (c)1991-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Feb 14 12:32:10 2011 on firestorm
+;;; yatexadd.el rev.19
+;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Feb 14 12:48:47 2011 on firestorm
 ;;; $Id$
 
 ;;;
