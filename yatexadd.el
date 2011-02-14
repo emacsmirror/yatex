@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.18
 ;;; (c)1991-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Sep  9 09:08:19 2010 on firestorm
+;;; Last modified Mon Feb 14 12:32:10 2011 on firestorm
 ;;; $Id$
 
 ;;;
@@ -1118,6 +1118,26 @@ YaTeX-sectioning-levelの数値で指定.")
 		  )))
 	    (bury-buffer YaTeX-label-buffer)))
 	label)))))
+
+(defun YaTeX::label (argp &optional refname)
+  "Read label name and return it with copying \\ref{LABEL-NAME} to kill-ring."
+  (cond
+   ((= argp 1)
+    (let*((dlab (if (boundp (intern-soft "old"))
+		    old ;if called via YaTeX-change-section (tricky...)
+		  (YaTeX::ref-default-label)))
+	  (label (read-string "New label name: " (cons dlab 1))))
+      (if (string< "" label)
+	  (let ((refstr (format "\\%s{%s}" (or refname "ref") label))
+		(key (key-description (where-is-internal 'yank nil t)))
+		(msg
+		 (if YaTeX-japan
+		     "をkill-ringに入れました。yank(%s)で取り出せます。"
+		   " is stored into kill-ring.  Paste it by yank(%s).")))
+	    (kill-new refstr)
+	    (message (concat "`%s'" msg) refstr key)))
+      label))))
+      
 
 (fset 'YaTeX::pageref 'YaTeX::ref)
 (defun YaTeX::tabref (argp)	    ; For the style file of IPSJ journal
