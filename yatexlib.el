@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Sep 11 11:40:11 2010 on firestorm
+;;; Last modified Wed Feb 16 19:58:33 2011 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -664,6 +664,13 @@ See documentation of YaTeX-minibuffer-complete."
   (let ((quick t))
     (self-insert-command 1)
     (YaTeX-minibuffer-complete)))
+
+(defun YaTeX-yatex-buffer-list ()
+  (save-excursion
+    (delq nil (mapcar (function (lambda (buf)
+				  (set-buffer buf)
+				  (if (eq major-mode 'yatex-mode) buf)))
+		      (buffer-list)))))
 
 (defun foreach-buffers (pattern job)
   "For each buffer which matches with PATTERN, do JOB."

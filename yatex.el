@@ -1,15 +1,15 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.74.3
+;;; yatex.el rev. 1.74.4
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Feb 14 12:48:33 2011 on firestorm
+;;; Last modified Wed Feb 16 17:23:52 2011 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.74.3"
+(defconst YaTeX-revision-number "1.74.4"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -1528,6 +1528,29 @@ Optional second argument CHAR is for non-interactive call from menu."
 	(set-marker e nil))
        ))))
 
+(defvar YaTeX-refcommand-def-regexp-default
+  "label\\|bibitem")
+(defvar YaTeX-refcommand-def-regexp-private nil
+  "*Regexp of defining label commands")
+(defvar YaTeX-refcommand-def-regexp
+  (concat (if YaTeX-refcommand-def-regexp-private
+	      (concat YaTeX-refcommand-def-regexp-private "\\|"))
+	  YaTeX-refcommand-def-regexp-default))
+
+(defvar YaTeX-refcommand-ref-regexp-default
+  "\\(page\\|eq\\|fig\\)?ref\\|cite")
+(defvar YaTeX-refcommand-ref-regexp-private nil
+  "*Regexp of referring label commands")
+(defvar YaTeX-refcommand-ref-regexp
+  (concat (if YaTeX-refcommand-ref-regexp-private
+	      (concat YaTeX-refcommand-ref-regexp-private "\\|"))
+	  YaTeX-refcommand-ref-regexp-default))
+
+(defvar YaTeX-refcommand-regexp
+  (concat YaTeX-refcommand-def-regexp
+	  "\\|" YaTeX-refcommand-ref-regexp)
+  "Regexp of label defining/referring command name.")
+
 (defun YaTeX-goto-corresponding-label (reverse &optional otherwin)
   "Jump to corresponding \\label{} and \\ref{} or \\cite and \\bibitem.
   The default search direction depends on the command at the cursor position.
@@ -1543,7 +1566,7 @@ search-last-string, you can repeat search the same label/ref by typing
   If optional second argument OTHERWIN is non-nil, move to other window."
 
   (let ((scmd "") label direc string blist (p (point)) (cb (current-buffer))
-	(refcommands "label\\|\\(page\\|eq\\)?ref\\|cite\\|bibitem")
+	(refcommands YaTeX-refcommand-regexp)
 	(foundmsg (format "Type %s %c to return to original position."
 			  (key-description
 			   (car

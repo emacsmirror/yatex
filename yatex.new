@@ -5,7 +5,8 @@
 	[prefix] t e でポイント位置を含む環境か数式環境をタイプセット。
 	M-C-SPC で環境だけでなく数式環境もマークする。
 	[prefix] t d でタイプセッタ起動成功のあと dvipdfmx を起動。
-	\label{}でラベル名を入れたときは \ref{NAME} を自動的にkill-ring追加。
+	\label{}でラベル名を入れたときは \ref{NAME} を自動的にkill-ringに追加。
+	\bibitem{}を入れたときは \cite{TAG} を自動的にkill-ringに追加。
 	=== yahtml ===
 	[prefix] t ブラウザメニューに「n:新規ページ作成」を追加(実験)。
 	[prefix] t j のlintコマンドを <!-- #lint CmdLine --> 行で指定可。

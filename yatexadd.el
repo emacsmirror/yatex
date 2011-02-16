@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.19
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Feb 14 14:48:30 2011 on firestorm
+;;; Last modified Wed Feb 16 19:57:26 2011 on firestorm
 ;;; $Id$
 
 ;;;
@@ -742,7 +742,7 @@ If optional third argument NOSET is non-nil, do not generate new label."
   "Alist of labeling regexp vs. its group number points to label string.
 This alist is used in \\ref's argument's completion.")
 (defvar YaTeX::ref-labeling-regexp-alist-private nil
-  "*Private extesion to YaTeX::ref-labeling-regexp-alist.
+  "*Private extension to YaTeX::ref-labeling-regexp-alist.
 See the documetation of YaTeX::ref-labeling-regexp-alist.")
 (defvar YaTeX::ref-labeling-regexp-alist
   (append YaTeX::ref-labeling-regexp-alist-default
@@ -1119,12 +1119,86 @@ YaTeX-sectioning-levelの数値で指定.")
 	    (bury-buffer YaTeX-label-buffer)))
 	label)))))
 
+(defun YaTeX::label-rename-refs (old new &optional def ref)
+  "Rename reference tag from OLD to NEW.
+Optional arguments DEF and REF specify defining command and
+referring command respectively.
+---------------------------------------------------------
+CONTROL KEYS - キーの説明
+ y	Replace			置換する
+ n	Do not replace		置換しない
+ !	Replace All w/o query	残る全部を確認なしで置換
+ r	Enter Recursive-edit	再帰編集モードへ
+ q	Quit from replacing	ここまでで置換をやめる
+
+Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
+再帰編集に入ったら \\[exit-recursive-edit]  で抜け忘れなきよう。"
+  (save-window-excursion
+    (catch 'exit
+      (let*((bufs (YaTeX-yatex-buffer-list)) buf b e
+	    (oldptn (regexp-quote old))
+	    (sw (selected-window))
+	    (ptn (concat
+		  "\\(" YaTeX-refcommand-ref-regexp "\\)"
+		  "\\s *{" oldptn "}"))
+	    (useov (fboundp 'make-overlay)) ov
+	    (qmsg "Replace to `%s'? [yn!rq]")
+	    continue ch)
+	(while bufs
+	  (set-buffer (setq buf (car bufs)))
+	  (save-excursion
+	    (goto-char (point-min))
+	    (while (re-search-forward ptn nil t)
+	      (goto-char (match-end 1))
+	      (skip-chars-forward " \t\n{")
+	      (unwind-protect
+		  (if (and
+		       (looking-at oldptn)
+		       (setq b (match-beginning 0)
+			     e (match-end 0))
+		       (or continue
+			   (catch 'query
+			     (if useov
+				 (if ov (move-overlay ov b e)
+				   (overlay-put
+				    (setq ov (make-overlay b e))
+				    'face 'isearch)))
+			     (switch-to-buffer buf)
+			     (while t
+			       (message qmsg new)
+			       (setq ch (read-char))
+			       (cond
+				((= ch ?q) (throw 'exit t))
+				((= ch ?r)
+				 (message
+				  "Exit recursive-edit by `%s'"
+				  (key-description
+				   (where-is-internal
+				    'exit-recursive-edit '(keymap) t)))
+				 (sleep-for 2)
+				 (recursive-edit))
+				((= ch ?y) (throw 'query t))
+				((= ch ?!) (throw 'query (setq continue t)))
+				((= ch ??)
+				 (describe-function
+				  'YaTeX::label-rename-refs)
+				 (select-window (get-buffer-window "*Help*"))
+				 (search-forward "----")
+				 (forward-line 1)
+				 (set-window-start (selected-window) (point))
+				 (sit-for 0)
+				 (select-window sw))
+				((= ch ?n) (throw 'query nil)))))))
+		      (replace-match new))
+		(and ov (delete-overlay ov)))))
+	  (setq bufs (cdr bufs)))))))
+
 (defun YaTeX::label (argp &optional labname refname)
   "Read label name and return it with copying \\ref{LABEL-NAME} to kill-ring."
   (cond
    ((= argp 1)
-    (let*((dlab (if (boundp (intern-soft "old"))
-		    old ;if called via YaTeX-change-section (tricky...)
+    (let*((chmode (boundp (intern-soft "old")))
+	  (dlab (if chmode old ;if called via YaTeX-change-section (tricky...)
 		  (YaTeX::ref-default-label)))
 	  (label (read-string
 		  (format "New %s name: " (or labname "label"))
@@ -1137,7 +1211,8 @@ YaTeX-sectioning-levelの数値で指定.")
 		     "をkill-ringに入れました。yank(%s)で取り出せます。"
 		   " is stored into kill-ring.  Paste it by yank(%s).")))
 	    (kill-new refstr)
-	    (message (concat "`%s'" msg) refstr key)))
+	    (message (concat "`%s'" msg) refstr key)
+	    (if chmode (YaTeX::label-rename-refs old label))))
       label))))
       
 
@@ -1321,13 +1396,6 @@ and print them to standard output."
 (fset 'YaTeX::citename 'YaTeX::cite)
 (fset 'YaTeX::citep 'YaTeX::cite)
 (fset 'YaTeX::citet 'YaTeX::cite)
-
-(defun YaTeX-yatex-buffer-list ()
-  (save-excursion
-    (delq nil (mapcar (function (lambda (buf)
-				  (set-buffer buf)
-				  (if (eq major-mode 'yatex-mode) buf)))
-		      (buffer-list)))))
 
 (defun YaTeX-select-other-yatex-buffer ()
   "Select buffer from all yatex-mode's buffers interactivelly."
