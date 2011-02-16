@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.4
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Feb 16 17:23:52 2011 on firestorm
+;;; Last modified Wed Feb 16 21:20:13 2011 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -2309,7 +2309,8 @@ because this function is called with no argument."
 	      (set-marker end (match-end 1))
 	      (goto-char beg)		;beginning of the command
 	      (setq new (YaTeX-read-section
-			 (format "Change `%s' to: " cmd) nil)))
+			 (format "Change `%s' to: " cmd) nil)
+		    old cmd))
 
 	     ((= where -1);;if point is on a optional parameter
 	      (set-marker beg (match-beginning 2))
@@ -2320,9 +2321,10 @@ because this function is called with no argument."
 		    (if (fboundp (intern-soft (concat YaTeX-addin-prefix cmd)))
 			(YaTeX-addin cmd)
 		      (concat "["
-			      (read-string (format "Change `%s' to: "
-						   (YaTeX-buffer-substring
-						    (1+ beg) (1- end))))
+			      (read-string
+			       (format "Change `%s' to: "
+				       (setq old (YaTeX-buffer-substring
+						  (1+ beg) (1- end)))))
 			      "]"))))
 
 	     ((> where 0);;if point is in arguments' braces
@@ -2342,9 +2344,11 @@ because this function is called with no argument."
 			(funcall (intern-soft (concat "YaTeX::" cmd)) where)
 		      (read-string (format "Change `%s' to: " old)))))
 	     )				;cond
-	    (delete-region beg end)
-	    (goto-char beg)
-	    (insert-before-markers new))
+	    (if (string= old new)
+		nil			;do not replace
+	      (delete-region beg end)
+	      (goto-char beg)
+	      (insert-before-markers new)))
 	(set-marker beg nil)
 	(set-marker end nil))
       ;;(goto-char (marker-position p))
