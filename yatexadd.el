@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.19
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Feb 16 19:57:26 2011 on firestorm
+;;; Last modified Wed Feb 16 21:35:40 2011 on firestorm
 ;;; $Id$
 
 ;;;
@@ -1141,7 +1141,10 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 	    (ptn (concat
 		  "\\(" YaTeX-refcommand-ref-regexp "\\)"
 		  "\\s *{" oldptn "}"))
-	    (useov (fboundp 'make-overlay)) ov
+	    (repface (and (fboundp 'make-overlay)
+			  (fboundp 'internal-find-face)
+			  (if (internal-find-face 'isearch) 'isearch 'region)))
+	    ov
 	    (qmsg "Replace to `%s'? [yn!rq]")
 	    continue ch)
 	(while bufs
@@ -1158,11 +1161,11 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 			     e (match-end 0))
 		       (or continue
 			   (catch 'query
-			     (if useov
+			     (if repface
 				 (if ov (move-overlay ov b e)
 				   (overlay-put
 				    (setq ov (make-overlay b e))
-				    'face 'isearch)))
+				    'face repface)))
 			     (switch-to-buffer buf)
 			     (while t
 			       (message qmsg new)
@@ -1212,7 +1215,9 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 		   " is stored into kill-ring.  Paste it by yank(%s).")))
 	    (kill-new refstr)
 	    (message (concat "`%s'" msg) refstr key)
-	    (if chmode (YaTeX::label-rename-refs old label))))
+	    (and chmode
+		 (not (equal old label))
+		 (YaTeX::label-rename-refs old label))))
       label))))
       
 
