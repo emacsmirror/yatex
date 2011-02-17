@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Oct 20 12:32:44 2010 on firestorm
+;;; Last modified Thu Feb 17 15:50:32 2011 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -357,20 +357,24 @@ PP command will be called iff typeset command exit successfully"
   "Holds history list of YaTeX-call-command-on-file.")
 (put 'YaTeX-call-command-history 'no-default t)
 (defun YaTeX-call-command-on-file (base-cmd buffer &optional file)
-  "Call external command BASE-CMD int the BUFFER.
+  "Call external command BASE-CMD in the BUFFER.
 By default, pass the basename of current file.  Optional 3rd argument
 FILE changes the default file name."
   (YaTeX-save-buffers)
-  (YaTeX-typeset
-   (read-string-with-history
-    "Call command: "
-    (concat base-cmd " "
-	    (let ((me (file-name-nondirectory (or file buffer-file-name))))
-	      (if (string-match "\\.tex" me)
-		  (substring me 0 (match-beginning 0))
-		me)))
-    'YaTeX-call-command-history)
-   buffer))
+  (let ((default (concat base-cmd " "
+			 (let ((me (file-name-nondirectory
+				    (or file buffer-file-name))))
+			   (if (string-match "\\.tex" me)
+			       (substring me 0 (match-beginning 0))
+			     me)))))
+    (or YaTeX-call-command-history
+	(setq YaTeX-call-command-history (list default)))
+    (YaTeX-typeset
+     (read-string-with-history
+      "Call command: "
+      (car YaTeX-call-command-history)
+      'YaTeX-call-command-history)
+     buffer)))
 
 (defun YaTeX-bibtex-buffer (cmd)
   "Pass the bibliography data of editing file to bibtex."
