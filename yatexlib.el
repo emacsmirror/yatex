@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Feb 16 19:58:33 2011 on firestorm
+;;; Last modified Fri Feb 18 15:05:08 2011 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -465,13 +465,12 @@ corresponding real arguments ARGS."
 ;;;###autoload
 (defun rindex (string char)
   (let ((pos (1- (length string)))(index -1))
-    (while (>= pos 0)
-      (cond
-       ((= (aref string pos) char)
-	(setq index pos) (setq pos -1))
-       (t (setq pos (1- pos))))
-      )
-    index))
+    (catch 'rindex
+      (while (>= pos 0)
+	(cond
+	 ((= (aref string pos) char)
+	  (throw 'rindex pos))
+	 (t (setq pos (1- pos))))))))
 
 ;;;###autoload
 (defun point-beginning-of-line ()
