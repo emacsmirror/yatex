@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2010 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Feb 17 15:50:32 2011 on firestorm
+;;; Last modified Fri Feb 18 10:35:39 2011 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -304,12 +304,13 @@ PP command will be called iff typeset command exit successfully"
   (YaTeX-save-buffers)
   (let*((me (substring (buffer-name) 0 (rindex (buffer-name) ?.)))
 	(mydir (file-name-directory (buffer-file-name)))
-	(cmd (YaTeX-get-latex-command t)) ppcmd
+	(cmd (YaTeX-get-latex-command t)) pparg ppcmd
 	(cb (current-buffer)))
     (and pp
 	 (stringp pp)
-	 (setq ppcmd (concat pp (substring cmd (string-match "[ \t]" cmd)))
-	       ppcmd (substring ppcmd 0 (rindex ppcmd ?.))))
+	 (setq pparg (substring cmd 0 (string-match "[;&]" cmd)) ;rm multistmt
+	       pparg (substring pparg (rindex pparg ? ))	 ;get last arg
+	       ppcmd (concat pp (substring pparg 0 (rindex pparg ?.)))));rm ext
     (if (YaTeX-main-file-p) nil
       (save-excursion
 	(YaTeX-visit-main t)	;search into main buffer
@@ -722,17 +723,15 @@ error or warning lines in reverse order."
   (if (null preview-command) (setq preview-command dvi2-command))
   (let* ((latex-cmd (YaTeX-get-latex-command t))
 	 (rin (rindex latex-cmd ? ))
-	 (fname (if (> rin -1) (substring latex-cmd (1+ rin)) ""))
+	 (fname (if rin (substring latex-cmd (1+ rin)) ""))
 	 (r (YaTeX-assoc-regexp preview-command YaTeX-dvi2-command-ext-alist))
-	 (ext (if r (cdr r) ""))
-	 (period))
+	 (ext (if r (cdr r) "")))
     (concat
      (if (string= fname "")
-	(setq fname (substring (file-name-nondirectory
-				(buffer-file-name))
-			       0 -4))
-      (setq period (rindex fname ?.))
-      (setq fname (substring fname 0 (if (eq -1 period) nil period))))
+	 (setq fname (substring (file-name-nondirectory
+				 (buffer-file-name))
+				0 -4))
+       (setq fname (substring fname 0 (rindex fname ?.))))
      ext)))
 
 (defun YaTeX-get-latex-command (&optional switch)
