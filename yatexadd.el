@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.19
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Feb 16 21:35:40 2011 on firestorm
+;;; Last modified Thu Feb 17 11:15:20 2011 on firestorm
 ;;; $Id$
 
 ;;;
@@ -1145,7 +1145,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 			  (fboundp 'internal-find-face)
 			  (if (internal-find-face 'isearch) 'isearch 'region)))
 	    ov
-	    (qmsg "Replace to `%s'? [yn!rq]")
+	    (qmsg "Replace to `%s'? [yn!rq?]")
 	    continue ch)
 	(while bufs
 	  (set-buffer (setq buf (car bufs)))
@@ -1174,7 +1174,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 				((= ch ?q) (throw 'exit t))
 				((= ch ?r)
 				 (message
-				  "Exit recursive-edit by `%s'"
+				  "Don't forget to exit recursive-edit by `%s'"
 				  (key-description
 				   (where-is-internal
 				    'exit-recursive-edit '(keymap) t)))
@@ -1214,10 +1214,10 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 		     "Çkill-ringÇ…ì¸ÇÍÇ‹ÇµÇΩÅByank(%s)Ç≈éÊÇËèoÇπÇ‹Ç∑ÅB"
 		   " is stored into kill-ring.  Paste it by yank(%s).")))
 	    (kill-new refstr)
-	    (message (concat "`%s'" msg) refstr key)
 	    (and chmode
 		 (not (equal old label))
-		 (YaTeX::label-rename-refs old label))))
+		 (YaTeX::label-rename-refs old label))
+	    (message (concat "`%s'" msg) refstr key)))
       label))))
       
 
