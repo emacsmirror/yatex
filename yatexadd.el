@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.19
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Feb 17 11:15:20 2011 on firestorm
+;;; Last modified Mon Mar  7 12:12:11 2011 on firestorm
 ;;; $Id$
 
 ;;;
@@ -1690,6 +1690,7 @@ and print them to standard output."
     ("latterpaper") ("legalpaper") ("executivepaper") ("landscape")
     ("oneside") ("twoside") ("draft") ("final") ("leqno") ("fleqn") ("openbib")
     ("tombow") ("titlepage") ("notitlepage") ("dvips")
+    ("mingoth")				;for jsarticle
     ("clock")				;for slides class only
     )
     "Default options list for documentclass")
@@ -1727,6 +1728,7 @@ and print them to standard output."
 
 (defvar YaTeX:documentclasses-default
   '(("article") ("jarticle") ("report") ("jreport") ("book") ("jbook")
+    ("jsarticle") ("jsbook")
     ("j-article") ("j-report") ("j-book")
     ("letter") ("slides") ("ltxdoc") ("ltxguide") ("ltnews") ("proc"))
   "Default documentclass alist")
