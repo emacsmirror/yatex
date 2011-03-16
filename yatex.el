@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.4
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Feb 16 21:20:13 2011 on firestorm
+;;; Last modified Wed Mar 16 09:56:43 2011 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -153,7 +153,7 @@ for YaTeX-uncomment-paragraph.")
 (defvar YaTeX-verbatim-environments 
   '("verbatim" "verbatim*")
   "*Assume these environments of this variable disable LaTeX commands.")
-(defvar YaTeX-verb-regexp "verb\\*?\\|path"
+(defvar YaTeX-verb-regexp "verb\\*?\\|path\\|alltt"
   "*Regexp of verb family.  Do not contain preceding \\\\ nor \\(\\).")
 (defvar YaTeX-fill-inhibit-environments
   (append '("tabular" "tabular*" "array" "picture" "eqnarray" "eqnarray*"
@@ -1683,7 +1683,7 @@ search-last-string, you can repeat search the same label/ref by typing
 
 (defun YaTeX-goto-corresponding-file (&optional other)
   "Visit or switch buffer of corresponding file,
-looking at \\input or \\include or \includeonly on current line."
+looking at \\input or \\include or \\includeonly on current line."
   (if (not (YaTeX-on-includes-p)) nil
     (let ((parent buffer-file-name) input-file b)
       (save-excursion
