@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
 ;;; (c)1993-2010 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sat Sep 11 15:51:37 2010 on firestorm
+;;; Last modified Wed Mar 16 10:18:04 2011 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -433,10 +433,12 @@
   (list 'nth 1 list))
 
 (defvar YaTeX-math-cmd-regexp (concat (regexp-quote YaTeX-ec) "[A-z|]"))
-(defvar YaTeX-math-verbatim-environments
-  '("alltt")
-  "*List of environments in which LaTeX math mode is disabled.
-This value is appended with YaTeX-verbatim-environments.")
+
+;;;	alltt goes into YaTeX-verbatim-environments 2011/3/16
+;;(defvar YaTeX-math-verbatim-environments
+;;  '("alltt")
+;;  "*List of environments in which LaTeX math mode is disabled.
+;;This value is appended with YaTeX-verbatim-environments.")
 
 ;;;
 ;;YaTeX math-mode functions
@@ -552,10 +554,7 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 		      (setq dollar "$$")
 		      (backward-char 1)
 		      (setq nest (1+ nest)))
-		     ((let ((YaTeX-verbatim-environments
-			     (append YaTeX-math-verbatim-environments
-				     YaTeX-verbatim-environments)))
-			(YaTeX-literal-p))
+		     ((YaTeX-literal-p)
 		      nil)
 		     ((and (equal (char-after (1- (point))) ?\\ )
 			   (not (equal (char-after (- (point) 3)) ?\\ )))

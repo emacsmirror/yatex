@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.4
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Mar 16 09:56:43 2011 on firestorm
+;;; Last modified Wed Mar 16 10:16:18 2011 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -151,9 +151,9 @@ for YaTeX-uncomment-paragraph.")
 for YaTeX-uncomment-paragraph.")
 
 (defvar YaTeX-verbatim-environments 
-  '("verbatim" "verbatim*")
+  '("verbatim" "verbatim*" "alltt")
   "*Assume these environments of this variable disable LaTeX commands.")
-(defvar YaTeX-verb-regexp "verb\\*?\\|path\\|alltt"
+(defvar YaTeX-verb-regexp "verb\\*?\\|path"
   "*Regexp of verb family.  Do not contain preceding \\\\ nor \\(\\).")
 (defvar YaTeX-fill-inhibit-environments
   (append '("tabular" "tabular*" "array" "picture" "eqnarray" "eqnarray*"
