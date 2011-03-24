@@ -2,7 +2,7 @@
 ;;; YaTeX sectioning browser.
 ;;; yatexsec.el
 ;;; (c) 1994,1998,1999,2003 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Jun 27 12:10:34 2003 on firestorm
+;;; Last modified Thu Mar 24 10:35:24 2011 on firestorm
 ;;; $Id$
 
 (defvar YaTeX-sectioning-level
@@ -133,7 +133,8 @@ This must be the heighest number in YaTeX-sectioning-level.")
 	  (or
 	   (and ln (string< "" ln)
 		(progn
-		  (goto-line (max 1 (1- (string-to-int ln))))
+		  (goto-char (point-min))
+		  (forward-line (max 0 (- (string-to-int ln) 2)))
 		  (and
 		   (search-forward ptn nil t)
 		   (goto-char (match-beginning 0)))))

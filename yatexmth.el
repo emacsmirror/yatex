@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
 ;;; (c)1993-2010 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Wed Mar 16 10:18:04 2011 on firestorm
+;;; Last modified Thu Mar 24 10:30:18 2011 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -635,7 +635,7 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 	    (progn (YaTeX-math-display-list (car list) cols)
 		   (setq cols (% (1+ cols) maxcols))))
 	(setq list (cdr list)))
-      (goto-line 4)
+      (goto-char (point-min)) (forward-line 3)
       (use-local-map YaTeX-math-menu-map)
       (setq buffer-read-only t)
       (unwind-protect
