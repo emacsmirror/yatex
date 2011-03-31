@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.4
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Mar 16 10:16:18 2011 on firestorm
+;;; Last modified Mon Mar 28 23:43:16 2011 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1256,22 +1256,45 @@ into {\\xxx } braces.
 
 (defun YaTeX-jmode ()
   (or (and (boundp 'canna:*japanese-mode*) canna:*japanese-mode*)
-      (and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*)))
+      (and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*)
+      (and (boundp 'skk-mode) skk-mode)
+      (and (boundp 'default-input-method) default-input-method
+	   current-input-method)))
 
 (defun YaTeX-jmode-off ()
+  (if (cond
+       ((and (boundp 'canna:*japanese-mode*) canna:*japanese-mode*)
+	(canna-toggle-japanese-mode) t)
+       ((and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*)
+	(egg:toggle-egg-mode-on-off) t)
+       ((and (fboundp 'skk-mode) (boundp 'skk-mode) skk-mode)
+	(cond
+	 ((fboundp 'skk-latin-mode)	(skk-latin-mode t))
+	 ((fboundp 'skk-mode-off)	(skk-mode-off))
+	 (t (j-mode-off)))
+	t)
+       ((and (fboundp 'toggle-input-method) current-input-method)
+	(toggle-input-method) t)
+       ((and (fboundp 'fep-force-off) (fep-force-off))))
+      (put 'YaTeX-jmode 'jmode t)))
+
+(defun YaTeX-jmode-on ()
   (cond
-   ((and (boundp 'canna:*japanese-mode*) canna:*japanese-mode*)
-    (canna-toggle-japanese-mode))
-   ((and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*)
-    (egg:toggle-egg-mode-on-off))
-   ((and (fboundp 'skk-mode) (boundp 'skk-mode) skk-mode)
-    (cond
-     ((fboundp 'skk-latin-mode)	(skk-latin-mode t))
-     ((fboundp 'skk-mode-off)	(skk-mode-off))
-     (t (j-mode-off))))
-   ((and (fboundp 'toggle-input-method) current-input-method)
-    (toggle-input-method))
-   ((and (fboundp 'fep-force-off) (fep-force-off)))))
+   ((boundp 'canna:*japanese-mode*)
+    (if (not canna:*japanese-mode*) (canna-toggle-japanese-mode)))
+   ((boundp 'egg:*mode-on*)
+    (and (not egg:*mode-on*) (not egg:*input-mode*)
+	 (egg:toggle-egg-mode-on-off)))
+   ((and (fboundp 'skk-mode) (boundp 'skk-mode))
+    (if (not skk-mode) (skk-mode 1)))
+   ((fboundp 'toggle-input-method)
+    (if (not current-input-method) (toggle-input-method)))
+   ((and (fboundp 'fep-force-on) (fep-force-on)))))
+
+(defun YaTeX-jmode-back ()
+  (if (get 'YaTeX-jmode 'jmode)
+      (YaTeX-jmode-on))
+  (setplist 'YaTeX-jmode nil))
 
 (defun YaTeX-self-insert (arg)
   (call-interactively (global-key-binding (char-to-string last-command-char))))
@@ -1414,6 +1437,43 @@ into {\\xxx } braces.
 ;    (backward-char 1))
    (t (YaTeX-self-insert arg))))
 
+(defun YaTeX-jmode-hook (old new)
+  "A hook controling jmode on/off."
+  (let ((inhibit-point-motion-hooks t)
+	(oldp (plist-get (text-properties-at old) 'point-left))
+	(newp (plist-get (text-properties-at new) 'point-left))
+	(lnew (plist-get (text-properties-at new) 'last-new))
+	(bmp (buffer-modified-p)) ;(endc ?x)
+	(jm (YaTeX-jmode)) b e)
+    ;;(if (eq 'YaTeX-jmode-hook newp)
+    ;;	(setq endc (char-after (next-single-property-change new 'point-left))))
+    ;;(message "n[%c]=%s o[%c]=%s end=[%c] jm=%s"
+    ;;	     (char-after new) newp (char-after old) oldp endc jm)
+    (cond
+     ((eq lnew new) nil)		;Do nothing if continuous entry
+     ((and (not (eq newp 'YaTeX-jmode-hook))
+	   (eq oldp 'YaTeX-jmode-hook))
+      ;; leave
+      (remove-text-properties
+       (1+ (or (previous-single-property-change old 'point-left)
+	       (1- (point))))
+       (1- (or (next-single-property-change old 'point-left)
+	       (1+ (point))))
+       (list 'last-new nil))
+      (if (plist-get (text-properties-at old) 'jmode)
+	  (YaTeX-jmode-on)))
+     ((and (not (eq oldp 'YaTeX-jmode-hook))
+	   (eq newp 'YaTeX-jmode-hook))
+      ;; enter
+      (add-text-properties
+       (1+ (or (previous-single-property-change new 'point-left)
+	       (1- (point))))
+       (1- (or (next-single-property-change new 'point-left)
+	       (1+ (point))))
+       (list 'jmode jm 'last-new new))
+      (set-buffer-modified-p bmp)
+      (YaTeX-jmode-off)))))
+
 (defun YaTeX-insert-dollar ()
   (interactive)
   (if (or (not (YaTeX-closable-p))
@@ -1423,6 +1483,12 @@ into {\\xxx } braces.
       (insert "$")
     (insert "$$")
     (forward-char -1)
+    (if (fboundp 'add-text-properties)
+	(add-text-properties
+	 (1- (point)) (1+ (point))
+	 (list 'point-left 'YaTeX-jmode-hook
+	       'point-entered 'YaTeX-jmode-hook
+	       'jmode (YaTeX-jmode))))
     (YaTeX-jmode-off)
     (or YaTeX-auto-math-mode YaTeX-math-mode (YaTeX-toggle-math-mode 1))))
 
@@ -2275,7 +2341,7 @@ because this function is called with no argument."
   (interactive)
   (if (not (YaTeX-on-begin-end-p)) nil
     (save-excursion
-      (let (p env (m1 (match-beginning 1)) (m2 (match-beginning 2)))
+      (let (p env newenv (m1 (match-beginning 1)) (m2 (match-beginning 2)))
 	(setq env (if m1 (YaTeX-buffer-substring m1 (match-end 1))
 		    (YaTeX-buffer-substring m2 (match-end 2))))
 	(goto-char (match-beginning 0))
