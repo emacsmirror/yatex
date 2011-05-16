@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2011 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon Feb 14 12:48:22 2011 on firestorm
+;;; Last modified Mon May 16 15:49:38 2011 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -755,29 +755,29 @@ T for static indentation depth")
       (strong	"Strong" .
 	(lambda () (interactive) (yahtml-insert-tag nil "STRONG")))
       (VAR	"Variable notation" .
-	(lambda () (interactive) (yahtml-insert-tag nil "VAR"))))))
+	(lambda () (interactive) (yahtml-insert-tag nil "var"))))))
   (setq yahtml-menu-map-typeface (make-sparse-keymap "typeface tags"))
   (YaTeX-define-menu
    'yahtml-menu-map-typeface
    (nreverse
     '((b	"Bold" .
-	  (lambda () (interactive) (yahtml-insert-tag nil "B")))
+	  (lambda () (interactive) (yahtml-insert-tag nil "b")))
       (i	"Italic" .
-	(lambda () (interactive) (yahtml-insert-tag nil "I")))
+	(lambda () (interactive) (yahtml-insert-tag nil "i")))
       (tt	"Typewriter" .
-	(lambda () (interactive) (yahtml-insert-tag nil "TT")))
+	(lambda () (interactive) (yahtml-insert-tag nil "tt")))
       (u	"Underlined" .
-	(lambda () (interactive) (yahtml-insert-tag nil  "U"))))))
+	(lambda () (interactive) (yahtml-insert-tag nil  "u"))))))
   (setq yahtml-menu-map-listing (make-sparse-keymap "listing"))
   (YaTeX-define-menu
    'yahtml-menu-map-listing
    (nreverse
     '((ul	"Unordered" .
-		(lambda () (interactive) (yahtml-insert-begend nil "UL")))
+		(lambda () (interactive) (yahtml-insert-begend nil "ul")))
       (ol	"Ordered" .
-		(lambda () (interactive) (yahtml-insert-begend nil "OL")))
+		(lambda () (interactive) (yahtml-insert-begend nil "ol")))
       (dl	"Definition" .
-		(lambda () (interactive) (yahtml-insert-begend nil "DL"))))))
+		(lambda () (interactive) (yahtml-insert-begend nil "dl"))))))
   (setq yahtml-menu-map-item (make-sparse-keymap "item"))
   (YaTeX-define-menu
    'yahtml-menu-map-item
@@ -832,7 +832,7 @@ T for static indentation depth")
 	  (or (cdr (assoc yahtml-last-begend yahtml-env-table))
 	      yahtml-last-begend))
     (setq cmd yahtml-last-begend)
-    (if yahtml-prefer-upcases (setq cmd (upcase cmd)))
+    (setq cmd (funcall (if yahtml-prefer-upcases 'upcase 'downcase) cmd))
     (if region
 	;; We want to keep region effective for new tagged environment
 	;; to enable continuous regioning by another environment
