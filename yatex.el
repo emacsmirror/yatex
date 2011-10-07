@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.4
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Mar 28 23:43:16 2011 on firestorm
+;;; Last modified Fri Oct  7 15:58:31 2011 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1449,30 +1449,32 @@ into {\\xxx } braces.
     ;;	(setq endc (char-after (next-single-property-change new 'point-left))))
     ;;(message "n[%c]=%s o[%c]=%s end=[%c] jm=%s"
     ;;	     (char-after new) newp (char-after old) oldp endc jm)
-    (cond
-     ((eq lnew new) nil)		;Do nothing if continuous entry
-     ((and (not (eq newp 'YaTeX-jmode-hook))
-	   (eq oldp 'YaTeX-jmode-hook))
-      ;; leave
-      (remove-text-properties
-       (1+ (or (previous-single-property-change old 'point-left)
-	       (1- (point))))
-       (1- (or (next-single-property-change old 'point-left)
-	       (1+ (point))))
-       (list 'last-new nil))
-      (if (plist-get (text-properties-at old) 'jmode)
-	  (YaTeX-jmode-on)))
-     ((and (not (eq oldp 'YaTeX-jmode-hook))
-	   (eq newp 'YaTeX-jmode-hook))
-      ;; enter
-      (add-text-properties
-       (1+ (or (previous-single-property-change new 'point-left)
-	       (1- (point))))
-       (1- (or (next-single-property-change new 'point-left)
-	       (1+ (point))))
-       (list 'jmode jm 'last-new new))
-      (set-buffer-modified-p bmp)
-      (YaTeX-jmode-off)))))
+    (unwind-protect
+	(cond
+	 ((eq lnew new) nil)		;Do nothing if continuous entry
+	 ((and (not (eq newp 'YaTeX-jmode-hook))
+	       (eq oldp 'YaTeX-jmode-hook))
+	  ;; leave
+	  (remove-text-properties
+	   (1+ (or (previous-single-property-change old 'point-left)
+		   (1- (point))))
+	   (1- (or (next-single-property-change old 'point-left)
+		   (1+ (point))))
+	   (list 'last-new nil))
+	  (if (plist-get (text-properties-at old) 'jmode)
+	      (YaTeX-jmode-on)))
+	 ((and (not (eq oldp 'YaTeX-jmode-hook))
+	       (eq newp 'YaTeX-jmode-hook))
+	  ;; enter
+	  (add-text-properties
+	   (1+ (or (previous-single-property-change new 'point-left)
+		   (1- (point))))
+	   (1- (or (next-single-property-change new 'point-left)
+		   (1+ (point))))
+	   (list 'jmode jm 'last-new new))
+	  (YaTeX-jmode-off)))
+      ;;unwind job
+      (set-buffer-modified-p bmp))))
 
 (defun YaTeX-insert-dollar ()
   (interactive)
