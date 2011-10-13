@@ -1,15 +1,15 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.74.4
+;;; yatex.el rev. 1.74.5
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Oct  7 15:58:31 2011 on firestorm
+;;; Last modified Thu Oct 13 09:38:58 2011 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.74.4"
+(defconst YaTeX-revision-number "1.74.5"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -510,7 +510,7 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   (if YaTeX-dos
       (define-key YaTeX-prefix-map "\C-r"
 	'(lambda () (interactive)
-	   (set-screen-height YaTeX-saved-screen-height) (recenter)))))
+	   (YaTeX-set-screen-height YaTeX-saved-screen-height) (recenter)))))
 
 (defvar YaTeX-section-completion-map nil
   "*Key map used at YaTeX completion in the minibuffer.")
@@ -692,7 +692,7 @@ more features are available and they are documented in the manual.
 	))
   (use-local-map YaTeX-mode-map)
   (set-syntax-table YaTeX-mode-syntax-table)
-  (if YaTeX-dos (setq YaTeX-saved-screen-height (screen-height)))
+  (if YaTeX-dos (setq YaTeX-saved-screen-height (YaTeX-screen-height)))
   (YaTeX-read-user-completion-table)
   (and (fboundp 'YaTeX-hilit-setup-alist) (YaTeX-hilit-setup-alist))
   (makunbound 'inenv)
