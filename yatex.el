@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.4
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Oct  7 15:58:31 2011 on firestorm
+;;; Last modified Wed Nov 30 14:20:13 2011 on duke
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1198,9 +1198,9 @@ into {\\xxx } braces.
   (interactive "r")
   (save-excursion
     (goto-char end)
-    (insert (or close "}"))
+    (YaTeX-insert-inherit (or close "}"))
     (goto-char beg)
-    (insert (or open "{"))))
+    (YaTeX-insert-inherit (or open "{"))))
 
 (defun YaTeX-insert-braces (arg &optional open close)
   (interactive "p")
@@ -1298,6 +1298,9 @@ into {\\xxx } braces.
 
 (defun YaTeX-self-insert (arg)
   (call-interactively (global-key-binding (char-to-string last-command-char))))
+(defun YaTeX-insert-inherit (&rest args)
+  (apply (if (fboundp 'insert-and-inherit) 'insert-and-inherit 'insert)
+	   args))
 
 (defun YaTeX-insert-brackets (arg)
   "Insert Kagi-kakko or \\ [ \\] pair or simply \[."
@@ -1310,35 +1313,35 @@ into {\\xxx } braces.
      ((save-excursion
 	(and (> (- (point) (point-min)) 5) (forward-char -5))
 	(looking-at "\\\\left"))
-      (insert "[\\right]")
+      (YaTeX-insert-inherit "[\\right]")
       (forward-char -7))
      ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
 	(and (> (- (point) (point-min)) 5) (forward-char -5))
 	(looking-at "\\\\[bB]igl"))
-      (insert
+      (YaTeX-insert-inherit
        (concat
 	"[" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r]"))
       (forward-char -6))
      ((save-excursion
 	(and (> (- (point) (point-min)) 6) (forward-char -6))
 	(looking-at "\\\\[bB]iggl"))
-      (insert
+      (YaTeX-insert-inherit
        (concat
 	"[" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r]"))
       (forward-char -7))		;matsu's hack ends here
      ((and (= (preceding-char) ?\\ )
 	   (/= (char-after (- (point) 2)) ?\\ )
 	   (not (YaTeX-in-math-mode-p)))
-      (insert last-command-char "\n")
+      (YaTeX-insert-inherit last-command-char "\n")
       (indent-to (max 0 col))
-      (insert "\\]")
+      (YaTeX-insert-inherit "\\]")
       (beginning-of-line)
       (open-line 1)
       (delete-region (point) (progn (beginning-of-line) (point)))
       (indent-to (+ YaTeX-environment-indent (max 0 col)))
       (or YaTeX-auto-math-mode YaTeX-math-mode (YaTeX-toggle-math-mode 1)))
      ((YaTeX-closable-p)
-      (insert "[]")
+      (YaTeX-insert-inherit "[]")
       (backward-char 1))
      (t (YaTeX-self-insert arg)))))
 
@@ -1355,27 +1358,27 @@ into {\\xxx } braces.
    ((save-excursion
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\left"))
-    (insert "(\\right)")
+    (YaTeX-insert-inherit "(\\right)")
     (forward-char -7))
    ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\[bB]igl"))
-    (insert
+    (YaTeX-insert-inherit
      (concat
       "(" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r)"))
      (forward-char -6))
    ((save-excursion
       (and (> (- (point) (point-min)) 6) (forward-char -6))
       (looking-at "\\\\[bB]iggl"))
-    (insert
+    (YaTeX-insert-inherit
      (concat
       "(" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r)"))
      (forward-char -7))
    ((= (preceding-char) ?\\ )		;matsu's hack ends here
-    (insert "(\\)")
+    (YaTeX-insert-inherit "(\\)")
     (backward-char 2))
    ((YaTeX-closable-p)
-    (insert "()")
+    (YaTeX-insert-inherit "()")
     (backward-char 1))
    (t (YaTeX-self-insert arg))))
 
@@ -1392,7 +1395,7 @@ into {\\xxx } braces.
    ((save-excursion
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\left"))
-    (insert "|\\right|")
+    (YaTeX-insert-inherit "|\\right|")
     (forward-char -7))
    ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
       (and (> (- (point) (point-min)) 5) (forward-char -5))
@@ -1411,7 +1414,7 @@ into {\\xxx } braces.
    ((save-excursion		; added by Jin <MAF01011@nifty.ne.jp>
       (and (> (- (point) (point-min)) 6) (forward-char -6))
       (looking-at "\\\\left\\\\"))
-    (insert "|\\right\\|")
+    (YaTeX-insert-inherit "|\\right\\|")
     (forward-char -8))
    ((save-excursion
       (and (> (- (point) (point-min)) 6) (forward-char -6))
@@ -1428,12 +1431,12 @@ into {\\xxx } braces.
       "|" (buffer-substring (match-beginning 0) (- (match-end 0) 2)) "r\\|"))
      (forward-char -8))		; added by Jin up to here.
    ((= (preceding-char) ?\\ )
-    (insert "|\\|")
+    (YaTeX-insert-inherit "|\\|")
     (backward-char 2))
 ;   ((and (YaTeX-closable-p)
 ;	 (/= (preceding-char) ?|)
 ;	 (/= (following-char) ?|))
-;    (insert "||")
+;    (YaTeX-insert-inherit "||")
 ;    (backward-char 1))
    (t (YaTeX-self-insert arg))))
 
@@ -1490,6 +1493,8 @@ into {\\xxx } braces.
 	 (1- (point)) (1+ (point))
 	 (list 'point-left 'YaTeX-jmode-hook
 	       'point-entered 'YaTeX-jmode-hook
+	       'front-sticky t
+	       'rear-nonsticky t
 	       'jmode (YaTeX-jmode))))
     (YaTeX-jmode-off)
     (or YaTeX-auto-math-mode YaTeX-math-mode (YaTeX-toggle-math-mode 1))))
