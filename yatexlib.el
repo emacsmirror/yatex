@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Feb 18 15:05:08 2011 on firestorm
+;;; Last modified Thu Oct 13 09:36:20 2011 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -530,11 +530,15 @@ that window.  This function never selects minibuffer window."
 (cond
  ((fboundp 'screen-height)
   (fset 'YaTeX-screen-height 'screen-height)
-  (fset 'YaTeX-screen-width 'screen-width))
+  (fset 'YaTeX-screen-width 'screen-width)
+  (fset 'YaTeX-set-screen-height 'set-screen-height)
+  (fset 'YaTeX-set-screen-width 'set-screen-width))
  ((fboundp 'frame-height)
   (fset 'YaTeX-screen-height 'frame-height)
-  (fset 'YaTeX-screen-width 'frame-width))
- (t (error "I don't know how to run windows.el on this Emacs...")))
+  (fset 'YaTeX-screen-width 'frame-width)
+  (fset 'YaTeX-set-screen-height 'set-frame-height)
+  (fset 'YaTeX-set-screen-width 'set-frame-width))
+ (t (error "I don't know how to run YaTeX on this Emacs...")))
 
 ;;;###autoload
 (defun split-window-calculate-height (height)
