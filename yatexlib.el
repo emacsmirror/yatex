@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Oct 13 09:36:20 2011 on firestorm
+;;; Last modified Thu Dec 15 13:37:26 2011 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -912,7 +912,7 @@ of 'YaTeX-inner-environment, which can be referred by
 		    (goto-char m0)
 		    (put 'YaTeX-inner-environment 'indent (current-column))
 		    (throw 'begin t)))))
-	  (buffer-substring
+	  (YaTeX-buffer-substring
 	   (progn (skip-chars-forward open) (1+ (point)))
 	   (progn (skip-chars-forward close) (point)))))))
 
@@ -998,9 +998,16 @@ Optional third argument NOERR causes no error for unballanced environment."
   (let ((env (YaTeX-inner-environment)))
     (if (not env) (error "No premature environment")
       (save-excursion
-	(if (YaTeX-search-active-forward
-	     (YaTeX-replace-format-args YaTeX-struct-end env "" "")
-	     YaTeX-comment-prefix nil t)
+	(if (and
+	     (YaTeX-re-search-active-forward
+	      (concat
+	       "\\(" (YaTeX-replace-format-args
+		      YaTeX-struct-end env "" "")
+	       "\\)\\|\\(" (YaTeX-replace-format-args
+		      YaTeX-struct-begin env "" "")
+	       "\\)")
+	      YaTeX-comment-prefix nil t)
+	     (match-beginning 1))	;is closing struc.
 	    (if (y-or-n-p
 		 (concat "Environment `" env
 			 "' may be already closed. Force close?"))
