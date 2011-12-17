@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2011 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon Feb 14 12:48:22 2011 on firestorm
+;;; Last modified Sat Dec 17 11:17:59 2011 on roy
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -250,7 +250,8 @@ Consult your site's WWW administrator.")
 %x: width, %y: height, %s: size in bytes, %c: first comment string,
 %f: filename")
 
-(defvar yahtml-faithful-to-htmllint nil)
+(defvar yahtml-faithful-to-htmllint (not yahtml-always-/li)
+  "*Non-nil doesn't put space after opening tags.")
 (defvar yahtml-error-line-regexp
   "^\\(.*\\)(\\([0-9]+\\)):\\|^line \\([0-9]+\\)"
   "*Regexp of error position which is produced by lint program.")
@@ -2509,11 +2510,11 @@ Interactive prefix argument consults enclosing element other than td."
       (yahtml-indent-line-real))))
 
 (defun yahtml-this-indent ()
-  (let ((envs "[uod]l\\|table\\|[ht][rhd0-6]\\|select\\|blockquote\\|center\\|menu\\|dir\\|font")
-	(itemizing-envs "^\\([uod]l\\|menu\\|dir\\)$")
+  (let ((envs "[uod]l\\|table\\|[ht][rhd0-6]\\|select\\|blockquote\\|center\\|menu\\|dir\\|d[td]\\|li")
+	(itemizing-envs "^\\([uod]l\\|menu\\|dir\\|li\\|d[td]\\)$")
 	(itms "<\\(dt\\|dd\\|li\\|t[rdh]\\|option\\)\\b")
 	(excludes
-	 "\\(a\\|p\\|span\\|code\\|tt\\|em\\|u\\|i\\|big\\|small\\|font\\)\\b")
+	 "\\b\\(a\\|p\\|span\\|code\\|tt\\|em\\|u\\|i\\|big\\|small\\|font\\)\\b")
 	inenv p col peol (case-fold-search t))
     (save-excursion
       (beginning-of-line)
