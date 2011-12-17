@@ -1,15 +1,15 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.74.4
+;;; yatex.el rev. 1.74.6
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Mar 28 23:43:16 2011 on firestorm
+;;; Last modified Thu Dec 15 13:37:47 2011 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.74.4"
+(defconst YaTeX-revision-number "1.74.6"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -510,7 +510,7 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   (if YaTeX-dos
       (define-key YaTeX-prefix-map "\C-r"
 	'(lambda () (interactive)
-	   (set-screen-height YaTeX-saved-screen-height) (recenter)))))
+	   (YaTeX-set-screen-height YaTeX-saved-screen-height) (recenter)))))
 
 (defvar YaTeX-section-completion-map nil
   "*Key map used at YaTeX completion in the minibuffer.")
@@ -692,7 +692,7 @@ more features are available and they are documented in the manual.
 	))
   (use-local-map YaTeX-mode-map)
   (set-syntax-table YaTeX-mode-syntax-table)
-  (if YaTeX-dos (setq YaTeX-saved-screen-height (screen-height)))
+  (if YaTeX-dos (setq YaTeX-saved-screen-height (YaTeX-screen-height)))
   (YaTeX-read-user-completion-table)
   (and (fboundp 'YaTeX-hilit-setup-alist) (YaTeX-hilit-setup-alist))
   (makunbound 'inenv)
@@ -1198,9 +1198,9 @@ into {\\xxx } braces.
   (interactive "r")
   (save-excursion
     (goto-char end)
-    (insert (or close "}"))
+    (YaTeX-insert-inherit (or close "}"))
     (goto-char beg)
-    (insert (or open "{"))))
+    (YaTeX-insert-inherit (or open "{"))))
 
 (defun YaTeX-insert-braces (arg &optional open close)
   (interactive "p")
@@ -1257,7 +1257,7 @@ into {\\xxx } braces.
 (defun YaTeX-jmode ()
   (or (and (boundp 'canna:*japanese-mode*) canna:*japanese-mode*)
       (and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*)
-      (and (boundp 'skk-mode) skk-mode)
+      (and (boundp 'skk-mode) skk-mode (not skk-latin-mode))
       (and (boundp 'default-input-method) default-input-method
 	   current-input-method)))
 
@@ -1269,7 +1269,17 @@ into {\\xxx } braces.
 	(egg:toggle-egg-mode-on-off) t)
        ((and (fboundp 'skk-mode) (boundp 'skk-mode) skk-mode)
 	(cond
-	 ((fboundp 'skk-latin-mode)	(skk-latin-mode t))
+	 ((fboundp 'skk-latin-mode)
+	  (or (and (boundp 'skk-henkan-mode) skk-henkan-mode)
+	      (and (boundp 'skk-henkan-on)
+		   (or skk-henkan-mode skk-henkan-active))
+	      (and (boundp 'j-henkan-on)
+		   (or j-henkan-on j-henkan-active))
+	      ;; Deactivate jmode if henkan-mode is not running.
+	      ;; Suggested by tt.tetsuo.tsukamoto.
+	      (progn
+		(put 'YaTeX-jmode-on 'skkkata skk-katakana)
+		(skk-latin-mode t))))
 	 ((fboundp 'skk-mode-off)	(skk-mode-off))
 	 (t (j-mode-off)))
 	t)
@@ -1286,7 +1296,10 @@ into {\\xxx } braces.
     (and (not egg:*mode-on*) (not egg:*input-mode*)
 	 (egg:toggle-egg-mode-on-off)))
    ((and (fboundp 'skk-mode) (boundp 'skk-mode))
-    (if (not skk-mode) (skk-mode 1)))
+    (if (get 'YaTeX-jmode-on 'skkkata)
+	(skk-j-mode-on t)
+      (skk-mode 1))
+    (put 'YaTeX-jmode-on 'skkkata nil))
    ((fboundp 'toggle-input-method)
     (if (not current-input-method) (toggle-input-method)))
    ((and (fboundp 'fep-force-on) (fep-force-on)))))
@@ -1298,6 +1311,9 @@ into {\\xxx } braces.
 
 (defun YaTeX-self-insert (arg)
   (call-interactively (global-key-binding (char-to-string last-command-char))))
+(defun YaTeX-insert-inherit (&rest args)
+  (apply (if (fboundp 'insert-and-inherit) 'insert-and-inherit 'insert)
+	   args))
 
 (defun YaTeX-insert-brackets (arg)
   "Insert Kagi-kakko or \\ [ \\] pair or simply \[."
@@ -1310,35 +1326,35 @@ into {\\xxx } braces.
      ((save-excursion
 	(and (> (- (point) (point-min)) 5) (forward-char -5))
 	(looking-at "\\\\left"))
-      (insert "[\\right]")
+      (YaTeX-insert-inherit "[\\right]")
       (forward-char -7))
      ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
 	(and (> (- (point) (point-min)) 5) (forward-char -5))
 	(looking-at "\\\\[bB]igl"))
-      (insert
+      (YaTeX-insert-inherit
        (concat
 	"[" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r]"))
       (forward-char -6))
      ((save-excursion
 	(and (> (- (point) (point-min)) 6) (forward-char -6))
 	(looking-at "\\\\[bB]iggl"))
-      (insert
+      (YaTeX-insert-inherit
        (concat
 	"[" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r]"))
       (forward-char -7))		;matsu's hack ends here
      ((and (= (preceding-char) ?\\ )
 	   (/= (char-after (- (point) 2)) ?\\ )
 	   (not (YaTeX-in-math-mode-p)))
-      (insert last-command-char "\n")
+      (YaTeX-insert-inherit last-command-char "\n")
       (indent-to (max 0 col))
-      (insert "\\]")
+      (YaTeX-insert-inherit "\\]")
       (beginning-of-line)
       (open-line 1)
       (delete-region (point) (progn (beginning-of-line) (point)))
       (indent-to (+ YaTeX-environment-indent (max 0 col)))
       (or YaTeX-auto-math-mode YaTeX-math-mode (YaTeX-toggle-math-mode 1)))
      ((YaTeX-closable-p)
-      (insert "[]")
+      (YaTeX-insert-inherit "[]")
       (backward-char 1))
      (t (YaTeX-self-insert arg)))))
 
@@ -1355,27 +1371,27 @@ into {\\xxx } braces.
    ((save-excursion
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\left"))
-    (insert "(\\right)")
+    (YaTeX-insert-inherit "(\\right)")
     (forward-char -7))
    ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\[bB]igl"))
-    (insert
+    (YaTeX-insert-inherit
      (concat
       "(" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r)"))
      (forward-char -6))
    ((save-excursion
       (and (> (- (point) (point-min)) 6) (forward-char -6))
       (looking-at "\\\\[bB]iggl"))
-    (insert
+    (YaTeX-insert-inherit
      (concat
       "(" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r)"))
      (forward-char -7))
    ((= (preceding-char) ?\\ )		;matsu's hack ends here
-    (insert "(\\)")
+    (YaTeX-insert-inherit "(\\)")
     (backward-char 2))
    ((YaTeX-closable-p)
-    (insert "()")
+    (YaTeX-insert-inherit "()")
     (backward-char 1))
    (t (YaTeX-self-insert arg))))
 
@@ -1392,7 +1408,7 @@ into {\\xxx } braces.
    ((save-excursion
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\left"))
-    (insert "|\\right|")
+    (YaTeX-insert-inherit "|\\right|")
     (forward-char -7))
    ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
       (and (> (- (point) (point-min)) 5) (forward-char -5))
@@ -1411,7 +1427,7 @@ into {\\xxx } braces.
    ((save-excursion		; added by Jin <MAF01011@nifty.ne.jp>
       (and (> (- (point) (point-min)) 6) (forward-char -6))
       (looking-at "\\\\left\\\\"))
-    (insert "|\\right\\|")
+    (YaTeX-insert-inherit "|\\right\\|")
     (forward-char -8))
    ((save-excursion
       (and (> (- (point) (point-min)) 6) (forward-char -6))
@@ -1428,51 +1444,59 @@ into {\\xxx } braces.
       "|" (buffer-substring (match-beginning 0) (- (match-end 0) 2)) "r\\|"))
      (forward-char -8))		; added by Jin up to here.
    ((= (preceding-char) ?\\ )
-    (insert "|\\|")
+    (YaTeX-insert-inherit "|\\|")
     (backward-char 2))
 ;   ((and (YaTeX-closable-p)
 ;	 (/= (preceding-char) ?|)
 ;	 (/= (following-char) ?|))
-;    (insert "||")
+;    (YaTeX-insert-inherit "||")
 ;    (backward-char 1))
    (t (YaTeX-self-insert arg))))
 
 (defun YaTeX-jmode-hook (old new)
   "A hook controling jmode on/off."
+  ;; This function is called via point-entered/leave hook, so that
+  ;; codes in it is evaluated on such emacsen as having text-properties.
   (let ((inhibit-point-motion-hooks t)
 	(oldp (plist-get (text-properties-at old) 'point-left))
 	(newp (plist-get (text-properties-at new) 'point-left))
 	(lnew (plist-get (text-properties-at new) 'last-new))
-	(bmp (buffer-modified-p)) ;(endc ?x)
+	(mjmode (plist-get (text-properties-at new) 'mjmode))
+	(bmp (buffer-modified-p))
 	(jm (YaTeX-jmode)) b e)
-    ;;(if (eq 'YaTeX-jmode-hook newp)
-    ;;	(setq endc (char-after (next-single-property-change new 'point-left))))
-    ;;(message "n[%c]=%s o[%c]=%s end=[%c] jm=%s"
-    ;;	     (char-after new) newp (char-after old) oldp endc jm)
-    (cond
-     ((eq lnew new) nil)		;Do nothing if continuous entry
-     ((and (not (eq newp 'YaTeX-jmode-hook))
-	   (eq oldp 'YaTeX-jmode-hook))
-      ;; leave
-      (remove-text-properties
-       (1+ (or (previous-single-property-change old 'point-left)
-	       (1- (point))))
-       (1- (or (next-single-property-change old 'point-left)
-	       (1+ (point))))
-       (list 'last-new nil))
-      (if (plist-get (text-properties-at old) 'jmode)
-	  (YaTeX-jmode-on)))
-     ((and (not (eq oldp 'YaTeX-jmode-hook))
-	   (eq newp 'YaTeX-jmode-hook))
-      ;; enter
-      (add-text-properties
-       (1+ (or (previous-single-property-change new 'point-left)
-	       (1- (point))))
-       (1- (or (next-single-property-change new 'point-left)
-	       (1+ (point))))
-       (list 'jmode jm 'last-new new))
-      (set-buffer-modified-p bmp)
-      (YaTeX-jmode-off)))))
+    (unwind-protect
+	(cond
+	 ((eq lnew new) nil)		;Do nothing if continuous entry
+	 ((and (not (eq newp 'YaTeX-jmode-hook))
+	       (eq oldp 'YaTeX-jmode-hook)
+	       (plist-get (text-properties-at old) 'entered))
+	  ;; leave
+	  (remove-text-properties
+	   (setq b (1+ (or (previous-single-property-change old 'point-left)
+			   (1- (point)))))
+	   (setq e (1- (or (next-single-property-change old 'point-left)
+			   (1+ (point)))))
+	   (list 'last-new nil 'entered nil))
+	  (add-text-properties b e (list 'mjmode jm))
+	  (if (boundp 'skk-katakana)
+	      (put 'YaTeX-jmode-on 'skkkata skk-katakana))
+	  (if (plist-get (text-properties-at old) 'jmode)
+	      (YaTeX-jmode-on)))
+	 ((and (not (eq oldp 'YaTeX-jmode-hook))
+	       (eq newp 'YaTeX-jmode-hook)
+	       (not (plist-get (text-properties-at new) 'entered)))
+	  ;; enter
+	  (add-text-properties
+	   (1+ (or (previous-single-property-change new 'point-left)
+		   (1- (point))))
+	   (1- (or (next-single-property-change new 'point-left)
+		   (1+ (point))))
+	   (list 'jmode jm 'last-new new 'entered t))
+	  (if (boundp 'skk-katakana)	;care for skk katakana mode
+	      (put 'YaTeX-jmode-on 'skkkata skk-katakana))
+	  (if mjmode (YaTeX-jmode-on) (YaTeX-jmode-off))))
+      ;;unwind job
+      (set-buffer-modified-p bmp))))
 
 (defun YaTeX-insert-dollar ()
   (interactive)
@@ -1488,6 +1512,9 @@ into {\\xxx } braces.
 	 (1- (point)) (1+ (point))
 	 (list 'point-left 'YaTeX-jmode-hook
 	       'point-entered 'YaTeX-jmode-hook
+	       'front-sticky t
+	       'rear-nonsticky t
+	       'mjmode nil
 	       'jmode (YaTeX-jmode))))
     (YaTeX-jmode-off)
     (or YaTeX-auto-math-mode YaTeX-math-mode (YaTeX-toggle-math-mode 1))))
