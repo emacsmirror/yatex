@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
-;;; (c) 1994-2011 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon Jan  9 14:09:47 2012 on firestorm
+;;; (c) 1994-2012 by HIROSE Yuuji [yuuji(@)yatex.org]
+;;; Last modified Mon Jan  9 20:13:20 2012 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"

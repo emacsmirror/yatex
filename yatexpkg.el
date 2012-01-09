@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX package manager
 ;;; yatexpkg.el
-;;; (c)2003-2010 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Jan  9 14:10:34 2012 on firestorm
+;;; (c)2003-2012 by HIROSE, Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Jan  9 20:13:53 2012 on firestorm
 ;;; $Id$
 
 (defvar YaTeX-package-ams-envs

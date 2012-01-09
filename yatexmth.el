@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
-;;; (c)1993-2010 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Jan  9 14:11:08 2012 on firestorm
+;;; (c)1993-2012 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Jan  9 20:14:02 2012 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
