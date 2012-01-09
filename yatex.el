@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.6
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 15 13:37:47 2011 on firestorm
+;;; Last modified Mon Jan  9 11:29:44 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1236,15 +1236,19 @@ into {\\xxx } braces.
 	   (save-excursion (backward-char 4) (looking-at "\\\\end"))
 	   (not (YaTeX-literal-p))
 	   (setq env (YaTeX-inner-environment)))
-      (momentary-string-display
-       (concat
-	"{"
-	(cond
-	 (YaTeX-japan
-	  (format "¡“x‚©‚ç‚Í‚¿‚á‚ñ‚Æ %s b ‚ğg‚¢‚Ü‚µ‚å‚¤" YaTeX-prefix))
-	 (t (format "You don't understand Zen of `%s b':p" YaTeX-prefix)))
-	"}")
-       (point))
+      (if (equal (get 'YaTeX-insert-braces 'begend-guide) 2)
+	  nil				;if triggered thrice, do nothing
+	(momentary-string-display
+	 (format
+	  (cond
+	   (YaTeX-japan "{begin/end“ü—Í‚É‚Í %s ‚ğg‚¢‚Ü‚µ‚å‚¤}")
+	   (t "{You don't understand Zen of `%s'!}"))
+	  (key-description (car (where-is-internal 'YaTeX-make-begin-end))))
+	 (point))
+	(put 'YaTeX-insert-braces 'begend-guide
+	     (+ 1 (string-to-int	;increment counter of beg-end guidance
+		   (prin1-to-string
+		    (get 'YaTeX-insert-braces 'begend-guide))))))
       (insert (or open "{") env (or close "}")))
      (t
       (insert (or open "{") (or close "}"))
