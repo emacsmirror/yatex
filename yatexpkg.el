@@ -2,19 +2,19 @@
 ;;; YaTeX package manager
 ;;; yatexpkg.el
 ;;; (c)2003-2010 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Sat Sep 11 15:50:40 2010 on firestorm
+;;; Last modified Mon Jan  9 14:10:34 2012 on firestorm
 ;;; $Id$
 
 (defvar YaTeX-package-ams-envs
   (mapcar 'car YaTeX-ams-env-table))
 
 (defvar YaTeX-package-alist-default
-  '(("version"	(env "comment")		;by tsuchiya@pine.kuee.kyoto-u.ac.jp
+  '(("version"	(env "comment")		;by tsuchiya<at>pine.kuee.kyoto-u.ac.jp
      		(section "includeversion" "excludeversion"))
 
-    ("plext"	(section "bou"))	;by yas.axis@ma.mni.ne.jp
+    ("plext"	(section "bou"))	;by yas.axis<at>ma.mni.ne.jp
 
-    ("url"	(section "url"))	;by fujieda@jaist.ac.jp
+    ("url"	(section "url"))	;by fujieda<at>jaist.ac.jp
 
     ("fancybox"	(section "shadowbox" "doublebox" "ovalbox" "Ovalbox"))
     ("slashbox"	(section "slashbox" "backslashbox"))
@@ -23,7 +23,7 @@
     ("ascmac"	(env "screen" "boxnote" "shadebox" "itembox")
 		(maketitle "return" "Return" "yen")
      		(section "keytop") ("mask") ("maskbox"))
-    ("bm"	(section "bm"))		;by aoyama@le.chiba-u.ac.jp
+    ("bm"	(section "bm"))		;by aoyama<at>le.chiba-u.ac.jp
 
     ("alltt"	(env "alltt"))
     ("misc"	(section "verbfile" "listing"))

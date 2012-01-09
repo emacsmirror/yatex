@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.6
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan  9 11:29:44 2012 on firestorm
+;;; Last modified Mon Jan  9 14:03:07 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1214,7 +1214,7 @@ into {\\xxx } braces.
 	(looking-at "\\\\left\\\\"))
       (insert "{\\right\\}")
       (forward-char -8))
-     ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
+     ((save-excursion			;from matsu<at>math.s.chiba-u.ac.jp
 	(and (> (- (point) (point-min)) 6) (forward-char -6))
 	(looking-at "\\\\[bB]igl\\\\"))
       (insert
@@ -1332,7 +1332,7 @@ into {\\xxx } braces.
 	(looking-at "\\\\left"))
       (YaTeX-insert-inherit "[\\right]")
       (forward-char -7))
-     ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
+     ((save-excursion			;from matsu<at>math.s.chiba-u.ac.jp
 	(and (> (- (point) (point-min)) 5) (forward-char -5))
 	(looking-at "\\\\[bB]igl"))
       (YaTeX-insert-inherit
@@ -1377,7 +1377,7 @@ into {\\xxx } braces.
       (looking-at "\\\\left"))
     (YaTeX-insert-inherit "(\\right)")
     (forward-char -7))
-   ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
+   ((save-excursion			;from matsu<at>math.s.chiba-u.ac.jp
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\[bB]igl"))
     (YaTeX-insert-inherit
@@ -1414,7 +1414,7 @@ into {\\xxx } braces.
       (looking-at "\\\\left"))
     (YaTeX-insert-inherit "|\\right|")
     (forward-char -7))
-   ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
+   ((save-excursion			;from matsu<at>math.s.chiba-u.ac.jp
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\[bB]igl"))
     (insert
@@ -1428,7 +1428,7 @@ into {\\xxx } braces.
      (concat
       "|" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r|"))
      (forward-char -7))
-   ((save-excursion		; added by Jin <MAF01011@nifty.ne.jp>
+   ((save-excursion		; added by Jin <MAF01011<at>nifty.ne.jp>
       (and (> (- (point) (point-min)) 6) (forward-char -6))
       (looking-at "\\\\left\\\\"))
     (YaTeX-insert-inherit "|\\right\\|")

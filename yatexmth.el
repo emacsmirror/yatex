@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
 ;;; (c)1993-2010 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Oct  7 15:53:34 2011 on firestorm
+;;; Last modified Mon Jan  9 14:11:08 2012 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -802,7 +802,7 @@ If so return the cons of its invocation key and image-string."
 	  (setq list (cdr list)))
 	(setq lists (cdr lists))))))
 
-;;; ----- for AMS LaTeX (by matsu@math.s.chiba-u.ac.jp) -----
+;;; ----- for AMS LaTeX (by matsu<at>math.s.chiba-u.ac.jp) -----
 (defvar YaTeX-ams-paren-modifier
   '(("Biggl" . "Biggr") ("biggl" . "biggr")
     ("Bigl" . "Bigr") ("bigl" . "bigr")

@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2011 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon May 16 15:49:38 2011 on firestorm
+;;; Last modified Mon Jan  9 14:09:47 2012 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -1022,8 +1022,8 @@ If optional argument FILE is specified collect labels in FILE."
 
 ;
 ; Subject: [yatex:02849] Re: [yahtml] tilda in href tag
-; From: Masayasu Ishikawa <mimasa@sfc.keio.ac.jp>
-; To: yatex@arcadia.jaist.ac.jp
+; From: Masayasu Ishikawa <mimasa<at>sfc.keio.ac.jp>
+; To: yatex<at>arcadia.jaist.ac.jp
 ; Date: Mon, 31 May 1999 21:09:31 +0900
 ; RFC 2396 の "2.4.3. Excluded US-ASCII Characters" によると、以下の文字
 ; は必ずエスケープしないといけません。
