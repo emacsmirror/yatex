@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //野鳥//
 ;;; yatex.el rev. 1.74.6
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan  9 14:03:07 2012 on firestorm
+;;; Last modified Mon Jan  9 18:56:57 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -829,7 +829,15 @@ This works also for other defined begin/end tokens to define the structure."
 	  (insert "\n")
 	  (or exchange (exchange-point-and-mark)))
       (goto-char beg2)
-      (YaTeX-intelligent-newline nil)
+      (if (intern-soft (concat "YaTeX-intelligent-newline-" env))
+	  (progn
+	    (YaTeX-intelligent-newline nil)
+	    (message
+	     (cond
+	      (YaTeX-japan "%s で次の行の入力に進みます。")
+	      (t "`%s' produces the next line's template."))
+	     (key-description
+	      (car (where-is-internal 'YaTeX-intelligent-newline))))))
       (YaTeX-indent-line))
     (YaTeX-package-auto-usepackage env 'env)
     (if YaTeX-current-position-register
@@ -1202,9 +1210,39 @@ into {\\xxx } braces.
     (goto-char beg)
     (YaTeX-insert-inherit (or open "{"))))
 
+(defun YaTeX-get-macro-at-point (&optional p)
+  "Get (La)TeX macro around point P."
+  (interactive "d")
+  (save-excursion
+    (goto-char (setq p (or p (point))))
+    (cond
+     ((and (not (bobp))
+	   (string-match "[a-zA-Z]" (char-to-string (preceding-char))))
+      (skip-chars-backward "a-zA-Z")
+      (if (and (= (preceding-char) ?\\)
+	       (looking-at "\\([a-z]+\\)"))
+	  (YaTeX-buffer-substring  (point) p))))))
+
 (defun YaTeX-insert-braces (arg &optional open close)
   (interactive "p")
-  (let (env)
+  (let ((begend-guide
+	 (function
+	  (lambda ()
+	    (if (equal (get 'YaTeX-insert-braces 'begend-guide) 2)
+		nil			;if triggered thrice, do nothing
+	      (momentary-string-display
+	       (format
+		(cond
+		 (YaTeX-japan "{begin/end入力には %s を使いましょう}")
+		 (t "{You don't understand Zen of `%s'!}"))
+		(key-description
+		 (car (where-is-internal 'YaTeX-make-begin-end))))
+	       (point))
+	      (put 'YaTeX-insert-braces 'begend-guide
+		   (+ 1 (string-to-int ;increment counter of beg-end guidance
+			 (prin1-to-string
+			  (get 'YaTeX-insert-braces 'begend-guide)))))))))
+	env macro not-literal)
     (cond
      ((YaTeX-jmode) (YaTeX-self-insert arg))
      ((not (YaTeX-closable-p)) (YaTeX-self-insert arg))
@@ -1232,24 +1270,20 @@ into {\\xxx } braces.
      ((= (preceding-char) ?\\ )
       (insert "{\\}")
       (forward-char -2))		;matsu's hack ends here
-     ((and (> (point) (+ (point-min) 4))
-	   (save-excursion (backward-char 4) (looking-at "\\\\end"))
-	   (not (YaTeX-literal-p))
+     ((and (setq not-literal (not (YaTeX-literal-p)))
+	   (equal "end" (setq macro (YaTeX-get-macro-at-point)))
 	   (setq env (YaTeX-inner-environment)))
-      (if (equal (get 'YaTeX-insert-braces 'begend-guide) 2)
-	  nil				;if triggered thrice, do nothing
-	(momentary-string-display
-	 (format
-	  (cond
-	   (YaTeX-japan "{begin/end入力には %s を使いましょう}")
-	   (t "{You don't understand Zen of `%s'!}"))
-	  (key-description (car (where-is-internal 'YaTeX-make-begin-end))))
-	 (point))
-	(put 'YaTeX-insert-braces 'begend-guide
-	     (+ 1 (string-to-int	;increment counter of beg-end guidance
-		   (prin1-to-string
-		    (get 'YaTeX-insert-braces 'begend-guide))))))
+      (funcall begend-guide)
       (insert (or open "{") env (or close "}")))
+     ((and not-literal (equal "begin" macro))
+      (setq env
+	    (YaTeX-read-environment
+	     (format "Begin environment(default %s): " YaTeX-env-name)))
+      (if (string= "" env) (setq env YaTeX-env-name))
+      (setq YaTeX-env-name env)
+      (funcall begend-guide)
+      (delete-region (- (point) 6) (point))
+      (YaTeX-insert-begin-end env nil))
      (t
       (insert (or open "{") (or close "}"))
       (forward-char -1)
