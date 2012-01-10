@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2012 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon Jan  9 20:13:20 2012 on firestorm
+;;; Last modified Tue Jan 10 15:54:39 2012 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.2"
@@ -2959,7 +2959,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 		      (setcdr a (cons (list class) (cdr a))))
 		(setq alist (cons (list element (list class)) alist))))
 	    (goto-char (1- e))
-	    (search-forward "}" nil t)
+	    (search-forward "}" nil 1) ;1=move to limit when not found.
 	    (setq b (point))))
 	alist))))
 	    
