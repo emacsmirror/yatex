@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.7
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan 10 13:17:19 2012 on firestorm
+;;; Last modified Tue Jan 10 13:27:32 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1496,6 +1496,9 @@ into {\\xxx } braces.
 ;    (backward-char 1))
    (t (YaTeX-self-insert arg))))
 
+(defvar YaTeX-use-jmode-hook (not (and (fboundp 'skk-mode) (boundp 'skk-mode)))
+  "*Non-nil means activate automatic jmode switcher within/out math mode.
+Hopefully, change default to t in the next version of 1.75.")
 (defun YaTeX-jmode-hook (old new)
   "A hook controling jmode on/off."
   ;; This function is called via point-entered/leave hook, so that
@@ -1550,15 +1553,16 @@ into {\\xxx } braces.
       (insert "$")
     (insert "$$")
     (forward-char -1)
-    (if (fboundp 'add-text-properties)
-	(add-text-properties
-	 (1- (point)) (1+ (point))
-	 (list 'point-left 'YaTeX-jmode-hook
-	       'point-entered 'YaTeX-jmode-hook
-	       'front-sticky t
-	       'rear-nonsticky t
-	       'mjmode nil
-	       'jmode (YaTeX-jmode))))
+    (and YaTeX-use-jmode-hook
+	 (fboundp 'add-text-properties)
+	 (add-text-properties
+	  (1- (point)) (1+ (point))
+	  (list 'point-left 'YaTeX-jmode-hook
+		'point-entered 'YaTeX-jmode-hook
+		'front-sticky t
+		'rear-nonsticky t
+		'mjmode nil
+		'jmode (YaTeX-jmode))))
     (YaTeX-jmode-off)
     (or YaTeX-auto-math-mode YaTeX-math-mode (YaTeX-toggle-math-mode 1))))
 
