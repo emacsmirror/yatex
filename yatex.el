@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.7
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan  9 20:12:52 2012 on firestorm
+;;; Last modified Tue Jan 10 13:17:19 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1233,8 +1233,8 @@ into {\\xxx } braces.
 	      (momentary-string-display
 	       (format
 		(cond
-		 (YaTeX-japan "{begin/end“ü—Í‚É‚Í %s ‚ðŽg‚¢‚Ü‚µ‚å‚¤}")
-		 (t "{You don't understand Zen of `%s'!}"))
+		 (YaTeX-japan "begin/end“ü—Í‚É‚Í %s ‚ðŽg‚¢‚Ü‚µ‚å‚¤")
+		 (t "You don't understand Zen of `%s'!"))
 		(key-description
 		 (car (where-is-internal 'YaTeX-make-begin-end))))
 	       (point))
@@ -1242,7 +1242,7 @@ into {\\xxx } braces.
 		   (+ 1 (string-to-int ;increment counter of beg-end guidance
 			 (prin1-to-string
 			  (get 'YaTeX-insert-braces 'begend-guide)))))))))
-	env macro not-literal)
+	env macro not-literal b e)
     (cond
      ((YaTeX-jmode) (YaTeX-self-insert arg))
      ((not (YaTeX-closable-p)) (YaTeX-self-insert arg))
@@ -1274,20 +1274,25 @@ into {\\xxx } braces.
 	   (equal "end" (setq macro (YaTeX-get-macro-at-point)))
 	   (setq env (YaTeX-inner-environment)))
       (funcall begend-guide)
-      (insert (or open "{") env (or close "}")))
+      (insert "{" env "}"))
      ((and not-literal (equal "begin" macro))
+      (insert "{")
+      (save-excursion
+	(indent-to (prog1 (- (current-column) 7) (insert "}\n")))
+	(insert "\\end{}")
+	(setq e (point)))
       (setq env
 	    (YaTeX-read-environment
 	     (format "Begin environment(default %s): " YaTeX-env-name)))
       (if (string= "" env) (setq env YaTeX-env-name))
       (setq YaTeX-env-name env)
       (funcall begend-guide)
-      (delete-region (- (point) 6) (point))
+      (delete-region (- (point) 7) e)
       (YaTeX-insert-begin-end env nil))
      (t
       (insert (or open "{") (or close "}"))
       (forward-char -1)
-      (if (and (eq (char-after (point)) ?\})
+      (if (and (eq (char-after (point)) ?\}) ;; the case `\\{}'
 	       (eq (char-after (- (point) 2)) ?\\ ))
 	  (progn (insert "\\") (forward-char -1)))
       ))))
