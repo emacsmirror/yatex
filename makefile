@@ -1,5 +1,5 @@
 #
-# Makefile for YaTeX
+# Makefile for YaTeX/yahtml
 #
 
 # Edit these variables to be suitable for your site
@@ -8,7 +8,7 @@ PREFIX	= /usr/local
 ## mule2
 #EMACS	= mule
 #EMACSDIR= ${PREFIX}/lib/${EMACS}
-## emacs20
+## emacs20 or later
 EMACS	= emacs
 EMACSDIR= ${PREFIX}/share/${EMACS}
 ## XEmacs
@@ -68,11 +68,11 @@ DOCSRC	= docs/yatexj.tex docs/yatexe.tex \
 DOCOBJ	= docs/yatexj docs/yatexe docs/yahtmlj docs/yahtmle
 HELP	= help/YATEXHLP.jp help/YATEXHLP.eng
 MANIFEST= manifest
-EXTRA	= dir install 00readme makefile readme.meadow.j
+EXTRA	= dir install 00readme makefile readme.meadow.j newpage.rb
 DISTRIB = ${EXTRA} ${LISP} ${DOCS} ${MANIFEST} ${HELP}
 RCSFILE	= ${LISP} ${NEWS} ${DOCSRC} ${HELP}
 YAHTMLLISP = ${YAHTML} ${COMMON}
-YAHTMLDIST = ${YAHTMLLISP} install 00readme makefile
+YAHTMLDIST = ${YAHTMLLISP} install 00readme makefile newpage.rb
 PACK	= `ls ${DISTRIB}`
 TMPDIR	= /tmp
 VERSION = `head yatex.el|awk '/rev\./{print $$4}'`
