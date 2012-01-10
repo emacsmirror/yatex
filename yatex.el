@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.74.7
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan 10 13:27:32 2012 on firestorm
+;;; Last modified Tue Jan 10 15:22:08 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1215,13 +1215,21 @@ into {\\xxx } braces.
   (interactive "d")
   (save-excursion
     (goto-char (setq p (or p (point))))
-    (cond
-     ((and (not (bobp))
-	   (string-match "[a-zA-Z]" (char-to-string (preceding-char))))
-      (skip-chars-backward "a-zA-Z")
-      (if (and (= (preceding-char) ?\\)
-	       (looking-at "\\([a-z]+\\)"))
-	  (YaTeX-buffer-substring  (point) p))))))
+    (let ((token (substring (substring YaTeX-TeX-token-regexp 1) 0 -2))
+	  bsend)
+      (and (not (bobp))
+	   (or (looking-at YaTeX-TeX-token-regexp)
+	       (string-match
+		YaTeX-TeX-token-regexp (char-to-string (preceding-char))))
+	   (progn
+	     (skip-chars-backward token)
+	     (equal (preceding-char) ?\\))
+	   (save-excursion
+	     (setq bsend (point))
+	     (skip-chars-backward "\\\\") ;emacs18 doesn't return distance
+	     (/= (% (- bsend (point)) 2) 0)) ;consider \\
+	   (looking-at YaTeX-TeX-token-regexp)
+	   (YaTeX-match-string 0)))))
 
 (defun YaTeX-insert-braces (arg &optional open close)
   (interactive "p")
