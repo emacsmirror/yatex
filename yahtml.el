@@ -1,9 +1,9 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2012 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Tue Jan 10 15:54:39 2012 on firestorm
+;;; Last modified Tue Jan 10 15:55:19 2012 on firestorm
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.74.2"
+(defconst yahtml-revision-number "1.74.3"
   "Revision number of running yahtml.el")
 
 ;;;[Installation]
