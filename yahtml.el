@@ -1,6 +1,6 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2012 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Tue Jan 10 15:55:19 2012 on firestorm
+;;; Last modified Wed Jan 11 09:33:46 2012 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.74.3"
@@ -250,7 +250,7 @@ Consult your site's WWW administrator.")
 %x: width, %y: height, %s: size in bytes, %c: first comment string,
 %f: filename")
 
-(defvar yahtml-faithful-to-htmllint (not yahtml-always-/li)
+(defvar yahtml-faithful-to-htmllint yahtml-always-/li
   "*Non-nil doesn't put space after opening tags.")
 
 (defvar yahtml-error-line-regexp
