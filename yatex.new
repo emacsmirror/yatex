@@ -6,10 +6,19 @@
 	M-C-SPC で環境だけでなく数式環境もマークする。
 	[prefix] t d でタイプセッタ起動成功のあと dvipdfmx を起動。
 	\label{}でラベル名を入れたときは \ref{NAME} を自動的にkill-ringに追加。
+	[prefix] t c で\label{NAME} の NAME を変えたら \ref のNAMEも変える。
+	同上のことを \cite/\bibitem にも。
 	\bibitem{}を入れたときは \cite{TAG} を自動的にkill-ringに追加。
+	\end 補完のお節介検査の精度を少し上げた。
+	jsarticle, jsbook をデフォルト補完辞書に入れた。
+	\begin の直後の { で自動的に \end 込みで環境補完(modify-modeと連動)。
 	=== yahtml ===
 	[prefix] t ブラウザメニューに「n:新規ページ作成」を追加(実験)。
 	[prefix] t j のlintコマンドを <!-- #lint CmdLine --> 行で指定可。
+	[prefix] } でリジョンを td 要素で括る(デフォルトは空白区切り)。
+	[prefix] ] でリジョンを tr, td 要素で括る(1行1レコード)。
+	閉じ括弧のないCSSファイル解析が終われない問題を修正。
+	li, dt, dd のインデント計算を環境型的に深さを変えるようにした。
 
 1.74	=== yatex ===
 	YaTeX-kanji-code が 4 のときは UTF-8 とした。

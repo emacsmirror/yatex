@@ -67,7 +67,7 @@ It is a good successor of YaTeX in HTML world.  Do not want it to behave
 as modes you used.   Yahtml doesn't lessen  the number of initial typing
 not so  much.  But it   lessens your effort  of polishing/debugging your
 source, tracing links between file or URL,  and browsing the result with
-Netscape.  If you had not used YaTeX,  the concept of  `C-c g', `C-c k',
+browsers.  If you had not used YaTeX,  the concept of  `C-c g', `C-c k',
 and   `C-c  c' are very   new  to you.   If  you are   interested in the
 philosophy of YaTeX, please take a look at the info file of YaTeX.
 
@@ -102,7 +102,8 @@ Parenthesized values are default.
 				directory name.  If you're not sure of
 				this, ask it to WWW administrator.
 				Typically `index.html' if your site is
-				running NCSA httpd, and `Welcome.html'
-				if CERN httpd.
+				running apache, or `Welcome.html' if 
+				CERN httpd.
 				URLでファイル名を省略した時にオープンさ
 				れるファイル。WWW管理者に聞いて下さい。
+				たいてい index.html でしょう。
