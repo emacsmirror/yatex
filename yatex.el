@@ -1,15 +1,15 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.74.7
+;;; yatex.el rev. 1.75
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan 10 15:22:08 2012 on firestorm
+;;; Last modified Thu Jan 12 11:40:38 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.74.7"
+(defconst YaTeX-revision-number "1.75"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------

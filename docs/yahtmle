@@ -1,7 +1,11 @@
 Info file: yahtmle,    -*-Text-*-
 produced by `texinfo-format-buffer'
 from file `yahtmle.tex'
-using `texinfmt.el' version 2.42 of  7 Jul 2006.
+using `texinfmt.el' version 2.38 of 3 July 1998.
+
+
+
+
 
 
 File: yahtmle, Node: Top, Next: Intro, Prev: (dir), Up: (dir)
@@ -41,9 +45,9 @@ Installing yahtml
 *****************
 * Menu:
 
-* Setting up yahtml::
-* Setting environments for weblint browsers and image viewers::
-* Setting environment variables for WWW pages::
+* Setting up yahtml::           
+* Setting environments for weblint browsers and image viewers::  
+* Setting environment variables for WWW pages::  
 
 
 
@@ -160,7 +164,7 @@ entities.
      attributes.  Possible completions are, <img>, <input>.
 
 `[prefix] l (YaTeX large-type completion)'
-     ...
+     ... 
 
           <big> 〜 </big>
 
@@ -205,9 +209,9 @@ Changing and Deleting
 
 * Menu:
 
-* Changing tags in pairs::
-* Changing entities::
-* URLencoding of strings within region::
+* Changing tags in pairs::      
+* Changing entities::           
+* URLencoding of strings within region::  
 
 
 
@@ -254,7 +258,7 @@ URLencoding of strings within region
 ====================================
 
 `[prefix] #'
-        ... encode chars that needs to be URLencoded within region
+     	... encode chars that needs to be URLencoded within region
 
 
 
@@ -265,12 +269,16 @@ td-enclosure/tr-enclosure
 If you wan to convert series of field into <td>...</td> repetitions for
 table element, td-enclosure or tr-enclosure is convenient.
 
-      `[prefix] '} ... Enclose each field in a region into
-<td>...</td>'s.  `[prefix] ]' ... Enclose each line in a region into
-<tr>...</tr>'s, with every line converted to <td>...</td> repetition.
-They presume white space as field separator by default.  To change this,
-enter other delimiting character for a query.  You can convert CSV, for
-example, into table by specifying comma(,) as a delimiter.
+      `[prefix] '}
+     
+     	... Enclose each field in a region into <td>...</td>'s.
+      `[prefix] ]'
+     
+     	... Enclose each line in a region into <tr>...</tr>'s, with every
+line converted to <td>...</td> repetition.  They presume white space as
+field separator by default.  To change this, enter other delimiting
+character for a query.  You can convert CSV, for example, into table by
+specifying comma(,) as a delimiter.
 
 If you want to enclose fields with th, call with universal-argument
 (`C-u').  Enter `th' to enclose fields with <th>...</th>.  The special
@@ -286,8 +294,8 @@ CSS(Style Sheets) Support
 
 * Menu:
 
-* CSS-class completion::
-* Reread CSS definition::
+* CSS-class completion::        
+* Reread CSS definition::       
 
 
 
@@ -309,8 +317,8 @@ class like this;
       .caution { font-size: 120%; background-color: 0xc00000;}
 
 when you input any tags via completing-read, yahtml prompts you to input
-class name.  If this is bothering, typing `C-j' instead of
-`RET' (or `C-m') cancels the next prompt to class name completion.
+class name.  If this is bothering, typing `C-j' instead of `RET' (or
+`C-m') cancels the next prompt to class name completion.
 
 
 
@@ -353,7 +361,7 @@ List of customizable variables.  Defaults in parenthesis
 
  -- Variable: yahtml-kanji-code
      Default kanji code. 1=sjis, 2=jis, 3=euc, 4=utf-8 (2) If AddType
-     text/html; charset=xxx" .html is written in .htaccess, this will
+     "text/html; charset=xxx" .html is written in .htaccess, this will
      override yahtml-kanji-code.
 
  -- Variable: yahtml-fill-column
@@ -485,35 +493,39 @@ Index
 
 * Menu:
 
-* Customize:                    Customizations.         (line   5)
-* Demacs:                       Intro.                  (line   5)
-* Key Assign:                   Customizations.         (line   5)
-* LaTeX:                        Intro.                  (line   5)
-* Mule:                         Intro.                  (line   5)
-* yahtml:                       Intro.                  (line   5)
+* Customize:                    Customizations.         4.
+* Demacs:                       Intro.                  4.
+* Key Assign:                   Customizations.         4.
+* LaTeX:                        Intro.                  4.
+* Mule:                         Intro.                  4.
+* yahtml:                       Intro.                  4.
+
+
+
+
 
 Tag table:
-Node: Top147
-Node: Intro724
-Node: Installation1122
-Node: Setting up yahtml1388
-Node: Setting environments for weblint browsers and image viewers2179
-Node: Setting environment variables for WWW pages2875
-Node: Command Invocation3846
-Node: Completion4274
-Node: Jump5790
-Node: Changing and Deleting6270
-Node: Changing tags in pairs6502
-Node: Changing entities6997
-Node: URLencoding of strings within region7533
-Node: td-enclosure/tr-enclosure7836
-Node: CSS Support8772
-Node: CSS-class completion8983
-Node: Reread CSS definition9836
-Node: Customizations10111
-Node: All customizable variables10387
-Node: Hook variables14154
-Node: Copying14280
-Node: Concept Index15071
+Node: Top148
+Node: Intro725
+Node: Installation1123
+Node: Setting up yahtml1404
+Node: Setting environments for weblint browsers and image viewers2195
+Node: Setting environment variables for WWW pages2891
+Node: Command Invocation3862
+Node: Completion4290
+Node: Jump5807
+Node: Changing and Deleting6287
+Node: Changing tags in pairs6538
+Node: Changing entities7033
+Node: URLencoding of strings within region7569
+Node: td-enclosure/tr-enclosure7870
+Node: CSS Support8836
+Node: CSS-class completion9062
+Node: Reread CSS definition9915
+Node: Customizations10190
+Node: All customizable variables10466
+Node: Hook variables14234
+Node: Copying14360
+Node: Concept Index15151
 
 End tag table
