@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
-;;; (c)1994-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Sep 28 10:46:39 2009 on firestorm
+;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Jan  9 20:20:09 2012 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -465,13 +465,12 @@ corresponding real arguments ARGS."
 ;;;###autoload
 (defun rindex (string char)
   (let ((pos (1- (length string)))(index -1))
-    (while (>= pos 0)
-      (cond
-       ((= (aref string pos) char)
-	(setq index pos) (setq pos -1))
-       (t (setq pos (1- pos))))
-      )
-    index))
+    (catch 'rindex
+      (while (>= pos 0)
+	(cond
+	 ((= (aref string pos) char)
+	  (throw 'rindex pos))
+	 (t (setq pos (1- pos))))))))
 
 ;;;###autoload
 (defun point-beginning-of-line ()
@@ -531,11 +530,15 @@ that window.  This function never selects minibuffer window."
 (cond
  ((fboundp 'screen-height)
   (fset 'YaTeX-screen-height 'screen-height)
-  (fset 'YaTeX-screen-width 'screen-width))
+  (fset 'YaTeX-screen-width 'screen-width)
+  (fset 'YaTeX-set-screen-height 'set-screen-height)
+  (fset 'YaTeX-set-screen-width 'set-screen-width))
  ((fboundp 'frame-height)
   (fset 'YaTeX-screen-height 'frame-height)
-  (fset 'YaTeX-screen-width 'frame-width))
- (t (error "I don't know how to run windows.el on this Emacs...")))
+  (fset 'YaTeX-screen-width 'frame-width)
+  (fset 'YaTeX-set-screen-height 'set-frame-height)
+  (fset 'YaTeX-set-screen-width 'set-frame-width))
+ (t (error "I don't know how to run YaTeX on this Emacs...")))
 
 ;;;###autoload
 (defun split-window-calculate-height (height)
@@ -664,6 +667,13 @@ See documentation of YaTeX-minibuffer-complete."
   (let ((quick t))
     (self-insert-command 1)
     (YaTeX-minibuffer-complete)))
+
+(defun YaTeX-yatex-buffer-list ()
+  (save-excursion
+    (delq nil (mapcar (function (lambda (buf)
+				  (set-buffer buf)
+				  (if (eq major-mode 'yatex-mode) buf)))
+		      (buffer-list)))))
 
 (defun foreach-buffers (pattern job)
   "For each buffer which matches with PATTERN, do JOB."
@@ -822,6 +832,21 @@ NULL includes null string in a list."
   (win-switch-to-window 1 (- last-command-char win:base-key)))
 
 ;;;###autoload
+(defun YaTeX-command-to-string (cmd)
+  (if (fboundp 'shell-command-to-string)
+      (funcall 'shell-command-to-string cmd)
+    (let ((tbuf " *tmpout*"))
+      (if (get-buffer-create tbuf) (kill-buffer tbuf))
+      (let ((standard-output (get-buffer-create tbuf)))
+	(unwind-protect
+	    (save-excursion
+	      (call-process
+	       shell-file-name nil tbuf nil YaTeX-shell-command-option cmd)
+	      (set-buffer tbuf)
+	      (buffer-string))
+	  (kill-buffer tbuf))))))
+      
+;;;###autoload
 (defun YaTeX-reindent (col)
   "Remove current indentation and reindento to COL column."
   (save-excursion
@@ -887,7 +912,7 @@ of 'YaTeX-inner-environment, which can be referred by
 		    (goto-char m0)
 		    (put 'YaTeX-inner-environment 'indent (current-column))
 		    (throw 'begin t)))))
-	  (buffer-substring
+	  (YaTeX-buffer-substring
 	   (progn (skip-chars-forward open) (1+ (point)))
 	   (progn (skip-chars-forward close) (point)))))))
 
@@ -973,9 +998,16 @@ Optional third argument NOERR causes no error for unballanced environment."
   (let ((env (YaTeX-inner-environment)))
     (if (not env) (error "No premature environment")
       (save-excursion
-	(if (YaTeX-search-active-forward
-	     (YaTeX-replace-format-args YaTeX-struct-end env "" "")
-	     YaTeX-comment-prefix nil t)
+	(if (and
+	     (YaTeX-re-search-active-forward
+	      (concat
+	       "\\(" (YaTeX-replace-format-args
+		      YaTeX-struct-end env "" "")
+	       "\\)\\|\\(" (YaTeX-replace-format-args
+		      YaTeX-struct-begin env "" "")
+	       "\\)")
+	      YaTeX-comment-prefix nil t)
+	     (match-beginning 1))	;is closing struc.
 	    (if (y-or-n-p
 		 (concat "Environment `" env
 			 "' may be already closed. Force close?"))
@@ -1015,28 +1047,31 @@ to most recent sectioning command."
 (defun YaTeX-mark-environment ()
   "Mark current position and move point to end of environment."
   (interactive)
+  (require 'yatexmth)
   (let ((curp (point)))
-    (if (and (YaTeX-on-begin-end-p) (match-beginning 1)) ;if on \\begin
-	(progn (goto-char (match-end 0)))
-      (if (= (char-after (point)) ?\\) nil	;if on \\end
-	(skip-chars-backward "^\n\\\\")
-	(or (bolp) (forward-char -1))))
-    (if (not (YaTeX-end-of-environment))   ;arg1 turns to match-beginning 1
-	(progn
-	  (goto-char curp)
-	  (error "Cannot found the end of current environment."))
-      (YaTeX-goto-corresponding-environment)
-      (beginning-of-line)		;for confirmation
-      (if (< curp (point))
+    (if (YaTeX-in-math-mode-p)
+	(YaTeX-mark-mathenv)
+      (if (and (YaTeX-on-begin-end-p) (match-beginning 1)) ;if on \\begin
+	  (progn (goto-char (match-end 0)))
+	(if (= (char-after (point)) ?\\) nil ;if on \\end
+	  (skip-chars-backward "^\n\\\\")
+	  (or (bolp) (forward-char -1))))
+      (if (not (YaTeX-end-of-environment)) ;arg1 turns to match-beginning 1
 	  (progn
-	    (message "Mark this environment?(y or n): ")
-	    (if (= (read-char) ?y) nil
-	      (goto-char curp)
-	      (error "Abort.  Please call again at more proper position."))))
-      (set-mark-command nil)
-      (YaTeX-goto-corresponding-environment)
-      (end-of-line)
-      (if (eobp) nil (forward-char 1)))))
+	    (goto-char curp)
+	    (error "Cannot found the end of current environment."))
+	(YaTeX-goto-corresponding-environment)
+	(beginning-of-line)		;for confirmation
+	(if (< curp (point))
+	    (progn
+	      (message "Mark this environment?(y or n): ")
+	      (if (= (read-char) ?y) nil
+		(goto-char curp)
+		(error "Abort.  Please call again at more proper position."))))
+	(set-mark-command nil)
+	(YaTeX-goto-corresponding-environment)
+	(end-of-line)
+	(if (eobp) nil (forward-char 1))))))
 
 (defun YaTeX-kill-buffer (buffer)
   "Make effort to show parent buffer after kill."
@@ -1048,6 +1083,37 @@ to most recent sectioning command."
     (and pf
 	 (get-file-buffer pf)
 	 (switch-to-buffer (get-file-buffer pf)))))
+
+(defun YaTeX-get-builtin (key)
+  "Read source built-in command of %# usage."
+  (catch 'builtin
+    (let ((bl (delq nil (list (current-buffer)
+			      (and YaTeX-parent-file
+				   (get-file-buffer YaTeX-parent-file)))))
+	  (leader (or (cdr-safe (assq major-mode
+				      '((yatex-mode . "%#")
+					(yahtml-mode . "<!-- #"))))
+		      "")))
+      (save-excursion
+	(while bl
+	  (set-buffer (car bl))
+	  (save-excursion
+	    (goto-char (point-min))
+	    (if (and (re-search-forward
+		      (concat "^" (regexp-quote (concat leader key))) nil t)
+		     (not (eolp)))
+		(throw 'builtin
+		       (YaTeX-buffer-substring
+			(progn
+			  (skip-chars-forward " \t" (point-end-of-line))
+			  (point))
+			(if (string< "" comment-end)
+			    (progn
+			      (search-forward
+			       comment-end (point-end-of-line) t)
+			      (match-beginning 0))
+			  (point-end-of-line))))))
+	  (setq bl (cdr bl)))))))
 
 ;;;VER2
 (defun YaTeX-insert-struc (what env)
@@ -1069,6 +1135,24 @@ to most recent sectioning command."
    ((fboundp 'truncate-string-to-width) (truncate-string-to-width str width))
    ((fboundp 'truncate-string) (truncate-string str width))
    (t (substring str 0 width))))
+
+(defun YaTeX-hex (str)
+  "Return int expressed by hexadecimal string STR."
+  (if (string< "20" emacs-version)
+      (string-to-number str 16)
+    (let ((md (match-data)))
+      (unwind-protect
+	  (if (string-match "[^0-9a-f]" str)
+	      (error "Non hexadecimal character in %s" str)
+	    (let ((i 0) d)
+	      (setq str (downcase str))
+	      (while (string< "" str)
+		(setq d (+ 0 (string-to-char str)) ; + 0 for XEmacs
+		      i (+ (* 16 i) (- d (if (<= d ?9) ?0 (- ?a 10))))
+		      str (substring str 1)))
+	      i))
+	(store-match-data md)))))
+
 
 ;;; Function for menu support
 (defun YaTeX-define-menu (keymap bindlist)

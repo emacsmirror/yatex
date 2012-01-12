@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
-;;; (c)1993-2006 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Dec 24 15:13:15 2006 on firestorm
+;;; (c)1993-2012 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Jan  9 20:14:02 2012 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -152,7 +152,7 @@
    ("\\\\"	"setminus"	"\\")
    (")("	"wr"		" )\n(")
    ("<>"	"diamond"	"<>")
-   ("/\-"	"bigtriangleup"	("/\\\n~~" "Å¢"))
+   ("/\\-"	"bigtriangleup"	("/\\\n~~" "Å¢"))
    ("-\\/"	"bigtriangledown" ("__\n\\/" "Å§"))
    ("<|"	"triangleleft"	"<|")
    ("|>"	"triangleright"	"|>")
@@ -171,8 +171,11 @@
    ("II"	"amalg"		"II")
    ;	:
    ;;relational operators
-   ("<"		"leq"		("<\n-"		"ÅÖ"))
-   (">"		"geq"		(">\n-"		"ÅÜ"))
+   ("<"		"leq"		("<\n-"		"<\n-"))
+   ("=<"	"leqq"		("<\n="		"ÅÖ"))
+   (">"		"geq"		(">\n-"		">\n-"))
+   (">="	"geqq"		(">\n="		"ÅÜ"))
+   ("=:"	"fallingdotseq"	(".\n==\n ."	"Å‡"))
    ("-="	"equiv"		("=\n-"		YaTeX-image-equiv))
    ("=-"	"equiv"		("=\n-"		YaTeX-image-equiv))
    ("---"	"equiv"		("=\n-"		YaTeX-image-equiv))
@@ -207,7 +210,9 @@
    ("-<"	"prec"		("-<"		"Ç≠"))
    ("-<="	"preceq"	("-<\n-"	"Ç≠\n="))
    ("<<"	"ll"		("<<"		"Ås"))
+   ("<<"	"lll"		"<<<")
    (">>"	"gg"		(">>"		"Åt"))
+   (">>>"	"ggg"		">>>")
    ;	:
    ;;arrows
    ("<-"	"leftarrow"	("<-"		"Å©"))
@@ -428,10 +433,12 @@
   (list 'nth 1 list))
 
 (defvar YaTeX-math-cmd-regexp (concat (regexp-quote YaTeX-ec) "[A-z|]"))
-(defvar YaTeX-math-verbatim-environments
-  '("alltt")
-  "*List of environments in which LaTeX math mode is disabled.
-This value is appended with YaTeX-verbatim-environments.")
+
+;;;	alltt goes into YaTeX-verbatim-environments 2011/3/16
+;;(defvar YaTeX-math-verbatim-environments
+;;  '("alltt")
+;;  "*List of environments in which LaTeX math mode is disabled.
+;;This value is appended with YaTeX-verbatim-environments.")
 
 ;;;
 ;;YaTeX math-mode functions
@@ -506,7 +513,7 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 	      ;;  "alignat*" "xalignat" "xalignat*" "xxalignat" "xxalignat*"
 	      YaTeX-math-begin-list
 	    )))
-	(let*((p (point)) (nest 0) me0 r
+	(let*((p (point)) (nest 0) me0 r firstp dollar
 	      (delim (concat YaTeX-sectioning-regexp "\\|^$\\|^\C-l"))
 	      (boundary
 	       (save-excursion
@@ -530,8 +537,8 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 			  (setq nest (1+ nest))
 			(if (= (preceding-char) ?\\ ) nil ;;\\[5pt]
 			  (setq nest (1- nest))))))
-		  (if (< nest 0) (throw 'open t))))
-	      t)
+		  (if (< nest 0)
+		      (throw 'open (cons (YaTeX-match-string 0) (point)))))))
 	     ((and (setq r (YaTeX-on-section-command-p
 			    YaTeX-math-section-type-regexp))
 		   (numberp r)
@@ -541,20 +548,48 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 		  (while ;(search-backward "$" boundary t);little bit fast.
 		      (YaTeX-re-search-active-backward ;;;;;; Too slow???
 		       "\\$" (concat "[^\\\\]" YaTeX-comment-prefix) boundary t)
+		    (setq dollar "$")
 		    (cond
 		     ((equal (char-after (1- (point))) ?$) ; $$ equation $$
+		      (setq dollar "$$")
 		      (backward-char 1)
 		      (setq nest (1+ nest)))
-		     ((let ((YaTeX-verbatim-environments
-			     (append YaTeX-math-verbatim-environments
-				     YaTeX-verbatim-environments)))
-			(YaTeX-literal-p))
+		     ((YaTeX-literal-p)
 		      nil)
 		     ((and (equal (char-after (1- (point))) ?\\ )
 			   (not (equal (char-after (- (point) 3)) ?\\ )))
 		      nil)		;\$
-		     (t (setq nest (1+ nest)))))
-		  (if (= (% nest 2) 1) (throw 'dollar t))))))))))
+		     (t (setq nest (1+ nest))))
+		    (if (and (= nest 1) (null firstp))
+			(setq firstp (cons dollar (point)))))
+		  (if (= (% nest 2) 1)
+		      (throw 'dollar firstp))))))))))
+
+(defun YaTeX-mark-mathenv ()
+  "Mark current mathematic environment."
+  (interactive)
+  (let ((mmp (YaTeX-in-math-mode-p)) type bpt)
+    (if (or (null mmp) (not (stringp (setq type (car mmp)))))
+	nil				;if nil or not string, do nothing
+     (setq bpt (cdr mmp))
+     (goto-char bpt)
+     (cond
+      ((string-match "\\$" type)
+       (set-mark-command nil)
+       (skip-chars-forward "$")
+       (YaTeX-search-active-forward
+	type YaTeX-comment-prefix nil)	;if it cause error, obey it
+       (goto-char (match-end 0)))
+      ;;
+      ((string-match "^\\\\[\\[(]" type)
+       (set-mark-command nil)
+       (YaTeX-goto-corresponding-leftright)
+       (skip-chars-forward "])\\\\"))
+      ;;
+      ((string-match "^[a-z]" type)	; \begin\end type math
+       (set-mark-command nil)
+       (YaTeX-goto-corresponding-environment)
+       (goto-char (match-end 0)))))))
 
 (defun YaTeX-math-display-list (list cols)
   (goto-char (point-max))
@@ -600,7 +635,7 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 	    (progn (YaTeX-math-display-list (car list) cols)
 		   (setq cols (% (1+ cols) maxcols))))
 	(setq list (cdr list)))
-      (goto-line 4)
+      (goto-char (point-min)) (forward-line 3)
       (use-local-map YaTeX-math-menu-map)
       (setq buffer-read-only t)
       (unwind-protect
@@ -767,7 +802,7 @@ If so return the cons of its invocation key and image-string."
 	  (setq list (cdr list)))
 	(setq lists (cdr lists))))))
 
-;;; ----- for AMS LaTeX (by matsu@math.s.chiba-u.ac.jp) -----
+;;; ----- for AMS LaTeX (by matsu<at>math.s.chiba-u.ac.jp) -----
 (defvar YaTeX-ams-paren-modifier
   '(("Biggl" . "Biggr") ("biggl" . "biggr")
     ("Bigl" . "Bigr") ("bigl" . "bigr")

@@ -10,7 +10,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Wed Jul 20 21:25:48 2005 on firestorm
+@c Last modified Thu May 27 18:24:30 2010 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -224,10 +224,17 @@ LaTeXソースの編集中、次のキー入力により、platex などのタイプセットプログラ
         @dots{} タイプセッタ(platex)起動
 @item [prefix] t r
         @dots{} タイプセッタ起動(領域指定)
+@item [prefix] t e
+        @dots{} タイプセッタ起動
+        (ポイント位置の環境または数式モードのみ対称)
 @item [prefix] t k
         @dots{} 動作中のタイプセッタの停止
 @item [prefix] t b
         @dots{} jbibtex起動
+@item [prefix] t i
+        @dots{} makeindex起動
+@item [prefix] t d
+        @dots{} タイプセッタとdvipdfmx起動
 @item [prefix] t p
         @dots{} プレヴューア起動
 @item [prefix] t l
@@ -275,11 +282,22 @@ LaTeXソースの編集中、次のキー入力により、platex などのタイプセットプログラ
 
   ポイントとマークの間、あるいはテキスト中に埋め込んだ @code{%#BEGIN} と
 @code{%#END}の間の領域(@ref{%#notation})だけを切り取ってタイプセットすることが
-できます。この場合の documentclass は、単一ファイルの La@TeX{} ソースの編
-集時にはそのファイルの documentclass が、別ファイルから include している場
-合にはメインファイルの documentclass が自動的に選択されます。指定領域は、
-メインファイルのあるディレクトリの@file{texput.tex}という臨時ファイルに出
-力されますので、上書きには注意してください。
+できます。この場合メインファイルのプリアンブルが一時ファイルの
+プリアンブルとして使われます。したがってプリアンブルにないマクロ定義が
+領域内にあるとエラーになります。領域タイプセットを使う場合、
+必ずマクロ定義はプリアンブル(@code{\begin{document}}より前)に置くよう
+にして下さい。一時ファイルはメインファイルのある
+ディレクトリの@file{texput.tex}という名前で出力されるので、
+上書きには注意してください。
+
+@subsection{環境タイプセット}
+
+  @kbd{[prefix] te} を押すと、ポイント位置の最も内側の環境、または数式モー
+ド内の場合はその数式モード全体が自動的に領域選択されて、領域タイプセットを
+呼び出します。tabular環境や数式モードで複雑なものを作っている場合は確かめた
+い部分だけを確認できるので便利です。これも @file{texput.tex} に該当部分を
+書き出します。プレヴューアで @file{texput.dvi} を開いたままにしておけば
+修正と確認が素早くできるでしょう。
 
 @node Calling previewer, Print out, Calling typesetter, Invocation
 @comment  node-name,  next,  previous,  up
@@ -1821,8 +1839,8 @@ prefix キーの直後のキーバインドで @kbd{英字} のものを @kbd{C-英字} に変更
 
 @defvar YaTeX-kanji-code
 文書を作成する時の漢字コード
-nil=既存のコードのまま 0=no-conversion1=Shift JIS,
-2=JIS, 3=EUC (2 (MS-DOSでは1))
+nil=既存のコードのまま 0=no-conversion 1=Shift JIS,
+2=JIS, 3=EUC, 4=UTF-8 (2 (MS-DOSでは1))
 @end defvar
 
 @defvar tex-command
@@ -1849,6 +1867,10 @@ dviファイルの印刷に使われるコマンド式 (@code{"dvi2ps %f %t %s | lpr"})
 
 @defvar makeindex-command
 makeindexコマンド (@code{"makeindex"} (MS-DOSでは@code{"makeind"}))
+@end defvar
+
+@defvar YaTeX-dvipdf-command
+dviをPDFに変換するコマンド (@code{"dvipdfmx"})
 @end defvar
 
 @defvar YaTeX-need-nonstop

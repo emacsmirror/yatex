@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX hierarchy browser.
 ;;; yatexhie.el
-;;; (c)1995 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Jun 27 12:09:49 2003 on firestorm
+;;; (c)1995-2012 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Jan  9 20:19:06 2012 on firestorm
 ;;; $Id$
 
 ;; ----- Customizable variables -----

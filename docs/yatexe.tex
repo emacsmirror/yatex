@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Wed Jul 20 21:27:50 2005 on firestorm
+@c Last modified Thu May 27 18:04:10 2010 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -145,10 +145,17 @@ strokes execute typeset or preview command.
         @dots{} invoke latex
 @item [prefix] t r
         @dots{} invoke latex on region
+@item [prefix] t e
+        @dots{} invoke latex on current environment or whole
+         portion of current formulas in math-mode.
 @item [prefix] t k
         @dots{} kill current typesetting process
 @item [prefix] t b
         @dots{} invoke bibtex
+@item [prefix] t i
+        @dots{} invoke makeindex
+@item [prefix] t d
+        @dots{} invoke latex && dvipdfmx
 @item [prefix] t p
         @dots{} preview
 @item [prefix] t l
@@ -188,14 +195,28 @@ move the cursor to the line where La@TeX{} error is detected.
 the cursor on the line of error message and type @kbd{SPACE} key.  This
 makes the cursor move to corresponding source line.
 
-  Since @kbd{[prefix] tr} pastes the region into the file
-@file{texput.tex} in the current directory, you should be careful of
-overwriting.  The method of specification of the region is shown in the
+  YaTeX-typeset-region invoked by @kbd{[prefix] tr} call typesetter
+for region.  The region is specified by standard point and mark, or
+by @code{%#BEGIN} and @code{%#END} marks.  Selected region will be
+copied to the temporary file @file{texput.tex} with the same preamble
+as the main file of current editing sources.  Be sure to put
+all local macro settings in preamble, not after @code{\begin{document}}.
+  The method of specification of the region is shown in the
 section @xref{%#notation}.
 
   The documentclass  for typeset-region is the same as that of editing
 file if you edit one  file,  and is the same as main file's if you
 edit splitting files.
+
+  The @kbd{[prefix] te} key automatically marks current inner environment
+or inner math mode and then call typeset-region with marked region.  This
+is convenient to quick view of current tabular environment or current
+editing formulas.  Keeping previewer window for @file{texput.dvi} is handy
+for debugging.  Since @kbd{[prefix] te} selects the inner-most environment
+as region, it is not suitable for partial typesetting of doubly or more
+composed environment.  If you want to do partial typesetting for a nested
+environment, use @kbd{[prefix] tr} for static-region, which is described
+in the section @xref{%#notation}.
 
 @node Calling previewer, Printing out, Calling typesetter, Typesetting
 @comment  node-name,  next,  previous,  up
@@ -1594,7 +1615,7 @@ Set this nil to produce all messages in English
 @defvar YaTeX-kanji-code
 Default buffer-file-coding-system for YaTeX modes' buffer.
 Set this 0 to no language conversion.  Nil to preserve original 
-coding-system. (@code{1 or 2})
+coding-system. 1=Shift JIS, 2=JIS, 3=EUC, 4=UTF-8 (@code{1 or 2})
 @end defvar
 
 @defvar YaTeX-prefix
@@ -1636,6 +1657,10 @@ End page format of above %t. %e will turn to @code{end} page (@code{"-t %e"})
 
 @defvar makeindex-command
 Default makeindex command (@code{"makeindex"} (@code{"makeind"} on MS-DOS))
+@end defvar
+
+@defvar YaTeX-dvipdf-command
+Default command name to convert .dvi to PDF (@code{"dvipdfmx"})
 @end defvar
 
 @defvar YaTeX-need-nonstop

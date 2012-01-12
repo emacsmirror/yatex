@@ -1,0 +1,10 @@
+syntax: glob
+*,v
+RCS
+CVS
+.cvsignore
+[._]win*
+__emacs
+docs/*
+*.swp
+trashbox

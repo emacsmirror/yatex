@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.18
-;;; (c)1991-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Sep 21 11:44:42 2007 on firestorm
+;;; yatexadd.el rev.19
+;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Mar  7 12:12:11 2011 on firestorm
 ;;; $Id$
 
 ;;;
@@ -198,12 +198,16 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:parbox ()
   (YaTeX:read-position "tbc"))
+(defun YaTeX::parbox (argp)
+  (cond
+   ((= argp 1) (read-string "Width: "))
+   ((= argp 2) (read-string "Text: "))))
 
-(defun YaTeX:dashbox ()
+(defun YaTeX::dashbox ()
   (concat "{" (read-string "Dash dimension: ") "}"
 	  (YaTeX:read-coordinates "Dimension")))
 
-(defun YaTeX:savebox (argp)
+(defun YaTeX::savebox (argp)
   (cond
    ((= argp 1) (read-string "Saved into name: " "\\"))
    ((= argp 2) (read-string "Text: "))))
@@ -738,7 +742,7 @@ If optional third argument NOSET is non-nil, do not generate new label."
   "Alist of labeling regexp vs. its group number points to label string.
 This alist is used in \\ref's argument's completion.")
 (defvar YaTeX::ref-labeling-regexp-alist-private nil
-  "*Private extesion to YaTeX::ref-labeling-regexp-alist.
+  "*Private extension to YaTeX::ref-labeling-regexp-alist.
 See the documetation of YaTeX::ref-labeling-regexp-alist.")
 (defvar YaTeX::ref-labeling-regexp-alist
   (append YaTeX::ref-labeling-regexp-alist-default
@@ -1115,6 +1119,108 @@ YaTeX-sectioning-levelの数値で指定.")
 	    (bury-buffer YaTeX-label-buffer)))
 	label)))))
 
+(defun YaTeX::label-rename-refs (old new &optional def ref)
+  "Rename reference tag from OLD to NEW.
+Optional arguments DEF and REF specify defining command and
+referring command respectively.
+---------------------------------------------------------
+CONTROL KEYS - キーの説明
+ y	Replace			置換する
+ n	Do not replace		置換しない
+ !	Replace All w/o query	残る全部を確認なしで置換
+ r	Enter Recursive-edit	再帰編集モードへ
+ q	Quit from replacing	ここまでで置換をやめる
+
+Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
+再帰編集に入ったら \\[exit-recursive-edit]  で抜け忘れなきよう。"
+  (save-window-excursion
+    (catch 'exit
+      (let*((bufs (YaTeX-yatex-buffer-list)) buf b e
+	    (oldptn (regexp-quote old))
+	    (sw (selected-window))
+	    (ptn (concat
+		  "\\(" YaTeX-refcommand-ref-regexp "\\)"
+		  "\\s *{" oldptn "}"))
+	    (repface (and (fboundp 'make-overlay)
+			  (fboundp 'internal-find-face)
+			  (if (internal-find-face 'isearch) 'isearch 'region)))
+	    ov
+	    (qmsg "Replace to `%s'? [yn!rq?]")
+	    continue ch)
+	(while bufs
+	  (set-buffer (setq buf (car bufs)))
+	  (save-excursion
+	    (goto-char (point-min))
+	    (while (re-search-forward ptn nil t)
+	      (goto-char (match-end 1))
+	      (skip-chars-forward " \t\n{")
+	      (unwind-protect
+		  (if (and
+		       (looking-at oldptn)
+		       (setq b (match-beginning 0)
+			     e (match-end 0))
+		       (or continue
+			   (catch 'query
+			     (if repface
+				 (if ov (move-overlay ov b e)
+				   (overlay-put
+				    (setq ov (make-overlay b e))
+				    'face repface)))
+			     (switch-to-buffer buf)
+			     (while t
+			       (message qmsg new)
+			       (setq ch (read-char))
+			       (cond
+				((= ch ?q) (throw 'exit t))
+				((= ch ?r)
+				 (message
+				  "Don't forget to exit recursive-edit by `%s'"
+				  (key-description
+				   (where-is-internal
+				    'exit-recursive-edit '(keymap) t)))
+				 (sleep-for 2)
+				 (recursive-edit))
+				((= ch ?y) (throw 'query t))
+				((= ch ?!) (throw 'query (setq continue t)))
+				((= ch ??)
+				 (describe-function
+				  'YaTeX::label-rename-refs)
+				 (select-window (get-buffer-window "*Help*"))
+				 (search-forward "----")
+				 (forward-line 1)
+				 (set-window-start (selected-window) (point))
+				 (sit-for 0)
+				 (select-window sw))
+				((= ch ?n) (throw 'query nil)))))))
+		      (replace-match new))
+		(and ov (delete-overlay ov)))))
+	  (setq bufs (cdr bufs)))))))
+
+(defun YaTeX::label (argp &optional labname refname)
+  "Read label name and return it with copying \\ref{LABEL-NAME} to kill-ring."
+  (cond
+   ((= argp 1)
+    (let*((chmode (boundp (intern-soft "old")))
+	  (dlab (if chmode old ;if called via YaTeX-change-section (tricky...)
+		  (YaTeX::ref-default-label)))
+	  (label (read-string
+		  (format "New %s name: " (or labname "label"))
+		  (cons dlab 1))))
+      (if (string< "" label)
+	  (let ((refstr (format "\\%s{%s}" (or refname "ref") label))
+		(key (key-description (where-is-internal 'yank nil t)))
+		(msg
+		 (if YaTeX-japan
+		     "をkill-ringに入れました。yank(%s)で取り出せます。"
+		   " is stored into kill-ring.  Paste it by yank(%s).")))
+	    (kill-new refstr)
+	    (and chmode
+		 (not (equal old label))
+		 (YaTeX::label-rename-refs old label))
+	    (message (concat "`%s'" msg) refstr key)))
+      label))))
+      
+
 (fset 'YaTeX::pageref 'YaTeX::ref)
 (defun YaTeX::tabref (argp)	    ; For the style file of IPSJ journal
   (YaTeX::ref
@@ -1282,6 +1388,10 @@ and print them to standard output."
 
    (t nil)))
 
+(defun YaTeX::bibitem (argp)
+  "Add-in function to insert argument of \\bibitem."
+  (YaTeX::label argp "label" "cite"))
+
 ;;; for AMS-LaTeX
 (and YaTeX-use-AMS-LaTeX (fset 'YaTeX::eqref 'YaTeX::ref))
 ;;; for Harvard citation style
@@ -1291,13 +1401,6 @@ and print them to standard output."
 (fset 'YaTeX::citename 'YaTeX::cite)
 (fset 'YaTeX::citep 'YaTeX::cite)
 (fset 'YaTeX::citet 'YaTeX::cite)
-
-(defun YaTeX-yatex-buffer-list ()
-  (save-excursion
-    (delq nil (mapcar (function (lambda (buf)
-				  (set-buffer buf)
-				  (if (eq major-mode 'yatex-mode) buf)))
-		      (buffer-list)))))
 
 (defun YaTeX-select-other-yatex-buffer ()
   "Select buffer from all yatex-mode's buffers interactivelly."
@@ -1587,6 +1690,7 @@ and print them to standard output."
     ("latterpaper") ("legalpaper") ("executivepaper") ("landscape")
     ("oneside") ("twoside") ("draft") ("final") ("leqno") ("fleqn") ("openbib")
     ("tombow") ("titlepage") ("notitlepage") ("dvips")
+    ("mingoth")				;for jsarticle
     ("clock")				;for slides class only
     )
     "Default options list for documentclass")
@@ -1624,6 +1728,7 @@ and print them to standard output."
 
 (defvar YaTeX:documentclasses-default
   '(("article") ("jarticle") ("report") ("jreport") ("book") ("jbook")
+    ("jsarticle") ("jsbook")
     ("j-article") ("j-report") ("j-book")
     ("letter") ("slides") ("ltxdoc") ("ltxguide") ("ltnews") ("proc"))
   "Default documentclass alist")
@@ -1661,7 +1766,7 @@ and print them to standard output."
     ("Emerald") ("JungleGreen") ("SeaGreen") ("Green") ("ForestGreen")
     ("PineGreen") ("LimeGreen") ("YellowGreen") ("SpringGreen") ("OliveGreen")
     ("RawSienna") ("Sepia") ("Brown") ("Tan") ("Gray") ("Black") ("White"))
-  "Colors defined in $TEXMF/tex/plain/colordvi.tex")
+  "Colors defined in $TEXMF/tex/plain/dvips/colordvi.tex")
 
 (defvar YaTeX:latex2e-basic-color-alist
   '(("black") ("white") ("red") ("blue") ("yellow") ("green") ("cyan")

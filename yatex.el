@@ -1,15 +1,15 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //野鳥//
-;;; yatex.el rev. 1.74
-;;; (c)1991-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Sep 28 10:44:35 2009 on firestorm
+;;; yatex.el rev. 1.75
+;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Jan 12 11:40:38 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.74"
+(defconst YaTeX-revision-number "1.75"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -82,6 +82,10 @@ specify the `from usage' and `to usage' with their option by format string
   (if YaTeX-dos "%e" "-t %e")
   "*`To' page format of dvi filter.  %e will turn to end page number.")
 
+(defvar YaTeX-dvipdf-command
+  "dvipdfmx"
+  "*Command name to convert dvi file to PDF.")
+
 (defvar YaTeX-default-document-style
   (concat (if YaTeX-japan "j") "article")
   "*Default LaTeX Documentstyle for YaTeX-typeset-region.")
@@ -147,7 +151,7 @@ for YaTeX-uncomment-paragraph.")
 for YaTeX-uncomment-paragraph.")
 
 (defvar YaTeX-verbatim-environments 
-  '("verbatim" "verbatim*")
+  '("verbatim" "verbatim*" "alltt")
   "*Assume these environments of this variable disable LaTeX commands.")
 (defvar YaTeX-verb-regexp "verb\\*?\\|path"
   "*Regexp of verb family.  Do not contain preceding \\\\ nor \\(\\).")
@@ -363,7 +367,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 
 (defvar singlecmd-table
   (append
-   '(("maketitle") ("makeindex") ("sloppy") ("protect")
+   '(("maketitle") ("makeindex") ("sloppy") ("protect") ("par")
      ("LaTeX") ("TeX") ("item") ("item[]") ("appendix") ("hline") ("kill")
      ;;("rightarrow") ("Rightarrow") ("leftarrow") ("Leftarrow")
      ("pagebreak") ("nopagebreak") ("tableofcontents")
@@ -455,8 +459,9 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   (YaTeX-define-key ")" 'YaTeX-insert-parens-region)
   (YaTeX-define-key "$" 'YaTeX-insert-dollars-region)
   (YaTeX-define-key "i" 'YaTeX-fill-item)
-  (YaTeX-define-key
-   "\\" '(lambda () (interactive) (insert "$\\backslash$")))
+  (YaTeX-define-key "\\"
+   '(lambda () (interactive)
+      (insert (if (YaTeX-in-math-mode-p) "\\backslash" "\\textbackslash"))))
   (if YaTeX-no-begend-shortcut
       (progn
 	(YaTeX-define-key "B" 'YaTeX-make-begin-end-region)
@@ -505,7 +510,7 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   (if YaTeX-dos
       (define-key YaTeX-prefix-map "\C-r"
 	'(lambda () (interactive)
-	   (set-screen-height YaTeX-saved-screen-height) (recenter)))))
+	   (YaTeX-set-screen-height YaTeX-saved-screen-height) (recenter)))))
 
 (defvar YaTeX-section-completion-map nil
   "*Key map used at YaTeX completion in the minibuffer.")
@@ -687,7 +692,7 @@ more features are available and they are documented in the manual.
 	))
   (use-local-map YaTeX-mode-map)
   (set-syntax-table YaTeX-mode-syntax-table)
-  (if YaTeX-dos (setq YaTeX-saved-screen-height (screen-height)))
+  (if YaTeX-dos (setq YaTeX-saved-screen-height (YaTeX-screen-height)))
   (YaTeX-read-user-completion-table)
   (and (fboundp 'YaTeX-hilit-setup-alist) (YaTeX-hilit-setup-alist))
   (makunbound 'inenv)
@@ -746,6 +751,7 @@ more features are available and they are documented in the manual.
 (autoload 'YaTeX-goto-open-paren "yatexmth" "Goto opening paren" t)
 (autoload 'YaTeX-change-parentheses "yatexmth" "Change corresponding parens" t)
 (autoload 'YaTeX-goto-corresponding-paren "yatexmth" "\bigl\bigr jumps" t)
+(autoload 'YaTeX-typeset-math-region "yatexmth" "Typeset math-region" t)
 
 ;;autoload from yatexhlp.el
 (autoload 'YaTeX-help "yatexhlp" "YaTeX helper with LaTeX commands." t)
@@ -823,7 +829,15 @@ This works also for other defined begin/end tokens to define the structure."
 	  (insert "\n")
 	  (or exchange (exchange-point-and-mark)))
       (goto-char beg2)
-      (YaTeX-intelligent-newline nil)
+      (if (intern-soft (concat "YaTeX-intelligent-newline-" env))
+	  (progn
+	    (YaTeX-intelligent-newline nil)
+	    (message
+	     (cond
+	      (YaTeX-japan "%s で次の行の入力に進みます。")
+	      (t "`%s' produces the next line's template."))
+	     (key-description
+	      (car (where-is-internal 'YaTeX-intelligent-newline))))))
       (YaTeX-indent-line))
     (YaTeX-package-auto-usepackage env 'env)
     (if YaTeX-current-position-register
@@ -977,9 +991,11 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 	 'section-table 'user-section-table 'tmp-section-table)
 	(if YaTeX-current-position-register
 	    (point-to-register YaTeX-current-position-register))
-	(if (string= (buffer-substring (- (point) 2) (point)) "{}")
-	  (forward-char -1))
-	(while (string= (buffer-substring (- (point) 3) (1- (point))) "{}")
+	(if (string= (YaTeX-buffer-substring (- (point) 2) (point))
+		     "{}")
+	    (forward-char -1))
+	(while (string= (YaTeX-buffer-substring (- (point) 3) (1- (point)))
+			"{}")
 	  (forward-char -2))
 	(YaTeX-package-auto-usepackage section 'section))
     (if (<= (minibuffer-depth) 0) (use-global-map global-map))
@@ -1100,7 +1116,7 @@ into {\\xxx } braces.
        (t
 	(mapcar 'YaTeX-sync-local-table
 		'(tmp-section-table tmp-env-table tmp-singlecmd-table))
-	(let*((pattern (buffer-substring begin end))
+	(let*((pattern (YaTeX-buffer-substring begin end))
 	      (all-table
 	       (append
 		section-table user-section-table tmp-section-table
@@ -1114,8 +1130,9 @@ into {\\xxx } braces.
 	      ;; Next,
 	      ;; search completion with backslash
 	      (setq completion
-		    (try-completion (buffer-substring (1- begin) end)
-				    all-table nil)
+		    (try-completion
+		     (YaTeX-buffer-substring (1- begin) end)
+		     all-table nil)
 		    begin (1- begin)))
 	  (cond
 	   ((null completion)
@@ -1189,13 +1206,51 @@ into {\\xxx } braces.
   (interactive "r")
   (save-excursion
     (goto-char end)
-    (insert (or close "}"))
+    (YaTeX-insert-inherit (or close "}"))
     (goto-char beg)
-    (insert (or open "{"))))
+    (YaTeX-insert-inherit (or open "{"))))
+
+(defun YaTeX-get-macro-at-point (&optional p)
+  "Get (La)TeX macro around point P."
+  (interactive "d")
+  (save-excursion
+    (goto-char (setq p (or p (point))))
+    (let ((token (substring (substring YaTeX-TeX-token-regexp 1) 0 -2))
+	  bsend)
+      (and (not (bobp))
+	   (or (looking-at YaTeX-TeX-token-regexp)
+	       (string-match
+		YaTeX-TeX-token-regexp (char-to-string (preceding-char))))
+	   (progn
+	     (skip-chars-backward token)
+	     (equal (preceding-char) ?\\))
+	   (save-excursion
+	     (setq bsend (point))
+	     (skip-chars-backward "\\\\") ;emacs18 doesn't return distance
+	     (/= (% (- bsend (point)) 2) 0)) ;consider \\
+	   (looking-at YaTeX-TeX-token-regexp)
+	   (YaTeX-match-string 0)))))
 
 (defun YaTeX-insert-braces (arg &optional open close)
   (interactive "p")
-  (let (env)
+  (let ((begend-guide
+	 (function
+	  (lambda ()
+	    (if (equal (get 'YaTeX-insert-braces 'begend-guide) 2)
+		nil			;if triggered thrice, do nothing
+	      (momentary-string-display
+	       (format
+		(cond
+		 (YaTeX-japan "begin/end入力には %s を使いましょう")
+		 (t "You don't understand Zen of `%s'!"))
+		(key-description
+		 (car (where-is-internal 'YaTeX-make-begin-end))))
+	       (point))
+	      (put 'YaTeX-insert-braces 'begend-guide
+		   (+ 1 (string-to-int ;increment counter of beg-end guidance
+			 (prin1-to-string
+			  (get 'YaTeX-insert-braces 'begend-guide)))))))))
+	env macro not-literal b e)
     (cond
      ((YaTeX-jmode) (YaTeX-self-insert arg))
      ((not (YaTeX-closable-p)) (YaTeX-self-insert arg))
@@ -1205,7 +1260,7 @@ into {\\xxx } braces.
 	(looking-at "\\\\left\\\\"))
       (insert "{\\right\\}")
       (forward-char -8))
-     ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
+     ((save-excursion			;from matsu<at>math.s.chiba-u.ac.jp
 	(and (> (- (point) (point-min)) 6) (forward-char -6))
 	(looking-at "\\\\[bB]igl\\\\"))
       (insert
@@ -1223,49 +1278,93 @@ into {\\xxx } braces.
      ((= (preceding-char) ?\\ )
       (insert "{\\}")
       (forward-char -2))		;matsu's hack ends here
-     ((and (> (point) (+ (point-min) 4))
-	   (save-excursion (backward-char 4) (looking-at "\\\\end"))
-	   (not (YaTeX-literal-p))
+     ((and (setq not-literal (not (YaTeX-literal-p)))
+	   (equal "end" (setq macro (YaTeX-get-macro-at-point)))
 	   (setq env (YaTeX-inner-environment)))
-      (momentary-string-display
-       (concat
-	"{"
-	(cond
-	 (YaTeX-japan
-	  (format "今度からはちゃんと %s b を使いましょう" YaTeX-prefix))
-	 (t (format "You don't understand Zen of `%s b':p" YaTeX-prefix)))
-	"}")
-       (point))
-      (insert (or open "{") env (or close "}")))
+      (funcall begend-guide)
+      (insert "{" env "}"))
+     ((and not-literal (equal "begin" macro))
+      (insert "{")
+      (save-excursion
+	(indent-to (prog1 (- (current-column) 7) (insert "}\n")))
+	(insert "\\end{}")
+	(setq e (point)))
+      (setq env
+	    (YaTeX-read-environment
+	     (format "Begin environment(default %s): " YaTeX-env-name)))
+      (if (string= "" env) (setq env YaTeX-env-name))
+      (setq YaTeX-env-name env)
+      (funcall begend-guide)
+      (delete-region (- (point) 7) e)
+      (YaTeX-insert-begin-end env nil))
      (t
       (insert (or open "{") (or close "}"))
       (forward-char -1)
-      (if (and (eq (char-after (point)) ?\})
+      (if (and (eq (char-after (point)) ?\}) ;; the case `\\{}'
 	       (eq (char-after (- (point) 2)) ?\\ ))
 	  (progn (insert "\\") (forward-char -1)))
       ))))
 
 (defun YaTeX-jmode ()
   (or (and (boundp 'canna:*japanese-mode*) canna:*japanese-mode*)
-      (and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*)))
+      (and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*)
+      (and (boundp 'skk-mode) skk-mode (not skk-latin-mode))
+      (and (boundp 'default-input-method) default-input-method
+	   current-input-method)))
 
 (defun YaTeX-jmode-off ()
+  (if (cond
+       ((and (boundp 'canna:*japanese-mode*) canna:*japanese-mode*)
+	(canna-toggle-japanese-mode) t)
+       ((and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*)
+	(egg:toggle-egg-mode-on-off) t)
+       ((and (fboundp 'skk-mode) (boundp 'skk-mode) skk-mode)
+	(cond
+	 ((fboundp 'skk-latin-mode)
+	  (or (and (boundp 'skk-henkan-mode) skk-henkan-mode)
+	      (and (boundp 'skk-henkan-on)
+		   (or skk-henkan-mode skk-henkan-active))
+	      (and (boundp 'j-henkan-on)
+		   (or j-henkan-on j-henkan-active))
+	      ;; Deactivate jmode if henkan-mode is not running.
+	      ;; Suggested by tt.tetsuo.tsukamoto.
+	      (progn
+		(put 'YaTeX-jmode-on 'skkkata skk-katakana)
+		(skk-latin-mode t))))
+	 ((fboundp 'skk-mode-off)	(skk-mode-off))
+	 (t (j-mode-off)))
+	t)
+       ((and (fboundp 'toggle-input-method) current-input-method)
+	(toggle-input-method) t)
+       ((and (fboundp 'fep-force-off) (fep-force-off))))
+      (put 'YaTeX-jmode 'jmode t)))
+
+(defun YaTeX-jmode-on ()
   (cond
-   ((and (boundp 'canna:*japanese-mode*) canna:*japanese-mode*)
-    (canna-toggle-japanese-mode))
-   ((and (boundp 'egg:*mode-on*) egg:*mode-on* egg:*input-mode*)
-    (egg:toggle-egg-mode-on-off))
-   ((and (fboundp 'skk-mode) (boundp 'skk-mode) skk-mode)
-    (cond
-     ((fboundp 'skk-latin-mode)	(skk-latin-mode t))
-     ((fboundp 'skk-mode-off)	(skk-mode-off))
-     (t (j-mode-off))))
-   ((and (fboundp 'toggle-input-method) current-input-method)
-    (toggle-input-method))
-   ((and (fboundp 'fep-force-off) (fep-force-off)))))
+   ((boundp 'canna:*japanese-mode*)
+    (if (not canna:*japanese-mode*) (canna-toggle-japanese-mode)))
+   ((boundp 'egg:*mode-on*)
+    (and (not egg:*mode-on*) (not egg:*input-mode*)
+	 (egg:toggle-egg-mode-on-off)))
+   ((and (fboundp 'skk-mode) (boundp 'skk-mode))
+    (if (get 'YaTeX-jmode-on 'skkkata)
+	(skk-j-mode-on t)
+      (skk-mode 1))
+    (put 'YaTeX-jmode-on 'skkkata nil))
+   ((fboundp 'toggle-input-method)
+    (if (not current-input-method) (toggle-input-method)))
+   ((and (fboundp 'fep-force-on) (fep-force-on)))))
+
+(defun YaTeX-jmode-back ()
+  (if (get 'YaTeX-jmode 'jmode)
+      (YaTeX-jmode-on))
+  (setplist 'YaTeX-jmode nil))
 
 (defun YaTeX-self-insert (arg)
   (call-interactively (global-key-binding (char-to-string last-command-char))))
+(defun YaTeX-insert-inherit (&rest args)
+  (apply (if (fboundp 'insert-and-inherit) 'insert-and-inherit 'insert)
+	   args))
 
 (defun YaTeX-insert-brackets (arg)
   "Insert Kagi-kakko or \\ [ \\] pair or simply \[."
@@ -1278,35 +1377,35 @@ into {\\xxx } braces.
      ((save-excursion
 	(and (> (- (point) (point-min)) 5) (forward-char -5))
 	(looking-at "\\\\left"))
-      (insert "[\\right]")
+      (YaTeX-insert-inherit "[\\right]")
       (forward-char -7))
-     ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
+     ((save-excursion			;from matsu<at>math.s.chiba-u.ac.jp
 	(and (> (- (point) (point-min)) 5) (forward-char -5))
 	(looking-at "\\\\[bB]igl"))
-      (insert
+      (YaTeX-insert-inherit
        (concat
 	"[" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r]"))
       (forward-char -6))
      ((save-excursion
 	(and (> (- (point) (point-min)) 6) (forward-char -6))
 	(looking-at "\\\\[bB]iggl"))
-      (insert
+      (YaTeX-insert-inherit
        (concat
 	"[" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r]"))
       (forward-char -7))		;matsu's hack ends here
      ((and (= (preceding-char) ?\\ )
 	   (/= (char-after (- (point) 2)) ?\\ )
 	   (not (YaTeX-in-math-mode-p)))
-      (insert last-command-char "\n")
+      (YaTeX-insert-inherit last-command-char "\n")
       (indent-to (max 0 col))
-      (insert "\\]")
+      (YaTeX-insert-inherit "\\]")
       (beginning-of-line)
       (open-line 1)
       (delete-region (point) (progn (beginning-of-line) (point)))
       (indent-to (+ YaTeX-environment-indent (max 0 col)))
       (or YaTeX-auto-math-mode YaTeX-math-mode (YaTeX-toggle-math-mode 1)))
      ((YaTeX-closable-p)
-      (insert "[]")
+      (YaTeX-insert-inherit "[]")
       (backward-char 1))
      (t (YaTeX-self-insert arg)))))
 
@@ -1323,27 +1422,27 @@ into {\\xxx } braces.
    ((save-excursion
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\left"))
-    (insert "(\\right)")
+    (YaTeX-insert-inherit "(\\right)")
     (forward-char -7))
-   ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
+   ((save-excursion			;from matsu<at>math.s.chiba-u.ac.jp
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\[bB]igl"))
-    (insert
+    (YaTeX-insert-inherit
      (concat
       "(" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r)"))
      (forward-char -6))
    ((save-excursion
       (and (> (- (point) (point-min)) 6) (forward-char -6))
       (looking-at "\\\\[bB]iggl"))
-    (insert
+    (YaTeX-insert-inherit
      (concat
       "(" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r)"))
      (forward-char -7))
    ((= (preceding-char) ?\\ )		;matsu's hack ends here
-    (insert "(\\)")
+    (YaTeX-insert-inherit "(\\)")
     (backward-char 2))
    ((YaTeX-closable-p)
-    (insert "()")
+    (YaTeX-insert-inherit "()")
     (backward-char 1))
    (t (YaTeX-self-insert arg))))
 
@@ -1360,9 +1459,9 @@ into {\\xxx } braces.
    ((save-excursion
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\left"))
-    (insert "|\\right|")
+    (YaTeX-insert-inherit "|\\right|")
     (forward-char -7))
-   ((save-excursion			;from matsu@math.s.chiba-u.ac.jp
+   ((save-excursion			;from matsu<at>math.s.chiba-u.ac.jp
       (and (> (- (point) (point-min)) 5) (forward-char -5))
       (looking-at "\\\\[bB]igl"))
     (insert
@@ -1376,10 +1475,10 @@ into {\\xxx } braces.
      (concat
       "|" (buffer-substring (match-beginning 0) (- (match-end 0) 1)) "r|"))
      (forward-char -7))
-   ((save-excursion		; added by Jin <MAF01011@nifty.ne.jp>
+   ((save-excursion		; added by Jin <MAF01011<at>nifty.ne.jp>
       (and (> (- (point) (point-min)) 6) (forward-char -6))
       (looking-at "\\\\left\\\\"))
-    (insert "|\\right\\|")
+    (YaTeX-insert-inherit "|\\right\\|")
     (forward-char -8))
    ((save-excursion
       (and (> (- (point) (point-min)) 6) (forward-char -6))
@@ -1396,14 +1495,62 @@ into {\\xxx } braces.
       "|" (buffer-substring (match-beginning 0) (- (match-end 0) 2)) "r\\|"))
      (forward-char -8))		; added by Jin up to here.
    ((= (preceding-char) ?\\ )
-    (insert "|\\|")
+    (YaTeX-insert-inherit "|\\|")
     (backward-char 2))
 ;   ((and (YaTeX-closable-p)
 ;	 (/= (preceding-char) ?|)
 ;	 (/= (following-char) ?|))
-;    (insert "||")
+;    (YaTeX-insert-inherit "||")
 ;    (backward-char 1))
    (t (YaTeX-self-insert arg))))
+
+(defvar YaTeX-use-jmode-hook (not (and (fboundp 'skk-mode) (boundp 'skk-mode)))
+  "*Non-nil means activate automatic jmode switcher within/out math mode.
+Hopefully, change default to t in the next version of 1.75.")
+(defun YaTeX-jmode-hook (old new)
+  "A hook controling jmode on/off."
+  ;; This function is called via point-entered/leave hook, so that
+  ;; codes in it is evaluated on such emacsen as having text-properties.
+  (let ((inhibit-point-motion-hooks t)
+	(oldp (plist-get (text-properties-at old) 'point-left))
+	(newp (plist-get (text-properties-at new) 'point-left))
+	(lnew (plist-get (text-properties-at new) 'last-new))
+	(mjmode (plist-get (text-properties-at new) 'mjmode))
+	(bmp (buffer-modified-p))
+	(jm (YaTeX-jmode)) b e)
+    (unwind-protect
+	(cond
+	 ((eq lnew new) nil)		;Do nothing if continuous entry
+	 ((and (not (eq newp 'YaTeX-jmode-hook))
+	       (eq oldp 'YaTeX-jmode-hook)
+	       (plist-get (text-properties-at old) 'entered))
+	  ;; leave
+	  (remove-text-properties
+	   (setq b (1+ (or (previous-single-property-change old 'point-left)
+			   (1- (point)))))
+	   (setq e (1- (or (next-single-property-change old 'point-left)
+			   (1+ (point)))))
+	   (list 'last-new nil 'entered nil))
+	  (add-text-properties b e (list 'mjmode jm))
+	  (if (boundp 'skk-katakana)
+	      (put 'YaTeX-jmode-on 'skkkata skk-katakana))
+	  (if (plist-get (text-properties-at old) 'jmode)
+	      (YaTeX-jmode-on)))
+	 ((and (not (eq oldp 'YaTeX-jmode-hook))
+	       (eq newp 'YaTeX-jmode-hook)
+	       (not (plist-get (text-properties-at new) 'entered)))
+	  ;; enter
+	  (add-text-properties
+	   (1+ (or (previous-single-property-change new 'point-left)
+		   (1- (point))))
+	   (1- (or (next-single-property-change new 'point-left)
+		   (1+ (point))))
+	   (list 'jmode jm 'last-new new 'entered t))
+	  (if (boundp 'skk-katakana)	;care for skk katakana mode
+	      (put 'YaTeX-jmode-on 'skkkata skk-katakana))
+	  (if mjmode (YaTeX-jmode-on) (YaTeX-jmode-off))))
+      ;;unwind job
+      (set-buffer-modified-p bmp))))
 
 (defun YaTeX-insert-dollar ()
   (interactive)
@@ -1414,6 +1561,16 @@ into {\\xxx } braces.
       (insert "$")
     (insert "$$")
     (forward-char -1)
+    (and YaTeX-use-jmode-hook
+	 (fboundp 'add-text-properties)
+	 (add-text-properties
+	  (1- (point)) (1+ (point))
+	  (list 'point-left 'YaTeX-jmode-hook
+		'point-entered 'YaTeX-jmode-hook
+		'front-sticky t
+		'rear-nonsticky t
+		'mjmode nil
+		'jmode (YaTeX-jmode))))
     (YaTeX-jmode-off)
     (or YaTeX-auto-math-mode YaTeX-math-mode (YaTeX-toggle-math-mode 1))))
 
@@ -1445,17 +1602,19 @@ into {\\xxx } braces.
 Optional second argument CHAR is for non-interactive call from menu."
   (interactive "P")
   (message
-   (concat "J)latex R)egion B)ibtex mk(I)ndex "
-	   (if (fboundp 'start-process) "K)ill-latex ")
+   (concat "J)latex R)egion E)nv B)ibtex mk(I)dx "
+	   "latex+p(D)f "
+	   (if (fboundp 'start-process) "K)ill ")
 	   "P)review "
 	   (and (boundp 'window-system) window-system "S)earch ")
-	   "V)iewerr L)pr"))
+	   "V)iewErr L)pr"))
   (let ((sw (selected-window)) (c (or char (read-char))))
     (require 'yatexprc)			;for Nemacs's bug
     (select-window sw)
     (cond
      ((= c ?j) (YaTeX-typeset-buffer))
      ((= c ?r) (YaTeX-typeset-region))
+     ((= c ?e) (YaTeX-typeset-environment))
      ((= c ?b) (YaTeX-call-command-on-file
 		bibtex-command "*YaTeX-bibtex*" YaTeX-parent-file))
      ((= c ?i) (YaTeX-call-command-on-file
@@ -1463,6 +1622,7 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?k) (YaTeX-kill-typeset-process YaTeX-typeset-process))
      ((= c ?p) (call-interactively 'YaTeX-preview))
      ((= c ?q) (YaTeX-system "lpq" "*Printer queue*"))
+     ((= c ?d) (YaTeX-typeset-buffer YaTeX-dvipdf-command))
      ((= c ?v) (YaTeX-view-error))
      ((= c ?l) (YaTeX-lpr arg))
      ((= c ?m) (YaTeX-switch-mode-menu arg))
@@ -1488,7 +1648,8 @@ Optional second argument CHAR is for non-interactive call from menu."
 			((= c ?l) "%#LPR")))
 	(if (re-search-forward key nil t)
 	    (progn
-	      (setq string (buffer-substring (point) (point-end-of-line)))
+	      (setq string (YaTeX-buffer-substring
+			    (point) (point-end-of-line)))
 	      (delete-region (point) (progn (end-of-line) (point))))
 	  (open-line 1)
 	  (delete-region (point) (progn (beginning-of-line)(point)));for 19 :-<
@@ -1515,6 +1676,29 @@ Optional second argument CHAR is for non-interactive call from menu."
 	(set-marker e nil))
        ))))
 
+(defvar YaTeX-refcommand-def-regexp-default
+  "label\\|bibitem")
+(defvar YaTeX-refcommand-def-regexp-private nil
+  "*Regexp of defining label commands")
+(defvar YaTeX-refcommand-def-regexp
+  (concat (if YaTeX-refcommand-def-regexp-private
+	      (concat YaTeX-refcommand-def-regexp-private "\\|"))
+	  YaTeX-refcommand-def-regexp-default))
+
+(defvar YaTeX-refcommand-ref-regexp-default
+  "\\(page\\|eq\\|fig\\)?ref\\|cite")
+(defvar YaTeX-refcommand-ref-regexp-private nil
+  "*Regexp of referring label commands")
+(defvar YaTeX-refcommand-ref-regexp
+  (concat (if YaTeX-refcommand-ref-regexp-private
+	      (concat YaTeX-refcommand-ref-regexp-private "\\|"))
+	  YaTeX-refcommand-ref-regexp-default))
+
+(defvar YaTeX-refcommand-regexp
+  (concat YaTeX-refcommand-def-regexp
+	  "\\|" YaTeX-refcommand-ref-regexp)
+  "Regexp of label defining/referring command name.")
+
 (defun YaTeX-goto-corresponding-label (reverse &optional otherwin)
   "Jump to corresponding \\label{} and \\ref{} or \\cite and \\bibitem.
   The default search direction depends on the command at the cursor position.
@@ -1530,7 +1714,7 @@ search-last-string, you can repeat search the same label/ref by typing
   If optional second argument OTHERWIN is non-nil, move to other window."
 
   (let ((scmd "") label direc string blist (p (point)) (cb (current-buffer))
-	(refcommands "label\\|\\(page\\|eq\\)?ref\\|cite\\|bibitem")
+	(refcommands YaTeX-refcommand-regexp)
 	(foundmsg (format "Type %s %c to return to original position."
 			  (key-description
 			   (car
@@ -1557,7 +1741,7 @@ search-last-string, you can repeat search the same label/ref by typing
 		 "\\\\bibitem\\(\\[[^]]+\\]\\)?{%k}\\|^\\s *@[a-z]+{%k,")
 		("bibitem" . "\\\\cite\\(\\[[^]]+\\]\\)?")))))
       (goto-char (match-end 0))
-      (let ((label (buffer-substring 
+      (let ((label (YaTeX-buffer-substring 
 		    (1- (point)) (progn (backward-list 1) (1+ (point)))))
 	    (fp (make-marker))fl fn
 	    (goother (function (lambda (buffer point)
@@ -1647,7 +1831,7 @@ search-last-string, you can repeat search the same label/ref by typing
 
 (defun YaTeX-goto-corresponding-file (&optional other)
   "Visit or switch buffer of corresponding file,
-looking at \\input or \\include or \includeonly on current line."
+looking at \\input or \\include or \\includeonly on current line."
   (if (not (YaTeX-on-includes-p)) nil
     (let ((parent buffer-file-name) input-file b)
       (save-excursion
@@ -1656,7 +1840,7 @@ looking at \\input or \\include or \includeonly on current line."
 	    nil
 	  (skip-chars-backward "^,{"))
 	(setq input-file
-	      (buffer-substring
+	      (YaTeX-buffer-substring
 	       (point) (progn (skip-chars-forward "^ ,}") (point))))
 	(if (not (string-match "\\.\\(tex\\|sty\\)$" input-file))
 	    (setq input-file (concat input-file ".tex"))))
@@ -2205,7 +2389,8 @@ But kill its contents if the argument KILL-CONTENTS is non-nil."
 
 (defun YaTeX-read-section-with-overview ()
   "Read sectioning command with overview.
-This function refers a local variable `source-window' in YaTeX-make-section"
+This function refers a local variable `source-window' in YaTeX-make-section,
+because this function is called with no argument."
   (interactive)
   (require 'yatexsec)			;some case needs this
   (if (> (minibuffer-depth) 1)
@@ -2238,9 +2423,9 @@ This function refers a local variable `source-window' in YaTeX-make-section"
   (interactive)
   (if (not (YaTeX-on-begin-end-p)) nil
     (save-excursion
-      (let (p env (m1 (match-beginning 1)) (m2 (match-beginning 2)))
-	(setq env (if m1 (buffer-substring m1 (match-end 1))
-		    (buffer-substring m2 (match-end 2))))
+      (let (p env newenv (m1 (match-beginning 1)) (m2 (match-beginning 2)))
+	(setq env (if m1 (YaTeX-buffer-substring m1 (match-end 1))
+		    (YaTeX-buffer-substring m2 (match-end 2))))
 	(goto-char (match-beginning 0))
 	(set-mark-command nil)
 	(YaTeX-goto-corresponding-environment)
@@ -2265,14 +2450,15 @@ This function refers a local variable `source-window' in YaTeX-make-section"
 	(beg (make-marker)) (end (make-marker)) old new)
     (if (null where) nil
       (unwind-protect
-	  (progn
+	  (let ((source-window (selected-window)))
 	    (cond
 	     ((equal where 0);;if point is on section command
 	      (set-marker beg (match-beginning 1))
 	      (set-marker end (match-end 1))
 	      (goto-char beg)		;beginning of the command
 	      (setq new (YaTeX-read-section
-			 (format "Change `%s' to: " cmd) nil)))
+			 (format "Change `%s' to: " cmd) nil)
+		    old cmd))
 
 	     ((= where -1);;if point is on a optional parameter
 	      (set-marker beg (match-beginning 2))
@@ -2283,9 +2469,10 @@ This function refers a local variable `source-window' in YaTeX-make-section"
 		    (if (fboundp (intern-soft (concat YaTeX-addin-prefix cmd)))
 			(YaTeX-addin cmd)
 		      (concat "["
-			      (read-string (format "Change `%s' to: "
-						   (buffer-substring
-						    (1+ beg) (1- end))))
+			      (read-string
+			       (format "Change `%s' to: "
+				       (setq old (YaTeX-buffer-substring
+						  (1+ beg) (1- end)))))
 			      "]"))))
 
 	     ((> where 0);;if point is in arguments' braces
@@ -2295,7 +2482,7 @@ This function refers a local variable `source-window' in YaTeX-make-section"
 	      (forward-list 1)
 	      (forward-char -1)
 	      (set-marker end (point))
-	      (setq old (buffer-substring beg end))
+	      (setq old (YaTeX-buffer-substring beg end))
 	      (goto-char p)
 	      (if (> (length old) 40)
 		  (setq old (concat (substring old 0 12) "..."
@@ -2305,9 +2492,11 @@ This function refers a local variable `source-window' in YaTeX-make-section"
 			(funcall (intern-soft (concat "YaTeX::" cmd)) where)
 		      (read-string (format "Change `%s' to: " old)))))
 	     )				;cond
-	    (delete-region beg end)
-	    (goto-char beg)
-	    (insert-before-markers new))
+	    (if (string= old new)
+		nil			;do not replace
+	      (delete-region beg end)
+	      (goto-char beg)
+	      (insert-before-markers new)))
 	(set-marker beg nil)
 	(set-marker end nil))
       ;;(goto-char (marker-position p))
@@ -2422,7 +2611,8 @@ Non-nil for ARG kills its contents too."
 	      nil
 	    (goto-char (match-end 2))
 	    (skip-chars-forward
-	     (concat "^" (buffer-substring (match-beginning 2) (match-end 2))))
+	     (concat "^" (YaTeX-buffer-substring
+			  (match-beginning 2) (match-end 2))))
 	    (and (< (match-beginning 2) point) (< (1- point) (point))))
 	(store-match-data md)))))
 
@@ -2464,7 +2654,8 @@ ENV is given in the form of environment's name or its list."
 		    (if (match-beginning 2)
 			(setq nest (1+ nest))
 		      (setq nest (1- nest)))
-		    (if (< nest 0) (throw 'open t)))))))
+		    (if (< nest 0)
+			(throw 'open (cons env (match-beginning 0)))))))))
      ((listp env)
       (setq p
 	    (or (YaTeX-in-environment-p (car env))
@@ -2478,21 +2669,25 @@ ENV is given in the form of environment's name or its list."
 ENV is given in the form of environment's name or its list.
 This function returns correct result only if ENV is NOT nested."
   (save-excursion
-    (let ((md (match-data)) (p (point)) rc clfound)
+    (let ((md (match-data)) m0 (p (point)) rc clfound)
       (cond
        ((listp env)
 	(or (YaTeX-quick-in-environment-p (car env))
 	    (and (cdr env) (YaTeX-quick-in-environment-p (cdr env)))))
        (t
-	(if (YaTeX-search-active-backward
-	     (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
-	     YaTeX-comment-prefix nil t)
-	    (setq rc (not (YaTeX-search-active-forward
-			   (YaTeX-replace-format-args
-			    YaTeX-struct-end env)
-			   YaTeX-comment-prefix p t nil))))
-	(store-match-data md)
-	rc)))))
+	(unwind-protect
+	    (if (prog1
+		    (YaTeX-search-active-backward
+		     (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
+		     YaTeX-comment-prefix nil t)
+		  (setq m0 (match-beginning 0)))
+		(if (YaTeX-search-active-forward
+		     (YaTeX-replace-format-args
+		      YaTeX-struct-end env)
+		     YaTeX-comment-prefix p t nil)
+		    nil			;if \end{env} found, return nil
+		  (cons env m0)))	;else, return meaningful values
+	  (store-match-data md)))))))
 
 ;; Filling \item
 (defun YaTeX-remove-trailing-comment (start end)
@@ -2576,7 +2771,7 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 	  (newline)
 	  (indent-to col)
 	  (setq fill-prefix
-		(buffer-substring (point-beginning-of-line)(point)))
+		(YaTeX-buffer-substring (point-beginning-of-line)(point)))
 	  (beginning-of-line)
 	  (delete-region (point) (progn (forward-line 1) (point)))
 	  (re-search-forward item-term nil 1)
@@ -2622,7 +2817,7 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 			  (setq end (point))  ;non-whitespace char
 			  (skip-chars-forward " \t")
 			  (equal (point) p))
-	  (setq fill-prefix (buffer-substring p end)))
+	  (setq fill-prefix (YaTeX-buffer-substring p end)))
 	 ((and ;;(not YaTeX-emacs-19)
 	       (string-match YaTeX-itemizing-env-regexp inenv)
 	       (setq ii (YaTeX-get-item-info)))
@@ -2630,7 +2825,7 @@ Optional second argument THISENV omits calling YaTeX-inner-environment."
 	    (beginning-of-line)
 	    (indent-to-column (car (cdr ii)))
 	    (setq fill-prefix
-		  (buffer-substring (point) (point-beginning-of-line)))
+		  (YaTeX-buffer-substring (point) (point-beginning-of-line)))
 	    (delete-region (point) (progn (beginning-of-line) (point))))))
 	(cond
 	 ((string-match "tabular" inenv)

@@ -1,16 +1,16 @@
 #
-# Makefile for YaTeX
+# Makefile for YaTeX/yahtml
 #
 
 # Edit these variables to be suitable for your site
 PREFIX	= /usr/local
 
 ## mule2
-EMACS	= mule
-EMACSDIR= ${PREFIX}/lib/${EMACS}
-## emacs20
-#EMACS	= emacs
-#EMACSDIR= ${PREFIX}/share/${EMACS}
+#EMACS	= mule
+#EMACSDIR= ${PREFIX}/lib/${EMACS}
+## emacs20 or later
+EMACS	= emacs
+EMACSDIR= ${PREFIX}/share/${EMACS}
 ## XEmacs
 #EMACS	= xemacs
 #EMACSDIR= ${PREFIX}/lib/${EMACS}
@@ -49,7 +49,7 @@ GEO	= -geometry 80x20+0+0
 # make clean		to delete all producted files
 # make ci		to check in all
 # make co		to check out all
-MVER	= 1.74
+MVER	= 1.75
 LISP	= ${LISP18} ${LISP19}
 YAHTML	= yahtml.el
 COMMON	= yatexlib.el yatexprc.el
@@ -68,11 +68,11 @@ DOCSRC	= docs/yatexj.tex docs/yatexe.tex \
 DOCOBJ	= docs/yatexj docs/yatexe docs/yahtmlj docs/yahtmle
 HELP	= help/YATEXHLP.jp help/YATEXHLP.eng
 MANIFEST= manifest
-EXTRA	= dir install 00readme makefile readme.meadow.j
+EXTRA	= dir install 00readme makefile readme.meadow.j newpage.rb
 DISTRIB = ${EXTRA} ${LISP} ${DOCS} ${MANIFEST} ${HELP}
 RCSFILE	= ${LISP} ${NEWS} ${DOCSRC} ${HELP}
 YAHTMLLISP = ${YAHTML} ${COMMON}
-YAHTMLDIST = ${YAHTMLLISP} install 00readme makefile
+YAHTMLDIST = ${YAHTMLLISP} install 00readme makefile newpage.rb
 PACK	= `ls ${DISTRIB}`
 TMPDIR	= /tmp
 VERSION = `head yatex.el|awk '/rev\./{print $$4}'`
@@ -206,9 +206,9 @@ gohome:
 	-x '*RCS/*' -x 'texinfo/*'
 
 RSYNCDIR	= ${HOME}/http/yatex/rsync/yatex
-sync:	
-	@-mkdir ${PACKDIR}
-	@tar cf - ${PACK} | (cd ${PACKDIR}; tar xf -)
-	syncdir -A -x CVS ${PACKDIR} ${RSYNCDIR}
-	(cd ${RSYNCDIR}; cvs ci -m '')
-	rm -rf ${PACKDIR} 
+#sync:	
+#	@-mkdir ${PACKDIR}
+#	@tar cf - ${PACK} | (cd ${PACKDIR}; tar xf -)
+#	syncdir -A -x CVS ${PACKDIR} ${RSYNCDIR}
+#	(cd ${RSYNCDIR}; cvs ci -m '')
+#	rm -rf ${PACKDIR} 

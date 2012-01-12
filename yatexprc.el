@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX process handler.
 ;;; yatexprc.el
-;;; (c)1993-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Sep 28 10:47:11 2009 on firestorm
+;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Jan  9 20:20:24 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -55,7 +55,7 @@
   (modify-syntax-entry ?\[ "w" YaTeX-typeset-buffer-syntax)
   (modify-syntax-entry ?\] "w" YaTeX-typeset-buffer-syntax))
 
-(defun YaTeX-typeset (command buffer &optional prcname modename)
+(defun YaTeX-typeset (command buffer &optional prcname modename ppcmd)
   "Execute jlatex (or other) to LaTeX typeset."
   (interactive)
   (save-excursion
@@ -91,7 +91,12 @@
 	       (start-process prcname buffer shell-file-name
 			      YaTeX-shell-command-option command))
 	 (get-buffer buffer))
-	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)))
+	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)
+	(let ((ppprop (get 'YaTeX-typeset-process 'ppcmd)))
+	  (setq ppprop (delq (assq YaTeX-typeset-process ppprop) ppprop))
+	  (if ppcmd
+	      (setq ppprop (cons (cons YaTeX-typeset-process ppcmd) ppprop)))
+	  (put 'YaTeX-typeset-process 'ppcmd ppprop))))
       (message (format "Calling `%s'..." command))
       (setq YaTeX-current-TeX-buffer (buffer-name))
       (use-local-map map)		;map may be localized
@@ -150,7 +155,6 @@
                  (insert ?\n mode-name " " mes)
                  (forward-char -1)
                  (insert " at " (substring (current-time-string) 0 -5) "\n")
-                 (forward-char 1)
                  (setq mode-line-process
                        (concat ": "
                                (symbol-name (process-status proc))))
@@ -161,8 +165,27 @@
                  ;; is dead, we can delete it now.  Otherwise it
                  ;; will stay around until M-x list-processes.
                  (delete-process proc)
-		 )
-             (setq YaTeX-typeset-process nil)
+		 ;; If ppcmd is active, call it.
+		 (let* ((ppprop (get 'YaTeX-typeset-process 'ppcmd))
+			(ppcmd (cdr (assq proc ppprop))))
+		   (put 'YaTeX-typeset-process 'ppcmd ;erase ppcmd
+			(delq (assq proc ppprop) ppprop))
+		   (cond
+		    ((and ppcmd (string-match "finish" mes))
+		     (insert (format "=======> Success! Calling %s\n" ppcmd))
+		     (setq mode-name	; set process name
+			   (substring ppcmd 0 (string-match " " ppcmd)))
+		     ; to reach here, 'start-process exists on this emacsen
+		     (set-process-sentinel
+		      (start-process
+		       mode-name
+		       pbuf		; Use this buffer twice.
+		       shell-file-name YaTeX-shell-command-option
+		       ppcmd)
+		      'YaTeX-typeset-sentinel))))
+		 
+		 (forward-char 1))
+	     (setq YaTeX-typeset-process nil)
              ;; Force mode line redisplay soon
              (set-buffer-modified-p (buffer-modified-p))
 	     )
@@ -236,7 +259,8 @@ operation to the region."
 	  "\\begin{document}")))
       (goto-char opoint)
       ;;(set-buffer buffer)		;for clarity
-      (let ((hilit-auto-highlight nil))
+      (let ((hilit-auto-highlight nil) (auto-mode-alist nil)
+	    (magic-mode-alist nil))	;Do not activate yatex-mode here
 	(set-buffer (find-file-noselect texput)))
       ;;(find-file YaTeX-texput-file)
       (erase-buffer)
@@ -256,17 +280,37 @@ operation to the region."
       (put 'dvi2-command 'file buffer)
       (put 'dvi2-command 'offset lineinfo))))
 
-(defun YaTeX-typeset-buffer ()
+(defun YaTeX-typeset-environment ()
+  "Typeset current math environment"
+  (interactive)
+  (save-excursion
+    (YaTeX-mark-environment)
+    (YaTeX-typeset-region)))
+
+(defun YaTeX-typeset-buffer (&optional pp)
   "Typeset whole buffer.
 If %#! usage says other buffer is main text,
 visit main buffer to confirm if its includeonly list contains current
 buffer's file.  And if it doesn't contain editing text, ask user which
-action wants to be done, A:Add list, R:Replace list, %:comment-out list."
+action wants to be done, A:Add list, R:Replace list, %:comment-out list.
+If optional argument PP given as string, PP is considered as post-process
+command and call it with the same command argument as typesetter without
+last extension.
+eg. if PP is \"dvipdfmx\", called commands as follows.
+  platex foo.tex
+  dvipdfmx foo
+PP command will be called iff typeset command exit successfully"
   (interactive)
   (YaTeX-save-buffers)
   (let*((me (substring (buffer-name) 0 (rindex (buffer-name) ?.)))
 	(mydir (file-name-directory (buffer-file-name)))
-	(cmd (YaTeX-get-latex-command t)) (cb (current-buffer)))
+	(cmd (YaTeX-get-latex-command t)) pparg ppcmd
+	(cb (current-buffer)))
+    (and pp
+	 (stringp pp)
+	 (setq pparg (substring cmd 0 (string-match "[;&]" cmd)) ;rm multistmt
+	       pparg (substring pparg (rindex pparg ? ))	 ;get last arg
+	       ppcmd (concat pp (substring pparg 0 (rindex pparg ?.)))));rm ext
     (if (YaTeX-main-file-p) nil
       (save-excursion
 	(YaTeX-visit-main t)	;search into main buffer
@@ -307,27 +351,31 @@ action wants to be done, A:Add list, R:Replace list, %:comment-out list."
 		  (basic-save-buffer))))
 	  (exchange-point-and-mark)))
       (switch-to-buffer cb))		;for 19
-    (YaTeX-typeset cmd YaTeX-typeset-buffer)
+    (YaTeX-typeset cmd YaTeX-typeset-buffer nil nil ppcmd)
     (put 'dvi2-command 'region nil)))
 
 (defvar YaTeX-call-command-history nil
   "Holds history list of YaTeX-call-command-on-file.")
 (put 'YaTeX-call-command-history 'no-default t)
 (defun YaTeX-call-command-on-file (base-cmd buffer &optional file)
-  "Call external command BASE-CMD int the BUFFER.
+  "Call external command BASE-CMD in the BUFFER.
 By default, pass the basename of current file.  Optional 3rd argument
 FILE changes the default file name."
   (YaTeX-save-buffers)
-  (YaTeX-typeset
-   (read-string-with-history
-    "Call command: "
-    (concat base-cmd " "
-	    (let ((me (file-name-nondirectory (or file buffer-file-name))))
-	      (if (string-match "\\.tex" me)
-		  (substring me 0 (match-beginning 0))
-		me)))
-    'YaTeX-call-command-history)
-   buffer))
+  (let ((default (concat base-cmd " "
+			 (let ((me (file-name-nondirectory
+				    (or file buffer-file-name))))
+			   (if (string-match "\\.tex" me)
+			       (substring me 0 (match-beginning 0))
+			     me)))))
+    (or YaTeX-call-command-history
+	(setq YaTeX-call-command-history (list default)))
+    (YaTeX-typeset
+     (read-string-with-history
+      "Call command: "
+      (car YaTeX-call-command-history)
+      'YaTeX-call-command-history)
+     buffer)))
 
 (defun YaTeX-bibtex-buffer (cmd)
   "Pass the bibliography data of editing file to bibtex."
@@ -668,24 +716,22 @@ error or warning lines in reverse order."
 (defvar YaTeX-dvi2-command-ext-alist
  '(("[agx]dvi\\|dviout" . ".dvi")
    ("ghostview\\|gv" . ".ps")
-   ("acroread\\|pdf\\|Preview\\|TeXShop\\|Skim" . ".pdf")))
+   ("acroread\\|pdf\\|Preview\\|TeXShop\\|Skim\\|evince" . ".pdf")))
 
 (defun YaTeX-get-preview-file-name (&optional preview-command)
   "Get file name to preview by inquiring YaTeX-get-latex-command"
   (if (null preview-command) (setq preview-command dvi2-command))
   (let* ((latex-cmd (YaTeX-get-latex-command t))
 	 (rin (rindex latex-cmd ? ))
-	 (fname (if (> rin -1) (substring latex-cmd (1+ rin)) ""))
+	 (fname (if rin (substring latex-cmd (1+ rin)) ""))
 	 (r (YaTeX-assoc-regexp preview-command YaTeX-dvi2-command-ext-alist))
-	 (ext (if r (cdr r) ""))
-	 (period))
+	 (ext (if r (cdr r) "")))
     (concat
      (if (string= fname "")
-	(setq fname (substring (file-name-nondirectory
-				(buffer-file-name))
-			       0 -4))
-      (setq period (rindex fname ?.))
-      (setq fname (substring fname 0 (if (eq -1 period) nil period))))
+	 (setq fname (substring (file-name-nondirectory
+				 (buffer-file-name))
+				0 -4))
+       (setq fname (substring fname 0 (rindex fname ?.))))
      ext)))
 
 (defun YaTeX-get-latex-command (&optional switch)
@@ -811,7 +857,7 @@ page range description."
 
 (defun YaTeX-visit-main (&optional setbuf)
   "Switch buffer to main LaTeX source.
-Use set-buffer instead of switch-to-buffer if the optional second argument
+Use set-buffer instead of switch-to-buffer if the optional argument
 SETBUF is t(Use it only from Emacs-Lisp program)."
   (interactive "P")
   (if (and (interactive-p) setbuf) (setq YaTeX-parent-file nil))
@@ -873,18 +919,6 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
   (if (YaTeX-main-file-p) (message "I think this is main LaTeX source.")
       (YaTeX-switch-to-buffer-other-window
        (concat (YaTeX-get-preview-file-name) ".tex"))))
-
-(defun YaTeX-get-builtin (key)
-  "Read source built-in command of %# usage."
-  (save-excursion
-    (goto-char (point-min))
-    (if (and (re-search-forward
-	      (concat "^" (regexp-quote (concat "%#" key))) nil t)
-	     (not (eolp)))
-	(YaTeX-buffer-substring
-	 (progn (skip-chars-forward " 	" (point-end-of-line))(point))
-	 (point-end-of-line))
-      nil)))
 
 (defun YaTeX-save-buffers ()
   "Save buffers whose major-mode is equal to current major-mode."
