@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan 12 17:52:15 2012 on firestorm
+;;; Last modified Thu Jan 12 21:17:08 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -56,7 +56,7 @@
   (modify-syntax-entry ?\] "w" YaTeX-typeset-buffer-syntax))
 
 (defvar YaTeX-typeset-marker nil)
-(defun YaTeX-typeset (command buffer &optional prcname modename ppcmd rerun)
+(defun YaTeX-typeset (command buffer &optional prcname modename ppcmd)
   "Execute jlatex (or other) to LaTeX typeset."
   (interactive)
   (save-excursion
@@ -81,7 +81,7 @@
       (set-buffer (get-buffer-create buffer))
       (setq default-directory execdir)
       (cd execdir)
-      (or rerun (erase-buffer))
+      (erase-buffer)
       (cond
        ((not (fboundp 'start-process)) ;YaTeX-dos;if MS-DOS
 	(call-process
