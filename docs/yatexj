@@ -1,7 +1,8 @@
 Info file: yatexj,    -*-Text-*-
 produced by `texinfo-format-buffer'
 from file `yatexj.tex'
-using `texinfmt.el' version 2.32 of 19 November 1993.
+using `texinfmt.el' version 2.38 of 3 July 1998.
+
 
 
 
@@ -37,6 +38,7 @@ File: yatexj, Node: Top, Next: Intro, Prev: (dir), Up: (dir)
 * Concept Index::               $B:w0z(B
 
 
+
 
 File: yatexj, Node: Intro, Next: Terminology, Prev: Top, Up: Top
 
@@ -50,6 +52,7 @@ File: yatexj, Node: Intro, Next: Terminology, Prev: Top, Up: Top
 $B$^$9!#(B
 
   English manual *Note Top: (yatexe)Top.
+
 
 
 File: yatexj, Node: Terminology, Next: Main features, Prev: Intro, Up: Top
@@ -84,6 +87,7 @@ File: yatexj, Node: Terminology, Next: Main features, Prev: Intro, Up: Top
      $BEv$F$i$l$F$$$k$N$G!"FC$KJQ99$7$F$$$J$$>l9gK\%^%K%e%"%k$N(B `[prefix]' 
      $B$H$$$&I=5-$O!"(B`C-c' $B$HFI$_49$($F$/$@$5$$!#(B
 
+
 
 File: yatexj, Node: Main features, Next: Installation, Prev: Terminology, Up: Top
 
@@ -94,7 +98,7 @@ File: yatexj, Node: Main features, Next: Installation, Prev: Terminology, Up: To
    * $B%+!<%=%k0LCV$K$h$i$J$$8GDj%j%8%g%s$NItJ,%?%$%W%;%C%H(B
    * \includeonly$B$N%o%s%?%C%A99?7(B
    * $B%(%i!<2U=j$X$N<+F0%8%c%s%W(B(`C-c '')
-   * `\begin{}, \end{}, \section...' $B$J$I$N(B LaTeX$B%3%^%s%I$NJd40F~NO(B(`C-c
+   * `\begin{}, \end{}, \section...' $B$J$I$N(B LaTeX $B%3%^%s%I$NJd40F~NO(B(`C-c
      b', `C-c s', `C-c l', `C-c m')
    * $B4{$KF~NO$7$?%F%-%9%H$r4D6-$d%3%^%s%I0z?t$NCf$K<h$j9~$`3g$jJd40(B(`C-u'
      +$BDL>oJd40%-!<(B)
@@ -104,19 +108,19 @@ File: yatexj, Node: Main features, Next: Installation, Prev: Terminology, Up: To
    * LaTeX $B$N4D6-$d%3%^%s%I$K1~$8$?%,%$%IIU$-0z?tF~NO(B
    * $BLnD;$K$J$$%,%$%IIU$-0z?tF~NO4X?t$N<+F0@8@.(B(`yatexgen.el')
    * LaTeX $B%3%^%s%I$N:o=|(B/$BJQ99(B(`C-c k', `C-c c')
-   * $B%U%!%$%k4V!"(B`\begin'<->`\end'$B4V!"(B
-             `\ref'<->`\label'$B4V!"(B
-             `\cite'<->`\bibitem'$B%8%c%s%W(B(`C-c g')
-   * $B0l3g%3%a%s%H%"%&%H(B/$B%"%s%3%a%s%H%"%&%H(B
-             (`C-c >', `C-c <', `C-c ,', `C-c .')
-   * $B%"%/%;%s%H5-9f(B/$B?t<04D6-MQ%3%^%s%I(B/$B%.%j%7%cJ8;z$NF~NO;Y1g(B
-             (`C-c a', `;', `/')
+   * $B%U%!%$%k4V!"(B`\begin'<->`\end'$B4V!"(B`\ref'<->`\label'$B4V!"(B
+     `\cite'<->`\bibitem'$B%8%c%s%W(B(`C-c g')
+   * $B0l3g%3%a%s%H%"%&%H(B/$B%"%s%3%a%s%H%"%&%H(B(`C-c >', `C-c <', `C-c ,', `C-c
+     .')
+   * $B%"%/%;%s%H5-9f(B/$B?t<04D6-MQ%3%^%s%I(B/$B%.%j%7%cJ8;z$NF~NO;Y1g(B(`C-c a',
+     `;', `/')
    * tabular/array$B4D6-$N%+%i%`0LCV%,%$%I(B
    * $BI8=`E*(B LaTeX $B%3%^%s%I$N%*%s%i%$%s%X%k%W(B(`C-c ?', `C-c /')
    * $B%I%-%e%a%s%H$N%$%s%/%k!<%I9=B$$N;k3PE*I=<($H%P%C%U%!@Z$jBX$((B(`C-c d')
    * $BJd40F~NO$7$?%^%/%m$K1~$8$FI,MW$J(B \userpackage $B$rF~$l$F$/$l$k@h2s$j(B
      userpackage
    * \label$B$rBG$D$3$H$O$b$&K:$l$h$&(B! ref$B$d(Bcite$BJd40F~NO$G<+F0@8@.$7$^$9(B
+
 
 
 File: yatexj, Node: Installation, Next: Invocation, Prev: Main features, Up: Top
@@ -156,9 +160,8 @@ File: yatexj, Node: Installation, Next: Invocation, Prev: Main features, Up: Top
              ... $B5/F0$9$k%W%l%t%e!<%"$N%3%^%s%IL>(B
 `NTT-jTeX'
              ... $B2~9T(B+$B%$%s%G%s%H$K$h$C$F!"%?%$%W%;%C%H8e$N;z4V$,6u$$$F$7$^(B
-             $B$&$N$rM^@)$9$k>l9g$K(Bt$B$K$9$k(B($B8E$$(BNTT-jTeX$B$G82Cx$K8=$l$k(B)$B!#6qBN(B
-     $BE*$K$O!"(B
-             fill$B$9$k$H$-$K3F9T$N=*$o$j$K(B%$B$rIU2C$9$k$h$&$K$J$k!#(B
+     $B$&$N$rM^@)$9$k>l9g$K(Bt$B$K$9$k(B($B8E$$(BNTT-jTeX$B$G82Cx$K8=$l$k(B)$B!#6qBNE*$K$O!"(B
+     fill$B$9$k$H$-$K3F9T$N=*$o$j$K(B%$B$rIU2C$9$k$h$&$K$J$k!#(B
 `YaTeX-kanji-code'
              ... $BJ8=q$r:n@.$9$k;~$N4A;z%3!<%I(B
 `dviprint-command-format'
@@ -166,10 +169,10 @@ File: yatexj, Node: Installation, Next: Invocation, Prev: Main features, Up: Top
 `makeindex-command'
              ... makeindex$B%3%^%s%I(B
 
-$B$3$l$i$rJQ99$9$k>l9g$O!"$d$O$j(B`~/.emacs'$B$K$F!"$?$H$($P(B
-     (setq tex-command "bigjlatex")
-$B$N$h$&$K$7$F$/$@$5$$!#$I$N$h$&$JCM$r%;%C%H$9$l$PNI$$$+$K$D$$$F$O!"(B
-*Note All customizable variables::$B$r;2>H$7$F$/$@$5$$!#(B
+$B$3$l$i$rJQ99$9$k>l9g$O!"$d$O$j(B`~/.emacs'$B$K$F!"$?$H$($P(B(setq tex-command
+"bigjlatex") $B$N$h$&$K$7$F$/$@$5$$!#$I$N$h$&$JCM$r%;%C%H$9$l$PNI$$$+$K$D$$(B
+$B$F$O!"(B*Note All customizable variables::$B$r;2>H$7$F$/$@$5$$!#(B
+
 
 
 
@@ -186,8 +189,8 @@ LaTeX$B%=!<%9$NJT=8Cf!"<!$N%-!<F~NO$K$h$j!"(Bplatex $B$J$I$N%?%$%W%;%C%H%W%m%
 `[prefix] t r'
              ... $B%?%$%W%;%C%?5/F0(B($BNN0h;XDj(B)
 `[prefix] t e'
-             ... $B%?%$%W%;%C%?5/F0(B
-             ($B%]%$%s%H0LCV$N4D6-$^$?$O?t<0%b!<%I$N$_BP>N(B)
+             ... $B%?%$%W%;%C%?5/F0(B($B%]%$%s%H0LCV$N4D6-$^$?$O?t<0%b!<%I$N$_BP(B
+     $B>N(B)
 `[prefix] t k'
              ... $BF0:nCf$N%?%$%W%;%C%?$NDd;_(B
 `[prefix] t b'
@@ -208,6 +211,7 @@ LaTeX$B%=!<%9$NJT=8Cf!"<!$N%-!<F~NO$K$h$j!"(Bplatex $B$J$I$N%?%$%W%;%C%H%W%m%
 * Calling typesetter::          $B%?%$%W%;%C%?5/F0(B
 * Calling previewer::           $B%W%l%t%e!<%"5/F0(B
 * Print out::                   $B%W%j%s%H%"%&%HMQ%3%^%s%I$N5/F0(B
+
 
 
 File: yatexj, Node: Calling typesetter, Next: Calling previewer, Prev: Invocation, Up: Invocation
@@ -260,6 +264,7 @@ File: yatexj, Node: Calling typesetter, Next: Calling previewer, Prev: Invocatio
 $B$^$9!#%W%l%t%e!<%"$G(B `texput.dvi' $B$r3+$$$?$^$^$K$7$F$*$1$P=$@5$H3NG'$,AGAa(B
 $B$/$G$-$k$G$7$g$&!#(B
 
+
 
 File: yatexj, Node: Calling previewer, Next: Print out, Prev: Calling typesetter, Up: Invocation
 
@@ -270,6 +275,7 @@ remote $B5!G=$D$-$N(Bxdvi$B$rMxMQ$7$F$$$k>l9g$O(B `[prefix] t s' $B$r2!$9$3
 $B%+!<%=%k0LCV$NJ8;zNs$r8!:w$7$F$=$N%Z!<%8$rI=<($9$k$h$&$K$9$G$K5/F0Cf$N(Bxdvi
 $B$KL?Na$rAw$j$^$9!#$3$l$K$h$j!"8=:_JT=8Cf$N2U=j$N%?%$%W%;%C%H7k2L$rB(:B$K8+(B
 $B$k$3$H$,$G$-$^$9!#(B
+
 
 
 
@@ -288,6 +294,7 @@ universal-argument $B$r$D$1!"(B
 
 $B$N$h$&$K5/F0$7$F$/$@$5$$!#(B
 
+
 
 File: yatexj, Node: %#notation, Next: Completion, Prev: Invocation, Up: Top
 
@@ -305,6 +312,7 @@ File: yatexj, Node: %#notation, Next: Completion, Prev: Invocation, Up: Top
 * lpr format::                  $B%W%j%s%H%"%&%H%3%^%s%IMQ%U%)!<%^%C%H(B
 * Editing %# notation::         %#$B5-K!$NJT=8(B
 
+
 
 File: yatexj, Node: Changing typesetter, Next: Splitting input files, Prev: %#notation, Up: %#notation
 
@@ -317,6 +325,7 @@ File: yatexj, Node: Changing typesetter, Next: Splitting input files, Prev: %#no
              %#!jlatex-ntt
 
 NTT jTeX $B$H!"(BASCII jTeX $B$r;H$$J,$1$?$$$h$&$J>l9g$KJXMx$G$7$g$&!#(B
+
 
 
 
@@ -350,10 +359,11 @@ shell $B$KEO$9$N$G<!$N$h$&$K=q$1$P!"(Bghostview $B$J$I$r%W%l%t%e!<%"$K;H$&;~$
 
   1. $B%5%V%G%#%l%/%H%j$r:n$C$F!"$=$NCf$K%5%V%U%!%$%k$rCV$/$3$H$O$G$-$k$,%5(B
      $B%V%G%#%l%/%H%j$N%5%V%G%#%l%/%H%j$K$OCV$1$J$$!#(B
-  2. $B%a%$%s%U%!%$%k$+$i%5%V%G%#%l%/%H%jFb$N%U%!%$%k$r(B include$B$9$k;~$K$O!"(B
+  2. $B%a%$%s%U%!%$%k$+$i%5%V%G%#%l%/%H%jFb$N%U%!%$%k$r(B include $B$9$k;~$K$O!"(B
      $BAjBP%Q%9;XDj$rMQ$$$F!"(B`\include{chap1/sub}'$B$N$h$&$K5-=R!#(B
   3. $B%a%$%s%U%!%$%k$,0l$D>e$N%G%#%l%/%H%j$K$"$k>l9g$b!"%5%V%U%!%$%k$K$O(B
      %#!platex main.tex $B$N$h$&$K5-=R$9$k(B(../main$B$G$O$J$$(B)$B!#(B
+
 
 
 
@@ -390,8 +400,9 @@ File: yatexj, Node: Fix region for typesetting, Next: lpr format, Prev: Splittin
   tabular $B4D6-$r2?EY$b;n9T:x8m$7$F$$$k$h$&$J>l9g$O!"(B`\begin'$B$NA0$N9T$K(B 
 `%#BEGIN' $B$H=q$-!"(B`\end' $B$N<!$N9T$K(B `%#END' $B$H=q$$$F$*$/$H4JC1$K:nI=7k2L$r(B
 $B%F%9%H$9$k$3$H$,$G$-$^$9!#$^$?!"D9$$(B .tex $B%U%!%$%k$N8eH>$K(B `%#BEGIN' $B$r=q(B
-$B$$$F$*$1$P!"A0H>$NItJ,$OL5;k$G$-$^$9!#$3$N(BBEGIN$B$H(BEND$B$N>C$7K:$l$K$O==J,$4Cm(B
-$B0U2<$5$$!#(B
+$B$$$F$*$1$P!"A0H>$NItJ,$OL5;k$G$-$^$9!#$3$N(BBEGIN$B$H(BEND $B$N>C$7K:$l$K$O==J,$4(B
+$BCm0U2<$5$$!#(B
+
 
 
 
@@ -430,6 +441,7 @@ dvi2ps $BMQ$N%U%)!<%^%C%H$rNc$K@bL@$7$^$9!#(B
 
 $B$J$I$H$9$k$N$bJXMx$+$b$7$l$^$;$s!#(B
 
+
 
 File: yatexj, Node: Editing %# notation, Prev: lpr format, Up: %#notation
 
@@ -449,6 +461,7 @@ File: yatexj, Node: Editing %# notation, Prev: lpr format, Up: %#notation
 `%#LPR'$B$G(B lpr $B%U%)!<%^%C%H$rJQ$($?$$;~$O(B`l'$B$r!"$"$i$+$8$a@_Dj$7$?%j%8%g%s(B
 $B$r(B `%#BEGIN' $B!A(B `%#END' $B$G3g$j$?$$;~$O!"(B`b'$B$r2!$7$^$9!#(B`b'$B$rA*$s$@;~$K$O!"(B
 $B$=$l$^$G%P%C%U%!Cf$KCV$+$l$F$$$?(B `%#BEGIN', `%#END' $B$,<+F0E*$K>C5n$5$l$^$9!#(B
+
 
 
 File: yatexj, Node: Completion, Next: Local dictionary, Prev: %#notation, Up: Top
@@ -471,6 +484,7 @@ File: yatexj, Node: Completion, Next: Local dictionary, Prev: %#notation, Up: To
 * Image completion::            $B?t<05-9f%$%a!<%8Jd40(B
 * Greek letter completion::     $B%.%j%7%cJ8;zJd40(B
 
+
 
 File: yatexj, Node: begin$B7?Jd40(B, Next: section$B7?Jd40(B, Prev: Completion, Up: Completion
 
@@ -483,7 +497,7 @@ begin$B7?Jd40(B
 `[prefix] b'
              ... begin $B7?Jd403+;O(B($BI8=`$G$O(B `C-c b')
 
-$B$G;O$^$j$^$9!#IQHK$KMQ$$$i$l$k<!$N(B LaTeX $B4D6-$NJd40$O!"(B[prefix] `b'$B$KB3$/(B
+$B$G;O$^$j$^$9!#IQHK$KMQ$$$i$l$k<!$N(B LaTeX $B4D6-$NJd40$O!"(B[prefix] `b' $B$KB3$/(B
 $B<!$N(B1$BJ8;z$rF~NO$9$k$@$1$G!"(B`\begin{xxx}...\end{xxx}'$B$r40@.$5$;$^$9!#(B
 
 `[prefix] b c'
@@ -550,7 +564,7 @@ begin$B7?Jd40(B
 
   $B$H$3$m$G!":G=i$K=q$$$F$7$^$C$?%V%m%C%/$r8e$+$i!"(Bitemize $B4D6-$NCf$KJD$8$3(B
 $B$a$?$$$H;W$&$3$H$,$"$j$^$9$,!"$=$N$h$&$J$H$-$O!"$"$i$+$8$aJD$8$3$a$?$$CJMn(B
-$B$r%^!<%/$7$F!"(Bbegin $B7?Jd40$N3F%3%^%s%I$N(B `[prefix]'$B$N<!$N!X>.J8;z$N(B 'b'$B!Y(B 
+$B$r%^!<%/$7$F!"(Bbegin $B7?Jd40$N3F%3%^%s%I$N(B `[prefix]' $B$N<!$N!X>.J8;z$N(B 'b'$B!Y(B 
 $B$r!XBgJ8;z!Y$KJQ$($F5/F0$7$F2<$5$$!#(B($B$^$?$O!"(B`C-u' $B$r@h$KBG$A!"(Buniversal
 argument $B$r$D$1$F$b2DG=$G$9(B)
 
@@ -564,6 +578,7 @@ argument $B$r$D$1$F$b2DG=$G$9(B)
 $B$H%?%$%W$7$F$/$@$5$$!#$3$l$O!"(B`[prefix] b SPC'$B$NJd40F~NO$K$b$"$F$O$^$j!"(B
 `b' $B$rBgJ8;z$KJQ$($F!"(B`[prefix] B SPC' $B$H%?%$%W$9$l$P!"$"$i$+$8$a%^!<%/$7(B
 $B$F$*$$$?%j%8%g%s$r!"(Bbegin $B$H(B end $B$N4D6-$G3g$j$^$9!#(B
+
 
 
 File: yatexj, Node: section$B7?Jd40(B, Next: large$B7?Jd40(B, Prev: begin$B7?Jd40(B, Up: Completion
@@ -617,6 +632,7 @@ section$B7?Jd40(B
 * view-sectioning::             $B%;%/%7%g%s6h@Z$j$N%"%&%H%i%$%sI=<((B
 * label-generation::            $B%i%Y%k<+F0@8@.(B
 
+
 
 File: yatexj, Node: 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B, Next: Enclose section-type command, Prev: section$B7?Jd40(B, Up: section$B7?Jd40(B
 
@@ -644,6 +660,7 @@ File: yatexj, Node: 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B, Next: Enc
 $B$$$F8D?t$r;XDj$7D>$9$3$H$G!"<+F0E*$K<-=qCf$N0z?t$N8D?t$NItJ,$r99?7$7$^$9!#(B
 
 
+
 
 File: yatexj, Node: Enclose section-type command, Next: Recursive completion, Prev: 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B, Up: section$B7?Jd40(B
 
@@ -653,6 +670,7 @@ File: yatexj, Node: Enclose section-type command, Next: Recursive completion, Pr
   $B$^$?!"5/F0%3%^%s%I$N(B`s'$B$rBgJ8;z$KJQ$($F5/F0$9$k$H!"$"$i$+$8$a=q$$$?J8>O(B
 $B$r(B section $B7?%3%^%s%I$NBh0l0z?t$H$7$F3g$j$^$9!#(B
 
+
 
 File: yatexj, Node: Recursive completion, Next: view-sectioning, Prev: Enclose section-type command, Up: section$B7?Jd40(B
 
@@ -660,9 +678,10 @@ File: yatexj, Node: Recursive completion, Next: view-sectioning, Prev: Enclose s
 --------
 
   $B9bEY$J;H$$J}$K$J$k$+$b$7$l$^$;$s$,!"(Bsection$B7?Jd40$N0z?t$NF~NO;~$K$5$i$K(B
-$BJd40F~NO$rMxMQ$9$k$3$H$,$G$-$^$9(B(section/large/maketitle$B7?$K8B$k(B)$B!#(Bsection
+$BJd40F~NO$rMxMQ$9$k$3$H$,$G$-$^$9(B(section/large/maketitle$B7?$K8B$k(B)$B!#(Bsection 
 $B7?%3%^%s%I$N0z?t$K99$K(B LaTeX $B%3%^%s%I$,Mh$k>l9g$K$O%_%K%P%C%U%!$GLnD;$NJd(B
 $B40%-!<$r:F5"E*$KF~NO$9$k$3$H$G0z?t$NF~NO$b8zN(E*$K9T$J$($^$9!#(B
+
 
 
 File: yatexj, Node: view-sectioning, Next: label-generation, Prev: Recursive completion, Up: section$B7?Jd40(B
@@ -708,6 +727,7 @@ File: yatexj, Node: view-sectioning, Next: label-generation, Prev: Recursive com
              ... $B%l%Y%k(B n $B0J2<$N%;%/%7%g%s%3%^%s%I$r1#$7$FI=<((B
 
 
+
 
 File: yatexj, Node: label-generation, Prev: view-sectioning, Up: section$B7?Jd40(B
 
@@ -720,6 +740,7 @@ File: yatexj, Node: label-generation, Prev: view-sectioning, Up: section$B7?Jd4
 `\label{}'$B$r:n$i$;$F$/$l$^$9!#%i%Y%kL>$r9M$($k$N$O6lDK$K46$8$k$b$N$G$9!#A4(B
 $B$F$N%+%&%s%?$K%i%Y%k$r$D$1$k$N$b$?$$$X$s$G$9!#$b$&%i%Y%kL>$K2?$r$D$1$k$+!"(B
 $B%i%Y%k$r$D$1$k$+$D$1$^$$$+!"$J$I$H$$$&$3$H$OK:$l$^$7$g$&(B!
+
 
 
 File: yatexj, Node: large$B7?Jd40(B, Next: maketitle$B7?Jd40(B, Prev: section$B7?Jd40(B, Up: Completion
@@ -749,6 +770,7 @@ large$B7?Jd40(B
 $B;z$NHO0O$r%^!<%/$7$F$+$i!"8F$S=P$7%-!<$r(B `[prefix] L' $B$H!"BgJ8;z$N(B L $B$KJQ(B
 $B$($F8F$S=P$;$P!"$=$N%j%8%g%sA4BN$,!"%V%l!<%9$G0O$^$l$^$9!#(B
 
+
 
 File: yatexj, Node: maketitle$B7?Jd40(B, Next: Arbitrary completion, Prev: large$B7?Jd40(B, Up: Completion
 
@@ -762,6 +784,7 @@ maketitle$B7?Jd40(B
 
 $B$G!"(Bmaketitle $B7?Jd40$r3+;O$7$^$9!#Jd40$NMWNN$O:#$^$G$N$b$N$H$^$C$?$/F1$8$G(B
 $B$9!#(BLaTeX $BMQ$N%3%^%s%IL>$,Jd408uJd$H$7$FMQ0U$5$l$F$$$^$9!#(B
+
 
 
 File: yatexj, Node: Arbitrary completion, Next: end$BJd40(B, Prev: maketitle$B7?Jd40(B, Up: Completion
@@ -779,6 +802,7 @@ File: yatexj, Node: Arbitrary completion, Next: end$BJd40(B, Prev: maketitle$
 $B$rF~NO$9$l$P!"A4$F$NJd408uJd$NCf$+$i0lCW$9$k$b$N$,A*$P$l%+!<%=%k0LCV$KA^F~(B
 $B$5$l$^$9!#(B
 
+
 
 File: yatexj, Node: end$BJd40(B, Next: Accent mark completion, Prev: Arbitrary completion, Up: Completion
 
@@ -794,6 +818,7 @@ begin $B7?Jd40$rMQ$$$l$P4D6-$NJD$8K:$l$O$J$$$N$G$9$,!";~$K$O$D$$$D$$<j$G(B
              ... end $BJd40(B
 
 $B$H$9$k$3$H$G!"8=:_3+$$$F$$$k4D6-L>$G(B \end{} $B$,Jd$o$l$^$9!#(B
+
 
 
 File: yatexj, Node: Accent mark completion, Next: Image completion, Prev: end$BJd40(B, Up: Completion
@@ -821,6 +846,7 @@ File: yatexj, Node: Accent mark completion, Next: Image completion, Prev: end$B
 
 $B$,40@.$5$l!"%+!<%=%k$O(B{}$B$N30$KLa$j$^$9!#(B
 
+
 
 File: yatexj, Node: Image completion, Next: Greek letter completion, Prev: Accent mark completion, Up: Completion
 
@@ -836,8 +862,8 @@ File: yatexj, Node: Image completion, Next: Greek letter completion, Prev: Accen
 $B$N$h$&$K$7$^$9$,!"$3$l$rMxMQ$7$F!"?t<05-9f%$%a!<%8F~NO%b!<%I$G(B 
 `\leftarrow'$B$rF~NO$9$k$K$O!"(B`;'($B%;%_%3%m%s(B)$B$rBG$C$F$+$i(B`<-'$B$HF~NO$7$^$9!#(B
 $BF1MM$K!"D9$$Lp0u"+(B-(long-leftarrow) $B$r(BASCII$BJ8;z$@$1$GI=8=$9$k>l9g!V(B<--$B!W$H(B
-$B$9$k$N$G!"(B`\longleftarrow'$B$rF~NO$9$k$?$a$K$O!"(B`;<--'$B$HF~NO$7$^$9!#$"$k$$$O(B
-$BL58BBg5-9f$r(BASCII$BJ8;z$@$1$GI=8=$9$k;~$O!V(Boo$B!W$N$h$&$K$9$k$3$H$+$i!"(B
+$B$9$k$N$G!"(B`\longleftarrow'$B$rF~NO$9$k$?$a$K$O!"(B`;<--' $B$HF~NO$7$^$9!#$"$k$$(B
+$B$OL58BBg5-9f$r(BASCII$BJ8;z$@$1$GI=8=$9$k;~$O!V(Boo$B!W$N$h$&$K$9$k$3$H$+$i!"(B
 `\infty' $B$rF~NO$9$k;~$O!"(B`;oo'$B$H%-!<F~NO$7$^$9!#(B
 
   $B$3$l$i$NA`:n$r$^$H$a$k$H<!$N$h$&$K$J$j$^$9!#(B
@@ -875,9 +901,10 @@ File: yatexj, Node: Image completion, Next: Greek letter completion, Prev: Accen
 
   $BF~NO%-!<$H(B LaTeX $B%3%^%s%I!"5-9f$NBP1~I=$r8D?ME*$K@_Dj$7$?$$>l9g$O(B 
 Emacs-Lisp $BJQ?t(B `YaTeX-math-sign-alist-private' $B$KDj5A$7$F$/$@$5$$!#$=$NFb(B
-$BMF$H%G%U%)%k%H$N$b$N$r9g$o$;$?$b$N$,BP1~I=$H$7$F;HMQ$5$l$^$9(B(private$B$NJ}$,(B
-$BM%@h$5$l$k(B)$B!#$J$*!"$3$NJQ?t$N9=B$$K$D$$$F$O(B `yatexmth.el' $B$r;2>H$7$F$/$@$5(B
-$B$$!#(B
+$BMF$H%G%U%)%k%H$N$b$N$r9g$o$;$?$b$N$,BP1~I=$H$7$F;HMQ$5$l$^$9(B(private $B$NJ}(B
+$B$,M%@h$5$l$k(B)$B!#$J$*!"$3$NJQ?t$N9=B$$K$D$$$F$O(B `yatexmth.el' $B$r;2>H$7$F$/$@(B
+$B$5$$!#(B
+
 
 
 File: yatexj, Node: Greek letter completion, Prev: Image completion, Up: Completion
@@ -896,6 +923,7 @@ File: yatexj, Node: Greek letter completion, Prev: Image completion, Up: Complet
 $B@)E*$K%$%a!<%8Jd40$KF~$k$3$H$,$G$-$^$9!#$^$?!"$3$N;~$K$I$N$h$&$J>uBV$G?t<0(B
 $B4D6-FbH=Dj$K<:GT$7$?$+$r$4O"Mm2<$5$$!#(B
 
+
 
 File: yatexj, Node: Local dictionary, Next: Commenting out, Prev: Completion, Up: Top
 
@@ -913,8 +941,9 @@ File: yatexj, Node: Local dictionary, Next: Commenting out, Prev: Completion, Up
        `foo' is not in table. Register into: U)serDic L)ocalDic N)one D)iscard
 
 $B$H$$$&%W%m%s%W%H$KBP$7!"(B`u'$B$HEz$($k$H!V%f!<%6<-=q!W$r!"(B`l'$B$HEz$($k$H%m!<%+(B
-$B%k<-=q$r99?7$7!"(B`n'$B$HEz$($k$H<-=q%U%!%$%k$O99?7$;$:8=:_$N(BEmacs$B%;%C%7%g%s$N(B
-$B$_M-8z$JC18l$H$7!"(B`d'$B$HEz$($k$H?7$?$JC18l$r3X=,$;$:$K<N$F$k$3$H$K$J$j$^$9!#(B
+$B%k<-=q$r99?7$7!"(B`n'$B$HEz$($k$H<-=q%U%!%$%k$O99?7$;$:8=:_$N(BEmacs $B%;%C%7%g%s(B
+$B$N$_M-8z$JC18l$H$7!"(B`d'$B$HEz$($k$H?7$?$JC18l$r3X=,$;$:$K<N$F$k$3$H$K$J$j$^(B
+$B$9!#(B
 
   $B$b$7!"%m!<%+%k<-=q$N5!G=$O$$$i$:!"A4$F%f!<%6<-=q$N99?7$N$_$G$h$$$H8@$&>l(B
 $B9g$K$O(B`~/.emacs'$B$J$I$G!"(B
@@ -922,6 +951,7 @@ File: yatexj, Node: Local dictionary, Next: Commenting out, Prev: Completion, Up
              (setq YaTeX-nervous nil)
 
 $B$H$7$F2<$5$$!#(B
+
 
 
 File: yatexj, Node: Commenting out, Next: Cursor jump, Prev: Local dictionary, Up: Top
@@ -972,6 +1002,7 @@ File: yatexj, Node: Commenting out, Next: Cursor jump, Prev: Local dictionary, U
 `[preifx] >' $B$r2!$7$F$b%+!<%=%k$,(B `\begin{}' $B$N>e$K$"$k$H(B`\begin{}'$B!A(B
 `\end{}'$B%b!<%I$G%3%a%s%H5!G=$,F/$$$F$7$^$&$N$GCm0U$7$F2<$5$$!#(B
 
+
 
 File: yatexj, Node: Cursor jump, Next: Modifying/Deleting, Prev: Commenting out, Up: Top
 
@@ -986,6 +1017,7 @@ File: yatexj, Node: Cursor jump, Next: Modifying/Deleting, Prev: Commenting out,
 * $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B::  
 * $B4D6-$rC10L$H$7$?%8%c%s%W(B::    
 * $B:G8e$NJd400LCV$X$N%8%c%s%W(B::  
+
 
 
 File: yatexj, Node: $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B, Next: $B$*3(IA$-%D!<%k5/F0(B, Prev: Cursor jump, Up: Cursor jump
@@ -1025,6 +1057,7 @@ File: yatexj, Node: $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B, Next: $B$*3(IA$-%D!<%k5
 $B$3$N5!G=$O(B `begin/end', `%#BEGIN/%#END' $B4V$N%8%c%s%W$KBP$7$F$O(B($B0UL#$,$J$$(B
 $B$H;W$o$l$k$N$G(B)$B5!G=$7$J$$$N$GCm0U$7$F$/$@$5$$!#(B
 
+
 
 File: yatexj, Node: $B$*3(IA$-%D!<%k5/F0(B, Next: $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B, Prev: $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B, Up: Cursor jump
 
@@ -1054,6 +1087,7 @@ File: yatexj, Node: $B$*3(IA$-%D!<%k5/F0(B, Next: $B%a%$%s%U%!%$%k$X$N%8%c%s%
 $B2<$5$$!#$&$^$/@_Dj$9$k$H!"2hA|%U%!%$%k$K$+$.$i$:!"G$0U$N7A<0$N%U%!%$%k$rG$(B
 $B0U$N%W%m%;%C%5$G=hM}$9$k%3%^%s%I$r4JC1$K8F$S=P$9$3$H$,$G$-$^$9!#(B
 
+
 
 File: yatexj, Node: $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B, Next: $B4D6-$rC10L$H$7$?%8%c%s%W(B, Prev: $B$*3(IA$-%D!<%k5/F0(B, Up: Cursor jump
 
@@ -1070,6 +1104,7 @@ File: yatexj, Node: $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B, Next: $B4D6-$rC10L$H$7$?%
 $B$r2!$9$H!"%a%$%s%U%!%$%k$NJT=8%P%C%U%!$K@ZBX$($^$9!#$b$7!"%a%$%s%U%!%$%k$r(B
 $B%*!<%W%s$7$F$$$J$$>l9g$O!"%+%l%s%H%G%#%l%/%H%j$+$iC5$7$F<+F0E*$K%*!<%W%s$7(B
 $B$^$9!#(B
+
 
 
 File: yatexj, Node: $B4D6-$rC10L$H$7$?%8%c%s%W(B, Next: $B:G8e$NJd400LCV$X$N%8%c%s%W(B, Prev: $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B, Up: Cursor jump
@@ -1089,6 +1124,7 @@ File: yatexj, Node: $B4D6-$rC10L$H$7$?%8%c%s%W(B, Next: $B:G8e$NJd400LCV$X$N%
 $B>e5-$N%3%^%s%I$ODL>o$N(B`[prefix]'$B%-!<$G$O$J$/(B`META'$B%-!<$r%W%j%U%#%/%9$H$7$F(B
 $B5!G=$9$k$N$G$4Cm0U2<$5$$!#(B
 
+
 
 File: yatexj, Node: $B:G8e$NJd400LCV$X$N%8%c%s%W(B, Prev: $B4D6-$rC10L$H$7$?%8%c%s%W(B, Up: Cursor jump
 
@@ -1098,6 +1134,7 @@ File: yatexj, Node: $B:G8e$NJd400LCV$X$N%8%c%s%W(B, Prev: $B4D6-$rC10L$H$7$?%
 $BLnD;$OJd40F~NO$7$?0LCV$r>o$K%l%8%9%?(B `3'$B$KJ]B8$7$F$$$^$9!#F~NOESCf$GG!2?$J(B
 $B$k%U%!%$%k$NG!2?$J$k0LCV$K9T$C$?$H$7$F$b!"(B`C-x j 3'(`jump-to-register')$B$r(B
 $B;H$C$FD>$A$K:G8e$NJd40F~NO0LCV$KLa$k$3$H$,$G$-$^$9!#(B
+
 
 
 File: yatexj, Node: Modifying/Deleting, Next: Filling, Prev: Cursor jump, Up: Top
@@ -1121,6 +1158,7 @@ File: yatexj, Node: Modifying/Deleting, Next: Filling, Prev: Cursor jump, Up: To
 * Changing LaTeX command::      LaTeX $B%3%^%s%I$NJQ99(B
 * Killing LaTeX command::       LaTeX $B%3%^%s%I$N:o=|(B
 
+
 
 File: yatexj, Node: Changing LaTeX command, Next: Killing LaTeX command, Prev: Modifying/Deleting, Up: Modifying/Deleting
 
@@ -1141,6 +1179,7 @@ LaTeX $B%3%^%s%I$NJQ99(B
   $BJQ$($?$$(Bsection$B7?%3%^%s%I$N0z?t$,$5$i$K(B LaTeX $B%3%^%s%I$r4^$`>l9g$O!"$=$N(B
 $B0z?t$r0O$`Cf3g8L$N>e$G(B `[prefix] c' $B$r2!$9$3$H$GCf$N%3%^%s%I$rJQ99BP>]H=Dj(B
 $B$+$i=|30$9$k$3$H$,$G$-$^$9!#(B
+
 
 
 
@@ -1169,6 +1208,7 @@ LaTeX $B%3%^%s%I$N:o=|(B
              $B85$N%F%-%9%H(B:                   [prefix] k      C-u [prefix] k
              $BK\J8(B\footnote{$B5SCm(B}$B$G$9!#(B     $BK\J85SCm$G$9!#(B  $BK\J8$G$9!#(B
                      $B",(B($B%+!<%=%k0LCV(B)
+
 
 
 File: yatexj, Node: Filling, Next: Includeonly, Prev: Modifying/Deleting, Up: Top
@@ -1226,6 +1266,7 @@ NTT jTeX $B$r;HMQ$7$F$$$k>l9g$K$O!"(BLisp $BJQ?t(B`NTT-jTeX'$B$r(B`t'$B$K
 $B$h$j(B fill-prefix $B$r$$$A$$$AJQ99$7$J$/$F7eB7$($,$G$-$^$9!#(B
 
 
+
 
 File: yatexj, Node: Includeonly, Next: What column, Prev: Filling, Up: Top
 
@@ -1247,9 +1288,10 @@ File: yatexj, Node: Includeonly, Next: What column, Prev: Filling, Up: Top
 
              A)dd R)eplace %)comment?
 
-$B8=:_JT=8Cf$N%U%!%$%k$r(B `\includeonly' $B$N%j%9%H$K2C$($?$$;~$K$O(B`a'$B$r!"8=:_(B
+$B8=:_JT=8Cf$N%U%!%$%k$r(B `\includeonly' $B$N%j%9%H$K2C$($?$$;~$K$O(B`a' $B$r!"8=:_(B
 $BJT=8Cf$N%U%!%$%k$@$1$r(B `\includeonly' $B$K$7$?$$;~$O(B`r'$B$r!"(B`\includeonly' $B$N(B
 $B9T$r%3%a%s%H%"%&%H$7$FL58z2=$7$?$$;~$K$O!"(B`%'$B$r$=$l$>$l2!$7$F2<$5$$!#(B
+
 
 
 File: yatexj, Node: What column, Next: Intelligent newline, Prev: Includeonly, Up: Top
@@ -1279,6 +1321,7 @@ File: yatexj, Node: What column, Next: Intelligent newline, Prev: Includeonly, U
 $B$9!#(Btabular/array$B4D6-$NBh(B1$B9TL\$r9`L\L>$NJB$S$H$_$J$7$FBP1~$9$k$b$N$rC5$7$^(B
 $B$9!#$b$79`L\L>$H$7$FJL$N$b$N$rI=<($7$FM_$7$$>l9g$O!"9TF,$r(B`%'$B$K$7$F%@%_!<(B
 $B$N9`L\JB$S$r:n$C$F$*$/$HNI$$$G$7$g$&!#(B
+
 
 
 File: yatexj, Node: Intelligent newline, Next: Usepackage cheker, Prev: What column, Up: Top
@@ -1322,6 +1365,7 @@ tabular$B4D6-$G$O!"$=$N4D6-$N%+%i%`?t$KBP1~$7$?8D?t$N(B `&' $B$K2C$(!"9TKv$N
 $B$K$7$F$/$@$5$$!#(B
 
 
+
 
 File: yatexj, Node: Usepackage cheker, Next: Changing mode of YaTeX, Prev: Intelligent newline, Up: Top
 
@@ -1336,6 +1380,7 @@ File: yatexj, Node: Usepackage cheker, Next: Changing mode of YaTeX, Prev: Intel
   $B$?$@$7$3$N5!G=$,F/$/$?$a$K$O!"%Q%C%1!<%8L>$H$=$NCf$GDj5A$5$l$F$$$k%^%/%m(B
 $B72$r(Balist$B$N7A<0$GJQ?t(B `YaTeX-package-alist-private' $B$K@_Dj$7$F$*$/I,MW$,$"(B
 $B$j$^$9!#(B
+
 
 
 File: yatexj, Node: Changing mode of YaTeX, Next: Online help, Prev: Usepackage cheker, Up: Top
@@ -1360,6 +1405,7 @@ File: yatexj, Node: Changing mode of YaTeX, Next: Online help, Prev: Usepackage 
 $B%8Jd40$r5!G=$5$;$k$+!"DL>o$N%-!<$H$7$F5!G=$5$;$k$+$r<jF0$G@Z$jBX$($^$9!#<+(B
 $BF0H=Dj$,CY$$%^%7%s$G$O(B`YaTeX-auto-math-mode' `nil'$B$K%;%C%H$7!"LnD;?t<0%b!<(B
 $B%I$r<jF0$G@Z$jBX$($k$HNI$$$G$7$g$&!#(B
+
 
 
 
@@ -1402,6 +1448,7 @@ File: yatexj, Node: Online help, Next: Inclusion hierarchy browser, Prev: Changi
 $B$Y$F$=$N%3%^%s%I$N@bL@$rF~NO$7$F$/$@$5$$!#$b$7!"$J$K$+I8=`E*$J%3%^%s%I$KBP(B
 $B$9$k@bL@$r=q$$$?$J$i$P$<$R;d$^$G$=$N@bL@$r$*Aw$j2<$5$$!#<!2s$NG[I[$K4^$a$?(B
 $B$$$H;W$$$^$9!#(B
+
 
 
 File: yatexj, Node: Inclusion hierarchy browser, Next: Cooperation with other packages, Prev: Online help, Up: Top
@@ -1465,6 +1512,7 @@ File: yatexj, Node: Inclusion hierarchy browser, Next: Cooperation with other pa
   $B$?$@$7!"NY$N%&%#%s%I%&$N%U%!%$%k$NFbMF$rI=<($9$k5!G=$K4X$7$F$O!"BP1~$9$k(B
 $B%U%!%$%k$r%/%m!<%:$7$F$7$^$&$H$&$^$/F/$-$^$;$s$N$G$4Cm0U$/$@$5$$!#(B
 
+
 
 File: yatexj, Node: Cooperation with other packages, Next: Customizations, Prev: Inclusion hierarchy browser, Up: Top
 
@@ -1487,6 +1535,7 @@ min-out
   `min-out.el' (`outline-minor-mode') $B$HLnD;$rAH$_9g$o$;$F;H$&$3$H$b$b$A$m(B
 $B$s2DG=$G$9!#@_Dj$NJ}K!$K4X$7$F$O(B`yatexm-o.el'$B$r$4Mw$/$@$5$$!#(B
 
+
 
 File: yatexj, Node: Customizations, Next: Etc, Prev: Cooperation with other packages, Up: Top
 
@@ -1501,6 +1550,7 @@ File: yatexj, Node: Customizations, Next: Etc, Prev: Cooperation with other pack
 
 * Lisp variables::              lisp $BJQ?t(B
 * Add-in functions::            $BIU2C4X?t(B($B%"%I%$%s4X?t(B)
+
 
 
 File: yatexj, Node: Lisp variables, Next: Add-in functions, Prev: Customizations, Up: Customizations
@@ -1522,6 +1572,7 @@ prefix $B%-!<$K$7$?$$%7%s%\%k$rDj5A$7$F$/$@$5$$!#$5$i$K!"!V(B`C-c $B1Q;z(B'
 * Sample definitions::          $B%+%9%?%^%$%:JQ?t@_DjNc(B
 * Hook variables::              hook$BJQ?t(B
 * Hook file::                   hook$BMQ%U%!%$%k(B
+
 
 
 File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: Lisp variables, Up: Lisp variables
@@ -1675,7 +1726,7 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
 
  -- Variable: YaTeX-hilit-sectioning-attenuation-rate
      $B?'IU$1$,M-8z$J;~$N!"(B`\subparagraph' $B$N?'$r(B `\chapter' $B$NG;EY$N2?(B%$BGv$/(B
-     $B$7$?$b$N$K$9$k$+(B (`'(15 40)') `YaTeX-hilit-sectioning-face'$B$N9`;2>H!#(B
+     $B$7$?$b$N$K$9$k$+(B (`'(15 40)') `YaTeX-hilit-sectioning-face' $B$N9`;2>H!#(B
 
  -- Variable: YaTeX-use-AMS-LaTeX
      AMS-LaTeX $B$r;HMQ$9$k>l9g$O(B `t' $B$K@_Dj$9$k(B (`nil')
@@ -1694,8 +1745,8 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
      (`(featurep 'font-lock)')
 
  -- Variable: YaTeX-use-hilit19
-     $B%=!<%9$N?'$E$1%Q%C%1!<%8$H$7$F(B hilit19 $B$rMxMQ$9$k$+$I$&$+(B(`(featurep '
-     hilit19)')
+     $B%=!<%9$N?'$E$1%Q%C%1!<%8$H$7$F(B hilit19 $B$rMxMQ$9$k$+$I$&$+(B(`(featurep
+     'hilit19)')
 
  -- Variable: YaTeX-use-italic-bold
      italic, bold$B%U%)%s%H$rLnD;$,C5$9$+$I$&$+(B (Emacs20$B0J9_$J$i(B`t')
@@ -1709,15 +1760,12 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
      LaTeX2e$B$N%Q%C%1!<%8L>$H$=$NCf$K4^$^$l$k%^%/%m$N%j%9%H!#E,@Z$K@_Dj$7$F(B
      $B$*$/$HK\J8F~NO;~$K%^%/%m$rJd40F~NO$9$k$H$=$N%^%/%m$KI,MW$J%Q%C%1!<%8(B
      $B$r(B usepackage $B$9$k$+<+F0E*$K8!::$7$F$/$l$k!#$7$F$$$J$1$l$P(B 
-     \usepackage $B$r<+F0DI2C$9$k$3$H$b$G$-$k!#%j%9%H$O(B
-             '(($B%Q%C%1!<%8L>(B1
-                  ($BJd40%?%$%W(B $B%^%/%m$N%j%9%H!D!D(B)
-                  ($BJd40%?%$%W(B $B%^%/%m$N%j%9%H!D!D(B))
-               ($B%Q%C%1!<%8L>(B2
-                  ($BJd40%?%$%W(B $B%^%/%m$N%j%9%H!D!D(B)
-                  ($BJd40%?%$%W(B $B%^%/%m$N%j%9%H!D!D(B))$B!D!D!D(B)$B$H$$$&7A<0$K$9$k!#(B
-     $BJd40%?%$%W$O(B `env, section, maketitle' $B$N$I$l$+!#6qBNNc$OJQ?t(B 
-     `YaTeX-package-alist-default'$B$NCM;2>H!#(B
+     \usepackage $B$r<+F0DI2C$9$k$3$H$b$G$-$k!#%j%9%H$O(B'(($B%Q%C%1!<%8L>(B1 ($BJd(B
+     $B40%?%$%W(B $B%^%/%m$N%j%9%H!D!D(B) ($BJd40%?%$%W(B $B%^%/%m$N%j%9%H!D!D(B)) ($B%Q%C%1!<(B
+     $B%8L>(B2 ($BJd40%?%$%W(B $B%^%/%m$N%j%9%H!D!D(B) ($BJd40%?%$%W(B $B%^%/%m$N%j%9(B
+     $B%H!D!D(B))$B!D!D!D(B) $B$H$$$&7A<0$K$9$k!#Jd40%?%$%W$O(B `env, section,
+     maketitle' $B$N$I$l$+!#6qBNNc$OJQ?t(B `YaTeX-package-alist-default' $B$NCM(B
+     $B;2>H!#(B
 
  -- Variable: YaTeX-tabular-indentation
      tabular/array $B4D6-$G8=:_9T$N@hF,0LCV$,I=$NBh(BN$B%+%i%`$N$H$-$OI8=`%$%s%G(B
@@ -1754,6 +1802,7 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
                     (concat command ":" value)
                   (YaTeX::ref-generate-label nil nil))))
 
+
 
 File: yatexj, Node: Sample definitions, Next: Hook variables, Prev: All customizable variables, Up: Lisp variables
 
@@ -1769,6 +1818,7 @@ File: yatexj, Node: Sample definitions, Next: Hook variables, Prev: All customiz
                    YaTeX-fill-prefix "       ")
 
 $B$r(B `~/.emacs' $B$K2C$($^$9!#(B
+
 
 
 File: yatexj, Node: Hook variables, Next: Hook file, Prev: Sample definitions, Up: Lisp variables
@@ -1787,8 +1837,8 @@ hook$BJQ?t(B
                    '(lambda () (outline-minor-mode t)))
 
 $B5U$K!"FH<+$N%-!<Dj5A$r9T$$$?$$;~$J$I$O!"(B`yatex-mode-load-hook' $B$rMxMQ$7$^(B
-$B$9!#Nc$($P!"(Bbegin $B7?Jd40$K$*$$$F!"(B document $B$d!"(Benumerate $B0J30$N4D6-L>$b%7%g!<(B
-$B%H%+%C%H%-!<$GF~$l$?$$$J$I$H$$$&;~$O!"<!$N$h$&$K$7$^$9!#0J2<$NNc$O!"(B
+$B$9!#Nc$($P!"(Bbegin $B7?Jd40$K$*$$$F!"(B document $B$d!"(Benumerate $B0J30$N4D6-L>$b(B
+$B%7%g!<%H%+%C%H%-!<$GF~$l$?$$$J$I$H$$$&;~$O!"<!$N$h$&$K$7$^$9!#0J2<$NNc$O!"(B
 `[prefix] ba' $B$G(B `\begin{abstract}', `\end{abstract}' $B$rA^F~$7$^$9!#(B
 
              (setq yatex-mode-load-hook
@@ -1796,6 +1846,7 @@ hook$BJQ?t(B
 
 $B$J$*!"?7$?$J%-!<$NDj5A$K$O!"4X?t(B `YaTeX-define-key'
 `YaTeX-define-begend-key'$B$rMxMQ$9$k$h$&$K$7$F$/$@$5$$!#(B
+
 
 
 File: yatexj, Node: Hook file, Prev: Hook variables, Up: Lisp variables
@@ -1808,6 +1859,7 @@ hook$BMQ%U%!%$%k(B
 $B%I$7$^$9!#(B
 
 
+
 
 File: yatexj, Node: Add-in functions, Prev: Lisp variables, Up: Customizations
 
@@ -1817,6 +1869,7 @@ File: yatexj, Node: Add-in functions, Prev: Lisp variables, Up: Customizations
   $B3F<oJd40;~$K!"4D6-L>$d%3%^%s%IL>$K1~$8$?$-$a:Y$d$+$JJd40F~NO5!G=$r<B8=$9(B
 $B$k$?$a$N4X?t$r:n@.$9$k$3$H$,$G$-$^$9!#$3$N4X?t$N:n@.J}K!$d!"AH$_9~$_J}K!$K(B
 $B4X$7$F$O!"(B`yatexadd.doc' $B$r$4Mw$/$@$5$$!#(B
+
 
 
 File: yatexj, Node: Etc, Next: Copying, Prev: Customizations, Up: Top
@@ -1829,6 +1882,7 @@ File: yatexj, Node: Etc, Next: Copying, Prev: Customizations, Up: Top
 $B%3%^%s%I$r=P$9$^$G$N%9%H%m!<%/?t$rA}$d$7$F$7$^$&;v$rKI;_$9$k$?$a$G$9!#I8=`(B
 $B<-=q$K$J$$%3%^%s%I$b!"$G$-$k$@$1Jd40F~NOJ}<0$rMxMQ$7!"%f!<%6<-=q$r=<<B$5$;(B
 $B$k$3$H$G!"$"$J$?$N(B LaTeX $B%9%?%$%k$K$"$C$?LnD;$X$H0i$C$F$$$/$3$H$G$7$g$&!#(B
+
 
 
 File: yatexj, Node: Copying, Next: Concept Index, Prev: Etc, Up: Top
@@ -1847,12 +1901,13 @@ File: yatexj, Node: Copying, Next: Concept Index, Prev: Etc, Up: Top
 
   $B6l>p!"4uK>!"%P%0Js9p!"46A[Ey$O4?7^$$$?$7$^$9!#O"Mm$O(B yuuji@yatex.org $B$^(B
 $B$G(B(2004$BG/(B1$B7n8=:_(B)$B!#7QB3E*$K;HMQ$7$F$/$@$5$kJ}$O%a%$%j%s%0%j%9%H!V(Bfj$BLnD;$N(B
-$B2q!W$K@'Hs2CF~$7$F$/$@$5$$!#2CF~J}K!$K$D$$$F$OK\%Q%C%1!<%8$N(B `docs/qanda'
+$B2q!W$K@'Hs2CF~$7$F$/$@$5$$!#2CF~J}K!$K$D$$$F$OK\%Q%C%1!<%8$N(B `docs/qanda' 
 $B%U%!%$%k$N!V$=$NB>!W$N>O$r8fMw$/$@$5$$!#(B
 
 $B;EMM$O!"M=9p$J$/3N<B$K(B($B5$J,<!Bh$G(B)$BJQ99$5$l$^$9(B:-p$B!#(B
 
                                                                   $B9-@%M:Fs(B
+
 
 
 File: yatexj, Node: Concept Index, Prev: Copying, Up: Top
@@ -1864,117 +1919,114 @@ File: yatexj, Node: Concept Index, Prev: Copying, Up: Top
 
 * ::                            Greek letter completion.  4.
 * ;:                            Image completion.       4.
+* ,C0(B[,B5-\(B]:                   Image completion.       4.
+* äá,Bi(B[,B--i(B]:                 Enclose section-type command.  4.
+* äá,Bi(B[,B--i(B]:                 largeå^ï‚(J.(B.            21.
+* ,Hxêî(B[,BP+7$(B]:               2,LB,HH(Bè„,BL,Hxêî,BpFi(B sectionå^ÉRÉ}ÉìÉh.  4.
+* (I"ï(B∂[,B($Sq(B]:               Accent mark completion.  4.
+* ;é©êg[;,B55q(B]:               Image completion.       31.
+* Åá[,B^/q="(B]:               Image completion.       4.
+* ñÓ,Hs(B[,Bb5i5(B]:               Image completion.       4.
+* ÉuÉçÉbÉN[,BSkB-(B]:           beginå^ï‚(J.(B.            81.
+* ÉqÉXÉgÉä[,BP7Fh(B]:           Cooperation with other packages.  8.
+* åÖëµ,B&(B[,B/=;k&(B]:           Filling.                4.
+* ,Bb?e$(B[,Bb?f$(B]:           Intro.                  4.
+* ÉWÉÉÉìÉv[,B5bqS(B]:           view-sectioning.        42.
+* &ì¸óÕ[&,BId$hf-(B]:         Intelligent newline.    4.
+* ê›íËó·[,B9BD"j"(B]:         Sample definitions.     4.
+* êèéûï‚(J.(B[,B7"5Y)q(B]:       Arbitrary completion.   4.
+* ï¬,B6ç(Bû,B_i(B[,BF51_i(B]:       beginå^ï‚(J.(B.            81.
+* ,MD(BãAï‚(J.(B[,B3"+Y)q(B]:       Recursive completion.   4.
+* ÉÜÅ[ÉUé´èë[,Bd$355f(B]:     beginå^ï‚(J.(B.            71.
+* ò_óùäKëw[,Bkqh)";$(B]:     view-sectioning.        42.
+* ,B11MG1(B?[,B11MF1(B?]:     What column.            4.
+* ,B(ä(BGï`,B+É(BcÅ[ÉããNìÆ[,B(&)+B$i+F$(B]: ,B(ä(BGï`,B+É(BcÅ[ÉããNìÆ.  4.
+* (JB(Bã´,BLê(BÊì™,BV(B[,B)q+f$L9qF$V(B]: (JB(Bã´,Bpí(BP,HJ,BF5=É(BWÉÉÉìÉv.  7.
+* (JB(Bã´,BLññî(Bˆ,BV(B[,B)q+f$L\BPV(B]: (JB(Bã´,Bpí(BP,HJ,BF5=É(BWÉÉÉìÉv.  7.
+* (JB(Bã´,BpÉ(B}Å[ÉN[,B)q+f$p\ -(B]: (JB(Bã´,Bpí(BP,HJ,BF5=É(BWÉÉÉìÉv.  7.
+* ÉJÉXÉ^É}ÉCÉY[,B)7=\"7(B]:   Customizations.         4.
+* ÉLÅ[ÉAÉTÉCÉì[,B+" 3"q(B]:   Customizations.         4.
+* êîéÆÉÇÅ[Éh[,B7$5+`(F(B]:   Image completion.       4.
+* ÉCÉìÉXÉgÅ[Éã[,B"q7F(i(B]:   Installation.           4.
+* É^ÉCÉvÉZÉbÉ^[,B="S9B=(B]:   Invocation.             4.
+* ÉvÉåÉîÉÖÅ[ÉA[,BSjPd$ (B]:   Invocation.             4.
+* ÉAÉEÉgÉâÉCÉì[,B $Fg"q(B]:   view-sectioning.        4.
+* ,Hxêî,BL,LBêî,Bpï(Bœ,B&i(B[,BP+7$L17$p)&i(B]: 2,LB,HH(Bè„,BL,Hxêî,BpFi(B sectionå^ÉRÉ}ÉìÉh.  24.
+* ÉAÉNÉZÉìÉgãLçÜï‚(J.(B[,B -9qF+1$Y)q(B]: Accent mark completion.  4.
+* ÉJÉXÉ^É}ÉCÉYïœêî,Hj(Bóó[,B)7=\"7Vq7$"?gq(B]: All customizable variables.  4.
+* (JB(Bã´ñº,BLï(B‚(J.(B[,B)q+f$_"LY)q(B]: beginå^ï‚(J.(B.    4.
+* ÉGÉâÅ[èCê≥[,B&g 5d$9"(B]: Calling typesetter.     4.
+* É^ÉCÉvÉZÉbÉ^ãNìÆ[,B="S9B=+F$(B]: Calling typesetter.  4.
+* É^ÉCÉvÉZÉbÉgÉGÉâÅ[[,B="S9BF&g (B]: Calling typesetter.  4.
+* (JB(Bã´ñº,BLï(BœçX[,B)q+f$_"LVq1$(B]: Changing LaTeX command.  20.
+* ÉÇÅ[Éhêÿ,Bhë(B÷,B&(B[,B`$F+h)&(B]: Changing mode of YaTeX.  4.
+* É^ÉCÉvÉZÉbÉ^,BL(Bég,B"ï(B™,B/(B[,B="S9B=LB)"m/(B]: Changing typesetter.  12.
+* ãNìÆ,B7iÉ(BRÉ}ÉìÉh,Bpï(Bœ,B&i(B[,B+F$7i1\qFp)&i(B]: Changing typesetter.  7.
+* ÉRÉÅÉìÉgÉAÉEÉg[,B1_qF $F(B]: Commenting out.       4.
+* ëºÉpÉbÉPÅ[ÉW,BFLò(BAåg[,B=MB/&5FLjq/"(B]: Cooperation with other packages.  4.
+* ÉRÉ}ÉìÉhÉqÉXÉgÉä[,B1\qFP7Fh(B]: Cooperation with other packages.  8.
+* ÉJÅ[É\ÉãÉWÉÉÉìÉv[,B) ;i5bqS(B]: Cursor jump.      4.
+* %#ãLñ@é©ëÃ,BLï(B“èW[%#,B+Y$5="LVq5d$(B]: Editing %# notation.  4.
+* ÉpÉâÉOÉâÉt,BLåÖë(Bµ,B&(B[,BMg-gSL/=;k&(B]: Filling.  46.
+* óÃ,Hfåàí(BËãKë•[,Bhf$"+/BD"+;-(B]: Fix region for typesetting.  25.
+* í∑,B"É(BtÉ@ÉCÉã,BLï(B“èW[,BH)"S "iLVq5d$(B]: Fix region for typesetting.  34.
+* ,LEí(BËóÃ,Hf,BLÉ(B^ÉCÉvÉZÉbÉg[,B1D"hf$"+L="S9BF(B]: Fix region for typesetting.  4.
+* ÉMÉäÉVÉÉï∂éöï‚(J.(B[,B+h5b`5Y)q(B]: Greek letter completion.  4.
+* ÉCÉÅÅ[ÉWï‚(J.(B[,B"_&5Y)q(B]: Image completion.       4.
+* êîéÆãLçÜÉCÉÅÅ[ÉWï‚(J.(B[,B7$5++1$"_&5Y)q(B]: Image completion.  4.
+* ëº,BLÉ(BtÉ@ÉCÉã,BL(BéËíº,B5(B[,BY)LS "iLDH(5(B]: Includeonly.  11.
+* ÉCÉìÉNÉãÅ[Éhç\ë¢[,B"q-i$F1$;$(B]: Inclusion hierarchy browser.  4.
+* ,B(\)9(I|ç(Bs[,B(\)9)"+f$(B]: Intelligent newline.  4.
+* ÉvÉäÉìÉgÉAÉEÉg[,BShqF $F(B]: Invocation.           4.
+* (JB(Bã´,BL,Mm(Bèú[,B)q+f$L3-5f(B]: Killing LaTeX command.  6.
+* ÉâÉxÉãé©ìÆê∂ê¨[,BgVi5F$9"9"(B]: label-generation.  4.
+* ÉtÉHÉìÉgéwíËéq[,BS(qF5D"5(B]: largeå^ï‚(J.(B.        17.
+* ï∂éöÉTÉCÉYéwíËéq[,B`53"75D"5(B]: largeå^ï‚(J.(B.    17.
+* ÉçÅ[ÉJÉãé´èë[,Bk()i55f(B]: Local dictionary.       4.
+* ïœçX/,Mm(Bèú[,BVq1$(B/,B3-5f(B]: Modifying/Deleting.     4.
+* ÉOÉçÅ[ÉoÉãÉwÉãÉv[,B-k(MiViS(B]: Online help.      16.
+* ÉIÉìÉâÉCÉìÉwÉãÉv[,B(qg"qViS(B]: Online help.      4.
+* ÉLÅ[ÉèÅ[Éhåü,Mu(B[,B+"m F/q3-(B]: Online help.      4.
+* ÉvÉâÉCÉxÅ[ÉgÉwÉãÉv[,BSg"V&FViS(B]: Online help.  16.
+* ì¸óÕÉtÉ@ÉCÉãï™äÑ[,BId$hf-S "iSq)B(B]: Splitting input files.  11.
+* ÉZÉNÉVÉáÉìãÊêÿ,Bh,Hj(BóóÉoÉbÉtÉ@[,B9-5fq-+h"?gqMBS (B]: view-sectioning.  18.
+* ÉZÉNÉVÉáÉìãÊêÿ,Bh(B[,B9-5fq-+h(B]: view-sectioning.  42.
+* ,L;,M],BLÉ(BJÉâÉÄï\é¶[,B/q3"L)g^Pf$5(B]: What column.  22.
 * apropos:                      Online help.            4.
 * autoload:                     Installation.           4.
 * auto-mode-alist:              Installation.           4.
-* $B%0%m!<%P%k%X%k%W(B[$B$/$m$*$O$k$X$k$U(B]: Online help.      16.
-* $B0z?t(B[$B$R$-$9$&(B]:               2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B.  4.
-* $B0z?t$N8D?t$rJQ$($k(B[$B$R$-$9$&$N$3$9$&$r$+$($k(B]: 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B.  24.
-* $B$*$^$+$;2~9T(B[$B$*$^$+$;$+$$$-$h$&(B]: Intelligent newline.  4.
-* $B&2(B[$B$7$/$^(B]:                   Image completion.       4.
-* $B2$J8(B[$B$*$&$U$s(B]:               Accent mark completion.  4.
-* $B$3$3$O$I$3(B?[$B$3$3$O$H$3(B?]:     What column.            4.
-* $B%3%a%s%H%"%&%H(B[$B$3$a$s$H$"$&$H(B]: Commenting out.       4.
-* $B3g$k(B[$B$/$/$k(B]:                 Enclose section-type command.  4.
-* $B3g$k(B[$B$/$/$k(B]:                 large$B7?Jd40(B.            21.
-* $B$*3(IA$-%D!<%k5/F0(B[$B$*$($+$-$D$&$k$-$H$&(B]: $B$*3(IA$-%D!<%k5/F0(B.  4.
-* $B%3%^%s%I%R%9%H%j(B[$B$3$^$s$H$R$9$H$j(B]: Cooperation with other packages.  8.
-* $B4D6-L>$NJd40(B[$B$+$s$-$h$&$a$$$N$[$+$s(B]: begin$B7?Jd40(B.    4.
-* $B4D6-L>$NJQ99(B[$B$+$s$-$h$&$a$$$N$X$s$3$&(B]: Changing LaTeX command.  20.
-* $B4D6-$N@hF,$X(B[$B$+$s$-$h$&$N$;$s$H$&$X(B]: $B4D6-$rC10L$H$7$?%8%c%s%W(B.  7.
-* $B4D6-$NKvHx$X(B[$B$+$s$-$h$&$N$^$D$R$X(B]: $B4D6-$rC10L$H$7$?%8%c%s%W(B.  7.
-* $B4D6-$N:o=|(B[$B$+$s$-$h$&$N$5$/$7$h(B]: Killing LaTeX command.  6.
-* $B4D6-$r%^!<%/(B[$B$+$s$-$h$&$r$^$"$/(B]: $B4D6-$rC10L$H$7$?%8%c%s%W(B.  7.
-* $B5/F0$9$k%3%^%s%I$rJQ$($k(B[$B$-$H$&$9$k$3$^$s$H$r$+$($k(B]: Changing typesetter.  7.
-* %#$B5-K!<+BN$NJT=8(B[%#$B$-$[$&$7$?$$$N$X$s$7$f$&(B]: Editing %# notation.  4.
-* $B%-!<%"%5%$%s(B[$B$-$$$"$5$$$s(B]:   Customizations.         4.
-* $B7eB7$((B[$B$1$?$=$m$((B]:           Filling.                4.
-* $B%;%/%7%g%s6h@Z$j0lMw%P%C%U%!(B[$B$;$/$7$h$s$/$-$j$$$A$i$s$O$D$U$"(B]: view-sectioning.  18.
-* $B%;%/%7%g%s6h@Z$j(B[$B$;$/$7$h$s$/$-$j(B]: view-sectioning.  42.
-* $B%8%c%s%W(B[$B$7$d$s$U(B]:           view-sectioning.        42.
-* $B8GDjNN0h$N%?%$%W%;%C%H(B[$B$3$F$$$j$h$&$$$-$N$?$$$U$;$D$H(B]: Fix region for typesetting.  4.
-* $B8=:_$N%+%i%`I=<((B[$B$1$s$5$$$N$+$i$`$R$h$&$7(B]: What column.  22.
-* $B%+%9%?%^%$%:(B[$B$+$9$?$^$$$9(B]:   Customizations.         4.
-* $B%+%9%?%^%$%:JQ?t0lMw(B[$B$+$9$?$^$$$9$X$s$9$&$$$A$i$s(B]: All customizable variables.  4.
-* $B%$%a!<%8Jd40(B[$B$$$a$($7$[$+$s(B]: Image completion.       4.
-* $B%b!<%I@Z$jBX$((B[$B$b$&$H$-$j$+$((B]: Changing mode of YaTeX.  4.
-* $BB>$N%U%!%$%k$N<jD>$7(B[$B$[$+$N$U$"$$$k$N$F$J$*$7(B]: Includeonly.  11.
-* $BB>%Q%C%1!<%8$H$NO"7H(B[$B$?$O$D$1$($7$H$N$l$s$1$$(B]: Cooperation with other packages.  4.
-* $BD9$$%U%!%$%k$NJT=8(B[$B$J$+$$$U$"$$$k$N$X$s$7$f$&(B]: Fix region for typesetting.  34.
-* $B$d$A$g$&(B[$B$d$A$h$&(B]:           Intro.                  4.
-* $B@_DjNc(B[$B$;$D$F$$$l$$(B]:         Sample definitions.     4.
 * %#BEGIN:                      Fix region for typesetting.  4.
-* begin$B7?Jd40(B[begin$B$+$?$[$+$s(B]: begin$B7?Jd40(B.            4.
-* $B:F5"Jd40(B[$B$5$$$-$[$+$s(B]:       Recursive completion.   4.
-* $B%f!<%6<-=q(B[$B$f$&$5$7$7$h(B]:     begin$B7?Jd40(B.            71.
-* &$BF~NO(B[&$B$K$f$&$j$h$/(B]:         Intelligent newline.    4.
-* $BF~NO%U%!%$%kJ,3d(B[$B$K$f$&$j$h$/$U$"$$$k$U$s$+$D(B]: Splitting input files.  11.
-* $B!g(B[$B$`$1$s$?$$(B]:               Image completion.       4.
-* $B@h2s$j(Busepackage[$B$5$-$^$o$j(B]: Usepackage cheker.      4.
-* ;$B<+?H(B[;$B$7$7$s(B]:               Image completion.       31.
-* $B%"%&%H%i%$%s(B[$B$"$&$H$i$$$s(B]:   view-sectioning.        4.
-* $B%(%i!<=$@5(B[$B$($i$"$7$f$&$;$$(B]: Calling typesetter.     4.
-* $B%i%Y%k<+F0@8@.(B[$B$i$X$k$7$H$&$;$$$;$$(B]: label-generation.  4.
-* $B%.%j%7%cJ8;zJd40(B[$B$-$j$7$d$b$7$[$+$s(B]: Greek letter completion.  4.
-* $BJ8;z%5%$%:;XDj;R(B[$B$b$7$5$$$9$7$F$$$7(B]: large$B7?Jd40(B.    17.
-* $BJD$89~$a$k(B[$B$H$7$3$a$k(B]:       begin$B7?Jd40(B.            81.
-* $BJ#;($J(Btabular[$B$U$/$5$D$J(Btabular]: What column.        4.
-* $B>!<j$K(Bincludeonly[$B$+$D$F$K(Bincludeonly]: Includeonly.  4.
-* $BJQ99(B/$B:o=|(B[$B$X$s$3$&(B/$B$5$/$7$h(B]: Modifying/Deleting.     4.
-* $B%+!<%=%k%8%c%s%W(B[$B$+$"$=$k$7$d$s$U(B]: Cursor jump.      4.
-* $BLp0u(B[$B$d$7$k$7(B]:               Image completion.       4.
-* $B%m!<%+%k<-=q(B[$B$m$*$+$k$7$7$h(B]: Local dictionary.       4.
-* $BNN0h7hDj5,B'(B[$B$j$h$&$$$-$1$D$F$$$-$=$/(B]: Fix region for typesetting.  25.
-* $B%-!<%o!<%I8!:w(B[$B$-$$$o$"$H$1$s$5$/(B]: Online help.      4.
-* $B?o;~Jd40(B[$B$9$$$7$[$+$s(B]:       Arbitrary completion.   4.
-* $BO@M}3,AX(B[$B$m$s$j$+$$$=$&(B]:     view-sectioning.        42.
-* $B=PNO3+;O%Z!<%8(B[$B$7$f$D$j$h$/$+$$$7$X$($7(B]: Print out.  9.
-* $B=PNO=*N;%Z!<%8(B[$B$7$f$D$j$h$/$7$f$&$j$h$&$X$($7(B]: Print out.  9.
-* $B%Q%i%0%i%U$N7eB7$((B[$B$O$i$/$i$U$N$1$?$=$m$((B]: Filling.  46.
-* $B%R%9%H%j(B[$B$R$9$H$j(B]:           Cooperation with other packages.  8.
-* $B%$%s%9%H!<%k(B[$B$$$s$9$H$*$k(B]:   Installation.           4.
-* $B%"%/%;%s%H5-9fJd40(B[$B$"$/$;$s$H$-$3$&$[$+$s(B]: Accent mark completion.  4.
-* $B%*%s%i%$%s%X%k%W(B[$B$*$s$i$$$s$X$k$U(B]: Online help.      4.
-* $B%$%s%/%k!<%I9=B$(B[$B$$$s$/$k$&$H$3$&$=$&(B]: Inclusion hierarchy browser.  4.
-* $B?t<05-9f%$%a!<%8Jd40(B[$B$9$&$7$-$-$3$&$$$a$($7$[$+$s(B]: Image completion.  4.
-* $B?t<0%b!<%I(B[$B$9$&$7$-$b$*$H(B]:   Image completion.       4.
-* $B%U%)%s%H;XDj;R(B[$B$U$*$s$H$7$F$$$7(B]: large$B7?Jd40(B.        17.
-* $B%V%m%C%/(B[$B$U$m$D$/(B]:           begin$B7?Jd40(B.            81.
-* $B%?%$%W%;%C%?5/F0(B[$B$?$$$U$;$D$?$-$H$&(B]: Calling typesetter.  4.
-* $B%?%$%W%;%C%?(B[$B$?$$$U$;$D$?(B]:   Invocation.             4.
-* $B%?%$%W%;%C%H%(%i!<(B[$B$?$$$U$;$D$H$($i$"(B]: Calling typesetter.  4.
-* $B%?%$%W%;%C%?$N;H$$J,$1(B[$B$?$$$U$;$D$?$N$D$+$$$o$1(B]: Changing typesetter.  12.
-* $B%W%i%$%Y!<%H%X%k%W(B[$B$U$i$$$X$($H$X$k$U(B]: Online help.  16.
-* $B%W%j%s%H%"%&%H(B[$B$U$j$s$H$"$&$H(B]: Invocation.           4.
-* $B%W%l%t%e!<%"(B[$B$U$l$R$f$&$"(B]:   Invocation.             4.
-* $B%Z!<%83NG'>JN,(Blpr$B5/F0(B[$B$X$($7$+$/$K$s$7$h$&$j$d$/(Blpr$B$-$H$&(B]: Print out.  12.
+* beginå^ï‚(J.(B[begin,B)=Y)q(B]: beginå^ï‚(J.(B.            4.
 * C-c:                          Invocation.             4.
 * Demacs:                       Intro.                  4.
 * .emacs:                       Installation.           4.
 * %#END:                        Fix region for typesetting.  4.
-* end$BJd40(B[end$B$[$+$s(B]:           end$BJd40(B.                4.
+* endï‚(J.(B[end,BY)q(B]:           endï‚(J.(B.                4.
 * ghostview:                    Splitting input files.  16.
 * gmhist:                       Cooperation with other packages.  8.
-* hook$BJQ?t(B[hook$B$X$s$9$&(B]:       Hook variables.         4.
+* hookïœêî[hook,BVq7$(B]:       Hook variables.         4.
+* èoóÕèIóπÉyÅ[ÉW[,B5dBhf-5d$hf$V&5(B]: Print out.  9.
 * includeonly:                  Includeonly.            4.
 * Install:                      Installation.           4.
-* item$B$J$I$N7eB7$((B[item$B$J$H$N$1$?$=$m$((B]: Filling.      8.
+* item,BHGLåÖë(Bµ,B&(B[item,BHFL/=;k&(B]: Filling.      8.
+* èoóÕäJénÉyÅ[ÉW[,B5dBhf-)"5V&5(B]: Print out.  9.
 * jlatex:                       Invocation.             4.
-* large$B7?Jd40(B[large$B$+$?$[$+$s(B]: large$B7?Jd40(B.            4.
+* largeå^ï‚(J.(B[large,B)=Y)q(B]: largeå^ï‚(J.(B.            4.
 * LaTeX:                        Intro.                  4.
 * leftarrow:                    Image completion.       4.
 * lpr format:                   lpr format.             4.
-* lpr$B$U$)!<$^$C$H(B[lpr$B$U$*$*$^$D$H(B]: lpr format.         4.
-* lpr$B%U%)!<%^%C%H(B[lpr$B$U$*$*$^$D$H(B]: lpr format.         4.
-* lpr$B%U%)!<%^%C%H$NJQ99(B[lpr$B$U$*$*$^$D$H$N$X$s$3$&(B]: Editing %# notation.  18.
-* maketitle$B7?Jd40(B[maketitle$B$+$?$[$+$s(B]: maketitle$B7?Jd40(B.  4.
-* M-C-@:                        $B4D6-$rC10L$H$7$?%8%c%s%W(B.  7.
-* M-C-a:                        $B4D6-$rC10L$H$7$?%8%c%s%W(B.  7.
-* M-C-e:                        $B4D6-$rC10L$H$7$?%8%c%s%W(B.  7.
+* lprÉtÉHÅ[É}ÉbÉg,BLï(BœçX[lpr,BS((\BFLVq1$(B]: Editing %# notation.  18.
+* lpr,BS'Å(B[,B\AF(B[lpr,BS((\BF(B]: lpr format.         4.
+* lprÉtÉHÅ[É}ÉbÉg[lpr,BS((\BF(B]: lpr format.         4.
+* maketitleå^ï‚(J.(B[maketitle,B)=Y)q(B]: maketitleå^ï‚(J.(B.  4.
+* M-C-@:                        (JB(Bã´,Bpí(BP,HJ,BF5=É(BWÉÉÉìÉv.  7.
+* M-C-a:                        (JB(Bã´,Bpí(BP,HJ,BF5=É(BWÉÉÉìÉv.  7.
+* M-C-e:                        (JB(Bã´,Bpí(BP,HJ,BF5=É(BWÉÉÉìÉv.  7.
 * min-out:                      Cooperation with other packages.  17.
 * M-q:                          Filling.                46.
 * Mule:                         Intro.                  4.
-* NTT-jTeX[$B$($L$F$$$$$F$$$$$7$($$$F$D$/(B]: Filling.      16.
+* èüéË,BI(Bincludeonly[,B)BDI(Bincludeonly]: Includeonly.  4.
+* NTT-jTeX[,B&JD""D""5&"DB-(B]: Filling.      16.
 * platex:                       Invocation.             4.
 * prefix ,:                     Commenting out.         4.
 * prefix .:                     Commenting out.         4.
@@ -1984,93 +2036,97 @@ File: yatexj, Node: Concept Index, Prev: Copying, Up: Top
 * prefix ?:                     Online help.            4.
 * prefix &:                     What column.            4.
 * prefix a:                     Accent mark completion.  4.
-* prefix b:                     begin$B7?Jd40(B.            4.
+* prefix b:                     beginå^ï‚(J.(B.            4.
 * prefix c:                     Modifying/Deleting.     4.
 * prefix d:                     Inclusion hierarchy browser.  4.
-* prefix e:                     end$BJd40(B.                4.
+* prefix e:                     endï‚(J.(B.                4.
 * prefix g:                     Cursor jump.            4.
 * prefix i:                     Filling.                8.
 * prefix k:                     Modifying/Deleting.     4.
 * prefix key:                   Invocation.             4.
-* prefix l:                     large$B7?Jd40(B.            4.
-* prefix m:                     maketitle$B7?Jd40(B.        4.
-* prefix s:                     section$B7?Jd40(B.          4.
+* prefix l:                     largeå^ï‚(J.(B.            4.
+* prefix m:                     maketitleå^ï‚(J.(B.        4.
+* prefix s:                     sectionå^ï‚(J.(B.          4.
 * prefix SPC:                   Arbitrary completion.   4.
 * prefix w:                     Changing mode of YaTeX.  4.
-* prefix$B%-!<JQ99(B[prefix$B$-$$$X$s$3$&(B]: Lisp variables.   4.
-* section$B7?Jd40(B[section$B$+$?$[$+$s(B]: section$B7?Jd40(B.      4.
+* prefixÉLÅ[ïœçX[prefix,B+"Vq1$(B]: Lisp variables.   4.
+* ÉyÅ[ÉWämîFè»ó™lprãNìÆ[,BV&5)-Iq5f$hb-(Blpr,B+F$(B]: Print out.  12.
+* sectionå^ï‚(J.(B[section,B)=Y)q(B]: sectionå^ï‚(J.(B.      4.
+* ï°éG,BH(Btabular[,BS-3BH(Btabular]: What column.        4.
+* êÊ(Iq,Bh(Busepackage[,B3+\mh(B]: Usepackage cheker.      4.
 * YaTeX-help-file:              Online help.            16.
 * YaTeX-help-file-private:      Online help.            16.
 * YaTeX-item-regexp:            Filling.                20.
 * YaTeX-math-sign-alist-private: Image completion.      56.
 * yatex-mode-hook:              Hook variables.         4.
 * yatex-mode-load-hook:         Hook variables.         4.
-* YaTeX-nervous:                Local dictionary.       21.
+* YaTeX-nervous:                Local dictionary.       22.
 * .yatexrc:                     Local dictionary.       4.
+
 
 
 
 
 Tag table:
-Node: Top153
-Node: Intro1496
-Node: Terminology2066
-Node: Main features3186
-Node: Installation5035
-Node: Invocation7121
-Node: Calling typesetter8352
-Node: Calling previewer11223
-Node: Print out11820
-Node: %#notation12265
-Node: Changing typesetter12832
-Node: Splitting input files13221
-Node: Fix region for typesetting15126
-Node: lpr format16871
-Node: Editing %# notation18271
-Node: Completion19023
-Node: begin$B7?Jd40(B19667
-Node: section$B7?Jd40(B23797
-Node: 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B25583
-Node: Enclose section-type command27081
-Node: Recursive completion27481
-Node: view-sectioning28033
-Node: label-generation30494
-Node: large$B7?Jd40(B31239
-Node: maketitle$B7?Jd40(B32366
-Node: Arbitrary completion32848
-Node: end$BJd40(B33454
-Node: Accent mark completion34091
-Node: Image completion34822
-Node: Greek letter completion38356
-Node: Local dictionary39351
-Node: Commenting out40591
-Node: Cursor jump42823
-Node: $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B43197
-Node: $B$*3(IA$-%D!<%k5/F0(B45094
-Node: $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B47059
-Node: $B4D6-$rC10L$H$7$?%8%c%s%W(B47728
-Node: $B:G8e$NJd400LCV$X$N%8%c%s%W(B48392
-Node: Modifying/Deleting48870
-Node: Changing LaTeX command49524
-Node: Killing LaTeX command50540
-Node: Filling51973
-Node: Includeonly54442
-Node: What column55531
-Node: Intelligent newline56880
-Node: Usepackage cheker58815
-Node: Changing mode of YaTeX59596
-Node: Online help60743
-Node: Inclusion hierarchy browser62886
-Node: Cooperation with other packages65341
-Node: Customizations66099
-Node: Lisp variables66585
-Node: All customizable variables67619
-Node: Sample definitions78748
-Node: Hook variables79327
-Node: Hook file80687
-Node: Add-in functions81022
-Node: Etc81440
-Node: Copying82081
-Node: Concept Index83526
+Node: Top146
+Node: Intro1200
+Node: Terminology1503
+Node: Main features2138
+Node: Installation3171
+Node: Invocation4390
+Node: Calling typesetter5214
+Node: Calling previewer6452
+Node: Print out6768
+Node: %#notation7034
+Node: Changing typesetter7408
+Node: Splitting input files7666
+Node: Fix region for typesetting8615
+Node: lpr format9516
+Node: Editing %# notation10309
+Node: Completion10742
+Node: begin$B7?Jd40(B11215
+Node: section$B7?Jd40(B13800
+Node: 2$B8D0J>e$N0z?t$r$H$k(B section$B7?%3%^%s%I(B14895
+Node: Enclose section-type command15712
+Node: Recursive completion15949
+Node: view-sectioning16255
+Node: label-generation17451
+Node: large$B7?Jd40(B17801
+Node: maketitle$B7?Jd40(B18381
+Node: Arbitrary completion18680
+Node: end$BJd40(B18993
+Node: Accent mark completion19335
+Node: Image completion19761
+Node: Greek letter completion21578
+Node: Local dictionary22038
+Node: Commenting out22643
+Node: Cursor jump23802
+Node: $BBP1~%*%V%8%'%/%H$X$N%8%c%s%W(B24039
+Node: $B$*3(IA$-%D!<%k5/F0(B25027
+Node: $B%a%$%s%U%!%$%k$X$N%8%c%s%W(B25947
+Node: $B4D6-$rC10L$H$7$?%8%c%s%W(B26283
+Node: $B:G8e$NJd400LCV$X$N%8%c%s%W(B26640
+Node: Modifying/Deleting26877
+Node: Changing LaTeX command27282
+Node: Killing LaTeX command27833
+Node: Filling28703
+Node: Includeonly30031
+Node: What column30590
+Node: Intelligent newline31368
+Node: Usepackage cheker32400
+Node: Changing mode of YaTeX32826
+Node: Online help33402
+Node: Inclusion hierarchy browser34378
+Node: Cooperation with other packages35656
+Node: Customizations36111
+Node: Lisp variables36408
+Node: All customizable variables37015
+Node: Sample definitions44315
+Node: Hook variables44749
+Node: Hook file45642
+Node: Add-in functions45848
+Node: Etc46075
+Node: Copying46359
+Node: Concept Index46990
 
 End tag table

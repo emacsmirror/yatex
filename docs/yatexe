@@ -1,7 +1,8 @@
 Info file: yatexe,    -*-Text-*-
 produced by `texinfo-format-buffer'
 from file `yatexe.tex'
-using `texinfmt.el' version 2.32 of 19 November 1993.
+using `texinfmt.el' version 2.38 of 3 July 1998.
+
 
 
 
@@ -34,6 +35,7 @@ File: yatexe, Node: Top, Next: What is YaTeX?, Prev: (dir), Up: (dir)
 * Copying::                     Redistribution
 
 
+
 
 File: yatexe, Node: What is YaTeX?, Next: Main features, Prev: Top, Up: Top
 
@@ -46,6 +48,7 @@ completing input of LaTeX mark-up command such as
 
   YaTeX also supports Demacs which runs on MS-DOS(386), Mule (Multi
 Language Enhancement to GNU Emacs), and latex on DOS.
+
 
 
 File: yatexe, Node: Main features, Next: Installation, Prev: What is YaTeX?, Up: Top
@@ -81,6 +84,7 @@ Main features
    * Allow you to forget creating \label{}s, \ref or \cite completion
            automatically generate labels.
 
+
 
 File: yatexe, Node: Installation, Next: Typesetting, Prev: Main features, Up: Top
 
@@ -104,6 +108,7 @@ in your `~/.emacs'
   Then, yatex-mode will be automatically loaded when you visit a
 file which has extension `.tex'.  If yatex-mode is successfully
 loaded, mode string on mode line will be turned to "YaTeX".
+
 
 
 
@@ -145,6 +150,7 @@ strokes execute typeset or preview command.
 * Calling previewer::           
 * Printing out::                
 
+
 
 File: yatexe, Node: Calling typesetter, Next: Calling previewer, Prev: Typesetting, Up: Typesetting
 
@@ -175,9 +181,8 @@ region.  The region is specified by standard point and mark, or by
 `%#BEGIN' and `%#END' marks.  Selected region will be copied to the
 temporary file `texput.tex' with the same preamble as the main file of
 current editing sources.  Be sure to put all local macro settings in
-preamble, not after `\begin{document}'.
-  The method of specification of the region is shown in the section *Note
-%#notation::.
+preamble, not after `\begin{document}'.  The method of specification of
+the region is shown in the section *Note %#notation::.
 
   The documentclass for typeset-region is the same as that of editing file
 if you edit one file, and is the same as main file's if you edit splitting
@@ -193,6 +198,7 @@ composed environment.  If you want to do partial typesetting for a nested
 environment, use `[prefix] tr' for static-region, which is described in
 the section *Note %#notation::.
 
+
 
 File: yatexe, Node: Calling previewer, Next: Printing out, Prev: Calling typesetter, Up: Typesetting
 
@@ -203,6 +209,7 @@ Calling previewer
 xdvi-remote, which can be controled from other terminals, `[prefix] t s'
 enables you to search current string at the cursor on the running xdvi
 window.
+
 
 
 File: yatexe, Node: Printing out, Prev: Calling previewer, Up: Typesetting
@@ -215,6 +222,7 @@ by default.  You can skip this by invoking it with universal-argument as
 follows:
 
              C-u [prefix] tl
+
 
 
 File: yatexe, Node: %#notation, Next: Completion, Prev: Typesetting, Up: Top
@@ -233,6 +241,7 @@ the source text.
 * Lpr format::                  
 * Editing %# notation::         
 
+
 
 File: yatexe, Node: Changing typesetter, Next: Splitting input files, Prev: %#notation, Up: %#notation
 
@@ -244,6 +253,7 @@ To change the `latex' command or to split a source text.
              %#!latex-big
 
 anywhere in the source text.  This is useful for changing typesetter.
+
 
 
 File: yatexe, Node: Splitting input files, Next: Static region for typesetting, Prev: Changing typesetter, Up: %#notation
@@ -271,13 +281,14 @@ ask you the name of main file at the first typesetting.
   To make best use of the feature of inter-file jumping by `[prefix] g'
 (see *Note Cursor jump::), take described below into consideration.
 
-   * You can put split texts in sub directory, but not in
-      sub directory of sub directory.
+   * You can put split texts in sub directory, but not in sub directory of
+     sub directory.
    * In the main text, specify the child file name with relative path name
-      such as \include{chap1/sub}, when you include the file in
-      a sub-directory.
-   * In a sub-text, write `%#!latex main.tex' even if `main.tex'
-      is in the parent directory(not %#!latex ../main.tex).
+     such as \include{chap1/sub}, when you include the file in a
+     sub-directory.
+   * In a sub-text, write `%#!latex main.tex' even if `main.tex' is in the
+     parent directory(not %#!latex ../main.tex).
+
 
 
 File: yatexe, Node: Static region for typesetting, Next: Lpr format, Prev: Splitting input files, Up: %#notation
@@ -312,6 +323,7 @@ as `tabular' many times.  It is also useful to put only `%#BEGIN' alone at
 the middle of very long text.  Do not forget to erase `%#BEGIN' `%#END'
 pair.
 
+
 
 File: yatexe, Node: Lpr format, Next: Editing %# notation, Prev: Static region for typesetting, Up: %#notation
 
@@ -344,6 +356,7 @@ example may be helpful.
 
              %#LPR dvi2ps %s | lpr
 
+
 
 File: yatexe, Node: Editing %# notation, Prev: Lpr format, Up: %#notation
 
@@ -362,6 +375,7 @@ and select one of the entry of the menu as follows.
 Type `!' to edit `%#!' entry, `b' to enclose the region with `%#BEGIN' and
 `%#END', and `l' to edit `%#LPR' entry.  When you type `b', all `%#BEGIN'
 and `%#END' are automatically erased.
+
 
 
 File: yatexe, Node: Completion, Next: Local dictionaries, Prev: %#notation, Up: Top
@@ -384,13 +398,14 @@ kinds of completion type, begin-type, section-type, large-type, etc...
 * Image completion::            
 * Greek letters completion::    
 
+
 
 File: yatexe, Node: Begin-type completion, Next: Section-type completion, Prev: Completion, Up: Completion
 
 Begin-type completion
 =====================
 
-  "Begin-type completion" completes commands of `\begin{env}' ... 
+  "Begin-type completion" completes commands of `\begin{env}' ...
 `\end{env}'.  All of the begin-type completions begin with this key
 sequence.
 
@@ -472,6 +487,7 @@ sequence upper(or invoke it with universal argument by `C-u' prefix).
 `[prefix] B SPC' enclose a region with the environment selected by
 completing-read.
 
+
 
 File: yatexe, Node: Section-type completion, Next: Large-type completion, Prev: Begin-type completion, Up: Completion
 
@@ -551,6 +567,7 @@ completion key sequence in the minibuffer.
 
 * view-sectioning::             
 
+
 
 File: yatexe, Node: view-sectioning, Prev: Section-type completion, Up: Section-type completion
 
@@ -594,6 +611,7 @@ buffer.
              ... Hide sectioning commands whose level is lower than n
 
 
+
 
 File: yatexe, Node: Large-type completion, Next: Maketitle-type completion, Prev: Section-type completion, Up: Completion
 
@@ -618,6 +636,7 @@ completion table.
 prefix key stroke as `[prefix] L'.  It encloses the region by braces with
 large-type command.
 
+
 
 File: yatexe, Node: Maketitle-type completion, Next: Arbitrary completion, Prev: Large-type completion, Up: Completion
 
@@ -635,6 +654,7 @@ begins maketitle-completion.  Above mentioned method is true for
 maketitle-completion, and there are LaTeX commands with no arguments in
 completion table.
 
+
 
 File: yatexe, Node: Arbitrary completion, Next: End completion, Prev: Maketitle-type completion, Up: Completion
 
@@ -648,6 +668,7 @@ completing method as described, by typing
              ... arbitrary completion
 
 after the initial string of LaTeX command that is preceded by `\'.
+
 
 
 File: yatexe, Node: End completion, Next: Accent completion, Prev: Arbitrary completion, Up: Completion
@@ -664,6 +685,7 @@ manually.  In that case, type
              ... `end' completion
 
 at the end of the opened environment.
+
 
 
 File: yatexe, Node: Accent completion, Next: Image completion, Prev: End completion, Up: Completion
@@ -691,6 +713,7 @@ character `o' for example, then
              \`{o}
 
 will be completed, and the cursor gets out from braces.
+
 
 
 File: yatexe, Node: Image completion, Next: Greek letters completion, Prev: Accent completion, Up: Completion
@@ -742,6 +765,7 @@ here is the sample menu by `TAB' after `;<'.
 Emacs-Lisp variable `YaTeX-math-sign-alist-private'.  See also
 `yatexmth.el' for the information of the structure of this variable.
 
+
 
 File: yatexe, Node: Greek letters completion, Prev: Image completion, Up: Completion
 
@@ -758,6 +782,7 @@ environment, it may be a bug of YaTeX.  Please send me a bug report with
 the configuration of your text, and avoid it temporarily by typing `;' or
 `:' after universal-argument(`C-u') which forces `;' and `:' to work as
 math-prefix.
+
 
 
 File: yatexe, Node: Local dictionaries, Next: Commenting out, Prev: Completion, Up: Top
@@ -783,6 +808,7 @@ new word away.
 next expression into your `~/.emacs'
 
              (setq YaTeX-nervous nil)
+
 
 
 File: yatexe, Node: Commenting out, Next: Cursor jump, Prev: Local dictionaries, Up: Top
@@ -831,6 +857,7 @@ NOTE that even if you intend to comment out some region, invoking
 out from `\begin' to `\end'' mode.
 
 
+
 
 File: yatexe, Node: Cursor jump, Next: Changing and Deleting, Prev: Commenting out, Up: Top
 
@@ -845,6 +872,7 @@ Cursor jump
 * Jump to main file::           
 * Jumping around the environment::  
 * Jumping to last completion position::  
+
 
 
 File: yatexe, Node: Jump to corresponding object, Next: Invoking image processor, Prev: Cursor jump, Up: Cursor jump
@@ -885,6 +913,7 @@ do the same job as `[prefix] g' except it's done in other window.  Note
 that this function doesn't work on `begin/end', `%#BEGIN/%#END' pairs
 because it is meaningless.
 
+
 
 File: yatexe, Node: Invoking image processor, Next: Jump to main file, Prev: Jump to corresponding object, Up: Cursor jump
 
@@ -912,6 +941,7 @@ foo.obj'.  How a processor is choosen is as follows.
      `YaTeX-file-processor-alist'.  If any, call the corresponding image
      viewer or drawing tool.
 
+
 
 File: yatexe, Node: Jump to main file, Next: Jumping around the environment, Prev: Invoking image processor, Up: Cursor jump
 
@@ -928,6 +958,7 @@ Jump to main file
 in a sub text switch the buffer to the main text specified by `%#!'
 notation.
 
+
 
 File: yatexe, Node: Jumping around the environment, Next: Jumping to last completion position, Prev: Jump to main file, Up: Cursor jump
 
@@ -943,6 +974,7 @@ Jumping around the environment
 `M-C-@'
              ... mark environment
 
+
 
 File: yatexe, Node: Jumping to last completion position, Prev: Jumping around the environment, Up: Cursor jump
 
@@ -954,6 +986,7 @@ every time you make a trip to any other part of text other than you are
 writing, you can return to the editing paragraph by calling
 register-to-point with argument YaTeX-current-position-register, which is
 achieved by typing `C-x j 3'(by default).
+
 
 
 File: yatexe, Node: Changing and Deleting, Next: Filling, Prev: Cursor jump, Up: Top
@@ -973,6 +1006,7 @@ entered.
 
 * Changing LaTeX commands::     
 * Killing LaTeX commands::      
+
 
 
 File: yatexe, Node: Changing LaTeX commands, Next: Killing LaTeX commands, Prev: Changing and Deleting, Up: Changing and Deleting
@@ -999,6 +1033,7 @@ changing.  Anyway, it is very difficult to know which argument position
 the cursor belongs because the LaTeX commands can be nested and braces can
 freely emerge.  So keep it mind to put the cursor on a brace when you are
 thinking of changing a complicated argument.
+
 
 
 File: yatexe, Node: Killing LaTeX commands, Prev: Changing LaTeX commands, Up: Changing and Deleting
@@ -1027,6 +1062,7 @@ text, universal argument (`C-u') for these commands kills not only
      Original text:                  [prefix] k      C-u [prefix] k
      Main \footnote{note} here.    Main note here. Main  here.
             ~(cursor)
+
 
 
 File: yatexe, Node: Filling, Next: Updation of includeonly, Prev: Changing and Deleting, Up: Top
@@ -1083,6 +1119,7 @@ being folded (The variable `YaTeX-verb-regexp' controls this).  Besides,
 putting cursor on the first occurrence of non-whitespace character on a
 line changes the fill-prefix temporarily to the depth of the line.
 
+
 
 File: yatexe, Node: Updation of includeonly, Next: What column, Prev: Filling, Up: Top
 
@@ -1106,6 +1143,7 @@ text is not in includeonly list and prompts you
 in the minibuffer.  Type `a' if you want to add the current file name to
 `\includeonly' list, `r' to replace \`includeonly' list with the current
 file, and type `%' to comment out the `\includeonly' line.
+
 
 
 File: yatexe, Node: What column, Next: Intelligent newline, Prev: Updation of includeonly, Up: Top
@@ -1137,6 +1175,7 @@ Since YaTeX assumes the first line of tabular environment as a row of
 column headers, you can create a row of virtual column headers by putting
 them in the first line and commenting that line with `%'.
 
+
 
 File: yatexe, Node: Intelligent newline, Next: Usepackage checker, Prev: What column, Up: Top
 
@@ -1158,8 +1197,8 @@ contents vs. environments.
 
    * `tabular', `tabular*', `array'
 
-             Corresponding number of `&' and `\\'.
-             And `\hline' if needed.
+             Corresponding number of `&' and `\\'.  And `\hline' if
+     needed.
 
    * `tabbing'
 
@@ -1182,6 +1221,7 @@ calling this function before your code to insert certain contents must be
 useful.  See the definition of the function
 `YaTeX-intelligent-newline-itemize' as an example.
 
+
 
 File: yatexe, Node: Usepackage checker, Next: Online help, Prev: Intelligent newline, Up: Top
 
@@ -1196,6 +1236,7 @@ existence of correct `\usepackage'.  If not, YaTeX inserts the
 To activate the package completion for your favarite package, set the
 variable `YaTeX-package-alist-private' correctly.  Please refere the value
 of `YaTeX-package-alist-default' as an example.
+
 
 
 File: yatexe, Node: Online help, Next: Browsing file hierarchy, Prev: Usepackage checker, Up: Top
@@ -1245,6 +1286,7 @@ determine which help file to add and write the description on it referring
 your manual of (La)TeX.  Please send me your additional descriptions if
 you describe the help on some standard commands.  I might want to include
 it in the next distribution.
+
 
 
 File: yatexe, Node: Browsing file hierarchy, Next: Cooperation with other packages, Prev: Online help, Up: Top
@@ -1307,6 +1349,7 @@ commands are available.
   Note that operations on the file contents in the next window do not work
 correctly when you close the corresponding file.
 
+
 
 File: yatexe, Node: Cooperation with other packages, Next: Customizations, Prev: Browsing file hierarchy, Up: Top
 
@@ -1332,6 +1375,7 @@ min-out
 If you want to use it with YaTeX, please refer the file `yatexm-o.el' as
 an example.
 
+
 
 File: yatexe, Node: Customizations, Next: Etcetera, Prev: Cooperation with other packages, Up: Top
 
@@ -1346,6 +1390,7 @@ add-in functions.
 * Lisp variables::              
 * Add-in functions::            
 * Add-in generator::            
+
 
 
 File: yatexe, Node: Lisp variables, Next: Add-in functions, Prev: Customizations, Up: Customizations
@@ -1373,6 +1418,7 @@ those bindings, set that variable to 1 instead of `t').
 * Hook variables::              
 * Hook file::                   
 
+
 
 File: yatexe, Node: All customizable variables, Next: Sample definitions, Prev: Lisp variables, Up: Lisp variables
 
@@ -1391,8 +1437,8 @@ variable by `M-x describe-variable'.
 
  -- Variable: YaTeX-kanji-code
      Default buffer-file-coding-system for YaTeX modes' buffer.  Set this
-     0 to no language conversion.  Nil to preserve original coding-system. 
-     1=Shift JIS, 2=JIS, 3=EUC, 4=UTF-8 (`1 or 2')
+     0 to no language conversion.  Nil to preserve original
+     coding-system. 1=Shift JIS, 2=JIS, 3=EUC, 4=UTF-8 (`1 or 2')
 
  -- Variable: YaTeX-prefix
      Prefix key stroke (`C-c')
@@ -1405,7 +1451,7 @@ variable by `M-x describe-variable'.
 
  -- Variable: YaTeX-user-completion-table
      Name of user dictionary where learned completion table will be
-     stored. (`"~/.yatexrc"')
+     stored.  (`"~/.yatexrc"')
 
  -- Variable: tex-command
      LaTeX typesetter command (`"latex"')
@@ -1567,13 +1613,10 @@ variable by `M-x describe-variable'.
      `usepackage' for corresponding macro, when you input that macro with
      completion.  If required `usepackage' is not found, YaTeX also
      automatically inserts `\usepackage'.  Alist is as follows;
-             '((PackageName1
-                  (completionType ListOfMacro)
-                  (completionType ListOfMacro))
-               (PackageName2
-                  (completionType ListOfMacro)
-                  (completionType ListOfMacro...))....)  completionType is
-     one of `env, section, maketitle'.  Consult the value of
+     '((PackageName1 (completionType ListOfMacro) (completionType
+     ListOfMacro)) (PackageName2 (completionType ListOfMacro)
+     (completionType ListOfMacro...))....)  completionType is one of `env,
+     section, maketitle'.  Consult the value of
      `YaTeX-package-alist-default' as an example.
 
  -- Variable: YaTeX-tabular-indentation
@@ -1616,6 +1659,7 @@ variable by `M-x describe-variable'.
                   (YaTeX::ref-generate-label nil nil))))
 
 
+
 
 File: yatexe, Node: Sample definitions, Next: Hook variables, Prev: All customizable variables, Up: Lisp variables
 
@@ -1629,6 +1673,7 @@ character, add the following `setq' to `~/.emacs'.
              (setq YaTeX-prefix "\e"
                    YaTeX-user-completion-table "~/src/emacs/yatexrc"
                    YaTeX-fill-prefix "       ")
+
 
 
 File: yatexe, Node: Hook variables, Next: Hook file, Prev: Sample definitions, Up: Lisp variables
@@ -1648,6 +1693,7 @@ etc.  The following statement defines `[prefix] ba' to enter
         You should use functions `YaTeX-define-key', or
 `YaTeX-define-begend-key' to define all the key sequences of yatex-mode.
 
+
 
 File: yatexe, Node: Hook file, Prev: Hook variables, Up: Lisp variables
 
@@ -1658,6 +1704,7 @@ Hook file
 `yatexhks.el' if you have a lot of codes.  YaTeX automatically load this
 file at the initialization of itself.  Using `yatexhks.el' makes
 `yatex-mode-load-hook' unnecessary.
+
 
 
 File: yatexe, Node: Add-in functions, Next: Add-in generator, Prev: Lisp variables, Up: Customizations
@@ -1691,6 +1738,7 @@ Procedure
 * How the function is called::  
 * Useful functions for creating add-in::  
 * Contribution::                
+
 
 
 File: yatexe, Node: How the add-in function works, Next: How the function is called, Prev: Add-in functions, Up: Add-in functions
@@ -1756,6 +1804,7 @@ enclosing add-in is useful for modifying `/' to `}{'.
 * Defining argument-add-in::    
 * Defining enclosing-add-in::   
 
+
 
 File: yatexe, Node: Defining option-add-in, Next: Defining argument-add-in, Prev: How the add-in function works, Up: How the add-in function works
 
@@ -1776,6 +1825,7 @@ Note that the character `\' must be described as `\\' in Emacs-Lisp.  The
 next example reads the tabular format from keyboard.
              (defun YaTeX:tabular ()
                (concat "{" (read-string "Rule: ") "}"))
+
 
 
 File: yatexe, Node: Defining argument-add-in, Next: Defining enclosing-add-in, Prev: Defining option-add-in, Up: How the add-in function works
@@ -1800,6 +1850,7 @@ minibuffer.  Here is the created function considering this.
   Note that when the `argument add-in' function return `nil', normal
 argument reader will be called.
 
+
 
 File: yatexe, Node: Defining enclosing-add-in, Prev: Defining argument-add-in, Up: How the add-in function works
 
@@ -1823,6 +1874,7 @@ expression.
      	  (throw 'done (replace-match "}{")))
            (goto-char (match-end 0)))))
 
+
 
 File: yatexe, Node: How the function is called, Next: Useful functions for creating add-in, Prev: How the add-in function works, Up: Add-in functions
 
@@ -1836,6 +1888,7 @@ section-type are called just before input of the first argument, and
 functions for maketitle-type is called after maketitle-type command has
 been inserted.  `Argument add-in' functions are called at each entry of
 arguments for section-type commands.
+
 
 
 File: yatexe, Node: Useful functions for creating add-in, Next: Contribution, Prev: How the function is called, Up: Add-in functions
@@ -1876,6 +1929,7 @@ arguments, [D] means description.
      if not. The variable `YaTeX-current-completion-type' holds the symbol
      according to the current completion type.
 
+
 
 File: yatexe, Node: Contribution, Prev: Useful functions for creating add-in, Up: Add-in functions
 
@@ -1884,6 +1938,7 @@ Contribution
 
   If you make your own pretty function and you let it be in public, please
 send me the function.  I'm going to include it in the next release.
+
 
 
 File: yatexe, Node: Add-in generator, Prev: Add-in functions, Up: Customizations
@@ -1915,12 +1970,11 @@ mistake, it is recommendable to type `C-g' and start afresh.
 Simple generator
 ----------------
 
-  The latter generator is invoked by the next sequence.
-                       `M-x YaTeX-generate-simple'
-This generator can make both "option add-in" and "argument add-in"
-(*refer the section add-in functions*
-*Note How the add-in function works::), whereas `YaTeX-generate'
-cannot make "argument addin".
+  The latter generator is invoked by the next sequence.  `M-x
+YaTeX-generate-simple' This generator can make both "option add-in" and
+"argument add-in" (*refer the section add-in functions* *Note How the
+add-in function works::), whereas `YaTeX-generate' cannot make "argument
+addin".
 
   For example, assume you have the LaTeX command as follows.
 
@@ -2055,6 +2109,7 @@ Contribution
 steel yourself in the happy atmosphere and do not send me the function.  I
 do know it is not fine because it is generated by yatexgen:-p.
 
+
 
 File: yatexe, Node: Etcetera, Next: Copying, Prev: Customizations, Up: Top
 
@@ -2070,6 +2125,7 @@ your LaTeX style.
 
   The package name `Wild Bird' is the English translation of Japanese
 title `Yachou', which is a trick on words of Japanese.
+
 
 
 File: yatexe, Node: Copying, Prev: Etcetera, Up: Top
@@ -2095,68 +2151,69 @@ my feelings) without notice :-p.
 
 
                                                               HIROSE Yuuji
+
 
 Tag table:
-Node: Top153
-Node: What is YaTeX?1493
-Node: Main features1865
-Node: Installation3456
-Node: Typesetting4232
-Node: Calling typesetter5300
-Node: Calling previewer7504
-Node: Printing out7864
+Node: Top146
+Node: What is YaTeX?1487
+Node: Main features1860
+Node: Installation3452
+Node: Typesetting4229
+Node: Calling typesetter5298
+Node: Calling previewer7502
+Node: Printing out7863
 Node: %#notation8155
-Node: Changing typesetter8530
-Node: Splitting input files8893
-Node: Static region for typesetting10320
+Node: Changing typesetter8531
+Node: Splitting input files8895
+Node: Static region for typesetting10319
 Node: Lpr format11448
-Node: Editing %# notation12504
-Node: Completion13022
-Node: Begin-type completion13581
-Node: Section-type completion16624
-Node: view-sectioning19058
-Node: Large-type completion20637
-Node: Maketitle-type completion21367
-Node: Arbitrary completion21918
-Node: End completion22307
-Node: Accent completion22776
-Node: Image completion23392
-Node: Greek letters completion25648
-Node: Local dictionaries26374
-Node: Commenting out27310
-Node: Cursor jump28768
-Node: Jump to corresponding object29079
-Node: Invoking image processor30479
-Node: Jump to main file31821
-Node: Jumping around the environment32185
-Node: Jumping to last completion position32602
-Node: Changing and Deleting33110
-Node: Changing LaTeX commands33501
-Node: Killing LaTeX commands34677
-Node: Filling35861
-Node: Updation of includeonly37711
-Node: What column38507
-Node: Intelligent newline39591
-Node: Usepackage checker41251
-Node: Online help41841
-Node: Browsing file hierarchy43515
-Node: Cooperation with other packages45251
-Node: Customizations45955
-Node: Lisp variables46288
-Node: All customizable variables47291
-Node: Sample definitions57174
-Node: Hook variables57686
-Node: Hook file58389
-Node: Add-in functions58727
-Node: How the add-in function works59586
-Node: Defining option-add-in61784
-Node: Defining argument-add-in62505
-Node: Defining enclosing-add-in63386
-Node: How the function is called64239
-Node: Useful functions for creating add-in64914
-Node: Contribution66318
-Node: Add-in generator66591
-Node: Etcetera71984
-Node: Copying72588
+Node: Editing %# notation12505
+Node: Completion13024
+Node: Begin-type completion13584
+Node: Section-type completion16627
+Node: view-sectioning19062
+Node: Large-type completion20642
+Node: Maketitle-type completion21373
+Node: Arbitrary completion21925
+Node: End completion22315
+Node: Accent completion22785
+Node: Image completion23402
+Node: Greek letters completion25659
+Node: Local dictionaries26386
+Node: Commenting out27323
+Node: Cursor jump28782
+Node: Jump to corresponding object29094
+Node: Invoking image processor30495
+Node: Jump to main file31838
+Node: Jumping around the environment32203
+Node: Jumping to last completion position32621
+Node: Changing and Deleting33130
+Node: Changing LaTeX commands33522
+Node: Killing LaTeX commands34699
+Node: Filling35884
+Node: Updation of includeonly37735
+Node: What column38532
+Node: Intelligent newline39617
+Node: Usepackage checker41271
+Node: Online help41862
+Node: Browsing file hierarchy43537
+Node: Cooperation with other packages45274
+Node: Customizations45979
+Node: Lisp variables46313
+Node: All customizable variables47317
+Node: Sample definitions57116
+Node: Hook variables57629
+Node: Hook file58333
+Node: Add-in functions58672
+Node: How the add-in function works59532
+Node: Defining option-add-in61731
+Node: Defining argument-add-in62453
+Node: Defining enclosing-add-in63335
+Node: How the function is called64189
+Node: Useful functions for creating add-in64865
+Node: Contribution66270
+Node: Add-in generator66544
+Node: Etcetera71916
+Node: Copying72521
 
 End tag table
