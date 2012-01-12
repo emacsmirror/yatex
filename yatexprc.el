@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan  9 20:20:24 2012 on firestorm
+;;; Last modified Thu Jan 12 17:52:15 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -55,7 +55,8 @@
   (modify-syntax-entry ?\[ "w" YaTeX-typeset-buffer-syntax)
   (modify-syntax-entry ?\] "w" YaTeX-typeset-buffer-syntax))
 
-(defun YaTeX-typeset (command buffer &optional prcname modename ppcmd)
+(defvar YaTeX-typeset-marker nil)
+(defun YaTeX-typeset (command buffer &optional prcname modename ppcmd rerun)
   "Execute jlatex (or other) to LaTeX typeset."
   (interactive)
   (save-excursion
@@ -80,7 +81,7 @@
       (set-buffer (get-buffer-create buffer))
       (setq default-directory execdir)
       (cd execdir)
-      (erase-buffer)
+      (or rerun (erase-buffer))
       (cond
        ((not (fboundp 'start-process)) ;YaTeX-dos;if MS-DOS
 	(call-process
@@ -92,6 +93,8 @@
 			      YaTeX-shell-command-option command))
 	 (get-buffer buffer))
 	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)
+	(put 'YaTeX-typeset-process 'thiscmd command)
+	(put 'YaTeX-typeset-process 'name prcname)
 	(let ((ppprop (get 'YaTeX-typeset-process 'ppcmd)))
 	  (setq ppprop (delq (assq YaTeX-typeset-process ppprop) ppprop))
 	  (if ppcmd
@@ -114,6 +117,10 @@
 		  YaTeX-latex-message-code outcode))
 		((boundp 'NEMACS)
 		 (set-kanji-process-code YaTeX-latex-message-code))))
+      (set-marker (or YaTeX-typeset-marker
+		      (setq YaTeX-typeset-marker (make-marker)))
+		  (point))
+      (insert (format "Call `%s'\n" command))
       (if YaTeX-dos (message "Done.")
 	(insert " ")
 	(set-marker (process-mark YaTeX-typeset-process) (1- (point))))
@@ -133,6 +140,7 @@
       (switch-to-buffer cb)
       (YaTeX-remove-nonstopmode))))
 
+(defvar YaTeX-typeset-rerun-msg "Rerun to get cross-references right.")
 (defun YaTeX-typeset-sentinel (proc mes)
   (cond ((null (buffer-name (process-buffer proc)))
          ;; buffer killed
@@ -140,7 +148,12 @@
         ((memq (process-status proc) '(signal exit))
          (let* ((obuf (current-buffer)) (pbuf (process-buffer proc))
 		(pwin (get-buffer-window pbuf))
-		(owin (selected-window)) win)
+		(owin (selected-window)) win
+		(thiscmd (get 'YaTeX-typeset-process 'thiscmd))
+		(ppprop (get 'YaTeX-typeset-process 'ppcmd))
+		(ppcmd (cdr (assq proc ppprop))))
+	   (put 'YaTeX-typeset-process 'ppcmd ;erase ppcmd
+		(delq (assq proc ppprop) ppprop))
            ;; save-excursion isn't the right thing if
            ;;  process-buffer is current-buffer
            (unwind-protect
@@ -165,17 +178,33 @@
                  ;; is dead, we can delete it now.  Otherwise it
                  ;; will stay around until M-x list-processes.
                  (delete-process proc)
-		 ;; If ppcmd is active, call it.
-		 (let* ((ppprop (get 'YaTeX-typeset-process 'ppcmd))
-			(ppcmd (cdr (assq proc ppprop))))
-		   (put 'YaTeX-typeset-process 'ppcmd ;erase ppcmd
-			(delq (assq proc ppprop) ppprop))
+		 (if (save-excursion
+		       (search-backward
+			YaTeX-typeset-rerun-msg YaTeX-typeset-marker t))
+		     (progn
+		       (insert
+			(format
+			 "===!!! %s !!!===\n"
+			 (message "Rerun `%s' to get cross-references right"
+				  thiscmd)))
+		       (set-marker YaTeX-typeset-marker (point))
+		       (save-excursion (sit-for 2))
+		       (set-process-sentinel
+			(start-process
+			 mode-name pbuf
+			 shell-file-name YaTeX-shell-command-option thiscmd)
+			'YaTeX-typeset-sentinel)
+		       (if ppcmd
+			   (put 'YaTeX-typeset-process 'ppcmd
+				(cons (cons (get-buffer-process pbuf) ppcmd)
+				      ppprop))))
+		   ;; If ppcmd is active, call it.
 		   (cond
 		    ((and ppcmd (string-match "finish" mes))
 		     (insert (format "=======> Success! Calling %s\n" ppcmd))
 		     (setq mode-name	; set process name
 			   (substring ppcmd 0 (string-match " " ppcmd)))
-		     ; to reach here, 'start-process exists on this emacsen
+					; to reach here, 'start-process exists on this emacsen
 		     (set-process-sentinel
 		      (start-process
 		       mode-name
