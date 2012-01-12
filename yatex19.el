@@ -1,7 +1,7 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX facilities for Emacs 19 or later
 ;;; (c)1994-2009 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Sep 28 10:45:30 2009 on firestorm
+;;; Last modified Thu Jan 12 22:49:40 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -39,6 +39,7 @@
  'YaTeX-mode-menu-map-process
  (nreverse
  '((buffer "LaTeX" . (lambda () (interactive) (YaTeX-typeset-menu nil ?j)))
+   (pdf "LaTeX+PDF" . (lambda () (interactive) (YaTeX-typeset-menu nil ?d)))
    (kill "Kill LaTeX" . (lambda () (interactive) (YaTeX-typeset-menu nil ?k)))
    (bibtex "BibTeX" . (lambda () (interactive) (YaTeX-typeset-menu nil ?b)))
    (mindex "makeindex" . (lambda () (interactive) (YaTeX-typeset-menu nil ?i)))
