@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.75.1
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jan 13 16:16:58 2012 on firestorm
+;;; Last modified Fri Jan 13 16:17:27 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -711,7 +711,7 @@ more features are available and they are documented in the manual.
 (defvar YaTeX-struct-end
   (concat YaTeX-ec "end{%1}")
   "Keyword format of end-environment.")
-(defvar YaTeX-struct-name-regexp "[^}]+"
+(defvar YaTeX-struct-name-regexp "[^}]*"
   "Environment name regexp.")
 (defvar YaTeX-TeX-token-regexp
   (cond (YaTeX-japan "[A-Za-z*‚Ÿ-‚ñˆŸ-êž]+")
