@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.75.1
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jan 13 08:22:46 2012 on firestorm
+;;; Last modified Fri Jan 13 16:16:58 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -950,17 +950,17 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 	    (function
 	     (lambda (n)
 	       (while (<= j n)
-		 (insert
-		  (concat		;to allow nil return value
-		   "{"
-		   (setq title
-			 (cond
-			  (addin-args (funcall arg-reader j))
-			  (YaTeX-skip-default-reader "")
-			  (t
-			   (read-string
-			    (format "Argument %d of %s: " j section)))))
-		   "}"))
+		 (unwind-protect
+		     (setq title
+			   (cond
+			    (addin-args (funcall arg-reader j))
+			    (YaTeX-skip-default-reader "")
+			    (t
+			     (read-string
+			      (format "Argument %d of %s: " j section)))))
+		   (insert
+		    (concat		;to allow nil return value
+		     "{" title "}")))
 		 (setq j (1+ j))))))
 	   );;let
 	(setq YaTeX-section-name section)
@@ -972,10 +972,12 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 	      (insert "}")
 	      (set-marker e (point))
 	      (goto-char beg)
-	      (insert YaTeX-ec YaTeX-section-name
-		      (YaTeX-addin YaTeX-section-name))
-	      (if (> numarg 1) (funcall mkarg-func (1- numarg)))
-	      (insert "{")
+	      (unwind-protect
+		  (progn
+		    (insert YaTeX-ec YaTeX-section-name
+			    (YaTeX-addin YaTeX-section-name))
+		    (if (> numarg 1) (funcall mkarg-func (1- numarg))))
+		(insert "{"))
 	      (if arp (funcall ar2 (point) e))
 	      (goto-char e)
 	      (set-marker e nil))
