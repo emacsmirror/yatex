@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.75.1
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan 12 20:25:32 2012 on firestorm
+;;; Last modified Fri Jan 13 08:22:46 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -829,9 +829,9 @@ This works also for other defined begin/end tokens to define the structure."
 	  (insert "\n")
 	  (or exchange (exchange-point-and-mark)))
       (goto-char beg2)
+      (YaTeX-intelligent-newline nil)
       (if (intern-soft (concat "YaTeX-intelligent-newline-" env))
 	  (progn
-	    (YaTeX-intelligent-newline nil)
 	    (message
 	     (cond
 	      (YaTeX-japan "%s ‚ÅŸ‚Ìs‚Ì“ü—Í‚Éi‚İ‚Ü‚·B")
