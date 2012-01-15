@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.19
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 15 16:24:33 2012 on fusion
+;;; Last modified Sun Jan 15 17:04:50 2012 on firestorm
 ;;; $Id$
 
 ;;;
