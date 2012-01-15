@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.19
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Mar  7 12:12:11 2011 on firestorm
+;;; Last modified Sun Jan 15 09:39:36 2012 on fusion
 ;;; $Id$
 
 ;;;
@@ -103,18 +103,44 @@ YaTeX-make-begin-end."
   "YaTeX add-in function for table environment."
   (cond
    ((eq major-mode 'yatex-mode)
-    (setq YaTeX-env-name "tabular"
-	  YaTeX-section-name "caption")
-    (YaTeX:read-position "htbp"))
+    (let (pos (caption "") (label "") (opts ""))
+      (setq pos (YaTeX:read-position "htbp")
+	    caption (read-string "Table Caption: "))
+      (if (string= "" caption)
+	  (setq YaTeX-section-name "caption")
+	(setq opts (format "\n\\caption{%s}" caption)))
+      (setq label (read-string "Label: "))
+      (if (string= "" label)
+	  (setq YaTeX-section-name "label")
+	(setq opts (format "%s\n\\label{%s}" opts label)))
+      (setq YaTeX-env-name "tabular"
+	    YaTeX-section-name "caption")
+      (concat pos opts)))
    ((eq major-mode 'texinfo-mode)
     (concat " "
 	    (completing-read
 	     "Highlights with: "
 	     '(("@samp")("@kbd")("@code")("@asis")("@file")("@var"))
 	     nil nil "@")))))
+(fset 'YaTeX:table* 'YaTeX:table)
 
-(fset 'YaTeX:figure 'YaTeX:table)
-(fset 'YaTeX:figure* 'YaTeX:table)
+;;;
+;; Functions for figure environemnt
+;;;
+(defun YaTeX:figure ()
+  "YaTeX add-in function for figure(*) environment."
+  (let ((caption "") (label "") (opts ""))
+    (setq label (read-string "Figure Label: "))
+    (if (string= "" label)
+	(setq YaTeX-section-name "label")
+      (setq opts (format "\n\\label{%s}" label)))
+    (setq caption (read-string "Figure Caption: "))
+    (if (string= "" caption)
+	(setq YaTeX-section-name "caption")
+      (setq opts (format "%s\n%% figure here\n\\caption{%s}" opts caption)))
+    opts))
+
+(fset 'YaTeX:figure* 'YaTeX:figure)
 
 
 (defun YaTeX:description ()
