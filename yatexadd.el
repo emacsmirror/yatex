@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.19
 ;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 15 09:39:36 2012 on fusion
+;;; Last modified Sun Jan 15 16:24:33 2012 on fusion
 ;;; $Id$
 
 ;;;
@@ -99,23 +99,45 @@ YaTeX-make-begin-end."
   (let ((pos (YaTeX:read-oneof oneof)))
     (if (string= pos "")  "" (concat "[" pos "]"))))
 
+;;;
+;; Functions for figure environemnt
+;;;
+(defvar YaTeX:figure-caption-first nil
+  "Non-nil indicates put caption before figure.")
+(defun YaTeX:figure (&optional type firstp)
+  "YaTeX add-in function for figure(*) environment."
+  (let*((caption "") (label "") (opts "")
+	(top (if type firstp YaTeX:figure-caption-first))
+	(tl (or type "Figure"))
+	(heremsg (format "%% %s here" tl)))
+    (setq label (read-string (concat tl " Label: ")))
+    (if (string= "" label)
+	(setq YaTeX-section-name "label")
+      (setq opts (format "\n\\label{%s}" label)))
+    (setq caption (read-string (concat tl " Caption: ")))
+    (if (string= "" caption)
+	(setq YaTeX-section-name "caption")
+      (setq caption (format "\\caption{%s}" caption)
+	    opts (format "%s\n%s\n%s"
+			 opts
+			 (if top caption heremsg)
+			 (if top heremsg caption)))
+      (format "\\caption{%s}" caption))
+    opts))
+
+(fset 'YaTeX:figure* 'YaTeX:figure)
+
+;;;
+;; Functions for table environemnt
+;;;
+(defvar YaTeX:table-caption-first t
+  "*Non-nil indicates put caption before tabular.")
 (defun YaTeX:table ()
   "YaTeX add-in function for table environment."
   (cond
    ((eq major-mode 'yatex-mode)
-    (let (pos (caption "") (label "") (opts ""))
-      (setq pos (YaTeX:read-position "htbp")
-	    caption (read-string "Table Caption: "))
-      (if (string= "" caption)
-	  (setq YaTeX-section-name "caption")
-	(setq opts (format "\n\\caption{%s}" caption)))
-      (setq label (read-string "Label: "))
-      (if (string= "" label)
-	  (setq YaTeX-section-name "label")
-	(setq opts (format "%s\n\\label{%s}" opts label)))
-      (setq YaTeX-env-name "tabular"
-	    YaTeX-section-name "caption")
-      (concat pos opts)))
+    (setq YaTeX-env-name "tabular")
+    (YaTeX:figure "Table" YaTeX:table-caption-first))
    ((eq major-mode 'texinfo-mode)
     (concat " "
 	    (completing-read
@@ -123,25 +145,6 @@ YaTeX-make-begin-end."
 	     '(("@samp")("@kbd")("@code")("@asis")("@file")("@var"))
 	     nil nil "@")))))
 (fset 'YaTeX:table* 'YaTeX:table)
-
-;;;
-;; Functions for figure environemnt
-;;;
-(defun YaTeX:figure ()
-  "YaTeX add-in function for figure(*) environment."
-  (let ((caption "") (label "") (opts ""))
-    (setq label (read-string "Figure Label: "))
-    (if (string= "" label)
-	(setq YaTeX-section-name "label")
-      (setq opts (format "\n\\label{%s}" label)))
-    (setq caption (read-string "Figure Caption: "))
-    (if (string= "" caption)
-	(setq YaTeX-section-name "caption")
-      (setq opts (format "%s\n%% figure here\n\\caption{%s}" opts caption)))
-    opts))
-
-(fset 'YaTeX:figure* 'YaTeX:figure)
-
 
 (defun YaTeX:description ()
   "Truly poor service:-)"
