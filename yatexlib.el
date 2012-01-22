@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan 23 00:09:36 2012 on firestorm
+;;; Last modified Mon Jan 23 00:10:51 2012 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -464,6 +464,7 @@ corresponding real arguments ARGS."
 
 ;;;###autoload
 (defun rindex (string char)
+  "Return the last position of STRING where character CHAR found."
   (let ((pos (1- (length string)))(index -1))
     (catch 'rindex
       (while (>= pos 0)
