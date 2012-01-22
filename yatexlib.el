@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan  9 20:20:09 2012 on firestorm
+;;; Last modified Mon Jan 23 00:09:36 2012 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -1084,16 +1084,18 @@ to most recent sectioning command."
 	 (get-file-buffer pf)
 	 (switch-to-buffer (get-file-buffer pf)))))
 
-(defun YaTeX-get-builtin (key)
+(defun YaTeX-getset-builtin (key &optional value)
   "Read source built-in command of %# usage."
   (catch 'builtin
-    (let ((bl (delq nil (list (current-buffer)
+    (let*((bl (delq nil (list (current-buffer)
 			      (and YaTeX-parent-file
 				   (get-file-buffer YaTeX-parent-file)))))
-	  (leader (or (cdr-safe (assq major-mode
-				      '((yatex-mode . "%#")
-					(yahtml-mode . "<!-- #"))))
-		      "")))
+	  (tuple (cdr (assq major-mode
+			    '((yatex-mode "%#" . "\n")
+			      (yahtml-mode "<!-- #" . "[ \t]*-->\\|\n")))))
+	  (leader (or (car tuple) ""))
+	  (closer (or (cdr tuple) ""))
+	  (prompt (format "Built-in for %s: " key)))
       (save-excursion
 	(while bl
 	  (set-buffer (car bl))
@@ -1103,17 +1105,35 @@ to most recent sectioning command."
 		      (concat "^" (regexp-quote (concat leader key))) nil t)
 		     (not (eolp)))
 		(throw 'builtin
-		       (YaTeX-buffer-substring
-			(progn
-			  (skip-chars-forward " \t" (point-end-of-line))
-			  (point))
-			(if (string< "" comment-end)
-			    (progn
-			      (search-forward
-			       comment-end (point-end-of-line) t)
-			      (match-beginning 0))
-			  (point-end-of-line))))))
-	  (setq bl (cdr bl)))))))
+		       (let (b e w)
+			 (skip-chars-forward " \t" (point-end-of-line))
+			 (setq b (point)
+			       e (if (re-search-forward closer nil t)
+				     (match-beginning 0)
+				   (point-end-of-line))
+			       w (YaTeX-buffer-substring b e))
+			 (if (null value)
+			     w
+			   (delete-region b e)
+			   (goto-char b)
+			   (if (symbolp value)
+			       (setq value (read-string prompt w)))
+			   (insert value)
+			   value)))))
+	  (setq bl (cdr bl)))
+	; not found
+	(if (null value)
+	    nil				;not set mode, return simply nil
+	  (if (symbolp value)
+	      (setq value (read-string prompt)))
+	  (save-excursion
+	    (goto-char (point-min))
+	    (insert leader key " " value "\n")
+	    value))))))			;on set mode, return set value
+
+(defun YaTeX-get-builtin (key)
+  "Read source built-in command of %# usage."
+  (YaTeX-getset-builtin key))
 
 ;;;VER2
 (defun YaTeX-insert-struc (what env)
