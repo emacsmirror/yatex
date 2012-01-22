@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.75.1
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 22 15:48:09 2012 on firestorm
+;;; Last modified Mon Jan 23 01:11:49 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1618,9 +1618,9 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?r) (YaTeX-typeset-region))
      ((= c ?e) (YaTeX-typeset-environment))
      ((= c ?b) (YaTeX-call-builtin-on-file
-		"BIBTEX" bibtex-command))
+		"BIBTEX" bibtex-command arg))
      ((= c ?i) (YaTeX-call-builtin-on-file
-		"MAKEINDEX" makeindex-command))
+		"MAKEINDEX" makeindex-command arg))
      ((= c ?k) (YaTeX-kill-typeset-process YaTeX-typeset-process))
      ((= c ?p) (call-interactively 'YaTeX-preview))
      ((= c ?q) (YaTeX-system "lpq" "*Printer queue*"))
@@ -1639,26 +1639,18 @@ Optional second argument CHAR is for non-interactive call from menu."
   "Operate %# notation."
   ;;Do not use interactive"r" for the functions which require no mark
   (interactive)
-  (message "!)Edit-%%#! B)EGIN-END-region L)Edit-%%#LPR")
+  (message "!)Edit-%%#! B)EGIN-END-region P)review L)Edit-%%#LPR M)akeindex B)ibtex")
   (let ((c (or char (read-char))) (string "") key
 	(b (make-marker)) (e (make-marker)))
     (save-excursion
       (cond
-       ((or (= c ?!) (= c ?l))		;Edit `%#!'
-	(goto-char (point-min))
-	(setq key (cond ((= c ?!) "%#!")
-			((= c ?l) "%#LPR")))
-	(if (re-search-forward key nil t)
-	    (progn
-	      (setq string (YaTeX-buffer-substring
-			    (point) (point-end-of-line)))
-	      (delete-region (point) (progn (end-of-line) (point))))
-	  (open-line 1)
-	  (delete-region (point) (progn (beginning-of-line)(point)));for 19 :-<
-	  (insert key))
-	(unwind-protect
-	    (setq string (read-string (concat key ": ") string))
-	  (insert string)))
+       ((rindex "!plmb" c)		;Edit %#xxx
+	(setq key (cdr (assq c '((?! . "!")
+				 (?p . "PREVIEW")
+				 (?l . "LPR")
+				 (?m . "MAKEINDEX")
+				 (?b . "BIBTEX")))))
+	(YaTeX-getset-builtin key t))
 
        ((= c ?b)			;%#BEGIN %#END region
 	(or end (setq beg (min (point) (mark)) end (max (point) (mark))))

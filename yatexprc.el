@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 22 15:47:53 2012 on firestorm
+;;; Last modified Mon Jan 23 00:28:08 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -444,23 +444,33 @@ FILE changes the default file name."
       'YaTeX-call-command-history)
      buffer)))
 
-(defun YaTeX-call-builtin-on-file (builtin-type &optional default)
+(defvar YaTeX-call-builtin-on-file)
+(make-variable-buffer-local 'YaTeX-call-builtin-on-file)
+(defun YaTeX-call-builtin-on-file (builtin-type &optional default update)
   "Call command on file specified by BUILTIN-TYPE."
-  (interactive)
   (YaTeX-save-buffers)
   (let*((main (or YaTeX-parent-file
-		  (progn (YaTeX-visit-main t) buffer-file-name)))
+		  (save-excursion (YaTeX-visit-main t) buffer-file-name)))
 	(mainroot (file-name-nondirectory (substring main 0 (rindex main ?.))))
-	(b-in (YaTeX-get-builtin builtin-type)))
-    (cond
-     ((null b-in) (setq b-in (format "%s %s" default mainroot)))
-     ((string-match (regexp-quote mainroot) b-in) nil)
-     (t (setq b-in (concat b-in " " mainroot))))
+	(alist YaTeX-call-builtin-on-file)
+	(b-in (or (YaTeX-get-builtin builtin-type)
+		  (cdr (assoc builtin-type alist))))
+	(command b-in))
+    (if (or update (null b-in))
+	(progn
+	  (setq command (read-string-with-history
+			 (format "%s command: " builtin-type)
+			 (or b-in
+			     (format "%s %s" default mainroot))
+			 'YaTeX-call-command-history))
+	  (if (or update (null b-in))
+	      (if (y-or-n-p "Use this command line in the future? ")
+		  (YaTeX-getset-builtin builtin-type command) ;keep in a file
+		(setq YaTeX-call-builtin-on-file	      ;keep in memory
+		      (cons (cons builtin-type command)
+			    (delete (assoc builtin-type alist) alist)))))))
     (YaTeX-typeset
-     (read-string-with-history
-      "Call command: "
-      b-in
-      'YaTeX-call-command-history)
+     command
      (format " *YaTeX-%s*" (downcase builtin-type)))))
 
 (defun YaTeX-kill-typeset-process (proc)
