@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan 12 21:17:08 2012 on firestorm
+;;; Last modified Sun Jan 22 15:47:53 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -99,7 +99,13 @@
 	  (setq ppprop (delq (assq YaTeX-typeset-process ppprop) ppprop))
 	  (if ppcmd
 	      (setq ppprop (cons (cons YaTeX-typeset-process ppcmd) ppprop)))
-	  (put 'YaTeX-typeset-process 'ppcmd ppprop))))
+	  (put 'YaTeX-typeset-process 'ppcmd ppprop))
+	(if (and (boundp 'bibcmd) bibcmd)
+	    (let ((bcprop (get 'YaTeX-typeset-process 'bibcmd)))
+	      (setq bcprop (cons
+			    (cons YaTeX-typeset-process bibcmd)
+			    (delq (assq YaTeX-typeset-process bcprop) bcprop)))
+	      (put 'YaTeX-typeset-process 'bibcmd bcprop)))))
       (message (format "Calling `%s'..." command))
       (setq YaTeX-current-TeX-buffer (buffer-name))
       (use-local-map map)		;map may be localized
@@ -141,6 +147,11 @@
       (YaTeX-remove-nonstopmode))))
 
 (defvar YaTeX-typeset-rerun-msg "Rerun to get cross-references right.")
+(defvar YaTeX-typeset-citation-msg
+  "LaTeX Warning: Citation .* on page [0-9]+ undefined on input line")
+(defvar YaTeX-typeset-auto-rerun t
+  "*Non-nil automatically reruns typesetter when cross-refs update found.
+This is mechanism is ")
 (defun YaTeX-typeset-sentinel (proc mes)
   (cond ((null (buffer-name (process-buffer proc)))
          ;; buffer killed
@@ -149,11 +160,16 @@
          (let* ((obuf (current-buffer)) (pbuf (process-buffer proc))
 		(pwin (get-buffer-window pbuf))
 		(owin (selected-window)) win
+		tobecalled
 		(thiscmd (get 'YaTeX-typeset-process 'thiscmd))
 		(ppprop (get 'YaTeX-typeset-process 'ppcmd))
-		(ppcmd (cdr (assq proc ppprop))))
+		(ppcmd (cdr (assq proc ppprop)))
+		(bcprop (get 'YaTeX-typeset-process 'bibcmd))
+		(bibcmd (cdr (assq proc bcprop))))
 	   (put 'YaTeX-typeset-process 'ppcmd ;erase ppcmd
 		(delq (assq proc ppprop) ppprop))
+	   (put 'YaTeX-typeset-process 'bibcmd ;erase bibcmd
+		(delq (assq proc bcprop) bcprop))
            ;; save-excursion isn't the right thing if
            ;;  process-buffer is current-buffer
            (unwind-protect
@@ -178,26 +194,47 @@
                  ;; is dead, we can delete it now.  Otherwise it
                  ;; will stay around until M-x list-processes.
                  (delete-process proc)
-		 (if (save-excursion
-		       (search-backward
-			YaTeX-typeset-rerun-msg YaTeX-typeset-marker t))
+		 (if (cond
+		      ((null YaTeX-typeset-auto-rerun) nil)
+		      ((and bibcmd
+			    (save-excursion
+			      (re-search-backward
+			       YaTeX-typeset-citation-msg
+			       YaTeX-typeset-marker t))
+			    (save-excursion
+			      (search-backward
+			       ".bbl" YaTeX-typeset-marker t)))
+		       (insert "\n" YaTeX-typeset-rerun-msg "\n")
+		       (setq tobecalled bibcmd))
+		      ((save-excursion
+			 (search-backward
+			  YaTeX-typeset-rerun-msg YaTeX-typeset-marker t))
+		       (if bibcmd
+			   (put 'YaTeX-typeset-process 'bibcmd
+				(cons (cons (get-buffer-process pbuf) bibcmd)
+				      bcprop)))
+		       (setq tobecalled thiscmd))
+		      (t nil))
 		     (progn
 		       (insert
 			(format
 			 "===!!! %s !!!===\n"
 			 (message "Rerun `%s' to get cross-references right"
-				  thiscmd)))
-		       (set-marker YaTeX-typeset-marker (point))
+				  tobecalled)))
+		       (if (equal tobecalled thiscmd)
+			   (set-marker YaTeX-typeset-marker (point)))
 		       (save-excursion (sit-for 2))
 		       (set-process-sentinel
 			(start-process
 			 mode-name pbuf
-			 shell-file-name YaTeX-shell-command-option thiscmd)
+			 shell-file-name YaTeX-shell-command-option tobecalled)
 			'YaTeX-typeset-sentinel)
 		       (if ppcmd
 			   (put 'YaTeX-typeset-process 'ppcmd
 				(cons (cons (get-buffer-process pbuf) ppcmd)
-				      ppprop))))
+				      ppprop)))
+		       (if thiscmd
+			   (put 'YaTeX-typeset-process 'thiscmd thiscmd)))
 		   ;; If ppcmd is active, call it.
 		   (cond
 		    ((and ppcmd (string-match "finish" mes))
@@ -212,7 +249,6 @@
 		       shell-file-name YaTeX-shell-command-option
 		       ppcmd)
 		      'YaTeX-typeset-sentinel))))
-		 
 		 (forward-char 1))
 	     (setq YaTeX-typeset-process nil)
              ;; Force mode line redisplay soon
@@ -333,13 +369,15 @@ PP command will be called iff typeset command exit successfully"
   (YaTeX-save-buffers)
   (let*((me (substring (buffer-name) 0 (rindex (buffer-name) ?.)))
 	(mydir (file-name-directory (buffer-file-name)))
-	(cmd (YaTeX-get-latex-command t)) pparg ppcmd
+	(cmd (YaTeX-get-latex-command t)) pparg ppcmd bibcmd
 	(cb (current-buffer)))
+    (setq pparg (substring cmd 0 (string-match "[;&]" cmd)) ;rm multistmt
+	  pparg (substring pparg (rindex pparg ? ))	 ;get last arg
+	  pparg (substring pparg 0 (rindex pparg ?.))	 ;rm ext
+	  bibcmd (concat bibtex-command pparg))
     (and pp
 	 (stringp pp)
-	 (setq pparg (substring cmd 0 (string-match "[;&]" cmd)) ;rm multistmt
-	       pparg (substring pparg (rindex pparg ? ))	 ;get last arg
-	       ppcmd (concat pp (substring pparg 0 (rindex pparg ?.)))));rm ext
+	 (setq ppcmd (concat pp pparg)))
     (if (YaTeX-main-file-p) nil
       (save-excursion
 	(YaTeX-visit-main t)	;search into main buffer
@@ -406,13 +444,24 @@ FILE changes the default file name."
       'YaTeX-call-command-history)
      buffer)))
 
-(defun YaTeX-bibtex-buffer (cmd)
-  "Pass the bibliography data of editing file to bibtex."
+(defun YaTeX-call-builtin-on-file (builtin-type &optional default)
+  "Call command on file specified by BUILTIN-TYPE."
   (interactive)
   (YaTeX-save-buffers)
-  (let ((main (or YaTeX-parent-file
-		  (progn (YaTeX-visit-main t) buffer-file-name))))
-    (YaTeX-call-command-on-file cmd "*YaTeX-bibtex*" main)))
+  (let*((main (or YaTeX-parent-file
+		  (progn (YaTeX-visit-main t) buffer-file-name)))
+	(mainroot (file-name-nondirectory (substring main 0 (rindex main ?.))))
+	(b-in (YaTeX-get-builtin builtin-type)))
+    (cond
+     ((null b-in) (setq b-in (format "%s %s" default mainroot)))
+     ((string-match (regexp-quote mainroot) b-in) nil)
+     (t (setq b-in (concat b-in " " mainroot))))
+    (YaTeX-typeset
+     (read-string-with-history
+      "Call command: "
+      b-in
+      'YaTeX-call-command-history)
+     (format " *YaTeX-%s*" (downcase builtin-type)))))
 
 (defun YaTeX-kill-typeset-process (proc)
   "Kill process PROC after sending signal to PROC.

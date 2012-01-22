@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.75.1
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 15 09:06:00 2012 on fusion
+;;; Last modified Sun Jan 22 15:48:09 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1617,10 +1617,10 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?j) (YaTeX-typeset-buffer))
      ((= c ?r) (YaTeX-typeset-region))
      ((= c ?e) (YaTeX-typeset-environment))
-     ((= c ?b) (YaTeX-call-command-on-file
-		bibtex-command "*YaTeX-bibtex*" YaTeX-parent-file))
-     ((= c ?i) (YaTeX-call-command-on-file
-		makeindex-command "*YaTeX-makeindex*" YaTeX-parent-file))
+     ((= c ?b) (YaTeX-call-builtin-on-file
+		"BIBTEX" bibtex-command))
+     ((= c ?i) (YaTeX-call-builtin-on-file
+		"MAKEINDEX" makeindex-command))
      ((= c ?k) (YaTeX-kill-typeset-process YaTeX-typeset-process))
      ((= c ?p) (call-interactively 'YaTeX-preview))
      ((= c ?q) (YaTeX-system "lpq" "*Printer queue*"))
