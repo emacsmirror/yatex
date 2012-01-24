@@ -2,7 +2,7 @@
 ;;; YaTeX math-mode-specific functions.
 ;;; yatexmth.el
 ;;; (c)1993-2012 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Jan  9 20:14:02 2012 on firestorm
+;;; Last modified Tue Jan 24 08:58:56 2012 on firestorm
 ;;; $Id$
 
 ;;; [Customization guide]
@@ -315,6 +315,13 @@
    ("D"		"diamondsuit"	"/\\\n\\/")
    ("H"		"heartsuit"	"<^^>\n \\/")
    ("S"		"spadesuit"	" /\\\n<++>\n /\\")
+   ("mi"	"mathit"	"\\mathit{}")
+   ("mr"	"mathrm"	"\\mathrm{}")
+   ("mb"	"mathbf"	"\\mathbf{}")
+   ("mt"	"mathtt"	"\\mathtt{}")
+   ("ms"	"mathsf"	"\\mathsf{}")
+   ("mc"	"mathcal"	"\\mathcal{}")
+   ("mn"	"mathnormal"	"\\mathnormal{}")
    )
  "Default LaTeX-math-command alist.")
 
