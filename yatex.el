@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.75.2
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan 23 01:19:32 2012 on firestorm
+;;; Last modified Mon Jan 23 07:58:11 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1639,16 +1639,16 @@ Optional second argument CHAR is for non-interactive call from menu."
   "Operate %# notation."
   ;;Do not use interactive"r" for the functions which require no mark
   (interactive)
-  (message "!)Edit-%%#! B)EGIN-END-region P)review L)Edit-%%#LPR M)akeindex B)ibtex")
+  (message "!)Edit-%%#! B)EGIN-END-region P)review L)Edit-%%#LPR make(I)ndex B)ibtex")
   (let ((c (or char (read-char))) (string "") key
 	(b (make-marker)) (e (make-marker)))
     (save-excursion
       (cond
-       ((rindex "!plmb" c)		;Edit %#xxx
+       ((rindex "!plib" c)		;Edit %#xxx
 	(setq key (cdr (assq c '((?! . "!")
 				 (?p . "PREVIEW")
 				 (?l . "LPR")
-				 (?m . "MAKEINDEX")
+				 (?i . "MAKEINDEX")
 				 (?b . "BIBTEX")))))
 	(YaTeX-getset-builtin key t))
 
