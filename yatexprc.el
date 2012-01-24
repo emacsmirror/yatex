@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan 23 00:28:08 2012 on firestorm
+;;; Last modified Tue Jan 24 09:43:29 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -223,7 +223,6 @@ This is mechanism is ")
 				  tobecalled)))
 		       (if (equal tobecalled thiscmd)
 			   (set-marker YaTeX-typeset-marker (point)))
-		       (save-excursion (sit-for 2))
 		       (set-process-sentinel
 			(start-process
 			 mode-name pbuf
@@ -654,20 +653,24 @@ by region."
 	    -1)))))
 
 (defun YaTeX-prev-error ()
-  "Visit previous typeset error.
+  "Visit position of previous typeset error or warning.
   To avoid making confliction of line numbers by editing, jump to
 error or warning lines in reverse order."
   (interactive)
-  (let ((cur-buf (buffer-name)) (cur-win (selected-window))
-	b0 errorp error-line typeset-win error-buffer error-win)
+  (let ((cur-buf (save-excursion (YaTeX-visit-main t) (buffer-name)))
+	(cur-win (selected-window))
+	b0 bound errorp error-line typeset-win error-buffer error-win)
     (if (null (get-buffer YaTeX-typeset-buffer))
 	(error "There is no typesetting buffer."))
     (YaTeX-showup-buffer YaTeX-typeset-buffer nil t)
+    (if (and (markerp YaTeX-typeset-marker)
+	     (eq (marker-buffer YaTeX-typeset-marker) (current-buffer)))
+	(setq bound YaTeX-typeset-marker))
     (setq typeset-win (selected-window))
     (if (re-search-backward
 	 (concat "\\(" latex-error-regexp "\\)\\|\\("
 		 latex-warning-regexp "\\)")
-	 nil t)
+	 bound t)
 	(setq errorp (match-beginning 1))
       (select-window cur-win)
       (error "No more errors on %s" cur-buf))
