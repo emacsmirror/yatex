@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan 23 00:10:51 2012 on firestorm
+;;; Last modified Sat Jan 28 11:02:48 2012 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -751,6 +751,12 @@ If no such window exist, switch to buffer BUFFER."
    ((featurep 'gmhist-mh)
     (read-with-history-in hsym prompt init))
    (t (read-string prompt init))))
+
+(defvar YaTeX-skip-next-reader-char ?\C-j)
+(defun YaTeX-skip-next-reader-p ()
+  "Check if the next string-reader should be skip."
+  (if (equal last-input-char YaTeX-skip-next-reader-char)
+      "" nil))
 
 ;;;###autoload
 (fset 'YaTeX-rassoc

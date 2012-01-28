@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Jan 28 09:55:19 2012 on firestorm
+;;; Last modified Sat Jan 28 11:03:05 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -109,12 +109,15 @@ YaTeX-make-begin-end."
   (let*((caption "") (label "") (opts "")
 	(top (if type firstp YaTeX:figure-caption-first))
 	(tl (or type "Figure"))
-	(heremsg (format "%% %s here" tl)))
-    (setq label (read-string (concat tl " Label: ")))
+	(heremsg (format "%% %s here" tl))
+	(pos (YaTeX:read-position "htbp")))
+    (setq label (or (YaTeX-skip-next-reader-p)
+		    (read-string (concat tl " Label: "))))
     (if (string= "" label)
 	(setq YaTeX-section-name "label")
       (setq opts (format "\n\\label{%s}" label)))
-    (setq caption (read-string (concat tl " Caption: ")))
+    (setq caption (or (YaTeX-skip-next-reader-p)
+		      (read-string (concat tl " Caption: "))))
     (if (string= "" caption)
 	(setq YaTeX-section-name "caption")
       (setq caption (format "\\caption{%s}" caption)
@@ -123,7 +126,7 @@ YaTeX-make-begin-end."
 			 (if top caption heremsg)
 			 (if top heremsg caption)))
       (format "\\caption{%s}" caption))
-    opts))
+    (concat pos opts)))
 
 (fset 'YaTeX:figure* 'YaTeX:figure)
 
