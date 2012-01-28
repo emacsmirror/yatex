@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c) 1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Jan 28 10:26:54 2012 on firestorm
+;;; Last modified Sat Jan 28 18:31:05 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -251,16 +251,6 @@ Count the number of & in the first align line and insert that many &s."
   (YaTeX-indent-line)
   (YaTeX-make-section nil nil nil "bibitem")
   (YaTeX-indent-line))
-
-
-;;;
-;; Functions for math mode environments
-;;;
-(defun YaTeX-intelligent-newline-equation ()
-  "Warn equation can't have multiple lines."
-  (undo)
-  (error "Equation environment can't have multiple lines."))
-(fset 'YaTeX-intelligent-newline-equation* 'YaTeX-intelligent-newline-equation)
 
 ;;;
 ;; For document environment
