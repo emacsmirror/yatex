@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c) 1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Jun 24 08:14:11 2006 on firestorm
+;;; Last modified Sat Jan 28 10:21:07 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -227,8 +227,7 @@ Count the number of & in the first align line and insert that many &s."
 	      (setq tabcount (1- tabcount))))
 	  (forward-char 2))
       (insert "\\= \\\\")
-      (forward-char -5)))
-)
+      (forward-char -5))))
 
 ;;;
 ;; Functions for itemize/enumerate/list environments
@@ -237,23 +236,27 @@ Count the number of & in the first align line and insert that many &s."
 (defun YaTeX-intelligent-newline-itemize ()
   "Insert '\\item '."
   (insert "\\item ")
-  (YaTeX-indent-line)
-)
+  (YaTeX-indent-line))
+
 (fset 'YaTeX-intelligent-newline-enumerate 'YaTeX-intelligent-newline-itemize)
 (fset 'YaTeX-intelligent-newline-list 'YaTeX-intelligent-newline-itemize)
 
 (defun YaTeX-intelligent-newline-description ()
   (insert "\\item[] ")
   (forward-char -2)
-  (YaTeX-indent-line)
-)
+  (YaTeX-indent-line))
 
 (defun YaTeX-intelligent-newline-thebibliography ()
   "Insert '\\bibitem '."
   (YaTeX-indent-line)
   (YaTeX-make-section nil nil nil "bibitem")
-  (YaTeX-indent-line)
-)
+  (YaTeX-indent-line))
+
+(defun YaTeX-intelligent-newline-equation ()
+  "Warn equation can't have multiple lines."
+  (undo)
+  (error "Equation environment can't have multiple lines."))
+(fset 'YaTeX-intelligent-newline-equation* 'YaTeX-intelligent-newline-equation)
 
 ;;;
 ;; Intelligent newline
