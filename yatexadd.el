@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 15 17:06:26 2012 on firestorm
+;;; Last modified Sat Jan 28 09:55:19 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -1263,6 +1263,12 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
    (function
     (lambda ()
       (YaTeX-quick-in-environment-p "figure")))))
+(defun YaTeX::eqref (argp)
+  (YaTeX::ref
+   argp nil nil
+   (function
+    (lambda ()
+      (YaTeX-in-math-mode-p)))))
 
 (defun YaTeX::cite-collect-bibs-external (bibptn &rest files)
   "Collect bibentry from FILES(variable length argument) ;
@@ -1421,8 +1427,6 @@ and print them to standard output."
   "Add-in function to insert argument of \\bibitem."
   (YaTeX::label argp "label" "cite"))
 
-;;; for AMS-LaTeX
-(and YaTeX-use-AMS-LaTeX (fset 'YaTeX::eqref 'YaTeX::ref))
 ;;; for Harvard citation style
 (fset 'YaTeX::citeasnoun 'YaTeX::cite)
 (fset 'YaTeX::possessivecite 'YaTeX::cite)
