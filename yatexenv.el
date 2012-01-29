@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c) 1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Jan 28 22:27:24 2012 on firestorm
+;;; Last modified Sun Jan 29 16:08:09 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -188,6 +188,13 @@ Count the number of & in the first align line and insert that many &s."
 	(while (YaTeX-re-search-active-forward
 		"\\(&\\)\\|\\(\\\\\\\\\\)" YaTeX-comment-prefix p t)
 	  (if (match-beginning 1) (setq cols (1+ cols)) (throw 'done t)))))
+    (if (> cols 0)
+	(save-excursion
+	  (forward-line -1)
+	  (end-of-line)
+	  (skip-chars-backward " \t")
+	  (or (and (= (preceding-char) ?\\) (= (char-after (- (point) 2)) ?\\))
+	      (insert "\\\\"))))
     (save-excursion
       (while (>= (setq cols (1- cols)) 0)
 	(insert "& ")))
