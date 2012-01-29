@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Jan 28 11:03:05 2012 on firestorm
+;;; Last modified Sun Jan 29 15:56:28 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -111,13 +111,11 @@ YaTeX-make-begin-end."
 	(tl (or type "Figure"))
 	(heremsg (format "%% %s here" tl))
 	(pos (YaTeX:read-position "htbp")))
-    (setq label (or (YaTeX-skip-next-reader-p)
-		    (read-string (concat tl " Label: "))))
+    (setq label (YaTeX-read-string-or-skip (concat tl " Label: ")))
     (if (string= "" label)
 	(setq YaTeX-section-name "label")
       (setq opts (format "\n\\label{%s}" label)))
-    (setq caption (or (YaTeX-skip-next-reader-p)
-		      (read-string (concat tl " Caption: "))))
+    (setq caption (YaTeX-read-string-or-skip (concat tl " Caption: ")))
     (if (string= "" caption)
 	(setq YaTeX-section-name "caption")
       (setq caption (format "\\caption{%s}" caption)
@@ -1890,11 +1888,11 @@ and print them to standard output."
 (defun YaTeX:includegraphics ()
   "Add-in for \\includegraphics's option"
   (let (width height (scale "") angle str)
-    (setq width (read-string "Width: ")
-	  height (read-string "Height: "))
+    (setq width (YaTeX-read-string-or-skip "Width: ")
+	  height (YaTeX-read-string-or-skip "Height: "))
     (or (string< width "") (string< "" height)
-	(setq scale (read-string "Scale: ")))
-    (setq angle (read-string "Angle(0-359): "))
+	(setq scale (YaTeX-read-string-or-skip "Scale: ")))
+    (setq angle (YaTeX-read-string-or-skip "Angle(0-359): "))
     (setq str
 	  (mapconcat
 	   'concat
