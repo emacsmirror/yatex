@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.75.3
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 29 17:27:03 2012 on firestorm
+;;; Last modified Sun Jan 29 19:35:24 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -321,7 +321,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("verbatim") ("itemize") ("enumerate") ("description")
      ("list") ("tabular") ("tabular*") ("table") ("tabbing") ("titlepage")
      ("sloppypar") ("picture") ("displaymath")
-     ("eqnarray") ("figure") ("equation") ("abstract") ("array")
+     ("eqnarray") ("eqnarray*") ("figure") ("equation") ("equation*")
+     ("abstract") ("array")
      ("thebibliography") ("theindex") ("flushleft") ("flushright")
      ("minipage")
      ("supertabular")

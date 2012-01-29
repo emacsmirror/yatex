@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c) 1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 29 17:23:40 2012 on firestorm
+;;; Last modified Sun Jan 29 19:34:13 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -206,7 +206,7 @@ Count the number of & in the first align line and insert that many &s."
 			   (symbol-name s)))
 	  'YaTeX-intelligent-newline-align))
  '(align* flalign  flalign* matrix pmatrix bmatrix Bmatrix vmatrix Vmatrix
-   cases))
+   cases eqnarray eqnarray*))
 
 ;;;
 ;; Functions for tabbing environment
