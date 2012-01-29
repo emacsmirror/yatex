@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Thu May 27 18:04:10 2010 on firestorm
+@c Last modified Sun Jan 29 22:55:53 2012 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -148,6 +148,8 @@ strokes execute typeset or preview command.
 @item [prefix] t e
         @dots{} invoke latex on current environment or whole
          portion of current formulas in math-mode.
+@item [prefix] t d
+	@dots{} invoke dvipdfmx after successful typesetting
 @item [prefix] t k
         @dots{} kill current typesetting process
 @item [prefix] t b
@@ -287,7 +289,7 @@ this command line after @kbd{%#!} will be sent to shell literally, next
 description makes it convenient to use ghostview as dvi-previewer.
 
 @example
-        %#!latex main ; dvi2ps main.dvi > main
+        %#!latex main && dvi2ps main.dvi > main
 @end example
 
 @noindent
@@ -399,6 +401,28 @@ out, the next example may be helpful.
 @example
         %#LPR dvi2ps %s | lpr
 @end example
+
+@node Controlling which command to invoke, Editing %# notation, lpr format, %#notation
+@comment  node-name,  next,  previous,  up
+@section Controlling which command to invoke
+
+These %# notation below can control which command to invoke for
+La@TeX{} related process.
+
+@table @code
+ @item %#BIBTEX
+	@dots{} Command line for makeindex ([prefix] t i)
+ @item %#MAKEINDEX
+	@dots{} Command line for bibtex ([prefix] t b)
+@end table
+
+If you want to invoke ``makeidx hogehoge'' to update index,
+put the next line some upper place in the source, for example.
+
+@example
+%#MAKEINDEX makeidx hogehoge
+@end example
+
 
 @node Editing %# notation,  , Lpr format, %#notation
 @comment  node-name,  next,  previous,  up

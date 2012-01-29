@@ -10,7 +10,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Thu May 27 18:24:30 2010 on firestorm
+@c Last modified Sun Jan 29 22:56:44 2012 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -199,7 +199,7 @@ userpackage
 
 これらを変更する場合は、やはり@file{~/.emacs}にて、たとえば
 @lisp
-(setq tex-command "bigjlatex")
+(setq tex-command "pdflatex")
 @end lisp
 のようにしてください。どのような値をセットすれば良いかについては、
 @ref{All customizable variables}を参照してください。
@@ -226,7 +226,7 @@ LaTeXソースの編集中、次のキー入力により、platex などのタイプセットプログラ
         @dots{} タイプセッタ起動(領域指定)
 @item [prefix] t e
         @dots{} タイプセッタ起動
-        (ポイント位置の環境または数式モードのみ対称)
+        (ポイント位置の環境または数式モードのみ対象)
 @item [prefix] t k
         @dots{} 動作中のタイプセッタの停止
 @item [prefix] t b
@@ -234,7 +234,7 @@ LaTeXソースの編集中、次のキー入力により、platex などのタイプセットプログラ
 @item [prefix] t i
         @dots{} makeindex起動
 @item [prefix] t d
-        @dots{} タイプセッタとdvipdfmx起動
+	@dots{} タイプセット完了後dvipdfmx起動
 @item [prefix] t p
         @dots{} プレヴューア起動
 @item [prefix] t l
@@ -384,7 +384,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 @cindex ghostview
 
 @example
-        %#!platex main ; dvi2ps main.dvi > main
+        %#!platex main && dvi2ps main.dvi > main
 @end example
 
 なお、この行の最後の単語のピリオド以前を「メインファイル」のベース
@@ -467,7 +467,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 @c @node  Require, lpr format, Fix region for typesetting, %#notation
 @comment  node-name,  next,  previous,  up
 
-@node lpr format, Editing %# notation, Fix region for typesetting, %#notation
+@node lpr format, Controlling which command to invoke, Fix region for typesetting, %#notation
 @comment  node-name,  next,  previous,  up
 @section lprフォーマット
 @cindex lprふぉーまっと[lprふおおまつと]
@@ -512,7 +512,24 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 @noindent 
 などとするのも便利かもしれません。
 
-@node Editing %# notation,  , lpr format, %#notation
+@node Controlling which command to invoke, Editing %# notation, lpr format, %#notation
+@comment  node-name,  next,  previous,  up
+@section その他の起動コマンド制御
+@cindex その他のコマンド制御[そのたのこまんとせいきよ]
+
+La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
+
+@table @code
+ @item %#BIBTEX
+	@dots{} makeindexを行なうコマンドライン([prefix] t b)
+ @item %#MAKEINDEX
+	@dots{} bibtexを行なうコマンドライン([prefix] t i)
+@end table
+
+行頭がこれらのキーワードで始まる行をLa@TeX{}文書の先頭付近に書いておけば、
+それで指定したコマンドを起動できます。
+
+@node Editing %# notation,  , Controlling which command to invoke, %#notation
 @comment  node-name,  next,  previous,  up
 @section %#記法自体の編集
 @cindex %#記法自体の編集[%#きほうしたいのへんしゆう]
