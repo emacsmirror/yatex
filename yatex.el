@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.75.3
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 29 19:35:24 2012 on firestorm
+;;; Last modified Thu Feb  9 09:52:41 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -2003,6 +2003,11 @@ Macro's argument number stored to propname 'argc."
 		 (looking-at ec+command))
 	       (goto-char (match-beginning 0))
 	       (throw 'found t))
+	  ;;If inside of parentheses, try to escape.
+	  (while (condition-case err
+		     (progn (up-list -1) t)
+		   (error nil)))
+	  (while (equal (preceding-char) ?\]) (backward-list))
 	  ;;(2) search command directly
 	  (skip-chars-forward "^{}[]")
 	  (and (YaTeX-re-search-active-backward
