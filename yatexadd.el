@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Feb 10 09:50:00 2012 on firestorm
+;;; Last modified Fri Feb 10 16:30:39 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -1885,14 +1885,13 @@ and print them to standard output."
 				 (format "%s=%s" s (symbol-value s))))
 			 '(width height scale angle)))
 	   ","))
-    (setq YaTeX-section-name "caption")
     (if (string= "" str) ""
       (concat "[" str "]"))))
 
 (defun YaTeX::includegraphics (argp)
   "Add-in for \\includegraphics"
   (let ((imgfile (YaTeX::include argp "Image File: "))
-	(case-fold-search t) info bb)
+	(case-fold-search t) info bb noupdate needclose)
     (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\)$" imgfile)
 	 (file-exists-p imgfile)
 	 (or (fboundp 'yahtml-get-image-info)
@@ -1902,7 +1901,29 @@ and print them to standard output."
 	 (car info)			;if has width value
 	 (car (cdr info))		;if has height value
 	 (setq bb (format "bb=%d %d %d %d" 0 0 (car info) (car (cdr info))))
-	 (YaTeX-push-to-kill-ring bb))
+	 (save-excursion
+	   (cond
+	    ((and (YaTeX-re-search-active-backward
+		   "\\\\\\(includegraphics\\)\\|\\(bb=[ \t0-9]+\\)"
+		   YaTeX-comment-prefix nil t)
+		  (match-beginning 2)
+		  (not (setq noupdate (equal (YaTeX-match-string 2) bb)))
+		  (y-or-n-p (format "Update `bb=' line to `%s'?: " bb)))
+	     (message "")
+	     (replace-match bb))
+	    (noupdate nil)
+	    ((and (match-beginning 1)
+		  (y-or-n-p "Insert `bb=...' line?: "))
+	     (goto-char (match-end 0))
+	     (message "")
+	     (if (looking-at "\\[") (forward-char 1)
+	       (insert-before-markers "[")
+	       (setq needclose t))
+	     (insert-before-markers bb)
+	     (if needclose (insert-before-markers "]")
+	       (or (looking-at "\\]") (insert-before-markers ","))))
+	    (t (YaTeX-push-to-kill-ring bb)))))
+    (setq YaTeX-section-name "caption")
     imgfile))
  
 (defun YaTeX::verbfile (argp)
