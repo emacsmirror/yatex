@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Feb  9 09:33:55 2012 on firestorm
+;;; Last modified Fri Feb 10 09:50:00 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -1225,17 +1225,11 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 		  (format "New %s name: " (or labname "label"))
 		  (cons dlab 1))))
       (if (string< "" label)
-	  (let ((refstr (format "\\%s{%s}" (or refname "ref") label))
-		(key (key-description (where-is-internal 'yank nil t)))
-		(msg
-		 (if YaTeX-japan
-		     "‚ðkill-ring‚É“ü‚ê‚Ü‚µ‚½Byank(%s)‚ÅŽæ‚èo‚¹‚Ü‚·B"
-		   " is stored into kill-ring.  Paste it by yank(%s).")))
-	    (kill-new refstr)
+	  (let ((refstr (format "\\%s{%s}" (or refname "ref") label)))
+	    (YaTeX-push-to-kill-ring refstr)
 	    (and chmode
 		 (not (equal old label))
-		 (YaTeX::label-rename-refs old label))
-	    (message (concat "`%s'" msg) refstr key)))
+		 (YaTeX::label-rename-refs old label))))
       label))))
       
 
@@ -1897,7 +1891,19 @@ and print them to standard output."
 
 (defun YaTeX::includegraphics (argp)
   "Add-in for \\includegraphics"
-  (YaTeX::include argp "Image File: "))
+  (let ((imgfile (YaTeX::include argp "Image File: "))
+	(case-fold-search t) info bb)
+    (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\)$" imgfile)
+	 (file-exists-p imgfile)
+	 (or (fboundp 'yahtml-get-image-info)
+	     (progn
+	       (load "yahtml" t) (featurep 'yahtml))) ;(require 'yahtml nil t)
+	 (setq info (yahtml-get-image-info imgfile))
+	 (car info)			;if has width value
+	 (car (cdr info))		;if has height value
+	 (setq bb (format "bb=%d %d %d %d" 0 0 (car info) (car (cdr info))))
+	 (YaTeX-push-to-kill-ring bb))
+    imgfile))
  
 (defun YaTeX::verbfile (argp)
   "Add-in for \\verbfile"

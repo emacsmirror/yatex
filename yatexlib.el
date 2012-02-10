@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Feb  9 08:32:18 2012 on firestorm
+;;; Last modified Fri Feb 10 12:30:49 2012 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -1522,6 +1522,17 @@ compared by regexp."
 	(if (string-match x elt)
 	    (throw 'found (car alist)))
 	(setq alist (cdr alist))))))
+
+(defun YaTeX-push-to-kill-ring (string)
+  "Push STRING to kill-ring, then show guidance message."
+  (and (stringp string) (string< "" string)
+       (let ((key (key-description (where-is-internal 'yank nil t)))
+	     (msg
+	      (if YaTeX-japan
+		  " ‚ðkill-ring‚É“ü‚ê‚Ü‚µ‚½BŽŸ‚Ìyank(%s)‚Å“\•t‚Å‚«‚Ü‚·"
+		" is stored into kill-ring.  Paste it by yank(%s).")))
+	 (kill-new string)
+	 (message (concat "`%s'" msg) string key))))
 
 ;;;
 ;; Functions for the Installation time
