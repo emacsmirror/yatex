@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 29 15:56:28 2012 on firestorm
+;;; Last modified Thu Feb  9 09:33:55 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -106,25 +106,11 @@ YaTeX-make-begin-end."
   "Non-nil indicates put caption before figure.")
 (defun YaTeX:figure (&optional type firstp)
   "YaTeX add-in function for figure(*) environment."
-  (let*((caption "") (label "") (opts "")
-	(top (if type firstp YaTeX:figure-caption-first))
-	(tl (or type "Figure"))
-	(heremsg (format "%% %s here" tl))
-	(pos (YaTeX:read-position "htbp")))
-    (setq label (YaTeX-read-string-or-skip (concat tl " Label: ")))
-    (if (string= "" label)
-	(setq YaTeX-section-name "label")
-      (setq opts (format "\n\\label{%s}" label)))
-    (setq caption (YaTeX-read-string-or-skip (concat tl " Caption: ")))
-    (if (string= "" caption)
-	(setq YaTeX-section-name "caption")
-      (setq caption (format "\\caption{%s}" caption)
-	    opts (format "%s\n%s\n%s"
-			 opts
-			 (if top caption heremsg)
-			 (if top heremsg caption)))
-      (format "\\caption{%s}" caption))
-    (concat pos opts)))
+  (setq YaTeX-section-name
+	(if YaTeX:figure-caption-first "caption" "includegraphics")
+	YaTeX-env-name "center")
+  (YaTeX:read-position "htbp"))
+
 
 (fset 'YaTeX:figure* 'YaTeX:figure)
 
@@ -137,8 +123,10 @@ YaTeX-make-begin-end."
   "YaTeX add-in function for table environment."
   (cond
    ((eq major-mode 'yatex-mode)
-    (setq YaTeX-env-name "tabular")
-    (YaTeX:figure "Table" YaTeX:table-caption-first))
+    (setq YaTeX-section-name
+	  (if YaTeX:table-caption-first "caption" "label")
+	  YaTeX-env-name "tabular")
+    (YaTeX:read-position "htbp"))
    ((eq major-mode 'texinfo-mode)
     (concat " "
 	    (completing-read
@@ -1903,6 +1891,7 @@ and print them to standard output."
 				 (format "%s=%s" s (symbol-value s))))
 			 '(width height scale angle)))
 	   ","))
+    (setq YaTeX-section-name "caption")
     (if (string= "" str) ""
       (concat "[" str "]"))))
 
