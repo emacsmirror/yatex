@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Feb 10 16:30:39 2012 on firestorm
+;;; Last modified Sat Feb 11 12:01:45 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -145,7 +145,10 @@ YaTeX-make-begin-end."
   (setq YaTeX-single-command "item")
   "")
 
-(fset 'YaTeX:enumerate 'YaTeX:itemize)
+(defun YaTeX:enumerate ()
+  (setq YaTeX-single-command "item"
+	YaTeX-section-name "label")
+  "")
 
 (defun YaTeX:picture ()
   "Ask the size of coordinates of picture environment."
@@ -1767,6 +1770,16 @@ and print them to standard output."
 	    'YaTeX:documentclasses-local)))
       (if (string= "" sname) (setq sname YaTeX-default-documentclass))
       (setq YaTeX-default-documentclass sname)))))
+
+(defun YaTeX::title (&optional argp)
+  (prog1 (read-string "Document Title: ")
+    (setq YaTeX-section-name "author"
+	  YaTeX-single-command "maketitle")))
+
+(defun YaTeX::author (&optional argp)
+  (prog1 (read-string "Document Author: ")
+    (setq YaTeX-section-name "date"
+	  YaTeX-single-command "maketitle")))
 
 (defvar YaTeX:latex2e-named-color-alist
   '(("GreenYellow") ("Yellow") ("Goldenrod") ("Dandelion") ("Apricot")
