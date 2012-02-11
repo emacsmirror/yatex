@@ -2,6 +2,8 @@
 	野鳥/yahtml - 各バージョンの変更点について
 
 1.76	=== yatex ===
+	タイプセットでラベル未定義があったら自動的にrerunする。
+	自動rerun無効化は YaTeX-typeset-auto-rerun を nil に。
 	%#BIBTEX で始まる行に起動すべき bibtex コマンドを記述可能。
 	%#MAKEINDEX で始まる行に起動すべき makeindex コマンドを記述可能。
 	[prefix] t % で %#BIBTEX、%#MAKEINDEX 行を更新可能に。
