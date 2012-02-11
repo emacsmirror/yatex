@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c) 1994-2006 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 29 19:34:13 2012 on firestorm
+;;; Last modified Sat Feb 11 10:35:22 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -134,12 +134,10 @@ Return the list of (No.ofCols PointEndofFormat)"
 	     ((eq type 'alignat)
 	      (max
 	       1
-	       (1-
-		(* 2
-		   (string-to-int
-		    (buffer-substring
-		     (point)
-		     (progn (up-list -1) (forward-list 1) (1- (point)))))))))
+	       (* 2 (string-to-int
+		     (buffer-substring
+		      (point)
+		      (progn (up-list -1) (forward-list 1) (1- (point))))))))
 	     (t
 	      (YaTeX-tabular-parse-format-count-cols (point) eoform))))
       (list cols (1+ eoform)))))
@@ -174,29 +172,28 @@ Return the list of (No.ofCols PointEndofFormat)"
 (fset 'YaTeX-intelligent-newline-array 'YaTeX-intelligent-newline-tabular)
 (fset 'YaTeX-intelligent-newline-supertabular 'YaTeX-intelligent-newline-tabular)
 
-(defun YaTeX-intelligent-newline-alignat ()
-  (YaTeX-intelligent-newline-tabular 'alignat))
-(fset 'YaTeX-intelligent-newline-alignat* 'YaTeX-intelligent-newline-alignat)
-
 (defun YaTeX-intelligent-newline-align ()
   "Intelligent newline function for align.
 Count the number of & in the first align line and insert that many &s."
-  (let*((p (point)) (cols 0))
+  (let*((p (point)) (amps 0))
+    (if (string-match "alignat" env)
+	(setq amps (1- (car (YaTeX-tabular-parse-format 'alignat))))
+      (save-excursion
+	(YaTeX-beginning-of-environment)
+	(catch 'done
+	  (while (YaTeX-re-search-active-forward
+		  "\\(&\\)\\|\\(\\\\\\\\\\)" YaTeX-comment-prefix p t)
+	    (if (match-beginning 1) (setq amps (1+ amps)) (throw 'done t))))))
     (save-excursion
-      (YaTeX-beginning-of-environment)
-      (catch 'done
-	(while (YaTeX-re-search-active-forward
-		"\\(&\\)\\|\\(\\\\\\\\\\)" YaTeX-comment-prefix p t)
-	  (if (match-beginning 1) (setq cols (1+ cols)) (throw 'done t)))))
-    (if (> cols 0)
-	(save-excursion
-	  (forward-line -1)
-	  (end-of-line)
-	  (skip-chars-backward " \t")
-	  (or (and (= (preceding-char) ?\\) (= (char-after (- (point) 2)) ?\\))
-	      (insert "\\\\"))))
+      (forward-line -1)
+      (skip-chars-forward " \t")
+      (or (prog1 (looking-at "\\\\begin{") (end-of-line))
+	  (save-excursion
+	    (skip-chars-backward " \t")
+	    (and (= (preceding-char) ?\\) (= (char-after (- (point) 2)) ?\\)))
+	  (insert "\\\\")))
     (save-excursion
-      (while (>= (setq cols (1- cols)) 0)
+      (while (>= (setq amps (1- amps)) 0)
 	(insert "& ")))
     (YaTeX-indent-line)))
 
@@ -206,7 +203,7 @@ Count the number of & in the first align line and insert that many &s."
 			   (symbol-name s)))
 	  'YaTeX-intelligent-newline-align))
  '(align* flalign  flalign* matrix pmatrix bmatrix Bmatrix vmatrix Vmatrix
-   cases eqnarray eqnarray*))
+   cases eqnarray eqnarray* alignat alignat*))
 
 ;;;
 ;; Functions for tabbing environment
