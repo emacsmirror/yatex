@@ -1,6 +1,14 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.76	=== yatex ===
+	%#BIBTEX で始まる行に起動すべき bibtex コマンドを記述可能。
+	%#MAKEINDEX で始まる行に起動すべき makeindex コマンドを記述可能。
+	[prefix] t % で %#BIBTEX、%#MAKEINDEX 行を更新可能に。
+	[prefix] t d の platex+dvipdfmx をメニューに追加。
+	\includegraphicsでPNG/JPG/GIF/BMP指定時、bb= を生成する。
+	数式用環境のお任せ改行を刷新。
+	
 1.75	=== yatex ===
 	[prefix] t e でポイント位置を含む環境か数式環境をタイプセット。
 	M-C-SPC で環境だけでなく数式環境もマークする。
