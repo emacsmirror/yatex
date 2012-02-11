@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Feb 11 12:01:45 2012 on firestorm
+;;; Last modified Sat Feb 11 23:36:21 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -1769,7 +1769,8 @@ and print them to standard output."
 	    'YaTeX:documentclasses-private
 	    'YaTeX:documentclasses-local)))
       (if (string= "" sname) (setq sname YaTeX-default-documentclass))
-      (setq YaTeX-default-documentclass sname)))))
+      (setq YaTeX-section-name "title"
+	    YaTeX-default-documentclass sname)))))
 
 (defun YaTeX::title (&optional argp)
   (prog1 (read-string "Document Title: ")
@@ -1780,6 +1781,14 @@ and print them to standard output."
   (prog1 (read-string "Document Author: ")
     (setq YaTeX-section-name "date"
 	  YaTeX-single-command "maketitle")))
+
+(defun YaTeX:document ()
+  (setq YaTeX-section-name
+	(if (string-match "book\\|bk" YaTeX-default-documentclass)
+	    "chapter"
+	  "section"))
+  "")
+      
 
 (defvar YaTeX:latex2e-named-color-alist
   '(("GreenYellow") ("Yellow") ("Goldenrod") ("Dandelion") ("Apricot")
