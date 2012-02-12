@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Feb 11 23:36:21 2012 on firestorm
+;;; Last modified Sun Feb 12 10:23:23 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -1894,7 +1894,7 @@ and print them to standard output."
   (let (width height (scale "") angle str)
     (setq width (YaTeX-read-string-or-skip "Width: ")
 	  height (YaTeX-read-string-or-skip "Height: "))
-    (or (string< width "") (string< "" height)
+    (or (string< "" width) (string< "" height)
 	(setq scale (YaTeX-read-string-or-skip "Scale: ")))
     (setq angle (YaTeX-read-string-or-skip "Angle(0-359): "))
     (setq str
@@ -1913,7 +1913,7 @@ and print them to standard output."
 (defun YaTeX::includegraphics (argp)
   "Add-in for \\includegraphics"
   (let ((imgfile (YaTeX::include argp "Image File: "))
-	(case-fold-search t) info bb noupdate needclose)
+	(case-fold-search t) info bb noupdate needclose c)
     (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\)$" imgfile)
 	 (file-exists-p imgfile)
 	 (or (fboundp 'yahtml-get-image-info)
@@ -1925,9 +1925,10 @@ and print them to standard output."
 	 (setq bb (format "bb=%d %d %d %d" 0 0 (car info) (car (cdr info))))
 	 (save-excursion
 	   (cond
-	    ((and (YaTeX-re-search-active-backward
-		   "\\\\\\(includegraphics\\)\\|\\(bb=[ \t0-9]+\\)"
-		   YaTeX-comment-prefix nil t)
+	    ((and (save-excursion
+		    (YaTeX-re-search-active-backward
+		     "\\\\\\(includegraphics\\)\\|\\(bb=[-+ \t0-9]+\\)"
+		     YaTeX-comment-prefix nil t))
 		  (match-beginning 2)
 		  (not (setq noupdate (equal (YaTeX-match-string 2) bb)))
 		  (y-or-n-p (format "Update `bb=' line to `%s'?: " bb)))
@@ -1935,13 +1936,17 @@ and print them to standard output."
 	     (replace-match bb))
 	    (noupdate nil)
 	    ((and (match-beginning 1)
-		  (y-or-n-p "Insert `bb=...' line?: "))
+		  (prog2
+		      (message "Insert `%s'?  Y)es N)o C)yes+`clip': " bb)
+		      (memq (setq c (read-char)) '(?y ?Y ?\  ?c ?C))
+		    (message "")))
 	     (goto-char (match-end 0))
 	     (message "")
 	     (if (looking-at "\\[") (forward-char 1)
 	       (insert-before-markers "[")
 	       (setq needclose t))
 	     (insert-before-markers bb)
+	     (if (memq c '(?c ?C)) (insert-before-markers ",clip"))
 	     (if needclose (insert-before-markers "]")
 	       (or (looking-at "\\]") (insert-before-markers ","))))
 	    (t (YaTeX-push-to-kill-ring bb)))))
