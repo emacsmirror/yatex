@@ -10,6 +10,8 @@
 	[prefix] t d の platex+dvipdfmx をメニューに追加。
 	\includegraphicsでPNG/JPG/GIF/BMP指定時、bb= を生成する。
 	数式用環境のお任せ改行を刷新。
+	=== yahtml ===
+	<ol>, <input> の属性入力を C-j でスキップ可能に。
 	
 1.75	=== yatex ===
 	[prefix] t e でポイント位置を含む環境か数式環境をタイプセット。
