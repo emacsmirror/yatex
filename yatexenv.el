@@ -2,7 +2,7 @@
 ;;; YaTeX environment-specific functions.
 ;;; yatexenv.el
 ;;; (c) 1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Feb 11 12:15:22 2012 on firestorm
+;;; Last modified Sun Feb 12 11:15:33 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -259,11 +259,17 @@ Count the number of & in the first align line and insert that many &s."
 ;;;
 (defun YaTeX-intelligent-newline-document ()
   "New paragraph by null line or `\\par'."
-  (if (save-excursion (re-search-backward "\\\\par\\>" nil t))
-      (progn
-	(YaTeX-indent-line)
-	(insert "\\par")))
-  (newline)
+  (if (< (count-lines
+	  (or (get 'YaTeX-inner-environment 'point)
+	      (max 1 (- (point) 17)))	;"\begin{document}\n" == 17
+	  (point))
+	 2)
+      nil
+    (if (save-excursion (re-search-backward "\\\\par\\>" nil t))
+	(progn
+	  (YaTeX-indent-line)
+	  (insert "\\par")))
+    (newline))
   (YaTeX-indent-line))
 
 ;;;
