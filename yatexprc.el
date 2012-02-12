@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan 24 09:43:29 2012 on firestorm
+;;; Last modified Sun Feb 12 10:56:25 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -187,7 +187,7 @@ This is mechanism is ")
                  (setq mode-line-process
                        (concat ": "
                                (symbol-name (process-status proc))))
-		 (message mode-name " %s."
+		 (message "%s %s" mode-name
 			  (if (eq (process-status proc) 'exit)
 			      "done" "ceased"))
                  ;; If buffer and mode line shows that the process
@@ -225,7 +225,8 @@ This is mechanism is ")
 			   (set-marker YaTeX-typeset-marker (point)))
 		       (set-process-sentinel
 			(start-process
-			 mode-name pbuf
+			 (setq mode-name (concat mode-name "*2"))
+			 pbuf
 			 shell-file-name YaTeX-shell-command-option tobecalled)
 			'YaTeX-typeset-sentinel)
 		       (if ppcmd
@@ -239,7 +240,9 @@ This is mechanism is ")
 		    ((and ppcmd (string-match "finish" mes))
 		     (insert (format "=======> Success! Calling %s\n" ppcmd))
 		     (setq mode-name	; set process name
-			   (substring ppcmd 0 (string-match " " ppcmd)))
+			   (concat
+			    mode-name "+"
+			    (substring ppcmd 0 (string-match " " ppcmd))))
 					; to reach here, 'start-process exists on this emacsen
 		     (set-process-sentinel
 		      (start-process
