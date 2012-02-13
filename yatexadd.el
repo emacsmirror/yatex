@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Feb 12 10:48:23 2012 on firestorm
+;;; Last modified Mon Feb 13 15:20:11 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -606,6 +606,7 @@ If optional third argument NOSET is non-nil, do not generate new label."
       (setq cc (current-column))
       (if (= (char-after (point)) ?\\) (forward-char 1))
       (cond
+       ;; In each codition, 'inspoint and 'boundary should be set
        ((looking-at YaTeX-sectioning-regexp)
 	(setq command (YaTeX-match-string 0))
 	(skip-chars-forward "^{")
@@ -680,14 +681,19 @@ If optional third argument NOSET is non-nil, do not generate new label."
 	;;(setq boundary (concat YaTeX-ec-regexp "\\(\\\\\\|end{" env "}\\)"))
 	(setq boundary
 	      (save-excursion
-		(if (YaTeX-re-search-active-forward
-		     (concat
-		      YaTeX-ec-regexp "\\("
-		      (if exp1 "" "\\\\\\|")
-		      "end{" env "}\\)")
-		     r-escape nil 1)
-		    (match-beginning 0)
-		  (1- (point))))
+		(or (catch 'bndry
+		      (while (YaTeX-re-search-active-forward
+			      (concat
+			       YaTeX-ec-regexp "\\("
+			       (if exp1 "" "\\\\\\|")
+			       "\\(end{" env "\\)}\\)")
+			      r-escape nil 1)
+			(setq foundpoint (match-beginning 0))
+			(if (or (match-beginning 2) ;end of outer math-env
+				(equal env (YaTeX-inner-environment t)))
+			    ;; YaTeX-inner-environment destroys match-data
+			    (throw 'bndry foundpoint))))
+		    (1- (point))))
 	      inspoint boundary))
        ((looking-at "footnote\\s *{")
 	(setq command "footnote")
@@ -718,6 +724,7 @@ If optional third argument NOSET is non-nil, do not generate new label."
 		    (match-beginning 0)
 		(1- (point))))))
        (t ))
+      ;;cond by kind of labeling ends here.
       (if (save-excursion (skip-chars-forward " \t") (looking-at "%"))
 	  (forward-line 1))
       (cond
@@ -754,6 +761,7 @@ If optional third argument NOSET is non-nil, do not generate new label."
 	(if mathp nil 
 	  (insert "\n")
 	  (YaTeX-reindent cc))
+	(put 'YaTeX::ref-getset-label 'foundpoint (point))
 	(insert (format "\\label{%s}" newlabel))
 	newlabel)))))
 
@@ -904,8 +912,6 @@ YaTeX-sectioning-levelの数値で指定.")
 			      e0 (match-end 1)))
 		    (funcall output (format "--subequation--%s" label) e0)))
 		 ((string-match mathenvs cmd) ;;if matches mathematical env
-		  ;(skip-chars-forward "} \t\n")
-		  ;(forward-line 1) ;2004/1/25
 		  (skip-chars-forward "}")
 		  (setq x (point)
 			envname (substring
@@ -922,15 +928,15 @@ YaTeX-sectioning-levelの数値で指定.")
 		      (while (YaTeX-re-search-active-forward
 			      (concat
 			       "\\\\end{\\(" (regexp-quote envname) "\\)";;(1)
-			       (if YaTeX-use-AMS-LaTeX
-				   "\\|\\\\\\(notag\\)") ;;2
+			       "\\|\\\\\\(notag\\)" ;;2
 			       (if (string-match
 				    YaTeX::ref-mathenv-exp1-regexp  cmd)
-				   "" "\\|\\\\\\\\$")
+				   "" "\\|\\(\\\\\\\\\\)$") ;;3
 			       )
 			      percent nil t)
 			(let*((quit (match-beginning 1))
 			      (notag (match-beginning 2))
+			      (newln (match-beginning 3))
 			      (label ".......................") l2
 			      (e (point)) (m0 (match-beginning 0))
 			      (ln (YaTeX-string-width label)))
@@ -938,7 +944,12 @@ YaTeX-sectioning-levelの数値で指定.")
 			   (notag
 			    (YaTeX-re-search-active-forward
 			     "\\\\\\\\" percent nil 1)
-			    (setq x (point)))
+			    (setq x (point))) ;use x as \label search bound
+			   ((and newln	; `\\' found
+				 (not (equal (YaTeX-inner-environment)
+					     envname)))
+			    (YaTeX-end-of-environment)
+			    (goto-char (match-end 0)))
 			   (t
 			    (if (YaTeX-re-search-active-backward
 				 YaTeX::ref-labeling-regexp
