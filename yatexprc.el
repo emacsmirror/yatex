@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Feb 13 15:28:22 2012 on firestorm
+;;; Last modified Mon Feb 13 21:58:24 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -148,7 +148,7 @@
 
 (defvar YaTeX-typeset-rerun-msg "Rerun to get cross-references right.")
 (defvar YaTeX-typeset-citation-msg
-  "Warning: Citation .* on page [0-9]+ undefined on input line")
+  "Warning: Citation \`")
 (defvar YaTeX-typeset-auto-rerun t
   "*Non-nil automatically reruns typesetter when cross-refs update found.
 This is mechanism is ")
@@ -160,7 +160,7 @@ This is mechanism is ")
          (let* ((obuf (current-buffer)) (pbuf (process-buffer proc))
 		(pwin (get-buffer-window pbuf))
 		(owin (selected-window)) win
-		tobecalled
+		tobecalled shortname
 		(thiscmd (get 'YaTeX-typeset-process 'thiscmd))
 		(ppprop (get 'YaTeX-typeset-process 'ppcmd))
 		(ppcmd (cdr (assq proc ppprop)))
@@ -205,16 +205,22 @@ This is mechanism is ")
 			      (search-backward
 			       ".bbl" YaTeX-typeset-marker t)))
 		       (insert "\n" YaTeX-typeset-rerun-msg "\n")
-		       (setq tobecalled bibcmd))
-		      ((save-excursion
-			 (search-backward
-			  YaTeX-typeset-rerun-msg YaTeX-typeset-marker t))
+		       (setq tobecalled bibcmd shortname "+bibtex"))
+		      ((or
+			(save-excursion
+			  (search-backward
+			   YaTeX-typeset-rerun-msg YaTeX-typeset-marker t))
+			(save-excursion
+			  (re-search-backward
+			   "natbib.*Rerun to get citations correct"
+			   YaTeX-typeset-marker t)))
 		       (if bibcmd
 			   (put 'YaTeX-typeset-process 'bibcmd
 				(cons (cons (get-buffer-process pbuf) bibcmd)
 				      bcprop)))
-		       (setq tobecalled thiscmd))
-		      (t nil))
+		       (setq tobecalled thiscmd shortname "+typeset"))
+		      (t
+		       nil))			  ;no need to call any process
 		     (progn
 		       (insert
 			(format
@@ -225,7 +231,7 @@ This is mechanism is ")
 			   (set-marker YaTeX-typeset-marker (point)))
 		       (set-process-sentinel
 			(start-process
-			 (setq mode-name (concat mode-name "*2"))
+			 (setq mode-name (concat mode-name shortname))
 			 pbuf
 			 shell-file-name YaTeX-shell-command-option tobecalled)
 			'YaTeX-typeset-sentinel)
@@ -250,7 +256,9 @@ This is mechanism is ")
 		       pbuf		; Use this buffer twice.
 		       shell-file-name YaTeX-shell-command-option
 		       ppcmd)
-		      'YaTeX-typeset-sentinel))))
+		      'YaTeX-typeset-sentinel))
+		    (t ;pull back original name
+		     (setq mode-name "typeset"))))
 		 (forward-char 1))
 	     (setq YaTeX-typeset-process nil)
              ;; Force mode line redisplay soon
