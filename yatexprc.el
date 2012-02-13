@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Feb 12 10:56:25 2012 on firestorm
+;;; Last modified Mon Feb 13 15:28:22 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -148,7 +148,7 @@
 
 (defvar YaTeX-typeset-rerun-msg "Rerun to get cross-references right.")
 (defvar YaTeX-typeset-citation-msg
-  "LaTeX Warning: Citation .* on page [0-9]+ undefined on input line")
+  "Warning: Citation .* on page [0-9]+ undefined on input line")
 (defvar YaTeX-typeset-auto-rerun t
   "*Non-nil automatically reruns typesetter when cross-refs update found.
 This is mechanism is ")
