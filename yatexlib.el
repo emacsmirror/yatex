@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Feb 10 12:30:49 2012 on firestorm
+;;; Last modified Fri Feb 17 17:15:37 2012 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -1533,6 +1533,15 @@ compared by regexp."
 		" is stored into kill-ring.  Paste it by yank(%s).")))
 	 (kill-new string)
 	 (message (concat "`%s'" msg) string key))))
+
+(defun YaTeX-elapsed-time (before after)
+  "Get elapsed time from BEFORE and AFTER, which are given from currente-time."
+  (if (fboundp 'float)			;Then, current-time function should be.
+      (let ((mil (float 1000000)))	;To protect parse error before 19
+	(+ (* (- (nth 0 after) (nth 0 before)) 65536)
+	   (- (nth 1 after) (nth 1 before))
+	   (- (/ (nth 2 after) mil)
+	      (/ (nth 2 before) mil))))))
 
 ;;;
 ;; Functions for the Installation time

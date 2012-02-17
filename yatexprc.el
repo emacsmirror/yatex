@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Feb 13 21:58:24 2012 on firestorm
+;;; Last modified Fri Feb 17 17:38:32 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -56,6 +56,8 @@
   (modify-syntax-entry ?\] "w" YaTeX-typeset-buffer-syntax))
 
 (defvar YaTeX-typeset-marker nil)
+(defvar YaTeX-typeset-consumption nil)
+(make-variable-buffer-local 'YaTeX-typeset-consumption)
 (defun YaTeX-typeset (command buffer &optional prcname modename ppcmd)
   "Execute jlatex (or other) to LaTeX typeset."
   (interactive)
@@ -95,6 +97,10 @@
 	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)
 	(put 'YaTeX-typeset-process 'thiscmd command)
 	(put 'YaTeX-typeset-process 'name prcname)
+	(if (fboundp 'current-time)
+	    (setq YaTeX-typeset-consumption
+		  (cons (cons 'time (current-time))
+			(delq 'time YaTeX-typeset-consumption))))
 	(let ((ppprop (get 'YaTeX-typeset-process 'ppcmd)))
 	  (setq ppprop (delq (assq YaTeX-typeset-process ppprop) ppprop))
 	  (if ppcmd
@@ -146,12 +152,15 @@
       (switch-to-buffer cb)
       (YaTeX-remove-nonstopmode))))
 
+(defvar YaTeX-typeset-auto-rerun t
+  "*Non-nil automatically reruns typesetter when cross-refs update found.
+This is a toy mechanism.  DO NOT RELY ON THIS MECHANISM.
+You SHOULD check the integrity of cross-references with your eyes!!
+Supplying an integer to this variable inhibit compulsory call of bibtex,
+thus, it call bibtex only if warning messages about citation are seen.")
 (defvar YaTeX-typeset-rerun-msg "Rerun to get cross-references right.")
 (defvar YaTeX-typeset-citation-msg
   "Warning: Citation \`")
-(defvar YaTeX-typeset-auto-rerun t
-  "*Non-nil automatically reruns typesetter when cross-refs update found.
-This is mechanism is ")
 (defun YaTeX-typeset-sentinel (proc mes)
   (cond ((null (buffer-name (process-buffer proc)))
          ;; buffer killed
@@ -183,7 +192,16 @@ This is mechanism is ")
 		 (if pwin (recenter -3))
                  (insert ?\n mode-name " " mes)
                  (forward-char -1)
-                 (insert " at " (substring (current-time-string) 0 -5) "\n")
+                 (insert
+		  (format " at %s%s\n"
+			  (substring (current-time-string) 0 -5)
+			  (if (and (fboundp 'current-time) (fboundp 'float)
+				   (assq 'time YaTeX-typeset-consumption))
+			      (format
+			       " (%.2f secs)"
+			       (YaTeX-elapsed-time
+				(cdr (assq 'time YaTeX-typeset-consumption))
+				(current-time))))))
                  (setq mode-line-process
                        (concat ": "
                                (symbol-name (process-status proc))))
@@ -195,15 +213,24 @@ This is mechanism is ")
                  ;; will stay around until M-x list-processes.
                  (delete-process proc)
 		 (if (cond
-		      ((null YaTeX-typeset-auto-rerun) nil)
-		      ((and bibcmd
-			    (save-excursion
-			      (re-search-backward
-			       YaTeX-typeset-citation-msg
-			       YaTeX-typeset-marker t))
-			    (save-excursion
+		      ((not YaTeX-typeset-auto-rerun) nil)
+		      ((and bibcmd     ;Call bibtex if bibcmd defined &&
+			    (or	       ;  (1st call  || warning found)
+			     (and (not (numberp YaTeX-typeset-auto-rerun))
+				  ; cancel call at 1st, if value is a number.
+				  (not (string-match "bibtex" mode-name)))
+			     (re-search-backward
+			      YaTeX-typeset-citation-msg
+			      YaTeX-typeset-marker t))
+			    (save-excursion ; && using .bbl files.
 			      (search-backward
 			       ".bbl" YaTeX-typeset-marker t)))
+		       ;; Always call bibtex after the first typesetting,
+		       ;; because bibtex doesn't warn disappeared \cite.
+		       ;; (Suggested by ryseto. 2012)
+		       ;; It is more efficient to call bibtex directly than
+		       ;; to call it after deep inspection on the balance
+		       ;; of \cite vs. \bib*'s referring all *.aux files.
 		       (insert "\n" YaTeX-typeset-rerun-msg "\n")
 		       (setq tobecalled bibcmd shortname "+bibtex"))
 		      ((or
@@ -257,7 +284,7 @@ This is mechanism is ")
 		       shell-file-name YaTeX-shell-command-option
 		       ppcmd)
 		      'YaTeX-typeset-sentinel))
-		    (t ;pull back original name
+		    (t ;pull back original mode-name
 		     (setq mode-name "typeset"))))
 		 (forward-char 1))
 	     (setq YaTeX-typeset-process nil)
@@ -384,7 +411,9 @@ PP command will be called iff typeset command exit successfully"
     (setq pparg (substring cmd 0 (string-match "[;&]" cmd)) ;rm multistmt
 	  pparg (substring pparg (rindex pparg ? ))	 ;get last arg
 	  pparg (substring pparg 0 (rindex pparg ?.))	 ;rm ext
-	  bibcmd (concat bibtex-command pparg))
+	  bibcmd (or (YaTeX-get-builtin "BIBTEX") bibtex-command))
+    (or (string-match "\\s " bibcmd)		;if bibcmd has no spaces,
+	(setq bibcmd (concat bibcmd pparg)))	;append argument(== %#!)
     (and pp
 	 (stringp pp)
 	 (setq ppcmd (concat pp pparg)))
