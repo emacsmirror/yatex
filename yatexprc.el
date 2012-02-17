@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Feb 17 17:38:32 2012 on firestorm
+;;; Last modified Fri Feb 17 22:35:38 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -213,7 +213,9 @@ thus, it call bibtex only if warning messages about citation are seen.")
                  ;; will stay around until M-x list-processes.
                  (delete-process proc)
 		 (if (cond
-		      ((not YaTeX-typeset-auto-rerun) nil)
+		      ((or (not YaTeX-typeset-auto-rerun)
+			   (string-match "latexmk" thiscmd))
+		       nil)
 		      ((and bibcmd     ;Call bibtex if bibcmd defined &&
 			    (or	       ;  (1st call  || warning found)
 			     (and (not (numberp YaTeX-typeset-auto-rerun))
