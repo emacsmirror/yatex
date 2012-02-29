@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Feb 17 17:15:37 2012 on firestorm
+;;; Last modified Wed Feb 29 09:49:30 2012 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -1568,7 +1568,15 @@ compared by regexp."
 		 (lambda (arg)
 		   (find-file arg)
 		   (texinfo-format-buffer)
-		   (basic-save-buffer)))
+		   (cond
+		    ((fboundp 'set-buffer-file-coding-system)
+		     (set-buffer-file-coding-system 'sjis-dos))
+		    ((fboundp 'set-file-coding-system)
+		     (set-file-coding-system '*sjis*dos))
+		    ((boundp 'NEMACS)
+		     (set (make-local-variable 'kanji-fileio-code) 1)))
+		   (let ((coding-system-for-write buffer-file-coding-system))
+		     (basic-save-buffer))))
 		command-line-args-left)
 	(kill-emacs))))
 
