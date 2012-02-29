@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Wed Jan 18 10:56:02 2012 on firestorm
+@c Last modified Wed Feb 29 10:38:46 2012 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -79,12 +79,12 @@ if you put them in @file{~/src/emacs/yahtml},
 (setq load-path (cons (expand-file-name "~/src/emacs/yahtml") load-path))
 @end lisp
 
-@noindent 
+@noindent
 is what you add.
 
 By this, yahtml will be automatically loaded when editing files with .html
 extensions.  "yahtml" will be displayed on the mode line if no errors
-occurred. 
+occurred.
 
 @node Setting environments for weblint browsers and image viewers, Setting environment variables for WWW pages, Setting up yahtml, Installation
 @comment  node-name,  next,  previous,  up
@@ -115,7 +115,7 @@ Variables regarding path names for files that will be your home page.
 @item yahtml-directory-index
         @dots{} index file displayed when none is given in URL.  Usually
         @file{index.html} on NCSA type httpd and @file{Welcome.html} on
-        CERN types. 
+        CERN types.
 @end table
 
 Examples for  @code{yahtml-path-url-alist}.  If @file{/home/yuuji/http/}
@@ -179,7 +179,7 @@ Completion for elements that do not have end tags and require only
 attributes.  Possible completions are, <img>, <input>.
 
 @item [prefix] l (YaTeX large-type completion)
-@dots{} 
+@dots{}
 
 @example
 <big> 〜 </big>
@@ -203,14 +203,14 @@ is possible.
 @node Jump, Changing and Deleting, Completion, Top
 @comment  node-name,  next,  previous,  up
 @chapter Cursor Movement
-By using 
+By using
 
 @table @kbd
 @item [prefix] g
         @dots{} move to corresponding object
 @end table
 
-@noindent 
+@noindent
 the cursor will go to the corresponding object according to the context.
 Recognized contexts are
 
@@ -242,7 +242,7 @@ By using
         @dots{} change tags in matching pairs
 @end table
 
-@noindent 
+@noindent
 the content can be changed according to the context of the HTML document
 where the cursor is located.
 
@@ -324,7 +324,7 @@ If you have CSS defined as below;
 
 when you input h1(or h2) tag with completing-read by [prefix] b or
 [prefix] l, yahtml prompts you to input class name with completion from
-the words which are effective to h1 or h2.  And if you defined 
+the words which are effective to h1 or h2.  And if you defined
 global class like this;
 
 @display

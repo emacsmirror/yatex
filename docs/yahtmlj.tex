@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Wed Jan 18 10:56:44 2012 on firestorm
+@c Last modified Wed Feb 29 09:18:14 2012 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -55,9 +55,9 @@ yahtmlは GNU Emacs 上で HTML文書を作成する時に、繁雑なHTMLタグの入力を補
 @comment  node-name,  next,  previous,  up
 @chapter インストール
 @menu
-* yahtml起動のための設定::      
-* lintプログラム/ブラウザ/イメージヴューア環境等の設定::  
-* WWWページ環境用変数の設定::   
+* yahtml起動のための設定::
+* lintプログラム/ブラウザ/イメージヴューア環境等の設定::
+* WWWページ環境用変数の設定::
 @end menu
 
 @node yahtml起動のための設定, lintプログラム/ブラウザ/イメージヴューア環境等の設定, Installation, Installation
@@ -80,7 +80,7 @@ yahtmlは GNU Emacs 上で HTML文書を作成する時に、繁雑なHTMLタグの入力を補
 (setq load-path (cons (expand-file-name "~/src/emacs/yahtml") load-path))
 @end lisp
 
-@noindent 
+@noindent
 などとします。
 
   以上の設定により、拡張子が .html であるファイルを編集すると自動的に
@@ -209,7 +209,7 @@ HTMLタグの補完入力ができます。それぞれの型の補完は順に、
         @dots{} 対応するオブジェクトにジャンプ
 @end table
 
-@noindent 
+@noindent
 を押すことにより、カーソル位置のHTML構文に対応する場所にジャンプ
 します。対応関係が存在すると解釈されるコマンドには以下のものがあります。
 
@@ -226,10 +226,10 @@ HTMLタグの補完入力ができます。それぞれの型の補完は順に、
 @chapter 変更/削除
 
 @menu
-* 対タグの変更::                
-* 文字参照への変更::            
-* リジョン内文字のURLencode::   
-* td括り/tr括り::               
+* 対タグの変更::
+* 文字参照への変更::
+* リジョン内文字のURLencode::
+* td括り/tr括り::
 @end menu
 
 @node 対タグの変更, 文字参照への変更, Changing and Deleting, Changing and Deleting
@@ -242,7 +242,7 @@ HTMLタグの補完入力ができます。それぞれの型の補完は順に、
         @dots{} 対応するタグ等を変更
 @end table
 
-@noindent 
+@noindent
 を押すことにより、カーソル位置のHTML構文に応じた
 記述内容の変更を行います。カーソル位置と変更する内容の
 対応は以下の通りです。
@@ -254,7 +254,7 @@ HTMLタグの補完入力ができます。それぞれの型の補完は順に、
 @dots{} 属性値の変更
 @end itemize
 
-@node 文字参照への変更,  , 対タグの変更, Changing and Deleting
+@node 文字参照への変更, リジョン内文字のURLencode, 対タグの変更, Changing and Deleting
 @comment  node-name,  next,  previous,  up
 @section 文字参照への変更
 文字としての < や > を表現するときは、文字参照を用いて
@@ -308,8 +308,8 @@ td以外の要素，具体的には th で括りたい場合は universal-argument
 @chapter CSS(スタイルシート)サポート
 
 @menu
-* CSS-class completion::        
-* Reread CSS file::             
+* CSS-class completion::
+* Reread CSS file::
 @end menu
 
 @node CSS-class completion, Reread CSS file, CSS Support, CSS Support

@@ -10,7 +10,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Sun Jan 29 22:56:44 2012 on firestorm
+@c Last modified Wed Feb 29 10:18:53 2012 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -169,7 +169,7 @@ userpackage
 (setq load-path (cons (expand-file-name "~/src/emacs/yatex") load-path))
 @end lisp
 
-@noindent 
+@noindent
 などとします。
 
   以上の設定により、拡張子が .tex であるファイルを編集すると自動的に野鳥が
@@ -285,12 +285,12 @@ LaTeXソースの編集中、次のキー入力により、platex などのタイプセットプログラ
 できます。この場合メインファイルのプリアンブルが一時ファイルの
 プリアンブルとして使われます。したがってプリアンブルにないマクロ定義が
 領域内にあるとエラーになります。領域タイプセットを使う場合、
-必ずマクロ定義はプリアンブル(@code{\begin{document}}より前)に置くよう
+必ずマクロ定義はプリアンブル(@code{\begin@{document@}}より前)に置くよう
 にして下さい。一時ファイルはメインファイルのある
 ディレクトリの@file{texput.tex}という名前で出力されるので、
 上書きには注意してください。
 
-@subsection{環境タイプセット}
+@subsection 環境タイプセット
 
   @kbd{[prefix] te} を押すと、ポイント位置の最も内側の環境、または数式モー
 ド内の場合はその数式モード全体が自動的に領域選択されて、領域タイプセットを
@@ -368,7 +368,7 @@ NTT jTeX と、ASCII jTeX を使い分けたいような場合に便利でしょう。
 @section 入力ファイル分割
 
 また、章毎に別ファイルの .tex を作成している場合で、@file{main.tex}から 
-@file{sub.tex}を @code{\include}しているような時は、@file{sub.tex}の任意の
+@file{sub.tex} を @code{\include}しているような時は、@file{sub.tex}の任意の
 位置に次のような行を埋め込みます。
 
 @example
@@ -389,7 +389,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 
 なお、この行の最後の単語のピリオド以前を「メインファイル」のベース
 ネームであると仮定します(上の2つの場合どちらも@file{main})。
-この行に記述した、@code{%f}はメインファイル名に、
+この行に記述した、@code{%f}はメインファイル名に、 
 @code{%r} はメインファイルの拡張子を取り除いた部分に置換されます。
 ただし、@code{%f,%r}を利用した場合、初回タイプセット時に必ずメインファイル
 名の入力を促されます。
@@ -403,8 +403,8 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 サブディレクトリを作って、その中にサブファイルを置くことはできるが
 サブディレクトリのサブディレクトリには置けない。
 @item
-メインファイルからサブディレクトリ内のファイルを include
-する時には、相対パス指定を用いて、
+メインファイルからサブディレクトリ内のファイルを include する時には、
+相対パス指定を用いて、
 @code{\include@{chap1/sub@}}のように記述。
 @item
 メインファイルが一つ上のディレクトリにある場合も、サブファイルには
@@ -430,7 +430,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
         %#END
 @end example
 
-@noindent 
+@noindent
 のように@code{%#BEGIN}と@code{%#END}で囲み、カーソルを「@code{%#BEGIN}以降」
 に置いてください。この時の領域決定規則をまとめると次のようになります。
 
@@ -501,7 +501,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
         %#LPR dvi2ps %f %t %s | 4up -page 4 | texfix | lpr -Plp2
 @end example
 
-@noindent 
+@noindent
 のように書いて下さい。プリントアウトするページ範囲をいちいち聞かせないよう
 にする時に
 
@@ -509,7 +509,7 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
         %#LPR dvi2ps %s | lpr
 @end example
 
-@noindent 
+@noindent
 などとするのも便利かもしれません。
 
 @node Controlling which command to invoke, Editing %# notation, lpr format, %#notation
@@ -541,18 +541,18 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
         @dots{} @code{%#}@var{記法編集メニュー}
 @end table
 
-@noindent 
+@noindent
 を押します。
 
 @example
         !)Edit-%#! B)EGIN-END-region L)Edit-%#LPR
 @end example
 
-@noindent 
+@noindent
 というメニューが出て来るので、@code{%#!}に続くコマンドを変更したい時には
 @kbd{!}を、@code{%#LPR}で lpr フォーマットを変えたい時は@kbd{l}を、あらか
 じめ設定したリジョンを @code{%#BEGIN} ～ @code{%#END} で括りたい時は、
-@kbd{b}を押します。@kbd{b}を選んだ時には、それまでバッファ中に置かれていた 
+@kbd{b}を押します。@kbd{b}を選んだ時には、それまでバッファ中に置かれていた
 @code{%#BEGIN}, @code{%#END} が自動的に消去されます。
 @cindex lprフォーマットの変更[lprふおおまつとのへんこう]
 
@@ -590,7 +590,7 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
         @dots{} begin 型補完開始(標準では @kbd{C-c b})
 @end table
 
-@noindent 
+@noindent
 で始まります。頻繁に用いられる次の La@TeX{} 環境の補完は、[prefix] @kbd{b}
 に続く次の1文字を入力するだけで、@code{\begin@{xxx@}...\end@{xxx@}}を完成
 させます。
@@ -643,7 +643,7 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
 @kbd{[prefix] b @key{SPC}} と入力すると、最下行のミニバッファに
 
 @example
-        Begin environment(default document): 
+        Begin environment(default document):
 @end example
 
 @noindent
@@ -698,14 +698,14 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
         @dots{} section 型補完
 @end table
 
-@noindent 
+
 で実行します。@kbd{[prefix] s} を入力するとミニバッファに、
 
 @example
         (C-v for view-section) \???@{@} (default documentclass):
 @end example
 
-@noindent 
+@noindent
 というプロンプトが現れるので、そこで @samp{section} のような La@TeX{} コマ
 ンド名を入力します。ここでもリターンキーのみで括弧内のデフォルト値が選択さ
 れるほか、@samp{chapter}などのような頻度の高い名称入力にはスペースキーによ
@@ -715,7 +715,7 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
         \section@{???@}:
 @end example
 
-@noindent 
+@noindent
 というプロンプトが現れるので、セクションのタイトルなどを入力します。
 たとえば、
 
@@ -724,33 +724,33 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
         \section@{???@}: 目的
 @end example
 
-@noindent 
+@noindent
 のように入力した場合は、文章中に
 
 @example
         \section@{目的@}
 @end example
 
-@noindent 
+@noindent
 が挿入され、
 
 @example
         (C-v for view-section) \???@{@} (default section): vspace*
-        \vspace*@{???@}: 
+        \vspace*@{???@}:
 @end example
 
-@noindent 
+@noindent
 のように@{@}の中身を省略したときは、
 
 @example
         \vspace*@{@}
 @end example
 
-@noindent 
+@noindent
 だけが挿入され、改行はせずカーソルは自動的に中括弧の内側に移動します。
 
 @menu
-* 2個以上の引数をとる section型コマンド::  
+* 2個以上の引数をとる section型コマンド::
 * Enclose section-type command::  括り補完
 * Recursive completion::        再帰補完
 * view-sectioning::             セクション区切りのアウトライン表示
@@ -763,15 +763,15 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
 @cindex 引数[ひきすう]
 
   ところで、@samp{\addtolength@{\topmargin@}@{8mm@}} などのように、引数を二つ
-以上取る La@TeX{} コマンドがあります。このようなコマンドの補完入力には、
-section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength} 
+以上取る La@TeX{} コマンドがあります。このようなコマンドの補完入力には、 
+section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 の例であれば、引数2を指定します。つまり、
 
 @example
         C-u 2 [prefix] s   (または、ESC 2 [prefix] s)
 @end example
 
-@noindent 
+@noindent
 と section 型補完を呼び出した後、
 
 @example
@@ -780,7 +780,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
         Argument 2: 8mm
 @end example
 
-@noindent 
+@noindent
 のように入力してください。最初の addtolength の部分と、第一引数である 
 \topmargin の入力は当然スペースによる補完入力が可能です。ユーザ辞書に登録
 される La@TeX{} コマンドには、この引数の数も学習されるので、最初の補完の時
@@ -865,7 +865,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 @subsection ラベル自動生成
 @cindex ラベル自動生成[らへるしとうせいせい]
 
-  @code{\ref@{@}} や @code{\cite{@@}} マクロをsection型補完で入れた場合
+  @code{\ref@{@}} や @code{\cite@{@}} マクロをsection型補完で入れた場合
 参照先となり得るものを全て探してメニューにして選択できます。参照先には
 @code{\label@{@}}をつけておく必要はありません。もしあれば、そのラベルを
 使い、なければその場で参照先に@code{\label@{@}}を作らせてくれます。
@@ -886,14 +886,14 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
         @dots{} large 型補完開始
 @end table
 
-@noindent 
+@noindent
 がlarge型補完の開始です。@kbd{[prefix] l} を押すと、ミニバッファに
 
 @example
-        @{\??? @} (default large): 
+        @{\??? @} (default large):
 @end example
 
-@noindent 
+
 と表示されるので、上記のものと同じ要領で補完入力して下さい。補完候補に用意
 されているのは、@samp{footnotesize} や @samp{huge} のような文字サイズ指定
 子と、@samp{bf}や@samp{dg}のようなフォント指定子です。
@@ -921,7 +921,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
         @dots{} maketitle 型補完開始
 @end table
 
-@noindent 
+@noindent
 で、maketitle 型補完を開始します。補完の要領は今までのものとまったく同じで
 す。La@TeX{} 用のコマンド名が補完候補として用意されています。
 
@@ -940,7 +940,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
         @dots{} 随時補完
 @end table
 
-@noindent 
+@noindent
 を入力すれば、全ての補完候補の中から一致するものが選ばれカーソル位置に挿入
 されます。
 
@@ -960,7 +960,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
         @dots{} end 補完
 @end table
 
-@noindent 
+@noindent
 とすることで、現在開いている環境名で \end@{@} が補われます。
 
 @node Accent mark completion, Image completion, end補完, Completion
@@ -977,14 +977,14 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
         @dots{} アクセント記号入力
 @end table
 
-@noindent 
+@noindent
 を押すと、ミニバッファに
 
 @example
         1:` 2:' 3:^ 4:" 5:~ 6:= 7:. u v H t c d b
 @end example
 
-@noindent 
+@noindent
 というメニューが出て来るので、数字、または対応する記号/英字を入力
 して下さい。すると編集バッファに、
 
@@ -992,14 +992,14 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
         \`@{@}
 @end example
 
-@noindent 
-があらわれ、カーソルが@{@}内に位置するので、さらに一文字入力する事で、
+@noindent
+が現われ、カーソルが@{@}内に位置するので、さらに一文字入力する事で、
 
 @example
         \`@{o@}
 @end example
 
-@noindent 
+@noindent
 が完成され、カーソルは@{@}の外に戻ります。
 
 @node Image completion, Greek letter completion, Accent mark completion, Completion
@@ -1020,7 +1020,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 @kbd{:}に特殊な機能を持たせます。
 
   さて、例えば、←(leftarrow)をASCII文字だけで表現する場合、一般的には「<-」
-のようにしますが、これを利用して、数式記号イメージ入力モードで 
+のようにしますが、これを利用して、数式記号イメージ入力モードで
 @code{\leftarrow}を入力するには、@kbd{;}(セミコロン)を打ってから@kbd{<-}と
 入力します。同様に、長い矢印←-(long-leftarrow) をASCII文字だけで表現する
 場合「<--」とするので、@code{\longleftarrow}を入力するためには、@kbd{;<--}
@@ -1039,7 +1039,7 @@ INPUT                   入力される La@TeX{} コマンド
 @end example
 
 
-@noindent 
+
   いずれの場合も、イメージ入力を行っている途中で望みのものがバッファ
 に表示されたなら、そこでイメージ入力を止めて次の編集動作に移っても
 構いません。
@@ -1112,7 +1112,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
   `foo' is not in table. Register into: U)serDic L)ocalDic N)one D)iscard
 @end example
 
-@noindent 
+@noindent
 というプロンプトに対し、@kbd{u}と答えると「ユーザ辞書」を、@kbd{l}と答える
 とローカル辞書を更新し、@kbd{n}と答えると辞書ファイルは更新せず現在のEmacs
 セッションのみ有効な単語とし、@kbd{d}と答えると新たな単語を学習せずに捨て
@@ -1126,7 +1126,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
         (setq YaTeX-nervous nil)
 @end lisp
 
-@noindent 
+@noindent
 として下さい。
 
 @node Commenting out, Cursor jump, Local dictionary, Top
@@ -1149,7 +1149,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
         @dots{} リジョンの % のコメントを外す
 @end table
 
-@noindent 
+@noindent
 は、あらかじめ設定したリジョンに対しての操作、
 
 @table @kbd
@@ -1159,7 +1159,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
         @dots{} 現在のパラグラフのコメントを外す
 @end table
 
-@noindent 
+@noindent
 は、カーソルの位置するパラグラフ全体に対しての操作です。なお、ここでいう
 「パラグラフ」は (@code{mark-paragraph}) 関数によりマークされる範囲を指し
 ます(標準設定で@kbd{ESC h}にバインドされている)。なお、既に@code{%}でコメ
@@ -1177,7 +1177,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
         @dots{} @code{\begin@{@}}～@code{\end@{@}} 全てコメントを外す
 @end table
 
-@noindent 
+@noindent
 とすることで、@code{\begin～\end}で囲まれる環境全てに対してコメント操作し、
 
 @table @kbd
@@ -1219,7 +1219,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
         @dots{} 対応するオブジェクトにジャンプ
 @end table
 
-@noindent 
+@noindent
 を押すことにより、カーソル位置のLa@TeX{}コマンドに対応する場所にジャンプ
 します。対応関係が存在すると解釈されるコマンドには以下のものがあります。
 
@@ -1302,7 +1302,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
         @dots{} 別ウィンドウでメインファイルにジャンプ
 @end table
 
-@noindent 
+@noindent
 を押すと、メインファイルの編集バッファに切替えます。もし、メインファイルを
 オープンしていない場合は、カレントディレクトリから探して自動的にオープンし
 ます。
@@ -1357,7 +1357,7 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
         @dots{} カーソル位置の La@TeX{} コマンドの削除
 @end table
 
-@noindent 
+
 これらのコマンドは、コマンドを起動する場所によって動作を決定するので注意し
 て下さい。
 
@@ -1407,7 +1407,7 @@ section型コマンドの上(中)       section型コマンドの削除
 括弧の上                        対をなす括弧の削除
 @end example
 
-@noindent 
+
 @code{\begin, \end} および @code{%#BEGIN, %#END} を削除する場合、
 @code{\begin, \end} や @code{%#BEGIN, %#END} の存在する行は
 まるごと削除されるので、それらの一行に @code{\begin} などを二つ以上連ねて
@@ -1444,9 +1444,9 @@ universal-argument (@kbd{C-u}) を打った後で@kbd{[prefix] k}をタイプすると、
 @item M-q
         @dots{} 桁揃え
 @end table
-
 @cindex NTT-jTeX[えぬていいていいしえいてつく]
-@noindent 
+
+@noindent
 によって、その item のインデントの深さに応じて fill されます。なお、古い
 NTT jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセッ
 トして下さい。
@@ -1462,7 +1462,7 @@ NTT jTeX を使用している場合には、Lisp 変数@code{NTT-jTeX}を@code{t}にセッ
               "\\(\\\\\\(sub\\)*item\\)\\|\\(\\\\underlineitem\\)")
 @end lisp
 
-@noindent 
+
 この変数の指定の仕方がよく分からない場合は、独自の項目列挙コマンドの名前を
 @code{@code{"\item"}で始まるものにして下さい(例えば"\itembf"})。
 
@@ -1504,7 +1504,7 @@ description環境:
         \includeonly@{現在編集中のファイル名@}
 @end example
 
-@noindent 
+@noindent
 のように書いておくことで、タイプセットの時間を節約できますが、ちょっと他の
 ファイルを手直ししたい時には
 @cindex 他のファイルの手直し[ほかのふあいるのてなおし]
@@ -1513,7 +1513,7 @@ description環境:
         \includeonly@{ちょっと手直ししたいファイル名@}
 @end example
 
-@noindent 
+
 と書き直さなければならず手間がかかります。野鳥では現在編集しているファイル
 名がメインファイルの@code{\includeonly}にない場合には自動的にこれを検出し、
 次の指示を仰ぎます。
@@ -1522,7 +1522,7 @@ description環境:
         A)dd R)eplace %)comment?
 @end example
 
-@noindent 
+
 現在編集中のファイルを @code{\includeonly} のリストに加えたい時には@kbd{a}
 を、現在編集中のファイルだけを @code{\includeonly} にしたい時は@kbd{r}を、
 @code{\includeonly} の行をコメントアウトして無効化したい時には、@kbd{%}を
@@ -1550,7 +1550,7 @@ description環境:
         \end@{tabular@}
 @end example
 
-@noindent 
+
 (???)の部分がどの項目なのかすぐに判断するのは難しいでしょう。こんな時は、
 
 @table @kbd
@@ -1559,6 +1559,7 @@ description環境:
 @end table
 @cindex 現在のカラム表示[けんさいのからむひようし]
 
+@noindent
 を押すとカーソル位置のカラムがどの項目に該当するかをミニバッファに表示しま
 す。tabular/array環境の第1行目を項目名の並びとみなして対応するものを探しま
 す。もし項目名として別のものを表示して欲しい場合は、行頭を@code{%}にしてダ
@@ -1578,7 +1579,7 @@ description環境:
         @dots{} おまかせ改行
 @end table
 
-@noindent 
+
 を押すと、その環境に応じた行エントリを次の行に挿入します(begin型補完時に自
 動挿入されたエントリが不要な場合は undo によって消去できます)。例えば、
 tabular環境では、その環境のカラム数に対応した個数の @code{&} に加え、行末
@@ -1861,7 +1862,7 @@ nil=既存のコードのまま 0=no-conversion 1=Shift JIS,
 @end defvar
 
 @defvar tex-command
-La@TeX{}タイプセッタコマンド名 (@code{"platex"})
+La@TeX{}タイプセッタコマンド名 (@code{"platex"})
 @end defvar
 
 @defvar dvi2-command
@@ -2056,7 +2057,7 @@ font-lock利用時のみ有効。
 
 @defvar YaTeX-singlecmd-suffix
 全てのmaketitle型コマンドの補完入力直後に挿入する文字列。
-@code{"{}"} などがお勧め。
+@code{"@{@}"} などがお勧め。
 @end defvar
 
 @defvar YaTeX-package-alist-private
@@ -2090,7 +2091,7 @@ verbatim環境などを指定する。
 @end defvar
 
 @defvar YaTeX-ref-default-label-string
-\ref{} のラベル補完でラベル未設定のものに自動的に生成する
+\ref@{@} のラベル補完でラベル未設定のものに自動的に生成する
 ラベル名の書式。strftime(3)関数に似た日付ベースで指定する。
 利用できる書式は以下のとおり。
 %y -> 西暦下二桁,  %b -> 月の英名,  %m -> 月(1～12)
@@ -2101,7 +2102,7 @@ verbatim環境などを指定する。
 @end defvar
 
 @defvar YaTeX-ref-generate-label-function
-\ref{}のラベル名自動生成のときに使う関数のシンボル。
+\ref@{@}のラベル名自動生成のときに使う関数のシンボル。
 デフォルトは標準の YaTeX::ref-generate-label 関数が割り当ててある。
 引数を2つ取る関数を定義して、この変数にセットするとその関数を呼んだ
 結果をデフォルトのラベル名候補とする。設定例:
@@ -2109,7 +2110,7 @@ verbatim環境などを指定する。
   (setq YaTeX-ref-generate-label-function 'my-yatex-generate-label)
   (defun my-yatex-generate-label (command value)
     (and (string= command "caption")
-         (re-search-backward "\\\\begin{\\(figure\\|table\\)}" nil t)
+         (re-search-backward "\\\\begin@{\\(figure\\|table\\)@}" nil t)
          (setq command (match-string 1)))
     (let ((alist '(("chapter" . "chap")
                    ("section" . "sec")
@@ -2137,7 +2138,7 @@ verbatim環境などを指定する。
               YaTeX-fill-prefix "       ")
 @end lisp
 
-@noindent 
+@noindent
 を @file{~/.emacs} に加えます。
 
 @node Hook variables, Hook file, Sample definitions, Lisp variables
@@ -2160,7 +2161,7 @@ verbatim環境などを指定する。
               '(lambda () (outline-minor-mode t)))
 @end lisp
 
-@noindent 
+
 逆に、独自のキー定義を行いたい時などは、@code{yatex-mode-load-hook} を利用
 します。例えば、begin 型補完において、 document や、enumerate 以外の環境名
 もショートカットキーで入れたいなどという時は、次のようにします。以下の例は、

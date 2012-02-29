@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Sun Jan 29 22:55:53 2012 on firestorm
+@c Last modified Wed Feb 29 10:38:42 2012 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -48,6 +48,7 @@
 * Etcetera::                    YaTeX is acquisitive.
 * Copying::                     Redistribution
 
+@end menu
 
 @node What is YaTeX?, Main features, Top, Top
 @comment  node-name,  next,  previous,  up
@@ -90,8 +91,8 @@ Language Enhancement to GNU Emacs), and latex on DOS.
 @item Document files hierarchy browser (@kbd{C-c d})
 @item Adding automatically \usepackage corresponding to inputting LaTeX
       macro with completion
-@item Allow you to forget creating \label{}s, \ref or \cite completion
-      automatically generate labels.
+@item Allow you to forget creating \label@{@}s, \ref@{@} or \cite@{@}
+      completion automatically generate labels.
 @end itemize
 
 @node Installation, Typesetting, Main features, Top
@@ -202,7 +203,7 @@ for region.  The region is specified by standard point and mark, or
 by @code{%#BEGIN} and @code{%#END} marks.  Selected region will be
 copied to the temporary file @file{texput.tex} with the same preamble
 as the main file of current editing sources.  Be sure to put
-all local macro settings in preamble, not after @code{\begin{document}}.
+all local macro settings in preamble, not after @code{\begin@{document@}}.
   The method of specification of the region is shown in the
 section @xref{%#notation}.
 
@@ -941,7 +942,7 @@ minibuffer, YaTeX asks you with the following prompt;
   `foo' is not in table. Register into: U)serDic L)ocalDic N)one D)iscard
 @end example
 
-@noindent 
+@noindent
 In this menu, typing @kbd{u} updates your `user dictionary', @kbd{l}
 updates your local dictionary, @kbd{n} updates only on-memory dictionary
 which go through only current Emacs session, and @kbd{d} updates no
@@ -1389,7 +1390,7 @@ enumerate or tabbing environment, or typing
         @dots{} Intelligent newline
 @end table
 
-@noindent 
+@noindent
 in these environments inserts the contents corresponding to the current
 environment in the next line.  (At the begin-type completion, this
 contents can be removed by `undo'.)  In @code{tabular} environment, for
@@ -1848,7 +1849,7 @@ font-lock is used.
 
 @defvar YaTeX-singlecmd-suffix
 Suffix which is always inserted after maketitle-type macros.
-@code{"{}"} is recommended.
+@code{"@{@}"} is recommended.
 @end defvar
 
 @defvar YaTeX-package-alist-private
@@ -1894,7 +1895,7 @@ part (%y+(%b|%m)+%d or %qx).
 @end defvar
 
 @defvar YaTeX-ref-generate-label-function
-Function to generate default label string for unnamed \\label{}s.
+Function to generate default label string for unnamed \\label@{@}s.
 The function pointed to this value should take two arguments.
 First argument is LaTeX macro's name, second is macro's argument.
 Here is an example for using this value.
@@ -1902,7 +1903,7 @@ Here is an example for using this value.
   (setq YaTeX-ref-generate-label-function 'my-yatex-generate-label)
   (defun my-yatex-generate-label (command value)
     (and (string= command "caption")
-         (re-search-backward "\\\\begin{\\(figure\\|table\\)}" nil t)
+         (re-search-backward "\\\\begin@{\\(figure\\|table\\)@}" nil t)
          (setq command (match-string 1)))
     (let ((alist '(("chapter" . "chap")
                    ("section" . "sec")
@@ -2051,7 +2052,7 @@ job referring the value of its argument.
 will be enclosed by section-type commands via @kbd{[prefix] S}.  An
 enclosing add-in function will be called with two arguments, beginning of
 the enclosed region and end of the region.  Suppose you want to enclose
-the existing text @code{(a+b)/c} by @code{\frac{}}.
+the existing text @code{(a+b)/c} by @code{\frac@{@}}.
 
 @display
 a/c
@@ -2063,7 +2064,7 @@ You do set-mark-command at point A and then move to point B.  Typing
 @kbd{[prefix] S} and input @code{frac} enclose the region like this;
 
 @display
-\frac{a/c}
+\frac@{a/c@}
 @end display
 
 Normally, the expression @code{a/c} is translated to
