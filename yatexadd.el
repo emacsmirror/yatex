@@ -2,7 +2,7 @@
 ;;; YaTeX add-in functions.
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Feb 13 15:20:11 2012 on firestorm
+;;; Last modified Fri Mar  9 21:19:09 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -1224,7 +1224,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 				 (sit-for 0)
 				 (select-window sw))
 				((= ch ?n) (throw 'query nil)))))))
-		      (replace-match new))
+		      (replace-match new t))
 		(and ov (delete-overlay ov)))))
 	  (setq bufs (cdr bufs)))))))
 
