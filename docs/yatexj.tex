@@ -10,7 +10,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Sun Apr 15 17:47:24 2012 on firestorm
+@c Last modified Sun Apr 15 22:53:14 2012 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -344,6 +344,7 @@ universal-argument をつけ、
 * Splitting input files::       入力ファイル分割
 * Fix region for typesetting::  領域の固定
 * lpr format::                  プリントアウトコマンド用フォーマット
+* Controlling which command to invoke::  その他の起動コマンド制御
 * Editing %# notation::         %#記法の編集
 @end menu
 
@@ -750,7 +751,7 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
 だけが挿入され、改行はせずカーソルは自動的に中括弧の内側に移動します。
 
 @menu
-* 2個以上の引数をとる section型コマンド::
+* 2個以上の引数をとる section型コマンド::  
 * Enclose section-type command::  括り補完
 * Recursive completion::        再帰補完
 * view-sectioning::             セクション区切りのアウトライン表示

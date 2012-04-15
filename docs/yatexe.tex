@@ -5,7 +5,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Wed Feb 29 10:38:42 2012 on firestorm
+@c Last modified Sun Apr 15 22:51:34 2012 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -255,6 +255,7 @@ notations in the source text.
 * Splitting input files::       
 * Static region for typesetting::  
 * Lpr format::                  
+* Controlling which command to invoke::  
 * Editing %# notation::         
 @end menu
 
@@ -365,7 +366,7 @@ environment such as `tabular' many times.  It is also useful to put only
 @code{%#BEGIN} alone at the middle of very long text.  Do not forget to
 erase @code{%#BEGIN} @code{%#END} pair.
 
-@node Lpr format, Editing %# notation, Static region for typesetting, %#notation
+@node Lpr format, Controlling which command to invoke, Static region for typesetting, %#notation
 @comment  node-name,  next,  previous,  up
 @section Lpr format
 @cindex lpr format
@@ -403,7 +404,7 @@ out, the next example may be helpful.
         %#LPR dvi2ps %s | lpr
 @end example
 
-@node Controlling which command to invoke, Editing %# notation, lpr format, %#notation
+@node Controlling which command to invoke, Editing %# notation, Lpr format, %#notation
 @comment  node-name,  next,  previous,  up
 @section Controlling which command to invoke
 
@@ -425,7 +426,7 @@ put the next line some upper place in the source, for example.
 @end example
 
 
-@node Editing %# notation,  , Lpr format, %#notation
+@node Editing %# notation,  , Controlling which command to invoke, %#notation
 @comment  node-name,  next,  previous,  up
 @section Editing %# notation
 
@@ -2145,8 +2146,8 @@ replace @code{/} with @code{@}@{}.  Here is an example expression.
   (catch 'done
     (while (search-forward "/" end t)
       (goto-char (match-beginning 0))
-      (if (y-or-n-p "Replace this slash(/) with `}{'")
-	  (throw 'done (replace-match "}{")))
+      (if (y-or-n-p "Replace this slash(/) with `@}@{'")
+	  (throw 'done (replace-match "@}@{")))
       (goto-char (match-end 0)))))
 @end lisp
 
