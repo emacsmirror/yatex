@@ -19,6 +19,7 @@ docs/yatexref.eng      	Quick reference of YaTeX's key bindings
 help/YATEXHLP.jp 	オンラインヘルプデータ
 help/YATEXHLP.eng 	LaTeX on-line help text
 install			インストールガイド
+newpage.rb		yahtml用新規ページ生成補助スクリプト
 readme.meadow.j		Meadow 用インストールガイド
 yahtml.el		野鳥風 html モード
 yatex.el		野鳥・主 Emacs-Lisp ファイル
