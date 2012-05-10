@@ -43,8 +43,7 @@ What is YaTeX?
 **************
 
   YaTeX automates typesetting and previewing of LaTeX and enables
-completing input of LaTeX mark-up command such as
-`\begin{}'..`\end{}'.
+completing input of LaTeX mark-up command such as `\begin{}'..`\end{}'.
 
   YaTeX also supports Demacs which runs on MS-DOS(386), Mule (Multi
 Language Enhancement to GNU Emacs), and latex on DOS.
@@ -60,11 +59,10 @@ Main features
    * Typesetting on static region which is independent from point
    * Semiautomatic replacing of `\includeonly'
    * Jumping to error line(`C-c '')
-   * Completing-read of LaTeX commands such as `\begin{}',
-             `\section' etc. 
-             (`C-c b', `C-c s', `C-c l', `C-c m')
-   * Enclosing text into LaTeX environments or commands
-           (`C-u' ABOVEKEYSTROKES)
+   * Completing-read of LaTeX commands such as `\begin{}', `\section' etc.
+     (`C-c b', `C-c s', `C-c l', `C-c m')
+   * Enclosing text into LaTeX environments or commands (`C-u'
+     ABOVEKEYSTROKES)
    * Displaying the structure of text at entering sectioning commands
    * Lump shifting of sectioning commands (*Note view-sectioning::)
    * Learning unknown/new LaTeX commands for the next completion
@@ -72,17 +70,16 @@ Main features
    * Generating argument-readers for new/unsupported commands(`yatexgen')
    * Quick changing or deleting of LaTeX commands(`C-c c', `C-c k')
    * Jumping from and to inter-file, begin<->end, ref<->label(`C-c g')
-   * Blanket commenting out or uncommenting
-             (`C-c >', `C-c <', `C-c ,', `C-c .')
+   * Blanket commenting out or uncommenting (`C-c >', `C-c <', `C-c ,',
+     `C-c .')
    * Easy input of accent mark, math-mode's commands and Greek letters
-             (`C-c a', `;', `:')
-   * Online help for the popular LaTeX commands
-           (`C-c ?', `C-c /')
+     (`C-c a', `;', `:')
+   * Online help for the popular LaTeX commands (`C-c ?', `C-c /')
    * Document files hierarchy browser (`C-c d')
    * Adding automatically \usepackage corresponding to inputting LaTeX
-           macro with completion
-   * Allow you to forget creating \label{}s, \ref or \cite completion
-           automatically generate labels.
+     macro with completion
+   * Allow you to forget creating \label{}s, \ref{} or \cite{} completion
+     automatically generate labels.
 
 
 
@@ -105,9 +102,9 @@ load-path.  If you want to put them in `~/src/emacs', write
 
 in your `~/.emacs'
 
-  Then, yatex-mode will be automatically loaded when you visit a
-file which has extension `.tex'.  If yatex-mode is successfully
-loaded, mode string on mode line will be turned to "YaTeX".
+  Then, yatex-mode will be automatically loaded when you visit a file
+which has extension `.tex'.  If yatex-mode is successfully loaded, mode
+string on mode line will be turned to "YaTeX".
 
 
 
@@ -119,16 +116,18 @@ Typesetting
 
   The prefix key stroke of yatex-mode is `C-c' (Press 'C' with Control
 key) by default.  If you don't intend to change the prefix key stroke,
-assume all `[prefix]' as `C-c' in this document.  These key
-strokes execute typeset or preview command.
+assume all `[prefix]' as `C-c' in this document.  These key strokes
+execute typeset or preview command.
 
 `[prefix] t j'
              ... invoke latex
 `[prefix] t r'
              ... invoke latex on region
 `[prefix] t e'
-             ... invoke latex on current environment or whole
-              portion of current formulas in math-mode.
+             ... invoke latex on current environment or whole portion of
+     current formulas in math-mode.
+`[prefix] t d'
+     	... invoke dvipdfmx after successful typesetting
 `[prefix] t k'
              ... kill current typesetting process
 `[prefix] t b'
@@ -239,6 +238,7 @@ the source text.
 * Splitting input files::       
 * Static region for typesetting::  
 * Lpr format::                  
+* Controlling which command to invoke::  
 * Editing %# notation::         
 
 
@@ -270,7 +270,7 @@ will be helpful to execute latex on main file from sub text buffer.  Since
 this command line after `%#!' will be sent to shell literally, next
 description makes it convenient to use ghostview as dvi-previewer.
 
-             %#!latex main ; dvi2ps main.dvi > main
+             %#!latex main && dvi2ps main.dvi > main
 
 Note that YaTeX assumes the component before the last period of the last
 word in this line as base name of the main LaTeX source.  The `%f'
@@ -325,7 +325,7 @@ pair.
 
 
 
-File: yatexe, Node: Lpr format, Next: Editing %# notation, Prev: Static region for typesetting, Up: %#notation
+File: yatexe, Node: Lpr format, Next: Controlling which command to invoke, Prev: Static region for typesetting, Up: %#notation
 
 Lpr format
 ==========
@@ -358,7 +358,30 @@ example may be helpful.
 
 
 
-File: yatexe, Node: Editing %# notation, Prev: Lpr format, Up: %#notation
+File: yatexe, Node: Controlling which command to invoke, Next: Editing %# notation, Prev: Lpr format, Up: %#notation
+
+Controlling which command to invoke
+===================================
+
+These %# notation below can control which command to invoke for LaTeX
+related process.
+
+      `%#BIBTEX'
+     
+     	... Command line for makeindex ([prefix] t i)
+      `%#MAKEINDEX'
+     
+     	... Command line for bibtex ([prefix] t b)
+
+If you want to invoke "makeidx hogehoge" to update index, put the next
+line some upper place in the source, for example.
+
+     %#MAKEINDEX makeidx hogehoge
+
+
+
+
+File: yatexe, Node: Editing %# notation, Prev: Controlling which command to invoke, Up: %#notation
 
 Editing %# notation
 ===================
@@ -2151,69 +2174,69 @@ my feelings) without notice :-p.
 
 
                                                               HIROSE Yuuji
-
 
 Tag table:
-Node: Top146
-Node: What is YaTeX?1487
-Node: Main features1860
-Node: Installation3452
-Node: Typesetting4229
-Node: Calling typesetter5298
-Node: Calling previewer7502
-Node: Printing out7863
-Node: %#notation8155
-Node: Changing typesetter8531
-Node: Splitting input files8895
-Node: Static region for typesetting10319
-Node: Lpr format11448
-Node: Editing %# notation12505
-Node: Completion13024
-Node: Begin-type completion13584
-Node: Section-type completion16627
-Node: view-sectioning19062
-Node: Large-type completion20642
-Node: Maketitle-type completion21373
-Node: Arbitrary completion21925
-Node: End completion22315
-Node: Accent completion22785
-Node: Image completion23402
-Node: Greek letters completion25659
-Node: Local dictionaries26386
-Node: Commenting out27323
-Node: Cursor jump28782
-Node: Jump to corresponding object29094
-Node: Invoking image processor30495
-Node: Jump to main file31838
-Node: Jumping around the environment32203
-Node: Jumping to last completion position32621
-Node: Changing and Deleting33130
-Node: Changing LaTeX commands33522
-Node: Killing LaTeX commands34699
-Node: Filling35884
-Node: Updation of includeonly37735
-Node: What column38532
-Node: Intelligent newline39617
-Node: Usepackage checker41271
-Node: Online help41862
-Node: Browsing file hierarchy43537
-Node: Cooperation with other packages45274
-Node: Customizations45979
-Node: Lisp variables46313
-Node: All customizable variables47317
-Node: Sample definitions57116
-Node: Hook variables57629
-Node: Hook file58333
-Node: Add-in functions58672
-Node: How the add-in function works59532
-Node: Defining option-add-in61731
-Node: Defining argument-add-in62453
-Node: Defining enclosing-add-in63335
-Node: How the function is called64189
-Node: Useful functions for creating add-in64865
-Node: Contribution66270
-Node: Add-in generator66544
-Node: Etcetera71916
-Node: Copying72521
+Node: Top149
+Node: What is YaTeX?1490
+Node: Main features1863
+Node: Installation3392
+Node: Typesetting4169
+Node: Calling typesetter5299
+Node: Calling previewer7503
+Node: Printing out7864
+Node: %#notation8156
+Node: Changing typesetter8574
+Node: Splitting input files8938
+Node: Static region for typesetting10363
+Node: Lpr format11492
+Node: Controlling which command to invoke12565
+Node: Editing %# notation13158
+Node: Completion13702
+Node: Begin-type completion14262
+Node: Section-type completion17305
+Node: view-sectioning19740
+Node: Large-type completion21320
+Node: Maketitle-type completion22051
+Node: Arbitrary completion22603
+Node: End completion22993
+Node: Accent completion23463
+Node: Image completion24080
+Node: Greek letters completion26337
+Node: Local dictionaries27064
+Node: Commenting out28001
+Node: Cursor jump29460
+Node: Jump to corresponding object29772
+Node: Invoking image processor31173
+Node: Jump to main file32516
+Node: Jumping around the environment32881
+Node: Jumping to last completion position33299
+Node: Changing and Deleting33808
+Node: Changing LaTeX commands34200
+Node: Killing LaTeX commands35377
+Node: Filling36562
+Node: Updation of includeonly38413
+Node: What column39210
+Node: Intelligent newline40295
+Node: Usepackage checker41949
+Node: Online help42540
+Node: Browsing file hierarchy44215
+Node: Cooperation with other packages45952
+Node: Customizations46657
+Node: Lisp variables46991
+Node: All customizable variables47995
+Node: Sample definitions57794
+Node: Hook variables58307
+Node: Hook file59011
+Node: Add-in functions59350
+Node: How the add-in function works60210
+Node: Defining option-add-in62409
+Node: Defining argument-add-in63131
+Node: Defining enclosing-add-in64013
+Node: How the function is called64867
+Node: Useful functions for creating add-in65543
+Node: Contribution66948
+Node: Add-in generator67222
+Node: Etcetera72594
+Node: Copying73199
 
 End tag table

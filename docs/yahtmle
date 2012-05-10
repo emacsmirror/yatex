@@ -164,9 +164,9 @@ entities.
      attributes.  Possible completions are, <img>, <input>.
 
 `[prefix] l (YaTeX large-type completion)'
-     ... 
+     ...
 
-          <big> $B!A(B </big>
+          <big> Å` </big>
 
      Similar to begin-type completion but used for elements that start and
      end on a single line.
@@ -212,6 +212,7 @@ Changing and Deleting
 * Changing tags in pairs::      
 * Changing entities::           
 * URLencoding of strings within region::  
+* td-enclosure/tr-enclosure::   
 
 
 
@@ -227,7 +228,7 @@ By using
 the content can be changed according to the context of the HTML document
 where the cursor is located.
 
-   * `<TAG>'$B!A(B`</TAG>'
+   * `<TAG>'Å``</TAG>'
      ... change `TAG' element name
    * attributes such as `<img src="image.file" alt="photo">'
      ... change attributes
@@ -269,7 +270,7 @@ td-enclosure/tr-enclosure
 If you wan to convert series of field into <td>...</td> repetitions for
 table element, td-enclosure or tr-enclosure is convenient.
 
-      `[prefix] '}
+      `[prefix] }'
      
      	... Enclose each field in a region into <td>...</td>'s.
       `[prefix] ]'
@@ -474,7 +475,7 @@ common sense.  Mail me your thoughts on this program and I will be more
 than willing to help.
 
 Complaints, requests, bug reports and comments are welcome.  Make contacts
-to yuuji@yatex.org$B!!(B(as of December 2000)
+to yuuji@yatex.orgÅ@(as of December 2000)
 
 If you like this program and use it on a regular basis, please join the
 mailing list "fj Wild Bird Society".  Procedures can be found in the "etc"
@@ -502,30 +503,29 @@ Index
 
 
 
-
 
 Tag table:
-Node: Top148
-Node: Intro725
-Node: Installation1123
-Node: Setting up yahtml1404
-Node: Setting environments for weblint browsers and image viewers2195
-Node: Setting environment variables for WWW pages2891
-Node: Command Invocation3862
-Node: Completion4290
-Node: Jump5807
-Node: Changing and Deleting6287
-Node: Changing tags in pairs6538
-Node: Changing entities7033
-Node: URLencoding of strings within region7569
-Node: td-enclosure/tr-enclosure7870
-Node: CSS Support8836
-Node: CSS-class completion9062
-Node: Reread CSS definition9915
-Node: Customizations10190
-Node: All customizable variables10466
-Node: Hook variables14234
-Node: Copying14360
-Node: Concept Index15151
+Node: Top151
+Node: Intro728
+Node: Installation1126
+Node: Setting up yahtml1407
+Node: Setting environments for weblint browsers and image viewers2198
+Node: Setting environment variables for WWW pages2894
+Node: Command Invocation3865
+Node: Completion4293
+Node: Jump5809
+Node: Changing and Deleting6289
+Node: Changing tags in pairs6573
+Node: Changing entities7068
+Node: URLencoding of strings within region7604
+Node: td-enclosure/tr-enclosure7905
+Node: CSS Support8871
+Node: CSS-class completion9097
+Node: Reread CSS definition9950
+Node: Customizations10225
+Node: All customizable variables10501
+Node: Hook variables14269
+Node: Copying14395
+Node: Concept Index15186
 
 End tag table

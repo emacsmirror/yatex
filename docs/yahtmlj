@@ -12,531 +12,530 @@ File: yahtmlj, Node: Top, Next: Intro, Prev: (dir), Up: (dir)
 
 * Menu:
 
-* Intro::                       $(B$O$8$a$K
-(B* Installation::                $(B%$%s%9%H!<%k
-(B* Command Invocation::          $(B30It%3%^%s%I5/F0
-(B* Completion::                  $(BJd40F~NO
-(B* Jump::                        $(B%+!<%=%k%8%c%s%W
-(B* Changing and Deleting::       $(BJQ99$H:o=|
-(B* CSS Support::                 $(B%9%?%$%k%7!<%HJd40
-(B* Customizations::              $(B%+%9%?%^%$%:JQ?t0lMw
-(B* Copying::                     $(B$H$j$"$D$+$$
-(B* Concept Index::               $(B:w0z
+* Intro::                       ‚Í‚¶‚ß‚É
+* Installation::                ƒCƒ“ƒXƒg[ƒ‹
+* Command Invocation::          ŠO•”ƒRƒ}ƒ“ƒh‹N“®
+* Completion::                  •âŠ®“ü—Í
+* Jump::                        ƒJ[ƒ\ƒ‹ƒWƒƒƒ“ƒv
+* Changing and Deleting::       •ÏX‚Æíœ
+* CSS Support::                 ƒXƒ^ƒCƒ‹ƒV[ƒg•âŠ®
+* Customizations::              ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——
+* Copying::                     ‚Æ‚è‚ ‚Â‚©‚¢
+* Concept Index::               õˆø
 
 
 
 
-(BFile: yahtmlj, Node: Intro, Next: Installation, Prev: Top, Up: Top
+File: yahtmlj, Node: Intro, Next: Installation, Prev: Top, Up: Top
 
-$(B$O$8$a$K
-(B********
+‚Í‚¶‚ß‚É
+********
 
-yahtml$(B$O (BGNU Emacs $(B>e$G (BHTML$(BJ8=q$r:n@.$9$k;~$K!"HK;($J(BHTML$(B%?%0$NF~NO$rJd40
-5!G=$K$h$C$F%9%`!<%:$K9T$($k$h$&$K$9$k$@$1$G$J$/!"(Bweblint$(B$J$I$N9=J8%A%'%C
-%/%W%m%0%i%`!"%+!<%=%k0LCV$N(BURL$(B$d%U%!%$%kL>$K0MB8$7$?%V%i%&%6(B/$(B%$%a!<%8%t%e!<
-%"$N5/F0$J$I$r (BEmacs $(BJT=82hLLCf$+$i9T$($k$h$&$K$9$k%Q%C%1!<%8$G$9!#
+yahtml‚Í GNU Emacs ã‚Å HTML•¶‘‚ğì¬‚·‚é‚ÉA”ÉG‚ÈHTMLƒ^ƒO‚Ì“ü—Í‚ğ•âŠ®
+‹@”\‚É‚æ‚Á‚ÄƒXƒ€[ƒY‚És‚¦‚é‚æ‚¤‚É‚·‚é‚¾‚¯‚Å‚È‚­Aweblint‚È‚Ç‚Ì\•¶ƒ`ƒFƒb
+ƒNƒvƒƒOƒ‰ƒ€AƒJ[ƒ\ƒ‹ˆÊ’u‚ÌURL‚âƒtƒ@ƒCƒ‹–¼‚ÉˆË‘¶‚µ‚½ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[
+ƒA‚Ì‹N“®‚È‚Ç‚ğ Emacs •ÒW‰æ–Ê’†‚©‚çs‚¦‚é‚æ‚¤‚É‚·‚éƒpƒbƒP[ƒW‚Å‚·B
 
-(B($(B$3$N(BInfo$(B$OL$40@.$G$9(B(__)$(B!D(B)
+(‚±‚ÌInfo‚Í–¢Š®¬‚Å‚·(__)c)
 
 
 
 File: yahtmlj, Node: Installation, Next: Command Invocation, Prev: Intro, Up: Top
 
-$(B%$%s%9%H!<%k
-(B************
+ƒCƒ“ƒXƒg[ƒ‹
+************
 * Menu:
 
-* yahtml$(B5/F0$N$?$a$N@_Dj(B::      
-* lint$(B%W%m%0%i%`(B/$(B%V%i%&%6(B/$(B%$%a!<%8%t%e!<%"4D6-Ey$N@_Dj(B::  
-* WWW$(B%Z!<%84D6-MQJQ?t$N@_Dj(B::   
+* yahtml‹N“®‚Ì‚½‚ß‚Ìİ’è::
+* lintƒvƒƒOƒ‰ƒ€/ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[ƒAŠÂ‹«“™‚Ìİ’è::
+* WWWƒy[ƒWŠÂ‹«—p•Ï”‚Ìİ’è::
 
 
 
-File: yahtmlj, Node: yahtml$(B5/F0$N$?$a$N@_Dj(B, Next: lint$(B%W%m%0%i%`(B/$(B%V%i%&%6(B/$(B%$%a!<%8%t%e!<%"4D6-Ey$N@_Dj(B, Prev: Installation, Up: Installation
+File: yahtmlj, Node: yahtml‹N“®‚Ì‚½‚ß‚Ìİ’è, Next: lintƒvƒƒOƒ‰ƒ€/ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[ƒAŠÂ‹«“™‚Ìİ’è, Prev: Installation, Up: Installation
 
-yahtml$(B5/F0$N$?$a$N@_Dj
-(B======================
+yahtml‹N“®‚Ì‚½‚ß‚Ìİ’è
+======================
 
 
-`~/.emacs'$(B$K2<$N(B2$(B9`L\$r2C$($^$9!#
+`~/.emacs'‚É‰º‚Ì2€–Ú‚ğ‰Á‚¦‚Ü‚·B
 
-     (B(setq auto-mode-alist
+     (setq auto-mode-alist
            (cons (cons "\\.html$" 'yahtml-mode) auto-mode-alist))
      (autoload 'yahtml-mode "yahtml" "Yet Another HTML mode" t)
 
-$(B<!$K(Byahtml$(B$KI,MW$J%U%!%$%k(B(`yahtml.el', `yatexlib.el', `yatexprc.el') $(B$rCV
-$/%G%#%l%/%H%j$r (Bload-path $(B$K2C$($^$9!#$?$H$($P!" (B`~/src/emacs/yahtml'$(B$KCV
-$/$N$G$"$l$P!"
+Ÿ‚Éyahtml‚É•K—v‚Èƒtƒ@ƒCƒ‹(`yahtml.el', `yatexlib.el', `yatexprc.el') ‚ğ’u
+‚­ƒfƒBƒŒƒNƒgƒŠ‚ğ load-path ‚É‰Á‚¦‚Ü‚·B‚½‚Æ‚¦‚ÎA `~/src/emacs/yahtml'‚É’u
+‚­‚Ì‚Å‚ ‚ê‚ÎA
 
-     (B(setq load-path (cons (expand-file-name "~/src/emacs/yahtml") load-path))
+     (setq load-path (cons (expand-file-name "~/src/emacs/yahtml") load-path))
 
-$(B$J$I$H$7$^$9!#
+‚È‚Ç‚Æ‚µ‚Ü‚·B
 
-  0J>e$N@_Dj$K$h$j!"3HD%;R$, (B.html $(B$G$"$k%U%!%$%k$rJT=8$9$k$H<+F0E*$K
-(Byahtml $(B$,%m!<%I$5$l$^$9!#(Byahtml$(B$,@5>o$K5/F0$G$-$?$H$-$O%b!<%I%i%$%s$NI=<(
-$,!V(Byahtml$(B!W$KJQ$o$j$^$9!#
+  ˆÈã‚Ìİ’è‚É‚æ‚èAŠg’£q‚ª .html ‚Å‚ ‚éƒtƒ@ƒCƒ‹‚ğ•ÒW‚·‚é‚Æ©“®“I‚É
+yahtml ‚ªƒ[ƒh‚³‚ê‚Ü‚·Byahtml‚ª³í‚É‹N“®‚Å‚«‚½‚Æ‚«‚Íƒ‚[ƒhƒ‰ƒCƒ“‚Ì•\¦
+‚ªuyahtmlv‚É•Ï‚í‚è‚Ü‚·B
 
 
 
-(BFile: yahtmlj, Node: lint$(B%W%m%0%i%`(B/$(B%V%i%&%6(B/$(B%$%a!<%8%t%e!<%"4D6-Ey$N@_Dj(B, Next: WWW$(B%Z!<%84D6-MQJQ?t$N@_Dj(B, Prev: yahtml$(B5/F0$N$?$a$N@_Dj(B, Up: Installation
+File: yahtmlj, Node: lintƒvƒƒOƒ‰ƒ€/ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[ƒAŠÂ‹«“™‚Ìİ’è, Next: WWWƒy[ƒWŠÂ‹«—p•Ï”‚Ìİ’è, Prev: yahtml‹N“®‚Ì‚½‚ß‚Ìİ’è, Up: Installation
 
-lint$(B%W%m%0%i%`(B/$(B%V%i%&%6(B/$(B%$%a!<%8%t%e!<%"4D6-Ey$N@_Dj
-(B====================================================
+lintƒvƒƒOƒ‰ƒ€/ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[ƒAŠÂ‹«“™‚Ìİ’è
+====================================================
 
-$(BMxMQ$9$k30It%W%m%0%i%`$J$I$K4X$9$k0J2<$NJQ?t$r3NG'$7!"I,MW$J$i@5$7$$CM$KJQ
-99$7$^$9(B($(B3g8LFb$O%G%U%)%k%HCM(B)$(B!#
-(B`yahtml-www-browser'
-             ... $(B5/F0$9$k%V%i%&%6$N%3%^%s%IL>(B(netscape)
+—˜—p‚·‚éŠO•”ƒvƒƒOƒ‰ƒ€‚È‚Ç‚ÉŠÖ‚·‚éˆÈ‰º‚Ì•Ï”‚ğŠm”F‚µA•K—v‚È‚ç³‚µ‚¢’l‚É•Ï
+X‚µ‚Ü‚·(Š‡ŒÊ“à‚ÍƒfƒtƒHƒ‹ƒg’l)B
+`yahtml-www-browser'
+             ... ‹N“®‚·‚éƒuƒ‰ƒEƒU‚ÌƒRƒ}ƒ“ƒh–¼(netscape)
 `yahtml-image-viewer'
-             ... $(B5/F0$9$k2hA|%S%e!<%"$N%3%^%s%IL>(B(xv)
+             ... ‹N“®‚·‚é‰æ‘œƒrƒ…[ƒA‚ÌƒRƒ}ƒ“ƒh–¼(xv)
 `yahtml-lint-program'
-             ... $(B9=J8%A%'%C%/%W%m%0%i%`$N%3%^%s%IL>(B(jweblint)
+             ... \•¶ƒ`ƒFƒbƒNƒvƒƒOƒ‰ƒ€‚ÌƒRƒ}ƒ“ƒh–¼(jweblint)
 `yahtml-kanji-code'
-             ... html$(B%U%!%$%k$N4A;z%3!<%I
+             ... htmlƒtƒ@ƒCƒ‹‚ÌŠ¿šƒR[ƒh
 
 
 
-(BFile: yahtmlj, Node: WWW$(B%Z!<%84D6-MQJQ?t$N@_Dj(B, Prev: lint$(B%W%m%0%i%`(B/$(B%V%i%&%6(B/$(B%$%a!<%8%t%e!<%"4D6-Ey$N@_Dj(B, Up: Installation
+File: yahtmlj, Node: WWWƒy[ƒWŠÂ‹«—p•Ï”‚Ìİ’è, Prev: lintƒvƒƒOƒ‰ƒ€/ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[ƒAŠÂ‹«“™‚Ìİ’è, Up: Installation
 
-WWW$(B%Z!<%84D6-MQJQ?t$N@_Dj
-(B=========================
+WWWƒy[ƒWŠÂ‹«—p•Ï”‚Ìİ’è
+=========================
 
-$(B%[!<%`%Z!<%8$H$J$k%U%!%$%k$,B8:_$9$k(BPATH$(BL>$K4X$9$kJQ?t$r@_Dj$7$^$9!#
-(B`yahtml-path-url-alist'
-             ... $(B%U%!%$%k%7%9%F%`>e$N(BPATH$(BL>$H!"(BURL$(B$NBP1~I=
-(B`yahtml-directory-index'
-             ... URL$(B;XDj$G%U%!%$%kL>$r>JN,$7$?$H$-$KI=<($5$l$k%$%s%G%C%/%9
-     %U%!%$%kL>(B(NCSA$(B7O(Bhttpd$(B$J$i (B`index.html', CERN$(B7O$J$i(B`Welcome.html'$(B$,0l
-     HLE*(B)
+ƒz[ƒ€ƒy[ƒW‚Æ‚È‚éƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚éPATH–¼‚ÉŠÖ‚·‚é•Ï”‚ğİ’è‚µ‚Ü‚·B
+`yahtml-path-url-alist'
+             ... ƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€ã‚ÌPATH–¼‚ÆAURL‚Ì‘Î‰•\
+`yahtml-directory-index'
+             ... URLw’è‚Åƒtƒ@ƒCƒ‹–¼‚ğÈ—ª‚µ‚½‚Æ‚«‚É•\¦‚³‚ê‚éƒCƒ“ƒfƒbƒNƒX
+     ƒtƒ@ƒCƒ‹–¼(NCSAŒnhttpd‚È‚ç `index.html', CERNŒn‚È‚ç`Welcome.html'‚ªˆê
+     ”Ê“I)
 
-$(BJQ?t (B`yahtml-path-url-alist' $(B$N@_DjNc$r<($7$^$9!#Nc$($P!"<+Bp$G$O!"
-(B`/home/yuuji/http/' $(B$, (B`http://localhost/~yuuji' $(B$G;2>H$G$-!"?&>l$G$O 
-(B`/usr/home/yuuji/www/' $(B$,(B`http://www.keio.ac.jp/~yuuji/' $(B$G;2>H$G$-$k$h$&
-$K$J$C$F$$$k>l9g$O0J2<$N$h$&$K@_Dj$7$^$9!#
+•Ï” `yahtml-path-url-alist' ‚Ìİ’è—á‚ğ¦‚µ‚Ü‚·B—á‚¦‚ÎA©‘î‚Å‚ÍA
+`/home/yuuji/http/' ‚ª `http://localhost/~yuuji' ‚ÅQÆ‚Å‚«AEê‚Å‚Í 
+`/usr/home/yuuji/www/' ‚ª`http://www.keio.ac.jp/~yuuji/' ‚ÅQÆ‚Å‚«‚é‚æ‚¤
+‚É‚È‚Á‚Ä‚¢‚éê‡‚ÍˆÈ‰º‚Ì‚æ‚¤‚Éİ’è‚µ‚Ü‚·B
 
-     (B(setq yahtml-path-url-alist
+     (setq yahtml-path-url-alist
            '(("/home/yuuj/http" . "http://localhost/~yuuji")
              ("/usr/home/yuuj/www" . "http://www.keio.ac.jp/~yuuji")))
 
-$(B$3$NBP1~AH$O$$$/$i$G$b@_Dj$9$k$3$H$,$G$-$^$9!#
+‚±‚Ì‘Î‰‘g‚Í‚¢‚­‚ç‚Å‚àİ’è‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 
 
-(BFile: yahtmlj, Node: Command Invocation, Next: Completion, Prev: Installation, Up: Top
+File: yahtmlj, Node: Command Invocation, Next: Completion, Prev: Installation, Up: Top
 
-$(B30It%3%^%s%I5/F0
-(B****************
+ŠO•”ƒRƒ}ƒ“ƒh‹N“®
+****************
 
-HTML$(B%U%!%$%kJT=8$K$+$+$o$k$$$/$D$+$N%3%^%s%I$rB(:B$K8F$V$3$H$,$G$-$^$9!#
-(B`[prefix] t j'
-             ... HTML$(B9=J8%A%'%C%+(B(jweblint)$(B5/F0
-(B`[prefix] t p'
-             ... $(B8=:_$N%Z!<%8$rBP>]$H$7$?%V%i%&%65/F0
-(B`[prefix] t r'
-             ... $(B8=:_$N%Z!<%8$,%V%i%&%6$KI=<($5$l$F$$$k$H$-$N(Breload$(B;XDj
+HTMLƒtƒ@ƒCƒ‹•ÒW‚É‚©‚©‚í‚é‚¢‚­‚Â‚©‚ÌƒRƒ}ƒ“ƒh‚ğ‘¦À‚ÉŒÄ‚Ô‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+`[prefix] t j'
+             ... HTML\•¶ƒ`ƒFƒbƒJ(jweblint)‹N“®
+`[prefix] t p'
+             ... Œ»İ‚Ìƒy[ƒW‚ğ‘ÎÛ‚Æ‚µ‚½ƒuƒ‰ƒEƒU‹N“®
+`[prefix] t r'
+             ... Œ»İ‚Ìƒy[ƒW‚ªƒuƒ‰ƒEƒU‚É•\¦‚³‚ê‚Ä‚¢‚é‚Æ‚«‚Ìreloadw’è
 
 
 
-(BFile: yahtmlj, Node: Completion, Next: Jump, Prev: Command Invocation, Up: Top
+File: yahtmlj, Node: Completion, Next: Jump, Prev: Command Invocation, Up: Top
 
-$(BJd40F~NO
-(B********
+•âŠ®“ü—Í
+********
 
-$(B!VLnD;!W$GMxMQ$G$-$k!"!V(Bbegin$(B7?Jd40!W!"!V(Bsection$(B7?Jd40!W!"!V(Blarge$(B7?Jd40!W!"
-!V(Bmaketitle$(B7?Jd40!W!"!V%"%/%;%s%HJd40!W$HA4$/F1$8%-!<A`:n$GBP1~$9$k(BHTML$(B%?
-%0$NJd40F~NO$,$G$-$^$9!#$=$l$>$l$N7?$NJd40$O=g$K!"!VJ#?t9T$KEO$k%?%0F~NO!W!"
-!V6uMWAG%?%0(B(img$(B$J$I(B)$(B$NJd40!W!"!V0l9TFb$G$N3+;O(B/$(B=*N;%?%0$NF~NO!W!"!V6uMWAG
-6uB0@-%?%0$NF~NO!W!"!VJ8;z;2>HF~NO!W$KBP1~$7$F$$$^$9!#6qBNE*$K$O
+u–ì’¹v‚Å—˜—p‚Å‚«‚éAubeginŒ^•âŠ®vAusectionŒ^•âŠ®vAulargeŒ^•âŠ®vA
+umaketitleŒ^•âŠ®vAuƒAƒNƒZƒ“ƒg•âŠ®v‚Æ‘S‚­“¯‚¶ƒL[‘€ì‚Å‘Î‰‚·‚éHTMLƒ^
+ƒO‚Ì•âŠ®“ü—Í‚ª‚Å‚«‚Ü‚·B‚»‚ê‚¼‚ê‚ÌŒ^‚Ì•âŠ®‚Í‡‚ÉAu•¡”s‚É“n‚éƒ^ƒO“ü—ÍvA
+u‹ó—v‘fƒ^ƒO(img‚È‚Ç)‚Ì•âŠ®vAuˆês“à‚Å‚ÌŠJn/I—¹ƒ^ƒO‚Ì“ü—ÍvAu‹ó—v‘f
+‹ó‘®«ƒ^ƒO‚Ì“ü—ÍvAu•¶šQÆ“ü—Ív‚É‘Î‰‚µ‚Ä‚¢‚Ü‚·B‹ï‘Ì“I‚É‚Í
 
-(B`[prefix] b ($(BLnD;$N(Bbegin$(BJd40$KBP1~(B)'
+`[prefix] b (–ì’¹‚Ìbegin•âŠ®‚É‘Î‰)'
      ...
           <ul>
           </ul>
 
-     $(B$N$h$&$K3+;O%?%0$H=*N;%?%0$rFs9T$KEO$C$F=q$-$?$$>l9g$NJd40$r;X$7$^$9!#
-     $*$b$K%V%m%C%/7?%?%0$,Jd408uJd$K4^$^$l$^$9!#
+     ‚Ì‚æ‚¤‚ÉŠJnƒ^ƒO‚ÆI—¹ƒ^ƒO‚ğ“ñs‚É“n‚Á‚Ä‘‚«‚½‚¢ê‡‚Ì•âŠ®‚ğw‚µ‚Ü‚·B
+     ‚¨‚à‚ÉƒuƒƒbƒNŒ^ƒ^ƒO‚ª•âŠ®Œó•â‚ÉŠÜ‚Ü‚ê‚Ü‚·B
 
-(B`[prefix] s ($(BLnD;$N(Bsection$(B7?Jd40$KBP1~(B)'
+`[prefix] s (–ì’¹‚ÌsectionŒ^•âŠ®‚É‘Î‰)'
      ...
           <img src="foo.gif" alt="photo">
 
-     $(B$N$h$&$K=*N;%?%0$r;}$?$:!"$+$DB0@-CM$N$_$G5!G=$r;XDj$9$k%?%0$rJd40$7
-     $^$9!#Jd408uJd$H$7$F$O!"(Bimg, input $(B$,B8:_$7$^$9!#
+     ‚Ì‚æ‚¤‚ÉI—¹ƒ^ƒO‚ğ‚½‚¸A‚©‚Â‘®«’l‚Ì‚İ‚Å‹@”\‚ğw’è‚·‚éƒ^ƒO‚ğ•âŠ®‚µ
+     ‚Ü‚·B•âŠ®Œó•â‚Æ‚µ‚Ä‚ÍAimg, input ‚ª‘¶İ‚µ‚Ü‚·B
 
-(B`[prefix] l ($(BLnD;$N(Blarge$(B7?Jd40$KBP1~(B)'
-     ... begin$(B7?Jd40$H$[$\F1$8$G$9$,!"
+`[prefix] l (–ì’¹‚ÌlargeŒ^•âŠ®‚É‘Î‰)'
+     ... beginŒ^•âŠ®‚Æ‚Ù‚Ú“¯‚¶‚Å‚·‚ªA
 
-          (B<big> $(B!A (B</big>
+          <big> ` </big>
 
-     $(B$N$h$&$K0l9TFb$K3+;O(B/$(B=*N;%?%0$rF~$l$?$$$H$-$KMxMQ$7$^$9!#
+     ‚Ì‚æ‚¤‚Éˆês“à‚ÉŠJn/I—¹ƒ^ƒO‚ğ“ü‚ê‚½‚¢‚Æ‚«‚É—˜—p‚µ‚Ü‚·B
 
-(B`[prefix] m ($(BLnD;$N(Bmaketitle$(B7?Jd40$KBP1~(B)'
-     ... $(BMWAG$bB0@-CM$b;}$?$J$$%?%0$rJd40F~NO$7$^$9!#(B<br> 
-     $(B$J$I$,Jd408uJd$KAjEv$7$^$9!#
+`[prefix] m (–ì’¹‚ÌmaketitleŒ^•âŠ®‚É‘Î‰)'
+     ... —v‘f‚à‘®«’l‚à‚½‚È‚¢ƒ^ƒO‚ğ•âŠ®“ü—Í‚µ‚Ü‚·B<br> 
+     ‚È‚Ç‚ª•âŠ®Œó•â‚É‘Š“–‚µ‚Ü‚·B
 
-(B`[prefix] a ($(BLnD;$N%"%/%;%s%HJd40$KBP1~(B)'
-     ... $(B%(%s%F%#%F%#;2>H$K$h$kJ8;zI=5-$rF~NO$9$k$H$-$KMQ$$$^$9!#
-     %G%U%)%k%H$G$O (B< (&lt;), > (&gt;), & (&amp;), " (&quot;), ' (&apos;), 
-     $(B%V%i%s%/ (B(&nbsp;) $(B$NJd40F~NO$,9T$($^$9!#
-
-
-
-(BFile: yahtmlj, Node: Jump, Next: Changing and Deleting, Prev: Completion, Up: Top
-
-$(B%+!<%=%k%8%c%s%W
-(B****************
-$(BJ8=qCf$N$$$m$$$m$J>l=j$G
-
-(B`[prefix] g'
-             ... $(BBP1~$9$k%*%V%8%'%/%H$K%8%c%s%W
-
-$r2!$9$3$H$K$h$j!"%+!<%=%k0LCV$N(BHTML$(B9=J8$KBP1~$9$k>l=j$K%8%c%s%W$7$^$9!#BP
-1~4X78$,B8:_$9$k$H2r<a$5$l$k%3%^%s%I$K$O0J2<$N$b$N$,$"$j$^$9!#
-
-   (B* `<TAG>' $(B"+"* (B`</TAG>'
-   * `<img src="$(B2hA|%U%!%$%k(B">' $(B"* BP1~$9$k(Bviewer$(B5/F0
-   (B* `<a href="$(B%j%s%/@h(B">' $(B"* %j%s%/@h$X$N%]%$%s%H0\F0
-   (B* `<applet code="$(B%W%m%0%i%`(B">' $(B"* (BJava$(B%=!<%9%W%m%0%i%`$X$N0\F0
+`[prefix] a (–ì’¹‚ÌƒAƒNƒZƒ“ƒg•âŠ®‚É‘Î‰)'
+     ... ƒGƒ“ƒeƒBƒeƒBQÆ‚É‚æ‚é•¶š•\‹L‚ğ“ü—Í‚·‚é‚Æ‚«‚É—p‚¢‚Ü‚·B
+     ƒfƒtƒHƒ‹ƒg‚Å‚Í < (&lt;), > (&gt;), & (&amp;), " (&quot;), ' (&apos;), 
+     ƒuƒ‰ƒ“ƒN (&nbsp;) ‚Ì•âŠ®“ü—Í‚ªs‚¦‚Ü‚·B
 
 
 
-(BFile: yahtmlj, Node: Changing and Deleting, Next: CSS Support, Prev: Jump, Up: Top
+File: yahtmlj, Node: Jump, Next: Changing and Deleting, Prev: Completion, Up: Top
 
-$(BJQ99(B/$(B:o=|
-(B*********
+ƒJ[ƒ\ƒ‹ƒWƒƒƒ“ƒv
+****************
+•¶‘’†‚Ì‚¢‚ë‚¢‚ë‚ÈêŠ‚Å
+
+`[prefix] g'
+             ... ‘Î‰‚·‚éƒIƒuƒWƒFƒNƒg‚ÉƒWƒƒƒ“ƒv
+
+‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èAƒJ[ƒ\ƒ‹ˆÊ’u‚ÌHTML\•¶‚É‘Î‰‚·‚éêŠ‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B‘Î
+‰ŠÖŒW‚ª‘¶İ‚·‚é‚Æ‰ğß‚³‚ê‚éƒRƒ}ƒ“ƒh‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
+
+   * `<TAG>' ©¨ `</TAG>'
+   * `<img src="‰æ‘œƒtƒ@ƒCƒ‹">' ¨ ‘Î‰‚·‚éviewer‹N“®
+   * `<a href="ƒŠƒ“ƒNæ">' ¨ ƒŠƒ“ƒNæ‚Ö‚Ìƒ|ƒCƒ“ƒgˆÚ“®
+   * `<applet code="ƒvƒƒOƒ‰ƒ€">' ¨ Javaƒ\[ƒXƒvƒƒOƒ‰ƒ€‚Ö‚ÌˆÚ“®
+
+
+
+File: yahtmlj, Node: Changing and Deleting, Next: CSS Support, Prev: Jump, Up: Top
+
+•ÏX/íœ
+*********
 
 * Menu:
 
-* $(BBP%?%0$NJQ99(B::                
-* $(BJ8;z;2>H$X$NJQ99(B::            
-* $(B%j%8%g%sFbJ8;z$N(BURLencode::   
-* td$(B3g$j(B/tr$(B3g$j(B::               
+* ‘Îƒ^ƒO‚Ì•ÏX::
+* •¶šQÆ‚Ö‚Ì•ÏX::
+* ƒŠƒWƒ‡ƒ““à•¶š‚ÌURLencode::
+* tdŠ‡‚è/trŠ‡‚è::
 
 
 
-File: yahtmlj, Node: $(BBP%?%0$NJQ99(B, Next: $(BJ8;z;2>H$X$NJQ99(B, Prev: Changing and Deleting, Up: Changing and Deleting
+File: yahtmlj, Node: ‘Îƒ^ƒO‚Ì•ÏX, Next: •¶šQÆ‚Ö‚Ì•ÏX, Prev: Changing and Deleting, Up: Changing and Deleting
 
-$(BBP%?%0$NJQ99
-(B============
-$(BJ8=qCf$N$$$m$$$m$J>l=j$G
+‘Îƒ^ƒO‚Ì•ÏX
+============
+•¶‘’†‚Ì‚¢‚ë‚¢‚ë‚ÈêŠ‚Å
 
-(B`[prefix] c'
-             ... $(BBP1~$9$k%?%0Ey$rJQ99
+`[prefix] c'
+             ... ‘Î‰‚·‚éƒ^ƒO“™‚ğ•ÏX
 
-$r2!$9$3$H$K$h$j!"%+!<%=%k0LCV$N(BHTML$(B9=J8$K1~$8$?5-=RFbMF$NJQ99$r9T$$$^$9!#
-%+!<%=%k0LCV$HJQ99$9$kFbMF$NBP1~$O0J2<$NDL$j$G$9!#
+‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èAƒJ[ƒ\ƒ‹ˆÊ’u‚ÌHTML\•¶‚É‰‚¶‚½‹Lq“à—e‚Ì•ÏX‚ğs‚¢‚Ü‚·B
+ƒJ[ƒ\ƒ‹ˆÊ’u‚Æ•ÏX‚·‚é“à—e‚Ì‘Î‰‚ÍˆÈ‰º‚Ì’Ê‚è‚Å‚·B
 
-   (B* `<TAG>'$(B!A(B`</TAG>'
-     ... `TAG' $(B$NJQ99
-   (B* `<img src="$(B2hA|%U%!%$%k(B" alt="photo">' $(B$J$I$NB0@-CM
-     (B... $(BB0@-CM$NJQ99
-
-
-
-(BFile: yahtmlj, Node: $(BJ8;z;2>H$X$NJQ99(B, Prev: $(BBP%?%0$NJQ99(B, Up: Changing and Deleting
-
-$(BJ8;z;2>H$X$NJQ99
-(B================
-$(BJ8;z$H$7$F$N (B< $(B$d (B> $(B$rI=8=$9$k$H$-$O!"J8;z;2>H$rMQ$$$F(B&lt; $(B$d (B&gt; $(B$HI=5-
-$9$kI,MW$,$"$j$^$9$,!"(BHTML$(B0J30$N%U%!%$%k$+$i$3$l$i$NJ8;z$r4^$`%F%-%9%H$rD%
-$j9~$s$@>l9g$J$I$K!"$3$l$i$NJ8;z$r0l3g$7$FJ8;z;2>H7A<0$KJQ49$G$-$^$9!#
-
-(B`[prefix] ;'
-             ... $(B;XDj$7$?NN0h$NJ8;z;2>H$KCV$-49$($k$Y$-J8;z$NCV49
-(B`[prefix] :'
-             ... $(B;XDj$7$?NN0h$NJ8;z;2>H$r;2>HJ8;z$=$N$b$N$KCV49(B([prefix] ; 
-     $(B$N5UJQ49(B)
-
+   * `<TAG>'``</TAG>'
+     ... `TAG' ‚Ì•ÏX
+   * `<img src="‰æ‘œƒtƒ@ƒCƒ‹" alt="photo">' ‚È‚Ç‚Ì‘®«’l
+     ... ‘®«’l‚Ì•ÏX
 
 
 
-File: yahtmlj, Node: $(B%j%8%g%sFbJ8;z$N(BURLencode, Next: td$(B3g$j(B/tr$(B3g$j(B, Prev: $(BJ8;z;2>H$X$NJQ99(B, Up: Changing and Deleting
+File: yahtmlj, Node: •¶šQÆ‚Ö‚Ì•ÏX, Next: ƒŠƒWƒ‡ƒ““à•¶š‚ÌURLencode, Prev: ‘Îƒ^ƒO‚Ì•ÏX, Up: Changing and Deleting
 
-$(B%j%8%g%sFbJ8;z$N(BURLencode
+•¶šQÆ‚Ö‚Ì•ÏX
+================
+•¶š‚Æ‚µ‚Ä‚Ì < ‚â > ‚ğ•\Œ»‚·‚é‚Æ‚«‚ÍA•¶šQÆ‚ğ—p‚¢‚Ä&lt; ‚â &gt; ‚Æ•\‹L
+‚·‚é•K—v‚ª‚ ‚è‚Ü‚·‚ªAHTMLˆÈŠO‚Ìƒtƒ@ƒCƒ‹‚©‚ç‚±‚ê‚ç‚Ì•¶š‚ğŠÜ‚ŞƒeƒLƒXƒg‚ğ’£
+‚è‚ñ‚¾ê‡‚È‚Ç‚ÉA‚±‚ê‚ç‚Ì•¶š‚ğˆêŠ‡‚µ‚Ä•¶šQÆŒ`®‚É•ÏŠ·‚Å‚«‚Ü‚·B
+
+`[prefix] ;'
+             ... w’è‚µ‚½—Ìˆæ‚Ì•¶šQÆ‚É’u‚«Š·‚¦‚é‚×‚«•¶š‚Ì’uŠ·
+`[prefix] :'
+             ... w’è‚µ‚½—Ìˆæ‚Ì•¶šQÆ‚ğQÆ•¶š‚»‚Ì‚à‚Ì‚É’uŠ·([prefix] ; 
+     ‚Ì‹t•ÏŠ·)
+
+
+
+
+File: yahtmlj, Node: ƒŠƒWƒ‡ƒ““à•¶š‚ÌURLencode, Next: tdŠ‡‚è/trŠ‡‚è, Prev: •¶šQÆ‚Ö‚Ì•ÏX, Up: Changing and Deleting
+
+ƒŠƒWƒ‡ƒ““à•¶š‚ÌURLencode
 =========================
-      [prefix] #
+      `[prefix] #'
      
-     	... $(B;XDj$7$?NN0hFb$K (BURLencode $(B$9$Y$-J8;z$,$"$l$P$=$l$i$r%(%s
-     %3!<%II=5-$KCV49!#
+     	... w’è‚µ‚½—Ìˆæ“à‚É URLencode ‚·‚×‚«•¶š‚ª‚ ‚ê‚Î‚»‚ê‚ç‚ğƒGƒ“
+     ƒR[ƒh•\‹L‚É’uŠ·B
 
 
 
-(BFile: yahtmlj, Node: td$(B3g$j(B/tr$(B3g$j(B, Prev: $(B%j%8%g%sFbJ8;z$N(BURLencode, Up: Changing and Deleting
+File: yahtmlj, Node: tdŠ‡‚è/trŠ‡‚è, Prev: ƒŠƒWƒ‡ƒ““à•¶š‚ÌURLencode, Up: Changing and Deleting
 
-td$(B3g$j(B/tr$(B3g$j
-(B=============
-$(B6uGr6h@Z$j$G=q$$$?I=7A<0$N9T%l%3!<%I$r (B<td> $(B3g$j$NJB$S!$$"$k$$$O$=$l$i$r$5
-$i$K (B<tr> $(B$G3g$C$?9TJB$S$KJQ49$G$-$^$9!#
-      (B`[prefix] '}
+tdŠ‡‚è/trŠ‡‚è
+=============
+‹ó”’‹æØ‚è‚Å‘‚¢‚½•\Œ`®‚ÌsƒŒƒR[ƒh‚ğ <td> Š‡‚è‚Ì•À‚ÑC‚ ‚é‚¢‚Í‚»‚ê‚ç‚ğ‚³
+‚ç‚É <tr> ‚ÅŠ‡‚Á‚½s•À‚Ñ‚É•ÏŠ·‚Å‚«‚Ü‚·B
+      `[prefix] }'
      
-     	... $(B8=:_$N%j%8%g%s$K$"$k%G!<%?$r6uGr6h@Z$j$4$H$K
-             (B<td>...</td> $(B$G3g$k
-      (B`[prefix] ]'
+     	... Œ»İ‚ÌƒŠƒWƒ‡ƒ“‚É‚ ‚éƒf[ƒ^‚ğ‹ó”’‹æØ‚è‚²‚Æ‚É
+             <td>...</td> ‚ÅŠ‡‚é
+      `[prefix] ]'
      
-     	... $(B8=:_$N%j%8%g%s$K$"$k9T$r>e5-(Btd$(B3g$j$r$[$I$3$7$F$+$i$5$i$K9T$4$H
-$K (B<tr>...</tr> $(B$G3g$k%G%U%)%k%H$G$O6uGr6h@Z$j$G$9$,!$$3$l$rJQ$($k$H$-$O
-(BDelimiter: $(B$NLd$$9g$o$;$K6h@Z$jJ8;z$r;XDj$7$^$9!#$?$H$($P%+%s%^(B(,) $(B$r;XDj
-$9$k$H(BCSV$(B$+$iI=$r:n$k$3$H$,$G$-$^$9!#
+     	... Œ»İ‚ÌƒŠƒWƒ‡ƒ“‚É‚ ‚és‚ğã‹LtdŠ‡‚è‚ğ‚Ù‚Ç‚±‚µ‚Ä‚©‚ç‚³‚ç‚És‚²‚Æ
+‚É <tr>...</tr> ‚ÅŠ‡‚éƒfƒtƒHƒ‹ƒg‚Å‚Í‹ó”’‹æØ‚è‚Å‚·‚ªC‚±‚ê‚ğ•Ï‚¦‚é‚Æ‚«‚Í
+Delimiter: ‚Ì–â‚¢‡‚í‚¹‚É‹æØ‚è•¶š‚ğw’è‚µ‚Ü‚·B‚½‚Æ‚¦‚ÎƒJƒ“ƒ}(,) ‚ğw’è
+‚·‚é‚ÆCSV‚©‚ç•\‚ğì‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
-(Btd$(B0J30$NMWAG!$6qBNE*$K$O (Bth $(B$G3g$j$?$$>l9g$O (Buniversal-argument (`C-u') $(B$r
-$D$1$F>e5-(B2$(B$D$N%3%^%s%I$r8F$S$^$9!#$I$NMWAG$G3g$k$+$N<ALd$,A}$($k$N$G$=$l
-$K (Bth $(B$HF~$l$l$P!$3F%U%#!<%k%I$r (B<th>...</th> $(B$G3g$j$^$9!#$b$7!$Bh(B1$(B%U%#!<
-%k%I$N$_ (Bth $(B$G!$;D$j$rA4It (Btd $(B3g$j$K$7$?$$$H$-$O (Bthd $(B$HF~NO$7$F2<$5$$!#
+tdˆÈŠO‚Ì—v‘fC‹ï‘Ì“I‚É‚Í th ‚ÅŠ‡‚è‚½‚¢ê‡‚Í universal-argument (`C-u') ‚ğ
+‚Â‚¯‚Äã‹L2‚Â‚ÌƒRƒ}ƒ“ƒh‚ğŒÄ‚Ñ‚Ü‚·B‚Ç‚Ì—v‘f‚ÅŠ‡‚é‚©‚Ì¿–â‚ª‘‚¦‚é‚Ì‚Å‚»‚ê
+‚É th ‚Æ“ü‚ê‚ê‚ÎCŠeƒtƒB[ƒ‹ƒh‚ğ <th>...</th> ‚ÅŠ‡‚è‚Ü‚·B‚à‚µC‘æ1ƒtƒB[
+ƒ‹ƒh‚Ì‚İ th ‚ÅCc‚è‚ğ‘S•” td Š‡‚è‚É‚µ‚½‚¢‚Æ‚«‚Í thd ‚Æ“ü—Í‚µ‚Ä‰º‚³‚¢B
 
 
 
-(BFile: yahtmlj, Node: CSS Support, Next: Customizations, Prev: Changing and Deleting, Up: Top
+File: yahtmlj, Node: CSS Support, Next: Customizations, Prev: Changing and Deleting, Up: Top
 
-CSS($(B%9%?%$%k%7!<%H(B)$(B%5%]!<%H
-(B***************************
+CSS(ƒXƒ^ƒCƒ‹ƒV[ƒg)ƒTƒ|[ƒg
+***************************
 
 * Menu:
 
-* CSS-class completion::        
-* Reread CSS file::             
+* CSS-class completion::
+* Reread CSS file::
 
 
 
 File: yahtmlj, Node: CSS-class completion, Next: Reread CSS file, Prev: CSS Support, Up: CSS Support
 
-CSS$(B%/%i%9L>Jd40
-(B===============
-HTML$(B20$O(BCSS(Cascading Style Sheets)$(B$N%/%i%9L>$rJd40F~NO$9$k$3$H$,$G$-$^$9!#
-%9%?%$%kDj5A$H$7$F
+CSSƒNƒ‰ƒX–¼•âŠ®
+===============
+HTML‰®‚ÍCSS(Cascading Style Sheets)‚ÌƒNƒ‰ƒX–¼‚ğ•âŠ®“ü—Í‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+ƒXƒ^ƒCƒ‹’è‹`‚Æ‚µ‚Ä
 
-      (Bh1.foo, h2.foo { background-color: 0xffffff; }
+      h1.foo, h2.foo { background-color: 0xffffff; }
       h1.bar, h2.bar { font-size: 120%; }
 
-$(B$N$h$&$J$b$N$,$"$C$?>l9g$K!"(Bh1$(B$^$?$O(Bh2$(B%?%0$r (B[prefix] b $(B$d (B[prefix] l $(B$GJd
-40F~NO$7$?>l9g$K!"$=$l$i$KM-8z$J (Bclass $(BL>$G$"$k (Bfoo, bar $(B$r8uJd$H$7$FJd40
-F~NO$9$k$3$H$,2DG=$G$9!#$^$?
+‚Ì‚æ‚¤‚È‚à‚Ì‚ª‚ ‚Á‚½ê‡‚ÉAh1‚Ü‚½‚Íh2ƒ^ƒO‚ğ [prefix] b ‚â [prefix] l ‚Å•â
+Š®“ü—Í‚µ‚½ê‡‚ÉA‚»‚ê‚ç‚É—LŒø‚È class –¼‚Å‚ ‚é foo, bar ‚ğŒó•â‚Æ‚µ‚Ä•âŠ®
+“ü—Í‚·‚é‚±‚Æ‚ª‰Â”\‚Å‚·B‚Ü‚½
 
-      (B.caution { font-size: 120%; background-color: 0xc00000;}
+      .caution { font-size: 120%; background-color: 0xc00000;}
 
-$(B$N$h$&$JA4$F$N%(%l%a%s%H$KF/$/(Bclass$(B$,Dj5A$5$l$F$$$?>l9g$O!"A4$F$N%?%0$NJd
-40F~NO;~$K(Bclass$(B;2>HF~NO$r5a$a$i$l$^$9!#$3$l$,HQ$o$7$$>l9g$O%(%l%a%s%HL>F~
-NO3NDj$N$H$-$K%j%?!<%s%-!<(B($(B$^$?$O(BC-m)$(B$G$O$J$/!"(BC-j$(B$r2!$;$P(Bclass$(BJd40F~NO$r
-%-%c%s%;%k$G$-$^$9!#$?$H$($P
+‚Ì‚æ‚¤‚È‘S‚Ä‚ÌƒGƒŒƒƒ“ƒg‚É“­‚­class‚ª’è‹`‚³‚ê‚Ä‚¢‚½ê‡‚ÍA‘S‚Ä‚Ìƒ^ƒO‚Ì•â
+Š®“ü—Í‚ÉclassQÆ“ü—Í‚ğ‹‚ß‚ç‚ê‚Ü‚·B‚±‚ê‚ª”Ï‚í‚µ‚¢ê‡‚ÍƒGƒŒƒƒ“ƒg–¼“ü
+—ÍŠm’è‚Ì‚Æ‚«‚ÉƒŠƒ^[ƒ“ƒL[(‚Ü‚½‚ÍC-m)‚Å‚Í‚È‚­AC-j‚ğ‰Ÿ‚¹‚Îclass•âŠ®“ü—Í‚ğ
+ƒLƒƒƒ“ƒZƒ‹‚Å‚«‚Ü‚·B‚½‚Æ‚¦‚Î
 
-      (B`[prefix] l'                    $(B9TFb%?%0Jd40$r5/F0
-         (B($(B$^$?$O(B`[prefix] l SPC')
-      tt                                  <tt></tt>$(B$r$$$l$?$$$N$G(Btt$(B$HF~NO
-      (B`C-m'
+      [prefix] l                    s“àƒ^ƒO•âŠ®‚ğ‹N“®
+         (‚Ü‚½‚Í[prefix] l SPC)
+      tt                                  <tt></tt>‚ğ‚¢‚ê‚½‚¢‚Ì‚Ått‚Æ“ü—Í
+      C-m
 
-$(B$H$7$?>l9g$OB3$$$F (Bclass= $(B$HJd40%W%m%s%W%H$,=P$^$9$,!"
+‚Æ‚µ‚½ê‡‚Í‘±‚¢‚Ä class= ‚Æ•âŠ®ƒvƒƒ“ƒvƒg‚ªo‚Ü‚·‚ªA
 
-      (B`[prefix] l'                    $(B9TFb%?%0Jd40$r5/F0
-         (B($(B$^$?$O(B`[prefix] l SPC')
-      tt                                  <tt></tt>$(B$r$$$l$?$$$N$G(Btt$(B$HF~NO
-      (B`C-j'
+      [prefix] l                    s“àƒ^ƒO•âŠ®‚ğ‹N“®
+         (‚Ü‚½‚Í[prefix] l SPC)
+      tt                                  <tt></tt>‚ğ‚¢‚ê‚½‚¢‚Ì‚Ått‚Æ“ü—Í
+      C-j
 
-$(B$H:G8e$r (B`C-j' $(B$GF~NO$7$?>l9g$O (Bclass $(BJd40%W%m%s%W%H$O=P$^$;$s!#
-
-
-
-(BFile: yahtmlj, Node: Reread CSS file, Prev: CSS-class completion, Up: CSS Support
-
-CSS$(BDj5A%U%!%$%k$NFI$_D>$7
-(B=========================
-html$(B%U%!%$%k$rJT=8Cf$K(BCSS$(BDj5A%U%!%$%k$r=$@5$7!"DI2C$7$?(Bclass$(B$rJd408uJd$H$7
-$FD>$A$KFI$_9~$^$;$?$$>l9g$O!"(B`M-x yahtml-mode' $(B$H$7$F:F5/F0$r9T$C$F$/$@$5
-$$!#
+‚ÆÅŒã‚ğ `C-j' ‚Å“ü—Í‚µ‚½ê‡‚Í class •âŠ®ƒvƒƒ“ƒvƒg‚Ío‚Ü‚¹‚ñB
 
 
 
-(BFile: yahtmlj, Node: Customizations, Next: Copying, Prev: CSS Support, Up: Top
+File: yahtmlj, Node: Reread CSS file, Prev: CSS-class completion, Up: CSS Support
 
-$(B%+%9%?%^%$%:
-(B************
-
-yahtml$(B$NF0:n$r@)8f$9$kJQ?t$K$D$$$F@bL@$7$^$9!#
-
-(B* Menu:
-
-* All customizable variables::  $(B%+%9%?%^%$%:JQ?t0lMw
-(B* Hook variables::              hook$(BJQ?t
+CSS’è‹`ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ’¼‚µ
+=========================
+htmlƒtƒ@ƒCƒ‹‚ğ•ÒW’†‚ÉCSS’è‹`ƒtƒ@ƒCƒ‹‚ğC³‚µA’Ç‰Á‚µ‚½class‚ğ•âŠ®Œó•â‚Æ‚µ
+‚Ä’¼‚¿‚É“Ç‚İ‚Ü‚¹‚½‚¢ê‡‚ÍA`M-x yahtml-mode' ‚Æ‚µ‚ÄÄ‹N“®‚ğs‚Á‚Ä‚­‚¾‚³
+‚¢B
 
 
 
-(BFile: yahtmlj, Node: All customizable variables, Next: Hook variables, Prev: Customizations, Up: Customizations
+File: yahtmlj, Node: Customizations, Next: Copying, Prev: CSS Support, Up: Top
 
-$(B%+%9%?%^%$%:JQ?t0lMw
-(B====================
+ƒJƒXƒ^ƒ}ƒCƒY
+************
+
+yahtml‚Ì“®ì‚ğ§Œä‚·‚é•Ï”‚É‚Â‚¢‚Äà–¾‚µ‚Ü‚·B
+
+* Menu:
+
+* All customizable variables::  ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——
+* Hook variables::              hook•Ï”
+
+
+
+File: yahtmlj, Node: All customizable variables, Next: Hook variables, Prev: Customizations, Up: Customizations
+
+ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——
+====================
 
  -- Variable: yahtml-prefix
-     yahtml-mode $(BCf$N%W%j%U%#%/%9%-!< (B(`\C-c')
+     yahtml-mode ’†‚ÌƒvƒŠƒtƒBƒNƒXƒL[ (`\C-c')
 
  -- Variable: yahtml-image-viewer
-     img$(B$G;2>H$7$F$$$k2hA|%U%!%$%k$rI=<($9$k$H$-$K5/F0$9$k%3%^%s%I (B(xv)
+     img‚ÅQÆ‚µ‚Ä‚¢‚é‰æ‘œƒtƒ@ƒCƒ‹‚ğ•\¦‚·‚é‚Æ‚«‚É‹N“®‚·‚éƒRƒ}ƒ“ƒh (xv)
 
  -- Variable: yahtml-www-browser
-     `[prefix]g' $(B$G30It%Z!<%8$rI=<($9$k$H$-$K5/F0$9$k%V%i%&%6 (B(netscape)
+     `[prefix]g' ‚ÅŠO•”ƒy[ƒW‚ğ•\¦‚·‚é‚Æ‚«‚É‹N“®‚·‚éƒuƒ‰ƒEƒU (netscape)
 
  -- Variable: yahtml-kanji-code
-     $(B%G%U%)%k%H$N4A;z%3!<%I!#(B1=sjis, 2=jis, 3=euc, 4=utf-8 (2)
-     .htaccess $(B%U%!%$%k$K
-           (BAddType "text/html; charset=xxx" .html $(B$N5-=R$,$"$C$?>l9g$O$=$l
-     $K=>$&
+     ƒfƒtƒHƒ‹ƒg‚ÌŠ¿šƒR[ƒhB1=sjis, 2=jis, 3=euc, 4=utf-8 (2)
+     .htaccess ƒtƒ@ƒCƒ‹‚É
+           AddType "text/html; charset=xxx" .html ‚Ì‹Lq‚ª‚ ‚Á‚½ê‡‚Í‚»‚ê
+     ‚É]‚¤
 
- (B-- Variable: yahtml-fill-column
-     auto-fill$(B$9$k$H$-$N%+%i%`?t (B(72)
+ -- Variable: yahtml-fill-column
+     auto-fill‚·‚é‚Æ‚«‚ÌƒJƒ‰ƒ€” (72)
 
  -- Variable: yahtml-fill-prefix
-     yahtml-mode $(B8GM-$N(Bfill-prefix (`nil')
+     yahtml-mode ŒÅ—L‚Ìfill-prefix (`nil')
 
  -- Variable: yahtml-path-url-alist
-     OS$(B$N%U%!%$%k%7%9%F%`>e$G$N%U%k%Q%9L>$H!"$=$N30It8x3+;~$N(BURL$(B$NBP1~I=!#
+     OS‚Ìƒtƒ@ƒCƒ‹ƒVƒXƒeƒ€ã‚Å‚Ìƒtƒ‹ƒpƒX–¼‚ÆA‚»‚ÌŠO•”ŒöŠJ‚ÌURL‚Ì‘Î‰•\B
 
- (B-- Variable: yahtml-directory-index
-     $(B%5!<%P%"%/%;%9;~%U%!%$%kL>$r>JN,$7$?$H$-$K%G%U%)%k%H$G3+$+$l$k%$%s%G%C
-     %/%9%U%!%$%k$NL>A0!#B?$/$N>l9g (Bindex.html$(B!#(B(`"index.html"')
+ -- Variable: yahtml-directory-index
+     ƒT[ƒoƒAƒNƒZƒXƒtƒ@ƒCƒ‹–¼‚ğÈ—ª‚µ‚½‚Æ‚«‚ÉƒfƒtƒHƒ‹ƒg‚ÅŠJ‚©‚ê‚éƒCƒ“ƒfƒb
+     ƒNƒXƒtƒ@ƒCƒ‹‚Ì–¼‘OB‘½‚­‚Ìê‡ index.htmlB(`"index.html"')
 
  -- Variable: yahtml-lint-program
-     HTML$(B9=J8%A%'%C%/%W%m%0%i%`!#(B(`"jweblint"')
+     HTML\•¶ƒ`ƒFƒbƒNƒvƒƒOƒ‰ƒ€B(`"jweblint"')
 
  -- Variable: yahtml-hate-too-deep-indentation
-     $(B%M%9%H$7$?Ns5s7O4D6-$G$N%$%s%G%s%H$,?<$9$.$k$H$-$K(Bt$(B$K$9$k!#(B(`nil')
+     ƒlƒXƒg‚µ‚½—ñ‹“ŒnŠÂ‹«‚Å‚ÌƒCƒ“ƒfƒ“ƒg‚ª[‚·‚¬‚é‚Æ‚«‚Ét‚É‚·‚éB(`nil')
 
  -- Variable: yahtml-always-/p
-     `<p>' $(B$r$$$l$?$iI,$: (B`</p>' $(B$7$?$$?M8~$1!#(B`nil'
+     `<p>' ‚ğ‚¢‚ê‚½‚ç•K‚¸ `</p>' ‚µ‚½‚¢lŒü‚¯B`nil'
 
  -- Variable: yahtml-p-prefered-env-regexp
-     $(B<+F0E*$K (B`<p>' $(B$rF~$l$FM_$7$$4D6-!#
-     (B(`"^\\(body\\|dl\\|blockquote\\)"')
+     ©“®“I‚É `<p>' ‚ğ“ü‚ê‚Ä—~‚µ‚¢ŠÂ‹«B
+     (`"^\\(body\\|dl\\|blockquote\\)"')
 
  -- Variable: yahtml-template-file
-     $(B?75,(BHTML$(B%U%!%$%k:n@.;~$K<+F0E*$KA^F~$7$FM_$7$$%U%!%$%kL>!#
-     (B`"~/http/template.html"'
+     V‹KHTMLƒtƒ@ƒCƒ‹ì¬‚É©“®“I‚É‘}“ü‚µ‚Ä—~‚µ‚¢ƒtƒ@ƒCƒ‹–¼B
+     `"~/http/template.html"'
 
  -- Variable: yahtml-prefer-upcases
-     $(B%?%0$KBgJ8;z$r;H$$$?$$!#(B`nil'
+     ƒ^ƒO‚É‘å•¶š‚ğg‚¢‚½‚¢B`nil'
 
  -- Variable: yahtml-prefer-upcase-attributes
-     $(BB0@-;XDj;R$KBgJ8;z$r;H$$$?$$!#(B`nil'
+     ‘®«w’èq‚É‘å•¶š‚ğg‚¢‚½‚¢B`nil'
 
  -- Variable: yahtml-server-type
-     Apache$(B7O$N%5!<%P$rMxMQ$7$F$$$k>l9g$O (B'apache $(B$r%;%C%H$9$k!#
-     (B./.htaccess $(B$r;2>H$9$k$+$I$&$+$r7hDj$9$k!#(B`'apache'
+     ApacheŒn‚ÌƒT[ƒo‚ğ—˜—p‚µ‚Ä‚¢‚éê‡‚Í 'apache ‚ğƒZƒbƒg‚·‚éB
+     ./.htaccess ‚ğQÆ‚·‚é‚©‚Ç‚¤‚©‚ğŒˆ’è‚·‚éB`'apache'
 
  -- Variable: yahtml-apache-access-file
-     `yahtml-server-type' $(B$, (B`'apache' $(B$N$H$-$K%"%/%;%9@)8B%U%!%$%kL>$r;X
-     Dj!#(B`".htaccess"'
+     `yahtml-server-type' ‚ª `'apache' ‚Ì‚Æ‚«‚ÉƒAƒNƒZƒX§ŒÀƒtƒ@ƒCƒ‹–¼‚ğw
+     ’èB`".htaccess"'
 
  -- Variable: yahtml-shell-command-option
-     $(B%7%'%k$GJL%3%^%s%I$r5/F0$9$k$H$-$N%*%W%7%g%s!#
+     ƒVƒFƒ‹‚Å•ÊƒRƒ}ƒ“ƒh‚ğ‹N“®‚·‚é‚Æ‚«‚ÌƒIƒvƒVƒ‡ƒ“B
 
- (B-- Variable: yahtml-translate-hyphens-when-comment-region
-     $(BNN0h%3%a%s%H%"%&%H$r$9$k$H$-$K4{$KB8:_$9$k%O%$%U%s$r (B`&#45;' $(B$KJQ99$9
-     $k$+$I$&$+!#(B(`t')
+ -- Variable: yahtml-translate-hyphens-when-comment-region
+     —ÌˆæƒRƒƒ“ƒgƒAƒEƒg‚ğ‚·‚é‚Æ‚«‚ÉŠù‚É‘¶İ‚·‚éƒnƒCƒtƒ“‚ğ `&#45;' ‚É•ÏX‚·
+     ‚é‚©‚Ç‚¤‚©B(`t')
 
  -- Variable: yahtml-entity-reference-chars-alist
-     $(B%(%s%F%#%F%#;2>H(B(Entity Reference)$(B$G5-=R$9$Y$-J8;z72$r(B`'(?$(BJ8;z (B. "$(B%(
-     %s%F%#%F%#I=5-(B")' $(B$H$$$&7A<0$rNs5s$7$?(Balist$(B$GJB$Y$k!#%G%U%)%k%H$G 
-     (B`<', `>', `&', `'', `"' $(B$KBP$9$k(Balist$(B$,@_Dj$5$l$F$$$k$N$G!"DI2C$7$?$$
-     J,$@$1$r5-=R$9$l$PNI$$!#(Bcdr$(BIt (B`"$(B%(%s%F%#%F%#I=5-(B"' $(B$O!"@hF,$N (B`&' $(B$H 
-     KvHx$N(B`;' $(B$O4^$a$:$K=q$/!#
+     ƒGƒ“ƒeƒBƒeƒBQÆ(Entity Reference)‚Å‹Lq‚·‚×‚«•¶šŒQ‚ğ`'(?•¶š . "ƒG
+     ƒ“ƒeƒBƒeƒB•\‹L")' ‚Æ‚¢‚¤Œ`®‚ğ—ñ‹“‚µ‚½alist‚Å•À‚×‚éBƒfƒtƒHƒ‹ƒg‚Å 
+     `<', `>', `&', `'', `"' ‚É‘Î‚·‚éalist‚ªİ’è‚³‚ê‚Ä‚¢‚é‚Ì‚ÅA’Ç‰Á‚µ‚½‚¢
+     •ª‚¾‚¯‚ğ‹Lq‚·‚ê‚Î—Ç‚¢Bcdr•” `"ƒGƒ“ƒeƒBƒeƒB•\‹L"' ‚ÍAæ“ª‚Ì `&' ‚Æ 
+     ––”ö‚Ì`;' ‚ÍŠÜ‚ß‚¸‚É‘‚­B
 
- (B-- Variable: yahtml-faithful-to-htmllint
-     $(B9=J8%A%'%C%+$H$7$F (Bhtmllint $(B$rMxMQ$9$k>l9g$A$g$C$H$7$?M>7W$J6uGr$J$I
-     $KBP$7$F$b7Y9p$r<($9$N$G!"$3$l$r2sHr$9$k$H$-$K$O$3$NJQ?t$r(B`t'$(B$K$9$k!#
+ -- Variable: yahtml-faithful-to-htmllint
+     \•¶ƒ`ƒFƒbƒJ‚Æ‚µ‚Ä htmllint ‚ğ—˜—p‚·‚éê‡‚¿‚å‚Á‚Æ‚µ‚½—]Œv‚È‹ó”’‚È‚Ç
+     ‚É‘Î‚µ‚Ä‚àŒx‚ğ¦‚·‚Ì‚ÅA‚±‚ê‚ğ‰ñ”ğ‚·‚é‚Æ‚«‚É‚Í‚±‚Ì•Ï”‚ğ`t'‚É‚·‚éB
 
- (B-- Variable: yahtml-use-css
-     CSS$(B$NJd405!G=$r;H$&$+$I$&$+ (B(`t')
+ -- Variable: yahtml-use-css
+     CSS‚Ì•âŠ®‹@”\‚ğg‚¤‚©‚Ç‚¤‚© (`t')
 
  -- Variable: yahtml-image-inspection-bytes
-     $(B2hA|%U%!%$%k$N%5%$%:$rD4$Y$k$H$-$KFI$_9~$`%P%$%H?t (B(`10000')
+     ‰æ‘œƒtƒ@ƒCƒ‹‚ÌƒTƒCƒY‚ğ’²‚×‚é‚Æ‚«‚É“Ç‚İ‚ŞƒoƒCƒg” (`10000')
 
  -- Variable: yahtml:img-default-alt-format
-     <img src...>$(B$N(BALT$(BB0@-$N%G%U%)%k%HJ8;zNs$N=q<0!#(B%x$(B$O2hA|$NI}!"(B%y$(B$O2hA|
-     $N9b$5!"(B%s$(B$O%U%!%$%k%5%$%:$KCV49$5$l$k (B(`"%xx%y(%sbytes)"')
+     <img src...>‚ÌALT‘®«‚ÌƒfƒtƒHƒ‹ƒg•¶š—ñ‚Ì‘®B%x‚Í‰æ‘œ‚Ì•A%y‚Í‰æ‘œ
+     ‚Ì‚‚³A%s‚Íƒtƒ@ƒCƒ‹ƒTƒCƒY‚É’uŠ·‚³‚ê‚é (`"%xx%y(%sbytes)"')
 
  -- Variable: yahtml-escape-chars
-     href$(BJd40$J$I$N$H$-$KM=LsJ8;z$r(BURL$(B%(%s%3!<%I$9$k$+(B; 'ask$(B$N$H$-$O3NG'$7
-     $F$+$iCV49$9$k (B(`'ask')
+     href•âŠ®‚È‚Ç‚Ì‚Æ‚«‚É—\–ñ•¶š‚ğURLƒGƒ“ƒR[ƒh‚·‚é‚©; 'ask‚Ì‚Æ‚«‚ÍŠm”F‚µ
+     ‚Ä‚©‚ç’uŠ·‚·‚é (`'ask')
 
  -- Variable: yahtml-use-font-lock
-     $(B%=!<%9$N?'$E$1%Q%C%1!<%8$H$7$F (Bfont-lock $(B$rMxMQ$9$k$+(B(`(featurep
+     ƒ\[ƒX‚ÌF‚Ã‚¯ƒpƒbƒP[ƒW‚Æ‚µ‚Ä font-lock ‚ğ—˜—p‚·‚é‚©(`(featurep
      'font-lock)')
 
  -- Variable: yahtml-use-hilit19
-     $(B%=!<%9$N?'$E$1%Q%C%1!<%8$H$7$F (Bhilit19 $(B$rMxMQ$9$k$+(B(`(featurep
+     ƒ\[ƒX‚ÌF‚Ã‚¯ƒpƒbƒP[ƒW‚Æ‚µ‚Ä hilit19 ‚ğ—˜—p‚·‚é‚©(`(featurep
      'hilit19)')
 
  -- Variable: yahtml-indentation-boundary
-     $(B%$%s%G%s%H7W;;$rBG$A@Z$C$F$h$$6-3&$H$J$k@55,I=8=(B(`"^\\s *<h[1-3]>"')
+     ƒCƒ“ƒfƒ“ƒgŒvZ‚ğ‘Å‚¿Ø‚Á‚Ä‚æ‚¢‹«ŠE‚Æ‚È‚é³‹K•\Œ»(`"^\\s *<h[1-3]>"')
 
 
 
 File: yahtmlj, Node: Hook variables, Prev: All customizable variables, Up: Customizations
 
-hook$(BJQ?t
-(B========
+hook•Ï”
+========
 
 
 
 
 File: yahtmlj, Node: Copying, Next: Concept Index, Prev: Customizations, Up: Top
 
-$(B<h$j07$$
-(B********
+æ‚èˆµ‚¢
+********
 
-  $(BK\%W%m%0%i%`$O%U%j!<%=%U%H%&%'%"$G$9!#K\%W%m%0%i%`$r;HMQ$7$F@8$8$?$$$+$J
-$k7k2L$KBP$7$F$b:n<T$O@UG$$rIi$o$J$$$3$H$H$7$^$9!#E>:\Ey$K4X$7$F$O@)8B$$$?
-$7$^$;$s!#>o<1E*$K07$C$F$/$@$5$$!#$^$?!";HMQ$7$F$$$k;]$r%a%$%k$G$*CN$i$;$$
-$?$@$/$H!":n<T$O4n$s$G%5%]!<%H$KNe$`$3$H$G$7$g$&!#
+  –{ƒvƒƒOƒ‰ƒ€‚ÍƒtƒŠ[ƒ\ƒtƒgƒEƒFƒA‚Å‚·B–{ƒvƒƒOƒ‰ƒ€‚ğg—p‚µ‚Ä¶‚¶‚½‚¢‚©‚È
+‚éŒ‹‰Ê‚É‘Î‚µ‚Ä‚àìÒ‚ÍÓ”C‚ğ•‰‚í‚È‚¢‚±‚Æ‚Æ‚µ‚Ü‚·B“]Ú“™‚ÉŠÖ‚µ‚Ä‚Í§ŒÀ‚¢‚½
+‚µ‚Ü‚¹‚ñBí¯“I‚Éˆµ‚Á‚Ä‚­‚¾‚³‚¢B‚Ü‚½Ag—p‚µ‚Ä‚¢‚é|‚ğƒƒCƒ‹‚Å‚¨’m‚ç‚¹‚¢
+‚½‚¾‚­‚ÆAìÒ‚ÍŠì‚ñ‚ÅƒTƒ|[ƒg‚É—ã‚Ş‚±‚Æ‚Å‚µ‚å‚¤B
 
-  6l>p!"4uK>!"%P%0Js9p!"46A[Ey$O4?7^$$$?$7$^$9!#O"Mm$O (Byuuji@yatex.org $(B$^
-$G(B(2000$(BG/(B12$(B7n8=:_(B)$(B!#7QB3E*$K;HMQ$7$F$/$@$5$kJ}$O%a%$%j%s%0%j%9%H!V(Bfj$(BLnD;$N
-2q!W$K@'Hs2CF~$7$F$/$@$5$$!#2CF~J}K!$K$D$$$F$OK\%Q%C%1!<%8$N (B`docs/htmlqa' 
-$(B%U%!%$%k$N!V$=$NB>!W$N>O$r8fMw$/$@$5$$!#
+  ‹êîAŠó–]AƒoƒO•ñAŠ´‘z“™‚ÍŠ½Œ}‚¢‚½‚µ‚Ü‚·B˜A—‚Í yuuji@yatex.org ‚Ü
+‚Å(2000”N12ŒŒ»İ)BŒp‘±“I‚Ég—p‚µ‚Ä‚­‚¾‚³‚é•û‚ÍƒƒCƒŠƒ“ƒOƒŠƒXƒgufj–ì’¹‚Ì
+‰ïv‚É¥”ñ‰Á“ü‚µ‚Ä‚­‚¾‚³‚¢B‰Á“ü•û–@‚É‚Â‚¢‚Ä‚Í–{ƒpƒbƒP[ƒW‚Ì `docs/htmlqa' 
+ƒtƒ@ƒCƒ‹‚Ìu‚»‚Ì‘¼v‚ÌÍ‚ğŒä——‚­‚¾‚³‚¢B
 
-;EMM$O!"M=9p$J$/3N<B$K(B($(B5$J,<!Bh$G(B)$(BJQ99$5$l$^$9(B:-p$(B!#
+d—l‚ÍA—\‚È‚­ŠmÀ‚É(‹C•ªŸ‘æ‚Å)•ÏX‚³‚ê‚Ü‚·:-pB
 
-                                                                  9-@%M:Fs
+                                                                  L£—Y“ñ
 
 
 
 
-(BFile: yahtmlj, Node: Concept Index, Prev: Copying, Up: Top
+File: yahtmlj, Node: Concept Index, Prev: Copying, Up: Top
 
-$(B:w0z
-(B****
+õˆø
+****
 
 * Menu:
 
-* ƒJƒXƒ^ƒ}ƒCƒY[,B)7=\"7(B]:   Customizations.         4.
-* ƒL[ƒAƒTƒCƒ“[,B+" 3"q(B]:   Customizations.         4.
+* ƒJƒXƒ^ƒ}ƒCƒY[‚©‚·‚½‚Ü‚¢‚·]:   Customizations.         4.
+* ƒL[ƒAƒTƒCƒ“[‚«‚¢‚ ‚³‚¢‚ñ]:   Customizations.         4.
 * Demacs:                       Intro.                  4.
-* HTML(I.(B[HTML,Bb(B]:               Intro.                  4.
+* HTML‰®[HTML‚â]:               Intro.                  4.
 * LaTeX:                        Intro.                  4.
 * Mule:                         Intro.                  4.
 
 
 
-
 
 Tag table:
-Node: Top148
-Node: Intro617
-Node: Installation896
-Node: yahtml$(B5/F0$N$?$a$N@_Dj(B1095
-Node: lint$(B%W%m%0%i%`(B/$(B%V%i%&%6(B/$(B%$%a!<%8%t%e!<%"4D6-Ey$N@_Dj(B1749
-Node: WWW$(B%Z!<%84D6-MQJQ?t$N@_Dj(B2249
-Node: Command Invocation3020
-Node: Completion3347
-Node: Jump4331
-Node: Changing and Deleting4730
-Node: $(BBP%?%0$NJQ99(B4950
-Node: $(BJ8;z;2>H$X$NJQ99(B5300
-Node: $(B%j%8%g%sFbJ8;z$N(BURLencode5658
-Node: td$(B3g$j(B/tr$(B3g$j(B5890
-Node: CSS Support6519
-Node: CSS-class completion6738
-Node: Reread CSS file7734
-Node: Customizations7956
-Node: All customizable variables8180
-Node: Hook variables11178
-Node: Copying11290
-Node: Concept Index11793
+Node: Top151
+Node: Intro620
+Node: Installation899
+Node: yahtml‹N“®‚Ì‚½‚ß‚Ìİ’è1087
+Node: lintƒvƒƒOƒ‰ƒ€/ƒuƒ‰ƒEƒU/ƒCƒ[ƒWƒ”ƒ…[ƒAŠÂ‹«“™‚Ìİ’è1741
+Node: WWWƒy[ƒWŠÂ‹«—p•Ï”‚Ìİ’è2241
+Node: Command Invocation3012
+Node: Completion3339
+Node: Jump4323
+Node: Changing and Deleting4722
+Node: ‘Îƒ^ƒO‚Ì•ÏX4896
+Node: •¶šQÆ‚Ö‚Ì•ÏX5246
+Node: ƒŠƒWƒ‡ƒ““à•¶š‚ÌURLencode5629
+Node: tdŠ‡‚è/trŠ‡‚è5863
+Node: CSS Support6492
+Node: CSS-class completion6690
+Node: Reread CSS file7674
+Node: Customizations7896
+Node: All customizable variables8120
+Node: Hook variables11118
+Node: Copying11230
+Node: Concept Index11733
 
 End tag table
