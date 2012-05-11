@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.76
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu May 10 11:06:33 2012 on firestorm
+;;; Last modified Fri May 11 17:44:12 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1890,7 +1890,8 @@ fj–ì’¹‚Ì‰ï‚Å•·‚±‚¤!
   '(("\\\\epsfile\\(\\[[^]]+\\]\\)?{[^},]*file=\\(\\([^,} ]*/\\)?[^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 2)
     ("\\\\epsfig{[^},]*fi\\(le\\|gure\\)=\\(\\([^,} ]*/\\)?[^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 2)
     ("\\\\postscriptbox{[^}]*}{[^}]*}{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 1)
-    ("\\\\\\(epsfbox\\|includegraphics\\|epsfig\\)\\*?{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 2) ;\epsfbox{hoge.ps} or \includegraphics{hoge.eps}
+    ("\\\\\\(epsfbox\\|epsfig\\)\\*?{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 2) ;\epsfbox{hoge.ps}
+    ("\\\\includegraphics\\*?{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.ai\\|\\.pdf\\|\\.svg\\|\\.png\\|\\.jpe?g\\|\\.e?ps\\)?}" 1) ;\includegraphics{hoge.eps}
     ("\\\\\\(psbox\\)\\(\\[[^]]+\\]\\)?{\\(\\([^,} ]*/\\)?[^} ]+\\)\\(\\.e?ps\\)}" 3) ;\psbox[options...]{hoge.eps} (97/1/11)
     ("\\\\input{\\([^} ]+\\)\\(\\.tps\\)}" 1) ;tgif2tex (1998/9/16)
     )
@@ -1899,11 +1900,16 @@ fj–ì’¹‚Ì‰ï‚Å•·‚±‚¤!
 (defvar YaTeX-file-processor-alist nil
   "*Alist of files' processor vs. its extension;
 See also the documentation of YaTeX-processed-file-regexp-alist.")
-  
+
 (defvar YaTeX-file-processor-alist-default
   '(("tgif" . ".obj")
-    ("ghostview" . ".ps")
-    ("ghostview" . ".eps")
+    ("gimp" . ".xcf") ("gimp" . ".xcf.gz") ("gimp" . ".xcf.bz2")
+    ("inkscape" . ".svg") ("inkscape" . ".svgz") ("inkscape" . ".ai")
+    ("ooffice" . ".odg")
+    ("gimp" . ".jpeg") ("gimp" . ".jpg") ("gimp" . ".png")
+    ("evince" . ".ps")
+    ("evince" . ".eps")
+    ("ooffice" . ".pdf")
     (t . ".tex")
     (t . ".sty")
     (t . ""))
