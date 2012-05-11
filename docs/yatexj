@@ -3,6 +3,10 @@ produced by `texinfo-format-buffer'
 from file `yatexj.tex'
 using `texinfmt.el' version 2.38 of 3 July 1998.
 
+START-INFO-DIR-ENTRY
+* YaTeX: (yatexj).      Yet Another tex-mode for Emacs (Japanese).
+END-INFO-DIR-ENTRY
+
 
 
 
@@ -2099,66 +2103,66 @@ File: yatexj, Node: Concept Index, Prev: Copying, Up: Top
 
 
 Tag table:
-Node: Top149
-Node: Intro1203
-Node: Terminology1506
-Node: Main features2141
-Node: Installation3174
-Node: Invocation4392
-Node: Calling typesetter5211
-Node: Calling previewer6448
-Node: Print out6764
-Node: %#notation7030
-Node: Changing typesetter7458
-Node: Splitting input files7716
-Node: Fix region for typesetting8668
-Node: lpr format9569
-Node: Controlling which command to invoke10378
-Node: Editing %# notation10779
-Node: Completion11236
-Node: begin型補完11709
-Node: section型補完14293
-Node: 2個以上の引数をとる section型コマンド15388
-Node: Enclose section-type command16206
-Node: Recursive completion16443
-Node: view-sectioning16749
-Node: label-generation17945
-Node: large型補完18294
-Node: maketitle型補完18874
-Node: Arbitrary completion19173
-Node: end補完19486
-Node: Accent mark completion19828
-Node: Image completion20253
-Node: Greek letter completion22070
-Node: Local dictionary22530
-Node: Commenting out23135
-Node: Cursor jump24294
-Node: 対応オブジェクトへのジャンプ24531
-Node: お絵描きツール起動25519
-Node: メインファイルへのジャンプ26439
-Node: 環境を単位としたジャンプ26775
-Node: 最後の補完位置へのジャンプ27132
-Node: Modifying/Deleting27369
-Node: Changing LaTeX command27775
-Node: Killing LaTeX command28326
-Node: Filling29197
-Node: Includeonly30526
-Node: What column31087
-Node: Intelligent newline31866
-Node: Usepackage cheker32899
-Node: Changing mode of YaTeX33325
-Node: Online help33901
-Node: Inclusion hierarchy browser34877
-Node: Cooperation with other packages36155
-Node: Customizations36610
-Node: Lisp variables36907
-Node: All customizable variables37514
-Node: Sample definitions44815
-Node: Hook variables45249
-Node: Hook file46143
-Node: Add-in functions46349
-Node: Etc46576
-Node: Copying46860
-Node: Concept Index47491
+Node: Top257
+Node: Intro1311
+Node: Terminology1614
+Node: Main features2249
+Node: Installation3282
+Node: Invocation4500
+Node: Calling typesetter5319
+Node: Calling previewer6556
+Node: Print out6872
+Node: %#notation7138
+Node: Changing typesetter7566
+Node: Splitting input files7824
+Node: Fix region for typesetting8776
+Node: lpr format9677
+Node: Controlling which command to invoke10486
+Node: Editing %# notation10887
+Node: Completion11344
+Node: begin型補完11817
+Node: section型補完14401
+Node: 2個以上の引数をとる section型コマンド15496
+Node: Enclose section-type command16314
+Node: Recursive completion16551
+Node: view-sectioning16857
+Node: label-generation18053
+Node: large型補完18402
+Node: maketitle型補完18982
+Node: Arbitrary completion19281
+Node: end補完19594
+Node: Accent mark completion19936
+Node: Image completion20361
+Node: Greek letter completion22178
+Node: Local dictionary22638
+Node: Commenting out23243
+Node: Cursor jump24402
+Node: 対応オブジェクトへのジャンプ24639
+Node: お絵描きツール起動25627
+Node: メインファイルへのジャンプ26547
+Node: 環境を単位としたジャンプ26883
+Node: 最後の補完位置へのジャンプ27240
+Node: Modifying/Deleting27477
+Node: Changing LaTeX command27883
+Node: Killing LaTeX command28434
+Node: Filling29305
+Node: Includeonly30634
+Node: What column31195
+Node: Intelligent newline31974
+Node: Usepackage cheker33007
+Node: Changing mode of YaTeX33433
+Node: Online help34009
+Node: Inclusion hierarchy browser34985
+Node: Cooperation with other packages36263
+Node: Customizations36718
+Node: Lisp variables37015
+Node: All customizable variables37622
+Node: Sample definitions44923
+Node: Hook variables45357
+Node: Hook file46251
+Node: Add-in functions46457
+Node: Etc46684
+Node: Copying46968
+Node: Concept Index47599
 
 End tag table

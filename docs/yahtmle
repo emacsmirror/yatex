@@ -3,6 +3,10 @@ produced by `texinfo-format-buffer'
 from file `yahtmle.tex'
 using `texinfmt.el' version 2.38 of 3 July 1998.
 
+START-INFO-DIR-ENTRY
+* yahtml-e: (yahtmle).  Yet Another html-mode for Emacs (English).
+END-INFO-DIR-ENTRY
+
 
 
 
@@ -505,27 +509,27 @@ Index
 
 
 Tag table:
-Node: Top151
-Node: Intro728
-Node: Installation1126
-Node: Setting up yahtml1407
-Node: Setting environments for weblint browsers and image viewers2198
-Node: Setting environment variables for WWW pages2894
-Node: Command Invocation3865
-Node: Completion4293
-Node: Jump5809
-Node: Changing and Deleting6289
-Node: Changing tags in pairs6573
-Node: Changing entities7068
-Node: URLencoding of strings within region7604
-Node: td-enclosure/tr-enclosure7905
-Node: CSS Support8871
-Node: CSS-class completion9097
-Node: Reread CSS definition9950
-Node: Customizations10225
-Node: All customizable variables10501
-Node: Hook variables14269
-Node: Copying14395
-Node: Concept Index15186
+Node: Top259
+Node: Intro836
+Node: Installation1234
+Node: Setting up yahtml1515
+Node: Setting environments for weblint browsers and image viewers2306
+Node: Setting environment variables for WWW pages3002
+Node: Command Invocation3973
+Node: Completion4401
+Node: Jump5917
+Node: Changing and Deleting6397
+Node: Changing tags in pairs6681
+Node: Changing entities7176
+Node: URLencoding of strings within region7712
+Node: td-enclosure/tr-enclosure8013
+Node: CSS Support8979
+Node: CSS-class completion9205
+Node: Reread CSS definition10058
+Node: Customizations10333
+Node: All customizable variables10609
+Node: Hook variables14377
+Node: Copying14503
+Node: Concept Index15294
 
 End tag table

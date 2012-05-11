@@ -3,6 +3,10 @@ produced by `texinfo-format-buffer'
 from file `yahtmlj.tex'
 using `texinfmt.el' version 2.38 of 3 July 1998.
 
+START-INFO-DIR-ENTRY
+* yahtml: (yahtmlj).    Yet Another html-mode for Emacs (Japanese).
+END-INFO-DIR-ENTRY
+
 
 
 
@@ -515,27 +519,27 @@ File: yahtmlj, Node: Concept Index, Prev: Copying, Up: Top
 
 
 Tag table:
-Node: Top151
-Node: Intro620
-Node: Installation899
-Node: yahtml起動のための設定1087
-Node: lintプログラム/ブラウザ/イメージヴューア環境等の設定1741
-Node: WWWページ環境用変数の設定2241
-Node: Command Invocation3012
-Node: Completion3339
-Node: Jump4323
-Node: Changing and Deleting4722
-Node: 対タグの変更4896
-Node: 文字参照への変更5246
-Node: リジョン内文字のURLencode5629
-Node: td括り/tr括り5863
-Node: CSS Support6492
-Node: CSS-class completion6690
-Node: Reread CSS file7674
-Node: Customizations7896
-Node: All customizable variables8120
-Node: Hook variables11118
-Node: Copying11230
-Node: Concept Index11733
+Node: Top260
+Node: Intro729
+Node: Installation1008
+Node: yahtml起動のための設定1196
+Node: lintプログラム/ブラウザ/イメージヴューア環境等の設定1850
+Node: WWWページ環境用変数の設定2350
+Node: Command Invocation3121
+Node: Completion3448
+Node: Jump4432
+Node: Changing and Deleting4831
+Node: 対タグの変更5005
+Node: 文字参照への変更5355
+Node: リジョン内文字のURLencode5738
+Node: td括り/tr括り5972
+Node: CSS Support6601
+Node: CSS-class completion6799
+Node: Reread CSS file7783
+Node: Customizations8005
+Node: All customizable variables8229
+Node: Hook variables11227
+Node: Copying11339
+Node: Concept Index11842
 
 End tag table

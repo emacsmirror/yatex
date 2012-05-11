@@ -3,6 +3,10 @@ produced by `texinfo-format-buffer'
 from file `yatexe.tex'
 using `texinfmt.el' version 2.38 of 3 July 1998.
 
+START-INFO-DIR-ENTRY
+* YaTeX-e: (yatexe).    Yet Another tex-mode for Emacs (English).
+END-INFO-DIR-ENTRY
+
 
 
 
@@ -2176,67 +2180,67 @@ my feelings) without notice :-p.
                                                               HIROSE Yuuji
 
 Tag table:
-Node: Top149
-Node: What is YaTeX?1490
-Node: Main features1863
-Node: Installation3392
-Node: Typesetting4169
-Node: Calling typesetter5299
-Node: Calling previewer7503
-Node: Printing out7864
-Node: %#notation8156
-Node: Changing typesetter8574
-Node: Splitting input files8938
-Node: Static region for typesetting10363
-Node: Lpr format11492
-Node: Controlling which command to invoke12565
-Node: Editing %# notation13158
-Node: Completion13702
-Node: Begin-type completion14262
-Node: Section-type completion17305
-Node: view-sectioning19740
-Node: Large-type completion21320
-Node: Maketitle-type completion22051
-Node: Arbitrary completion22603
-Node: End completion22993
-Node: Accent completion23463
-Node: Image completion24080
-Node: Greek letters completion26337
-Node: Local dictionaries27064
-Node: Commenting out28001
-Node: Cursor jump29460
-Node: Jump to corresponding object29772
-Node: Invoking image processor31173
-Node: Jump to main file32516
-Node: Jumping around the environment32881
-Node: Jumping to last completion position33299
-Node: Changing and Deleting33808
-Node: Changing LaTeX commands34200
-Node: Killing LaTeX commands35377
-Node: Filling36562
-Node: Updation of includeonly38413
-Node: What column39210
-Node: Intelligent newline40295
-Node: Usepackage checker41949
-Node: Online help42540
-Node: Browsing file hierarchy44215
-Node: Cooperation with other packages45952
-Node: Customizations46657
-Node: Lisp variables46991
-Node: All customizable variables47995
-Node: Sample definitions57794
-Node: Hook variables58307
-Node: Hook file59011
-Node: Add-in functions59350
-Node: How the add-in function works60210
-Node: Defining option-add-in62409
-Node: Defining argument-add-in63131
-Node: Defining enclosing-add-in64013
-Node: How the function is called64867
-Node: Useful functions for creating add-in65543
-Node: Contribution66948
-Node: Add-in generator67222
-Node: Etcetera72594
-Node: Copying73199
+Node: Top256
+Node: What is YaTeX?1597
+Node: Main features1970
+Node: Installation3499
+Node: Typesetting4276
+Node: Calling typesetter5406
+Node: Calling previewer7610
+Node: Printing out7971
+Node: %#notation8263
+Node: Changing typesetter8681
+Node: Splitting input files9045
+Node: Static region for typesetting10470
+Node: Lpr format11599
+Node: Controlling which command to invoke12672
+Node: Editing %# notation13265
+Node: Completion13809
+Node: Begin-type completion14369
+Node: Section-type completion17412
+Node: view-sectioning19847
+Node: Large-type completion21427
+Node: Maketitle-type completion22158
+Node: Arbitrary completion22710
+Node: End completion23100
+Node: Accent completion23570
+Node: Image completion24187
+Node: Greek letters completion26444
+Node: Local dictionaries27171
+Node: Commenting out28108
+Node: Cursor jump29567
+Node: Jump to corresponding object29879
+Node: Invoking image processor31280
+Node: Jump to main file32623
+Node: Jumping around the environment32988
+Node: Jumping to last completion position33406
+Node: Changing and Deleting33915
+Node: Changing LaTeX commands34307
+Node: Killing LaTeX commands35484
+Node: Filling36669
+Node: Updation of includeonly38520
+Node: What column39317
+Node: Intelligent newline40402
+Node: Usepackage checker42056
+Node: Online help42647
+Node: Browsing file hierarchy44322
+Node: Cooperation with other packages46059
+Node: Customizations46764
+Node: Lisp variables47098
+Node: All customizable variables48102
+Node: Sample definitions57901
+Node: Hook variables58414
+Node: Hook file59118
+Node: Add-in functions59457
+Node: How the add-in function works60317
+Node: Defining option-add-in62516
+Node: Defining argument-add-in63238
+Node: Defining enclosing-add-in64120
+Node: How the function is called64974
+Node: Useful functions for creating add-in65650
+Node: Contribution67055
+Node: Add-in generator67329
+Node: Etcetera72701
+Node: Copying73306
 
 End tag table
