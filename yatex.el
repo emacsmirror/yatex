@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.76
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri May 11 17:44:12 2012 on firestorm
+;;; Last modified Fri May 11 17:57:27 2012 on duke
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1891,7 +1891,7 @@ fj–ì’¹‚Ì‰ï‚Å•·‚±‚¤!
     ("\\\\epsfig{[^},]*fi\\(le\\|gure\\)=\\(\\([^,} ]*/\\)?[^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 2)
     ("\\\\postscriptbox{[^}]*}{[^}]*}{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 1)
     ("\\\\\\(epsfbox\\|epsfig\\)\\*?{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 2) ;\epsfbox{hoge.ps}
-    ("\\\\includegraphics\\*?{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.ai\\|\\.pdf\\|\\.svg\\|\\.png\\|\\.jpe?g\\|\\.e?ps\\)?}" 1) ;\includegraphics{hoge.eps}
+    ("\\\\includegraphics\\*?\\(.*\\]\\|\\s \\)?{\\(.*\\)\\(\\.ai\\|\\.pdf\\|\\.svg\\|\\.png\\|\\.jpe?g\\|\\.e?ps\\)}" 2) ;\includegraphics[options...]{hoge.eps}
     ("\\\\\\(psbox\\)\\(\\[[^]]+\\]\\)?{\\(\\([^,} ]*/\\)?[^} ]+\\)\\(\\.e?ps\\)}" 3) ;\psbox[options...]{hoge.eps} (97/1/11)
     ("\\\\input{\\([^} ]+\\)\\(\\.tps\\)}" 1) ;tgif2tex (1998/9/16)
     )
