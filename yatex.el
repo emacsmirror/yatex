@@ -2,7 +2,7 @@
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
 ;;; yatex.el rev. 1.76
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri May 11 17:57:27 2012 on duke
+;;; Last modified Sat May 12 14:53:03 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1905,11 +1905,11 @@ See also the documentation of YaTeX-processed-file-regexp-alist.")
   '(("tgif" . ".obj")
     ("gimp" . ".xcf") ("gimp" . ".xcf.gz") ("gimp" . ".xcf.bz2")
     ("inkscape" . ".svg") ("inkscape" . ".svgz") ("inkscape" . ".ai")
-    ("ooffice" . ".odg")
+    ("soffice" . ".odg")
     ("gimp" . ".jpeg") ("gimp" . ".jpg") ("gimp" . ".png")
     ("evince" . ".ps")
     ("evince" . ".eps")
-    ("ooffice" . ".pdf")
+    ("soffice" . ".pdf")
     (t . ".tex")
     (t . ".sty")
     (t . ""))
