@@ -1,15 +1,15 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //ñÏíπ//
-;;; yatex.el rev. 1.75
+;;; yatex.el rev. 1.76
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan 12 11:40:38 2012 on firestorm
+;;; Last modified Sat May 12 14:53:03 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.75"
+(defconst YaTeX-revision-number "1.76"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -321,7 +321,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("verbatim") ("itemize") ("enumerate") ("description")
      ("list") ("tabular") ("tabular*") ("table") ("tabbing") ("titlepage")
      ("sloppypar") ("picture") ("displaymath")
-     ("eqnarray") ("figure") ("equation") ("abstract") ("array")
+     ("eqnarray") ("eqnarray*") ("figure") ("equation") ("equation*")
+     ("abstract") ("array")
      ("thebibliography") ("theindex") ("flushleft") ("flushright")
      ("minipage")
      ("supertabular")
@@ -711,7 +712,7 @@ more features are available and they are documented in the manual.
 (defvar YaTeX-struct-end
   (concat YaTeX-ec "end{%1}")
   "Keyword format of end-environment.")
-(defvar YaTeX-struct-name-regexp "[^}]+"
+(defvar YaTeX-struct-name-regexp "[^}]*"
   "Environment name regexp.")
 (defvar YaTeX-TeX-token-regexp
   (cond (YaTeX-japan "[A-Za-z*Çü-ÇÒàü-Íû]+")
@@ -829,9 +830,9 @@ This works also for other defined begin/end tokens to define the structure."
 	  (insert "\n")
 	  (or exchange (exchange-point-and-mark)))
       (goto-char beg2)
-      (if (intern-soft (concat "YaTeX-intelligent-newline-" env))
+      (YaTeX-intelligent-newline nil)
+      (if (fboundp (intern-soft (concat "YaTeX-intelligent-newline-" env)))
 	  (progn
-	    (YaTeX-intelligent-newline nil)
 	    (message
 	     (cond
 	      (YaTeX-japan "%s Ç≈éüÇÃçsÇÃì¸óÕÇ…êiÇ›Ç‹Ç∑ÅB")
@@ -950,17 +951,17 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 	    (function
 	     (lambda (n)
 	       (while (<= j n)
-		 (insert
-		  (concat		;to allow nil return value
-		   "{"
-		   (setq title
-			 (cond
-			  (addin-args (funcall arg-reader j))
-			  (YaTeX-skip-default-reader "")
-			  (t
-			   (read-string
-			    (format "Argument %d of %s: " j section)))))
-		   "}"))
+		 (unwind-protect
+		     (setq title
+			   (cond
+			    (addin-args (funcall arg-reader j))
+			    (YaTeX-skip-default-reader "")
+			    (t
+			     (read-string
+			      (format "Argument %d of %s: " j section)))))
+		   (insert
+		    (concat		;to allow nil return value
+		     "{" title "}")))
 		 (setq j (1+ j))))))
 	   );;let
 	(setq YaTeX-section-name section)
@@ -972,10 +973,12 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 	      (insert "}")
 	      (set-marker e (point))
 	      (goto-char beg)
-	      (insert YaTeX-ec YaTeX-section-name
-		      (YaTeX-addin YaTeX-section-name))
-	      (if (> numarg 1) (funcall mkarg-func (1- numarg)))
-	      (insert "{")
+	      (unwind-protect
+		  (progn
+		    (insert YaTeX-ec YaTeX-section-name
+			    (YaTeX-addin YaTeX-section-name))
+		    (if (> numarg 1) (funcall mkarg-func (1- numarg))))
+		(insert "{"))
 	      (if arp (funcall ar2 (point) e))
 	      (goto-char e)
 	      (set-marker e nil))
@@ -1615,10 +1618,10 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?j) (YaTeX-typeset-buffer))
      ((= c ?r) (YaTeX-typeset-region))
      ((= c ?e) (YaTeX-typeset-environment))
-     ((= c ?b) (YaTeX-call-command-on-file
-		bibtex-command "*YaTeX-bibtex*" YaTeX-parent-file))
-     ((= c ?i) (YaTeX-call-command-on-file
-		makeindex-command "*YaTeX-makeindex*" YaTeX-parent-file))
+     ((= c ?b) (YaTeX-call-builtin-on-file
+		"BIBTEX" bibtex-command arg))
+     ((= c ?i) (YaTeX-call-builtin-on-file
+		"MAKEINDEX" makeindex-command arg))
      ((= c ?k) (YaTeX-kill-typeset-process YaTeX-typeset-process))
      ((= c ?p) (call-interactively 'YaTeX-preview))
      ((= c ?q) (YaTeX-system "lpq" "*Printer queue*"))
@@ -1637,26 +1640,18 @@ Optional second argument CHAR is for non-interactive call from menu."
   "Operate %# notation."
   ;;Do not use interactive"r" for the functions which require no mark
   (interactive)
-  (message "!)Edit-%%#! B)EGIN-END-region L)Edit-%%#LPR")
+  (message "!)Edit-%%#! B)EGIN-END-region P)review L)Edit-%%#LPR make(I)ndex B)ibtex")
   (let ((c (or char (read-char))) (string "") key
 	(b (make-marker)) (e (make-marker)))
     (save-excursion
       (cond
-       ((or (= c ?!) (= c ?l))		;Edit `%#!'
-	(goto-char (point-min))
-	(setq key (cond ((= c ?!) "%#!")
-			((= c ?l) "%#LPR")))
-	(if (re-search-forward key nil t)
-	    (progn
-	      (setq string (YaTeX-buffer-substring
-			    (point) (point-end-of-line)))
-	      (delete-region (point) (progn (end-of-line) (point))))
-	  (open-line 1)
-	  (delete-region (point) (progn (beginning-of-line)(point)));for 19 :-<
-	  (insert key))
-	(unwind-protect
-	    (setq string (read-string (concat key ": ") string))
-	  (insert string)))
+       ((rindex "!plib" c)		;Edit %#xxx
+	(setq key (cdr (assq c '((?! . "!")
+				 (?p . "PREVIEW")
+				 (?l . "LPR")
+				 (?i . "MAKEINDEX")
+				 (?b . "BIBTEX")))))
+	(YaTeX-getset-builtin key t))
 
        ((= c ?b)			;%#BEGIN %#END region
 	(or end (setq beg (min (point) (mark)) end (max (point) (mark))))
@@ -1895,7 +1890,8 @@ fjñÏíπÇÃâÔÇ≈ï∑Ç±Ç§!
   '(("\\\\epsfile\\(\\[[^]]+\\]\\)?{[^},]*file=\\(\\([^,} ]*/\\)?[^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 2)
     ("\\\\epsfig{[^},]*fi\\(le\\|gure\\)=\\(\\([^,} ]*/\\)?[^,}. ]+\\)\\(\\.e?ps\\)?[^}]*}" 2)
     ("\\\\postscriptbox{[^}]*}{[^}]*}{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 1)
-    ("\\\\\\(epsfbox\\|includegraphics\\|epsfig\\)\\*?{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 2) ;\epsfbox{hoge.ps} or \includegraphics{hoge.eps}
+    ("\\\\\\(epsfbox\\|epsfig\\)\\*?{\\(\\([^,} ]*/\\)?[^}. ]+\\)\\(\\.e?ps\\)?}" 2) ;\epsfbox{hoge.ps}
+    ("\\\\includegraphics\\*?\\(.*\\]\\|\\s \\)?{\\(.*\\)\\(\\.ai\\|\\.pdf\\|\\.svg\\|\\.png\\|\\.jpe?g\\|\\.e?ps\\)}" 2) ;\includegraphics[options...]{hoge.eps}
     ("\\\\\\(psbox\\)\\(\\[[^]]+\\]\\)?{\\(\\([^,} ]*/\\)?[^} ]+\\)\\(\\.e?ps\\)}" 3) ;\psbox[options...]{hoge.eps} (97/1/11)
     ("\\\\input{\\([^} ]+\\)\\(\\.tps\\)}" 1) ;tgif2tex (1998/9/16)
     )
@@ -1904,11 +1900,16 @@ fjñÏíπÇÃâÔÇ≈ï∑Ç±Ç§!
 (defvar YaTeX-file-processor-alist nil
   "*Alist of files' processor vs. its extension;
 See also the documentation of YaTeX-processed-file-regexp-alist.")
-  
+
 (defvar YaTeX-file-processor-alist-default
   '(("tgif" . ".obj")
-    ("ghostview" . ".ps")
-    ("ghostview" . ".eps")
+    ("gimp" . ".xcf") ("gimp" . ".xcf.gz") ("gimp" . ".xcf.bz2")
+    ("inkscape" . ".svg") ("inkscape" . ".svgz") ("inkscape" . ".ai")
+    ("soffice" . ".odg")
+    ("gimp" . ".jpeg") ("gimp" . ".jpg") ("gimp" . ".png")
+    ("evince" . ".ps")
+    ("evince" . ".eps")
+    ("soffice" . ".pdf")
     (t . ".tex")
     (t . ".sty")
     (t . ""))
@@ -2008,6 +2009,11 @@ Macro's argument number stored to propname 'argc."
 		 (looking-at ec+command))
 	       (goto-char (match-beginning 0))
 	       (throw 'found t))
+	  ;;If inside of parentheses, try to escape.
+	  (while (condition-case err
+		     (progn (up-list -1) t)
+		   (error nil)))
+	  (while (equal (preceding-char) ?\]) (backward-list))
 	  ;;(2) search command directly
 	  (skip-chars-forward "^{}[]")
 	  (and (YaTeX-re-search-active-backward

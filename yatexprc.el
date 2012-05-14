@@ -2,7 +2,7 @@
 ;;; YaTeX process handler.
 ;;; yatexprc.el
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan  9 20:20:24 2012 on firestorm
+;;; Last modified Fri Feb 17 22:35:38 2012 on firestorm
 ;;; $Id$
 
 ;(require 'yatex)
@@ -55,6 +55,9 @@
   (modify-syntax-entry ?\[ "w" YaTeX-typeset-buffer-syntax)
   (modify-syntax-entry ?\] "w" YaTeX-typeset-buffer-syntax))
 
+(defvar YaTeX-typeset-marker nil)
+(defvar YaTeX-typeset-consumption nil)
+(make-variable-buffer-local 'YaTeX-typeset-consumption)
 (defun YaTeX-typeset (command buffer &optional prcname modename ppcmd)
   "Execute jlatex (or other) to LaTeX typeset."
   (interactive)
@@ -92,11 +95,23 @@
 			      YaTeX-shell-command-option command))
 	 (get-buffer buffer))
 	(set-process-sentinel YaTeX-typeset-process 'YaTeX-typeset-sentinel)
+	(put 'YaTeX-typeset-process 'thiscmd command)
+	(put 'YaTeX-typeset-process 'name prcname)
+	(if (fboundp 'current-time)
+	    (setq YaTeX-typeset-consumption
+		  (cons (cons 'time (current-time))
+			(delq 'time YaTeX-typeset-consumption))))
 	(let ((ppprop (get 'YaTeX-typeset-process 'ppcmd)))
 	  (setq ppprop (delq (assq YaTeX-typeset-process ppprop) ppprop))
 	  (if ppcmd
 	      (setq ppprop (cons (cons YaTeX-typeset-process ppcmd) ppprop)))
-	  (put 'YaTeX-typeset-process 'ppcmd ppprop))))
+	  (put 'YaTeX-typeset-process 'ppcmd ppprop))
+	(if (and (boundp 'bibcmd) bibcmd)
+	    (let ((bcprop (get 'YaTeX-typeset-process 'bibcmd)))
+	      (setq bcprop (cons
+			    (cons YaTeX-typeset-process bibcmd)
+			    (delq (assq YaTeX-typeset-process bcprop) bcprop)))
+	      (put 'YaTeX-typeset-process 'bibcmd bcprop)))))
       (message (format "Calling `%s'..." command))
       (setq YaTeX-current-TeX-buffer (buffer-name))
       (use-local-map map)		;map may be localized
@@ -114,6 +129,10 @@
 		  YaTeX-latex-message-code outcode))
 		((boundp 'NEMACS)
 		 (set-kanji-process-code YaTeX-latex-message-code))))
+      (set-marker (or YaTeX-typeset-marker
+		      (setq YaTeX-typeset-marker (make-marker)))
+		  (point))
+      (insert (format "Call `%s'\n" command))
       (if YaTeX-dos (message "Done.")
 	(insert " ")
 	(set-marker (process-mark YaTeX-typeset-process) (1- (point))))
@@ -133,6 +152,15 @@
       (switch-to-buffer cb)
       (YaTeX-remove-nonstopmode))))
 
+(defvar YaTeX-typeset-auto-rerun t
+  "*Non-nil automatically reruns typesetter when cross-refs update found.
+This is a toy mechanism.  DO NOT RELY ON THIS MECHANISM.
+You SHOULD check the integrity of cross-references with your eyes!!
+Supplying an integer to this variable inhibit compulsory call of bibtex,
+thus, it call bibtex only if warning messages about citation are seen.")
+(defvar YaTeX-typeset-rerun-msg "Rerun to get cross-references right.")
+(defvar YaTeX-typeset-citation-msg
+  "Warning: Citation \`")
 (defun YaTeX-typeset-sentinel (proc mes)
   (cond ((null (buffer-name (process-buffer proc)))
          ;; buffer killed
@@ -140,7 +168,17 @@
         ((memq (process-status proc) '(signal exit))
          (let* ((obuf (current-buffer)) (pbuf (process-buffer proc))
 		(pwin (get-buffer-window pbuf))
-		(owin (selected-window)) win)
+		(owin (selected-window)) win
+		tobecalled shortname
+		(thiscmd (get 'YaTeX-typeset-process 'thiscmd))
+		(ppprop (get 'YaTeX-typeset-process 'ppcmd))
+		(ppcmd (cdr (assq proc ppprop)))
+		(bcprop (get 'YaTeX-typeset-process 'bibcmd))
+		(bibcmd (cdr (assq proc bcprop))))
+	   (put 'YaTeX-typeset-process 'ppcmd ;erase ppcmd
+		(delq (assq proc ppprop) ppprop))
+	   (put 'YaTeX-typeset-process 'bibcmd ;erase bibcmd
+		(delq (assq proc bcprop) bcprop))
            ;; save-excursion isn't the right thing if
            ;;  process-buffer is current-buffer
            (unwind-protect
@@ -154,36 +192,102 @@
 		 (if pwin (recenter -3))
                  (insert ?\n mode-name " " mes)
                  (forward-char -1)
-                 (insert " at " (substring (current-time-string) 0 -5) "\n")
+                 (insert
+		  (format " at %s%s\n"
+			  (substring (current-time-string) 0 -5)
+			  (if (and (fboundp 'current-time) (fboundp 'float)
+				   (assq 'time YaTeX-typeset-consumption))
+			      (format
+			       " (%.2f secs)"
+			       (YaTeX-elapsed-time
+				(cdr (assq 'time YaTeX-typeset-consumption))
+				(current-time))))))
                  (setq mode-line-process
                        (concat ": "
                                (symbol-name (process-status proc))))
-		 (message mode-name " %s."
+		 (message "%s %s" mode-name
 			  (if (eq (process-status proc) 'exit)
 			      "done" "ceased"))
                  ;; If buffer and mode line shows that the process
                  ;; is dead, we can delete it now.  Otherwise it
                  ;; will stay around until M-x list-processes.
                  (delete-process proc)
-		 ;; If ppcmd is active, call it.
-		 (let* ((ppprop (get 'YaTeX-typeset-process 'ppcmd))
-			(ppcmd (cdr (assq proc ppprop))))
-		   (put 'YaTeX-typeset-process 'ppcmd ;erase ppcmd
-			(delq (assq proc ppprop) ppprop))
+		 (if (cond
+		      ((or (not YaTeX-typeset-auto-rerun)
+			   (string-match "latexmk" thiscmd))
+		       nil)
+		      ((and bibcmd     ;Call bibtex if bibcmd defined &&
+			    (or	       ;  (1st call  || warning found)
+			     (and (not (numberp YaTeX-typeset-auto-rerun))
+				  ; cancel call at 1st, if value is a number.
+				  (not (string-match "bibtex" mode-name)))
+			     (re-search-backward
+			      YaTeX-typeset-citation-msg
+			      YaTeX-typeset-marker t))
+			    (save-excursion ; && using .bbl files.
+			      (search-backward
+			       ".bbl" YaTeX-typeset-marker t)))
+		       ;; Always call bibtex after the first typesetting,
+		       ;; because bibtex doesn't warn disappeared \cite.
+		       ;; (Suggested by ryseto. 2012)
+		       ;; It is more efficient to call bibtex directly than
+		       ;; to call it after deep inspection on the balance
+		       ;; of \cite vs. \bib*'s referring all *.aux files.
+		       (insert "\n" YaTeX-typeset-rerun-msg "\n")
+		       (setq tobecalled bibcmd shortname "+bibtex"))
+		      ((or
+			(save-excursion
+			  (search-backward
+			   YaTeX-typeset-rerun-msg YaTeX-typeset-marker t))
+			(save-excursion
+			  (re-search-backward
+			   "natbib.*Rerun to get citations correct"
+			   YaTeX-typeset-marker t)))
+		       (if bibcmd
+			   (put 'YaTeX-typeset-process 'bibcmd
+				(cons (cons (get-buffer-process pbuf) bibcmd)
+				      bcprop)))
+		       (setq tobecalled thiscmd shortname "+typeset"))
+		      (t
+		       nil))			  ;no need to call any process
+		     (progn
+		       (insert
+			(format
+			 "===!!! %s !!!===\n"
+			 (message "Rerun `%s' to get cross-references right"
+				  tobecalled)))
+		       (if (equal tobecalled thiscmd)
+			   (set-marker YaTeX-typeset-marker (point)))
+		       (set-process-sentinel
+			(start-process
+			 (setq mode-name (concat mode-name shortname))
+			 pbuf
+			 shell-file-name YaTeX-shell-command-option tobecalled)
+			'YaTeX-typeset-sentinel)
+		       (if ppcmd
+			   (put 'YaTeX-typeset-process 'ppcmd
+				(cons (cons (get-buffer-process pbuf) ppcmd)
+				      ppprop)))
+		       (if thiscmd
+			   (put 'YaTeX-typeset-process 'thiscmd thiscmd)))
+		   ;; If ppcmd is active, call it.
 		   (cond
 		    ((and ppcmd (string-match "finish" mes))
 		     (insert (format "=======> Success! Calling %s\n" ppcmd))
 		     (setq mode-name	; set process name
-			   (substring ppcmd 0 (string-match " " ppcmd)))
-		     ; to reach here, 'start-process exists on this emacsen
+			   (concat
+			    mode-name "+"
+			    (substring ppcmd 0 (string-match " " ppcmd))))
+					; to reach here, 'start-process exists on this emacsen
 		     (set-process-sentinel
 		      (start-process
 		       mode-name
 		       pbuf		; Use this buffer twice.
 		       shell-file-name YaTeX-shell-command-option
 		       ppcmd)
-		      'YaTeX-typeset-sentinel))))
-		 
+		      'YaTeX-typeset-sentinel))
+		    (t ;pull back original mode-name
+		     (setq mode-name "typeset"))))
 		 (forward-char 1))
 	     (setq YaTeX-typeset-process nil)
              ;; Force mode line redisplay soon
@@ -304,13 +408,17 @@ PP command will be called iff typeset command exit successfully"
   (YaTeX-save-buffers)
   (let*((me (substring (buffer-name) 0 (rindex (buffer-name) ?.)))
 	(mydir (file-name-directory (buffer-file-name)))
-	(cmd (YaTeX-get-latex-command t)) pparg ppcmd
+	(cmd (YaTeX-get-latex-command t)) pparg ppcmd bibcmd
 	(cb (current-buffer)))
+    (setq pparg (substring cmd 0 (string-match "[;&]" cmd)) ;rm multistmt
+	  pparg (substring pparg (rindex pparg ? ))	 ;get last arg
+	  pparg (substring pparg 0 (rindex pparg ?.))	 ;rm ext
+	  bibcmd (or (YaTeX-get-builtin "BIBTEX") bibtex-command))
+    (or (string-match "\\s " bibcmd)		;if bibcmd has no spaces,
+	(setq bibcmd (concat bibcmd pparg)))	;append argument(== %#!)
     (and pp
 	 (stringp pp)
-	 (setq pparg (substring cmd 0 (string-match "[;&]" cmd)) ;rm multistmt
-	       pparg (substring pparg (rindex pparg ? ))	 ;get last arg
-	       ppcmd (concat pp (substring pparg 0 (rindex pparg ?.)))));rm ext
+	 (setq ppcmd (concat pp pparg)))
     (if (YaTeX-main-file-p) nil
       (save-excursion
 	(YaTeX-visit-main t)	;search into main buffer
@@ -377,13 +485,34 @@ FILE changes the default file name."
       'YaTeX-call-command-history)
      buffer)))
 
-(defun YaTeX-bibtex-buffer (cmd)
-  "Pass the bibliography data of editing file to bibtex."
-  (interactive)
+(defvar YaTeX-call-builtin-on-file)
+(make-variable-buffer-local 'YaTeX-call-builtin-on-file)
+(defun YaTeX-call-builtin-on-file (builtin-type &optional default update)
+  "Call command on file specified by BUILTIN-TYPE."
   (YaTeX-save-buffers)
-  (let ((main (or YaTeX-parent-file
-		  (progn (YaTeX-visit-main t) buffer-file-name))))
-    (YaTeX-call-command-on-file cmd "*YaTeX-bibtex*" main)))
+  (let*((main (or YaTeX-parent-file
+		  (save-excursion (YaTeX-visit-main t) buffer-file-name)))
+	(mainroot (file-name-nondirectory (substring main 0 (rindex main ?.))))
+	(alist YaTeX-call-builtin-on-file)
+	(b-in (or (YaTeX-get-builtin builtin-type)
+		  (cdr (assoc builtin-type alist))))
+	(command b-in))
+    (if (or update (null b-in))
+	(progn
+	  (setq command (read-string-with-history
+			 (format "%s command: " builtin-type)
+			 (or b-in
+			     (format "%s %s" default mainroot))
+			 'YaTeX-call-command-history))
+	  (if (or update (null b-in))
+	      (if (y-or-n-p "Use this command line in the future? ")
+		  (YaTeX-getset-builtin builtin-type command) ;keep in a file
+		(setq YaTeX-call-builtin-on-file	      ;keep in memory
+		      (cons (cons builtin-type command)
+			    (delete (assoc builtin-type alist) alist)))))))
+    (YaTeX-typeset
+     command
+     (format " *YaTeX-%s*" (downcase builtin-type)))))
 
 (defun YaTeX-kill-typeset-process (proc)
   "Kill process PROC after sending signal to PROC.
@@ -566,20 +695,24 @@ by region."
 	    -1)))))
 
 (defun YaTeX-prev-error ()
-  "Visit previous typeset error.
+  "Visit position of previous typeset error or warning.
   To avoid making confliction of line numbers by editing, jump to
 error or warning lines in reverse order."
   (interactive)
-  (let ((cur-buf (buffer-name)) (cur-win (selected-window))
-	b0 errorp error-line typeset-win error-buffer error-win)
+  (let ((cur-buf (save-excursion (YaTeX-visit-main t) (buffer-name)))
+	(cur-win (selected-window))
+	b0 bound errorp error-line typeset-win error-buffer error-win)
     (if (null (get-buffer YaTeX-typeset-buffer))
 	(error "There is no typesetting buffer."))
     (YaTeX-showup-buffer YaTeX-typeset-buffer nil t)
+    (if (and (markerp YaTeX-typeset-marker)
+	     (eq (marker-buffer YaTeX-typeset-marker) (current-buffer)))
+	(setq bound YaTeX-typeset-marker))
     (setq typeset-win (selected-window))
     (if (re-search-backward
 	 (concat "\\(" latex-error-regexp "\\)\\|\\("
 		 latex-warning-regexp "\\)")
-	 nil t)
+	 bound t)
 	(setq errorp (match-beginning 1))
       (select-window cur-win)
       (error "No more errors on %s" cur-buf))

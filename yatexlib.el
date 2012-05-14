@@ -2,7 +2,7 @@
 ;;; YaTeX and yahtml common libraries, general functions and definitions
 ;;; yatexlib.el
 ;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan  9 20:20:09 2012 on firestorm
+;;; Last modified Wed Feb 29 09:49:30 2012 on firestorm
 ;;; $Id$
 
 ;; General variables
@@ -464,6 +464,7 @@ corresponding real arguments ARGS."
 
 ;;;###autoload
 (defun rindex (string char)
+  "Return the last position of STRING where character CHAR found."
   (let ((pos (1- (length string)))(index -1))
     (catch 'rindex
       (while (>= pos 0)
@@ -750,6 +751,19 @@ If no such window exist, switch to buffer BUFFER."
    ((featurep 'gmhist-mh)
     (read-with-history-in hsym prompt init))
    (t (read-string prompt init))))
+
+(defvar YaTeX-skip-next-reader-char ?\C-j)
+(defun YaTeX-read-string-or-skip (&rest args)
+  "Read string, or skip if last input char is \C-j."
+  (if (equal last-input-char YaTeX-skip-next-reader-char)
+      ""
+    (apply 'read-string args)))
+
+(defun YaTeX-completing-read-or-skip (&rest args)
+  "Do completing-read, or skip if last input char is \C-j."
+  (if (equal last-input-char YaTeX-skip-next-reader-char)
+      ""
+    (apply 'completing-read args)))
 
 ;;;###autoload
 (fset 'YaTeX-rassoc
@@ -1084,16 +1098,18 @@ to most recent sectioning command."
 	 (get-file-buffer pf)
 	 (switch-to-buffer (get-file-buffer pf)))))
 
-(defun YaTeX-get-builtin (key)
+(defun YaTeX-getset-builtin (key &optional value)
   "Read source built-in command of %# usage."
   (catch 'builtin
-    (let ((bl (delq nil (list (current-buffer)
+    (let*((bl (delq nil (list (current-buffer)
 			      (and YaTeX-parent-file
 				   (get-file-buffer YaTeX-parent-file)))))
-	  (leader (or (cdr-safe (assq major-mode
-				      '((yatex-mode . "%#")
-					(yahtml-mode . "<!-- #"))))
-		      "")))
+	  (tuple (cdr (assq major-mode
+			    '((yatex-mode "%#" . "\n")
+			      (yahtml-mode "<!-- #" . "[ \t]*-->\\|\n")))))
+	  (leader (or (car tuple) ""))
+	  (closer (or (cdr tuple) ""))
+	  (prompt (format "Built-in for %s: " key)))
       (save-excursion
 	(while bl
 	  (set-buffer (car bl))
@@ -1103,17 +1119,35 @@ to most recent sectioning command."
 		      (concat "^" (regexp-quote (concat leader key))) nil t)
 		     (not (eolp)))
 		(throw 'builtin
-		       (YaTeX-buffer-substring
-			(progn
-			  (skip-chars-forward " \t" (point-end-of-line))
-			  (point))
-			(if (string< "" comment-end)
-			    (progn
-			      (search-forward
-			       comment-end (point-end-of-line) t)
-			      (match-beginning 0))
-			  (point-end-of-line))))))
-	  (setq bl (cdr bl)))))))
+		       (let (b e w)
+			 (skip-chars-forward " \t" (point-end-of-line))
+			 (setq b (point)
+			       e (if (re-search-forward closer nil t)
+				     (match-beginning 0)
+				   (point-end-of-line))
+			       w (YaTeX-buffer-substring b e))
+			 (if (null value)
+			     w
+			   (delete-region b e)
+			   (goto-char b)
+			   (if (symbolp value)
+			       (setq value (read-string prompt w)))
+			   (insert value)
+			   value)))))
+	  (setq bl (cdr bl)))
+	; not found
+	(if (null value)
+	    nil				;not set mode, return simply nil
+	  (if (symbolp value)
+	      (setq value (read-string prompt)))
+	  (save-excursion
+	    (goto-char (point-min))
+	    (insert leader key " " value "\n")
+	    value))))))			;on set mode, return set value
+
+(defun YaTeX-get-builtin (key)
+  "Read source built-in command of %# usage."
+  (YaTeX-getset-builtin key))
 
 ;;;VER2
 (defun YaTeX-insert-struc (what env)
@@ -1489,6 +1523,26 @@ compared by regexp."
 	    (throw 'found (car alist)))
 	(setq alist (cdr alist))))))
 
+(defun YaTeX-push-to-kill-ring (string)
+  "Push STRING to kill-ring, then show guidance message."
+  (and (stringp string) (string< "" string)
+       (let ((key (key-description (where-is-internal 'yank nil t)))
+	     (msg
+	      (if YaTeX-japan
+		  " ‚ðkill-ring‚É“ü‚ê‚Ü‚µ‚½BŽŸ‚Ìyank(%s)‚Å“\•t‚Å‚«‚Ü‚·"
+		" is stored into kill-ring.  Paste it by yank(%s).")))
+	 (kill-new string)
+	 (message (concat "`%s'" msg) string key))))
+
+(defun YaTeX-elapsed-time (before after)
+  "Get elapsed time from BEFORE and AFTER, which are given from currente-time."
+  (if (fboundp 'float)			;Then, current-time function should be.
+      (let ((mil (float 1000000)))	;To protect parse error before 19
+	(+ (* (- (nth 0 after) (nth 0 before)) 65536)
+	   (- (nth 1 after) (nth 1 before))
+	   (- (/ (nth 2 after) mil)
+	      (/ (nth 2 before) mil))))))
+
 ;;;
 ;; Functions for the Installation time
 ;;;
@@ -1514,7 +1568,15 @@ compared by regexp."
 		 (lambda (arg)
 		   (find-file arg)
 		   (texinfo-format-buffer)
-		   (basic-save-buffer)))
+		   (cond
+		    ((fboundp 'set-buffer-file-coding-system)
+		     (set-buffer-file-coding-system 'sjis-dos))
+		    ((fboundp 'set-file-coding-system)
+		     (set-file-coding-system '*sjis*dos))
+		    ((boundp 'NEMACS)
+		     (set (make-local-variable 'kanji-fileio-code) 1)))
+		   (let ((coding-system-for-write buffer-file-coding-system))
+		     (basic-save-buffer))))
 		command-line-args-left)
 	(kill-emacs))))
 

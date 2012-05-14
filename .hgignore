@@ -5,6 +5,15 @@ CVS
 .cvsignore
 [._]win*
 __emacs
-docs/*
 *.swp
 trashbox
+*.aux
+*.cp
+*.dvi
+*.fn
+*.ky
+*.log
+*.pg
+*.toc
+*.tp
+*.vr

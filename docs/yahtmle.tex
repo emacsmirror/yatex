@@ -2,10 +2,13 @@
 \input texinfo
 @setfilename yahtmle
 @settitle Yet Another html-mode for Emacs
+@direntry
+* yahtml-e: (yahtmle).  Yet Another html-mode for Emacs (English).
+@end direntry
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Thu Dec  9 16:12:43 2010 on firestorm
+@c Last modified Fri May 11 15:42:22 2012 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -15,7 +18,7 @@
 @subtitle Yet Another html-mode for emacs
 @title // yahtml //
 %@subtitle // yahtml //
-@author @copyright{} 1994-1997 by    HIROSE, Yuuji [yuuji@@yatex.org]
+@author @copyright{} 1994-2012 by    HIROSE, Yuuji [yuuji@@yatex.org]
 @end titlepage
 
 @node Top, Intro, (dir), (dir)
@@ -79,12 +82,12 @@ if you put them in @file{~/src/emacs/yahtml},
 (setq load-path (cons (expand-file-name "~/src/emacs/yahtml") load-path))
 @end lisp
 
-@noindent 
+@noindent
 is what you add.
 
 By this, yahtml will be automatically loaded when editing files with .html
 extensions.  "yahtml" will be displayed on the mode line if no errors
-occurred. 
+occurred.
 
 @node Setting environments for weblint browsers and image viewers, Setting environment variables for WWW pages, Setting up yahtml, Installation
 @comment  node-name,  next,  previous,  up
@@ -115,7 +118,7 @@ Variables regarding path names for files that will be your home page.
 @item yahtml-directory-index
         @dots{} index file displayed when none is given in URL.  Usually
         @file{index.html} on NCSA type httpd and @file{Welcome.html} on
-        CERN types. 
+        CERN types.
 @end table
 
 Examples for  @code{yahtml-path-url-alist}.  If @file{/home/yuuji/http/}
@@ -179,7 +182,7 @@ Completion for elements that do not have end tags and require only
 attributes.  Possible completions are, <img>, <input>.
 
 @item [prefix] l (YaTeX large-type completion)
-@dots{} 
+@dots{}
 
 @example
 <big> 〜 </big>
@@ -203,14 +206,14 @@ is possible.
 @node Jump, Changing and Deleting, Completion, Top
 @comment  node-name,  next,  previous,  up
 @chapter Cursor Movement
-By using 
+By using
 
 @table @kbd
 @item [prefix] g
         @dots{} move to corresponding object
 @end table
 
-@noindent 
+@noindent
 the cursor will go to the corresponding object according to the context.
 Recognized contexts are
 
@@ -230,6 +233,7 @@ Recognized contexts are
 * Changing tags in pairs::      
 * Changing entities::           
 * URLencoding of strings within region::  
+* td-enclosure/tr-enclosure::   
 @end menu
 
 @node Changing tags in pairs, Changing entities, Changing and Deleting, Changing and Deleting
@@ -242,7 +246,7 @@ By using
         @dots{} change tags in matching pairs
 @end table
 
-@noindent 
+@noindent
 the content can be changed according to the context of the HTML document
 where the cursor is located.
 
@@ -286,7 +290,7 @@ If you wan to convert series of field into <td>...</td> repetitions for
 table element, td-enclosure or tr-enclosure is convenient.
 
 @table @kbd
- @item [prefix] }
+ @item [prefix] @}
 	@dots{} Enclose each field in a region into <td>...</td>'s.
  @item [prefix] ]
 	@dots{} Enclose each line in a region into <tr>...</tr>'s, with
@@ -324,7 +328,7 @@ If you have CSS defined as below;
 
 when you input h1(or h2) tag with completing-read by [prefix] b or
 [prefix] l, yahtml prompts you to input class name with completion from
-the words which are effective to h1 or h2.  And if you defined 
+the words which are effective to h1 or h2.  And if you defined
 global class like this;
 
 @display

@@ -2,10 +2,13 @@
 \input texinfo.tex
 @setfilename yatexe
 @settitle Yet Another tex-mode for Emacs
+@direntry
+* YaTeX-e: (yatexe).    Yet Another tex-mode for Emacs (English).
+@end direntry
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Thu May 27 18:04:10 2010 on firestorm
+@c Last modified Fri May 11 15:40:49 2012 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -15,7 +18,7 @@
 @subtitle Yet Another tex-mode for emacs
 @title Wild Bird
 @subtitle // YaTeX //
-@author @copyright{} 1991-2003 by    HIROSE, Yuuji [yuuji@@yatex.org]
+@author @copyright{} 1991-2012 by    HIROSE, Yuuji [yuuji@@yatex.org]
 @end titlepage
 
 @node Top, What is YaTeX?, (dir), (dir)
@@ -48,6 +51,7 @@
 * Etcetera::                    YaTeX is acquisitive.
 * Copying::                     Redistribution
 
+@end menu
 
 @node What is YaTeX?, Main features, Top, Top
 @comment  node-name,  next,  previous,  up
@@ -90,8 +94,8 @@ Language Enhancement to GNU Emacs), and latex on DOS.
 @item Document files hierarchy browser (@kbd{C-c d})
 @item Adding automatically \usepackage corresponding to inputting LaTeX
       macro with completion
-@item Allow you to forget creating \label{}s, \ref or \cite completion
-      automatically generate labels.
+@item Allow you to forget creating \label@{@}s, \ref@{@} or \cite@{@}
+      completion automatically generate labels.
 @end itemize
 
 @node Installation, Typesetting, Main features, Top
@@ -148,6 +152,8 @@ strokes execute typeset or preview command.
 @item [prefix] t e
         @dots{} invoke latex on current environment or whole
          portion of current formulas in math-mode.
+@item [prefix] t d
+	@dots{} invoke dvipdfmx after successful typesetting
 @item [prefix] t k
         @dots{} kill current typesetting process
 @item [prefix] t b
@@ -200,7 +206,7 @@ for region.  The region is specified by standard point and mark, or
 by @code{%#BEGIN} and @code{%#END} marks.  Selected region will be
 copied to the temporary file @file{texput.tex} with the same preamble
 as the main file of current editing sources.  Be sure to put
-all local macro settings in preamble, not after @code{\begin{document}}.
+all local macro settings in preamble, not after @code{\begin@{document@}}.
   The method of specification of the region is shown in the
 section @xref{%#notation}.
 
@@ -252,6 +258,7 @@ notations in the source text.
 * Splitting input files::       
 * Static region for typesetting::  
 * Lpr format::                  
+* Controlling which command to invoke::  
 * Editing %# notation::         
 @end menu
 
@@ -287,7 +294,7 @@ this command line after @kbd{%#!} will be sent to shell literally, next
 description makes it convenient to use ghostview as dvi-previewer.
 
 @example
-        %#!latex main ; dvi2ps main.dvi > main
+        %#!latex main && dvi2ps main.dvi > main
 @end example
 
 @noindent
@@ -362,7 +369,7 @@ environment such as `tabular' many times.  It is also useful to put only
 @code{%#BEGIN} alone at the middle of very long text.  Do not forget to
 erase @code{%#BEGIN} @code{%#END} pair.
 
-@node Lpr format, Editing %# notation, Static region for typesetting, %#notation
+@node Lpr format, Controlling which command to invoke, Static region for typesetting, %#notation
 @comment  node-name,  next,  previous,  up
 @section Lpr format
 @cindex lpr format
@@ -400,7 +407,29 @@ out, the next example may be helpful.
         %#LPR dvi2ps %s | lpr
 @end example
 
-@node Editing %# notation,  , Lpr format, %#notation
+@node Controlling which command to invoke, Editing %# notation, Lpr format, %#notation
+@comment  node-name,  next,  previous,  up
+@section Controlling which command to invoke
+
+These %# notation below can control which command to invoke for
+La@TeX{} related process.
+
+@table @code
+ @item %#BIBTEX
+	@dots{} Command line for makeindex ([prefix] t i)
+ @item %#MAKEINDEX
+	@dots{} Command line for bibtex ([prefix] t b)
+@end table
+
+If you want to invoke ``makeidx hogehoge'' to update index,
+put the next line some upper place in the source, for example.
+
+@example
+%#MAKEINDEX makeidx hogehoge
+@end example
+
+
+@node Editing %# notation,  , Controlling which command to invoke, %#notation
 @comment  node-name,  next,  previous,  up
 @section Editing %# notation
 
@@ -917,7 +946,7 @@ minibuffer, YaTeX asks you with the following prompt;
   `foo' is not in table. Register into: U)serDic L)ocalDic N)one D)iscard
 @end example
 
-@noindent 
+@noindent
 In this menu, typing @kbd{u} updates your `user dictionary', @kbd{l}
 updates your local dictionary, @kbd{n} updates only on-memory dictionary
 which go through only current Emacs session, and @kbd{d} updates no
@@ -1365,7 +1394,7 @@ enumerate or tabbing environment, or typing
         @dots{} Intelligent newline
 @end table
 
-@noindent 
+@noindent
 in these environments inserts the contents corresponding to the current
 environment in the next line.  (At the begin-type completion, this
 contents can be removed by `undo'.)  In @code{tabular} environment, for
@@ -1824,7 +1853,7 @@ font-lock is used.
 
 @defvar YaTeX-singlecmd-suffix
 Suffix which is always inserted after maketitle-type macros.
-@code{"{}"} is recommended.
+@code{"@{@}"} is recommended.
 @end defvar
 
 @defvar YaTeX-package-alist-private
@@ -1870,7 +1899,7 @@ part (%y+(%b|%m)+%d or %qx).
 @end defvar
 
 @defvar YaTeX-ref-generate-label-function
-Function to generate default label string for unnamed \\label{}s.
+Function to generate default label string for unnamed \\label@{@}s.
 The function pointed to this value should take two arguments.
 First argument is LaTeX macro's name, second is macro's argument.
 Here is an example for using this value.
@@ -1878,7 +1907,7 @@ Here is an example for using this value.
   (setq YaTeX-ref-generate-label-function 'my-yatex-generate-label)
   (defun my-yatex-generate-label (command value)
     (and (string= command "caption")
-         (re-search-backward "\\\\begin{\\(figure\\|table\\)}" nil t)
+         (re-search-backward "\\\\begin@{\\(figure\\|table\\)@}" nil t)
          (setq command (match-string 1)))
     (let ((alist '(("chapter" . "chap")
                    ("section" . "sec")
@@ -2027,7 +2056,7 @@ job referring the value of its argument.
 will be enclosed by section-type commands via @kbd{[prefix] S}.  An
 enclosing add-in function will be called with two arguments, beginning of
 the enclosed region and end of the region.  Suppose you want to enclose
-the existing text @code{(a+b)/c} by @code{\frac{}}.
+the existing text @code{(a+b)/c} by @code{\frac@{@}}.
 
 @display
 a/c
@@ -2039,7 +2068,7 @@ You do set-mark-command at point A and then move to point B.  Typing
 @kbd{[prefix] S} and input @code{frac} enclose the region like this;
 
 @display
-\frac{a/c}
+\frac@{a/c@}
 @end display
 
 Normally, the expression @code{a/c} is translated to
@@ -2120,8 +2149,8 @@ replace @code{/} with @code{@}@{}.  Here is an example expression.
   (catch 'done
     (while (search-forward "/" end t)
       (goto-char (match-beginning 0))
-      (if (y-or-n-p "Replace this slash(/) with `}{'")
-	  (throw 'done (replace-match "}{")))
+      (if (y-or-n-p "Replace this slash(/) with `@}@{'")
+	  (throw 'done (replace-match "@}@{")))
       (goto-char (match-end 0)))))
 @end lisp
 

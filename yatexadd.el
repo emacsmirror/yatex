@@ -1,8 +1,8 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; YaTeX add-in functions.
-;;; yatexadd.el rev.19
-;;; (c)1991-2011 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Mar  7 12:12:11 2011 on firestorm
+;;; yatexadd.el rev.20
+;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Fri Mar  9 21:19:09 2012 on firestorm
 ;;; $Id$
 
 ;;;
@@ -99,12 +99,33 @@ YaTeX-make-begin-end."
   (let ((pos (YaTeX:read-oneof oneof)))
     (if (string= pos "")  "" (concat "[" pos "]"))))
 
+;;;
+;; Functions for figure environemnt
+;;;
+(defvar YaTeX:figure-caption-first nil
+  "Non-nil indicates put caption before figure.")
+(defun YaTeX:figure (&optional type firstp)
+  "YaTeX add-in function for figure(*) environment."
+  (setq YaTeX-section-name
+	(if YaTeX:figure-caption-first "caption" "includegraphics")
+	YaTeX-env-name "center")
+  (YaTeX:read-position "htbp"))
+
+
+(fset 'YaTeX:figure* 'YaTeX:figure)
+
+;;;
+;; Functions for table environemnt
+;;;
+(defvar YaTeX:table-caption-first t
+  "*Non-nil indicates put caption before tabular.")
 (defun YaTeX:table ()
   "YaTeX add-in function for table environment."
   (cond
    ((eq major-mode 'yatex-mode)
-    (setq YaTeX-env-name "tabular"
-	  YaTeX-section-name "caption")
+    (setq YaTeX-section-name
+	  (if YaTeX:table-caption-first "caption" "label")
+	  YaTeX-env-name "tabular")
     (YaTeX:read-position "htbp"))
    ((eq major-mode 'texinfo-mode)
     (concat " "
@@ -112,10 +133,7 @@ YaTeX-make-begin-end."
 	     "Highlights with: "
 	     '(("@samp")("@kbd")("@code")("@asis")("@file")("@var"))
 	     nil nil "@")))))
-
-(fset 'YaTeX:figure 'YaTeX:table)
-(fset 'YaTeX:figure* 'YaTeX:table)
-
+(fset 'YaTeX:table* 'YaTeX:table)
 
 (defun YaTeX:description ()
   "Truly poor service:-)"
@@ -127,7 +145,10 @@ YaTeX-make-begin-end."
   (setq YaTeX-single-command "item")
   "")
 
-(fset 'YaTeX:enumerate 'YaTeX:itemize)
+(defun YaTeX:enumerate ()
+  (setq YaTeX-single-command "item"
+	YaTeX-section-name "label")
+  "")
 
 (defun YaTeX:picture ()
   "Ask the size of coordinates of picture environment."
@@ -585,6 +606,7 @@ If optional third argument NOSET is non-nil, do not generate new label."
       (setq cc (current-column))
       (if (= (char-after (point)) ?\\) (forward-char 1))
       (cond
+       ;; In each codition, 'inspoint and 'boundary should be set
        ((looking-at YaTeX-sectioning-regexp)
 	(setq command (YaTeX-match-string 0))
 	(skip-chars-forward "^{")
@@ -659,14 +681,19 @@ If optional third argument NOSET is non-nil, do not generate new label."
 	;;(setq boundary (concat YaTeX-ec-regexp "\\(\\\\\\|end{" env "}\\)"))
 	(setq boundary
 	      (save-excursion
-		(if (YaTeX-re-search-active-forward
-		     (concat
-		      YaTeX-ec-regexp "\\("
-		      (if exp1 "" "\\\\\\|")
-		      "end{" env "}\\)")
-		     r-escape nil 1)
-		    (match-beginning 0)
-		  (1- (point))))
+		(or (catch 'bndry
+		      (while (YaTeX-re-search-active-forward
+			      (concat
+			       YaTeX-ec-regexp "\\("
+			       (if exp1 "" "\\\\\\|")
+			       "\\(end{" env "\\)}\\)")
+			      r-escape nil 1)
+			(setq foundpoint (match-beginning 0))
+			(if (or (match-beginning 2) ;end of outer math-env
+				(equal env (YaTeX-inner-environment t)))
+			    ;; YaTeX-inner-environment destroys match-data
+			    (throw 'bndry foundpoint))))
+		    (1- (point))))
 	      inspoint boundary))
        ((looking-at "footnote\\s *{")
 	(setq command "footnote")
@@ -697,6 +724,7 @@ If optional third argument NOSET is non-nil, do not generate new label."
 		    (match-beginning 0)
 		(1- (point))))))
        (t ))
+      ;;cond by kind of labeling ends here.
       (if (save-excursion (skip-chars-forward " \t") (looking-at "%"))
 	  (forward-line 1))
       (cond
@@ -733,6 +761,7 @@ If optional third argument NOSET is non-nil, do not generate new label."
 	(if mathp nil 
 	  (insert "\n")
 	  (YaTeX-reindent cc))
+	(put 'YaTeX::ref-getset-label 'foundpoint (point))
 	(insert (format "\\label{%s}" newlabel))
 	newlabel)))))
 
@@ -883,8 +912,6 @@ YaTeX-sectioning-levelの数値で指定.")
 			      e0 (match-end 1)))
 		    (funcall output (format "--subequation--%s" label) e0)))
 		 ((string-match mathenvs cmd) ;;if matches mathematical env
-		  ;(skip-chars-forward "} \t\n")
-		  ;(forward-line 1) ;2004/1/25
 		  (skip-chars-forward "}")
 		  (setq x (point)
 			envname (substring
@@ -901,15 +928,15 @@ YaTeX-sectioning-levelの数値で指定.")
 		      (while (YaTeX-re-search-active-forward
 			      (concat
 			       "\\\\end{\\(" (regexp-quote envname) "\\)";;(1)
-			       (if YaTeX-use-AMS-LaTeX
-				   "\\|\\\\\\(notag\\)") ;;2
+			       "\\|\\\\\\(notag\\)" ;;2
 			       (if (string-match
 				    YaTeX::ref-mathenv-exp1-regexp  cmd)
-				   "" "\\|\\\\\\\\$")
+				   "" "\\|\\(\\\\\\\\\\)$") ;;3
 			       )
 			      percent nil t)
 			(let*((quit (match-beginning 1))
 			      (notag (match-beginning 2))
+			      (newln (match-beginning 3))
 			      (label ".......................") l2
 			      (e (point)) (m0 (match-beginning 0))
 			      (ln (YaTeX-string-width label)))
@@ -917,7 +944,12 @@ YaTeX-sectioning-levelの数値で指定.")
 			   (notag
 			    (YaTeX-re-search-active-forward
 			     "\\\\\\\\" percent nil 1)
-			    (setq x (point)))
+			    (setq x (point))) ;use x as \label search bound
+			   ((and newln	; `\\' found
+				 (not (equal (YaTeX-inner-environment)
+					     envname)))
+			    (YaTeX-end-of-environment)
+			    (goto-char (match-end 0)))
 			   (t
 			    (if (YaTeX-re-search-active-backward
 				 YaTeX::ref-labeling-regexp
@@ -1180,7 +1212,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 				    'exit-recursive-edit '(keymap) t)))
 				 (sleep-for 2)
 				 (recursive-edit))
-				((= ch ?y) (throw 'query t))
+				((memq ch '(?y ?\  )) (throw 'query t))
 				((= ch ?!) (throw 'query (setq continue t)))
 				((= ch ??)
 				 (describe-function
@@ -1192,7 +1224,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 				 (sit-for 0)
 				 (select-window sw))
 				((= ch ?n) (throw 'query nil)))))))
-		      (replace-match new))
+		      (replace-match new t))
 		(and ov (delete-overlay ov)))))
 	  (setq bufs (cdr bufs)))))))
 
@@ -1207,17 +1239,11 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 		  (format "New %s name: " (or labname "label"))
 		  (cons dlab 1))))
       (if (string< "" label)
-	  (let ((refstr (format "\\%s{%s}" (or refname "ref") label))
-		(key (key-description (where-is-internal 'yank nil t)))
-		(msg
-		 (if YaTeX-japan
-		     "をkill-ringに入れました。yank(%s)で取り出せます。"
-		   " is stored into kill-ring.  Paste it by yank(%s).")))
-	    (kill-new refstr)
+	  (let ((refstr (format "\\%s{%s}" (or refname "ref") label)))
+	    (YaTeX-push-to-kill-ring refstr)
 	    (and chmode
 		 (not (equal old label))
-		 (YaTeX::label-rename-refs old label))
-	    (message (concat "`%s'" msg) refstr key)))
+		 (YaTeX::label-rename-refs old label))))
       label))))
       
 
@@ -1234,6 +1260,12 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
    (function
     (lambda ()
       (YaTeX-quick-in-environment-p "figure")))))
+(defun YaTeX::eqref (argp)
+  (YaTeX::ref
+   argp nil nil
+   (function
+    (lambda ()
+      (YaTeX-in-math-mode-p)))))
 
 (defun YaTeX::cite-collect-bibs-external (bibptn &rest files)
   "Collect bibentry from FILES(variable length argument) ;
@@ -1392,8 +1424,6 @@ and print them to standard output."
   "Add-in function to insert argument of \\bibitem."
   (YaTeX::label argp "label" "cite"))
 
-;;; for AMS-LaTeX
-(and YaTeX-use-AMS-LaTeX (fset 'YaTeX::eqref 'YaTeX::ref))
 ;;; for Harvard citation style
 (fset 'YaTeX::citeasnoun 'YaTeX::cite)
 (fset 'YaTeX::possessivecite 'YaTeX::cite)
@@ -1750,7 +1780,26 @@ and print them to standard output."
 	    'YaTeX:documentclasses-private
 	    'YaTeX:documentclasses-local)))
       (if (string= "" sname) (setq sname YaTeX-default-documentclass))
-      (setq YaTeX-default-documentclass sname)))))
+      (setq YaTeX-section-name "title"
+	    YaTeX-default-documentclass sname)))))
+
+(defun YaTeX::title (&optional argp)
+  (prog1 (read-string "Document Title: ")
+    (setq YaTeX-section-name "author"
+	  YaTeX-single-command "maketitle")))
+
+(defun YaTeX::author (&optional argp)
+  (prog1 (read-string "Document Author: ")
+    (setq YaTeX-section-name "date"
+	  YaTeX-single-command "maketitle")))
+
+(defun YaTeX:document ()
+  (setq YaTeX-section-name
+	(if (string-match "book\\|bk" YaTeX-default-documentclass)
+	    "chapter"
+	  "section"))
+  "")
+      
 
 (defvar YaTeX:latex2e-named-color-alist
   '(("GreenYellow") ("Yellow") ("Goldenrod") ("Dandelion") ("Apricot")
@@ -1854,11 +1903,11 @@ and print them to standard output."
 (defun YaTeX:includegraphics ()
   "Add-in for \\includegraphics's option"
   (let (width height (scale "") angle str)
-    (setq width (read-string "Width: ")
-	  height (read-string "Height: "))
-    (or (string< width "") (string< "" height)
-	(setq scale (read-string "Scale: ")))
-    (setq angle (read-string "Angle(0-359): "))
+    (setq width (YaTeX-read-string-or-skip "Width: ")
+	  height (YaTeX-read-string-or-skip "Height: "))
+    (or (string< "" width) (string< "" height)
+	(setq scale (YaTeX-read-string-or-skip "Scale: ")))
+    (setq angle (YaTeX-read-string-or-skip "Angle(0-359): "))
     (setq str
 	  (mapconcat
 	   'concat
@@ -1874,7 +1923,46 @@ and print them to standard output."
 
 (defun YaTeX::includegraphics (argp)
   "Add-in for \\includegraphics"
-  (YaTeX::include argp "Image File: "))
+  (let ((imgfile (YaTeX::include argp "Image File: "))
+	(case-fold-search t) info bb noupdate needclose c)
+    (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\)$" imgfile)
+	 (file-exists-p imgfile)
+	 (or (fboundp 'yahtml-get-image-info)
+	     (progn
+	       (load "yahtml" t) (featurep 'yahtml))) ;(require 'yahtml nil t)
+	 (setq info (yahtml-get-image-info imgfile))
+	 (car info)			;if has width value
+	 (car (cdr info))		;if has height value
+	 (setq bb (format "bb=%d %d %d %d" 0 0 (car info) (car (cdr info))))
+	 (save-excursion
+	   (cond
+	    ((and (save-excursion
+		    (YaTeX-re-search-active-backward
+		     "\\\\\\(includegraphics\\)\\|\\(bb=[-+ \t0-9]+\\)"
+		     YaTeX-comment-prefix nil t))
+		  (match-beginning 2)
+		  (not (setq noupdate (equal (YaTeX-match-string 2) bb)))
+		  (y-or-n-p (format "Update `bb=' line to `%s'?: " bb)))
+	     (message "")
+	     (replace-match bb))
+	    (noupdate nil)
+	    ((and (match-beginning 1)
+		  (prog2
+		      (message "Insert `%s'?  Y)es N)o C)yes+`clip': " bb)
+		      (memq (setq c (read-char)) '(?y ?Y ?\  ?c ?C))
+		    (message "")))
+	     (goto-char (match-end 0))
+	     (message "")
+	     (if (looking-at "\\[") (forward-char 1)
+	       (insert-before-markers "[")
+	       (setq needclose t))
+	     (insert-before-markers bb)
+	     (if (memq c '(?c ?C)) (insert-before-markers ",clip"))
+	     (if needclose (insert-before-markers "]")
+	       (or (looking-at "\\]") (insert-before-markers ","))))
+	    (t (YaTeX-push-to-kill-ring bb)))))
+    (setq YaTeX-section-name "caption")
+    imgfile))
  
 (defun YaTeX::verbfile (argp)
   "Add-in for \\verbfile"

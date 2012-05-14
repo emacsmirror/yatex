@@ -1,9 +1,9 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; (c) 1994-2012 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Thu Jan 12 11:40:53 2012 on firestorm
+;;; Last modified Thu May 10 11:06:39 2012 on firestorm
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.75"
+(defconst yahtml-revision-number "1.76"
   "Revision number of running yahtml.el")
 
 ;;;[Installation]
@@ -1401,8 +1401,8 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 (defun yahtml:ol ()
   "Add-in function for <ol>"
   (setq yahtml-last-single-cmd "li")
-  (let ((start (read-string "start="))
-	(type (completing-read
+  (let ((start (YaTeX-read-string-or-skip "start="))
+	(type (YaTeX-completing-read-or-skip
 	       "type=" '(("1") ("a") ("A") ("i") ("I")) nil t)))
     (concat
      (yahtml-make-optional-argument "start" start)
@@ -1428,12 +1428,12 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
   (let ((size "") name type value checked (maxlength "")
 	(l yahtml-prefer-upcase-attributes))
     (setq name (read-string "name: ")
-	  type (completing-read "type (default=text): "
+	  type (YaTeX-completing-read-or-skip "type (default=text): "
 				yahtml-input-types nil t)
-	  value (read-string "value: "))
+	  value (YaTeX-read-string-or-skip "value: "))
     (if (string-match "text\\|password\\|^$" type)
-	(setq size (read-string "size: ")
-	      maxlength (read-string "maxlength: ")))
+	(setq size (YaTeX-read-string-or-skip "size: ")
+	      maxlength (YaTeX-read-string-or-skip "maxlength: ")))
     (concat
      (if l "NAME" "name") "=\"" name "\""
      (yahtml-make-optional-argument "type" type)
