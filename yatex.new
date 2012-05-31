@@ -18,7 +18,7 @@
 	M-C-SPC で環境だけでなく数式環境もマークする。
 	[prefix] t d でタイプセッタ起動成功のあと dvipdfmx を起動。
 	\label{}でラベル名を入れたときは \ref{NAME} を自動的にkill-ringに追加。
-	[prefix] t c で\label{NAME} の NAME を変えたら \ref のNAMEも変える。
+	[prefix] c で\label{NAME} の NAME を変えたら \ref のNAMEも変える。
 	同上のことを \cite/\bibitem にも。
 	\bibitem{}を入れたときは \cite{TAG} を自動的にkill-ringに追加。
 	\end 補完のお節介検査の精度を少し上げた。
