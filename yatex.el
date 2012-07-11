@@ -1,15 +1,15 @@
 ;;; -*- Emacs-Lisp -*-
 ;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.76.1
+;;; yatex.el rev. 1.76.2
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon May 14 21:33:44 2012 on firestorm
+;;; Last modified Wed Jul 11 12:27:24 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.76.1"
+(defconst YaTeX-revision-number "1.76.2"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -1507,7 +1507,9 @@ into {\\xxx } braces.
 ;    (backward-char 1))
    (t (YaTeX-self-insert arg))))
 
-(defvar YaTeX-use-jmode-hook (not (and (fboundp 'skk-mode) (boundp 'skk-mode)))
+(defvar YaTeX-use-jmode-hook
+  (and (featurep 'canna) (boundp 'canna:*initialized*) canna:*initialized*)
+  ;; (not (and (fboundp 'skk-mode) (boundp 'skk-mode)))
   "*Non-nil means activate automatic jmode switcher within/out math mode.
 Hopefully, change default to t in the next version of 1.75.")
 (defun YaTeX-jmode-hook (old new)
