@@ -1,15 +1,15 @@
-;;; -*- Emacs-Lisp -*-
-;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.76.2
+;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
+
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jul 11 12:27:24 2012 on firestorm
+;;; Last modified Sat Sep  1 07:37:53 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
+;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.76.2"
+(defconst YaTeX-revision-number "1.76.3"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -44,7 +44,7 @@ YaTeX-current-position-register.")
 ;;'main-file	: switch tmp-dic according to main-file directory.
 ;;'directory	: switch tmp-dic dir by dir."
 ;;)
-(defvar YaTeX-use-LaTeX2e t "*Use LaTeX2e or not.  Nil meas latex 2.09")
+(defvar YaTeX-use-LaTeX2e t "*Use LaTeX2e or not.  Nil means latex 2.09")
 
 (defvar tex-command
   (cond

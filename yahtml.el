@@ -1,10 +1,12 @@
-;;; -*- Emacs-Lisp -*-
+;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2012 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Thu May 10 11:06:39 2012 on firestorm
+;;; Last modified Sat Sep  1 07:28:17 2012 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.76"
   "Revision number of running yahtml.el")
+
+;;; Commentary:
 
 ;;;[Installation]
 ;;; 
@@ -176,6 +178,7 @@
 ;;;		(‚Æ‚¢‚¤‚©‚Ù‚Æ‚ñ‚Ç‚â‚Á‚Ä‚à‚ç‚Á‚½ ^^;)
 ;;; 
 
+;;; Code:
 
 (require 'yatexlib)
 ;;; --- customizable variable starts here ---
@@ -2943,7 +2946,8 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 			       (skip-chars-forward "^\"")(point)))))
 		(if (file-exists-p f)
 		    (setq alist
-			  (append alist (yahtml-css-collect-classes-file f)))))
+			  (append alist (yahtml-css-collect-classes-file
+					 f initial)))))
 	    (setq e (point))
 	    (goto-char b)
 	    (while (re-search-forward	;‚¿‚å‚Æ‚¢‚¢‰ÁŒ¸‚ÈREGEXP

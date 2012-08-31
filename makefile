@@ -75,7 +75,7 @@ YAHTMLLISP = ${YAHTML} ${COMMON}
 YAHTMLDIST = ${YAHTMLLISP} install 00readme makefile newpage.rb
 PACK	= `ls ${DISTRIB}`
 TMPDIR	= /tmp
-VERSION = `head yatex.el|awk '/rev\./{print $$4}'`
+VERSION = `head -20 yatex.el|awk -F'"' '/revision/{print $$2}'`
 PACKDIR	= ${TMPDIR}/yatex${VERSION}
 
 all:
