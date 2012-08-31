@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX sectioning browser.
-;;; yatexsec.el
+;;; yatexsec.el --- YaTeX sectioning browser
+;;; 
 ;;; (c) 1994-2012 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Jan  9 20:20:32 2012 on firestorm
+;;; Last modified Sat Sep  1 08:13:52 2012 on firestorm
 ;;; $Id$
 
+;;; Code:
 (defvar YaTeX-sectioning-level
   '(("part" . 0)
     ("chapter" . 1)

@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX and yahtml common libraries, general functions and definitions
-;;; yatexlib.el
+;;; yatexlib.el --- YaTeX and yahtml common libraries
+;;; 
 ;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Feb 29 09:49:30 2012 on firestorm
+;;; Last modified Sat Sep  1 08:12:09 2012 on firestorm
 ;;; $Id$
 
+;;; Code:
 ;; General variables
 (defvar YaTeX-dos (memq system-type '(ms-dos windows-nt OS/2)))
 (defvar YaTeX-macos (memq system-type '(darwin)))

@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX hierarchy browser.
-;;; yatexhie.el
+;;; yatexhie.el --- YaTeX hierarchy browser
+;;; 
 ;;; (c)1995-2012 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Jan  9 20:19:06 2012 on firestorm
+;;; Last modified Sat Sep  1 08:11:00 2012 on firestorm
 ;;; $Id$
 
+;;; Code:
 ;; ----- Customizable variables -----
 (defvar YaTeX-hierarchy-ignore-heading-regexp
   "\\$[A-Z][a-z]+: .* \\$\\|-\\*- .* -\\*-"

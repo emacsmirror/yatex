@@ -1,9 +1,9 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX facilities for Emacs 19 or later
+;;; yatex19.el -- YaTeX facilities for Emacs 19 or later
 ;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 29 23:00:52 2012 on firestorm
+;;; Last modified Sat Sep  1 08:07:31 2012 on firestorm
 ;;; $Id$
 
+;;; Code:
 ;(require 'yatex)
 
 (and (boundp 'YaTeX-use-hilit19)

@@ -1,8 +1,9 @@
-;;; -*- Emacs-Lisp -*-
-;;; Sample startup file to invoke yatex-mode with outline-minor mode.
-;;; (c)1993 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Jun 27 12:10:15 2003 on firestorm
+;;; yatexm-o.el --- Sample to invoke yatex-mode with outline-minor mode
 
+;;; (c)1993 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Sat Sep  1 08:12:40 2012 on firestorm
+
+;;; Code:
 ;;;
 ;; outline-minor-mode(使用しない場合は不要です)
 ;;; 

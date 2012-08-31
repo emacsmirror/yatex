@@ -1,16 +1,15 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX add-in function generator.
-;;; yatexgen.el rev.5
+;;; yatexgen.el --- YaTeX add-in function generator(rev.5)
+
 ;;; (c)1991-1995,1999,2000 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jun 27 12:09:37 2003 on firestorm
+;;; Last modified Sat Sep  1 08:10:36 2012 on firestorm
 ;;; $Id$
 
+;;; Code:
 (require 'yatex)
 
 (defmacro YaTeX-setq (var japanese english)
   (list 'setq var
-	(if YaTeX-japan japanese english))
-)
+	(if YaTeX-japan japanese english)))
 
 (put 'YaTeX-setq 'lisp-indent-hook 1)
 
@@ -29,8 +28,7 @@ following my messages.  Then, at making actual function, operate
 reading my messages *carefully*, or you'll fail to generate appropriate
 function.
 
-  Hit return key!"
-)
+  Hit return key!")
 
 (YaTeX-setq YaTeX-generate-start-message
   "さぁはじめるよ.\n1.登録したい補完をやってみて.
@@ -40,33 +38,27 @@ function.
   "Let's begin completion for which you want to make add-in function.
 If you want to make add-in function for \\documentstyle input only
 `\\documentstyle{}' *with* completion of yatex-mode.
-If you finish this, please press RET."
-)
+If you finish this, please press RET.")
 
 (YaTeX-setq YaTeX-generate-abort-message
   "やめた、やめた～いめんどくせ～"
-  "Aborted."
-)
+  "Aborted.")
 
 (YaTeX-setq YaTeX-generate-same-message
   "それじゃ、なにも変わってねぇだろーが! やめた。"
-  "I found no difference between them.  So I'm quitting."
-)
+  "I found no difference between them.  So I'm quitting.")
 
 (YaTeX-setq YaTeX-generate-invalid-message
   "それは、ちと無理というものじゃ."
-  "It's impossible."
-)
+  "It's impossible.")
 
 (YaTeX-setq YaTeX-generate-idontknow-message
   "う～ん、難しくてよくわからないなぁ。ばかでごめんねェ～"
-  "Sorry I can't tell your adding method."
-)
+  "Sorry I can't tell your adding method.")
 
 (YaTeX-setq YaTeX-generate-confirm-message
   "ということは、付け足したい部分はこれでいいのね"
-  "Is it additional string of add-in function?"
-)
+  "Is it additional string of add-in function?")
 
 (YaTeX-setq YaTeX-generate-output-message
   "2.じゃ、それにくっつけたいものを *カーソルの位置に* 足してみて. 
@@ -75,8 +67,7 @@ If you finish this, please press RET."
 で、またおわったらりたーん!!"
   "2.Then input additional string *at CURSOR POSITION*
 According to last example \\documentstyle{},
-modify it \\documentstyle[12pt]{}.  RET to finish."
-)
+modify it \\documentstyle[12pt]{}.  RET to finish.")
 
 (YaTeX-setq YaTeX-generate-put-arg-message
   "3.このうち、キーボードから読み込んで欲しい文字列を順に入れて。
@@ -86,8 +77,7 @@ modify it \\documentstyle[12pt]{}.  RET to finish."
   "3.In this string, extract string which you want to input from key
 board with quiry afterwards.  For example, though additional string is
 \\documentstyle[12pt]{}, but you want enter only `12pt' by hand.
-RET to finish!"
-)
+RET to finish!")
 
 (YaTeX-setq YaTeX-generate-read-prompt-message
   "4.では、あとでこれらの文字列を読み込む時に、どういうプロンプトを
@@ -95,8 +85,7 @@ RET to finish!"
 さっきの 12pt の部分だったら、『サイズは』とかがおすすめ。"
   "4.When you use this add-in function afterwards, what message
 do you like to be prompted with to enter these values.  In last
-example `12pt', typical prompt string may be `Size?: '."
-)
+example `12pt', typical prompt string may be `Size?: '.")
 
 (YaTeX-setq YaTeX-generate-done-message
   "よし! これが、君の作りたかった関数だ。~/.emacs にでも入れてせいぜい
@@ -109,34 +98,29 @@ this description to your ~/.emacs or so.  Use this buffer(*Guide*)
 for testing of this function please.
   But you can see this function quite easy, can't you? You had better
 write your most favorite add-in function yourself!
-"
-)
+")
 
 (YaTeX-setq YaTeX-generate-nomatch-message
   "こらこら、そんな文字列どこにもねーぞ!!"
-  "No such string in additional string."
-)
+  "No such string in additional string.")
+
 (YaTeX-setq YaTeX-generate-buffer
   "*付加関数生成バッファ*"
-  "*Generate-add-in-function*"
-)
+  "*Generate-add-in-function*")
 
 (YaTeX-setq YaTeX-generate-message-buffer
   "*ご案内*"
-  "*Guide*"
-)
+  "*Guide*")
 
 (YaTeX-setq YaTeX-generate-bug-message
   "ごめ～ん!! ちょっと、このアドイン関数つくるの失敗しちゃったみたい!!
 作者まで連絡してくださ～～～い!"
   "Sorry I failed to make add-in function for you...
-Send bug report to me."
-)
+Send bug report to me.")
 
 (YaTeX-setq YaTeX-generate-narrow-message
   "画面がせますぎるような気がします。"
-  "Too narrow screen height."
-)
+  "Too narrow screen height.")
 
 (defvar YaTeX-generate-message-height
   10 "Window height of YaTeX-generate-message-buffer")
@@ -249,8 +233,7 @@ Send bug report to me."
   (condition-case error
       (eval-current-buffer)
     (error (insert YaTeX-generate-bug-message)))
-  (pop-to-buffer YaTeX-generate-message-buffer)
-)
+  (pop-to-buffer YaTeX-generate-message-buffer))
 
 (defun YaTeX-generate-parse-add-in (args add-in)
   "Parse add-in string and extract argument for it.
@@ -313,8 +296,7 @@ Variable add-in is referred in parent function."
     (insert ")\n(concat " (YaTeX-generate-lisp-quote string)
 	    ")))\n")
     (indent-region (point-min) (point) nil)
-    used)
-)
+    used))
 
 (defun YaTeX-generate-ask-match-position ()
   "Ask user whether match-position is in his expectation,
@@ -331,14 +313,12 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
   (insert "\n" (if YaTeX-japan "ここにも対応してるの?"
 		 "this underlined part too?"))
   (other-window -1)
-  (y-or-n-p (if YaTeX-japan "下線部はあってますか" "Is underline right"))
-)
+  (y-or-n-p (if YaTeX-japan "下線部はあってますか" "Is underline right")))
 
 (defun YaTeX-generate-register-match ()
   (nconc arg (list (list beg end)))
   (let ((x beg))
-    (while (< x end) (aset used x i)(setq x (1+ x))))
-)
+    (while (< x end) (aset used x i)(setq x (1+ x)))))
 
 (defun YaTeX-generate-display-message (mes &optional bottom)
   "Display message to generation buffer."
@@ -347,8 +327,7 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
   (insert "\n\n")
   (if bottom (recenter (1- bottom)) (recenter 0))
   (insert mes)
-  (other-window -1)
-)
+  (other-window -1))
 
 (defun YaTeX-generate-move-to-add-in-position ()
   "Move cursor where add-in function should insert string."
@@ -366,9 +345,7 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
    ((eq YaTeX-current-completion-type 'maketitle)
     (goto-char (point-max))
     (if (= (preceding-char) ? )
-	(forward-char -1)))
-   )
-)
+	(forward-char -1)))))
 
 (defun YaTeX-generate-function-name ()
   (concat
@@ -376,8 +353,7 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
    (cond
     ((eq YaTeX-current-completion-type 'begin) YaTeX-env-name)
     ((eq YaTeX-current-completion-type 'section) YaTeX-section-name)
-    ((eq YaTeX-current-completion-type 'maketitle) YaTeX-single-command)))
-)
+    ((eq YaTeX-current-completion-type 'maketitle) YaTeX-single-command))))
 
 (defun YaTeX-generate-lisp-quote (str)
   (let ((len (length str))(i 0) (quote ""))
@@ -388,8 +364,7 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
 	  (setq quote (concat quote "\""))
 	(setq quote (concat quote (substring str i (1+ i)))))
       (setq i (1+ i)))
-    quote)
-)
+    quote))
 
 (defun YaTeX-generate-quote-quote (str)
   (let ((len (length str))(i 0) (quote ""))
@@ -398,15 +373,13 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
 	  (setq quote (concat quote (char-to-string 127))))
       (setq quote (concat quote (substring str i (1+ i))))
       (setq i (1+ i)))
-    quote)
-)
+    quote))
 
 (defun YaTeX-suppress-sparse-keymap (map)
   (let ((i ? ))
     (while (< i 127)
       (define-key map (char-to-string i) 'undefined)
-      (setq i (1+ i))))
-)
+      (setq i (1+ i)))))
 
 ;;;
 ;; Auto-generate Function for Lispers.
@@ -423,8 +396,8 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
      ((= c ?p) 'oneof)
      ((= c ?o) 'coord)
      ;;((= c ?m) 'macro)
-     (t        'quit)))
- )
+     (t        'quit))))
+
 (defun YaTeX-generate-read-completion-table ()
   (let ((i 1) cand (cands "(") (cb (current-buffer))
 	(buf (get-buffer-create " *Candidates*")))
@@ -441,8 +414,8 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
 	(insert cand "\n"))
       (kill-buffer buf)))
     ;;(set-buffer cb)
-    (setq YaTeX-generate-current-completion-table (concat cands ")")))
-)
+    (setq YaTeX-generate-current-completion-table (concat cands ")"))))
+
 (defun YaTeX-generate-corresponding-paren (left)
   (cond
    ((equal left "{") "}")
@@ -450,16 +423,16 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
    ((equal left "(") ")")
    ((equal left "<") ">")
    ((equal left "\\begin{") "}")
-   (t left))
-)
+   (t left)))
+
 (defun YaTeX-generate-create-read-string (&optional nth)
   (concat
    "(read-string \""
    (read-string (if nth (format "Prompt for argument#%d: " nth) "Prompt: "))
    ": \"\n"
    "\"" (read-string "Default: ") "\""
-   ")\n")
-)
+   ")\n"))
+
 (defun YaTeX-generate-create-completing-read (&optional nth)
   (prog1
       (concat
@@ -475,21 +448,21 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
 	      (cons
 	       (cons (format "YaTeX-%s-%d" command (or nth 0))
 		     YaTeX-generate-current-completion-table)
-	       YaTeX-generate-variables-for-learning))))
-)
+	       YaTeX-generate-variables-for-learning)))))
+
 (defun YaTeX-generate-create-read-file-name (&optional nth)
   (concat
    "(read-file-name \""
    (read-string (if nth (format "Prompt for argument#%d: " nth) "Prompt: "))
-   ": \" "" \"\" t \"\")\n")
-)
+   ": \" "" \"\" t \"\")\n"))
+
 (defun YaTeX-generate-create-read-oneof (&optional nth readpos)
   (concat
    (if readpos
        "(YaTeX:read-position \""
      "(YaTeX:read-oneof \"")
-   (read-string "Acceptable characters: " "lcr") "\")\n")
-)
+   (read-string "Acceptable characters: " "lcr") "\")\n"))
+
 (defun YaTeX-generate-option-type (command)
   (let ((func (format "YaTeX:%s" command)) leftp
 	(buf (get-buffer-create YaTeX-generate-buffer)) type (n 1))
@@ -546,8 +519,8 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
     (goto-char (point-min))
     (while (not (eobp)) (lisp-indent-line) (forward-line 1))
     (eval-current-buffer)
-    buf)
-)
+    buf))
+
 (defun YaTeX-generate-argument-type (command argc)
   "Create an argument-type add-in function."
   (interactive)
@@ -581,8 +554,8 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
     (YaTeX-update-table
      (if (> argc 1) (list command argc) (list command))
      'section-table 'user-section-table 'tmp-section-table)
-    buf)
-)
+    buf))
+
 (defun YaTeX-generate-simple (&optional command)
   "Simple but requiring some elisp knowledge add-in generator."
   (interactive)
@@ -607,6 +580,6 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
        (YaTeX-generate-option-type command)
      (YaTeX-generate-argument-type
       command
-      (string-to-int (read-string "How many arguments?: ")))) nil)
-)
+      (string-to-int (read-string "How many arguments?: ")))) nil))
+
 (provide 'yatexgen)

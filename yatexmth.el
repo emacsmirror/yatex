@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX math-mode-specific functions.
-;;; yatexmth.el
+;;; yatexmth.el --- YaTeX math-mode-specific functions
+;;; 
 ;;; (c)1993-2012 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Tue Jan 24 08:58:56 2012 on firestorm
+;;; Last modified Sat Sep  1 08:13:08 2012 on firestorm
 ;;; $Id$
 
+;;; Commentary:
 ;;; [Customization guide]
 ;;;
 ;;;	  By default,  you can use two  completion  groups in YaTeX math
@@ -84,6 +84,7 @@
 ;;;	これらを ~/.emacs に書いておけば、math-mode で自分専用のイメージ
 ;;;	補完が利用できます。
 
+;;; Code:
 (defvar YaTeX-jisold
   (and (boundp 'dos-machine-type)
        (eq dos-machine-type 'pc98)))

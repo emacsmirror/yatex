@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX add-in functions.
+;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Mar  9 21:19:09 2012 on firestorm
+;;; Last modified Sat Sep  1 08:08:21 2012 on firestorm
 ;;; $Id$
 
+;;; Code:
 ;;;
 ;;Sample functions for LaTeX environment.
 ;;;
