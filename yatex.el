@@ -1,7 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
-
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Sep  1 07:37:53 2012 on firestorm
+;;; Last modified Thu Oct 25 16:24:50 2012 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1627,7 +1626,8 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?k) (YaTeX-kill-typeset-process YaTeX-typeset-process))
      ((= c ?p) (call-interactively 'YaTeX-preview))
      ((= c ?q) (YaTeX-system "lpq" "*Printer queue*"))
-     ((= c ?d) (YaTeX-typeset-buffer YaTeX-dvipdf-command))
+     ((= c ?d) (YaTeX-typeset-buffer
+		(or (YaTeX-get-builtin "DVIPDF") YaTeX-dvipdf-command)))
      ((= c ?v) (YaTeX-view-error))
      ((= c ?l) (YaTeX-lpr arg))
      ((= c ?m) (YaTeX-switch-mode-menu arg))
