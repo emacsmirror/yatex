@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2012 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Sat Sep  1 07:28:17 2012 on firestorm
+;;; Last modified Sun Jan 27 20:11:00 2013 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.76"
@@ -921,7 +921,7 @@ This program should take -o option to overwrite existing HTML file.")
    (let ((addin (concat "yahtml:" (downcase form))) s a)
      (concat
       (and (setq a (yahtml-css-get-element-completion-alist form))
-	   (not (equal last-command-char ?\C-j))
+	   (not (equal (YaTeX-last-key) ?\C-j))
 	   (memq yahtml-current-completion-type '(multiline inline))
 	   (not (string-match "#" form))
 	   (yahtml-make-optional-argument ;should be made generic?

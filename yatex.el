@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Oct 25 16:24:50 2012 on firestorm
+;;; Last modified Sun Jan 27 20:10:46 2013 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1363,7 +1363,7 @@ into {\\xxx } braces.
   (setplist 'YaTeX-jmode nil))
 
 (defun YaTeX-self-insert (arg)
-  (call-interactively (global-key-binding (char-to-string last-command-char))))
+  (call-interactively (global-key-binding (char-to-string (YaTeX-last-key)))))
 (defun YaTeX-insert-inherit (&rest args)
   (apply (if (fboundp 'insert-and-inherit) 'insert-and-inherit 'insert)
 	   args))
@@ -1398,7 +1398,7 @@ into {\\xxx } braces.
      ((and (= (preceding-char) ?\\ )
 	   (/= (char-after (- (point) 2)) ?\\ )
 	   (not (YaTeX-in-math-mode-p)))
-      (YaTeX-insert-inherit last-command-char "\n")
+      (YaTeX-insert-inherit (YaTeX-last-key) "\n")
       (indent-to (max 0 col))
       (YaTeX-insert-inherit "\\]")
       (beginning-of-line)

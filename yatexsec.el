@@ -1,7 +1,7 @@
 ;;; yatexsec.el --- YaTeX sectioning browser
 ;;; 
 ;;; (c) 1994-2012 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:13:52 2012 on firestorm
+;;; Last modified Sun Jan 27 20:11:45 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -181,7 +181,7 @@ If optional argument KEEP is non-nil, only shows the line."
 (defun YaTeX-sectioning-hide ()
   "Call YaTeX-sectioning-hide-under with argument according to pressed key."
   (interactive)
-  (YaTeX-sectioning-hide-under (- last-command-char ?0)))
+  (YaTeX-sectioning-hide-under (- (YaTeX-last-key) ?0)))
 
 (defun YaTeX-sectioning-help ()
   "Show help of sectioning."

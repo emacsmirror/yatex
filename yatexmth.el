@@ -1,7 +1,7 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions
 ;;; 
 ;;; (c)1993-2012 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:13:08 2012 on firestorm
+;;; Last modified Sun Jan 27 20:10:03 2013 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -700,7 +700,7 @@ at least you get to read the beginning."
   (interactive "P")
   (let*((key (or initial "")) regkey str  last-char list i
 	(case-fold-search nil) match sign
-	(this-key (char-to-string last-command-char))
+	(this-key (char-to-string (YaTeX-last-key)))
 	(alistsym (cdr (assoc this-key YaTeX-math-key-list)))
 	(alistname (symbol-name alistsym))
 	(alist (symbol-value alistsym))

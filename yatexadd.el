@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:08:21 2012 on firestorm
+;;; Last modified Sun Jan 27 20:11:23 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -432,7 +432,7 @@ YaTeX-make-begin-end."
 (defun YaTeX::label-search-tag ()
   (interactive)
   (let ((case-fold-search t)
-	(tag (regexp-quote (char-to-string last-command-char))))
+	(tag (regexp-quote (char-to-string (YaTeX-last-key)))))
     (cond
      ((save-excursion
 	(forward-char 1)

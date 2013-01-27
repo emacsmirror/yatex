@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries
 ;;; 
 ;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:12:09 2012 on firestorm
+;;; Last modified Sun Jan 27 20:09:01 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -839,11 +839,18 @@ NULL includes null string in a list."
 ;; Interface function for windows.el
 ;;;
 ;;;###autoload
+(fset 'YaTeX-last-key
+      (if (fboundp 'win:last-key)
+	  'win:last-key
+	'(lambda () (if (boundp 'last-command-char)
+			last-command-char
+		      last-command-event))))
 (defun YaTeX-switch-to-window ()
   "Switch to windows.el's window decided by last pressed key."
   (interactive)
   (or (featurep 'windows) (error "Why don't you use `windows.el'?"))
-  (win-switch-to-window 1 (- last-command-char win:base-key)))
+  (win-switch-to-window 1 (- (YaTeX-last-key) win:base-key)))
+
 
 ;;;###autoload
 (defun YaTeX-command-to-string (cmd)
