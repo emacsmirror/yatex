@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:13:49 2012 on firestorm
+;;; Last modified Mon Oct 29 08:55:58 2012 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -849,7 +849,7 @@ error or warning lines in reverse order."
 (defvar YaTeX-dvi2-command-ext-alist
  '(("[agx]dvi\\|dviout" . ".dvi")
    ("ghostview\\|gv" . ".ps")
-   ("acroread\\|pdf\\|Preview\\|TeXShop\\|Skim\\|evince" . ".pdf")))
+   ("acroread\\|xpdf\\|pdfopen\\|Preview\\|TeXShop\\|Skim\\|evince\\|mupdf\\|zathura\\|okular" . ".pdf")))
 
 (defun YaTeX-get-preview-file-name (&optional preview-command)
   "Get file name to preview by inquiring YaTeX-get-latex-command"
