@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 27 20:10:46 2013 on firestorm
+;;; Last modified Tue Feb 12 14:11:51 2013 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -2546,7 +2546,8 @@ because this function is called with no argument."
 	     (progn
 	       (setq maketitle (substring (YaTeX-match-string 0) 1))
 	       (setq memberp (YaTeX-math-member-p maketitle))))
-	(let ((last-command-char (string-to-char (car memberp))))
+	(let*((last-command-char (string-to-char (car memberp)))
+	      (last-command-event last-command-char))
 	  (setq beg (match-beginning 0) end (match-end 0))
 	  (delete-region beg end)
 	  (YaTeX-math-insert-sequence t (cdr memberp))))))
