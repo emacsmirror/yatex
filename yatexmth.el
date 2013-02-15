@@ -1,7 +1,7 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions
 ;;; 
 ;;; (c)1993-2012 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Jan 27 20:10:03 2013 on firestorm
+;;; Last modified Fri Feb 15 13:34:41 2013 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -688,7 +688,9 @@ at least you get to read the beginning."
 				    2))))
 	      (let ((char (read-char)))
 		(or (eq char exit-char)
-		    (setq unread-command-char char))))
+		    (if (boundp 'unread-command-events)
+			(setq unread-command-events (list char))
+		      (setq unread-command-char char)))))
 	  (if insert-end
 	      (save-excursion
 		(delete-region insert-start insert-end)))
@@ -780,7 +782,9 @@ at least you get to read the beginning."
     (cond
      ((memq result '(t select))
       (if (eq result t)
-	  (setq unread-command-char last-char)
+	  (if (boundp 'unread-command-events)
+	      (setq unread-command-events (list last-char))
+	    (setq unread-command-char last-char))
 	(message "Done."))
       (if (assoc YaTeX-single-command section-table)
 	  (YaTeX-make-section nil nil nil YaTeX-single-command)
