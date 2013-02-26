@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries
 ;;; 
 ;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 27 20:09:01 2013 on firestorm
+;;; Last modified Tue Feb 26 10:59:56 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -755,13 +755,15 @@ If no such window exist, switch to buffer BUFFER."
 (defvar YaTeX-skip-next-reader-char ?\C-j)
 (defun YaTeX-read-string-or-skip (&rest args)
   "Read string, or skip if last input char is \C-j."
-  (if (equal last-input-char YaTeX-skip-next-reader-char)
+  (if (equal (if (boundp 'last-input-event) last-input-event last-input-char)
+	     YaTeX-skip-next-reader-char)
       ""
     (apply 'read-string args)))
 
 (defun YaTeX-completing-read-or-skip (&rest args)
   "Do completing-read, or skip if last input char is \C-j."
-  (if (equal last-input-char YaTeX-skip-next-reader-char)
+  (if (equal (if (boundp 'last-input-event) last-input-event last-input-char)
+	     YaTeX-skip-next-reader-char)
       ""
     (apply 'completing-read args)))
 
