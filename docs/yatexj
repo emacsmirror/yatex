@@ -1,7 +1,7 @@
 Info file: yatexj,    -*-Text-*-
 produced by `texinfo-format-buffer'
 from file `yatexj.tex'
-using `texinfmt.el' version 2.42 of  7 Jul 2006.
+using `texinfmt.el' version 2.38 of 3 July 1998.
 
 START-INFO-DIR-ENTRY
 * YaTeX: (yatexj).      Yet Another tex-mode for Emacs (Japanese).
@@ -49,11 +49,11 @@ File: yatexj, Node: Intro, Next: Terminology, Prev: Top, Up: Top
 ‚Í‚¶‚ß‚É
 ********
 
-  –ì’¹‚ÍAGNU Emacs ‚Å LaTeX —p‚Ì•¶‘‚ğì¬‚·‚é‚É pLaTeX ‚È‚Ç‚Ìƒ^ƒCƒv
-ƒZƒbƒgƒRƒ}ƒ“ƒh‚âAƒvƒŒƒ”ƒ…[ƒA‚Ì‹N“®‚ğ Emacs •ÒW‰æ–Ê’†‚©‚çs‚¦‚é‚æ‚¤‚É
-‚·‚é‚Æ‹¤‚ÉAŠg’£«‚Ì‚‚¢íX‚Ì•âŠ®‹@”\‚É‚æ‚èƒ\[ƒXƒeƒLƒXƒg‚Ì•ÒW‚ğx‰‡
-‚µ‚Ü‚·B‚³‚ç‚É LaTeX ƒRƒ}ƒ“ƒh‚ÌƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv‚É‚æ‚èƒ}ƒjƒ…ƒAƒ‹‚ğ’²‚×‚é
-èŠÔ‚ğŒyŒ¸‚µ‚Ü‚·B
+  –ì’¹‚ÍAGNU Emacs ‚Å LaTeX —p‚Ì•¶‘‚ğì¬‚·‚é‚É pLaTeX ‚È‚Ç‚Ìƒ^ƒCƒvƒZƒb
+ƒgƒRƒ}ƒ“ƒh‚âAƒvƒŒƒ”ƒ…[ƒA‚Ì‹N“®‚ğ Emacs •ÒW‰æ–Ê’†‚©‚çs‚¦‚é‚æ‚¤‚É‚·‚é‚Æ
+‹¤‚ÉAŠg’£«‚Ì‚‚¢íX‚Ì•âŠ®‹@”\‚É‚æ‚èƒ\[ƒXƒeƒLƒXƒg‚Ì•ÒW‚ğx‰‡‚µ‚Ü‚·B‚³
+‚ç‚É LaTeX ƒRƒ}ƒ“ƒh‚ÌƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv‚É‚æ‚èƒ}ƒjƒ…ƒAƒ‹‚ğ’²‚×‚éèŠÔ‚ğŒyŒ¸‚µ
+‚Ü‚·B
 
   English manual *Note Top: (yatexe)Top.
 
@@ -73,24 +73,23 @@ File: yatexj, Node: Terminology, Next: Main features, Prev: Intro, Up: Top
 
    * sectionŒ^ƒRƒ}ƒ“ƒh
 
-     `\section{ƒ^ƒCƒgƒ‹}'‚â`\mbox{“à—e}'‚Ì‚æ‚¤‚Éˆø”‚ğæ‚éLaTeXƒRƒ}ƒ“ƒh
-     ‚ğw‚µ‚Ü‚·B
+     `\section{ƒ^ƒCƒgƒ‹}'‚â`\mbox{“à—e}'‚Ì‚æ‚¤‚Éˆø”‚ğæ‚éLaTeXƒRƒ}ƒ“ƒh‚ğ
+     w‚µ‚Ü‚·B
 
    * maketitleŒ^ƒRƒ}ƒ“ƒh
 
-     `\maketitle'‚â`\tableofcontents'‚Ì‚æ‚¤‚Éˆø”‚ğæ‚ç‚È‚¢LaTeXƒRƒ}ƒ“
-     ƒh‚ğw‚µ‚Ü‚·B
+     `\maketitle'‚â`\tableofcontents'‚Ì‚æ‚¤‚Éˆø”‚ğæ‚ç‚È‚¢LaTeXƒRƒ}ƒ“ƒh‚ğ
+     w‚µ‚Ü‚·B
 
    * largeŒ^ƒRƒ}ƒ“ƒh
 
-     `{\large ...}' ‚â `{\tt ...}' ‚Ì‚æ‚¤‚ÈƒtƒHƒ“ƒg/ƒTƒCƒYw’èq‚ğw‚µ
-     ‚Ü‚·B
+     `{\large ...}' ‚â `{\tt ...}' ‚Ì‚æ‚¤‚ÈƒtƒHƒ“ƒg/ƒTƒCƒYw’èq‚ğw‚µ‚Ü‚·B
 
    * `[prefix]'
 
-     –ì’¹‚Ì‹@”\‚ğŒÄ‚Ño‚·‚½‚ß‚ÌƒvƒŠƒtƒBƒNƒXƒL[BƒfƒtƒHƒ‹ƒg‚Å‚Í`C-c'‚É
-     Š„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚é‚Ì‚ÅA“Á‚É•ÏX‚µ‚Ä‚¢‚È‚¢ê‡–{ƒ}ƒjƒ…ƒAƒ‹‚Ì
-     `[prefix]' ‚Æ‚¢‚¤•\‹L‚ÍA`C-c' ‚Æ“Ç‚İŠ·‚¦‚Ä‚­‚¾‚³‚¢B
+     –ì’¹‚Ì‹@”\‚ğŒÄ‚Ño‚·‚½‚ß‚ÌƒvƒŠƒtƒBƒNƒXƒL[BƒfƒtƒHƒ‹ƒg‚Å‚Í`C-c'‚ÉŠ„‚è
+     “–‚Ä‚ç‚ê‚Ä‚¢‚é‚Ì‚ÅA“Á‚É•ÏX‚µ‚Ä‚¢‚È‚¢ê‡–{ƒ}ƒjƒ…ƒAƒ‹‚Ì `[prefix]' 
+     ‚Æ‚¢‚¤•\‹L‚ÍA`C-c' ‚Æ“Ç‚İŠ·‚¦‚Ä‚­‚¾‚³‚¢B
 
 
 
@@ -103,27 +102,25 @@ File: yatexj, Node: Main features, Next: Installation, Prev: Terminology, Up: To
    * ƒJ[ƒ\ƒ‹ˆÊ’u‚É‚æ‚ç‚È‚¢ŒÅ’èƒŠƒWƒ‡ƒ“‚Ì•”•ªƒ^ƒCƒvƒZƒbƒg
    * \includeonly‚Ìƒƒ“ƒ^ƒbƒ`XV
    * ƒGƒ‰[‰ÓŠ‚Ö‚Ì©“®ƒWƒƒƒ“ƒv(`C-c '')
-   * `\begin{}, \end{}, \section...' ‚È‚Ç‚Ì LaTeXƒRƒ}ƒ“ƒh‚Ì•âŠ®“ü—Í
-     (`C-c b', `C-c s', `C-c l', `C-c m')
-   * Šù‚É“ü—Í‚µ‚½ƒeƒLƒXƒg‚ğŠÂ‹«‚âƒRƒ}ƒ“ƒhˆø”‚Ì’†‚Éæ‚è‚ŞŠ‡‚è•âŠ®
-     (`C-u' +’Êí•âŠ®ƒL[)
+   * `\begin{}, \end{}, \section...' ‚È‚Ç‚Ì LaTeX ƒRƒ}ƒ“ƒh‚Ì•âŠ®“ü—Í(`C-c
+     b', `C-c s', `C-c l', `C-c m')
+   * Šù‚É“ü—Í‚µ‚½ƒeƒLƒXƒg‚ğŠÂ‹«‚âƒRƒ}ƒ“ƒhˆø”‚Ì’†‚Éæ‚è‚ŞŠ‡‚è•âŠ®(`C-u'
+     +’Êí•âŠ®ƒL[)
    * ƒZƒNƒVƒ‡ƒ“‹æØ‚è“ü—Í‚Ì•¶‘\‘¢ƒAƒEƒgƒ‰ƒCƒ“•\¦
    * ƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚ÌˆêŠ‡ƒVƒtƒg (*Note view-sectioning::)
    * •âŠ®«‘‚ÌŠwK
    * LaTeX ‚ÌŠÂ‹«‚âƒRƒ}ƒ“ƒh‚É‰‚¶‚½ƒKƒCƒh•t‚«ˆø”“ü—Í
    * –ì’¹‚É‚È‚¢ƒKƒCƒh•t‚«ˆø”“ü—ÍŠÖ”‚Ì©“®¶¬(`yatexgen.el')
    * LaTeX ƒRƒ}ƒ“ƒh‚Ìíœ/•ÏX(`C-c k', `C-c c')
-   * ƒtƒ@ƒCƒ‹ŠÔA`\begin'<->`\end'ŠÔA
-             `\ref'<->`\label'ŠÔA
-             `\cite'<->`\bibitem'ƒWƒƒƒ“ƒv(`C-c g')
-   * ˆêŠ‡ƒRƒƒ“ƒgƒAƒEƒg/ƒAƒ“ƒRƒƒ“ƒgƒAƒEƒg(`C-c >', `C-c <', `C-c ,',
-     `C-c .')
+   * ƒtƒ@ƒCƒ‹ŠÔA`\begin'<->`\end'ŠÔA`\ref'<->`\label'ŠÔA
+     `\cite'<->`\bibitem'ƒWƒƒƒ“ƒv(`C-c g')
+   * ˆêŠ‡ƒRƒƒ“ƒgƒAƒEƒg/ƒAƒ“ƒRƒƒ“ƒgƒAƒEƒg(`C-c >', `C-c <', `C-c ,', `C-c
+     .')
    * ƒAƒNƒZƒ“ƒg‹L†/”®ŠÂ‹«—pƒRƒ}ƒ“ƒh/ƒMƒŠƒVƒƒ•¶š‚Ì“ü—Íx‰‡(`C-c a',
      `;', `/')
    * tabular/arrayŠÂ‹«‚ÌƒJƒ‰ƒ€ˆÊ’uƒKƒCƒh
    * •W€“I LaTeX ƒRƒ}ƒ“ƒh‚ÌƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv(`C-c ?', `C-c /')
-   * ƒhƒLƒ…ƒƒ“ƒg‚ÌƒCƒ“ƒNƒ‹[ƒh\‘¢‚Ì‹Šo“I•\¦‚Æƒoƒbƒtƒ@Ø‚è‘Ö‚¦(`C-c
-     d')
+   * ƒhƒLƒ…ƒƒ“ƒg‚ÌƒCƒ“ƒNƒ‹[ƒh\‘¢‚Ì‹Šo“I•\¦‚Æƒoƒbƒtƒ@Ø‚è‘Ö‚¦(`C-c d')
    * •âŠ®“ü—Í‚µ‚½ƒ}ƒNƒ‚É‰‚¶‚Ä•K—v‚È \userpackage ‚ğ“ü‚ê‚Ä‚­‚ê‚éæ‰ñ‚è
      userpackage
    * \label‚ğ‘Å‚Â‚±‚Æ‚Í‚à‚¤–Y‚ê‚æ‚¤! ref‚âcite•âŠ®“ü—Í‚Å©“®¶¬‚µ‚Ü‚·
@@ -144,31 +141,31 @@ File: yatexj, Node: Installation, Next: Invocation, Prev: Main features, Up: Top
            (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
      (autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
 
-Ÿ‚É–ì’¹‚Ì emacs-lisp ƒtƒ@ƒCƒ‹ŒQ‚ğ’u‚­ƒfƒBƒŒƒNƒgƒŠ‚ğ load-path ‚É‰Á‚¦‚Ü
-‚·B‚½‚Æ‚¦‚ÎA `~/src/emacs/yatex'‚É’u‚­‚Ì‚Å‚ ‚ê‚ÎA
+Ÿ‚É–ì’¹‚Ì emacs-lisp ƒtƒ@ƒCƒ‹ŒQ‚ğ’u‚­ƒfƒBƒŒƒNƒgƒŠ‚ğ load-path ‚É‰Á‚¦‚Ü‚·B
+‚½‚Æ‚¦‚ÎA `~/src/emacs/yatex'‚É’u‚­‚Ì‚Å‚ ‚ê‚ÎA
 
      (setq load-path (cons (expand-file-name "~/src/emacs/yatex") load-path))
 
 ‚È‚Ç‚Æ‚µ‚Ü‚·B
 
-  ˆÈã‚Ìİ’è‚É‚æ‚èAŠg’£q‚ª .tex ‚Å‚ ‚éƒtƒ@ƒCƒ‹‚ğ•ÒW‚·‚é‚Æ©“®“I‚É–ì
-’¹‚ªƒ[ƒh‚³‚ê‚Ü‚·B–ì’¹‚ª³í‚É‹N“®‚Å‚«‚½‚Æ‚«‚Íƒ‚[ƒhƒ‰ƒCƒ“‚Ì•\¦‚ª
-u‚â‚Ä‚Óv‚É•Ï‚í‚è‚Ü‚·B
+  ˆÈã‚Ìİ’è‚É‚æ‚èAŠg’£q‚ª .tex ‚Å‚ ‚éƒtƒ@ƒCƒ‹‚ğ•ÒW‚·‚é‚Æ©“®“I‚É–ì’¹‚ª
+ƒ[ƒh‚³‚ê‚Ü‚·B–ì’¹‚ª³í‚É‹N“®‚Å‚«‚½‚Æ‚«‚Íƒ‚[ƒhƒ‰ƒCƒ“‚Ì•\¦‚ªu‚â‚Ä‚Óv
+‚É•Ï‚í‚è‚Ü‚·B
 
 
 ƒ^ƒCƒvƒZƒbƒ^/ƒvƒŒƒ”ƒ…[ƒAŠÂ‹«‚Ìİ’è
 ===================================
 
-  —˜—p‚·‚éŠO•”ƒvƒƒOƒ‰ƒ€‚ÉŠÖ‚·‚éˆÈ‰º‚Ì•Ï”‚ğŠm”F‚µA•K—v‚È‚ç³‚µ‚¢’l‚É
-•ÏX‚µ‚Ü‚·B
+  —˜—p‚·‚éŠO•”ƒvƒƒOƒ‰ƒ€‚ÉŠÖ‚·‚éˆÈ‰º‚Ì•Ï”‚ğŠm”F‚µA•K—v‚È‚ç³‚µ‚¢’l‚É•ÏX
+‚µ‚Ü‚·B
 `tex-command'
              ... ‹N“®‚·‚éƒ^ƒCƒvƒZƒbƒ^‚ÌƒRƒ}ƒ“ƒh–¼
 `dvi2-command'
              ... ‹N“®‚·‚éƒvƒŒƒ”ƒ…[ƒA‚ÌƒRƒ}ƒ“ƒh–¼
 `NTT-jTeX'
-             ... ‰üs+ƒCƒ“ƒfƒ“ƒg‚É‚æ‚Á‚ÄAƒ^ƒCƒvƒZƒbƒgŒã‚ÌšŠÔ‚ª‹ó‚¢‚Ä
-     ‚µ‚Ü‚¤‚Ì‚ğ—}§‚·‚éê‡‚Ét‚É‚·‚é(ŒÃ‚¢NTT-jTeX‚ÅŒ°’˜‚ÉŒ»‚ê‚é)B‹ï‘Ì
-     “I‚É‚ÍAfill‚·‚é‚Æ‚«‚ÉŠes‚ÌI‚í‚è‚É%‚ğ•t‰Á‚·‚é‚æ‚¤‚É‚È‚éB
+             ... ‰üs+ƒCƒ“ƒfƒ“ƒg‚É‚æ‚Á‚ÄAƒ^ƒCƒvƒZƒbƒgŒã‚ÌšŠÔ‚ª‹ó‚¢‚Ä‚µ‚Ü
+     ‚¤‚Ì‚ğ—}§‚·‚éê‡‚Ét‚É‚·‚é(ŒÃ‚¢NTT-jTeX‚ÅŒ°’˜‚ÉŒ»‚ê‚é)B‹ï‘Ì“I‚É‚ÍA
+     fill‚·‚é‚Æ‚«‚ÉŠes‚ÌI‚í‚è‚É%‚ğ•t‰Á‚·‚é‚æ‚¤‚É‚È‚éB
 `YaTeX-kanji-code'
              ... •¶‘‚ğì¬‚·‚é‚ÌŠ¿šƒR[ƒh
 `dviprint-command-format'
@@ -176,10 +173,9 @@ File: yatexj, Node: Installation, Next: Invocation, Prev: Main features, Up: Top
 `makeindex-command'
              ... makeindexƒRƒ}ƒ“ƒh
 
-‚±‚ê‚ç‚ğ•ÏX‚·‚éê‡‚ÍA‚â‚Í‚è`~/.emacs'‚É‚ÄA‚½‚Æ‚¦‚Î
-     (setq tex-command "pdflatex")
-‚Ì‚æ‚¤‚É‚µ‚Ä‚­‚¾‚³‚¢B‚Ç‚Ì‚æ‚¤‚È’l‚ğƒZƒbƒg‚·‚ê‚Î—Ç‚¢‚©‚É‚Â‚¢‚Ä‚ÍA
-*Note All customizable variables::‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢B
+‚±‚ê‚ç‚ğ•ÏX‚·‚éê‡‚ÍA‚â‚Í‚è`~/.emacs'‚É‚ÄA‚½‚Æ‚¦‚Î(setq tex-command
+"pdflatex") ‚Ì‚æ‚¤‚É‚µ‚Ä‚­‚¾‚³‚¢B‚Ç‚Ì‚æ‚¤‚È’l‚ğƒZƒbƒg‚·‚ê‚Î—Ç‚¢‚©‚É‚Â‚¢‚Ä
+‚ÍA*Note All customizable variables::‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢B
 
 
 
@@ -189,16 +185,16 @@ File: yatexj, Node: Invocation, Next: %#notation, Prev: Installation, Up: Top
 latexƒRƒ}ƒ“ƒh‹N“®
 *****************
 
-LaTeXƒ\[ƒX‚Ì•ÒW’†AŸ‚ÌƒL[“ü—Í‚É‚æ‚èAplatex ‚È‚Ç‚Ìƒ^ƒCƒvƒZƒbƒgƒvƒ
-ƒOƒ‰ƒ€(ˆÈŒãƒ^ƒCƒvƒZƒbƒ^‚ÆŒÄ‚Ô)AƒvƒŒƒ”ƒ…[ƒA‚È‚Ç‚Ì‹N“®‚ª‚Å‚«‚Ü‚·B
+LaTeXƒ\[ƒX‚Ì•ÒW’†AŸ‚ÌƒL[“ü—Í‚É‚æ‚èAplatex ‚È‚Ç‚Ìƒ^ƒCƒvƒZƒbƒgƒvƒƒOƒ‰
+ƒ€(ˆÈŒãƒ^ƒCƒvƒZƒbƒ^‚ÆŒÄ‚Ô)AƒvƒŒƒ”ƒ…[ƒA‚È‚Ç‚Ì‹N“®‚ª‚Å‚«‚Ü‚·B
 
 `[prefix] t j'
              ... ƒ^ƒCƒvƒZƒbƒ^(platex)‹N“®
 `[prefix] t r'
              ... ƒ^ƒCƒvƒZƒbƒ^‹N“®(—Ìˆæw’è)
 `[prefix] t e'
-             ... ƒ^ƒCƒvƒZƒbƒ^‹N“®(ƒ|ƒCƒ“ƒgˆÊ’u‚ÌŠÂ‹«‚Ü‚½‚Í”®ƒ‚[ƒh‚Ì
-     ‚İ‘ÎÛ)
+             ... ƒ^ƒCƒvƒZƒbƒ^‹N“®(ƒ|ƒCƒ“ƒgˆÊ’u‚ÌŠÂ‹«‚Ü‚½‚Í”®ƒ‚[ƒh‚Ì‚İ‘Î
+     Û)
 `[prefix] t k'
              ... “®ì’†‚Ìƒ^ƒCƒvƒZƒbƒ^‚Ì’â~
 `[prefix] t b'
@@ -206,7 +202,7 @@ LaTeXƒ\[ƒX‚Ì•ÒW’†AŸ‚ÌƒL[“ü—Í‚É‚æ‚èAplatex ‚È‚Ç‚Ìƒ^ƒCƒvƒZƒbƒgƒvƒ
 `[prefix] t i'
              ... makeindex‹N“®
 `[prefix] t d'
-        ... ƒ^ƒCƒvƒZƒbƒgŠ®—¹Œãdvipdfmx‹N“®
+     	... ƒ^ƒCƒvƒZƒbƒgŠ®—¹Œãdvipdfmx‹N“®
 `[prefix] t p'
              ... ƒvƒŒƒ”ƒ…[ƒA‹N“®
 `[prefix] t l'
@@ -227,49 +223,49 @@ File: yatexj, Node: Calling typesetter, Next: Calling previewer, Prev: Invocatio
 ƒ^ƒCƒvƒZƒbƒ^‹N“®
 ================
 
-  ƒ^ƒCƒvƒZƒbƒ^‚ğ‹N“®‚·‚é‚ÆA•ÒWƒEƒBƒ“ƒhƒE‚ª2‚Â‚É•ªŠ„‚³‚êA•Ğ•û‚ÌƒEƒBƒ“
-ƒhƒE‚Éƒ^ƒCƒvƒZƒbƒg‰æ–Ê‚ª•\¦‚³‚ê‚Ü‚·Bo—Í‚³‚ê‚éƒƒbƒZ[ƒW‚Æ˜A“®‚µƒ^ƒC
-ƒvƒZƒbƒgƒoƒbƒtƒ@‚Í©“®“I‚ÉƒXƒNƒ[ƒ‹‚µ‚Ü‚·B‚à‚µA“r’†‚ÅƒGƒ‰[‚ª‹N‚±‚Á
-‚Ä~‚Ü‚Á‚Ä‚µ‚Ü‚Á‚½ê‡‚É‚Íƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@‚ÉˆÚ‚èA(`C-x o') ƒ^ƒCƒv
-ƒZƒbƒ^‚Ìo‚µ‚Ä‚¢‚é ? ƒvƒƒ“ƒvƒg‚É‘Î‚µ‚ÄA`x' (ˆ—‚Ì’†’f)‚È‚Ç‚Ìw¦‚ğ‘—
-‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·BƒGƒ‰[‚ğC³‚·‚éê‡‚ÍA
+  ƒ^ƒCƒvƒZƒbƒ^‚ğ‹N“®‚·‚é‚ÆA•ÒWƒEƒBƒ“ƒhƒE‚ª2‚Â‚É•ªŠ„‚³‚êA•Ğ•û‚ÌƒEƒBƒ“ƒh
+ƒE‚Éƒ^ƒCƒvƒZƒbƒg‰æ–Ê‚ª•\¦‚³‚ê‚Ü‚·Bo—Í‚³‚ê‚éƒƒbƒZ[ƒW‚Æ˜A“®‚µƒ^ƒCƒvƒZƒb
+ƒgƒoƒbƒtƒ@‚Í©“®“I‚ÉƒXƒNƒ[ƒ‹‚µ‚Ü‚·B‚à‚µA“r’†‚ÅƒGƒ‰[‚ª‹N‚±‚Á‚Ä~‚Ü‚Á‚Ä
+‚µ‚Ü‚Á‚½ê‡‚É‚Íƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@‚ÉˆÚ‚èA(`C-x o') ƒ^ƒCƒvƒZƒbƒ^‚Ìo‚µ‚Ä
+‚¢‚é ? ƒvƒƒ“ƒvƒg‚É‘Î‚µ‚ÄA`x' (ˆ—‚Ì’†’f)‚È‚Ç‚Ìw¦‚ğ‘—‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+ƒGƒ‰[‚ğC³‚·‚éê‡‚ÍA
 
 `[prefix] ''
 `(prefix+ƒAƒ|ƒXƒgƒƒtƒB)'
              ... ’¼‘O‚ÌƒGƒ‰[”­¶s‚ÖƒWƒƒƒ“ƒv
 
-‚ğ“ü—Í‚·‚é‚±‚Æ‚É‚æ‚èAƒ^ƒCƒvƒZƒbƒ^‚ªƒGƒ‰[‚ğ”­¶‚µ‚½s‚ÉˆÚ‚é‚±‚Æ‚ª‚Å‚«
-‚Ü‚·B‚Ü‚½Aƒ^ƒCƒvƒZƒbƒ^‚Ìo—Í‚·‚é overfull hbox ‚È‚Ç‚ÌƒEƒH[ƒjƒ“ƒOs‚É
-‚à‘Î‰‚µ‚Ä‚¢‚Ü‚·‚Ì‚ÅA‡Ÿ `[prefix] '' ‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èAˆê‚Â‘O‚ÌƒEƒH[
-ƒjƒ“ƒO”­¶s‚ÉƒWƒƒƒ“ƒv‚µ‚Ä‚¢‚«‚Ü‚·B
+‚ğ“ü—Í‚·‚é‚±‚Æ‚É‚æ‚èAƒ^ƒCƒvƒZƒbƒ^‚ªƒGƒ‰[‚ğ”­¶‚µ‚½s‚ÉˆÚ‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+‚Ü‚½Aƒ^ƒCƒvƒZƒbƒ^‚Ìo—Í‚·‚é overfull hbox ‚È‚Ç‚ÌƒEƒH[ƒjƒ“ƒOs‚É‚à‘Î‰‚µ
+‚Ä‚¢‚Ü‚·‚Ì‚ÅA‡Ÿ `[prefix] '' ‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èAˆê‚Â‘O‚ÌƒEƒH[ƒjƒ“ƒO”­¶
+s‚ÉƒWƒƒƒ“ƒv‚µ‚Ä‚¢‚«‚Ü‚·B
 
-  ‚à‚µA‹C‚É‚È‚éƒGƒ‰[s‚ª‚ ‚Á‚½ê‡‚ÍAƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@‚ÅAƒGƒ‰[
-‚Ì•\¦‚³‚ê‚Ä‚¢‚és‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹ƒXƒy[ƒXƒL[‚ğ‰Ÿ‚·‚Æ LaTeX ƒ\[ƒX‚Ì
-‘Î‰‚·‚és‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B
+  ‚à‚µA‹C‚É‚È‚éƒGƒ‰[s‚ª‚ ‚Á‚½ê‡‚ÍAƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@‚ÅAƒGƒ‰[‚Ì•\
+¦‚³‚ê‚Ä‚¢‚és‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹ƒXƒy[ƒXƒL[‚ğ‰Ÿ‚·‚Æ LaTeX ƒ\[ƒX‚Ì‘Î‰‚·
+‚és‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B
 
 
 —Ìˆæƒ^ƒCƒvƒZƒbƒg
 ----------------
 
-  ƒ|ƒCƒ“ƒg‚Æƒ}[ƒN‚ÌŠÔA‚ ‚é‚¢‚ÍƒeƒLƒXƒg’†‚É–„‚ß‚ñ‚¾ `%#BEGIN' ‚Æ
-`%#END'‚ÌŠÔ‚Ì—Ìˆæ(*Note %#notation::)‚¾‚¯‚ğØ‚èæ‚Á‚Äƒ^ƒCƒvƒZƒbƒg‚·‚é‚±
-‚Æ‚ª‚Å‚«‚Ü‚·B‚±‚Ìê‡ƒƒCƒ“ƒtƒ@ƒCƒ‹‚ÌƒvƒŠƒAƒ“ƒuƒ‹‚ªˆêƒtƒ@ƒCƒ‹‚ÌƒvƒŠ
-ƒAƒ“ƒuƒ‹‚Æ‚µ‚Äg‚í‚ê‚Ü‚·B‚µ‚½‚ª‚Á‚ÄƒvƒŠƒAƒ“ƒuƒ‹‚É‚È‚¢ƒ}ƒNƒ’è‹`‚ª—Ìˆæ
-“à‚É‚ ‚é‚ÆƒGƒ‰[‚É‚È‚è‚Ü‚·B—Ìˆæƒ^ƒCƒvƒZƒbƒg‚ğg‚¤ê‡A•K‚¸ƒ}ƒNƒ’è‹`
-‚ÍƒvƒŠƒAƒ“ƒuƒ‹(`\begin{document}'‚æ‚è‘O)‚É’u‚­‚æ‚¤‚É‚µ‚Ä‰º‚³‚¢Bˆêƒtƒ@
-ƒCƒ‹‚ÍƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ì‚ ‚éƒfƒBƒŒƒNƒgƒŠ‚Ì`texput.tex'‚Æ‚¢‚¤–¼‘O‚Åo—Í‚³
-‚ê‚é‚Ì‚ÅAã‘‚«‚É‚Í’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢B
+  ƒ|ƒCƒ“ƒg‚Æƒ}[ƒN‚ÌŠÔA‚ ‚é‚¢‚ÍƒeƒLƒXƒg’†‚É–„‚ß‚ñ‚¾ `%#BEGIN' ‚Æ`%#END'
+‚ÌŠÔ‚Ì—Ìˆæ(*Note %#notation::)‚¾‚¯‚ğØ‚èæ‚Á‚Äƒ^ƒCƒvƒZƒbƒg‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü
+‚·B‚±‚Ìê‡ƒƒCƒ“ƒtƒ@ƒCƒ‹‚ÌƒvƒŠƒAƒ“ƒuƒ‹‚ªˆêƒtƒ@ƒCƒ‹‚ÌƒvƒŠƒAƒ“ƒuƒ‹‚Æ‚µ‚Ä
+g‚í‚ê‚Ü‚·B‚µ‚½‚ª‚Á‚ÄƒvƒŠƒAƒ“ƒuƒ‹‚É‚È‚¢ƒ}ƒNƒ’è‹`‚ª—Ìˆæ“à‚É‚ ‚é‚ÆƒGƒ‰[‚É
+‚È‚è‚Ü‚·B—Ìˆæƒ^ƒCƒvƒZƒbƒg‚ğg‚¤ê‡A•K‚¸ƒ}ƒNƒ’è‹`‚ÍƒvƒŠƒAƒ“ƒuƒ‹
+(`\begin{document}'‚æ‚è‘O)‚É’u‚­‚æ‚¤‚É‚µ‚Ä‰º‚³‚¢Bˆêƒtƒ@ƒCƒ‹‚ÍƒƒCƒ“ƒtƒ@
+ƒCƒ‹‚Ì‚ ‚éƒfƒBƒŒƒNƒgƒŠ‚Ì`texput.tex'‚Æ‚¢‚¤–¼‘O‚Åo—Í‚³‚ê‚é‚Ì‚ÅAã‘‚«‚É‚Í
+’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢B
 
 
 ŠÂ‹«ƒ^ƒCƒvƒZƒbƒg
 ----------------
 
-  `[prefix] te' ‚ğ‰Ÿ‚·‚ÆAƒ|ƒCƒ“ƒgˆÊ’u‚ÌÅ‚à“à‘¤‚ÌŠÂ‹«A‚Ü‚½‚Í”®ƒ‚[
-ƒh“à‚Ìê‡‚Í‚»‚Ì”®ƒ‚[ƒh‘S‘Ì‚ª©“®“I‚É—Ìˆæ‘I‘ğ‚³‚ê‚ÄA—Ìˆæƒ^ƒCƒvƒZƒb
-ƒg‚ğŒÄ‚Ño‚µ‚Ü‚·BtabularŠÂ‹«‚â”®ƒ‚[ƒh‚Å•¡G‚È‚à‚Ì‚ğì‚Á‚Ä‚¢‚éê‡‚Í
-Šm‚©‚ß‚½‚¢•”•ª‚¾‚¯‚ğŠm”F‚Å‚«‚é‚Ì‚Å•Ö—˜‚Å‚·B‚±‚ê‚à `texput.tex' ‚ÉŠY“–
-•”•ª‚ğ‘‚«o‚µ‚Ü‚·BƒvƒŒƒ”ƒ…[ƒA‚Å `texput.dvi' ‚ğŠJ‚¢‚½‚Ü‚Ü‚É‚µ‚Ä‚¨‚¯
-‚ÎC³‚ÆŠm”F‚ª‘f‘‚­‚Å‚«‚é‚Å‚µ‚å‚¤B
+  `[prefix] te' ‚ğ‰Ÿ‚·‚ÆAƒ|ƒCƒ“ƒgˆÊ’u‚ÌÅ‚à“à‘¤‚ÌŠÂ‹«A‚Ü‚½‚Í”®ƒ‚[ƒh“à
+‚Ìê‡‚Í‚»‚Ì”®ƒ‚[ƒh‘S‘Ì‚ª©“®“I‚É—Ìˆæ‘I‘ğ‚³‚ê‚ÄA—Ìˆæƒ^ƒCƒvƒZƒbƒg‚ğŒÄ‚Ñ
+o‚µ‚Ü‚·BtabularŠÂ‹«‚â”®ƒ‚[ƒh‚Å•¡G‚È‚à‚Ì‚ğì‚Á‚Ä‚¢‚éê‡‚ÍŠm‚©‚ß‚½‚¢
+•”•ª‚¾‚¯‚ğŠm”F‚Å‚«‚é‚Ì‚Å•Ö—˜‚Å‚·B‚±‚ê‚à `texput.tex' ‚ÉŠY“–•”•ª‚ğ‘‚«o‚µ
+‚Ü‚·BƒvƒŒƒ”ƒ…[ƒA‚Å `texput.dvi' ‚ğŠJ‚¢‚½‚Ü‚Ü‚É‚µ‚Ä‚¨‚¯‚ÎC³‚ÆŠm”F‚ª‘f‘
+‚­‚Å‚«‚é‚Å‚µ‚å‚¤B
 
 
 
@@ -277,11 +273,11 @@ File: yatexj, Node: Calling previewer, Next: Print out, Prev: Calling typesetter
 
 ƒvƒŒƒ”ƒ…[ƒA‹N“®
 ================
-  `[prefix] t p' ‚É‚æ‚èƒvƒŒƒ”ƒ…[ƒA‚Ì‹N“®‚ª‚Å‚«‚Ü‚·B‚³‚ç‚ÉA‚à‚µ‚ ‚È‚½
-‚ªA-remote ‹@”\‚Â‚«‚Ìxdvi‚ğ—˜—p‚µ‚Ä‚¢‚éê‡‚Í `[prefix] t s' ‚ğ‰Ÿ‚·‚±
-‚Æ‚É‚æ‚èƒJ[ƒ\ƒ‹ˆÊ’u‚Ì•¶š—ñ‚ğŒŸõ‚µ‚Ä‚»‚Ìƒy[ƒW‚ğ•\¦‚·‚é‚æ‚¤‚É‚·‚Å‚É
-‹N“®’†‚Ìxdvi‚É–½—ß‚ğ‘—‚è‚Ü‚·B‚±‚ê‚É‚æ‚èAŒ»İ•ÒW’†‚Ì‰ÓŠ‚Ìƒ^ƒCƒvƒZƒb
-ƒgŒ‹‰Ê‚ğ‘¦À‚ÉŒ©‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+  `[prefix] t p' ‚É‚æ‚èƒvƒŒƒ”ƒ…[ƒA‚Ì‹N“®‚ª‚Å‚«‚Ü‚·B‚³‚ç‚ÉA‚à‚µ‚ ‚È‚½‚ªA-
+remote ‹@”\‚Â‚«‚Ìxdvi‚ğ—˜—p‚µ‚Ä‚¢‚éê‡‚Í `[prefix] t s' ‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚è
+ƒJ[ƒ\ƒ‹ˆÊ’u‚Ì•¶š—ñ‚ğŒŸõ‚µ‚Ä‚»‚Ìƒy[ƒW‚ğ•\¦‚·‚é‚æ‚¤‚É‚·‚Å‚É‹N“®’†‚Ìxdvi
+‚É–½—ß‚ğ‘—‚è‚Ü‚·B‚±‚ê‚É‚æ‚èAŒ»İ•ÒW’†‚Ì‰ÓŠ‚Ìƒ^ƒCƒvƒZƒbƒgŒ‹‰Ê‚ğ‘¦À‚ÉŒ©
+‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 
 
@@ -291,8 +287,8 @@ File: yatexj, Node: Print out, Prev: Calling previewer, Up: Invocation
 ƒvƒŠƒ“ƒgƒAƒEƒg
 ==============
 
-  `[prefix] t l'‚ğ‰Ÿ‚µ‚ÄƒvƒŠƒ“ƒgƒAƒEƒg‚ğw¦‚·‚é‚ÆAo—ÍŠJn/I—¹ƒy[ƒW
-‚ğ•·‚¢‚Ä‚­‚é‚Ì‚ÅA‚»‚ê‚¼‚ê‚É“š‚¦‚Ü‚·B‚±‚ê‚ğÈ—ª‚µ‚½‚¢‚ÍA
+  `[prefix] t l'‚ğ‰Ÿ‚µ‚ÄƒvƒŠƒ“ƒgƒAƒEƒg‚ğw¦‚·‚é‚ÆAo—ÍŠJn/I—¹ƒy[ƒW‚ğ
+•·‚¢‚Ä‚­‚é‚Ì‚ÅA‚»‚ê‚¼‚ê‚É“š‚¦‚Ü‚·B‚±‚ê‚ğÈ—ª‚µ‚½‚¢‚ÍA
 universal-argument ‚ğ‚Â‚¯A
 
 
@@ -308,8 +304,8 @@ File: yatexj, Node: %#notation, Next: Completion, Prev: Invocation, Up: Top
 %#‹L–@
 ******
 
-  –{•¶’†‚É`%#'‚Å‚Í‚¶‚Ü‚éƒL[ƒ[ƒh‚ğ–„‚ß‚Ş‚±‚Æ‚Åƒ^ƒCƒvƒZƒbƒ^‹N“®“™‚Ì
-§Œä‚ğ‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+  –{•¶’†‚É`%#'‚Å‚Í‚¶‚Ü‚éƒL[ƒ[ƒh‚ğ–„‚ß‚Ş‚±‚Æ‚Åƒ^ƒCƒvƒZƒbƒ^‹N“®“™‚Ì§Œä
+‚ğ‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 * Menu:
 
@@ -342,34 +338,33 @@ File: yatexj, Node: Splitting input files, Next: Fix region for typesetting, Pre
 “ü—Íƒtƒ@ƒCƒ‹•ªŠ„
 ================
 
-‚Ü‚½AÍ–ˆ‚É•Êƒtƒ@ƒCƒ‹‚Ì .tex ‚ğì¬‚µ‚Ä‚¢‚éê‡‚ÅA`main.tex'‚©‚ç
-`sub.tex' ‚ğ `\include'‚µ‚Ä‚¢‚é‚æ‚¤‚È‚ÍA`sub.tex'‚Ì”CˆÓ‚ÌˆÊ’u‚ÉŸ‚Ì
-‚æ‚¤‚Ès‚ğ–„‚ß‚İ‚Ü‚·B
+‚Ü‚½AÍ–ˆ‚É•Êƒtƒ@ƒCƒ‹‚Ì .tex ‚ğì¬‚µ‚Ä‚¢‚éê‡‚ÅA`main.tex'‚©‚ç 
+`sub.tex' ‚ğ `\include'‚µ‚Ä‚¢‚é‚æ‚¤‚È‚ÍA`sub.tex'‚Ì”CˆÓ‚ÌˆÊ’u‚ÉŸ‚Ì‚æ‚¤
+‚Ès‚ğ–„‚ß‚İ‚Ü‚·B
 
              %#!platex main.tex
 
 
-ã‚Ì—á‚Ì‚æ‚¤‚ÉƒRƒ}ƒ“ƒh–¼‚¾‚¯‚Å‚È‚­ˆø”‚à‘‚¢‚½ê‡‚É‚ÍA‘S‚Ä‚ğ‚»‚Ì‚Ü‚Ü
-shell ‚É“n‚·‚Ì‚ÅŸ‚Ì‚æ‚¤‚É‘‚¯‚ÎAghostview ‚È‚Ç‚ğƒvƒŒƒ”ƒ…[ƒA‚Ég‚¤
-‚É•Ö—˜‚Å‚·B
+ã‚Ì—á‚Ì‚æ‚¤‚ÉƒRƒ}ƒ“ƒh–¼‚¾‚¯‚Å‚È‚­ˆø”‚à‘‚¢‚½ê‡‚É‚ÍA‘S‚Ä‚ğ‚»‚Ì‚Ü‚Ü 
+shell ‚É“n‚·‚Ì‚ÅŸ‚Ì‚æ‚¤‚É‘‚¯‚ÎAghostview ‚È‚Ç‚ğƒvƒŒƒ”ƒ…[ƒA‚Ég‚¤‚É•Ö
+—˜‚Å‚·B
 
 
              %#!platex main && dvi2ps main.dvi > main
 
-‚È‚¨A‚±‚Ìs‚ÌÅŒã‚Ì’PŒê‚ÌƒsƒŠƒIƒhˆÈ‘O‚ğuƒƒCƒ“ƒtƒ@ƒCƒ‹v‚Ìƒx[ƒXƒl[
-ƒ€‚Å‚ ‚é‚Æ‰¼’è‚µ‚Ü‚·(ã‚Ì2‚Â‚Ìê‡‚Ç‚¿‚ç‚à`main')B‚±‚Ìs‚É‹Lq‚µ‚½A
-`%f'‚ÍƒƒCƒ“ƒtƒ@ƒCƒ‹–¼‚ÉA `%r' ‚ÍƒƒCƒ“ƒtƒ@ƒCƒ‹‚ÌŠg’£q‚ğæ‚èœ‚¢‚½•”
-•ª‚É’uŠ·‚³‚ê‚Ü‚·B‚½‚¾‚µA`%f,%r'‚ğ—˜—p‚µ‚½ê‡A‰‰ñƒ^ƒCƒvƒZƒbƒg‚É•K
-‚¸ƒƒCƒ“ƒtƒ@ƒCƒ‹–¼‚Ì“ü—Í‚ğ‘£‚³‚ê‚Ü‚·B
+‚È‚¨A‚±‚Ìs‚ÌÅŒã‚Ì’PŒê‚ÌƒsƒŠƒIƒhˆÈ‘O‚ğuƒƒCƒ“ƒtƒ@ƒCƒ‹v‚Ìƒx[ƒXƒl[ƒ€‚Å
+‚ ‚é‚Æ‰¼’è‚µ‚Ü‚·(ã‚Ì2‚Â‚Ìê‡‚Ç‚¿‚ç‚à`main')B‚±‚Ìs‚É‹Lq‚µ‚½A`%f'‚Íƒ
+ƒCƒ“ƒtƒ@ƒCƒ‹–¼‚ÉA `%r' ‚ÍƒƒCƒ“ƒtƒ@ƒCƒ‹‚ÌŠg’£q‚ğæ‚èœ‚¢‚½•”•ª‚É’uŠ·‚³‚ê
+‚Ü‚·B‚½‚¾‚µA`%f,%r'‚ğ—˜—p‚µ‚½ê‡A‰‰ñƒ^ƒCƒvƒZƒbƒg‚É•K‚¸ƒƒCƒ“ƒtƒ@ƒC
+ƒ‹–¼‚Ì“ü—Í‚ğ‘£‚³‚ê‚Ü‚·B
 
-  `[prefix] g' (*Note Cursor jump::QÆ) ‚Å‚Ìƒtƒ@ƒCƒ‹ŠÔƒWƒƒƒ“ƒv‚ğ—LŒø‚É
-‹@”\‚³‚¹‚é‚½‚ßA“ü—Íƒtƒ@ƒCƒ‹•ªŠ„‚É‚ÍŸ‚Ì‚±‚Æ‚É’ˆÓ‚µ‚Ä‰º‚³‚¢B
+  `[prefix] g' (*Note Cursor jump::QÆ) ‚Å‚Ìƒtƒ@ƒCƒ‹ŠÔƒWƒƒƒ“ƒv‚ğ—LŒø‚É‹@
+”\‚³‚¹‚é‚½‚ßA“ü—Íƒtƒ@ƒCƒ‹•ªŠ„‚É‚ÍŸ‚Ì‚±‚Æ‚É’ˆÓ‚µ‚Ä‰º‚³‚¢B
 
-  1. ƒTƒuƒfƒBƒŒƒNƒgƒŠ‚ğì‚Á‚ÄA‚»‚Ì’†‚ÉƒTƒuƒtƒ@ƒCƒ‹‚ğ’u‚­‚±‚Æ‚Í‚Å‚«‚é‚ª
-     ƒTƒuƒfƒBƒŒƒNƒgƒŠ‚ÌƒTƒuƒfƒBƒŒƒNƒgƒŠ‚É‚Í’u‚¯‚È‚¢B
+  1. ƒTƒuƒfƒBƒŒƒNƒgƒŠ‚ğì‚Á‚ÄA‚»‚Ì’†‚ÉƒTƒuƒtƒ@ƒCƒ‹‚ğ’u‚­‚±‚Æ‚Í‚Å‚«‚é‚ªƒT
+     ƒuƒfƒBƒŒƒNƒgƒŠ‚ÌƒTƒuƒfƒBƒŒƒNƒgƒŠ‚É‚Í’u‚¯‚È‚¢B
   2. ƒƒCƒ“ƒtƒ@ƒCƒ‹‚©‚çƒTƒuƒfƒBƒŒƒNƒgƒŠ“à‚Ìƒtƒ@ƒCƒ‹‚ğ include ‚·‚é‚É‚ÍA
-     ‘Š‘ÎƒpƒXw’è‚ğ—p‚¢‚ÄA
-     `\include{chap1/sub}'‚Ì‚æ‚¤‚É‹LqB
+     ‘Š‘ÎƒpƒXw’è‚ğ—p‚¢‚ÄA`\include{chap1/sub}'‚Ì‚æ‚¤‚É‹LqB
   3. ƒƒCƒ“ƒtƒ@ƒCƒ‹‚ªˆê‚Âã‚ÌƒfƒBƒŒƒNƒgƒŠ‚É‚ ‚éê‡‚àAƒTƒuƒtƒ@ƒCƒ‹‚É‚Í
      %#!platex main.tex ‚Ì‚æ‚¤‚É‹Lq‚·‚é(../main‚Å‚Í‚È‚¢)B
 
@@ -382,36 +377,35 @@ File: yatexj, Node: Fix region for typesetting, Next: lpr format, Prev: Splittin
 —Ìˆæ‚ÌŒÅ’è
 ==========
 
-  `[prefix] tr' ‚Ì—Ìˆæw’è‚Ìƒ^ƒCƒvƒZƒbƒg‚Å‚ÍA‚Æ‚­‚Éw’è‚Ì‚È‚¢‚©‚¬‚èA
-`C-SPC'‚Åƒ}[ƒN‚µ‚½ˆÊ’u‚ÆAƒ|ƒCƒ“ƒg(ƒJ[ƒ\ƒ‹ˆÊ’u)‚ÌŠÔ‚ğ—Ìˆæ‚Æ‚İ‚È‚µ‚Ü‚·
-‚ªA•K‚¸Œˆ‚Ü‚Á‚½—Ìˆæ‚ğƒ^ƒCƒvƒZƒbƒg‚µ‚½‚¢ê‡‚ÍA‚»‚Ì—Ìˆæ‚ğ
+  `[prefix] tr' ‚Ì—Ìˆæw’è‚Ìƒ^ƒCƒvƒZƒbƒg‚Å‚ÍA‚Æ‚­‚Éw’è‚Ì‚È‚¢‚©‚¬‚èA 
+`C-SPC'‚Åƒ}[ƒN‚µ‚½ˆÊ’u‚ÆAƒ|ƒCƒ“ƒg(ƒJ[ƒ\ƒ‹ˆÊ’u)‚ÌŠÔ‚ğ—Ìˆæ‚Æ‚İ‚È‚µ‚Ü‚·‚ªA
+•K‚¸Œˆ‚Ü‚Á‚½—Ìˆæ‚ğƒ^ƒCƒvƒZƒbƒg‚µ‚½‚¢ê‡‚ÍA‚»‚Ì—Ìˆæ‚ğ
 
              %#BEGIN
              <“n‚µ‚½‚¢—Ìˆæ>
              %#END
 
-‚Ì‚æ‚¤‚É`%#BEGIN'‚Æ`%#END'‚ÅˆÍ‚İAƒJ[ƒ\ƒ‹‚ğu`%#BEGIN'ˆÈ~v‚É’u‚¢‚Ä‚­
-‚¾‚³‚¢B‚±‚Ì‚Ì—ÌˆæŒˆ’è‹K‘¥‚ğ‚Ü‚Æ‚ß‚é‚ÆŸ‚Ì‚æ‚¤‚É‚È‚è‚Ü‚·B
+‚Ì‚æ‚¤‚É`%#BEGIN'‚Æ`%#END'‚ÅˆÍ‚İAƒJ[ƒ\ƒ‹‚ğu`%#BEGIN'ˆÈ~v‚É’u‚¢‚Ä‚­‚¾
+‚³‚¢B‚±‚Ì‚Ì—ÌˆæŒˆ’è‹K‘¥‚ğ‚Ü‚Æ‚ß‚é‚ÆŸ‚Ì‚æ‚¤‚É‚È‚è‚Ü‚·B
 
 
-  1. ƒJ[ƒ\ƒ‹ˆÊ’u‚æ‚èƒoƒbƒtƒ@‚Ìæ“ª•ûŒü‚É`%#BEGIN'‚Æ‚¢‚¤ƒL[ƒ[ƒh‚ª‚ 
-     ‚éê‡
+  1. ƒJ[ƒ\ƒ‹ˆÊ’u‚æ‚èƒoƒbƒtƒ@‚Ìæ“ª•ûŒü‚É`%#BEGIN'‚Æ‚¢‚¤ƒL[ƒ[ƒh‚ª‚ ‚éê
+     ‡
 
        1. `%#BEGIN'‚æ‚èƒoƒbƒtƒ@‚Ì––”ö•ûŒü‚É`%#END'‚Æ‚¢‚¤ƒL[ƒ[ƒh‚ªŒ©‚Â‚©‚Á
           ‚½ê‡B
           =>`%#BEGIN' ‚©‚çA‚»‚Ì `%#END' ‚Ì‚ ‚éˆÊ’u‚Ü‚ÅB
-       2. `%#END' ‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡B
-          =>ƒoƒbƒtƒ@‚ÌÅŒã”ö‚Ü‚ÅB
+       2. `%#END' ‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡B=>ƒoƒbƒtƒ@‚ÌÅŒã”ö‚Ü‚ÅB
 
   2. ƒJ[ƒ\ƒ‹ˆÊ’u‚æ‚èƒoƒbƒtƒ@‚Ìæ“ª•ûŒü‚É `%#BEGIN' ‚Æ‚¢‚¤ƒL[ƒ[ƒh‚ª
      Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡B
      =>ƒ}[ƒN(`C-SPC'ˆÊ’u)‚Æƒ|ƒCƒ“ƒg(ƒJ[ƒ\ƒ‹ˆÊ’u)‚ÌŠÔ‚Ì—ÌˆæB
 
-  tabular ŠÂ‹«‚ğ‰½“x‚àsöŒë‚µ‚Ä‚¢‚é‚æ‚¤‚Èê‡‚ÍA`\begin'‚Ì‘O‚Ìs‚É
-`%#BEGIN' ‚Æ‘‚«A`\end' ‚ÌŸ‚Ìs‚É `%#END' ‚Æ‘‚¢‚Ä‚¨‚­‚ÆŠÈ’P‚Éì•\Œ‹
-‰Ê‚ğƒeƒXƒg‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚Ü‚½A’·‚¢ .tex ƒtƒ@ƒCƒ‹‚ÌŒã”¼‚É
-`%#BEGIN' ‚ğ‘‚¢‚Ä‚¨‚¯‚ÎA‘O”¼‚Ì•”•ª‚Í–³‹‚Å‚«‚Ü‚·B‚±‚ÌBEGIN‚ÆEND‚ÌÁ
-‚µ–Y‚ê‚É‚Í\•ª‚²’ˆÓ‰º‚³‚¢B
+  tabular ŠÂ‹«‚ğ‰½“x‚àsöŒë‚µ‚Ä‚¢‚é‚æ‚¤‚Èê‡‚ÍA`\begin'‚Ì‘O‚Ìs‚É 
+`%#BEGIN' ‚Æ‘‚«A`\end' ‚ÌŸ‚Ìs‚É `%#END' ‚Æ‘‚¢‚Ä‚¨‚­‚ÆŠÈ’P‚Éì•\Œ‹‰Ê‚ğ
+ƒeƒXƒg‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚Ü‚½A’·‚¢ .tex ƒtƒ@ƒCƒ‹‚ÌŒã”¼‚É `%#BEGIN' ‚ğ‘
+‚¢‚Ä‚¨‚¯‚ÎA‘O”¼‚Ì•”•ª‚Í–³‹‚Å‚«‚Ü‚·B‚±‚ÌBEGIN‚ÆEND ‚ÌÁ‚µ–Y‚ê‚É‚Í\•ª‚²
+’ˆÓ‰º‚³‚¢B
 
 
 
@@ -421,9 +415,9 @@ File: yatexj, Node: lpr format, Next: Controlling which command to invoke, Prev:
 lprƒtƒH[ƒ}ƒbƒg
 ===============
 
-  ‚Ü‚¸AƒvƒŠƒ“ƒgƒAƒEƒg—pƒRƒ}ƒ“ƒh—ñ‚ÌƒtƒH[ƒ}ƒbƒg‚É‚Â‚¢‚Äà–¾‚µ‚Ü‚·BƒR
-ƒ}ƒ“ƒh—ñƒtƒH[ƒ}ƒbƒg‚ÍA3‚Â‚Ì Lisp •Ï”‚É‚æ‚Á‚Ä•\Œ»‚³‚ê‚Ü‚·BƒfƒtƒHƒ‹ƒg
-‚Ì dvi2ps —p‚ÌƒtƒH[ƒ}ƒbƒg‚ğ—á‚Éà–¾‚µ‚Ü‚·B
+  ‚Ü‚¸AƒvƒŠƒ“ƒgƒAƒEƒg—pƒRƒ}ƒ“ƒh—ñ‚ÌƒtƒH[ƒ}ƒbƒg‚É‚Â‚¢‚Äà–¾‚µ‚Ü‚·BƒRƒ}ƒ“
+ƒh—ñƒtƒH[ƒ}ƒbƒg‚ÍA3‚Â‚Ì Lisp •Ï”‚É‚æ‚Á‚Ä•\Œ»‚³‚ê‚Ü‚·BƒfƒtƒHƒ‹ƒg‚Ì 
+dvi2ps —p‚ÌƒtƒH[ƒ}ƒbƒg‚ğ—á‚Éà–¾‚µ‚Ü‚·B
 
 `(1)dviprint-command-format'
      `"dvi2ps %f %t %s | lpr"'
@@ -434,19 +428,18 @@ lprƒtƒH[ƒ}ƒbƒg
 `(3)dviprint-to-format'
      `"-t %e"'
 
-ÀÛ‚ÉƒvƒŠƒ“ƒgƒAƒEƒg‚·‚é‚ÍA(1)’†‚Ì %s ‚ªƒtƒ@ƒCƒ‹–¼‚É’u‚«Š·‚¦‚ç‚êA
-%f ‚ª(2)‚Ì“à—eA%t ‚ª(3)‚Ì“à—e‚É’u‚«Š·‚¦‚ç‚ê‚Ü‚·B‚»‚ÌÛ‚É(2)‚Ì•¶š—ñ’†
-‚Ì %b ‚Íuo—ÍŠJnƒy[ƒWvA(3)‚Ì•¶š—ñ’†‚Ì %e ‚Íuo—ÍI—¹ƒy[ƒWv‚É’u
-‚«Š·‚¦‚ç‚ê‚Ü‚·B‚à‚µAƒy[ƒW‚ğw’è‚µ‚È‚¢‚É‚ÍA%f, %t —¼•û‚Æ‚à–³‹‚³‚ê
-‚Ü‚·B
+ÀÛ‚ÉƒvƒŠƒ“ƒgƒAƒEƒg‚·‚é‚ÍA(1)’†‚Ì %s ‚ªƒtƒ@ƒCƒ‹–¼‚É’u‚«Š·‚¦‚ç‚êA%f ‚ª
+(2)‚Ì“à—eA%t ‚ª(3)‚Ì“à—e‚É’u‚«Š·‚¦‚ç‚ê‚Ü‚·B‚»‚ÌÛ‚É(2)‚Ì•¶š—ñ’†‚Ì %b ‚Í
+uo—ÍŠJnƒy[ƒWvA(3)‚Ì•¶š—ñ’†‚Ì %e ‚Íuo—ÍI—¹ƒy[ƒWv‚É’u‚«Š·‚¦‚ç‚ê
+‚Ü‚·B‚à‚µAƒy[ƒW‚ğw’è‚µ‚È‚¢‚É‚ÍA%f, %t —¼•û‚Æ‚à–³‹‚³‚ê‚Ü‚·B
 
-  ‚±‚ÌAdviprint-command-format ‚ğ—Õ‚É•Ï‚¦‚½‚¢‚ÍALaTeX ‚Ìƒ\[ƒXƒe
-ƒLƒXƒg’†‚Ì”CˆÓ‚ÌêŠ‚ÉA
+  ‚±‚ÌAdviprint-command-format ‚ğ—Õ‚É•Ï‚¦‚½‚¢‚ÍALaTeX ‚Ìƒ\[ƒXƒeƒLƒX
+ƒg’†‚Ì”CˆÓ‚ÌêŠ‚ÉA
 
              %#LPR dvi2ps %f %t %s | 4up -page 4 | texfix | lpr -Plp2
 
-‚Ì‚æ‚¤‚É‘‚¢‚Ä‰º‚³‚¢BƒvƒŠƒ“ƒgƒAƒEƒg‚·‚éƒy[ƒW”ÍˆÍ‚ğ‚¢‚¿‚¢‚¿•·‚©‚¹‚È‚¢
-‚æ‚¤‚É‚·‚é‚É
+‚Ì‚æ‚¤‚É‘‚¢‚Ä‰º‚³‚¢BƒvƒŠƒ“ƒgƒAƒEƒg‚·‚éƒy[ƒW”ÍˆÍ‚ğ‚¢‚¿‚¢‚¿•·‚©‚¹‚È‚¢‚æ‚¤
+‚É‚·‚é‚É
 
              %#LPR dvi2ps %s | lpr
 
@@ -462,14 +455,14 @@ File: yatexj, Node: Controlling which command to invoke, Next: Editing %# notati
 LaTeX •¶‘‚ÉŠÖ˜A‚·‚éƒRƒ}ƒ“ƒh‚ÍˆÈ‰º‚Ì %# ‹L–@‚Åw’è‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
       `%#BIBTEX'
-
-        ... makeindex‚ğs‚È‚¤ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“([prefix] t b)
+     
+     	... makeindex‚ğs‚È‚¤ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“([prefix] t b)
       `%#MAKEINDEX'
+     
+     	... bibtex‚ğs‚È‚¤ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“([prefix] t i)
 
-        ... bibtex‚ğs‚È‚¤ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“([prefix] t i)
-
-s“ª‚ª‚±‚ê‚ç‚ÌƒL[ƒ[ƒh‚Ån‚Ü‚és‚ğLaTeX•¶‘‚Ìæ“ª•t‹ß‚É‘‚¢‚Ä‚¨‚¯‚ÎA
-‚»‚ê‚Åw’è‚µ‚½ƒRƒ}ƒ“ƒh‚ğ‹N“®‚Å‚«‚Ü‚·B
+s“ª‚ª‚±‚ê‚ç‚ÌƒL[ƒ[ƒh‚Ån‚Ü‚és‚ğLaTeX•¶‘‚Ìæ“ª•t‹ß‚É‘‚¢‚Ä‚¨‚¯‚ÎA‚»
+‚ê‚Åw’è‚µ‚½ƒRƒ}ƒ“ƒh‚ğ‹N“®‚Å‚«‚Ü‚·B
 
 
 
@@ -487,11 +480,10 @@ File: yatexj, Node: Editing %# notation, Prev: Controlling which command to invo
 
              !)Edit-%#! B)EGIN-END-region L)Edit-%#LPR
 
-‚Æ‚¢‚¤ƒƒjƒ…[‚ªo‚Ä—ˆ‚é‚Ì‚ÅA`%#!'‚É‘±‚­ƒRƒ}ƒ“ƒh‚ğ•ÏX‚µ‚½‚¢‚É‚Í
-`!'‚ğA`%#LPR'‚Å lpr ƒtƒH[ƒ}ƒbƒg‚ğ•Ï‚¦‚½‚¢‚Í`l'‚ğA‚ ‚ç‚©
-‚¶‚ßİ’è‚µ‚½ƒŠƒWƒ‡ƒ“‚ğ `%#BEGIN' ` `%#END' ‚ÅŠ‡‚è‚½‚¢‚ÍA
-`b'‚ğ‰Ÿ‚µ‚Ü‚·B`b'‚ğ‘I‚ñ‚¾‚É‚ÍA‚»‚ê‚Ü‚Åƒoƒbƒtƒ@’†‚É’u‚©‚ê‚Ä‚¢‚½
-`%#BEGIN', `%#END' ‚ª©“®“I‚ÉÁ‹‚³‚ê‚Ü‚·B
+‚Æ‚¢‚¤ƒƒjƒ…[‚ªo‚Ä—ˆ‚é‚Ì‚ÅA`%#!'‚É‘±‚­ƒRƒ}ƒ“ƒh‚ğ•ÏX‚µ‚½‚¢‚É‚Í`!'‚ğA
+`%#LPR'‚Å lpr ƒtƒH[ƒ}ƒbƒg‚ğ•Ï‚¦‚½‚¢‚Í`l'‚ğA‚ ‚ç‚©‚¶‚ßİ’è‚µ‚½ƒŠƒWƒ‡ƒ“
+‚ğ `%#BEGIN' ` `%#END' ‚ÅŠ‡‚è‚½‚¢‚ÍA`b'‚ğ‰Ÿ‚µ‚Ü‚·B`b'‚ğ‘I‚ñ‚¾‚É‚ÍA
+‚»‚ê‚Ü‚Åƒoƒbƒtƒ@’†‚É’u‚©‚ê‚Ä‚¢‚½`%#BEGIN', `%#END' ‚ª©“®“I‚ÉÁ‹‚³‚ê‚Ü‚·B
 
 
 
@@ -500,17 +492,17 @@ File: yatexj, Node: Completion, Next: Local dictionary, Prev: %#notation, Up: To
 •âŠ®“ü—Í
 ********
 
-  LaTeX ‚Å‚ÌŠÂ‹«–¼‚È‚Ç‚ÍA–ì’¹‚Ì•âŠ®‹@”\‚ğ—˜—p‚µ‚Ä”\—¦“I‚É“ü—Í‚·‚é‚±‚Æ
-‚ª‚Å‚«‚Ü‚·B
+  LaTeX ‚Å‚ÌŠÂ‹«–¼‚È‚Ç‚ÍA–ì’¹‚Ì•âŠ®‹@”\‚ğ—˜—p‚µ‚Ä”\—¦“I‚É“ü—Í‚·‚é‚±‚Æ‚ª‚Å
+‚«‚Ü‚·B
 
 * Menu:
 
-* beginŒ^•âŠ®::
-* sectionŒ^•âŠ®::
-* largeŒ^•âŠ®::
-* maketitleŒ^•âŠ®::
+* beginŒ^•âŠ®::                 
+* sectionŒ^•âŠ®::               
+* largeŒ^•âŠ®::                 
+* maketitleŒ^•âŠ®::             
 * Arbitrary completion::        •âŠ®
-* end•âŠ®::
+* end•âŠ®::                     
 * Accent mark completion::      ƒAƒNƒZƒ“ƒg‹L†•âŠ®
 * Image completion::            ”®‹L†ƒCƒ[ƒW•âŠ®
 * Greek letter completion::     ƒMƒŠƒVƒƒ•¶š•âŠ®
@@ -522,14 +514,14 @@ File: yatexj, Node: beginŒ^•âŠ®, Next: sectionŒ^•âŠ®, Prev: Completion, Up: Comp
 beginŒ^•âŠ®
 ===========
 
-  `\begin{env}...\end{env}'‚Ì—l‚ÈŒ`®‚Ì“ü—Í‚Ì•âŠ®‚ğbeginŒ^•âŠ®‚ÆŒÄ‚Ô‚±
-‚Æ‚É‚µ‚Ü‚·Bbegin Œ^•âŠ®‚ÍA
+  `\begin{env}...\end{env}'‚Ì—l‚ÈŒ`®‚Ì“ü—Í‚Ì•âŠ®‚ğbeginŒ^•âŠ®‚ÆŒÄ‚Ô‚±‚Æ‚É
+‚µ‚Ü‚·Bbegin Œ^•âŠ®‚ÍA
 
 `[prefix] b'
              ... begin Œ^•âŠ®ŠJn(•W€‚Å‚Í `C-c b')
 
-‚Ån‚Ü‚è‚Ü‚·B•p”É‚É—p‚¢‚ç‚ê‚éŸ‚Ì LaTeX ŠÂ‹«‚Ì•âŠ®‚ÍA[prefix] `b'‚É‘±
-‚­Ÿ‚Ì1•¶š‚ğ“ü—Í‚·‚é‚¾‚¯‚ÅA`\begin{xxx}...\end{xxx}'‚ğŠ®¬‚³‚¹‚Ü‚·B
+‚Ån‚Ü‚è‚Ü‚·B•p”É‚É—p‚¢‚ç‚ê‚éŸ‚Ì LaTeX ŠÂ‹«‚Ì•âŠ®‚ÍA[prefix] `b' ‚É‘±‚­
+Ÿ‚Ì1•¶š‚ğ“ü—Í‚·‚é‚¾‚¯‚ÅA`\begin{xxx}...\end{xxx}'‚ğŠ®¬‚³‚¹‚Ü‚·B
 
 `[prefix] b c'
              ... `\begin{center}...\end{center}'
@@ -566,8 +558,8 @@ beginŒ^•âŠ®
 `[prefix] b V'
              ... `\begin{verse}...\end{verse}'
 
-  ã‹L‚Ì‚à‚ÌˆÈŠO‚ÌŠÂ‹«–¼‚Í Emacs ‚Ì‚ÂƒCƒ“ƒNƒŠƒƒ“ƒ^ƒ‹‚È•âŠ®‹@”\‚ğ—p‚¢
-‚Ä“ü—Í‚µ‚Ü‚·(ã‹L‚ÌŠÂ‹«–¼‚àˆÈ‰º‚Ì•âŠ®“ü—Í‰Â”\)B
+  ã‹L‚Ì‚à‚ÌˆÈŠO‚ÌŠÂ‹«–¼‚Í Emacs ‚Ì‚ÂƒCƒ“ƒNƒŠƒƒ“ƒ^ƒ‹‚È•âŠ®‹@”\‚ğ—p‚¢‚Ä
+“ü—Í‚µ‚Ü‚·(ã‹L‚ÌŠÂ‹«–¼‚àˆÈ‰º‚Ì•âŠ®“ü—Í‰Â”\)B
 
 `[prefix] b SPC'
              ... begin Œ^•âŠ®“ü—Í
@@ -576,39 +568,39 @@ beginŒ^•âŠ®
 
              Begin environment(default document):
 
-‚Æ•\¦‚³‚ê‚Ü‚·B‚±‚±‚ÅA‰½‚à“ü‚ê‚¸‚ÉƒŠƒ^[ƒ“ƒL[‚Ì‚İ‰Ÿ‚·‚ÆAŠ‡ŒÊ“à‚Éo
-‚Ä‚¢‚éƒfƒtƒHƒ‹ƒg‚ÌŠÂ‹«–¼‚ª“ü—Í‚³‚ê‚Ü‚·‚ªA“K“–‚ÈŠÂ‹«–¼‚ğ“ü—Í‚·‚é‚ÆA
-`\begin{ŠÂ‹«–¼} c \end{ŠÂ‹«–¼}'‚ª•¶‘’†‚É‘}“ü‚³‚ê‚Ü‚·Bƒ~ƒjƒoƒbƒtƒ@‚Å
-ŠÂ‹«–¼‚ğ“ü—Í‚·‚é‚Æ‚«‚ÉAŠÂ‹«–¼‚Ì“ª•¶š‚ğ“ü—Í‚µuƒXƒy[ƒXv‚ğ‚½‚½‚­‚ÆA
-ˆê’v‚·‚éŠÂ‹«–¼‚ª“à•”ƒe[ƒuƒ‹‚É‘¶İ‚µ‚½ê‡A³‚µ‚¢ŠÂ‹«–¼‚É•âŠ®‚³‚ê‚é‚Ì
-‚ÅA“ü—Í‚ÌèŠÔ‚ªÈ‚¯‚Ü‚·B“à•”ƒe[ƒuƒ‹‚É‘¶İ‚µ‚È‚¢ŠÂ‹«–¼‚ğ“ü—Í‚µ‚½‚Í
-ƒ†[ƒUê—p‚Ìƒe[ƒuƒ‹‚É“o˜^‚³‚êA‚³‚ç‚É‚»‚Ìƒe[ƒuƒ‹‚ğ©“®“I‚ÉAƒ†[ƒU«
-‘(ƒfƒtƒHƒ‹ƒg‚Å‚Í `~/.yatexrc')‚É•Û‘¶‚µ‚Ü‚·B
+‚Æ•\¦‚³‚ê‚Ü‚·B‚±‚±‚ÅA‰½‚à“ü‚ê‚¸‚ÉƒŠƒ^[ƒ“ƒL[‚Ì‚İ‰Ÿ‚·‚ÆAŠ‡ŒÊ“à‚Éo‚Ä‚¢
+‚éƒfƒtƒHƒ‹ƒg‚ÌŠÂ‹«–¼‚ª“ü—Í‚³‚ê‚Ü‚·‚ªA“K“–‚ÈŠÂ‹«–¼‚ğ“ü—Í‚·‚é‚ÆA`\begin{ŠÂ
+‹«–¼} c \end{ŠÂ‹«–¼}'‚ª•¶‘’†‚É‘}“ü‚³‚ê‚Ü‚·Bƒ~ƒjƒoƒbƒtƒ@‚ÅŠÂ‹«–¼‚ğ“ü—Í‚·
+‚é‚Æ‚«‚ÉAŠÂ‹«–¼‚Ì“ª•¶š‚ğ“ü—Í‚µuƒXƒy[ƒXv‚ğ‚½‚½‚­‚ÆAˆê’v‚·‚éŠÂ‹«–¼‚ª“à
+•”ƒe[ƒuƒ‹‚É‘¶İ‚µ‚½ê‡A³‚µ‚¢ŠÂ‹«–¼‚É•âŠ®‚³‚ê‚é‚Ì‚ÅA“ü—Í‚ÌèŠÔ‚ªÈ‚¯‚Ü
+‚·B“à•”ƒe[ƒuƒ‹‚É‘¶İ‚µ‚È‚¢ŠÂ‹«–¼‚ğ“ü—Í‚µ‚½‚Íƒ†[ƒUê—p‚Ìƒe[ƒuƒ‹‚É“o˜^
+‚³‚êA‚³‚ç‚É‚»‚Ìƒe[ƒuƒ‹‚ğ©“®“I‚ÉAƒ†[ƒU«‘(ƒfƒtƒHƒ‹ƒg‚Å‚Í 
+`~/.yatexrc')‚É•Û‘¶‚µ‚Ü‚·B
 
-‚³‚ç‚ÉA“Á’è‚ÌŠÂ‹«‚ğ•âŠ®“ü—Í‚µ‚½‚É‚Í‚»‚ÌŠÂ‹«‚Å•K‚¸—p‚¢‚ç‚ê‚éƒGƒ“ƒgƒŠ
-‚ğ©“®‘}“ü‚µ‚Ü‚·(—á: `itemize'ŠÂ‹«‚É‚¨‚¯‚é`\item'‚È‚Ç)B‘}“ü‚³‚ê‚½ƒGƒ“
-ƒgƒŠ‚ª•s—v‚Èê‡‚É‚Íundo‚É‚æ‚Á‚ÄÁ‹‚µ‚Ä‰º‚³‚¢B
+‚³‚ç‚ÉA“Á’è‚ÌŠÂ‹«‚ğ•âŠ®“ü—Í‚µ‚½‚É‚Í‚»‚ÌŠÂ‹«‚Å•K‚¸—p‚¢‚ç‚ê‚éƒGƒ“ƒgƒŠ‚ğ©
+“®‘}“ü‚µ‚Ü‚·(—á: `itemize'ŠÂ‹«‚É‚¨‚¯‚é`\item'‚È‚Ç)B‘}“ü‚³‚ê‚½ƒGƒ“ƒgƒŠ‚ª•s
+—v‚Èê‡‚É‚Íundo‚É‚æ‚Á‚ÄÁ‹‚µ‚Ä‰º‚³‚¢B
 
 
 Šù‚É‘‚¢‚½ƒeƒLƒXƒg‚ğŠÂ‹«‚ÅŠ‡‚é
 ------------------------------
 
-  ‚Æ‚±‚ë‚ÅAÅ‰‚É‘‚¢‚Ä‚µ‚Ü‚Á‚½ƒuƒƒbƒN‚ğŒã‚©‚çAitemize ŠÂ‹«‚Ì’†
-‚É•Â‚¶‚±‚ß‚½‚¢‚Æv‚¤‚±‚Æ‚ª‚ ‚è‚Ü‚·‚ªA‚»‚Ì‚æ‚¤‚È‚Æ‚«‚ÍA‚ ‚ç‚©‚¶‚ß
-•Â‚¶‚±‚ß‚½‚¢’i—‚ğƒ}[ƒN‚µ‚ÄAbegin Œ^•âŠ®‚ÌŠeƒRƒ}ƒ“ƒh‚Ì `[prefix]'
-‚ÌŸ‚Ìw¬•¶š‚Ì 'b'x ‚ğw‘å•¶šx‚É•Ï‚¦‚Ä‹N“®‚µ‚Ä‰º‚³‚¢B(‚Ü‚½‚ÍA
-`C-u' ‚ğæ‚É‘Å‚¿Auniversal argument ‚ğ‚Â‚¯‚Ä‚à‰Â”\‚Å‚·)
+  ‚Æ‚±‚ë‚ÅAÅ‰‚É‘‚¢‚Ä‚µ‚Ü‚Á‚½ƒuƒƒbƒN‚ğŒã‚©‚çAitemize ŠÂ‹«‚Ì’†‚É•Â‚¶‚±
+‚ß‚½‚¢‚Æv‚¤‚±‚Æ‚ª‚ ‚è‚Ü‚·‚ªA‚»‚Ì‚æ‚¤‚È‚Æ‚«‚ÍA‚ ‚ç‚©‚¶‚ß•Â‚¶‚±‚ß‚½‚¢’i—
+‚ğƒ}[ƒN‚µ‚ÄAbegin Œ^•âŠ®‚ÌŠeƒRƒ}ƒ“ƒh‚Ì `[prefix]' ‚ÌŸ‚Ìw¬•¶š‚Ì 'b'x 
+‚ğw‘å•¶šx‚É•Ï‚¦‚Ä‹N“®‚µ‚Ä‰º‚³‚¢B(‚Ü‚½‚ÍA`C-u' ‚ğæ‚É‘Å‚¿Auniversal
+argument ‚ğ‚Â‚¯‚Ä‚à‰Â”\‚Å‚·)
 
-  —á‚¦‚Î‚ ‚éƒpƒ‰ƒOƒ‰ƒt‚ğ description ŠÂ‹«‚Ì’†‚É“ü‚ê‚½‚¢‚Æ‚«‚ÍA‚»‚Ìƒpƒ‰
-ƒOƒ‰ƒt‚ğƒ}[ƒN‚µ‚Ä‚©‚çA
+  —á‚¦‚Î‚ ‚éƒpƒ‰ƒOƒ‰ƒt‚ğ description ŠÂ‹«‚Ì’†‚É“ü‚ê‚½‚¢‚Æ‚«‚ÍA‚»‚Ìƒpƒ‰ƒO
+ƒ‰ƒt‚ğƒ}[ƒN‚µ‚Ä‚©‚çA
 
 `[prefix] B D'
 `(‚Ü‚½‚Í ESC 1 [prefix] b D)'
 `(‚Ü‚½‚Í  C-u  [prefix] b D ‚È‚Ç)'
 
 ‚Æƒ^ƒCƒv‚µ‚Ä‚­‚¾‚³‚¢B‚±‚ê‚ÍA`[prefix] b SPC'‚Ì•âŠ®“ü—Í‚É‚à‚ ‚Ä‚Í‚Ü‚èA
-`b' ‚ğ‘å•¶š‚É•Ï‚¦‚ÄA`[prefix] B SPC' ‚Æƒ^ƒCƒv‚·‚ê‚ÎA‚ ‚ç‚©‚¶‚ßƒ}[ƒN
-‚µ‚Ä‚¨‚¢‚½ƒŠƒWƒ‡ƒ“‚ğAbegin ‚Æ end ‚ÌŠÂ‹«‚ÅŠ‡‚è‚Ü‚·B
+`b' ‚ğ‘å•¶š‚É•Ï‚¦‚ÄA`[prefix] B SPC' ‚Æƒ^ƒCƒv‚·‚ê‚ÎA‚ ‚ç‚©‚¶‚ßƒ}[ƒN‚µ
+‚Ä‚¨‚¢‚½ƒŠƒWƒ‡ƒ“‚ğAbegin ‚Æ end ‚ÌŠÂ‹«‚ÅŠ‡‚è‚Ü‚·B
 
 
 
@@ -617,8 +609,8 @@ File: yatexj, Node: sectionŒ^•âŠ®, Next: largeŒ^•âŠ®, Prev: beginŒ^•âŠ®, Up: Com
 sectionŒ^•âŠ®
 =============
 
-  `\section{–Ú“I}' ‚Ì‚æ‚¤‚ÈŒ`®‚Ì“ü—Í‚Ì•âŠ®‚ğ section Œ^•âŠ®‚ÆŒÄ‚Ô‚±‚Æ
-‚É‚µ‚Ü‚·Bsection Œ^•âŠ®‚ÍA
+  `\section{–Ú“I}' ‚Ì‚æ‚¤‚ÈŒ`®‚Ì“ü—Í‚Ì•âŠ®‚ğ section Œ^•âŠ®‚ÆŒÄ‚Ô‚±‚Æ‚É‚µ
+‚Ü‚·Bsection Œ^•âŠ®‚ÍA
 
 `[prefix] s'
              ... section Œ^•âŠ®
@@ -628,15 +620,15 @@ sectionŒ^•âŠ®
 
              (C-v for view-section) \???{} (default documentclass):
 
-‚Æ‚¢‚¤ƒvƒƒ“ƒvƒg‚ªŒ»‚ê‚é‚Ì‚ÅA‚»‚±‚Å `section' ‚Ì‚æ‚¤‚È LaTeX ƒRƒ}ƒ“ƒh
-–¼‚ğ“ü—Í‚µ‚Ü‚·B‚±‚±‚Å‚àƒŠƒ^[ƒ“ƒL[‚Ì‚İ‚ÅŠ‡ŒÊ“à‚ÌƒfƒtƒHƒ‹ƒg’l‚ª‘I‘ğ‚³
-‚ê‚é‚Ù‚©A`chapter'‚È‚Ç‚Ì‚æ‚¤‚È•p“x‚Ì‚‚¢–¼Ì“ü—Í‚É‚ÍƒXƒy[ƒXƒL[‚É‚æ‚é
-•âŠ®‹@”\‚ª—LŒø‚Å‚·B Ÿ‚ÉA{}‚Ì’†g‚Ì“ü—Í‚ğ‘£‚·A
+‚Æ‚¢‚¤ƒvƒƒ“ƒvƒg‚ªŒ»‚ê‚é‚Ì‚ÅA‚»‚±‚Å `section' ‚Ì‚æ‚¤‚È LaTeX ƒRƒ}ƒ“ƒh–¼‚ğ
+“ü—Í‚µ‚Ü‚·B‚±‚±‚Å‚àƒŠƒ^[ƒ“ƒL[‚Ì‚İ‚ÅŠ‡ŒÊ“à‚ÌƒfƒtƒHƒ‹ƒg’l‚ª‘I‘ğ‚³‚ê‚é‚Ù‚©A
+`chapter'‚È‚Ç‚Ì‚æ‚¤‚È•p“x‚Ì‚‚¢–¼Ì“ü—Í‚É‚ÍƒXƒy[ƒXƒL[‚É‚æ‚é•âŠ®‹@”\‚ª—L
+Œø‚Å‚·B Ÿ‚ÉA{}‚Ì’†g‚Ì“ü—Í‚ğ‘£‚·A
 
              \section{???}:
 
-‚Æ‚¢‚¤ƒvƒƒ“ƒvƒg‚ªŒ»‚ê‚é‚Ì‚ÅAƒZƒNƒVƒ‡ƒ“‚Ìƒ^ƒCƒgƒ‹‚È‚Ç‚ğ“ü—Í‚µ‚Ü‚·B‚½
-‚Æ‚¦‚ÎA
+‚Æ‚¢‚¤ƒvƒƒ“ƒvƒg‚ªŒ»‚ê‚é‚Ì‚ÅAƒZƒNƒVƒ‡ƒ“‚Ìƒ^ƒCƒgƒ‹‚È‚Ç‚ğ“ü—Í‚µ‚Ü‚·B‚½‚Æ‚¦
+‚ÎA
 
              (C-v for view-section) \???{} (default documentclass): section
              \section{???}: –Ú“I
@@ -658,7 +650,7 @@ sectionŒ^•âŠ®
 
 * Menu:
 
-* 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh::
+* 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh::  
 * Enclose section-type command::  Š‡‚è•âŠ®
 * Recursive completion::        Ä‹A•âŠ®
 * view-sectioning::             ƒZƒNƒVƒ‡ƒ“‹æØ‚è‚ÌƒAƒEƒgƒ‰ƒCƒ“•\¦
@@ -671,10 +663,10 @@ File: yatexj, Node: 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh, Next: Enclose section
 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh
 -------------------------------------
 
-  ‚Æ‚±‚ë‚ÅA`\addtolength{\topmargin}{8mm}' ‚È‚Ç‚Ì‚æ‚¤‚ÉAˆø”‚ğ“ñ‚ÂˆÈ
-ãæ‚é LaTeX ƒRƒ}ƒ“ƒh‚ª‚ ‚è‚Ü‚·B‚±‚Ì‚æ‚¤‚ÈƒRƒ}ƒ“ƒh‚Ì•âŠ®“ü—Í‚É‚ÍA
-section Œ^•âŠ®ŒÄ‚Ño‚µ‚Éˆø”‚ğ•t‚¯‚Ä‚­‚¾‚³‚¢B—á‚¦‚Îã‚Ì`addtolength'‚Ì
-—á‚Å‚ ‚ê‚ÎAˆø”2‚ğw’è‚µ‚Ü‚·B‚Â‚Ü‚èA
+  ‚Æ‚±‚ë‚ÅA`\addtolength{\topmargin}{8mm}' ‚È‚Ç‚Ì‚æ‚¤‚ÉAˆø”‚ğ“ñ‚ÂˆÈãæ
+‚é LaTeX ƒRƒ}ƒ“ƒh‚ª‚ ‚è‚Ü‚·B‚±‚Ì‚æ‚¤‚ÈƒRƒ}ƒ“ƒh‚Ì•âŠ®“ü—Í‚É‚ÍA section Œ^
+•âŠ®ŒÄ‚Ño‚µ‚Éˆø”‚ğ•t‚¯‚Ä‚­‚¾‚³‚¢B—á‚¦‚Îã‚Ì`addtolength' ‚Ì—á‚Å‚ ‚ê‚ÎA
+ˆø”2‚ğw’è‚µ‚Ü‚·B‚Â‚Ü‚èA
 
              C-u 2 [prefix] s   (‚Ü‚½‚ÍAESC 2 [prefix] s)
 
@@ -684,13 +676,12 @@ section Œ^•âŠ®ŒÄ‚Ño‚µ‚Éˆø”‚ğ•t‚¯‚Ä‚­‚¾‚³‚¢B—á‚¦‚Îã‚Ì`addtolength'‚Ì
              \addtolength{???}: \topmargin
              Argument 2: 8mm
 
-‚Ì‚æ‚¤‚É“ü—Í‚µ‚Ä‚­‚¾‚³‚¢BÅ‰‚Ì addtolength ‚Ì•”•ª‚ÆA‘æˆêˆø”‚Å‚ ‚é
-topmargin ‚Ì“ü—Í‚Í“–‘RƒXƒy[ƒX‚É‚æ‚é•âŠ®“ü—Í‚ª‰Â”\‚Å‚·Bƒ†[ƒU«‘‚É“o
-˜^‚³‚ê‚é LaTeX ƒRƒ}ƒ“ƒh‚É‚ÍA‚±‚Ìˆø”‚Ì”‚àŠwK‚³‚ê‚é‚Ì‚ÅAÅ‰‚Ì•âŠ®‚Ì
-ˆø”‚Ì”‚ğw’è‚µ‚Ä‹N“®‚µ‚Ä‚¨‚¯‚ÎAˆÈŒã‚Ì•âŠ®‚É‚ÍA‹L‰¯‚³‚ê‚½ŒÂ”‚¾
-‚¯ˆø”‚ğ•·‚¢‚Ä—ˆ‚é‚æ‚¤‚É‚È‚è‚Ü‚·B‚ ‚Æ‚Åˆø”‚ÌŒÂ”‚ğ•Ï‚¦‚½‚¢‚ÍAÄ‚Ñ
-`C-u' ‚ğ—p‚¢‚ÄŒÂ”‚ğw’è‚µ’¼‚·‚±‚Æ‚ÅA©“®“I‚É«‘’†‚Ìˆø”‚ÌŒÂ”‚Ì•”•ª
-‚ğXV‚µ‚Ü‚·B
+‚Ì‚æ‚¤‚É“ü—Í‚µ‚Ä‚­‚¾‚³‚¢BÅ‰‚Ì addtolength ‚Ì•”•ª‚ÆA‘æˆêˆø”‚Å‚ ‚é 
+\topmargin ‚Ì“ü—Í‚Í“–‘RƒXƒy[ƒX‚É‚æ‚é•âŠ®“ü—Í‚ª‰Â”\‚Å‚·Bƒ†[ƒU«‘‚É“o˜^
+‚³‚ê‚é LaTeX ƒRƒ}ƒ“ƒh‚É‚ÍA‚±‚Ìˆø”‚Ì”‚àŠwK‚³‚ê‚é‚Ì‚ÅAÅ‰‚Ì•âŠ®‚Ìˆø
+”‚Ì”‚ğw’è‚µ‚Ä‹N“®‚µ‚Ä‚¨‚¯‚ÎAˆÈŒã‚Ì•âŠ®‚É‚ÍA‹L‰¯‚³‚ê‚½ŒÂ”‚¾‚¯ˆø”‚ğ
+•·‚¢‚Ä—ˆ‚é‚æ‚¤‚É‚È‚è‚Ü‚·B‚ ‚Æ‚Åˆø”‚ÌŒÂ”‚ğ•Ï‚¦‚½‚¢‚ÍAÄ‚Ñ `C-u' ‚ğ—p
+‚¢‚ÄŒÂ”‚ğw’è‚µ’¼‚·‚±‚Æ‚ÅA©“®“I‚É«‘’†‚Ìˆø”‚ÌŒÂ”‚Ì•”•ª‚ğXV‚µ‚Ü‚·B
 
 
 
@@ -700,8 +691,8 @@ File: yatexj, Node: Enclose section-type command, Next: Recursive completion, Pr
 Šù‚É‘‚¢‚½ƒeƒLƒXƒg‚ğŠ‡‚é
 ------------------------
 
-  ‚Ü‚½A‹N“®ƒRƒ}ƒ“ƒh‚Ì`s'‚ğ‘å•¶š‚É•Ï‚¦‚Ä‹N“®‚·‚é‚ÆA‚ ‚ç‚©‚¶‚ß‘‚¢‚½•¶
-Í‚ğ section Œ^ƒRƒ}ƒ“ƒh‚Ì‘æˆêˆø”‚Æ‚µ‚ÄŠ‡‚è‚Ü‚·B
+  ‚Ü‚½A‹N“®ƒRƒ}ƒ“ƒh‚Ì`s'‚ğ‘å•¶š‚É•Ï‚¦‚Ä‹N“®‚·‚é‚ÆA‚ ‚ç‚©‚¶‚ß‘‚¢‚½•¶Í
+‚ğ section Œ^ƒRƒ}ƒ“ƒh‚Ì‘æˆêˆø”‚Æ‚µ‚ÄŠ‡‚è‚Ü‚·B
 
 
 
@@ -710,10 +701,10 @@ File: yatexj, Node: Recursive completion, Next: view-sectioning, Prev: Enclose s
 Ä‹A•âŠ®
 --------
 
-  ‚“x‚Èg‚¢•û‚É‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñ‚ªAsectionŒ^•âŠ®‚Ìˆø”‚Ì“ü—Í‚É‚³‚ç
-‚É•âŠ®“ü—Í‚ğ—˜—p‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·(section/large/maketitleŒ^‚ÉŒÀ‚é)B
-sectionŒ^ƒRƒ}ƒ“ƒh‚Ìˆø”‚ÉX‚É LaTeX ƒRƒ}ƒ“ƒh‚ª—ˆ‚éê‡‚É‚Íƒ~ƒjƒoƒbƒtƒ@
-‚Å–ì’¹‚Ì•âŠ®ƒL[‚ğÄ‹A“I‚É“ü—Í‚·‚é‚±‚Æ‚Åˆø”‚Ì“ü—Í‚àŒø—¦“I‚És‚È‚¦‚Ü‚·B
+  ‚“x‚Èg‚¢•û‚É‚È‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñ‚ªAsectionŒ^•âŠ®‚Ìˆø”‚Ì“ü—Í‚É‚³‚ç‚É
+•âŠ®“ü—Í‚ğ—˜—p‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·(section/large/maketitleŒ^‚ÉŒÀ‚é)Bsection 
+Œ^ƒRƒ}ƒ“ƒh‚Ìˆø”‚ÉX‚É LaTeX ƒRƒ}ƒ“ƒh‚ª—ˆ‚éê‡‚É‚Íƒ~ƒjƒoƒbƒtƒ@‚Å–ì’¹‚Ì•â
+Š®ƒL[‚ğÄ‹A“I‚É“ü—Í‚·‚é‚±‚Æ‚Åˆø”‚Ì“ü—Í‚àŒø—¦“I‚És‚È‚¦‚Ü‚·B
 
 
 
@@ -722,28 +713,27 @@ File: yatexj, Node: view-sectioning, Next: label-generation, Prev: Recursive com
 ƒZƒNƒVƒ‡ƒ“‹æØ‚è‚ÌƒAƒEƒgƒ‰ƒCƒ“•\¦
 ----------------------------------
 
-  ’Êí‚ÌsectionŒ^•âŠ®‚Ì‚Éƒ~ƒjƒoƒbƒtƒ@‚Å`C-v'‚ğ‰Ÿ‚·‚ÆŒ»İ‘¶İ‚·‚éƒZƒN
-ƒVƒ‡ƒ“‹æØ‚èƒRƒ}ƒ“ƒh‘S‚Ä‚ğ `*Sectioning Lines*'‚Æ‚¢‚¤ƒoƒbƒtƒ@‚Éˆê——•\¦
-‚µ‚Ü‚·(u<<--v‚Ì‚Â‚¢‚Ä‚¢‚és‚ª‚à‚Á‚Æ‚à‹ß‚¢ƒZƒNƒVƒ‡ƒ“‹æØ‚è)B‚±‚Ìƒ~
-ƒjƒoƒbƒtƒ@‚Å`C-p', `C-n' ‚ğ‰Ÿ‚·‚Æ`part', `chapter', ...,
-`subparagraph' ‚ÌƒRƒ}ƒ“ƒh‚ª˜_—ŠK‘w‚Ì‚‚³‚É‚µ‚½‚ª‚Á‚Äã‰º‚µ‚Ü‚·B‚Ü‚½A
-`C-v', `M-v' ‚ğ‰Ÿ‚·‚ÆƒZƒNƒVƒ‡ƒ“‹æØ‚èˆê——ƒoƒbƒtƒ@‚ªƒXƒNƒ[ƒ‹‚µA”š‚Ì
-`0'``7'‚ğ‰Ÿ‚·‚Æ‚ ‚é‚‚³ˆÈã‚ÌƒZƒNƒVƒ‡ƒ“‹æØ‚è‚¾‚¯‚ğ‘I‚ñ‚Å•\¦‚µ‚Ü‚·(À
-Û‚É‚â‚Á‚ÄŒ©‚ê‚Î•ª‚©‚è‚Ü‚·)B
+  ’Êí‚ÌsectionŒ^•âŠ®‚Ì‚Éƒ~ƒjƒoƒbƒtƒ@‚Å`C-v'‚ğ‰Ÿ‚·‚ÆŒ»İ‘¶İ‚·‚éƒZƒNƒVƒ‡
+ƒ“‹æØ‚èƒRƒ}ƒ“ƒh‘S‚Ä‚ğ `*Sectioning Lines*'‚Æ‚¢‚¤ƒoƒbƒtƒ@‚Éˆê——•\¦‚µ‚Ü‚·
+(u<<--v‚Ì‚Â‚¢‚Ä‚¢‚és‚ª‚à‚Á‚Æ‚à‹ß‚¢ƒZƒNƒVƒ‡ƒ“‹æØ‚è)B‚±‚Ìƒ~ƒjƒoƒbƒtƒ@
+‚Å`C-p', `C-n' ‚ğ‰Ÿ‚·‚Æ`part', `chapter', ..., `subparagraph' ‚ÌƒRƒ}ƒ“ƒh‚ª
+˜_—ŠK‘w‚Ì‚‚³‚É‚µ‚½‚ª‚Á‚Äã‰º‚µ‚Ü‚·B‚Ü‚½A`C-v', `M-v' ‚ğ‰Ÿ‚·‚ÆƒZƒNƒVƒ‡
+ƒ“‹æØ‚èˆê——ƒoƒbƒtƒ@‚ªƒXƒNƒ[ƒ‹‚µA”š‚Ì`0'``7'‚ğ‰Ÿ‚·‚Æ‚ ‚é‚‚³ˆÈã‚ÌƒZ
+ƒNƒVƒ‡ƒ“‹æØ‚è‚¾‚¯‚ğ‘I‚ñ‚Å•\¦‚µ‚Ü‚·(ÀÛ‚É‚â‚Á‚ÄŒ©‚ê‚Î•ª‚©‚è‚Ü‚·)B
 
 `*Sectioning Lines*'ƒoƒbƒtƒ@‚ÍA
 
 `M-x YaTeX-section-overview'
              ... ƒZƒNƒVƒ‡ƒ“‹æØ‚èˆê——ƒoƒbƒtƒ@‚ğ¶¬
 
-‚Åì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚±‚Ìƒoƒbƒtƒ@‚ğ‘I‘ğ‚µ”CˆÓ‚Ìs‚ÅƒXƒy[ƒX‚ğ‰Ÿ‚·
-‚ÆAŠY“–‚·‚éƒZƒNƒVƒ‡ƒ“‹æØ‚è‚Ì‚ ‚é–{•¶’†‚ÌêŠ‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B‚³‚ç‚ÉA
-“¯ƒoƒbƒtƒ@‚Å `u' ‚ğ‰Ÿ‚·‚ÆAƒ\[ƒXƒeƒLƒXƒg‚Ì‘Î‰‚·‚éƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚ª
-ˆêŠK‘wã‚ª‚è(—á: subsection ‚ª section ‚É•Ï‚í‚é)A`d'‚ğ‰Ÿ‚·‚ÆˆêŠK‘w‰º‚ª
-‚è‚Ü‚·B`*Sectioning Lines*'ƒoƒbƒtƒ@‚É‚ ‚éƒZƒNƒVƒ‡ƒ“‹æØ‚è‚Ìs‚ğƒ}[ƒN
-‚µ‚Ä‚¨‚¢‚Ä`U'‚ğ‰Ÿ‚·‚ÆƒŠƒWƒ‡ƒ““à‚Ì‚à‚Ì‚É‘Î‰‚·‚éƒ\[ƒXƒeƒLƒXƒg‚ÌƒZƒNƒVƒ‡
-ƒ“ƒRƒ}ƒ“ƒh‚·‚×‚Ä‚ªˆêŠK‘wã‚ª‚èA`D'‚ğ‰Ÿ‚·‚Æ‰º‚ª‚è‚Ü‚·BƒZƒNƒVƒ‡ƒ“‹æØ‚è
-ˆê——ƒoƒbƒtƒ@‚Å—˜—p‚Å‚«‚éƒL[ƒRƒ}ƒ“ƒh‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
+‚Åì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚±‚Ìƒoƒbƒtƒ@‚ğ‘I‘ğ‚µ”CˆÓ‚Ìs‚ÅƒXƒy[ƒX‚ğ‰Ÿ‚·‚ÆA
+ŠY“–‚·‚éƒZƒNƒVƒ‡ƒ“‹æØ‚è‚Ì‚ ‚é–{•¶’†‚ÌêŠ‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B‚³‚ç‚ÉA“¯ƒoƒb
+ƒtƒ@‚Å `u' ‚ğ‰Ÿ‚·‚ÆAƒ\[ƒXƒeƒLƒXƒg‚Ì‘Î‰‚·‚éƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚ªˆêŠK‘wã
+‚ª‚è(—á: subsection ‚ª section ‚É•Ï‚í‚é)A`d'‚ğ‰Ÿ‚·‚ÆˆêŠK‘w‰º‚ª‚è‚Ü‚·B
+`*Sectioning Lines*'ƒoƒbƒtƒ@‚É‚ ‚éƒZƒNƒVƒ‡ƒ“‹æØ‚è‚Ìs‚ğƒ}[ƒN‚µ‚Ä‚¨‚¢‚Ä
+`U'‚ğ‰Ÿ‚·‚ÆƒŠƒWƒ‡ƒ““à‚Ì‚à‚Ì‚É‘Î‰‚·‚éƒ\[ƒXƒeƒLƒXƒg‚ÌƒZƒNƒVƒ‡ƒ“ƒRƒ}ƒ“ƒh‚·
+‚×‚Ä‚ªˆêŠK‘wã‚ª‚èA`D'‚ğ‰Ÿ‚·‚Æ‰º‚ª‚è‚Ü‚·BƒZƒNƒVƒ‡ƒ“‹æØ‚èˆê——ƒoƒbƒtƒ@‚Å
+—˜—p‚Å‚«‚éƒL[ƒRƒ}ƒ“ƒh‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
 
 `SPC'
              ... ‘Î‰‚·‚éƒ\[ƒXs‚ÖƒWƒƒƒ“ƒv
@@ -768,13 +758,12 @@ File: yatexj, Node: label-generation, Prev: view-sectioning, Up: sectionŒ^•âŠ®
 ƒ‰ƒxƒ‹©“®¶¬
 --------------
 
-  `\ref{}' ‚â `\cite{}' ƒ}ƒNƒ‚ğsectionŒ^•âŠ®‚Å“ü‚ê‚½ê‡QÆæ‚Æ‚È‚è“¾
-‚é‚à‚Ì‚ğ‘S‚Ä’T‚µ‚Äƒƒjƒ…[‚É‚µ‚Ä‘I‘ğ‚Å‚«‚Ü‚·BQÆæ‚É‚Í`\label{}'‚ğ‚Â
-‚¯‚Ä‚¨‚­•K—v‚Í‚ ‚è‚Ü‚¹‚ñB‚à‚µ‚ ‚ê‚ÎA‚»‚Ìƒ‰ƒxƒ‹‚ğg‚¢A‚È‚¯‚ê‚Î‚»‚Ìê
-‚ÅQÆæ‚É`\label{}'‚ğì‚ç‚¹‚Ä‚­‚ê‚Ü‚·Bƒ‰ƒxƒ‹–¼‚ğl‚¦‚é‚Ì‚Í‹ê’É‚ÉŠ´‚¶
-‚é‚à‚Ì‚Å‚·B‘S‚Ä‚ÌƒJƒEƒ“ƒ^‚Éƒ‰ƒxƒ‹‚ğ‚Â‚¯‚é‚Ì‚à‚½‚¢‚Ö‚ñ‚Å‚·B‚à‚¤ƒ‰ƒxƒ‹
-–¼‚É‰½‚ğ‚Â‚¯‚é‚©Aƒ‰ƒxƒ‹‚ğ‚Â‚¯‚é‚©‚Â‚¯‚Ü‚¢‚©A‚È‚Ç‚Æ‚¢‚¤‚±‚Æ‚Í–Y‚ê‚Ü‚µ‚å
-‚¤!
+  `\ref{}' ‚â `\cite{}' ƒ}ƒNƒ‚ğsectionŒ^•âŠ®‚Å“ü‚ê‚½ê‡QÆæ‚Æ‚È‚è“¾‚é
+‚à‚Ì‚ğ‘S‚Ä’T‚µ‚Äƒƒjƒ…[‚É‚µ‚Ä‘I‘ğ‚Å‚«‚Ü‚·BQÆæ‚É‚Í`\label{}'‚ğ‚Â‚¯‚Ä‚¨
+‚­•K—v‚Í‚ ‚è‚Ü‚¹‚ñB‚à‚µ‚ ‚ê‚ÎA‚»‚Ìƒ‰ƒxƒ‹‚ğg‚¢A‚È‚¯‚ê‚Î‚»‚Ìê‚ÅQÆæ‚É
+`\label{}'‚ğì‚ç‚¹‚Ä‚­‚ê‚Ü‚·Bƒ‰ƒxƒ‹–¼‚ğl‚¦‚é‚Ì‚Í‹ê’É‚ÉŠ´‚¶‚é‚à‚Ì‚Å‚·B‘S
+‚Ä‚ÌƒJƒEƒ“ƒ^‚Éƒ‰ƒxƒ‹‚ğ‚Â‚¯‚é‚Ì‚à‚½‚¢‚Ö‚ñ‚Å‚·B‚à‚¤ƒ‰ƒxƒ‹–¼‚É‰½‚ğ‚Â‚¯‚é‚©A
+ƒ‰ƒxƒ‹‚ğ‚Â‚¯‚é‚©‚Â‚¯‚Ü‚¢‚©A‚È‚Ç‚Æ‚¢‚¤‚±‚Æ‚Í–Y‚ê‚Ü‚µ‚å‚¤!
 
 
 
@@ -793,18 +782,18 @@ largeŒ^•âŠ®
              {\??? } (default large):
 
 
-‚Æ•\¦‚³‚ê‚é‚Ì‚ÅAã‹L‚Ì‚à‚Ì‚Æ“¯‚¶—v—Ì‚Å•âŠ®“ü—Í‚µ‚Ä‰º‚³‚¢B•âŠ®Œó•â‚É
-—pˆÓ‚³‚ê‚Ä‚¢‚é‚Ì‚ÍA`footnotesize' ‚â `huge' ‚Ì‚æ‚¤‚È•¶šƒTƒCƒYw’èq‚ÆA
-`bf'‚â`dg'‚Ì‚æ‚¤‚ÈƒtƒHƒ“ƒgw’èq‚Å‚·B
+‚Æ•\¦‚³‚ê‚é‚Ì‚ÅAã‹L‚Ì‚à‚Ì‚Æ“¯‚¶—v—Ì‚Å•âŠ®“ü—Í‚µ‚Ä‰º‚³‚¢B•âŠ®Œó•â‚É—pˆÓ
+‚³‚ê‚Ä‚¢‚é‚Ì‚ÍA`footnotesize' ‚â `huge' ‚Ì‚æ‚¤‚È•¶šƒTƒCƒYw’èq‚ÆA`bf'
+‚â`dg'‚Ì‚æ‚¤‚ÈƒtƒHƒ“ƒgw’èq‚Å‚·B
 
 
 Šù‚É‘‚¢‚½•¶š‚ğŠ‡‚é
 --------------------
 
-  ‚Ü‚½AbeginŒ^•âŠ®‚Ì‚Æ“¯—lAæ‚É‘‚¢‚Ä‚µ‚Ü‚Á‚½ˆê˜A‚Ì•¶Í‚Ì•¶š‚ÌƒTƒC
-ƒY‚ğ•Ï‚¦‚½‚¢‚Æv‚¤‚ª‚ ‚è‚Ü‚·‚ªA‚»‚Ì‚æ‚¤‚È‚ÍAƒTƒCƒY‚â‘å‚«‚³‚ğ•Ï‚¦
-‚½‚¢•¶š‚Ì”ÍˆÍ‚ğƒ}[ƒN‚µ‚Ä‚©‚çAŒÄ‚Ño‚µƒL[‚ğ `[prefix] L' ‚ÆA‘å•¶š
-‚Ì L ‚É•Ï‚¦‚ÄŒÄ‚Ño‚¹‚ÎA‚»‚ÌƒŠƒWƒ‡ƒ“‘S‘Ì‚ªAƒuƒŒ[ƒX‚ÅˆÍ‚Ü‚ê‚Ü‚·B
+  ‚Ü‚½AbeginŒ^•âŠ®‚Ì‚Æ“¯—lAæ‚É‘‚¢‚Ä‚µ‚Ü‚Á‚½ˆê˜A‚Ì•¶Í‚Ì•¶š‚ÌƒTƒCƒY
+‚ğ•Ï‚¦‚½‚¢‚Æv‚¤‚ª‚ ‚è‚Ü‚·‚ªA‚»‚Ì‚æ‚¤‚È‚ÍAƒTƒCƒY‚â‘å‚«‚³‚ğ•Ï‚¦‚½‚¢•¶
+š‚Ì”ÍˆÍ‚ğƒ}[ƒN‚µ‚Ä‚©‚çAŒÄ‚Ño‚µƒL[‚ğ `[prefix] L' ‚ÆA‘å•¶š‚Ì L ‚É•Ï
+‚¦‚ÄŒÄ‚Ño‚¹‚ÎA‚»‚ÌƒŠƒWƒ‡ƒ“‘S‘Ì‚ªAƒuƒŒ[ƒX‚ÅˆÍ‚Ü‚ê‚Ü‚·B
 
 
 
@@ -818,8 +807,8 @@ maketitleŒ^•âŠ®
 `[prefix] m'
              ... maketitle Œ^•âŠ®ŠJn
 
-‚ÅAmaketitle Œ^•âŠ®‚ğŠJn‚µ‚Ü‚·B•âŠ®‚Ì—v—Ì‚Í¡‚Ü‚Å‚Ì‚à‚Ì‚Æ‚Ü‚Á‚½‚­“¯
-‚¶‚Å‚·BLaTeX —p‚ÌƒRƒ}ƒ“ƒh–¼‚ª•âŠ®Œó•â‚Æ‚µ‚Ä—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·B
+‚ÅAmaketitle Œ^•âŠ®‚ğŠJn‚µ‚Ü‚·B•âŠ®‚Ì—v—Ì‚Í¡‚Ü‚Å‚Ì‚à‚Ì‚Æ‚Ü‚Á‚½‚­“¯‚¶‚Å
+‚·BLaTeX —p‚ÌƒRƒ}ƒ“ƒh–¼‚ª•âŠ®Œó•â‚Æ‚µ‚Ä—pˆÓ‚³‚ê‚Ä‚¢‚Ü‚·B
 
 
 
@@ -828,15 +817,15 @@ File: yatexj, Node: Arbitrary completion, Next: end•âŠ®, Prev: maketitleŒ^•âŠ®, 
 •âŠ®
 ========
 
-  ‚³‚ÄA¡‚Ü‚Åq‚×‚½“TŒ^“I‚È LaTeX ƒRƒ}ƒ“ƒhŒ`®‚Ì•âŠ®“ü—Í‚ğ—p‚¢‚¸‚ÉA¡
-“ü—Í‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚é LaTeX ƒRƒ}ƒ“ƒh‚ğ•¶‘’†‚Ì”CˆÓ‚ÌˆÊ’u‚Å•âŠ®‚·‚é‚±
-‚Æ‚à‚Å‚«‚Ü‚·BLaTeX ƒRƒ}ƒ“ƒh(æ“ª‚ª\‚Ån‚Ü‚é)‚ğ“ü—Í‚µ‚Ä‚¢‚é“r’†‚ÅA
+  ‚³‚ÄA¡‚Ü‚Åq‚×‚½“TŒ^“I‚È LaTeX ƒRƒ}ƒ“ƒhŒ`®‚Ì•âŠ®“ü—Í‚ğ—p‚¢‚¸‚ÉA¡“ü
+—Í‚µ‚æ‚¤‚Æ‚µ‚Ä‚¢‚é LaTeX ƒRƒ}ƒ“ƒh‚ğ•¶‘’†‚Ì”CˆÓ‚ÌˆÊ’u‚Å•âŠ®‚·‚é‚±‚Æ‚à
+‚Å‚«‚Ü‚·BLaTeX ƒRƒ}ƒ“ƒh(æ“ª‚ª\‚Ån‚Ü‚é)‚ğ“ü—Í‚µ‚Ä‚¢‚é“r’†‚ÅA
 
 `[prefix] SPC'
              ... •âŠ®
 
-‚ğ“ü—Í‚·‚ê‚ÎA‘S‚Ä‚Ì•âŠ®Œó•â‚Ì’†‚©‚çˆê’v‚·‚é‚à‚Ì‚ª‘I‚Î‚êƒJ[ƒ\ƒ‹ˆÊ’u‚É
-‘}“ü‚³‚ê‚Ü‚·B
+‚ğ“ü—Í‚·‚ê‚ÎA‘S‚Ä‚Ì•âŠ®Œó•â‚Ì’†‚©‚çˆê’v‚·‚é‚à‚Ì‚ª‘I‚Î‚êƒJ[ƒ\ƒ‹ˆÊ’u‚É‘}“ü
+‚³‚ê‚Ü‚·B
 
 
 
@@ -846,9 +835,9 @@ end•âŠ®
 =======
 
   Œ»İŠJ‚¢‚½‚Ü‚Ü‚ÌŠÂ‹«–¼‚ğ©“®“I‚ÉŒŸo‚µA`\end{ŠÂ‹«–¼}'‚ğ‘}“ü‚µ‚Ü‚·B
-begin Œ^•âŠ®‚ğ—p‚¢‚ê‚ÎŠÂ‹«‚Ì•Â‚¶–Y‚ê‚Í‚È‚¢‚Ì‚Å‚·‚ªA‚É‚Í‚Â‚¢‚Â‚¢è‚Å
-`\begin{ŠÂ‹«–¼}' ‚ğ“ü‚ê‚Ä‚µ‚Ü‚¢A”ß‚µ‚¢v‚¢‚ğ‚·‚é‚±‚Æ‚ª‚ ‚è‚Ü‚·B‚»‚Ì‚æ
-‚¤‚È‚É‚Í‹C‚É‚¹‚¸‘±‚¯‚Ä•¶Í‚ğ“ü—Í‚µA‚µ‚©‚é‚Ì‚¿‚É
+begin Œ^•âŠ®‚ğ—p‚¢‚ê‚ÎŠÂ‹«‚Ì•Â‚¶–Y‚ê‚Í‚È‚¢‚Ì‚Å‚·‚ªA‚É‚Í‚Â‚¢‚Â‚¢è‚Å 
+`\begin{ŠÂ‹«–¼}' ‚ğ“ü‚ê‚Ä‚µ‚Ü‚¢A”ß‚µ‚¢v‚¢‚ğ‚·‚é‚±‚Æ‚ª‚ ‚è‚Ü‚·B‚»‚Ì‚æ‚¤
+‚È‚É‚Í‹C‚É‚¹‚¸‘±‚¯‚Ä•¶Í‚ğ“ü—Í‚µA‚µ‚©‚é‚Ì‚¿‚É
 
 `[prefix] e'
              ... end •âŠ®
@@ -871,8 +860,8 @@ File: yatexj, Node: Accent mark completion, Next: Image completion, Prev: end•âŠ
 
              1:` 2:' 3:^ 4:" 5:~ 6:= 7:. u v H t c d b
 
-‚Æ‚¢‚¤ƒƒjƒ…[‚ªo‚Ä—ˆ‚é‚Ì‚ÅA”šA‚Ü‚½‚Í‘Î‰‚·‚é‹L†/‰pš‚ğ“ü—Í‚µ‚Ä‰º
-‚³‚¢B‚·‚é‚Æ•ÒWƒoƒbƒtƒ@‚ÉA
+‚Æ‚¢‚¤ƒƒjƒ…[‚ªo‚Ä—ˆ‚é‚Ì‚ÅA”šA‚Ü‚½‚Í‘Î‰‚·‚é‹L†/‰pš‚ğ“ü—Í‚µ‚Ä‰º‚³
+‚¢B‚·‚é‚Æ•ÒWƒoƒbƒtƒ@‚ÉA
 
              \`{}
 
@@ -890,17 +879,17 @@ File: yatexj, Node: Image completion, Next: Greek letter completion, Prev: Accen
 ====================
 
   å‚É”®ƒ‚[ƒh‚Åg—p‚³‚ê‚éA–îˆó‚âƒ°‚È‚Ç‚Ì‹L†‚ğ‹[—“I‚É•\Œ»‚·‚éƒL[“ü—Í
-‚ÅALaTeX ƒRƒ}ƒ“ƒh‚ğ“ü—Í‚Å‚«‚Ü‚·B‚±‚ê‚Í–ì’¹©g‚Ìu”®ƒ‚[ƒhv‚Å‚Ì‚İ
-“®ì‚µ‚Ü‚·B–ì’¹‚ÍƒJ[ƒ\ƒ‹‚ªTeX‚Ì”®ŠÂ‹«‚Ì’†‚É‚ ‚é‚É`;'‚âA
-`:'‚É“Áê‚È‹@”\‚ğ‚½‚¹‚Ü‚·B
+‚ÅALaTeX ƒRƒ}ƒ“ƒh‚ğ“ü—Í‚Å‚«‚Ü‚·B‚±‚ê‚Í–ì’¹©g‚Ìu”®ƒ‚[ƒhv‚Å‚Ì‚İ“®ì
+‚µ‚Ü‚·B–ì’¹‚ÍƒJ[ƒ\ƒ‹‚ªTeX‚Ì”®ŠÂ‹«‚Ì’†‚É‚ ‚é‚É`;'‚âA`:'‚É“Áê‚È‹@”\
+‚ğ‚½‚¹‚Ü‚·B
 
-  ‚³‚ÄA—á‚¦‚ÎA©(leftarrow)‚ğASCII•¶š‚¾‚¯‚Å•\Œ»‚·‚éê‡Aˆê”Ê“I‚É‚Í
-u<-v‚Ì‚æ‚¤‚É‚µ‚Ü‚·‚ªA‚±‚ê‚ğ—˜—p‚µ‚ÄA”®‹L†ƒCƒ[ƒW“ü—Íƒ‚[ƒh‚Å
-`\leftarrow'‚ğ“ü—Í‚·‚é‚É‚ÍA`;'(ƒZƒ~ƒRƒƒ“)‚ğ‘Å‚Á‚Ä‚©‚ç`<-'‚Æ“ü—Í‚µ‚Ü‚·B
-“¯—l‚ÉA’·‚¢–îˆó©-(long-leftarrow) ‚ğASCII•¶š‚¾‚¯‚Å•\Œ»‚·‚éê‡u<--v
-‚Æ‚·‚é‚Ì‚ÅA`\longleftarrow'‚ğ“ü—Í‚·‚é‚½‚ß‚É‚ÍA`;<--'‚Æ“ü—Í‚µ‚Ü‚·B‚ 
-‚é‚¢‚Í–³ŒÀ‘å‹L†‚ğASCII•¶š‚¾‚¯‚Å•\Œ»‚·‚é‚Íuoov‚Ì‚æ‚¤‚É‚·‚é‚±‚Æ‚©‚çA
-`\infty' ‚ğ“ü—Í‚·‚é‚ÍA`;oo'‚ÆƒL[“ü—Í‚µ‚Ü‚·B
+  ‚³‚ÄA—á‚¦‚ÎA©(leftarrow)‚ğASCII•¶š‚¾‚¯‚Å•\Œ»‚·‚éê‡Aˆê”Ê“I‚É‚Íu<-v
+‚Ì‚æ‚¤‚É‚µ‚Ü‚·‚ªA‚±‚ê‚ğ—˜—p‚µ‚ÄA”®‹L†ƒCƒ[ƒW“ü—Íƒ‚[ƒh‚Å`\leftarrow'
+‚ğ“ü—Í‚·‚é‚É‚ÍA`;'(ƒZƒ~ƒRƒƒ“)‚ğ‘Å‚Á‚Ä‚©‚ç`<-'‚Æ“ü—Í‚µ‚Ü‚·B“¯—l‚ÉA’·‚¢
+–îˆó©-(long-leftarrow) ‚ğASCII•¶š‚¾‚¯‚Å•\Œ»‚·‚éê‡u<--v‚Æ‚·‚é‚Ì‚ÅA
+`\longleftarrow'‚ğ“ü—Í‚·‚é‚½‚ß‚É‚ÍA`;<--' ‚Æ“ü—Í‚µ‚Ü‚·B‚ ‚é‚¢‚Í–³ŒÀ‘å‹L
+†‚ğASCII•¶š‚¾‚¯‚Å•\Œ»‚·‚é‚Íuoov‚Ì‚æ‚¤‚É‚·‚é‚±‚Æ‚©‚çA`\infty' ‚ğ“ü—Í
+‚·‚é‚ÍA`;oo'‚ÆƒL[“ü—Í‚µ‚Ü‚·B
 
   ‚±‚ê‚ç‚Ì‘€ì‚ğ‚Ü‚Æ‚ß‚é‚ÆŸ‚Ì‚æ‚¤‚É‚È‚è‚Ü‚·B
 
@@ -913,18 +902,16 @@ File: yatexj, Node: Image completion, Next: Greek letter completion, Prev: Accen
 
 
 
-  ‚¢‚¸‚ê‚Ìê‡‚àAƒCƒ[ƒW“ü—Í‚ğs‚Á‚Ä‚¢‚é“r’†‚Å–]‚İ‚Ì‚à‚Ì‚ªƒoƒbƒtƒ@‚É
-•\¦‚³‚ê‚½‚È‚çA‚»‚±‚ÅƒCƒ[ƒW“ü—Í‚ğ~‚ß‚ÄŸ‚Ì•ÒW“®ì‚ÉˆÚ‚Á‚Ä‚à\‚¢‚Ü
-‚¹‚ñB
+  ‚¢‚¸‚ê‚Ìê‡‚àAƒCƒ[ƒW“ü—Í‚ğs‚Á‚Ä‚¢‚é“r’†‚Å–]‚İ‚Ì‚à‚Ì‚ªƒoƒbƒtƒ@‚É•\¦
+‚³‚ê‚½‚È‚çA‚»‚±‚ÅƒCƒ[ƒW“ü—Í‚ğ~‚ß‚ÄŸ‚Ì•ÒW“®ì‚ÉˆÚ‚Á‚Ä‚à\‚¢‚Ü‚¹‚ñB
 
-  ”®ŠÂ‹«’†‚Å`;'©g‚ğ“ü—Í‚·‚é‚É‚Í`;;'‚Ì‚æ‚¤‚É‚µ‚Ü‚·BƒCƒ[ƒW“ü—Í‚Ì“r
-’†‚ÅTAB‚ğ‰Ÿ‚·‚ÆA‚»‚ê‚Ü‚Å“ü—Í‚µ‚½•¶š‚Ån‚Ü‚é‚à‚Ìˆê——‚ª•\¦‚³‚ê‚Ü‚·B‚±
-‚±‚Å–Ú“I‚Ì LaTeX ƒRƒ}ƒ“ƒh‚Ü‚ÅƒJ[ƒ\ƒ‹‚ğˆÚ“®‚µÄ“xTAB‚ğ‰Ÿ‚·‚±‚Æ‚Å‚»‚Ì
-LaTeX ƒRƒ}ƒ“ƒh‚ªƒoƒbƒtƒ@‚É‘}“ü‚³‚ê‚Ü‚·B
+  ”®ŠÂ‹«’†‚Å`;'©g‚ğ“ü—Í‚·‚é‚É‚Í`;;'‚Ì‚æ‚¤‚É‚µ‚Ü‚·BƒCƒ[ƒW“ü—Í‚Ì“r’†
+‚ÅTAB‚ğ‰Ÿ‚·‚ÆA‚»‚ê‚Ü‚Å“ü—Í‚µ‚½•¶š‚Ån‚Ü‚é‚à‚Ìˆê——‚ª•\¦‚³‚ê‚Ü‚·B‚±‚±‚Å
+–Ú“I‚Ì LaTeX ƒRƒ}ƒ“ƒh‚Ü‚ÅƒJ[ƒ\ƒ‹‚ğˆÚ“®‚µÄ“xTAB‚ğ‰Ÿ‚·‚±‚Æ‚Å‚»‚Ì LaTeX ƒR
+ƒ}ƒ“ƒh‚ªƒoƒbƒtƒ@‚É‘}“ü‚³‚ê‚Ü‚·B
 
-  ‚Ç‚ÌƒL[“ü—Í‚É‚Ç‚Ì‹L†‚ª‘Î‰‚µ‚Ä‚¢‚é‚©‘S‚Ä’m‚è‚½‚¢‚ÍA`;'‚ğ‰Ÿ‚µ‚½’¼
-Œã‚ÉTAB‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢BˆÈ‰º‚Ì—á‚ÍA`;<'‚Æ‰Ÿ‚µ‚½Œã‚ÉTAB‚ğ‰Ÿ‚µ‚½‚à‚Ì‚Å
-‚·B
+  ‚Ç‚ÌƒL[“ü—Í‚É‚Ç‚Ì‹L†‚ª‘Î‰‚µ‚Ä‚¢‚é‚©‘S‚Ä’m‚è‚½‚¢‚ÍA`;'‚ğ‰Ÿ‚µ‚½’¼Œã
+‚ÉTAB‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢BˆÈ‰º‚Ì—á‚ÍA`;<'‚Æ‰Ÿ‚µ‚½Œã‚ÉTAB‚ğ‰Ÿ‚µ‚½‚à‚Ì‚Å‚·B
 
      KEY             LaTeX sequence          sign
      <               \leq                    …
@@ -932,18 +919,17 @@ LaTeX ƒRƒ}ƒ“ƒh‚ªƒoƒbƒtƒ@‚É‘}“ü‚³‚ê‚Ü‚·B
      <-              \leftarrow              ©
      <=              \Leftarrow              <=
 
-¶‚©‚ç[“ü—ÍƒL[]A[‘Î‰‚·‚é LaTeX ƒRƒ}ƒ“ƒh]A[(‹[—)‹L†}¦]A‚Æ‚¢‚¤‡
-‚Åƒƒjƒ…[‚ªo‚Ä—ˆ‚é‚Ì‚ÅA‚æ‚­g‚¤‚à‚Ì‚ğŠo‚¦‚Ä‚¨‚­‚Æ—Ç‚¢‚Å‚µ‚å‚¤B‚à‚Ì
-‚É‚æ‚Á‚Ä‚ÍASCII•¶š‚Å•\Œ»‚·‚é‚±‚Æ‚ª¢“ï‚È‚Ì‚ÅA‚ ‚Ü‚èŠo‚¦‚â‚·‚¢ƒL[•À‚Ñ
-‚Å‚Í‚È‚¢‚à‚Ì‚ª‚ ‚é‚Å‚µ‚å‚¤‚©‚çA‚»‚Ì‚æ‚¤‚Èê‡‚Í \maketitle Œ^•âŠ®‚Å“ü
-—Í‚·‚é‚©AˆÈ‰º‚Éq‚×‚é‘Î‰•\‚Ìİ’è‚ğs‚Á‚Ä’Pƒ‚ÈƒL[•À‚Ñ‚Ì‚à‚Ì‚ğİ’è‚·
-‚é‚Æ—Ç‚¢‚Å‚µ‚å‚¤B
+¶‚©‚ç[“ü—ÍƒL[]A[‘Î‰‚·‚é LaTeX ƒRƒ}ƒ“ƒh]A[(‹[—)‹L†}¦]A‚Æ‚¢‚¤‡‚Å
+ƒƒjƒ…[‚ªo‚Ä—ˆ‚é‚Ì‚ÅA‚æ‚­g‚¤‚à‚Ì‚ğŠo‚¦‚Ä‚¨‚­‚Æ—Ç‚¢‚Å‚µ‚å‚¤B‚à‚Ì‚É‚æ‚Á
+‚Ä‚ÍASCII•¶š‚Å•\Œ»‚·‚é‚±‚Æ‚ª¢“ï‚È‚Ì‚ÅA‚ ‚Ü‚èŠo‚¦‚â‚·‚¢ƒL[•À‚Ñ‚Å‚Í‚È‚¢
+‚à‚Ì‚ª‚ ‚é‚Å‚µ‚å‚¤‚©‚çA‚»‚Ì‚æ‚¤‚Èê‡‚Í \maketitle Œ^•âŠ®‚Å“ü—Í‚·‚é‚©AˆÈ
+‰º‚Éq‚×‚é‘Î‰•\‚Ìİ’è‚ğs‚Á‚Ä’Pƒ‚ÈƒL[•À‚Ñ‚Ì‚à‚Ì‚ğİ’è‚·‚é‚Æ—Ç‚¢‚Å‚µ‚å‚¤B
 
-  “ü—ÍƒL[‚Æ LaTeX ƒRƒ}ƒ“ƒhA‹L†‚Ì‘Î‰•\‚ğŒÂl“I‚Éİ’è‚µ‚½‚¢ê‡‚Í
-Emacs-Lisp •Ï” `YaTeX-math-sign-alist-private' ‚É’è‹`‚µ‚Ä‚­‚¾‚³‚¢B‚»
-‚Ì“à—e‚ÆƒfƒtƒHƒ‹ƒg‚Ì‚à‚Ì‚ğ‡‚í‚¹‚½‚à‚Ì‚ª‘Î‰•\‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·
-(private‚Ì•û‚ª—Dæ‚³‚ê‚é)B‚È‚¨A‚±‚Ì•Ï”‚Ì\‘¢‚É‚Â‚¢‚Ä‚Í
-`yatexmth.el' ‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢B
+  “ü—ÍƒL[‚Æ LaTeX ƒRƒ}ƒ“ƒhA‹L†‚Ì‘Î‰•\‚ğŒÂl“I‚Éİ’è‚µ‚½‚¢ê‡‚Í 
+Emacs-Lisp •Ï” `YaTeX-math-sign-alist-private' ‚É’è‹`‚µ‚Ä‚­‚¾‚³‚¢B‚»‚Ì“à
+—e‚ÆƒfƒtƒHƒ‹ƒg‚Ì‚à‚Ì‚ğ‡‚í‚¹‚½‚à‚Ì‚ª‘Î‰•\‚Æ‚µ‚Äg—p‚³‚ê‚Ü‚·(private ‚Ì•û
+‚ª—Dæ‚³‚ê‚é)B‚È‚¨A‚±‚Ì•Ï”‚Ì\‘¢‚É‚Â‚¢‚Ä‚Í `yatexmth.el' ‚ğQÆ‚µ‚Ä‚­‚¾
+‚³‚¢B
 
 
 
@@ -952,16 +938,16 @@ File: yatexj, Node: Greek letter completion, Prev: Image completion, Up: Complet
 ƒMƒŠƒVƒƒ•¶š•âŠ®
 ================
 
-  ‚à‚¤ˆê‚ÂA”®ŠÂ‹«’†‚Å`:'‚ğ‰Ÿ‚·‚ÆƒMƒŠƒVƒƒ•¶š“ü—Íƒ‚[ƒh‚É“ü‚è‚Ü‚·B
-`:'‚ğ‰Ÿ‚µ‚½’¼Œã‚É`a'‚ğ‰Ÿ‚·‚Æ`\alpha'‚ªA`g' ‚ğ‰Ÿ‚·‚Æ `\gamma'‚ªA‚È‚ÇƒA
-ƒ‹ƒtƒ@ƒxƒbƒg‚É‘Î‰‚µ‚½ƒMƒŠƒVƒƒ•¶š‚ª‘}“ü‚³‚ê‚Ü‚·B‘€ì•û–@‚Í;‚Ì”®‹L†
-•âŠ®‚Æ‚Ü‚Á‚½‚­“¯‚¶‚Å‚·B‚Ü‚¸‚Í`:'‚Ì’¼Œã‚ÉTAB‚ğ‰Ÿ‚µ‚Ä‚Ç‚ÌƒAƒ‹ƒtƒ@ƒxƒbƒg
-‚É‚Ç‚ÌƒMƒŠƒVƒƒ•¶š‚ª‘Î‰‚µ‚Ä‚¢‚é‚©’²‚×‚Ä‚İ‚Ä‚­‚¾‚³‚¢B
+  ‚à‚¤ˆê‚ÂA”®ŠÂ‹«’†‚Å`:'‚ğ‰Ÿ‚·‚ÆƒMƒŠƒVƒƒ•¶š“ü—Íƒ‚[ƒh‚É“ü‚è‚Ü‚·B`:'‚ğ
+‰Ÿ‚µ‚½’¼Œã‚É`a'‚ğ‰Ÿ‚·‚Æ`\alpha'‚ªA`g' ‚ğ‰Ÿ‚·‚Æ `\gamma'‚ªA‚È‚ÇƒAƒ‹ƒtƒ@ƒxƒb
+ƒg‚É‘Î‰‚µ‚½ƒMƒŠƒVƒƒ•¶š‚ª‘}“ü‚³‚ê‚Ü‚·B‘€ì•û–@‚Í;‚Ì”®‹L†•âŠ®‚Æ‚Ü‚Á‚½
+‚­“¯‚¶‚Å‚·B‚Ü‚¸‚Í`:'‚Ì’¼Œã‚ÉTAB‚ğ‰Ÿ‚µ‚Ä‚Ç‚ÌƒAƒ‹ƒtƒ@ƒxƒbƒg‚É‚Ç‚ÌƒMƒŠƒVƒƒ•¶
+š‚ª‘Î‰‚µ‚Ä‚¢‚é‚©’²‚×‚Ä‚İ‚Ä‚­‚¾‚³‚¢B
 
-  `;'‚Æ`:'‚ğ”®ŠÂ‹«’†‚Å‰Ÿ‚µ‚Ä‚¢‚é‚É‚à‚©‚©‚í‚ç‚¸AƒCƒ[ƒW•âŠ®‚ª“­‚©‚È
-‚¢ê‡‚ÍA`C-u ;'‚Ì‚æ‚¤‚É universal-argument ‚ğ‚Â‚¯‚ÄƒL[‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ
-‚èA‹­§“I‚ÉƒCƒ[ƒW•âŠ®‚É“ü‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚Ü‚½A‚±‚Ì‚É‚Ç‚Ì‚æ‚¤‚È
-ó‘Ô‚Å”®ŠÂ‹«“à”»’è‚É¸”s‚µ‚½‚©‚ğ‚²˜A—‰º‚³‚¢B
+  `;'‚Æ`:'‚ğ”®ŠÂ‹«’†‚Å‰Ÿ‚µ‚Ä‚¢‚é‚É‚à‚©‚©‚í‚ç‚¸AƒCƒ[ƒW•âŠ®‚ª“­‚©‚È‚¢ê
+‡‚ÍA`C-u ;'‚Ì‚æ‚¤‚É universal-argument ‚ğ‚Â‚¯‚ÄƒL[‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èA‹­
+§“I‚ÉƒCƒ[ƒW•âŠ®‚É“ü‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚Ü‚½A‚±‚Ì‚É‚Ç‚Ì‚æ‚¤‚Èó‘Ô‚Å”®
+ŠÂ‹«“à”»’è‚É¸”s‚µ‚½‚©‚ğ‚²˜A—‰º‚³‚¢B
 
 
 
@@ -970,23 +956,23 @@ File: yatexj, Node: Local dictionary, Next: Commenting out, Prev: Completion, Up
 ƒ[ƒJƒ‹«‘
 ************
 
-  •âŠ®“ü—Í—p‚ÌŒó•â‚ÍOí—Ş‚Ì«‘‚©‚ç\¬‚³‚ê‚Ä‚¢‚Ü‚·Bˆê‚Â‚Í`yatex.el'
-‚É‘g‚İ‚Ü‚ê‚½u•W€«‘vA‚à‚¤ˆê‚Â‚Íƒ†[ƒU‚ªŒÂl“I‚Éí—p‚·‚éƒRƒ}ƒ“ƒh
-‚ğ•Û‘¶‚·‚éuƒ†[ƒU«‘vA‚»‚µ‚Ä‚à‚¤‚Ğ‚Æ‚Â‚Í‚ ‚éƒfƒBƒŒƒNƒgƒŠ‚Å‚Ì‚İ—LŒø
-‚ÈƒRƒ}ƒ“ƒh‚ğ•Û‘¶‚·‚éuƒ[ƒJƒ‹«‘v‚Å‚·B
+  •âŠ®“ü—Í—p‚ÌŒó•â‚ÍOí—Ş‚Ì«‘‚©‚ç\¬‚³‚ê‚Ä‚¢‚Ü‚·Bˆê‚Â‚Í`yatex.el'‚É‘g
+‚İ‚Ü‚ê‚½u•W€«‘vA‚à‚¤ˆê‚Â‚Íƒ†[ƒU‚ªŒÂl“I‚Éí—p‚·‚éƒRƒ}ƒ“ƒh‚ğ•Û‘¶‚·
+‚éuƒ†[ƒU«‘vA‚»‚µ‚Ä‚à‚¤‚Ğ‚Æ‚Â‚Í‚ ‚éƒfƒBƒŒƒNƒgƒŠ‚Å‚Ì‚İ—LŒø‚ÈƒRƒ}ƒ“ƒh‚ğ
+•Û‘¶‚·‚éuƒ[ƒJƒ‹«‘v‚Å‚·B
 
-  •âŠ®“ü—Í‚ÉV‚µ‚¢’PŒê‚ğ“ü‚ê‚½ê‡‚ÉA‚»‚Ì’PŒê‚ğ‚Ç‚Ì«‘‚É“ü‚ê‚é‚©•·
-‚¢‚Ä—ˆ‚Ü‚·B
+  •âŠ®“ü—Í‚ÉV‚µ‚¢’PŒê‚ğ“ü‚ê‚½ê‡‚ÉA‚»‚Ì’PŒê‚ğ‚Ç‚Ì«‘‚É“ü‚ê‚é‚©•·‚¢‚Ä
+—ˆ‚Ü‚·B
 
        `foo' is not in table. Register into: U)serDic L)ocalDic N)one D)iscard
 
-‚Æ‚¢‚¤ƒvƒƒ“ƒvƒg‚É‘Î‚µA`u'‚Æ“š‚¦‚é‚Æuƒ†[ƒU«‘v‚ğA`l'‚Æ“š‚¦‚é‚Æƒ[
-ƒJƒ‹«‘‚ğXV‚µA`n'‚Æ“š‚¦‚é‚Æ«‘ƒtƒ@ƒCƒ‹‚ÍXV‚¹‚¸Œ»İ‚ÌEmacsƒZƒbƒVƒ‡
-ƒ“‚Ì‚İ—LŒø‚È’PŒê‚Æ‚µA`d'‚Æ“š‚¦‚é‚ÆV‚½‚È’PŒê‚ğŠwK‚¹‚¸‚ÉÌ‚Ä‚é‚±‚Æ‚É‚È
-‚è‚Ü‚·B
+‚Æ‚¢‚¤ƒvƒƒ“ƒvƒg‚É‘Î‚µA`u'‚Æ“š‚¦‚é‚Æuƒ†[ƒU«‘v‚ğA`l'‚Æ“š‚¦‚é‚Æƒ[ƒJ
+ƒ‹«‘‚ğXV‚µA`n'‚Æ“š‚¦‚é‚Æ«‘ƒtƒ@ƒCƒ‹‚ÍXV‚¹‚¸Œ»İ‚ÌEmacs ƒZƒbƒVƒ‡ƒ“
+‚Ì‚İ—LŒø‚È’PŒê‚Æ‚µA`d'‚Æ“š‚¦‚é‚ÆV‚½‚È’PŒê‚ğŠwK‚¹‚¸‚ÉÌ‚Ä‚é‚±‚Æ‚É‚È‚è‚Ü
+‚·B
 
-  ‚à‚µAƒ[ƒJƒ‹«‘‚Ì‹@”\‚Í‚¢‚ç‚¸A‘S‚Äƒ†[ƒU«‘‚ÌXV‚Ì‚İ‚Å‚æ‚¢‚ÆŒ¾
-‚¤ê‡‚É‚Í`~/.emacs'‚È‚Ç‚ÅA
+  ‚à‚µAƒ[ƒJƒ‹«‘‚Ì‹@”\‚Í‚¢‚ç‚¸A‘S‚Äƒ†[ƒU«‘‚ÌXV‚Ì‚İ‚Å‚æ‚¢‚ÆŒ¾‚¤ê
+‡‚É‚Í`~/.emacs'‚È‚Ç‚ÅA
 
              (setq YaTeX-nervous nil)
 
@@ -1000,8 +986,8 @@ File: yatexj, Node: Commenting out, Next: Cursor jump, Prev: Local dictionary, U
 **************
 
 
-  LaTeX‚Ì•ÒW‚É‚ÍsöŒë‚ª‚Â‚«‚à‚Ì‚Å‚·B‚ ‚é•”•ª‚ğˆêŠ‡‚ÅƒRƒƒ“ƒgƒAƒEƒg
-‚µ‚½‚èAƒRƒƒ“ƒg‚ğŠO‚µ‚½‚è‚µ‚½‚¢‚±‚Æ‚ª‚ ‚è‚Ü‚·B
+  LaTeX‚Ì•ÒW‚É‚ÍsöŒë‚ª‚Â‚«‚à‚Ì‚Å‚·B‚ ‚é•”•ª‚ğˆêŠ‡‚ÅƒRƒƒ“ƒgƒAƒEƒg‚µ
+‚½‚èAƒRƒƒ“ƒg‚ğŠO‚µ‚½‚è‚µ‚½‚¢‚±‚Æ‚ª‚ ‚è‚Ü‚·B
 
 `[prefix] >'
              ... ƒŠƒWƒ‡ƒ“‚ğ % ‚ÅƒRƒƒ“ƒgƒAƒEƒg
@@ -1015,15 +1001,15 @@ File: yatexj, Node: Commenting out, Next: Cursor jump, Prev: Local dictionary, U
 `[prefix] ,'
              ... Œ»İ‚Ìƒpƒ‰ƒOƒ‰ƒt‚ÌƒRƒƒ“ƒg‚ğŠO‚·
 
-‚ÍAƒJ[ƒ\ƒ‹‚ÌˆÊ’u‚·‚éƒpƒ‰ƒOƒ‰ƒt‘S‘Ì‚É‘Î‚µ‚Ä‚Ì‘€ì‚Å‚·B‚È‚¨A‚±‚±‚Å‚¢
-‚¤uƒpƒ‰ƒOƒ‰ƒtv‚Í (`mark-paragraph') ŠÖ”‚É‚æ‚èƒ}[ƒN‚³‚ê‚é”ÍˆÍ‚ğw‚µ
-‚Ü‚·(•W€İ’è‚Å`ESC h'‚ÉƒoƒCƒ“ƒh‚³‚ê‚Ä‚¢‚é)B‚È‚¨AŠù‚É`%'‚ÅƒRƒƒ“ƒgƒA
-ƒEƒg‚³‚ê‚Ä‚¢‚éƒpƒ‰ƒOƒ‰ƒt‚É‘Î‚µ‚ÄŒJ‚è•Ô‚µƒpƒ‰ƒOƒ‰ƒt‚ÌƒRƒƒ“ƒg‚ğg—p‚µ‚½
-ê‡‚Ì“®ì‚Í•ÛØ‚µ‚Ü‚¹‚ñ‚Ì‚ÅŒä’ˆÓ‚­‚¾‚³‚¢B
+‚ÍAƒJ[ƒ\ƒ‹‚ÌˆÊ’u‚·‚éƒpƒ‰ƒOƒ‰ƒt‘S‘Ì‚É‘Î‚µ‚Ä‚Ì‘€ì‚Å‚·B‚È‚¨A‚±‚±‚Å‚¢‚¤
+uƒpƒ‰ƒOƒ‰ƒtv‚Í (`mark-paragraph') ŠÖ”‚É‚æ‚èƒ}[ƒN‚³‚ê‚é”ÍˆÍ‚ğw‚µ‚Ü‚·
+(•W€İ’è‚Å`ESC h'‚ÉƒoƒCƒ“ƒh‚³‚ê‚Ä‚¢‚é)B‚È‚¨AŠù‚É`%'‚ÅƒRƒƒ“ƒgƒAƒEƒg‚³‚ê
+‚Ä‚¢‚éƒpƒ‰ƒOƒ‰ƒt‚É‘Î‚µ‚ÄŒJ‚è•Ô‚µƒpƒ‰ƒOƒ‰ƒt‚ÌƒRƒƒ“ƒg‚ğg—p‚µ‚½ê‡‚Ì“®ì‚Í
+•ÛØ‚µ‚Ü‚¹‚ñ‚Ì‚ÅŒä’ˆÓ‚­‚¾‚³‚¢B
 
-  ‚³‚ÄA•¶Í‚É‘Î‚µ‚Ä‚¾‚¯‚Å‚È‚­A‚É‚Í`\begin', `\end' ©‘Ì‚É‘Î
-‚µ‚Ä‚àƒRƒƒ“ƒgƒAƒEƒg‚Ì‘€ì‚ğ‚µ‚½‚¢‚Æ‚«‚ª‚ ‚è‚Ü‚·B‚±‚Ì‚æ‚¤‚È‚Æ‚«‚ÍA
-`\begin{}' ‚ ‚é‚¢‚Í `\end{}' ‚Ìs‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹A
+  ‚³‚ÄA•¶Í‚É‘Î‚µ‚Ä‚¾‚¯‚Å‚È‚­A‚É‚Í`\begin', `\end' ©‘Ì‚É‘Î‚µ‚Ä‚àƒRƒ
+ƒ“ƒgƒAƒEƒg‚Ì‘€ì‚ğ‚µ‚½‚¢‚Æ‚«‚ª‚ ‚è‚Ü‚·B‚±‚Ì‚æ‚¤‚È‚Æ‚«‚ÍA`\begin{}' ‚ ‚é
+‚¢‚Í `\end{}' ‚Ìs‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹A
 
 `[prefix] >'
              ... `\begin{}'``\end{}' ‘S‚ÄƒRƒƒ“ƒgƒAƒEƒg
@@ -1037,11 +1023,10 @@ File: yatexj, Node: Commenting out, Next: Cursor jump, Prev: Local dictionary, U
 `[prefix] ,'
              ... `\begin{}' ‚Æ `\end{}' ‚ÌƒRƒƒ“ƒg‚ğŠO‚·
 
-‚ÍA‘Î‰‚·‚é `\begin' ‚Æ `\end' 2s‚¾‚¯‚ğAƒRƒƒ“ƒg‘€ì‚Ì‘ÎÛ‚Æ‚µ‚Ü‚·B
-ƒŠƒWƒ‡ƒ“‚ğƒRƒƒ“ƒgƒAƒEƒg‚µ‚æ‚¤‚Æ‚µ‚ÄAƒ}[ƒN‚ğİ’è‚µ‚½‚Ì‚¿‚ÉƒJ[ƒ\ƒ‹‚ğ
-ˆÚ“®‚µ`[preifx] >' ‚ğ‰Ÿ‚µ‚Ä‚àƒJ[ƒ\ƒ‹‚ª `\begin{}' ‚Ìã‚É‚ ‚é‚Æ
-`\begin{}'``\end{}'ƒ‚[ƒh‚ÅƒRƒƒ“ƒg‹@”\‚ª“­‚¢‚Ä‚µ‚Ü‚¤‚Ì‚Å’ˆÓ‚µ‚Ä‰º‚³
-‚¢B
+‚ÍA‘Î‰‚·‚é `\begin' ‚Æ `\end' 2s‚¾‚¯‚ğAƒRƒƒ“ƒg‘€ì‚Ì‘ÎÛ‚Æ‚µ‚Ü‚·BƒŠ
+ƒWƒ‡ƒ“‚ğƒRƒƒ“ƒgƒAƒEƒg‚µ‚æ‚¤‚Æ‚µ‚ÄAƒ}[ƒN‚ğİ’è‚µ‚½‚Ì‚¿‚ÉƒJ[ƒ\ƒ‹‚ğˆÚ“®‚µ
+`[preifx] >' ‚ğ‰Ÿ‚µ‚Ä‚àƒJ[ƒ\ƒ‹‚ª `\begin{}' ‚Ìã‚É‚ ‚é‚Æ`\begin{}'`
+`\end{}'ƒ‚[ƒh‚ÅƒRƒƒ“ƒg‹@”\‚ª“­‚¢‚Ä‚µ‚Ü‚¤‚Ì‚Å’ˆÓ‚µ‚Ä‰º‚³‚¢B
 
 
 
@@ -1053,11 +1038,11 @@ File: yatexj, Node: Cursor jump, Next: Modifying/Deleting, Prev: Commenting out,
 
 * Menu:
 
-* ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv::
-* ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®::
-* ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv::
-* ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv::
-* ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv::
+* ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv::  
+* ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®::          
+* ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv::  
+* ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv::    
+* ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv::  
 
 
 
@@ -1071,8 +1056,8 @@ File: yatexj, Node: ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv, Next: ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®, Prev
 `[prefix] g'
              ... ‘Î‰‚·‚éƒIƒuƒWƒFƒNƒg‚ÉƒWƒƒƒ“ƒv
 
-‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èAƒJ[ƒ\ƒ‹ˆÊ’u‚ÌLaTeXƒRƒ}ƒ“ƒh‚É‘Î‰‚·‚éêŠ‚ÉƒWƒƒƒ“ƒv‚µ
-‚Ü‚·B‘Î‰ŠÖŒW‚ª‘¶İ‚·‚é‚Æ‰ğß‚³‚ê‚éƒRƒ}ƒ“ƒh‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
+‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èAƒJ[ƒ\ƒ‹ˆÊ’u‚ÌLaTeXƒRƒ}ƒ“ƒh‚É‘Î‰‚·‚éêŠ‚ÉƒWƒƒƒ“ƒv‚µ‚Ü
+‚·B‘Î‰ŠÖŒW‚ª‘¶İ‚·‚é‚Æ‰ğß‚³‚ê‚éƒRƒ}ƒ“ƒh‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
 
    * `\begin{}' ©¨ `\end{}'
    * `%#BEGIN' ©¨ `%#END'
@@ -1081,23 +1066,22 @@ File: yatexj, Node: ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv, Next: ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®, Prev
    * `\include(\input)' ¨ ‘Î‰‚·‚éƒtƒ@ƒCƒ‹
    * `\bibitem{}' ©¨ `\cite{}'
 
-  `\begin{}' ‚© `\end{}' ‚Ìs‚Å`[prefix] g'‚ğ‰Ÿ‚·‚±‚Æ‚É
-‚æ‚èA‘Î‰‚·‚é`end/begin'‚Ìs‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B‚à‚¿‚ë‚ñ‘Î‰‚·‚é‚à‚Ì‚ª
-‚È‚¢ê‡‚ÍƒGƒ‰[‚É‚È‚è‚Ü‚·B‚Ü‚½‚±‚ê‚ÍA—ÌˆæŒÅ’è‚Ì‚½‚ß‚Ì `%#BEGIN' ‚Æ
-`%#END' ‚ÌƒyƒA‚É‘Î‚µ‚Ä‚à“¯—l‚É“®ì‚µ‚Ü‚·B‚È‚¨A`label/ref'‚â
-`cite/bibitem'‘Î‰‚·‚é‚à‚Ì‚ª•Êƒtƒ@ƒCƒ‹‚É‚ ‚é‚ÍAƒWƒƒƒ“ƒvæ‚Æ‚È‚éƒtƒ@
-ƒCƒ‹‚ªƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñB*Note %#notation::.
-ƒƒCƒ“‚Ì .tex ƒtƒ@ƒCƒ‹‚Ì `\include{chap1}' ‚È‚Ç‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹A
-`[prefix] g' ‚ğ‰Ÿ‚·‚ÆA`chap1.tex' ‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B
+  `\begin{}' ‚© `\end{}' ‚Ìs‚Å`[prefix] g'‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚èA‘Î‰‚·‚é
+`end/begin'‚Ìs‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B‚à‚¿‚ë‚ñ‘Î‰‚·‚é‚à‚Ì‚ª‚È‚¢ê‡‚ÍƒGƒ‰[‚É
+‚È‚è‚Ü‚·B‚Ü‚½‚±‚ê‚ÍA—ÌˆæŒÅ’è‚Ì‚½‚ß‚Ì `%#BEGIN' ‚Æ `%#END' ‚ÌƒyƒA‚É‘Î‚µ‚Ä
+‚à“¯—l‚É“®ì‚µ‚Ü‚·B‚È‚¨A`label/ref'‚â`cite/bibitem'‘Î‰‚·‚é‚à‚Ì‚ª•Êƒtƒ@
+ƒCƒ‹‚É‚ ‚é‚ÍAƒWƒƒƒ“ƒvæ‚Æ‚È‚éƒtƒ@ƒCƒ‹‚ªƒI[ƒvƒ“‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹
+‚ñB*Note %#notation::.  ƒƒCƒ“‚Ì .tex ƒtƒ@ƒCƒ‹‚Ì `\include{chap1}' ‚È‚Ç‚É
+ƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹A`[prefix] g' ‚ğ‰Ÿ‚·‚ÆA`chap1.tex' ‚ÉƒWƒƒƒ“ƒv‚µ‚Ü‚·B
 
 ‚Ü‚½A
 
 `[prefix] 4 g'
              ... •ÊƒEƒBƒ“ƒhƒE‚Å‘Î‰ƒIƒuƒWƒFƒNƒg‚ÉƒWƒƒƒ“ƒv
 
-‚ğ‰Ÿ‚·‚ÆA‘Î‰‚·‚éƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv‚ğ•ÊƒEƒBƒ“ƒhƒE‚Ås‚¢‚Ü‚·B‚½
-‚¾‚µA‚±‚Ì‹@”\‚Í `begin/end', `%#BEGIN/%#END' ŠÔ‚ÌƒWƒƒƒ“ƒv‚É‘Î‚µ‚Ä‚Í(ˆÓ
-–¡‚ª‚È‚¢‚Æv‚í‚ê‚é‚Ì‚Å)‹@”\‚µ‚È‚¢‚Ì‚Å’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢B
+‚ğ‰Ÿ‚·‚ÆA‘Î‰‚·‚éƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv‚ğ•ÊƒEƒBƒ“ƒhƒE‚Ås‚¢‚Ü‚·B‚½‚¾‚µA
+‚±‚Ì‹@”\‚Í `begin/end', `%#BEGIN/%#END' ŠÔ‚ÌƒWƒƒƒ“ƒv‚É‘Î‚µ‚Ä‚Í(ˆÓ–¡‚ª‚È‚¢
+‚Æv‚í‚ê‚é‚Ì‚Å)‹@”\‚µ‚È‚¢‚Ì‚Å’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢B
 
 
 
@@ -1106,29 +1090,28 @@ File: yatexj, Node: ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®, Next: ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv, Prev: 
 ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®
 ==================
 
-ã‹L‚Ìu‰æ‘œƒtƒ@ƒCƒ‹‚Ìæ‚è‚İƒ}ƒNƒv‚Æ‚ÍA—á‚¦‚Î
-`\epsfile{file=foo}' ‚Ì‚æ‚¤‚È‘}ŠGæ‚è‚İƒRƒ}ƒ“ƒh‚Ì‚±‚Æ‚ÅA‚±‚Ìs‚ÉƒJ[
-ƒ\ƒ‹‚ğ‡‚í‚¹‚Ä`[prefix] g'‚ğ‰Ÿ‚·‚Æ‚»‚Ì‰æ‘œƒtƒ@ƒCƒ‹‚ÌŒ³‚Æ‚È‚Á‚½ƒtƒ@ƒCƒ‹
-‚ğ‘Î‰‚·‚é‚¨ŠG•`‚«ƒc[ƒ‹‚ğ‹N“®‚µ‚ÄƒI[ƒvƒ“‚µ‚Ü‚·B‹N“®‚·‚éƒc[ƒ‹‚Ì”»’è
-‚ÍˆÈ‰º‚Ì‚æ‚¤‚É‚È‚³‚ê‚Ü‚·B
+ã‹L‚Ìu‰æ‘œƒtƒ@ƒCƒ‹‚Ìæ‚è‚İƒ}ƒNƒv‚Æ‚ÍA—á‚¦‚Î `\epsfile{file=foo}' ‚Ì
+‚æ‚¤‚È‘}ŠGæ‚è‚İƒRƒ}ƒ“ƒh‚Ì‚±‚Æ‚ÅA‚±‚Ìs‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹‚Ä`[prefix] g'
+‚ğ‰Ÿ‚·‚Æ‚»‚Ì‰æ‘œƒtƒ@ƒCƒ‹‚ÌŒ³‚Æ‚È‚Á‚½ƒtƒ@ƒCƒ‹‚ğ‘Î‰‚·‚é‚¨ŠG•`‚«ƒc[ƒ‹‚ğ‹N“®
+‚µ‚ÄƒI[ƒvƒ“‚µ‚Ü‚·B‹N“®‚·‚éƒc[ƒ‹‚Ì”»’è‚ÍˆÈ‰º‚Ì‚æ‚¤‚É‚È‚³‚ê‚Ü‚·B
 
-  1. ƒJƒŒƒ“ƒgs‚ª•Ï” `YaTeX-processed-file-regexp-alist' ‚É’è‹`‚³‚ê‚Ä
-     ‚¢‚é³‹K•\Œ»‚Ì‚¢‚¸‚ê‚©‚Æƒ}ƒbƒ`‚µ‚½‚çAƒtƒ@ƒCƒ‹–¼‚É‘Š“–‚·‚é•”•ª‚ğ
-     (\\)‚©‚ç”²‚«o‚µ‚ÄŠo‚¦‚Ä‚¨‚­(‰½”Ô–Ú‚Ì\\(\\)‚©‚Í•Ï”‚ÌŠeƒŠƒXƒg‚Ì
-     cdr •”‚É“ü‚ê‚Ä‚¨‚­)Bƒ}ƒbƒ`‚µ‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢B
-  2. s––‚ÉA•Ï” `YaTeX-file-processor-alist' ‚É“o˜^‚³‚ê‚Ä‚¢‚éƒRƒ}ƒ“ƒh
-     ‚ªu%ƒRƒ}ƒ“ƒhv ‚Ì‚æ‚¤‚É‘‚¢‚Ä‚ ‚ê‚Î‹­§“I‚ÉuƒRƒ}ƒ“ƒh ƒtƒ@ƒCƒ‹
-     –¼.Šg’£qv‚ğ‹N“®B
-  3. ‚È‚¯‚ê‚ÎA•Ï” `YaTeX-file-processor-alist' ‚ÌŠeƒŠƒXƒg‚Ìcdr•”‚É“ü‚Á
-     ‚Ä‚¢‚éŠg’£q‚ğuƒtƒ@ƒCƒ‹–¼v‚ÌŒã‚ë‚É‘«‚µ‚½ƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚©‡Ÿ
-     ’²‚×‚ÄA‘¶İ‚µ‚½ê‡car•”‚É“ü‚Á‚Ä‚¢‚éƒRƒ}ƒ“ƒh‚ğ‹N“®‚·‚éB
+  1. ƒJƒŒƒ“ƒgs‚ª•Ï” `YaTeX-processed-file-regexp-alist' ‚É’è‹`‚³‚ê‚Ä‚¢‚é
+     ³‹K•\Œ»‚Ì‚¢‚¸‚ê‚©‚Æƒ}ƒbƒ`‚µ‚½‚çAƒtƒ@ƒCƒ‹–¼‚É‘Š“–‚·‚é•”•ª‚ğ \\(\\)‚©
+     ‚ç”²‚«o‚µ‚ÄŠo‚¦‚Ä‚¨‚­(‰½”Ô–Ú‚Ì\\(\\)‚©‚Í•Ï”‚ÌŠeƒŠƒXƒg‚Ì cdr •”‚É“ü
+     ‚ê‚Ä‚¨‚­)Bƒ}ƒbƒ`‚µ‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢B
+  2. s––‚ÉA•Ï” `YaTeX-file-processor-alist' ‚É“o˜^‚³‚ê‚Ä‚¢‚éƒRƒ}ƒ“ƒh‚ª
+     u%ƒRƒ}ƒ“ƒhv ‚Ì‚æ‚¤‚É‘‚¢‚Ä‚ ‚ê‚Î‹­§“I‚ÉuƒRƒ}ƒ“ƒh ƒtƒ@ƒCƒ‹–¼.Šg’£
+     qv‚ğ‹N“®B
+  3. ‚È‚¯‚ê‚ÎA•Ï” `YaTeX-file-processor-alist' ‚ÌŠeƒŠƒXƒg‚Ìcdr•”‚É“ü‚Á‚Ä
+     ‚¢‚éŠg’£q‚ğuƒtƒ@ƒCƒ‹–¼v‚ÌŒã‚ë‚É‘«‚µ‚½ƒtƒ@ƒCƒ‹‚ª‘¶İ‚·‚é‚©‡Ÿ’²‚×
+     ‚ÄA‘¶İ‚µ‚½ê‡car•”‚É“ü‚Á‚Ä‚¢‚éƒRƒ}ƒ“ƒh‚ğ‹N“®‚·‚éB
   4. ˆÈã‚Ç‚ê‚©‚Éƒ}ƒbƒ`‚µ‚È‚¯‚ê‚Î‚ ‚«‚ç‚ß‚éB
 
 
-•Ï” `YaTeX-file-processor-alist' ‚Æ•Ï” `YaTeX-file-processor-alist'
-‚Ìİ’è•û–@‚É‚Â‚¢‚Ä‚Í‚»‚ê‚¼‚ê‚Ì•Ï”‚É‚Â‚¢‚Ä describe-variable ‚µ‚Äà–¾‚ğ
-“Ç‚ñ‚Å‰º‚³‚¢B‚¤‚Ü‚­İ’è‚·‚é‚ÆA‰æ‘œƒtƒ@ƒCƒ‹‚É‚©‚¬‚ç‚¸A”CˆÓ‚ÌŒ`®‚Ìƒtƒ@
-ƒCƒ‹‚ğ”CˆÓ‚ÌƒvƒƒZƒbƒT‚Åˆ—‚·‚éƒRƒ}ƒ“ƒh‚ğŠÈ’P‚ÉŒÄ‚Ño‚·‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+•Ï” `YaTeX-file-processor-alist' ‚Æ•Ï” `YaTeX-file-processor-alist' ‚Ìİ
+’è•û–@‚É‚Â‚¢‚Ä‚Í‚»‚ê‚¼‚ê‚Ì•Ï”‚É‚Â‚¢‚Ä describe-variable ‚µ‚Äà–¾‚ğ“Ç‚ñ‚Å
+‰º‚³‚¢B‚¤‚Ü‚­İ’è‚·‚é‚ÆA‰æ‘œƒtƒ@ƒCƒ‹‚É‚©‚¬‚ç‚¸A”CˆÓ‚ÌŒ`®‚Ìƒtƒ@ƒCƒ‹‚ğ”C
+ˆÓ‚ÌƒvƒƒZƒbƒT‚Åˆ—‚·‚éƒRƒ}ƒ“ƒh‚ğŠÈ’P‚ÉŒÄ‚Ño‚·‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 
 
@@ -1144,9 +1127,9 @@ File: yatexj, Node: ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv, Next: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv, 
 `[prefix] 4 ^'
              ... •ÊƒEƒBƒ“ƒhƒE‚ÅƒƒCƒ“ƒtƒ@ƒCƒ‹‚ÉƒWƒƒƒ“ƒv
 
-‚ğ‰Ÿ‚·‚ÆAƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ì•ÒWƒoƒbƒtƒ@‚ÉØ‘Ö‚¦‚Ü‚·B‚à‚µAƒƒCƒ“ƒtƒ@ƒC
-ƒ‹‚ğƒI[ƒvƒ“‚µ‚Ä‚¢‚È‚¢ê‡‚ÍAƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç’T‚µ‚Ä©“®“I‚ÉƒI[
-ƒvƒ“‚µ‚Ü‚·B
+‚ğ‰Ÿ‚·‚ÆAƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ì•ÒWƒoƒbƒtƒ@‚ÉØ‘Ö‚¦‚Ü‚·B‚à‚µAƒƒCƒ“ƒtƒ@ƒCƒ‹‚ğ
+ƒI[ƒvƒ“‚µ‚Ä‚¢‚È‚¢ê‡‚ÍAƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚©‚ç’T‚µ‚Ä©“®“I‚ÉƒI[ƒvƒ“‚µ
+‚Ü‚·B
 
 
 
@@ -1164,8 +1147,8 @@ File: yatexj, Node: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv, Next: ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv, 
 `M-C-@'
              ... ŠÂ‹«‘S‘Ì‚ğƒ}[ƒN
 
-ã‹L‚ÌƒRƒ}ƒ“ƒh‚Í’Êí‚Ì`[prefix]'ƒL[‚Å‚Í‚È‚­`META'ƒL[‚ğƒvƒŠƒtƒBƒNƒX‚Æ
-‚µ‚Ä‹@”\‚·‚é‚Ì‚Å‚²’ˆÓ‰º‚³‚¢B
+ã‹L‚ÌƒRƒ}ƒ“ƒh‚Í’Êí‚Ì`[prefix]'ƒL[‚Å‚Í‚È‚­`META'ƒL[‚ğƒvƒŠƒtƒBƒNƒX‚Æ‚µ‚Ä
+‹@”\‚·‚é‚Ì‚Å‚²’ˆÓ‰º‚³‚¢B
 
 
 
@@ -1174,10 +1157,9 @@ File: yatexj, Node: ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv, Prev: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv, 
 ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv
 ==========================
 
-–ì’¹‚Í•âŠ®“ü—Í‚µ‚½ˆÊ’u‚ğí‚ÉƒŒƒWƒXƒ^ `3'‚É•Û‘¶‚µ‚Ä‚¢‚Ü‚·B“ü—Í“r’†‚Å”@
-‰½‚È‚éƒtƒ@ƒCƒ‹‚Ì”@‰½‚È‚éˆÊ’u‚És‚Á‚½‚Æ‚µ‚Ä‚àA`C-x j
-3'(`jump-to-register')‚ğg‚Á‚Ä’¼‚¿‚ÉÅŒã‚Ì•âŠ®“ü—ÍˆÊ’u‚É–ß‚é‚±‚Æ‚ª‚Å‚«
-‚Ü‚·B
+–ì’¹‚Í•âŠ®“ü—Í‚µ‚½ˆÊ’u‚ğí‚ÉƒŒƒWƒXƒ^ `3'‚É•Û‘¶‚µ‚Ä‚¢‚Ü‚·B“ü—Í“r’†‚Å”@‰½‚È
+‚éƒtƒ@ƒCƒ‹‚Ì”@‰½‚È‚éˆÊ’u‚És‚Á‚½‚Æ‚µ‚Ä‚àA`C-x j 3'(`jump-to-register')‚ğ
+g‚Á‚Ä’¼‚¿‚ÉÅŒã‚Ì•âŠ®“ü—ÍˆÊ’u‚É–ß‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 
 
@@ -1186,8 +1168,8 @@ File: yatexj, Node: Modifying/Deleting, Next: Filling, Prev: Cursor jump, Up: To
 •ÏX/íœ
 *********
 
-  Šù‚É“ü—Í‚³‚ê‚Ä‚¢‚é LaTeX ƒRƒ}ƒ“ƒh‚Ì•ÏX/íœ‚Ì‚½‚ß‚ÉˆÈ‰º‚Ì‹@”\‚ª—pˆÓ
-‚³‚ê‚Ä‚¢‚Ü‚·B
+  Šù‚É“ü—Í‚³‚ê‚Ä‚¢‚é LaTeX ƒRƒ}ƒ“ƒh‚Ì•ÏX/íœ‚Ì‚½‚ß‚ÉˆÈ‰º‚Ì‹@”\‚ª—pˆÓ‚³‚ê
+‚Ä‚¢‚Ü‚·B
 
 `[prefix] c'
              ... ƒJ[ƒ\ƒ‹ˆÊ’u‚Ì LaTeX ƒRƒ}ƒ“ƒh‚Ì•ÏX
@@ -1195,8 +1177,8 @@ File: yatexj, Node: Modifying/Deleting, Next: Filling, Prev: Cursor jump, Up: To
              ... ƒJ[ƒ\ƒ‹ˆÊ’u‚Ì LaTeX ƒRƒ}ƒ“ƒh‚Ìíœ
 
 
-‚±‚ê‚ç‚ÌƒRƒ}ƒ“ƒh‚ÍAƒRƒ}ƒ“ƒh‚ğ‹N“®‚·‚éêŠ‚É‚æ‚Á‚Ä“®ì‚ğŒˆ’è‚·‚é‚Ì‚Å’
-ˆÓ‚µ‚Ä‰º‚³‚¢B
+‚±‚ê‚ç‚ÌƒRƒ}ƒ“ƒh‚ÍAƒRƒ}ƒ“ƒh‚ğ‹N“®‚·‚éêŠ‚É‚æ‚Á‚Ä“®ì‚ğŒˆ’è‚·‚é‚Ì‚Å’ˆÓ‚µ
+‚Ä‰º‚³‚¢B
 
 * Menu:
 
@@ -1210,9 +1192,9 @@ File: yatexj, Node: Changing LaTeX command, Next: Killing LaTeX command, Prev: M
 LaTeX ƒRƒ}ƒ“ƒh‚Ì•ÏX
 ====================
 
-•ÏX‚µ‚½‚¢ LaTeX ƒRƒ}ƒ“ƒh‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹‚Ä `[prefix] c'
-‚ğ‰Ÿ‚·‚Æ‚»‚ÌƒRƒ}ƒ“ƒh‚ğ•âŠ®“ü—Í‚È‚Ç‚ğ—p‚¢‚ÄèŒy‚É•Ï‚¦‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
-`[prefix] c' ‚Å•ÏX‚Å‚«‚éƒRƒ}ƒ“ƒh‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
+•ÏX‚µ‚½‚¢ LaTeX ƒRƒ}ƒ“ƒh‚ÉƒJ[ƒ\ƒ‹‚ğ‡‚í‚¹‚Ä `[prefix] c' ‚ğ‰Ÿ‚·‚Æ‚»‚ÌƒR
+ƒ}ƒ“ƒh‚ğ•âŠ®“ü—Í‚È‚Ç‚ğ—p‚¢‚ÄèŒy‚É•Ï‚¦‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B`[prefix] c' ‚Å•Ï
+X‚Å‚«‚éƒRƒ}ƒ“ƒh‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
 
    * `begin/end' ‚ÌŠÂ‹«–¼
    * sectionŒ^ƒRƒ}ƒ“ƒh‚ÌƒRƒ}ƒ“ƒh–¼
@@ -1221,9 +1203,9 @@ LaTeX ƒRƒ}ƒ“ƒh‚Ì•ÏX
    * largeŒ^ƒRƒ}ƒ“ƒh
    * (ƒCƒ[ƒW•âŠ®‚Å“ü—Í‰Â”\‚È)”®ƒ‚[ƒhê—p‚ÌmaketitleŒ^ƒRƒ}ƒ“ƒh
 
-  •Ï‚¦‚½‚¢sectionŒ^ƒRƒ}ƒ“ƒh‚Ìˆø”‚ª‚³‚ç‚É LaTeX ƒRƒ}ƒ“ƒh‚ğŠÜ‚Şê‡‚ÍA
-‚»‚Ìˆø”‚ğˆÍ‚Ş’†Š‡ŒÊ‚Ìã‚Å `[prefix] c' ‚ğ‰Ÿ‚·‚±‚Æ‚Å’†‚ÌƒRƒ}ƒ“ƒh‚ğ•ÏX
-‘ÎÛ”»’è‚©‚çœŠO‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+  •Ï‚¦‚½‚¢sectionŒ^ƒRƒ}ƒ“ƒh‚Ìˆø”‚ª‚³‚ç‚É LaTeX ƒRƒ}ƒ“ƒh‚ğŠÜ‚Şê‡‚ÍA‚»‚Ì
+ˆø”‚ğˆÍ‚Ş’†Š‡ŒÊ‚Ìã‚Å `[prefix] c' ‚ğ‰Ÿ‚·‚±‚Æ‚Å’†‚ÌƒRƒ}ƒ“ƒh‚ğ•ÏX‘ÎÛ”»’è
+‚©‚çœŠO‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 
 
@@ -1244,13 +1226,12 @@ LaTeX ƒRƒ}ƒ“ƒh‚Ìíœ
      Š‡ŒÊ‚Ìã                        ‘Î‚ğ‚È‚·Š‡ŒÊ‚Ìíœ
 
 
-`\begin, \end' ‚¨‚æ‚Ñ `%#BEGIN, %#END' ‚ğíœ‚·‚éê‡A`\begin, \end'
-‚â `%#BEGIN, %#END' ‚Ì‘¶İ‚·‚és‚Í‚Ü‚é‚²‚Æíœ‚³‚ê‚é‚Ì‚ÅA‚»‚ê‚ç‚Ìˆês
-‚É `\begin' ‚È‚Ç‚ğ“ñ‚ÂˆÈã˜A‚Ë‚Ä‘‚©‚È‚¢‚æ‚¤‚É’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢Bã‹L‚Ì
-‚à‚Ì‚Í‚·‚×‚Ä–{•¶‚ğˆÍ‚¤u—eŠív‚ğíœ‚·‚é‚æ‚¤‚É“­‚«‚Ü‚·‚ªA
-universal-argument (`C-u') ‚ğ‘Å‚Á‚½Œã‚Å`[prefix] k'‚ğƒ^ƒCƒv‚·‚é‚ÆA‚»‚ê
-‚¼‚ê‚Ìu—eŠív‚ÉŠÜ‚Ü‚ê‚éu’†gv‚àˆê‹C‚Éíœ‚µ‚Ü‚·BˆÈ‰º‚Ì—á‚ğQl‚É‚µ
-‚Ä‰º‚³‚¢B
+`\begin, \end' ‚¨‚æ‚Ñ `%#BEGIN, %#END' ‚ğíœ‚·‚éê‡A`\begin, \end' ‚â 
+`%#BEGIN, %#END' ‚Ì‘¶İ‚·‚és‚Í‚Ü‚é‚²‚Æíœ‚³‚ê‚é‚Ì‚ÅA‚»‚ê‚ç‚Ìˆês‚É 
+`\begin' ‚È‚Ç‚ğ“ñ‚ÂˆÈã˜A‚Ë‚Ä‘‚©‚È‚¢‚æ‚¤‚É’ˆÓ‚µ‚Ä‚­‚¾‚³‚¢Bã‹L‚Ì‚à‚Ì‚Í
+‚·‚×‚Ä–{•¶‚ğˆÍ‚¤u—eŠív‚ğíœ‚·‚é‚æ‚¤‚É“­‚«‚Ü‚·‚ªAuniversal-argument
+(`C-u') ‚ğ‘Å‚Á‚½Œã‚Å`[prefix] k'‚ğƒ^ƒCƒv‚·‚é‚ÆA‚»‚ê‚¼‚ê‚Ìu—eŠív‚ÉŠÜ‚Ü‚ê
+‚éu’†gv‚àˆê‹C‚Éíœ‚µ‚Ü‚·BˆÈ‰º‚Ì—á‚ğQl‚É‚µ‚Ä‰º‚³‚¢B
 
              Œ³‚ÌƒeƒLƒXƒg:                   [prefix] k      C-u [prefix] k
              –{•¶\footnote{‹r’}‚Å‚·B     –{•¶‹r’‚Å‚·B  –{•¶‚Å‚·B
@@ -1267,21 +1248,21 @@ File: yatexj, Node: Filling, Next: Includeonly, Prev: Modifying/Deleting, Up: To
 item‚ÌŒ…‘µ‚¦
 ============
 
-  itemize ŠÂ‹«’†‚É‚ ‚é`\item'‚Ì€–Ú(•¶Í)‚ª•¡”s‚É“n‚éê‡‚ÉA€–Ú‚Ìæ
-“ª‚ğŒ…‘µ‚¦‚µ‚½‚¢ê‡‚É‚ÍA
+  itemize ŠÂ‹«’†‚É‚ ‚é`\item'‚Ì€–Ú(•¶Í)‚ª•¡”s‚É“n‚éê‡‚ÉA€–Ú‚Ìæ“ª
+‚ğŒ…‘µ‚¦‚µ‚½‚¢ê‡‚É‚ÍA
 
 
 `M-q'
              ... Œ…‘µ‚¦
 
-‚É‚æ‚Á‚ÄA‚»‚Ì item ‚ÌƒCƒ“ƒfƒ“ƒg‚Ì[‚³‚É‰‚¶‚Ä fill ‚³‚ê‚Ü‚·B‚È‚¨AŒÃ
-‚¢NTT jTeX ‚ğg—p‚µ‚Ä‚¢‚éê‡‚É‚ÍALisp •Ï”`NTT-jTeX'‚ğ`t'‚ÉƒZƒbƒg‚µ‚Ä
-‰º‚³‚¢B
+‚É‚æ‚Á‚ÄA‚»‚Ì item ‚ÌƒCƒ“ƒfƒ“ƒg‚Ì[‚³‚É‰‚¶‚Ä fill ‚³‚ê‚Ü‚·B‚È‚¨AŒÃ‚¢
+NTT jTeX ‚ğg—p‚µ‚Ä‚¢‚éê‡‚É‚ÍALisp •Ï”`NTT-jTeX'‚ğ`t'‚ÉƒZƒbƒg‚µ‚Ä‰º‚³
+‚¢B
 
-  ‚±‚Ì‚Æ‚«A•Ï”`YaTeX-item-regexp'‚Ì’l(•W€‚Å‚Í `"\\\\item"')‚ğ
-€–Úw’èƒRƒ}ƒ“ƒh‚Ì³‹K•\Œ»‚Æ‚µ‚ÄŒŸõ‚Ég—p‚µ‚Ü‚·Bitemize ŠÂ‹«‚ÅA“Æ©‚ÌƒR
-ƒ}ƒ“ƒh‚ğ’è‹`‚µ‚Ä€–Ú‚ğ—ñ‹“‚µ‚Ä‚¢‚éê‡(—á‚¦‚Î`\underlineitem')‚ÍA
-`~/.emacs' ‚ÅŸ‚Ì‚æ‚¤‚Éw’è‚µ‚Ä‰º‚³‚¢B
+  ‚±‚Ì‚Æ‚«A•Ï”`YaTeX-item-regexp'‚Ì’l(•W€‚Å‚Í `"\\\\item"')‚ğ€–Úw’èƒR
+ƒ}ƒ“ƒh‚Ì³‹K•\Œ»‚Æ‚µ‚ÄŒŸõ‚Ég—p‚µ‚Ü‚·Bitemize ŠÂ‹«‚ÅA“Æ©‚ÌƒRƒ}ƒ“ƒh‚ğ’è
+‹`‚µ‚Ä€–Ú‚ğ—ñ‹“‚µ‚Ä‚¢‚éê‡(—á‚¦‚Î`\underlineitem')‚ÍA`~/.emacs' ‚ÅŸ‚Ì
+‚æ‚¤‚Éw’è‚µ‚Ä‰º‚³‚¢B
 
              (setq YaTeX-item-regexp
                    "\\(\\\\\\(sub\\)*item\\)\\|\\(\\\\underlineitem\\)")
@@ -1290,8 +1271,8 @@ item‚ÌŒ…‘µ‚¦
 ‚±‚Ì•Ï”‚Ìw’è‚Ìd•û‚ª‚æ‚­•ª‚©‚ç‚È‚¢ê‡‚ÍA“Æ©‚Ì€–Ú—ñ‹“ƒRƒ}ƒ“ƒh‚Ì–¼‘O‚ğ
 ``"\item"'‚Ån‚Ü‚é‚à‚Ì‚É‚µ‚Ä‰º‚³‚¢(—á‚¦‚Î"\itembf"')B
 
-–ì’¹‚Ì `M-q' ‚Å‚Í `\item' ‚ğŠÂ‹«‚É‰‚¶‚ÄˆÈ‰º‚Ì‚æ‚¤‚Éuƒnƒ“ƒOƒCƒ“ƒfƒ“ƒgv
-‚µ‚Ü‚·B
+–ì’¹‚Ì `M-q' ‚Å‚Í `\item' ‚ğŠÂ‹«‚É‰‚¶‚ÄˆÈ‰º‚Ì‚æ‚¤‚Éuƒnƒ“ƒOƒCƒ“ƒfƒ“ƒgv‚µ
+‚Ü‚·B
 
      itemize, enumerateŠÂ‹«:
             >\item[‚Ù‚°‚Ù‚°] ‰pŒê‚Å‚ÍA“Á‚ÉˆÓ–¡‚Ì‚È‚¢’PŒê‚ğ `foo' ‚Å‚ ‚ç‚í‚µ‚Ü
@@ -1306,13 +1287,12 @@ item‚ÌŒ…‘µ‚¦
 ƒpƒ‰ƒOƒ‰ƒt‚ÌŒ…‘µ‚¦
 ==================
 
-  itemizeŠÂ‹«ˆÈŠO‚Å‚Ìƒpƒ‰ƒOƒ‰ƒt‚ÌŒ…‘µ‚¦(fill)‚ÍAŠî–{“I‚É‘¼‚Ìƒ‚[ƒh‚Æ“¯
-‚¶‚æ‚¤‚É‹@”\‚µ‚Ü‚·‚ªAverbatimŠÂ‹«‚âAtabularŠÂ‹«‚È‚ÇŒ…‘µ‚¦‚ğ‚·‚é‚Æ”ßS
-‚Èó‹µ‚É‚È‚é‚æ‚¤‚ÈŠÂ‹«’†‚Å‚Í‹@”\‚µ‚Ü‚¹‚ñB‚Ü‚½A\verb ‚ÅŠ‡‚Á‚Ä‚ ‚é‚à‚Ì
-‚ÍŒˆ‚µ‚Äs•ªŠ„‚³‚ê‚Ü‚¹‚ñ(•Ï” `YaTeX-verb-regexp' ‚Å§Œä) )B‚³‚ç‚ÉAˆê
-“I‚ÉƒCƒ“ƒfƒ“ƒg‚Ì[‚³‚ğ•Ï‚¦‚Ä‚ ‚é‰ÓŠ‚Å‚ÍA‚»‚ÌƒCƒ“ƒfƒ“ƒg‚Ìæ“ª‚Å
-`M-q'‚ğ‰Ÿ‚·‚±‚Æ‚É‚æ‚è fill-prefix ‚ğ‚¢‚¿‚¢‚¿•ÏX‚µ‚È‚­‚ÄŒ…‘µ‚¦‚ª‚Å‚«‚Ü
-‚·B
+  itemizeŠÂ‹«ˆÈŠO‚Å‚Ìƒpƒ‰ƒOƒ‰ƒt‚ÌŒ…‘µ‚¦(fill)‚ÍAŠî–{“I‚É‘¼‚Ìƒ‚[ƒh‚Æ“¯‚¶
+‚æ‚¤‚É‹@”\‚µ‚Ü‚·‚ªAverbatimŠÂ‹«‚âAtabularŠÂ‹«‚È‚ÇŒ…‘µ‚¦‚ğ‚·‚é‚Æ”ßS‚Èó
+‹µ‚É‚È‚é‚æ‚¤‚ÈŠÂ‹«’†‚Å‚Í‹@”\‚µ‚Ü‚¹‚ñB‚Ü‚½A\verb ‚ÅŠ‡‚Á‚Ä‚ ‚é‚à‚Ì‚ÍŒˆ‚µ‚Ä
+s•ªŠ„‚³‚ê‚Ü‚¹‚ñ(•Ï” `YaTeX-verb-regexp' ‚Å§Œä) )B‚³‚ç‚ÉAˆê“I‚ÉƒCƒ“
+ƒfƒ“ƒg‚Ì[‚³‚ğ•Ï‚¦‚Ä‚ ‚é‰ÓŠ‚Å‚ÍA‚»‚ÌƒCƒ“ƒfƒ“ƒg‚Ìæ“ª‚Å`M-q'‚ğ‰Ÿ‚·‚±‚Æ‚É
+‚æ‚è fill-prefix ‚ğ‚¢‚¿‚¢‚¿•ÏX‚µ‚È‚­‚ÄŒ…‘µ‚¦‚ª‚Å‚«‚Ü‚·B
 
 
 
@@ -1326,23 +1306,22 @@ File: yatexj, Node: Includeonly, Next: What column, Prev: Filling, Up: Top
 
              \includeonly{Œ»İ•ÒW’†‚Ìƒtƒ@ƒCƒ‹–¼}
 
-‚Ì‚æ‚¤‚É‘‚¢‚Ä‚¨‚­‚±‚Æ‚ÅAƒ^ƒCƒvƒZƒbƒg‚ÌŠÔ‚ğß–ñ‚Å‚«‚Ü‚·‚ªA‚¿‚å‚Á‚Æ
-‘¼‚Ìƒtƒ@ƒCƒ‹‚ğè’¼‚µ‚µ‚½‚¢‚É‚Í
+‚Ì‚æ‚¤‚É‘‚¢‚Ä‚¨‚­‚±‚Æ‚ÅAƒ^ƒCƒvƒZƒbƒg‚ÌŠÔ‚ğß–ñ‚Å‚«‚Ü‚·‚ªA‚¿‚å‚Á‚Æ‘¼‚Ì
+ƒtƒ@ƒCƒ‹‚ğè’¼‚µ‚µ‚½‚¢‚É‚Í
 
              \includeonly{‚¿‚å‚Á‚Æè’¼‚µ‚µ‚½‚¢ƒtƒ@ƒCƒ‹–¼}
 
 
-‚Æ‘‚«’¼‚³‚È‚¯‚ê‚Î‚È‚ç‚¸èŠÔ‚ª‚©‚©‚è‚Ü‚·B–ì’¹‚Å‚ÍŒ»İ•ÒW‚µ‚Ä‚¢‚éƒtƒ@
-ƒCƒ‹–¼‚ªƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ì`\includeonly'‚É‚È‚¢ê‡‚É‚Í©“®“I‚É‚±‚ê‚ğŒŸo
-‚µAŸ‚Ìw¦‚ğ‹Â‚¬‚Ü‚·B
+‚Æ‘‚«’¼‚³‚È‚¯‚ê‚Î‚È‚ç‚¸èŠÔ‚ª‚©‚©‚è‚Ü‚·B–ì’¹‚Å‚ÍŒ»İ•ÒW‚µ‚Ä‚¢‚éƒtƒ@ƒCƒ‹
+–¼‚ªƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ì`\includeonly'‚É‚È‚¢ê‡‚É‚Í©“®“I‚É‚±‚ê‚ğŒŸo‚µAŸ‚Ì
+w¦‚ğ‹Â‚¬‚Ü‚·B
 
              A)dd R)eplace %)comment?
 
 
-Œ»İ•ÒW’†‚Ìƒtƒ@ƒCƒ‹‚ğ `\includeonly' ‚ÌƒŠƒXƒg‚É‰Á‚¦‚½‚¢‚É‚Í`a'‚ğAŒ»
-İ•ÒW’†‚Ìƒtƒ@ƒCƒ‹‚¾‚¯‚ğ `\includeonly' ‚É‚µ‚½‚¢‚Í`r'‚ğA
-`\includeonly' ‚Ìs‚ğƒRƒƒ“ƒgƒAƒEƒg‚µ‚Ä–³Œø‰»‚µ‚½‚¢‚É‚ÍA`%'‚ğ‚»‚ê‚¼
-‚ê‰Ÿ‚µ‚Ä‰º‚³‚¢B
+Œ»İ•ÒW’†‚Ìƒtƒ@ƒCƒ‹‚ğ `\includeonly' ‚ÌƒŠƒXƒg‚É‰Á‚¦‚½‚¢‚É‚Í`a' ‚ğAŒ»İ
+•ÒW’†‚Ìƒtƒ@ƒCƒ‹‚¾‚¯‚ğ `\includeonly' ‚É‚µ‚½‚¢‚Í`r'‚ğA`\includeonly' ‚Ì
+s‚ğƒRƒƒ“ƒgƒAƒEƒg‚µ‚Ä–³Œø‰»‚µ‚½‚¢‚É‚ÍA`%'‚ğ‚»‚ê‚¼‚ê‰Ÿ‚µ‚Ä‰º‚³‚¢B
 
 
 
@@ -1351,9 +1330,9 @@ File: yatexj, Node: What column, Next: Intelligent newline, Prev: Includeonly, U
 ‚±‚±‚Í‚Ç‚±?
 ***********
 
-  €–Ú”‚Ì‘½‚¢ tabular ‚È‚Ç‚ğ‚½‚­‚³‚ñ‘‚¢‚Ä‚¢‚é‚Æ‰º‚Ì•û‚Ìs‚ÅA‚¢‚Ü‘‚¢
-‚Ä‚¢‚éŒ…‚ª‚Ç‚±‚É‘Î‰‚·‚é‚Ì‚©‚í‚©‚ç‚È‚­‚È‚Á‚Ä‚µ‚Ü‚¤‚±‚Æ‚ª‚ ‚è‚Ü‚·B—á‚¦
-‚ÎAˆÈ‰º‚Ì‚æ‚¤‚È tabular ‚É‚¨‚¢‚ÄA
+  €–Ú”‚Ì‘½‚¢ tabular ‚È‚Ç‚ğ‚½‚­‚³‚ñ‘‚¢‚Ä‚¢‚é‚Æ‰º‚Ì•û‚Ìs‚ÅA‚¢‚Ü‘‚¢‚Ä
+‚¢‚éŒ…‚ª‚Ç‚±‚É‘Î‰‚·‚é‚Ì‚©‚í‚©‚ç‚È‚­‚È‚Á‚Ä‚µ‚Ü‚¤‚±‚Æ‚ª‚ ‚è‚Ü‚·B—á‚¦‚ÎAˆÈ
+‰º‚Ì‚æ‚¤‚È tabular ‚É‚¨‚¢‚ÄA
 
              \begin{tabular}{|c|c|c|c|c|c|c|c|}\hline
               –¼&Š‘®&§&ZŠ&“d˜b&FAX&‹AÈæ&‹AÈæ“d˜b\\ \hline
@@ -1370,10 +1349,10 @@ File: yatexj, Node: What column, Next: Intelligent newline, Prev: Includeonly, U
 `[prefix] &'
              ... Œ»İ‚ÌƒJƒ‰ƒ€•\¦
 
-‚ğ‰Ÿ‚·‚ÆƒJ[ƒ\ƒ‹ˆÊ’u‚ÌƒJƒ‰ƒ€‚ª‚Ç‚Ì€–Ú‚ÉŠY“–‚·‚é‚©‚ğƒ~ƒjƒoƒbƒtƒ@‚É•\¦
-‚µ‚Ü‚·Btabular/arrayŠÂ‹«‚Ì‘æ1s–Ú‚ğ€–Ú–¼‚Ì•À‚Ñ‚Æ‚İ‚È‚µ‚Ä‘Î‰‚·‚é‚à‚Ì
-‚ğ’T‚µ‚Ü‚·B‚à‚µ€–Ú–¼‚Æ‚µ‚Ä•Ê‚Ì‚à‚Ì‚ğ•\¦‚µ‚Ä—~‚µ‚¢ê‡‚ÍAs“ª‚ğ`%'‚É
-‚µ‚Äƒ_ƒ~[‚Ì€–Ú•À‚Ñ‚ğì‚Á‚Ä‚¨‚­‚Æ—Ç‚¢‚Å‚µ‚å‚¤B
+‚ğ‰Ÿ‚·‚ÆƒJ[ƒ\ƒ‹ˆÊ’u‚ÌƒJƒ‰ƒ€‚ª‚Ç‚Ì€–Ú‚ÉŠY“–‚·‚é‚©‚ğƒ~ƒjƒoƒbƒtƒ@‚É•\¦‚µ‚Ü
+‚·Btabular/arrayŠÂ‹«‚Ì‘æ1s–Ú‚ğ€–Ú–¼‚Ì•À‚Ñ‚Æ‚İ‚È‚µ‚Ä‘Î‰‚·‚é‚à‚Ì‚ğ’T‚µ‚Ü
+‚·B‚à‚µ€–Ú–¼‚Æ‚µ‚Ä•Ê‚Ì‚à‚Ì‚ğ•\¦‚µ‚Ä—~‚µ‚¢ê‡‚ÍAs“ª‚ğ`%'‚É‚µ‚Äƒ_ƒ~[
+‚Ì€–Ú•À‚Ñ‚ğì‚Á‚Ä‚¨‚­‚Æ—Ç‚¢‚Å‚µ‚å‚¤B
 
 
 
@@ -1382,18 +1361,18 @@ File: yatexj, Node: Intelligent newline, Next: Usepackage cheker, Prev: What col
 ‚¨‚Ü‚©‚¹‰üs
 ************
 
-  tabular[*], array, itemize, enumerate, tabbing ŠÂ‹«‚ğbeginŒ^•âŠ®‚Å“ü
-—Í‚µ‚½A‚Ü‚½‚ÍŠeŠÂ‹«“à‚Å
+  tabular[*], array, itemize, enumerate, tabbing ŠÂ‹«‚ğbeginŒ^•âŠ®‚Å“ü—Í‚µ
+‚½A‚Ü‚½‚ÍŠeŠÂ‹«“à‚Å
 
 `ESC RET'
              ... ‚¨‚Ü‚©‚¹‰üs
 
 
-‚ğ‰Ÿ‚·‚ÆA‚»‚ÌŠÂ‹«‚É‰‚¶‚½sƒGƒ“ƒgƒŠ‚ğŸ‚Ìs‚É‘}“ü‚µ‚Ü‚·(beginŒ^•âŠ®
-‚É©“®‘}“ü‚³‚ê‚½ƒGƒ“ƒgƒŠ‚ª•s—v‚Èê‡‚Í undo ‚É‚æ‚Á‚ÄÁ‹‚Å‚«‚Ü‚·)B—á‚¦
-‚ÎAtabularŠÂ‹«‚Å‚ÍA‚»‚ÌŠÂ‹«‚ÌƒJƒ‰ƒ€”‚É‘Î‰‚µ‚½ŒÂ”‚Ì `&' ‚É‰Á‚¦As
-––‚Ì `\\' ‚ğ“ü‚ê‚Ü‚·B‚±‚Ì‚»‚êˆÈ‘O‚É `\hline' ‚ª‚ ‚ê‚Î‚»‚ê‚à•t‚¯‰Á‚¦
-‚Ü‚·BŠÂ‹«‚Æ‚»‚ê‚É‰‚¶‚Ä©“®“ü—Í‚·‚é‚à‚Ì‚Ì‘Î‰‚ÍˆÈ‰º‚Ì‚æ‚¤‚É‚È‚è‚Ü‚·B
+‚ğ‰Ÿ‚·‚ÆA‚»‚ÌŠÂ‹«‚É‰‚¶‚½sƒGƒ“ƒgƒŠ‚ğŸ‚Ìs‚É‘}“ü‚µ‚Ü‚·(beginŒ^•âŠ®‚É©
+“®‘}“ü‚³‚ê‚½ƒGƒ“ƒgƒŠ‚ª•s—v‚Èê‡‚Í undo ‚É‚æ‚Á‚ÄÁ‹‚Å‚«‚Ü‚·)B—á‚¦‚ÎA
+tabularŠÂ‹«‚Å‚ÍA‚»‚ÌŠÂ‹«‚ÌƒJƒ‰ƒ€”‚É‘Î‰‚µ‚½ŒÂ”‚Ì `&' ‚É‰Á‚¦As––‚Ì 
+`\\' ‚ğ“ü‚ê‚Ü‚·B‚±‚Ì‚»‚êˆÈ‘O‚É `\hline' ‚ª‚ ‚ê‚Î‚»‚ê‚à•t‚¯‰Á‚¦‚Ü‚·BŠÂ
+‹«‚Æ‚»‚ê‚É‰‚¶‚Ä©“®“ü—Í‚·‚é‚à‚Ì‚Ì‘Î‰‚ÍˆÈ‰º‚Ì‚æ‚¤‚É‚È‚è‚Ü‚·B
 
    * `tabular', `tabular*', `array'
 
@@ -1407,16 +1386,16 @@ File: yatexj, Node: Intelligent newline, Next: Usepackage cheker, Prev: What col
 
              `\item' ‚Ü‚½‚Í `item[]'
 
-  tabular ŠÂ‹«‚Ì—á‚Ì‚æ‚¤‚ÉA–{‹@”\‚ÍŠeŠÂ‹«‚Ìˆês–Ú‚Ì“à—e‚ğQl‚É‚µ‚Ä“®
-ì‚·‚é‚Ì‚ÅA‚È‚é‚×‚­“ñs–ÚˆÈ~‚ÅŒÄ‚Ño‚·‚æ‚¤‚É‚µ‚Ä‚­‚¾‚³‚¢B
+  tabular ŠÂ‹«‚Ì—á‚Ì‚æ‚¤‚ÉA–{‹@”\‚ÍŠeŠÂ‹«‚Ìˆês–Ú‚Ì“à—e‚ğQl‚É‚µ‚Ä“®ì‚·
+‚é‚Ì‚ÅA‚È‚é‚×‚­“ñs–ÚˆÈ~‚ÅŒÄ‚Ño‚·‚æ‚¤‚É‚µ‚Ä‚­‚¾‚³‚¢B
 
-  ‚à‚µA‚»‚Ì‘¼‚ÌŠÂ‹«A—á‚¦‚Î `foo'A‚É‘Î‚µ‚Ä`‚¨‚Ü‚©‚¹‰üs'‚ğ“®ì
-‚³‚¹‚½‚¢‚ÍA`YaTeX-intelligent-newline-foo' ‚Æ‚¢‚¤–¼‘O‚ÌŠÖ”‚ğ’è‹`
-‚µ‚Ü‚·B’è‹`‚µ‚½ŠÖ”‚ÍAŒ»İ‚Ìs‚É‰üs‚ğ‘}“ü‚µ‚½’¼Œã‚Ìs“ª‚ÌˆÊ’u‚ÅŒÄ‚Î‚ê‚Ü
-‚·BŠÖ” `YaTeX-indent-line' ‚ğŒÄ‚Ô‚ÆŒ»İ‚ÌŠÂ‹«‚ÌƒlƒXƒg‚É‰‚¶‚½[‚³‚É
-ƒCƒ“ƒfƒ“ƒg‚³‚ê‚é‚Ì‚ÅA‚±‚ê‚ğŒÄ‚ñ‚Å‚©‚ç‰½‚©‚ğ‘}“ü‚·‚é‚æ‚¤‚ÈƒR[ƒh‚ğ‘‚­‚Æ‚æ
-‚¢‚Å‚µ‚å‚¤B`yatexenv.el'“à‚ÌŠÖ”
-`YaTeX-intelligent-newline-itemize' ‚Ì’è‹`‚È‚Ç‚ğQl‚É‚µ‚Ä‚­‚¾‚³‚¢B
+  ‚à‚µA‚»‚Ì‘¼‚ÌŠÂ‹«A—á‚¦‚Î `foo'A‚É‘Î‚µ‚Ä`‚¨‚Ü‚©‚¹‰üs'‚ğ“®ì‚³‚¹‚½‚¢
+‚ÍA`YaTeX-intelligent-newline-foo' ‚Æ‚¢‚¤–¼‘O‚ÌŠÖ”‚ğ’è‹`‚µ‚Ü‚·B’è‹`‚µ‚½
+ŠÖ”‚ÍAŒ»İ‚Ìs‚É‰üs‚ğ‘}“ü‚µ‚½’¼Œã‚Ìs“ª‚ÌˆÊ’u‚ÅŒÄ‚Î‚ê‚Ü‚·BŠÖ” 
+`YaTeX-indent-line' ‚ğŒÄ‚Ô‚ÆŒ»İ‚ÌŠÂ‹«‚ÌƒlƒXƒg‚É‰‚¶‚½[‚³‚ÉƒCƒ“ƒfƒ“ƒg‚³‚ê
+‚é‚Ì‚ÅA‚±‚ê‚ğŒÄ‚ñ‚Å‚©‚ç‰½‚©‚ğ‘}“ü‚·‚é‚æ‚¤‚ÈƒR[ƒh‚ğ‘‚­‚Æ‚æ‚¢‚Å‚µ‚å‚¤B
+`yatexenv.el'“à‚ÌŠÖ” `YaTeX-intelligent-newline-itemize' ‚Ì’è‹`‚È‚Ç‚ğQl
+‚É‚µ‚Ä‚­‚¾‚³‚¢B
 
 
 
@@ -1426,15 +1405,14 @@ File: yatexj, Node: Usepackage cheker, Next: Changing mode of YaTeX, Prev: Intel
 æ‰ñ‚èusepackage
 ****************
 
-  beginŒ^AsectionŒ^AmaketitleŒ^A‚¢‚¸‚ê‚©‚ÌLaTeX2eƒ}ƒNƒ‚ğ•âŠ®“ü—Í‚·
-‚é‚ÆA‚»‚Ìƒ}ƒNƒ‚Ì—˜—p‚ÉŠO•”ƒpƒbƒP[ƒW‚ğ•K—v‚Æ‚·‚éê‡A‚»‚ÌƒpƒbƒP[ƒW
-‚ğ–{•¶’†‚Å `\usepackage{}' ‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ’²¸‚µA‚à‚µ‚µ‚Ä‚¢‚È‚¯‚ê‚Î
-ƒvƒŠƒAƒ“ƒuƒ‹‚É‘Î‰‚·‚éƒpƒbƒP[ƒW‚ğˆø”‚É‚µ‚½ `\usepackage' •¶‚ğ(Šm”FŒã
-‚É)‘}“ü‚µ‚Ü‚·B
+  beginŒ^AsectionŒ^AmaketitleŒ^A‚¢‚¸‚ê‚©‚ÌLaTeX2eƒ}ƒNƒ‚ğ•âŠ®“ü—Í‚·‚é‚ÆA
+‚»‚Ìƒ}ƒNƒ‚Ì—˜—p‚ÉŠO•”ƒpƒbƒP[ƒW‚ğ•K—v‚Æ‚·‚éê‡A‚»‚ÌƒpƒbƒP[ƒW‚ğ–{•¶’†‚Å 
+`\usepackage{}' ‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ’²¸‚µA‚à‚µ‚µ‚Ä‚¢‚È‚¯‚ê‚ÎƒvƒŠƒAƒ“ƒuƒ‹‚É
+‘Î‰‚·‚éƒpƒbƒP[ƒW‚ğˆø”‚É‚µ‚½ `\usepackage' •¶‚ğ(Šm”FŒã‚É)‘}“ü‚µ‚Ü‚·B
 
-  ‚½‚¾‚µ‚±‚Ì‹@”\‚ª“­‚­‚½‚ß‚É‚ÍAƒpƒbƒP[ƒW–¼‚Æ‚»‚Ì’†‚Å’è‹`‚³‚ê‚Ä‚¢‚éƒ}
-ƒNƒŒQ‚ğalist‚ÌŒ`®‚Å•Ï” `YaTeX-package-alist-private' ‚Éİ’è‚µ‚Ä‚¨‚­
-•K—v‚ª‚ ‚è‚Ü‚·B
+  ‚½‚¾‚µ‚±‚Ì‹@”\‚ª“­‚­‚½‚ß‚É‚ÍAƒpƒbƒP[ƒW–¼‚Æ‚»‚Ì’†‚Å’è‹`‚³‚ê‚Ä‚¢‚éƒ}ƒNƒ
+ŒQ‚ğalist‚ÌŒ`®‚Å•Ï” `YaTeX-package-alist-private' ‚Éİ’è‚µ‚Ä‚¨‚­•K—v‚ª‚ 
+‚è‚Ü‚·B
 
 
 
@@ -1451,15 +1429,15 @@ File: yatexj, Node: Changing mode of YaTeX, Next: Online help, Prev: Usepackage 
    * C³ƒ‚[ƒh
    * –ì’¹”®ƒ‚[ƒh
 
-C³ƒ‚[ƒh‚ÍAŠJ‚«Š‡ŒÊ“ü—Í‚Ìˆ—‚ğƒRƒ“ƒgƒ[ƒ‹‚µAC³ƒ‚[ƒhON‚Ì‚Í
-ŠJ‚«Š‡ŒÊ‚Ì“ü—Í‚ÍŠJ‚«Š‡ŒÊ‚Ì‚İ‚Ì“ü—Í‚É‚È‚èAC³ƒ‚[ƒhOFF‚Ì‚ÍŠJ‚«Š‡ŒÊ‚Ì
-“ü—Í‚¾‚¯‚Å•Â‚¶Š‡ŒÊ‚Ü‚Å“ü—Í‚µ‚Ü‚·BƒfƒtƒHƒ‹ƒg(‹N“®)‚Ìİ’è‚Í*OFF*‚Å‚·B
+C³ƒ‚[ƒh‚ÍAŠJ‚«Š‡ŒÊ“ü—Í‚Ìˆ—‚ğƒRƒ“ƒgƒ[ƒ‹‚µAC³ƒ‚[ƒhON‚Ì‚ÍŠJ‚«
+Š‡ŒÊ‚Ì“ü—Í‚ÍŠJ‚«Š‡ŒÊ‚Ì‚İ‚Ì“ü—Í‚É‚È‚èAC³ƒ‚[ƒhOFF‚Ì‚ÍŠJ‚«Š‡ŒÊ‚Ì“ü—Í‚¾
+‚¯‚Å•Â‚¶Š‡ŒÊ‚Ü‚Å“ü—Í‚µ‚Ü‚·BƒfƒtƒHƒ‹ƒg(‹N“®)‚Ìİ’è‚Í*OFF*‚Å‚·B
 
-  –ì’¹”®ƒ‚[ƒh‚ÍA•Ï” `YaTeX-auto-math-mode' ‚ª `nil' ‚Ì‚Ì
-‚İ—LŒø‚ÅA‚±‚Ì‚Æ‚«`;'‚â`:'‚ğ‰Ÿ‚µ‚½(*Note Image completion::QÆ)‚ÉA
-‚Ç‚Ì‚æ‚¤‚ÈƒCƒ[ƒW•âŠ®‚ğ‹@”\‚³‚¹‚é‚©A’Êí‚ÌƒL[‚Æ‚µ‚Ä‹@”\‚³‚¹‚é‚©‚ğè“®‚Å
-Ø‚è‘Ö‚¦‚Ü‚·B©“®”»’è‚ª’x‚¢ƒ}ƒVƒ“‚Å‚Í`YaTeX-auto-math-mode'
-`nil'‚ÉƒZƒbƒg‚µA–ì’¹”®ƒ‚[ƒh‚ğè“®‚ÅØ‚è‘Ö‚¦‚é‚Æ—Ç‚¢‚Å‚µ‚å‚¤B
+  –ì’¹”®ƒ‚[ƒh‚ÍA•Ï” `YaTeX-auto-math-mode' ‚ª `nil' ‚Ì‚Ì‚İ—LŒø‚ÅA
+‚±‚Ì‚Æ‚«`;'‚â`:'‚ğ‰Ÿ‚µ‚½(*Note Image completion::QÆ)‚ÉA‚Ç‚Ì‚æ‚¤‚ÈƒCƒ[
+ƒW•âŠ®‚ğ‹@”\‚³‚¹‚é‚©A’Êí‚ÌƒL[‚Æ‚µ‚Ä‹@”\‚³‚¹‚é‚©‚ğè“®‚ÅØ‚è‘Ö‚¦‚Ü‚·B©
+“®”»’è‚ª’x‚¢ƒ}ƒVƒ“‚Å‚Í`YaTeX-auto-math-mode' `nil'‚ÉƒZƒbƒg‚µA–ì’¹”®ƒ‚[
+ƒh‚ğè“®‚ÅØ‚è‘Ö‚¦‚é‚Æ—Ç‚¢‚Å‚µ‚å‚¤B
 
 
 
@@ -1469,8 +1447,8 @@ File: yatexj, Node: Online help, Next: Inclusion hierarchy browser, Prev: Changi
 ƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv
 ****************
 
-  g‚¨‚¤‚Æ‚·‚é LaTeX ƒRƒ}ƒ“ƒh‚Ì—p–@‚ª‚æ‚­•ª‚©‚ç‚È‚¢‚ÍAƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹
-ƒv‚ğ‚Ğ‚«‚Ü‚µ‚å‚¤Bƒwƒ‹ƒv‚ÉŠÖ‚·‚éƒL[‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
+  g‚¨‚¤‚Æ‚·‚é LaTeX ƒRƒ}ƒ“ƒh‚Ì—p–@‚ª‚æ‚­•ª‚©‚ç‚È‚¢‚ÍAƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv
+‚ğ‚Ğ‚«‚Ü‚µ‚å‚¤Bƒwƒ‹ƒv‚ÉŠÖ‚·‚éƒL[‚É‚ÍˆÈ‰º‚Ì‚à‚Ì‚ª‚ ‚è‚Ü‚·B
 
 `[prefix] ?'
              ... ƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv
@@ -1481,29 +1459,28 @@ File: yatexj, Node: Online help, Next: Inclusion hierarchy browser, Prev: Changi
 ƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv
 ================
 
-  uƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒvv‚ÍAˆê”Ê“I‚È LaTeX ƒRƒ}ƒ“ƒh(ƒfƒtƒHƒ‹ƒg‚ÅƒJ[ƒ\ƒ‹
-ˆÊ’u‚ÌƒRƒ}ƒ“ƒh)‚É‘Î‚·‚éà–¾‚ğ—×‚Ìƒoƒbƒtƒ@‚É•\¦‚µ‚Ü‚·B‚±‚ÌQÆ‚³‚ê‚é
-ƒwƒ‹ƒv—pƒtƒ@ƒCƒ‹‚É‚ÍuƒOƒ[ƒoƒ‹ƒwƒ‹ƒvv‚Æuƒvƒ‰ƒCƒx[ƒgƒwƒ‹ƒvv‚Ì“ñí
-—Ş‚ª‚ ‚èA‘OÒ‚Í LaTeX ‚Ì•W€ƒRƒ}ƒ“ƒh‚Ìå‚È‚à‚Ì‚Ìà–¾‚ğŠÜ‚Şƒtƒ@ƒCƒ‹‚ÅA
-•Ï”`YaTeX-help-file'‚Ì’l‚Åw’è‚³‚ê‚Ü‚·B‚±‚Ìƒtƒ@ƒCƒ‹‚Í’ÊíŒö‹¤‚ÌêŠ
-(ƒfƒtƒHƒ‹ƒg‚Å`$EMACSEXECPATH')‚É’u‚©‚êA’N‚à‚ª‚»‚Ì“à—e‚ğXV‚Å‚«‚é‚æ‚¤
-‚É‘Sˆõ‚É‘‚«‚İŒ ‚ª—^‚¦‚ç‚ê‚é‚×‚«‚à‚Ì‚Å‚·BŒãÒ‚ÍA”ñ•W€‚à‚µ‚­‚ÍŒÂl
-“I‚Èƒ}ƒNƒ’è‹`‚ÉŠÖ‚·‚éà–¾‚ª‘‚©‚ê‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚ÅA•Ï”
-`YaTeX-help-file-private'‚Ì’l‚Åw’è‚³‚ê‚Ü‚·B‚±‚¿‚ç‚Íƒ†[ƒU‚Ìƒz[ƒ€ƒfƒB
-ƒŒƒNƒgƒŠ‚Ì‰º‚È‚Ç‚É’u‚©‚ê‚Ü‚·B
+  uƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒvv‚ÍAˆê”Ê“I‚È LaTeX ƒRƒ}ƒ“ƒh(ƒfƒtƒHƒ‹ƒg‚ÅƒJ[ƒ\ƒ‹ˆÊ’u
+‚ÌƒRƒ}ƒ“ƒh)‚É‘Î‚·‚éà–¾‚ğ—×‚Ìƒoƒbƒtƒ@‚É•\¦‚µ‚Ü‚·B‚±‚ÌQÆ‚³‚ê‚éƒwƒ‹ƒv
+—pƒtƒ@ƒCƒ‹‚É‚ÍuƒOƒ[ƒoƒ‹ƒwƒ‹ƒvv‚Æuƒvƒ‰ƒCƒx[ƒgƒwƒ‹ƒvv‚Ì“ñí—Ş‚ª‚ ‚èA
+‘OÒ‚Í LaTeX ‚Ì•W€ƒRƒ}ƒ“ƒh‚Ìå‚È‚à‚Ì‚Ìà–¾‚ğŠÜ‚Şƒtƒ@ƒCƒ‹‚ÅA•Ï”
+`YaTeX-help-file'‚Ì’l‚Åw’è‚³‚ê‚Ü‚·B‚±‚Ìƒtƒ@ƒCƒ‹‚Í’ÊíŒö‹¤‚ÌêŠ(ƒfƒtƒHƒ‹
+ƒg‚Å`$EMACSEXECPATH')‚É’u‚©‚êA’N‚à‚ª‚»‚Ì“à—e‚ğXV‚Å‚«‚é‚æ‚¤‚É‘Sˆõ‚É‘‚«
+‚İŒ ‚ª—^‚¦‚ç‚ê‚é‚×‚«‚à‚Ì‚Å‚·BŒãÒ‚ÍA”ñ•W€‚à‚µ‚­‚ÍŒÂl“I‚Èƒ}ƒNƒ’è‹`‚É
+ŠÖ‚·‚éà–¾‚ª‘‚©‚ê‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚ÅA•Ï”`YaTeX-help-file-private'‚Ì’l‚Åw
+’è‚³‚ê‚Ü‚·B‚±‚¿‚ç‚Íƒ†[ƒU‚Ìƒz[ƒ€ƒfƒBƒŒƒNƒgƒŠ‚Ì‰º‚È‚Ç‚É’u‚©‚ê‚Ü‚·B
 
 
 ƒIƒ“ƒ‰ƒCƒ“apropos
 =================
 
-  uƒIƒ“ƒ‰ƒCƒ“aproposv‚Í GNU Emacs ‚Ì apropos ‚Æ“¯—lAƒ†[ƒU‚ªw’è‚µ‚½
-ƒL[ƒ[ƒh‚ğà–¾•¶‚ÉŠÜ‚Ş€–Ú‚·‚×‚Ä‚ğ—×‚Ìƒoƒbƒtƒ@‚É•\¦‚µ‚Ü‚·B
+  uƒIƒ“ƒ‰ƒCƒ“aproposv‚Í GNU Emacs ‚Ì apropos ‚Æ“¯—lAƒ†[ƒU‚ªw’è‚µ‚½ƒL[
+ƒ[ƒh‚ğà–¾•¶‚ÉŠÜ‚Ş€–Ú‚·‚×‚Ä‚ğ—×‚Ìƒoƒbƒtƒ@‚É•\¦‚µ‚Ü‚·B
 
-  ‚à‚µA’²‚×‚æ‚¤‚Æ‚µ‚½LaTeXƒRƒ}ƒ“ƒh‚É‘Î‚·‚éà–¾‚ªƒwƒ‹ƒvƒtƒ@ƒCƒ‹’†‚ÉŒ©‚Â
-‚©‚ç‚È‚©‚Á‚½ê‡‚ÍAà–¾•¶‚Ì“ü—Í‚ğ‹‚ß‚Ä‚­‚é‚Ì‚ÅA‰Â”\‚Å‚ ‚ê‚ÎQl‘‚È
-‚Ç‚ğ’²‚×‚Ä‚»‚ÌƒRƒ}ƒ“ƒh‚Ìà–¾‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B‚à‚µA‚È‚É‚©•W€“I‚ÈƒR
-ƒ}ƒ“ƒh‚É‘Î‚·‚éà–¾‚ğ‘‚¢‚½‚È‚ç‚Î‚º‚Ğ„‚Ü‚Å‚»‚Ìà–¾‚ğ‚¨‘—‚è‰º‚³‚¢BŸ‰ñ
-‚Ì”z•z‚ÉŠÜ‚ß‚½‚¢‚Æv‚¢‚Ü‚·B
+  ‚à‚µA’²‚×‚æ‚¤‚Æ‚µ‚½LaTeXƒRƒ}ƒ“ƒh‚É‘Î‚·‚éà–¾‚ªƒwƒ‹ƒvƒtƒ@ƒCƒ‹’†‚ÉŒ©‚Â‚©
+‚ç‚È‚©‚Á‚½ê‡‚ÍAà–¾•¶‚Ì“ü—Í‚ğ‹‚ß‚Ä‚­‚é‚Ì‚ÅA‰Â”\‚Å‚ ‚ê‚ÎQl‘‚È‚Ç‚ğ’²
+‚×‚Ä‚»‚ÌƒRƒ}ƒ“ƒh‚Ìà–¾‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B‚à‚µA‚È‚É‚©•W€“I‚ÈƒRƒ}ƒ“ƒh‚É‘Î
+‚·‚éà–¾‚ğ‘‚¢‚½‚È‚ç‚Î‚º‚Ğ„‚Ü‚Å‚»‚Ìà–¾‚ğ‚¨‘—‚è‰º‚³‚¢BŸ‰ñ‚Ì”z•z‚ÉŠÜ‚ß‚½
+‚¢‚Æv‚¢‚Ü‚·B
 
 
 
@@ -1517,10 +1494,10 @@ File: yatexj, Node: Inclusion hierarchy browser, Next: Cooperation with other pa
 `[prefix] d'
              ... ƒCƒ“ƒNƒ‹[ƒh\‘¢ƒuƒ‰ƒEƒY
 
-‚ğ‰Ÿ‚·‚ÆA‚»‚ÌƒhƒLƒ…ƒƒ“ƒg‚Ìeƒtƒ@ƒCƒ‹‚ğ•·‚¢‚Ä—ˆ‚Ü‚·B‚±‚±‚Å‘S‚Ä‚Ìƒtƒ@
-ƒCƒ‹‚Ìe‚Æ‚È‚éƒtƒ@ƒCƒ‹(ƒfƒtƒHƒ‹ƒg‚ª¦‚³‚ê‚Ä‚¢‚é‚Ì‚Å‘å’ï‚ÍRET‚Ì‚İ)‚ğ“ü—Í
-‚·‚é‚ÆƒCƒ“ƒNƒ‹[ƒh‚µ‚Ä‚¢‚é‘S‚Ä‚Ìƒtƒ@ƒCƒ‹‚ğ‰ğÍ‚µAƒCƒ“ƒNƒ‹[ƒhó‹µ‚ğ‹
-Šo“I‚É•\¦‚µ‚Ü‚·B‚±‚Ìƒoƒbƒtƒ@‚Å‚ÍˆÈ‰º‚ÌƒL[‘€ì‚ª—LŒø‚Å‚·B
+‚ğ‰Ÿ‚·‚ÆA‚»‚ÌƒhƒLƒ…ƒƒ“ƒg‚Ìeƒtƒ@ƒCƒ‹‚ğ•·‚¢‚Ä—ˆ‚Ü‚·B‚±‚±‚Å‘S‚Ä‚Ìƒtƒ@ƒCƒ‹
+‚Ìe‚Æ‚È‚éƒtƒ@ƒCƒ‹(ƒfƒtƒHƒ‹ƒg‚ª¦‚³‚ê‚Ä‚¢‚é‚Ì‚Å‘å’ï‚ÍRET‚Ì‚İ)‚ğ“ü—Í‚·‚é‚Æ
+ƒCƒ“ƒNƒ‹[ƒh‚µ‚Ä‚¢‚é‘S‚Ä‚Ìƒtƒ@ƒCƒ‹‚ğ‰ğÍ‚µAƒCƒ“ƒNƒ‹[ƒhó‹µ‚ğ‹Šo“I‚É•\¦
+‚µ‚Ü‚·B‚±‚Ìƒoƒbƒtƒ@‚Å‚ÍˆÈ‰º‚ÌƒL[‘€ì‚ª—LŒø‚Å‚·B
 
 `n'
              ... Ÿ‚Ìs‚ÉˆÚ“®‚µ‘Î‰‚·‚éƒtƒ@ƒCƒ‹‚ğ—×‚Ìƒoƒbƒtƒ@‚É•\¦
@@ -1565,8 +1542,8 @@ File: yatexj, Node: Inclusion hierarchy browser, Next: Cooperation with other pa
 `q'
              ... •\¦‘O‚Ìó‘Ô‚É–ß‚é
 
-  ‚½‚¾‚µA—×‚ÌƒEƒBƒ“ƒhƒE‚Ìƒtƒ@ƒCƒ‹‚Ì“à—e‚ğ•\¦‚·‚é‹@”\‚ÉŠÖ‚µ‚Ä‚ÍA‘Î‰
-‚·‚éƒtƒ@ƒCƒ‹‚ğƒNƒ[ƒY‚µ‚Ä‚µ‚Ü‚¤‚Æ‚¤‚Ü‚­“­‚«‚Ü‚¹‚ñ‚Ì‚Å‚²’ˆÓ‚­‚¾‚³‚¢B
+  ‚½‚¾‚µA—×‚ÌƒEƒBƒ“ƒhƒE‚Ìƒtƒ@ƒCƒ‹‚Ì“à—e‚ğ•\¦‚·‚é‹@”\‚ÉŠÖ‚µ‚Ä‚ÍA‘Î‰‚·‚é
+ƒtƒ@ƒCƒ‹‚ğƒNƒ[ƒY‚µ‚Ä‚µ‚Ü‚¤‚Æ‚¤‚Ü‚­“­‚«‚Ü‚¹‚ñ‚Ì‚Å‚²’ˆÓ‚­‚¾‚³‚¢B
 
 
 
@@ -1579,17 +1556,17 @@ File: yatexj, Node: Cooperation with other packages, Next: Customizations, Prev:
 gmhist
 ======
 
-  `gmhist.el'‚Æ`gmhist-mh.el' ‚ğƒ[ƒh‚µ‚Ä‚¢‚éê‡AƒvƒŒƒ”ƒ…[ƒRƒ}ƒ“ƒh
-‚Ì“ü—Í(`[prefix] tp]')AˆóüƒRƒ}ƒ“ƒh‚Ì“ü—Í(`[prefix] tl')‚Ì‚É“Æ—§‚µ‚½
-ƒqƒXƒgƒŠ‚ğ—˜—p‚Å‚«‚Ü‚·B‚»‚ê‚¼‚ê‚Ìƒvƒƒ“ƒvƒg‚ÅA`M-p' ‚ğ‰Ÿ‚·‚Æ’¼‘O‚É—˜
-—p‚µ‚½ƒRƒ}ƒ“ƒh•¶š—ñ‚ğ‚­‚è•Ô‚µŒÄ‚Ño‚·‚±‚Æ‚ª‚Å‚«‚Ü‚·B
+  `gmhist.el'‚Æ`gmhist-mh.el' ‚ğƒ[ƒh‚µ‚Ä‚¢‚éê‡AƒvƒŒƒ”ƒ…[ƒRƒ}ƒ“ƒh‚Ì“ü
+—Í(`[prefix] tp]')AˆóüƒRƒ}ƒ“ƒh‚Ì“ü—Í(`[prefix] tl')‚Ì‚É“Æ—§‚µ‚½ƒqƒXƒg
+ƒŠ‚ğ—˜—p‚Å‚«‚Ü‚·B‚»‚ê‚¼‚ê‚Ìƒvƒƒ“ƒvƒg‚ÅA`M-p' ‚ğ‰Ÿ‚·‚Æ’¼‘O‚É—˜—p‚µ‚½ƒRƒ}
+ƒ“ƒh•¶š—ñ‚ğ‚­‚è•Ô‚µŒÄ‚Ño‚·‚±‚Æ‚ª‚Å‚«‚Ü‚·B
 
 
 min-out
 =======
 
-  `min-out.el' (`outline-minor-mode') ‚Æ–ì’¹‚ğ‘g‚İ‡‚í‚¹‚Äg‚¤‚±‚Æ‚à‚à
-‚¿‚ë‚ñ‰Â”\‚Å‚·Bİ’è‚Ì•û–@‚ÉŠÖ‚µ‚Ä‚Í`yatexm-o.el'‚ğ‚²——‚­‚¾‚³‚¢B
+  `min-out.el' (`outline-minor-mode') ‚Æ–ì’¹‚ğ‘g‚İ‡‚í‚¹‚Äg‚¤‚±‚Æ‚à‚à‚¿‚ë
+‚ñ‰Â”\‚Å‚·Bİ’è‚Ì•û–@‚ÉŠÖ‚µ‚Ä‚Í`yatexm-o.el'‚ğ‚²——‚­‚¾‚³‚¢B
 
 
 
@@ -1598,9 +1575,9 @@ File: yatexj, Node: Customizations, Next: Etc, Prev: Cooperation with other pack
 ƒJƒXƒ^ƒ}ƒCƒY
 ************
 
-  –ì’¹‚Ì“®ì‚ğ§Œä‚·‚éíX‚Ì•Ï”‚ğ“Æ©‚Éİ’è‚·‚é‚±‚Æ‚É‚æ‚èA•âŠ®“ü—Í‚ğ
-‹N“®‚·‚éƒL[ƒAƒTƒCƒ“‚ğ•Ï‚¦‚½‚èAŠÂ‹«–¼‚Ì•âŠ®Œó•â‚ğ‚³‚ç‚É[À‚³‚¹‚é‚±‚Æ
-‚È‚Ç‚ª‚Å‚«‚Ü‚·B
+  –ì’¹‚Ì“®ì‚ğ§Œä‚·‚éíX‚Ì•Ï”‚ğ“Æ©‚Éİ’è‚·‚é‚±‚Æ‚É‚æ‚èA•âŠ®“ü—Í‚ğ‹N“®
+‚·‚éƒL[ƒAƒTƒCƒ“‚ğ•Ï‚¦‚½‚èAŠÂ‹«–¼‚Ì•âŠ®Œó•â‚ğ‚³‚ç‚É[À‚³‚¹‚é‚±‚Æ‚È‚Ç‚ª‚Å
+‚«‚Ü‚·B
 
 * Menu:
 
@@ -1614,13 +1591,13 @@ File: yatexj, Node: Lisp variables, Next: Add-in functions, Prev: Customizations
 lisp •Ï”
 =========
 
-  —á‚¦‚Î prefix ƒL[‚ğ `C-c' ˆÈŠO‚ÌƒL[‚É‚µ‚½‚¢ê‡‚ÍA`YaTeX-prefix'‚É
-prefix ƒL[‚É‚µ‚½‚¢ƒVƒ“ƒ{ƒ‹‚ğ’è‹`‚µ‚Ä‚­‚¾‚³‚¢B‚³‚ç‚ÉAu`C-c ‰pš'v‚Æ
-‚¢‚¤ƒL[ƒoƒCƒ“ƒh‚Í“Æ©‚ÌŠÖ”‚ªŠ„‚è“–‚Ä‚Ä‚ ‚é‚Ì‚Åg‚¢‚½‚­‚È‚¢B‚±‚Ì‚æ‚¤
-‚È‚ÍA`YaTeX-inhibit-prefix-letter' ‚ğ `t' ‚Éİ’è‚·‚é‚±‚Æ‚É‚æ‚èA
-`C-c ‰pšc'‚ÌƒoƒCƒ“ƒh‚ª‘S‚ÄA‘Î‰‚·‚é`C-c C-‰pšc'‚É•Ï‚í‚è‚Ü‚·(‚½‚¾‚µA
-beginŒ^ largeŒ^•âŠ®‚Ì‘å•¶š‹N“®‚É‚æ‚éƒŠƒWƒ‡ƒ“w’è‚Í‰Â”\‚È‚Ü‚Ü‚Å‚·B‚±‚ê
-‚à–³Œø‚É‚µ‚½‚¢ê‡‚Í`t'‚Å‚Í‚È‚­ 1 ‚ÉƒZƒbƒg‚µ‚Ä‰º‚³‚¢B)B
+  —á‚¦‚Î prefix ƒL[‚ğ `C-c' ˆÈŠO‚ÌƒL[‚É‚µ‚½‚¢ê‡‚ÍA`YaTeX-prefix'‚É 
+prefix ƒL[‚É‚µ‚½‚¢ƒVƒ“ƒ{ƒ‹‚ğ’è‹`‚µ‚Ä‚­‚¾‚³‚¢B‚³‚ç‚ÉAu`C-c ‰pš'v‚Æ‚¢
+‚¤ƒL[ƒoƒCƒ“ƒh‚Í“Æ©‚ÌŠÖ”‚ªŠ„‚è“–‚Ä‚Ä‚ ‚é‚Ì‚Åg‚¢‚½‚­‚È‚¢B‚±‚Ì‚æ‚¤‚È‚ÍA
+`YaTeX-inhibit-prefix-letter' ‚ğ `t' ‚Éİ’è‚·‚é‚±‚Æ‚É‚æ‚èA`C-c ‰pšc'‚Ì
+ƒoƒCƒ“ƒh‚ª‘S‚ÄA‘Î‰‚·‚é`C-c C-‰pšc'‚É•Ï‚í‚è‚Ü‚·(‚½‚¾‚µAbeginŒ^ largeŒ^
+•âŠ®‚Ì‘å•¶š‹N“®‚É‚æ‚éƒŠƒWƒ‡ƒ“w’è‚Í‰Â”\‚È‚Ü‚Ü‚Å‚·B‚±‚ê‚à–³Œø‚É‚µ‚½‚¢ê‡
+‚Í`t'‚Å‚Í‚È‚­ 1 ‚ÉƒZƒbƒg‚µ‚Ä‰º‚³‚¢B)B
 
 * Menu:
 
@@ -1636,32 +1613,31 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
 ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——
 --------------------
 
-  yatex-mode ‚É‚¨‚¯‚éŸ‚Ì•Ï”‚ªƒJƒXƒ^ƒ}ƒCƒY‰Â”\‚Å‚·B`~/.emacs' ‚Å
-`setq' ‚µ‚Ä‚¨‚¯‚ÎA‚»‚¿‚ç‚Ì’è‹`‚ª—Dæ‚³‚ê‚Ü‚·BŠ‡ŒÊ‚Ì’†‚ÍƒfƒtƒHƒ‹ƒg’l‚Å
-‚·BÀÛ‚É•Ï”‚Ì’l‚ğ•ÏX‚·‚éê‡‚Í `M-x describe-variable' ‚Å•Ï”‚ÌÚ×
-‚Èà–¾‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢B
+  yatex-mode ‚É‚¨‚¯‚éŸ‚Ì•Ï”‚ªƒJƒXƒ^ƒ}ƒCƒY‰Â”\‚Å‚·B`~/.emacs' ‚Å `setq' 
+‚µ‚Ä‚¨‚¯‚ÎA‚»‚¿‚ç‚Ì’è‹`‚ª—Dæ‚³‚ê‚Ü‚·BŠ‡ŒÊ‚Ì’†‚ÍƒfƒtƒHƒ‹ƒg’l‚Å‚·BÀÛ‚É
+•Ï”‚Ì’l‚ğ•ÏX‚·‚éê‡‚Í `M-x describe-variable' ‚Å•Ï”‚ÌÚ×‚Èà–¾‚ğQÆ
+‚µ‚Ä‚­‚¾‚³‚¢B
 
  -- Variable: YaTeX-prefix
      yatex-mode ’†‚ÌƒvƒŠƒtƒBƒNƒXƒL[ (`\C-c')
 
  -- Variable: YaTeX-inhibit-prefix-letter
-     prefix ƒL[‚Ì’¼Œã‚ÌƒL[ƒoƒCƒ“ƒh‚Å `‰pš' ‚Ì‚à‚Ì‚ğ `C-‰pš' ‚É•ÏX
+     prefix ƒL[‚Ì’¼Œã‚ÌƒL[ƒoƒCƒ“ƒh‚Å `‰pš' ‚Ì‚à‚Ì‚ğ `C-‰pš' ‚É•ÏX 
      (`nil')
 
  -- Variable: YaTeX-fill-prefix
-     –{•¶‚ğ‘‚­‚Ìs“ª‚É‘}“ü‚·‚éÚ“ª«‚·‚È‚í‚¿ fill-prefix
-     (`""(nil)')
+     –{•¶‚ğ‘‚­‚Ìs“ª‚É‘}“ü‚·‚éÚ“ª«‚·‚È‚í‚¿ fill-prefix (`""(nil)')
 
  -- Variable: YaTeX-user-completion-table
      ŠwK‚µ‚½LaTeXƒRƒ}ƒ“ƒh•Û‘¶ƒtƒ@ƒCƒ‹–¼ (`"~/.yatexrc"')
 
  -- Variable: YaTeX-kanji-code
-     •¶‘‚ğì¬‚·‚é‚ÌŠ¿šƒR[ƒhnil=Šù‘¶‚ÌƒR[ƒh‚Ì‚Ü‚Ü
-     0=no-conversion 1=Shift JIS, 2=JIS, 3=EUC, 4=UTF-8 (2 (MS-DOS‚Å‚Í
-     1))
+     •¶‘‚ğì¬‚·‚é‚ÌŠ¿šƒR[ƒhnil=Šù‘¶‚ÌƒR[ƒh‚Ì‚Ü‚Ü 0=no-conversion
+     1=Shift JIS, 2=JIS, 3=EUC, 4=UTF-8 (2 (MS-DOS‚Å‚Í1))
 
  -- Variable: tex-command
-     LaTeXƒ^ƒCƒvƒZƒbƒ^ƒRƒ}ƒ“ƒh–¼ (`"platex"')
+     LaTeXƒ^ƒCƒvƒZƒbƒ^ƒRƒ}ƒ“ƒh–¼ (`"platex"')
+
 
  -- Variable: dvi2-command
      ƒvƒŒƒ”ƒ…[ƒAƒRƒ}ƒ“ƒh–¼ (`"xdvi -geo +0+0 -s 4"')
@@ -1670,12 +1646,12 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
      dviƒtƒ@ƒCƒ‹‚Ìˆóü‚Ég‚í‚ê‚éƒRƒ}ƒ“ƒh® (`"dvi2ps %f %t %s | lpr"')
 
  -- Variable: dviprint-from-format
-     ã‚Ì`%f'‚É‘Š“–‚·‚éŠJnƒy[ƒWw’è‘®A`%b' ‚ªŠJnƒy[ƒW”Ô†‚É•Ï‚í
-     ‚é (`"-f %b"')
+     ã‚Ì`%f'‚É‘Š“–‚·‚éŠJnƒy[ƒWw’è‘®A`%b' ‚ªŠJnƒy[ƒW”Ô†‚É•Ï‚í‚é 
+     (`"-f %b"')
 
  -- Variable: dviprint-to-format
-     `%t' ‚É‘Š“–‚·‚éI—¹ƒy[ƒWw’è‘®A`%e'‚ªI—¹ƒy[ƒW”Ô†‚É•Ï‚í‚é
-     (`"-t %e"')
+     `%t' ‚É‘Š“–‚·‚éI—¹ƒy[ƒWw’è‘®A`%e'‚ªI—¹ƒy[ƒW”Ô†‚É•Ï‚í‚é (`"-t
+     %e"')
 
  -- Variable: makeindex-command
      makeindexƒRƒ}ƒ“ƒh (`"makeindex"' (MS-DOS‚Å‚Í`"makeind"'))
@@ -1687,42 +1663,40 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
      `\nonstopmode{}'‚ğ©“®“I‚É•t‰Á‚·‚é‚© (`nil')
 
  -- Variable: latex-warning-regexp
-     latexƒRƒ}ƒ“ƒh‚Ìo—Í‚·‚éƒEƒH[ƒjƒ“ƒOs‚Ì³‹K•\Œ» (`"line.*
-     [0-9]*"')
+     latexƒRƒ}ƒ“ƒh‚Ìo—Í‚·‚éƒEƒH[ƒjƒ“ƒOs‚Ì³‹K•\Œ» (`"line.* [0-9]*"')
 
  -- Variable: latex-error-regexp
      “¯‚¶‚­ƒGƒ‰[s‚Ì³‹K•\Œ» (`"l\\.[1-9][0-9]*"')
 
  -- Variable: latex-dos-emergency-message
-     MS-DOSã‚Å“®ì‚·‚é latex ƒRƒ}ƒ“ƒh‚ªAƒGƒ‰[‚É‚æ‚è’â~‚·‚é‚Æ‚«o—Í
-     ‚·‚éƒƒbƒZ[ƒW (`"Emergency stop"')
+     MS-DOSã‚Å“®ì‚·‚é latex ƒRƒ}ƒ“ƒh‚ªAƒGƒ‰[‚É‚æ‚è’â~‚·‚é‚Æ‚«o—Í‚·‚é
+     ƒƒbƒZ[ƒW (`"Emergency stop"')
 
  -- Variable: latex-message-kanji-code
-     ƒ^ƒCƒvƒZƒbƒ^‚Ìo—Í‚·‚éƒƒbƒZ[ƒW‚ÌŠ¿šƒR[ƒh.ƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@
-     ‚Ìo—Í‚ª‰»‚¯‚é‚ÍA‚±‚ê‚ğİ’è‚·‚é (2, Nemacs‚Å‚Ì‚İ—LŒø)
+     ƒ^ƒCƒvƒZƒbƒ^‚Ìo—Í‚·‚éƒƒbƒZ[ƒW‚ÌŠ¿šƒR[ƒh.ƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@‚Ìo
+     —Í‚ª‰»‚¯‚é‚ÍA‚±‚ê‚ğİ’è‚·‚é (2, Nemacs‚Å‚Ì‚İ—LŒø)
 
  -- Variable: NTT-jTeX
-     ŒÃ‚¢NTT-jTeXg—p‚Ì‚æ‚¤‚ÉƒCƒ“ƒfƒ“ƒg‚µ‚½s‚Ìæ“ª‚Æ‘O‚Ìs‚Ì(ƒ^ƒCƒv
-     ƒZƒbƒgŒã‚Ì)šŠÔ‚ª‹ó‚¢‚Ä‚µ‚Ü‚¤‚Ì‚ğŒ™‚¤ê‡‚Í`t'‚É‚·‚é(`nil')
+     ŒÃ‚¢NTT-jTeXg—p‚Ì‚æ‚¤‚ÉƒCƒ“ƒfƒ“ƒg‚µ‚½s‚Ìæ“ª‚Æ‘O‚Ìs‚Ì(ƒ^ƒCƒvƒZƒb
+     ƒgŒã‚Ì)šŠÔ‚ª‹ó‚¢‚Ä‚µ‚Ü‚¤‚Ì‚ğŒ™‚¤ê‡‚Í`t'‚É‚·‚é(`nil')
 
  -- Variable: YaTeX-item-regexp
      item‚ÌŒ…‘µ‚¦‚Ì‚É—p‚¢‚éAitem‚Ì³‹K•\Œ» (`"\\\\(sub\\)*item"')
 
  -- Variable: YaTeX-verb-regexp
-     verbƒRƒ}ƒ“ƒh‚Ì³‹K•\Œ»Bæ“ª‚Ì\\\\‚Í‚Â‚¯‚È‚¢
-     (`"verb\\*?\\|path"')
+     verbƒRƒ}ƒ“ƒh‚Ì³‹K•\Œ»Bæ“ª‚Ì\\\\‚Í‚Â‚¯‚È‚¢ (`"verb\\*?\\|path"')
 
  -- Variable: YaTeX-nervous
      ƒ[ƒJƒ‹«‘‚ğ—p‚¢‚é `t' (`t')
 
  -- Variable: YaTeX-sectioning-regexp
-     ƒZƒNƒVƒ‡ƒ“‹æØ‚èİ’èƒRƒ}ƒ“ƒh‚Ì³‹K•\Œ»
+     ƒZƒNƒVƒ‡ƒ“‹æØ‚èİ’èƒRƒ}ƒ“ƒh‚Ì³‹K•\Œ» 
      (`"\\(part\\|chapter\\*?\\|\\(sub\\)*\\(section\\|paragraph\\)\\*?\\)\\b"')
 
  -- Variable: YaTeX-fill-inhibit-environments
      fill ‚ğ—}~‚·‚éŠÂ‹«–¼‚ÌƒŠƒXƒg (`'("tabular" "tabular*" "array"
-     picture" "eqnarray" "eqnarray*" "equation" "math" "displaymath"
-     verbatim" "verbatim*")')
+     "picture" "eqnarray" "eqnarray*" "equation" "math" "displaymath"
+     "verbatim" "verbatim*")')
 
  -- Variable: YaTeX-uncomment-once
      —Ìˆæuncomment‚Ås“ª‚Ì•¡”‚Ì`%'‚ğ‘S‚Äíœ‚·‚é‚© (`nil')
@@ -1738,8 +1712,8 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
      alist (`nil')B•âŠ®ƒe[ƒuƒ‹‚Ì‘‚«•û‚É‚Â‚¢‚Ä‚Í`yatexmth.el'‚ğQÆB
 
  -- Variable: YaTeX-default-pop-window-height
-     1‰æ–Ê‚Ì‚Éƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@‚ğ‰‚ß‚Äì¬‚·‚é‚Ì‚‚³B”’l‚Ås
-     ”A”š•¶š—ñ‚ÅEmacsƒEƒBƒ“ƒhƒE‚É‘Î‚·‚é•S•ª—¦ (10)
+     1‰æ–Ê‚Ì‚Éƒ^ƒCƒvƒZƒbƒgƒoƒbƒtƒ@‚ğ‰‚ß‚Äì¬‚·‚é‚Ì‚‚³B”’l‚Ås”A
+     ”š•¶š—ñ‚ÅEmacsƒEƒBƒ“ƒhƒE‚É‘Î‚·‚é•S•ª—¦ (10)
 
  -- Variable: YaTeX-help-file
      ‹¤—pƒwƒ‹ƒvƒtƒ@ƒCƒ‹ (`$doc-directory/../../site-lisp/YATEXHLP.jp')
@@ -1748,46 +1722,45 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
      ŒÂl—pƒwƒ‹ƒvƒtƒ@ƒCƒ‹ (`"~/YATEXHLP.jp"')
 
  -- Variable: YaTeX-no-begend-shortcut
-     `[prefix] b ??' ‚ÌƒVƒ‡[ƒgƒJƒbƒg‚ğg‚í‚¸A`[prefix] b' ‚¾‚¯‚Å•âŠ®
-     “ü—Í‚É“ü‚é (`nil')
+     `[prefix] b ??' ‚ÌƒVƒ‡[ƒgƒJƒbƒg‚ğg‚í‚¸A`[prefix] b' ‚¾‚¯‚Å•âŠ®“ü—Í
+     ‚É“ü‚é (`nil')
 
  -- Variable: YaTeX-hilit-pattern-adjustment-private
-     ³‹K•\Œ»‚Æ‚»‚ê‚Éƒ}ƒbƒ`‚·‚é‚à‚Ì‚Ì˜_—“IˆÓ–¡‚ğƒVƒ“ƒ{ƒ‹‚Å‚ ‚ç‚í‚µ‚½‚à
-     ‚Ì‚ÌƒŠƒXƒgc‚ÌƒŠƒXƒgBhilit19 ‚ğ‘g‚İ‚ñ‚Å‚¢‚é‚Ì‚İ—LŒøBÚ‚µ‚­‚Í
-     `(assq 'yatex-mode hilit-patterns-alist)' ‚µ‚½Œ‹‰Ê‚ÆA•Ï”
-     `YaTeX-hilit-pattern-adjustment-default' ‚Ì’l(‚Æê‡‚É‚æ‚Á‚Ä‚Í
+     ³‹K•\Œ»‚Æ‚»‚ê‚Éƒ}ƒbƒ`‚·‚é‚à‚Ì‚Ì˜_—“IˆÓ–¡‚ğƒVƒ“ƒ{ƒ‹‚Å‚ ‚ç‚í‚µ‚½‚à‚Ì
+     ‚ÌƒŠƒXƒgc‚ÌƒŠƒXƒgBhilit19 ‚ğ‘g‚İ‚ñ‚Å‚¢‚é‚Ì‚İ—LŒøBÚ‚µ‚­‚Í 
+     `(assq 'yatex-mode hilit-patterns-alist)' ‚µ‚½Œ‹‰Ê‚ÆA•Ï” 
+     `YaTeX-hilit-pattern-adjustment-default' ‚Ì’l(‚Æê‡‚É‚æ‚Á‚Ä‚Í 
      hilit19 ‚ÌƒhƒLƒ…ƒƒ“ƒg)‚ğQÆ‚¹‚æB
 
  -- Variable: YaTeX-sectioning-level
      LaTeX‚ÌƒZƒNƒVƒ‡ƒ“’PˆÊéŒ¾ƒRƒ}ƒ“ƒh‚Æ‚»‚Ì˜_—“I‚‚³‚ÌalistB
 
  -- Variable: YaTeX-hierarchy-ignore-heading-regexp
-     Hierarchy ƒoƒbƒtƒ@‚Í’Êíƒtƒ@ƒCƒ‹ƒwƒbƒ_‚Æ‚µ‚ÄALaTeX‚ÌƒZƒNƒVƒ‡ƒ“é
-     Œ¾ƒRƒ}ƒ“ƒh‚Ìˆø”‚ğŒŸõ‚µA‚»‚ê‚ª‚È‚¯‚ê‚ÎƒRƒƒ“ƒgs‚ğ’T‚·‚ªA‚»‚ÌÛ
-     ‚Éƒwƒbƒ_‚Æ‚µ‚Ä‚ÍˆÓ–¡‚ğ‚½‚È‚¢ƒpƒ^[ƒ“‚ğ‚±‚Ì•Ï”‚Éİ’è‚·‚éBƒfƒtƒH
-     ƒ‹ƒg‚Å‚Í RCS ƒwƒbƒ_‚Æƒ‚[ƒhw’ès(-*- xxx -*-)‚ªİ’è‚³‚ê‚Ä‚¢‚éB
+     Hierarchy ƒoƒbƒtƒ@‚Í’Êíƒtƒ@ƒCƒ‹ƒwƒbƒ_‚Æ‚µ‚ÄALaTeX‚ÌƒZƒNƒVƒ‡ƒ“éŒ¾ƒR
+     ƒ}ƒ“ƒh‚Ìˆø”‚ğŒŸõ‚µA‚»‚ê‚ª‚È‚¯‚ê‚ÎƒRƒƒ“ƒgs‚ğ’T‚·‚ªA‚»‚ÌÛ‚Éƒwƒb
+     ƒ_‚Æ‚µ‚Ä‚ÍˆÓ–¡‚ğ‚½‚È‚¢ƒpƒ^[ƒ“‚ğ‚±‚Ì•Ï”‚Éİ’è‚·‚éBƒfƒtƒHƒ‹ƒg‚Å‚Í 
+     RCS ƒwƒbƒ_‚Æƒ‚[ƒhw’ès(-*- xxx -*-)‚ªİ’è‚³‚ê‚Ä‚¢‚éB
 
  -- Variable: YaTeX-skip-default-reader
-     Non-nil ‚Éİ’è‚·‚é‚ÆsectionŒ^ƒRƒ}ƒ“ƒh‚Ìˆø”“ü—ÍAƒAƒhƒCƒ“ŠÖ”‚ª
-     ‚È‚¯‚ê‚Îƒ~ƒjƒoƒbƒtƒ@‚Å‚Ì“Ç‚İ‚İ‚ğ‚¹‚¸‚É“ü—Í‚ğŠ®—¹‚³‚¹‚é (`nil')
+     Non-nil ‚Éİ’è‚·‚é‚ÆsectionŒ^ƒRƒ}ƒ“ƒh‚Ìˆø”“ü—ÍAƒAƒhƒCƒ“ŠÖ”‚ª‚È‚¯
+     ‚ê‚Îƒ~ƒjƒoƒbƒtƒ@‚Å‚Ì“Ç‚İ‚İ‚ğ‚¹‚¸‚É“ü—Í‚ğŠ®—¹‚³‚¹‚é (`nil')
 
  -- Variable: YaTeX-create-file-prefix-g
-     `\include'‚È‚Ç‚Å `prefix g'‚µ‚½‚ÉAƒWƒƒƒ“ƒvæ‚ª‘¶İ‚µ‚È‚¢ƒtƒ@ƒC
-     ƒ‹‚Å‚ ‚Á‚Ä‚àƒI[ƒvƒ“‚·‚é (`nil')
+     `\include'‚È‚Ç‚Å `prefix g'‚µ‚½‚ÉAƒWƒƒƒ“ƒvæ‚ª‘¶İ‚µ‚È‚¢ƒtƒ@ƒCƒ‹‚Å
+     ‚ ‚Á‚Ä‚àƒI[ƒvƒ“‚·‚é (`nil')
 
  -- Variable: YaTeX-simple-messages
      Šeí•âŠ®‚ÌƒƒbƒZ[ƒWo—Í‚ğŠÈ‘f‰»‚·‚é (`nil')
 
  -- Variable: YaTeX-hilit-sectioning-face
      F•t‚¯‚ª—LŒø‚È‚Ì `\part' ‚ÌF (`'(yellow/dodgerblue
-     yellow/slateblue)')BƒŠƒXƒg‚Ì‘æˆê—v‘f‚Í `hilit-background-mode' ‚ª
-     `'light' ‚Ì‚ÌA‘æ“ñ—v‘f‚Í `'dark' ‚Ì‚Ì `\chapter' ‚ÌF‚ÅA•¶š
-     F/”wŒiF ‚Ì‚æ‚¤‚Éw’è‚·‚éB
+     yellow/slateblue)')BƒŠƒXƒg‚Ì‘æˆê—v‘f‚Í `hilit-background-mode' ‚ª 
+     `'light' ‚Ì‚ÌA‘æ“ñ—v‘f‚Í `'dark' ‚Ì‚Ì `\chapter' ‚ÌF‚ÅA•¶šF/
+     ”wŒiF ‚Ì‚æ‚¤‚Éw’è‚·‚éB
 
  -- Variable: YaTeX-hilit-sectioning-attenuation-rate
-     F•t‚¯‚ª—LŒø‚È‚ÌA`\subparagraph' ‚ÌF‚ğ `\chapter' ‚Ì”Z“x‚Ì‰½%
-     ”–‚­‚µ‚½‚à‚Ì‚É‚·‚é‚© (`'(15 40)') `YaTeX-hilit-sectioning-face'‚Ì
-     €QÆB
+     F•t‚¯‚ª—LŒø‚È‚ÌA`\subparagraph' ‚ÌF‚ğ `\chapter' ‚Ì”Z“x‚Ì‰½%”–‚­
+     ‚µ‚½‚à‚Ì‚É‚·‚é‚© (`'(15 40)') `YaTeX-hilit-sectioning-face' ‚Ì€QÆB
 
  -- Variable: YaTeX-use-AMS-LaTeX
      AMS-LaTeX ‚ğg—p‚·‚éê‡‚Í `t' ‚Éİ’è‚·‚é (`nil')
@@ -1796,61 +1769,59 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
      LaTeX2e ‚ğg—p‚·‚éê‡‚Í `t' ‚Éİ’è‚·‚é (`t')
 
  -- Variable: YaTeX-template-file
-     V‹Kƒtƒ@ƒCƒ‹ì¬‚É©“®‘}“ü‚·‚éƒtƒ@ƒCƒ‹–¼
-     (`~/work/template.tex')
+     V‹Kƒtƒ@ƒCƒ‹ì¬‚É©“®‘}“ü‚·‚éƒtƒ@ƒCƒ‹–¼ (`~/work/template.tex')
 
  -- Variable: YaTeX-search-file-from-top-directory
-     input‚·‚éƒtƒ@ƒCƒ‹‚ğ’T‚·‚Æ‚«‚ÌŠî€ƒfƒBƒŒƒNƒgƒŠ‚ğmainƒtƒ@ƒCƒ‹‚Ì‚ ‚é
-     ƒfƒBƒŒƒNƒgƒŠ‚É‚·‚é‚© (`t')
+     input‚·‚éƒtƒ@ƒCƒ‹‚ğ’T‚·‚Æ‚«‚ÌŠî€ƒfƒBƒŒƒNƒgƒŠ‚ğmainƒtƒ@ƒCƒ‹‚Ì‚ ‚éƒfƒB
+     ƒŒƒNƒgƒŠ‚É‚·‚é‚© (`t')
  -- Variable: YaTeX-use-font-lock
      ƒ\[ƒX‚ÌF‚Ã‚¯ƒpƒbƒP[ƒW‚Æ‚µ‚Ä font-lock ‚ğ—˜—p‚·‚é‚©‚Ç‚¤‚©
      (`(featurep 'font-lock)')
 
  -- Variable: YaTeX-use-hilit19
-     ƒ\[ƒX‚ÌF‚Ã‚¯ƒpƒbƒP[ƒW‚Æ‚µ‚Ä hilit19 ‚ğ—˜—p‚·‚é‚©‚Ç‚¤‚©
-     (`(featurep 'hilit19)')
+     ƒ\[ƒX‚ÌF‚Ã‚¯ƒpƒbƒP[ƒW‚Æ‚µ‚Ä hilit19 ‚ğ—˜—p‚·‚é‚©‚Ç‚¤‚©(`(featurep
+     'hilit19)')
 
  -- Variable: YaTeX-use-italic-bold
      italic, boldƒtƒHƒ“ƒg‚ğ–ì’¹‚ª’T‚·‚©‚Ç‚¤‚© (Emacs20ˆÈ~‚È‚ç`t')
      font-lock—˜—p‚Ì‚İ—LŒøB(`(featurep 'hilit19)'
 
  -- Variable: YaTeX-singlecmd-suffix
-     ‘S‚Ä‚ÌmaketitleŒ^ƒRƒ}ƒ“ƒh‚Ì•âŠ®“ü—Í’¼Œã‚É‘}“ü‚·‚é•¶š—ñB
-     `"{}"' ‚È‚Ç‚ª‚¨Š©‚ßB
+     ‘S‚Ä‚ÌmaketitleŒ^ƒRƒ}ƒ“ƒh‚Ì•âŠ®“ü—Í’¼Œã‚É‘}“ü‚·‚é•¶š—ñB`"{}"' ‚È‚Ç
+     ‚ª‚¨Š©‚ßB
 
  -- Variable: YaTeX-package-alist-private
-     LaTeX2e‚ÌƒpƒbƒP[ƒW–¼‚Æ‚»‚Ì’†‚ÉŠÜ‚Ü‚ê‚éƒ}ƒNƒ‚ÌƒŠƒXƒgB“KØ‚Éİ’è
-     ‚µ‚Ä‚¨‚­‚Æ–{•¶“ü—Í‚Éƒ}ƒNƒ‚ğ•âŠ®“ü—Í‚·‚é‚Æ‚»‚Ìƒ}ƒNƒ‚É•K—v‚Èƒpƒb
-     ƒP[ƒW‚ğ usepackage ‚·‚é‚©©“®“I‚ÉŒŸ¸‚µ‚Ä‚­‚ê‚éB‚µ‚Ä‚¢‚È‚¯‚ê‚Î
-     usepackage ‚ğ©“®’Ç‰Á‚·‚é‚±‚Æ‚à‚Å‚«‚éBƒŠƒXƒg‚Í'((ƒpƒbƒP[ƒW–¼1
-     (•âŠ®ƒ^ƒCƒv ƒ}ƒNƒ‚ÌƒŠƒXƒgcc) (•âŠ®ƒ^ƒCƒv ƒ}ƒNƒ‚ÌƒŠƒXƒgcc))
-     (ƒpƒbƒP[ƒW–¼2 (•âŠ®ƒ^ƒCƒv ƒ}ƒNƒ‚ÌƒŠƒXƒgcc) (•âŠ®ƒ^ƒCƒv ƒ}ƒNƒ
-     ‚ÌƒŠƒXƒgcc))ccc)‚Æ‚¢‚¤Œ`®‚É‚·‚éB•âŠ®ƒ^ƒCƒv‚Í `env,
-     section, maketitle' ‚Ì‚Ç‚ê‚©B‹ï‘Ì—á‚Í•Ï”
-     `YaTeX-package-alist-default'‚Ì’lQÆB
+     LaTeX2e‚ÌƒpƒbƒP[ƒW–¼‚Æ‚»‚Ì’†‚ÉŠÜ‚Ü‚ê‚éƒ}ƒNƒ‚ÌƒŠƒXƒgB“KØ‚Éİ’è‚µ‚Ä
+     ‚¨‚­‚Æ–{•¶“ü—Í‚Éƒ}ƒNƒ‚ğ•âŠ®“ü—Í‚·‚é‚Æ‚»‚Ìƒ}ƒNƒ‚É•K—v‚ÈƒpƒbƒP[ƒW
+     ‚ğ usepackage ‚·‚é‚©©“®“I‚ÉŒŸ¸‚µ‚Ä‚­‚ê‚éB‚µ‚Ä‚¢‚È‚¯‚ê‚Î 
+     \usepackage ‚ğ©“®’Ç‰Á‚·‚é‚±‚Æ‚à‚Å‚«‚éBƒŠƒXƒg‚Í'((ƒpƒbƒP[ƒW–¼1 (•â
+     Š®ƒ^ƒCƒv ƒ}ƒNƒ‚ÌƒŠƒXƒgcc) (•âŠ®ƒ^ƒCƒv ƒ}ƒNƒ‚ÌƒŠƒXƒgcc)) (ƒpƒbƒP[
+     ƒW–¼2 (•âŠ®ƒ^ƒCƒv ƒ}ƒNƒ‚ÌƒŠƒXƒgcc) (•âŠ®ƒ^ƒCƒv ƒ}ƒNƒ‚ÌƒŠƒX
+     ƒgcc))ccc) ‚Æ‚¢‚¤Œ`®‚É‚·‚éB•âŠ®ƒ^ƒCƒv‚Í `env, section,
+     maketitle' ‚Ì‚Ç‚ê‚©B‹ï‘Ì—á‚Í•Ï” `YaTeX-package-alist-default' ‚Ì’l
+     QÆB
 
  -- Variable: YaTeX-tabular-indentation
-     tabular/array ŠÂ‹«‚ÅŒ»İs‚Ìæ“ªˆÊ’u‚ª•\‚Ì‘æNƒJƒ‰ƒ€‚Ì‚Æ‚«‚Í•W€ƒC
-     ƒ“ƒfƒ“ƒgˆÊ’u‚©‚ç N*YaTeX-tabular-indentation Œ…‰º‚°‚½ƒCƒ“ƒfƒ“ƒg‚É
-     ‚·‚éB
+     tabular/array ŠÂ‹«‚ÅŒ»İs‚Ìæ“ªˆÊ’u‚ª•\‚Ì‘æNƒJƒ‰ƒ€‚Ì‚Æ‚«‚Í•W€ƒCƒ“ƒf
+     ƒ“ƒgˆÊ’u‚©‚ç N*YaTeX-tabular-indentation Œ…‰º‚°‚½ƒCƒ“ƒfƒ“ƒg‚É‚·‚éB
 
  -- Variable: YaTeX-noindent-env-regexp
      •Ê‚ÌŠÂ‹«“à‚É‚ ‚Á‚Ä‚à \begin{} ‚ªs“ª‚©‚çn‚Ü‚é‚×‚«ŠÂ‹«–¼‚Ì³‹K•\Œ»B
      verbatimŠÂ‹«‚È‚Ç‚ğw’è‚·‚éB
 
  -- Variable: YaTeX-ref-default-label-string
-     \ref{} ‚Ìƒ‰ƒxƒ‹•âŠ®‚Åƒ‰ƒxƒ‹–¢İ’è‚Ì‚à‚Ì‚É©“®“I‚É¶¬‚·‚éƒ‰ƒxƒ‹–¼
-     ‚Ì‘®Bstrftime(3)ŠÖ”‚É—‚½“ú•tƒx[ƒX‚Åw’è‚·‚éB—˜—p‚Å‚«‚é‘®
-     ‚ÍˆÈ‰º‚Ì‚Æ‚¨‚èB%y -> ¼—ï‰º“ñŒ…, %b -> Œ‚Ì‰p–¼, %m -> Œ(1`12)
-     %d -> “ú, %H -> , %M -> •ª, %S -> •b, %qx -> ƒAƒ‹ƒtƒ@ƒxƒbƒg‚Å26
-     i”‰»‚µ‚½ yymmdd.  %qX -> ƒAƒ‹ƒtƒ@ƒxƒbƒg‚Å26i”‰»‚µ‚½ HHMMSS. ƒf
-     ƒtƒHƒ‹ƒg‚Í "%H%M%S_%d%b%y"
+     \ref{} ‚Ìƒ‰ƒxƒ‹•âŠ®‚Åƒ‰ƒxƒ‹–¢İ’è‚Ì‚à‚Ì‚É©“®“I‚É¶¬‚·‚éƒ‰ƒxƒ‹–¼‚Ì‘
+     ®Bstrftime(3)ŠÖ”‚É—‚½“ú•tƒx[ƒX‚Åw’è‚·‚éB—˜—p‚Å‚«‚é‘®‚ÍˆÈ‰º‚Ì
+     ‚Æ‚¨‚èB%y -> ¼—ï‰º“ñŒ…, %b -> Œ‚Ì‰p–¼, %m -> Œ(1`12) %d -> “ú,
+     %H -> , %M -> •ª, %S -> •b, %qx -> ƒAƒ‹ƒtƒ@ƒxƒbƒg‚Å26i”‰»‚µ‚½ 
+     yymmdd.  %qX -> ƒAƒ‹ƒtƒ@ƒxƒbƒg‚Å26i”‰»‚µ‚½ HHMMSS.  ƒfƒtƒHƒ‹ƒg‚Í 
+     "%H%M%S_%d%b%y"
 
  -- Variable: YaTeX-ref-generate-label-function
-     \ref{}‚Ìƒ‰ƒxƒ‹–¼©“®¶¬‚Ì‚Æ‚«‚Ég‚¤ŠÖ”‚ÌƒVƒ“ƒ{ƒ‹BƒfƒtƒHƒ‹ƒg‚Í•W
-     €‚Ì YaTeX::ref-generate-label ŠÖ”‚ªŠ„‚è“–‚Ä‚Ä‚ ‚éBˆø”‚ğ2‚Âæ‚é
-     ŠÖ”‚ğ’è‹`‚µ‚ÄA‚±‚Ì•Ï”‚ÉƒZƒbƒg‚·‚é‚Æ‚»‚ÌŠÖ”‚ğŒÄ‚ñ‚¾Œ‹‰Ê‚ğƒfƒtƒH
-     ƒ‹ƒg‚Ìƒ‰ƒxƒ‹–¼Œó•â‚Æ‚·‚éBİ’è—á:
+     \ref{}‚Ìƒ‰ƒxƒ‹–¼©“®¶¬‚Ì‚Æ‚«‚Ég‚¤ŠÖ”‚ÌƒVƒ“ƒ{ƒ‹BƒfƒtƒHƒ‹ƒg‚Í•W€
+     ‚Ì YaTeX::ref-generate-label ŠÖ”‚ªŠ„‚è“–‚Ä‚Ä‚ ‚éBˆø”‚ğ2‚Âæ‚éŠÖ”
+     ‚ğ’è‹`‚µ‚ÄA‚±‚Ì•Ï”‚ÉƒZƒbƒg‚·‚é‚Æ‚»‚ÌŠÖ”‚ğŒÄ‚ñ‚¾Œ‹‰Ê‚ğƒfƒtƒHƒ‹ƒg‚Ì
+     ƒ‰ƒxƒ‹–¼Œó•â‚Æ‚·‚éBİ’è—á:
             (setq YaTeX-ref-generate-label-function 'my-yatex-generate-label)
             (defun my-yatex-generate-label (command value)
               (and (string= command "caption")
@@ -1872,9 +1843,9 @@ File: yatexj, Node: Sample definitions, Next: Hook variables, Prev: All customiz
 ƒJƒXƒ^ƒ}ƒCƒY•Ï”İ’è—á
 ----------------------
 
-  ‚½‚Æ‚¦‚ÎAprefix ƒL[‚Æ‚µ‚Ä`ESC'‚ğg—p‚µAV‚½‚È•âŠ®Œó•â‚ğŠi”[‚·‚éƒtƒ@
-ƒCƒ‹‚ğA`~/src/emacs/yatexrc' ‚É‚µAs“ª‚Ì prefix ‚ğƒ^ƒu•¶šˆê‚Â‚É•Ï‚¦
-‚½‚¢‚Æ‚«‚ÍA
+  ‚½‚Æ‚¦‚ÎAprefix ƒL[‚Æ‚µ‚Ä`ESC'‚ğg—p‚µAV‚½‚È•âŠ®Œó•â‚ğŠi”[‚·‚éƒtƒ@ƒC
+ƒ‹‚ğA`~/src/emacs/yatexrc' ‚É‚µAs“ª‚Ì prefix ‚ğƒ^ƒu•¶šˆê‚Â‚É•Ï‚¦‚½‚¢‚Æ
+‚«‚ÍA
 
              (setq YaTeX-prefix "\e"
                    YaTeX-user-completion-table "~/src/emacs/yatexrc"
@@ -1889,22 +1860,21 @@ File: yatexj, Node: Hook variables, Next: Hook file, Prev: Sample definitions, U
 hook•Ï”
 --------
 
-  ‚Ü‚½Ahook •Ï” `yatex-mode-hook', `yatex-mode-load-hook' ‚ğ—pˆÓ‚µ‚Ä
-‚¢‚Ü‚·B‚·‚×‚Ä‚Ì yatex-mode ‚Ìƒoƒbƒtƒ@‚Åì—p‚³‚¹‚½‚¢‚à‚Ì‚ÍA
-`yatex-mode-hook' ‚É‹Lq‚µA`yatex.el' ‚ğƒ[ƒh‚·‚é‚¾‚¯ì—p‚³‚¹‚½‚¢‚à
-‚Ì‚Í`yatex-mode-load-hook' ‚É‹Lq‚µ‚Ü‚·B—á‚¦‚ÎA`outline-minor-mode'
-‚ğ—˜—p‚·‚éê‡A‚»‚ê‚¼‚ê‚Ìƒoƒbƒtƒ@‚Å `outline-minor-mode' ‚ğ—LŒø‚É‚µ‚½
-‚¢‚Ì‚ÅA`yatex-mode-hook' ‚ğŸ‚Ì‚æ‚¤‚Éİ’è‚µ‚Ü‚·B
+  ‚Ü‚½Ahook •Ï” `yatex-mode-hook', `yatex-mode-load-hook' ‚ğ—pˆÓ‚µ‚Ä‚¢‚Ü
+‚·B‚·‚×‚Ä‚Ì yatex-mode ‚Ìƒoƒbƒtƒ@‚Åì—p‚³‚¹‚½‚¢‚à‚Ì‚ÍA`yatex-mode-hook' 
+‚É‹Lq‚µA`yatex.el' ‚ğƒ[ƒh‚·‚é‚¾‚¯ì—p‚³‚¹‚½‚¢‚à‚Ì‚Í
+`yatex-mode-load-hook' ‚É‹Lq‚µ‚Ü‚·B—á‚¦‚ÎA`outline-minor-mode' ‚ğ—˜—p‚·
+‚éê‡A‚»‚ê‚¼‚ê‚Ìƒoƒbƒtƒ@‚Å `outline-minor-mode' ‚ğ—LŒø‚É‚µ‚½‚¢‚Ì‚ÅA
+`yatex-mode-hook' ‚ğŸ‚Ì‚æ‚¤‚Éİ’è‚µ‚Ü‚·B
 
              (setq yatex-mode-hook
                    '(lambda () (outline-minor-mode t)))
 
 
-‹t‚ÉA“Æ©‚ÌƒL[’è‹`‚ğs‚¢‚½‚¢‚È‚Ç‚ÍA`yatex-mode-load-hook' ‚ğ—˜—p‚µ
-‚Ü‚·B—á‚¦‚ÎAbegin Œ^•âŠ®‚É‚¨‚¢‚ÄA document ‚âAenumerate ˆÈŠO‚ÌŠÂ‹«
-–¼‚àƒVƒ‡[ƒgƒJƒbƒgƒL[‚Å“ü‚ê‚½‚¢‚È‚Ç‚Æ‚¢‚¤‚ÍAŸ‚Ì‚æ‚¤‚É‚µ‚Ü‚·BˆÈ‰º
-‚Ì—á‚ÍA`[prefix] ba' ‚Å `\begin{abstract}', `\end{abstract}' ‚ğ‘}“ü‚µ
-‚Ü‚·B
+‹t‚ÉA“Æ©‚ÌƒL[’è‹`‚ğs‚¢‚½‚¢‚È‚Ç‚ÍA`yatex-mode-load-hook' ‚ğ—˜—p‚µ‚Ü
+‚·B—á‚¦‚ÎAbegin Œ^•âŠ®‚É‚¨‚¢‚ÄA document ‚âAenumerate ˆÈŠO‚ÌŠÂ‹«–¼‚à
+ƒVƒ‡[ƒgƒJƒbƒgƒL[‚Å“ü‚ê‚½‚¢‚È‚Ç‚Æ‚¢‚¤‚ÍAŸ‚Ì‚æ‚¤‚É‚µ‚Ü‚·BˆÈ‰º‚Ì—á‚ÍA
+`[prefix] ba' ‚Å `\begin{abstract}', `\end{abstract}' ‚ğ‘}“ü‚µ‚Ü‚·B
 
              (setq yatex-mode-load-hook
                    '(lambda() (YaTeX-define-begend-key "ba" "abstract")))
@@ -1919,9 +1889,9 @@ File: yatexj, Node: Hook file, Prev: Hook variables, Up: Lisp variables
 hook—pƒtƒ@ƒCƒ‹
 --------------
 
-  •Ï” `yatex-mode-load-hook' ‚Å’è‹`‚·‚é“à—e‚ª‘½‚¢‚ÍA`yatexhks.el'‚Æ
-‚¢‚¤ƒtƒ@ƒCƒ‹‚ğì‚èA‚»‚Ì’†‚É–ì’¹ŠÖ˜A‚Ìİ’è‚ğ‘‚­–‚ÅA‰Šú‰»‚Ì‚É©“®
-“I‚Éƒ[ƒh‚µ‚Ü‚·B
+  •Ï” `yatex-mode-load-hook' ‚Å’è‹`‚·‚é“à—e‚ª‘½‚¢‚ÍA`yatexhks.el'‚Æ‚¢
+‚¤ƒtƒ@ƒCƒ‹‚ğì‚èA‚»‚Ì’†‚É–ì’¹ŠÖ˜A‚Ìİ’è‚ğ‘‚­–‚ÅA‰Šú‰»‚Ì‚É©“®“I‚Éƒ[
+ƒh‚µ‚Ü‚·B
 
 
 
@@ -1931,9 +1901,9 @@ File: yatexj, Node: Add-in functions, Prev: Lisp variables, Up: Customizations
 •t‰ÁŠÖ”(ƒAƒhƒCƒ“ŠÖ”)
 ======================
 
-  Šeí•âŠ®‚ÉAŠÂ‹«–¼‚âƒRƒ}ƒ“ƒh–¼‚É‰‚¶‚½‚«‚ß×‚â‚©‚È•âŠ®“ü—Í‹@”\‚ğÀ
-Œ»‚·‚é‚½‚ß‚ÌŠÖ”‚ğì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚±‚ÌŠÖ”‚Ìì¬•û–@‚âA‘g‚İ
-‚İ•û–@‚ÉŠÖ‚µ‚Ä‚ÍA`yatexadd.doc' ‚ğ‚²——‚­‚¾‚³‚¢B
+  Šeí•âŠ®‚ÉAŠÂ‹«–¼‚âƒRƒ}ƒ“ƒh–¼‚É‰‚¶‚½‚«‚ß×‚â‚©‚È•âŠ®“ü—Í‹@”\‚ğÀŒ»‚·
+‚é‚½‚ß‚ÌŠÖ”‚ğì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B‚±‚ÌŠÖ”‚Ìì¬•û–@‚âA‘g‚İ‚İ•û–@‚É
+ŠÖ‚µ‚Ä‚ÍA`yatexadd.doc' ‚ğ‚²——‚­‚¾‚³‚¢B
 
 
 
@@ -1942,12 +1912,11 @@ File: yatexj, Node: Etc, Next: Copying, Prev: Customizations, Up: Top
 ‚»‚Ì‘¼
 ******
 
-  –ì’¹‚Ì•W€‚Ì LaTeX ƒRƒ}ƒ“ƒh‚Ì«‘‚É‚ÍAìÒ‚ª•p”É‚Ég‚¤‚à‚Ì‚µ‚©“o˜^‚³
-‚ê‚Ä‚¢‚Ü‚¹‚ñB‚±‚ê‚ÍA•âŠ®Œó•â‚Ég‚¢‚»‚¤‚à‚È‚¢ƒRƒ}ƒ“ƒh‚ª‘¶İ‚µ‚ÄA•âŠ®
-‚µ‚½‚¢ƒRƒ}ƒ“ƒh‚ğo‚·‚Ü‚Å‚ÌƒXƒgƒ[ƒN”‚ğ‘‚â‚µ‚Ä‚µ‚Ü‚¤–‚ğ–h~‚·‚é‚½‚ß
-‚Å‚·B•W€«‘‚É‚È‚¢ƒRƒ}ƒ“ƒh‚àA‚Å‚«‚é‚¾‚¯•âŠ®“ü—Í•û®‚ğ—˜—p‚µAƒ†[ƒU
-«‘‚ğ[À‚³‚¹‚é‚±‚Æ‚ÅA‚ ‚È‚½‚Ì LaTeX ƒXƒ^ƒCƒ‹‚É‚ ‚Á‚½–ì’¹‚Ö‚Æˆç‚Á‚Ä‚¢
-‚­‚±‚Æ‚Å‚µ‚å‚¤B
+  –ì’¹‚Ì•W€‚Ì LaTeX ƒRƒ}ƒ“ƒh‚Ì«‘‚É‚ÍAìÒ‚ª•p”É‚Ég‚¤‚à‚Ì‚µ‚©“o˜^‚³‚ê
+‚Ä‚¢‚Ü‚¹‚ñB‚±‚ê‚ÍA•âŠ®Œó•â‚Ég‚¢‚»‚¤‚à‚È‚¢ƒRƒ}ƒ“ƒh‚ª‘¶İ‚µ‚ÄA•âŠ®‚µ‚½‚¢
+ƒRƒ}ƒ“ƒh‚ğo‚·‚Ü‚Å‚ÌƒXƒgƒ[ƒN”‚ğ‘‚â‚µ‚Ä‚µ‚Ü‚¤–‚ğ–h~‚·‚é‚½‚ß‚Å‚·B•W€
+«‘‚É‚È‚¢ƒRƒ}ƒ“ƒh‚àA‚Å‚«‚é‚¾‚¯•âŠ®“ü—Í•û®‚ğ—˜—p‚µAƒ†[ƒU«‘‚ğ[À‚³‚¹
+‚é‚±‚Æ‚ÅA‚ ‚È‚½‚Ì LaTeX ƒXƒ^ƒCƒ‹‚É‚ ‚Á‚½–ì’¹‚Ö‚Æˆç‚Á‚Ä‚¢‚­‚±‚Æ‚Å‚µ‚å‚¤B
 
 
 
@@ -1956,23 +1925,23 @@ File: yatexj, Node: Copying, Next: Concept Index, Prev: Etc, Up: Top
 æ‚èˆµ‚¢
 ********
 
-  –{ƒvƒƒOƒ‰ƒ€‚ÍƒtƒŠ[ƒ\ƒtƒgƒEƒFƒA‚Å‚·B–{ƒvƒƒOƒ‰ƒ€‚ğg—p‚µ‚Ä¶‚¶‚½‚¢
-‚©‚È‚éŒ‹‰Ê‚É‘Î‚µ‚Ä‚àìÒ‚ÍÓ”C‚ğ•‰‚í‚È‚¢‚±‚Æ‚Æ‚µ‚Ü‚·B“]Ú“™‚ÉŠÖ‚µ‚Ä‚Í
-§ŒÀ‚¢‚½‚µ‚Ü‚¹‚ñBí¯“I‚Éˆµ‚Á‚Ä‚­‚¾‚³‚¢B‚Ü‚½A–{ƒvƒƒOƒ‰ƒ€‚ÉŠÜ‚Ü‚ê‚é
-ƒR[ƒh‚ğ—˜—p‚·‚é‚±‚ÆA‰ü‘¢‚·‚é‚±‚Æ‚à©—R‚És‚È‚Á‚Ä\‚¢‚Ü‚¹‚ñ‚ªA—¬—p‚·
-‚é‚±‚Æ‚É‚æ‚èŒ_–ñ’÷Œ‹‚Ì•K—v‚ª¶‚¶‚éê‡A„‚Í‚¢‚©‚È‚éŒ_–ñ‚à’÷Œ‹‚µ‚Ü‚¹‚ñB
-‹ï‘Ì“I‚É‚ÍGPL‚Ö‚ÌƒTƒCƒ“‚Í‚µ‚Ü‚¹‚ñ‚Ì‚ÅAGNU‚ÉŠñ‘¡‚·‚é‚à‚Ì‚ğì‚Á‚Ä‚¢‚éê
-‡„‚Ìì•i‚©‚çæ‚è‚ñ‚¾ƒR[ƒh‚ğ—¬—p‚·‚é‚Æ‹ê˜J‚·‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB‚¢‚©
-‚È‚éƒR[ƒh—¬—p‚à‹‘”Û‚µ‚Ü‚¹‚ñ‚ªŒ_–ñ’÷Œ‹‚Í«‘Ş‚µ‚Ü‚·B
+  –{ƒvƒƒOƒ‰ƒ€‚ÍƒtƒŠ[ƒ\ƒtƒgƒEƒFƒA‚Å‚·B–{ƒvƒƒOƒ‰ƒ€‚ğg—p‚µ‚Ä¶‚¶‚½‚¢‚©‚È
+‚éŒ‹‰Ê‚É‘Î‚µ‚Ä‚àìÒ‚ÍÓ”C‚ğ•‰‚í‚È‚¢‚±‚Æ‚Æ‚µ‚Ü‚·B“]Ú“™‚ÉŠÖ‚µ‚Ä‚Í§ŒÀ‚¢‚½
+‚µ‚Ü‚¹‚ñBí¯“I‚Éˆµ‚Á‚Ä‚­‚¾‚³‚¢B‚Ü‚½A–{ƒvƒƒOƒ‰ƒ€‚ÉŠÜ‚Ü‚ê‚éƒR[ƒh‚ğ—˜—p
+‚·‚é‚±‚ÆA‰ü‘¢‚·‚é‚±‚Æ‚à©—R‚És‚È‚Á‚Ä\‚¢‚Ü‚¹‚ñ‚ªA—¬—p‚·‚é‚±‚Æ‚É‚æ‚èŒ_–ñ
+’÷Œ‹‚Ì•K—v‚ª¶‚¶‚éê‡A„‚Í‚¢‚©‚È‚éŒ_–ñ‚à’÷Œ‹‚µ‚Ü‚¹‚ñB‹ï‘Ì“I‚É‚ÍGPL‚Ö‚Ì
+ƒTƒCƒ“‚Í‚µ‚Ü‚¹‚ñ‚Ì‚ÅAGNU‚ÉŠñ‘¡‚·‚é‚à‚Ì‚ğì‚Á‚Ä‚¢‚éê‡„‚Ìì•i‚©‚çæ‚è
+‚ñ‚¾ƒR[ƒh‚ğ—¬—p‚·‚é‚Æ‹ê˜J‚·‚é‚©‚à‚µ‚ê‚Ü‚¹‚ñB‚¢‚©‚È‚éƒR[ƒh—¬—p‚à‹‘”Û‚µ‚Ü
+‚¹‚ñ‚ªŒ_–ñ’÷Œ‹‚Í«‘Ş‚µ‚Ü‚·B
 
-  ‹êîAŠó–]AƒoƒO•ñAŠ´‘z“™‚ÍŠ½Œ}‚¢‚½‚µ‚Ü‚·B˜A—‚Í yuuji@yatex.org
-‚Ü‚Å(2004”N1ŒŒ»İ)BŒp‘±“I‚Ég—p‚µ‚Ä‚­‚¾‚³‚é•û‚ÍƒƒCƒŠƒ“ƒOƒŠƒXƒgufj–ì
-’¹‚Ì‰ïv‚É¥”ñ‰Á“ü‚µ‚Ä‚­‚¾‚³‚¢B‰Á“ü•û–@‚É‚Â‚¢‚Ä‚Í–{ƒpƒbƒP[ƒW‚Ì
-`docs/qanda'ƒtƒ@ƒCƒ‹‚Ìu‚»‚Ì‘¼v‚ÌÍ‚ğŒä——‚­‚¾‚³‚¢B
+  ‹êîAŠó–]AƒoƒO•ñAŠ´‘z“™‚ÍŠ½Œ}‚¢‚½‚µ‚Ü‚·B˜A—‚Í yuuji@yatex.org ‚Ü
+‚Å(2004”N1ŒŒ»İ)BŒp‘±“I‚Ég—p‚µ‚Ä‚­‚¾‚³‚é•û‚ÍƒƒCƒŠƒ“ƒOƒŠƒXƒgufj–ì’¹‚Ì
+‰ïv‚É¥”ñ‰Á“ü‚µ‚Ä‚­‚¾‚³‚¢B‰Á“ü•û–@‚É‚Â‚¢‚Ä‚Í–{ƒpƒbƒP[ƒW‚Ì `docs/qanda' 
+ƒtƒ@ƒCƒ‹‚Ìu‚»‚Ì‘¼v‚ÌÍ‚ğŒä——‚­‚¾‚³‚¢B
 
 d—l‚ÍA—\‚È‚­ŠmÀ‚É(‹C•ªŸ‘æ‚Å)•ÏX‚³‚ê‚Ü‚·:-pB
 
-                                                              L£—Y“ñ
+                                                                  L£—Y“ñ
 
 
 
@@ -1983,214 +1952,217 @@ File: yatexj, Node: Concept Index, Prev: Copying, Up: Top
 
 * Menu:
 
-* ::                            Greek letter completion.  (line   5)
-* ;:                            Image completion.       (line   5)
-* ƒ°[‚µ‚­‚Ü]:                   Image completion.       (line   5)
-* Š‡‚é[‚­‚­‚é]:                 Enclose section-type command.  (line   5)
-* Š‡‚é[‚­‚­‚é]:                 largeŒ^•âŠ®.            (line  23)
-* ˆø”[‚Ğ‚«‚·‚¤]:               2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh.  (line   5)
-* ‰¢•¶[‚¨‚¤‚Ó‚ñ]:               Accent mark completion.  (line   5)
-* ‡[‚Ş‚¯‚ñ‚½‚¢]:               Image completion.       (line   5)
-* –îˆó[‚â‚µ‚é‚µ]:               Image completion.       (line   5)
-* ;©g[;‚µ‚µ‚ñ]:               Image completion.       (line  34)
-* ƒuƒƒbƒN[‚Ó‚ë‚Â‚­]:           beginŒ^•âŠ®.            (line  82)
-* ƒqƒXƒgƒŠ[‚Ğ‚·‚Æ‚è]:           Cooperation with other packages.  (line   9)
-* Œ…‘µ‚¦[‚¯‚½‚»‚ë‚¦]:           Filling.                (line   5)
-* ‚â‚¿‚å‚¤[‚â‚¿‚æ‚¤]:           Intro.                  (line   5)
-* ƒWƒƒƒ“ƒv[‚µ‚â‚ñ‚Ó]:           view-sectioning.        (line  44)
-* &“ü—Í[&‚É‚ä‚¤‚è‚æ‚­]:         Intelligent newline.    (line   5)
-* İ’è—á[‚¹‚Â‚Ä‚¢‚ê‚¢]:         Sample definitions.     (line   5)
-* •âŠ®[‚·‚¢‚µ‚Ù‚©‚ñ]:       Arbitrary completion.   (line   5)
-* •Â‚¶‚ß‚é[‚Æ‚µ‚±‚ß‚é]:       beginŒ^•âŠ®.            (line  82)
-* Ä‹A•âŠ®[‚³‚¢‚«‚Ù‚©‚ñ]:       Recursive completion.   (line   5)
-* ƒ†[ƒU«‘[‚ä‚¤‚³‚µ‚µ‚æ]:     beginŒ^•âŠ®.            (line  72)
-* ˜_—ŠK‘w[‚ë‚ñ‚è‚©‚¢‚»‚¤]:     view-sectioning.        (line  44)
-* ‚±‚±‚Í‚Ç‚±?[‚±‚±‚Í‚Æ‚±?]:     What column.            (line   5)
-* ƒJƒXƒ^ƒ}ƒCƒY[‚©‚·‚½‚Ü‚¢‚·]:   Customizations.         (line   5)
-* ƒL[ƒAƒTƒCƒ“[‚«‚¢‚ ‚³‚¢‚ñ]:   Customizations.         (line   5)
-* ”®ƒ‚[ƒh[‚·‚¤‚µ‚«‚à‚¨‚Æ]:   Image completion.       (line   5)
-* ƒCƒ“ƒXƒg[ƒ‹[‚¢‚ñ‚·‚Æ‚¨‚é]:   Installation.           (line   5)
-* ƒ^ƒCƒvƒZƒbƒ^[‚½‚¢‚Ó‚¹‚Â‚½]:   Invocation.             (line   5)
-* ƒvƒŒƒ”ƒ…[ƒA[‚Ó‚ê‚Ğ‚ä‚¤‚ ]:   Invocation.             (line   5)
-* ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®[‚¨‚¦‚©‚«‚Â‚¤‚é‚«‚Æ‚¤]: ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®.  (line   5)
-* ŠÂ‹«‚Ìæ“ª‚Ö[‚©‚ñ‚«‚æ‚¤‚Ì‚¹‚ñ‚Æ‚¤‚Ö]: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  (line   8)
-* ŠÂ‹«‚Ì––”ö‚Ö[‚©‚ñ‚«‚æ‚¤‚Ì‚Ü‚Â‚Ğ‚Ö]: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  (line   8)
-* ŠÂ‹«‚ğƒ}[ƒN[‚©‚ñ‚«‚æ‚¤‚ğ‚Ü‚ ‚­]: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  (line   8)
-* ƒAƒEƒgƒ‰ƒCƒ“[‚ ‚¤‚Æ‚ç‚¢‚ñ]:   view-sectioning.        (line   5)
-* ˆø”‚ÌŒÂ”‚ğ•Ï‚¦‚é[‚Ğ‚«‚·‚¤‚Ì‚±‚·‚¤‚ğ‚©‚¦‚é]: 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh.  (line  26)
-* ƒAƒNƒZƒ“ƒg‹L†•âŠ®[‚ ‚­‚¹‚ñ‚Æ‚«‚±‚¤‚Ù‚©‚ñ]: Accent mark completion.  (line   5)
-* ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——[‚©‚·‚½‚Ü‚¢‚·‚Ö‚ñ‚·‚¤‚¢‚¿‚ç‚ñ]: All customizable variables.  (line   5)
-* ŠÂ‹«–¼‚Ì•âŠ®[‚©‚ñ‚«‚æ‚¤‚ß‚¢‚Ì‚Ù‚©‚ñ]: beginŒ^•âŠ®.    (line   5)
-* ƒGƒ‰[C³[‚¦‚ç‚ ‚µ‚ä‚¤‚¹‚¢]: Calling typesetter.     (line   5)
-* ƒ^ƒCƒvƒZƒbƒ^‹N“®[‚½‚¢‚Ó‚¹‚Â‚½‚«‚Æ‚¤]: Calling typesetter.  (line   5)
-* ƒ^ƒCƒvƒZƒbƒgƒGƒ‰[[‚½‚¢‚Ó‚¹‚Â‚Æ‚¦‚ç‚ ]: Calling typesetter.  (line   5)
-* ŠÂ‹«–¼‚Ì•ÏX[‚©‚ñ‚«‚æ‚¤‚ß‚¢‚Ì‚Ö‚ñ‚±‚¤]: Changing LaTeX command.  (line  21)
-* ƒ‚[ƒhØ‚è‘Ö‚¦[‚à‚¤‚Æ‚«‚è‚©‚¦]: Changing mode of YaTeX.  (line   5)
-* ‹N“®‚·‚éƒRƒ}ƒ“ƒh‚ğ•Ï‚¦‚é[‚«‚Æ‚¤‚·‚é‚±‚Ü‚ñ‚Æ‚ğ‚©‚¦‚é]: Changing typesetter.  (line   8)
-* ƒ^ƒCƒvƒZƒbƒ^‚Ìg‚¢•ª‚¯[‚½‚¢‚Ó‚¹‚Â‚½‚Ì‚Â‚©‚¢‚í‚¯]: Changing typesetter.  (line  13)
-* ƒRƒƒ“ƒgƒAƒEƒg[‚±‚ß‚ñ‚Æ‚ ‚¤‚Æ]: Commenting out.       (line   5)
-* ‚»‚Ì‘¼‚ÌƒRƒ}ƒ“ƒh§Œä[‚»‚Ì‚½‚Ì‚±‚Ü‚ñ‚Æ‚¹‚¢‚«‚æ]: Controlling which command to invoke.  (line   5)
-* ‘¼ƒpƒbƒP[ƒW‚Æ‚Ì˜AŒg[‚½‚Í‚Â‚¯‚¦‚µ‚Æ‚Ì‚ê‚ñ‚¯‚¢]: Cooperation with other packages.  (line   5)
-* ƒRƒ}ƒ“ƒhƒqƒXƒgƒŠ[‚±‚Ü‚ñ‚Æ‚Ğ‚·‚Æ‚è]: Cooperation with other packages.  (line   9)
-* ƒJ[ƒ\ƒ‹ƒWƒƒƒ“ƒv[‚©‚ ‚»‚é‚µ‚â‚ñ‚Ó]: Cursor jump.      (line   5)
-* %#‹L–@©‘Ì‚Ì•ÒW[%#‚«‚Ù‚¤‚µ‚½‚¢‚Ì‚Ö‚ñ‚µ‚ä‚¤]: Editing %# notation.  (line   5)
-* ƒpƒ‰ƒOƒ‰ƒt‚ÌŒ…‘µ‚¦[‚Í‚ç‚­‚ç‚Ó‚Ì‚¯‚½‚»‚ë‚¦]: Filling.  (line  48)
-* ŒÅ’è—Ìˆæ‚Ìƒ^ƒCƒvƒZƒbƒg[‚±‚Ä‚¢‚è‚æ‚¤‚¢‚«‚Ì‚½‚¢‚Ó‚¹‚Â‚Æ]: Fix region for typesetting.  (line   5)
-* —ÌˆæŒˆ’è‹K‘¥[‚è‚æ‚¤‚¢‚«‚¯‚Â‚Ä‚¢‚«‚»‚­]: Fix region for typesetting.  (line  27)
-* ’·‚¢ƒtƒ@ƒCƒ‹‚Ì•ÒW[‚È‚©‚¢‚Ó‚ ‚¢‚é‚Ì‚Ö‚ñ‚µ‚ä‚¤]: Fix region for typesetting.  (line  36)
-* ƒMƒŠƒVƒƒ•¶š•âŠ®[‚«‚è‚µ‚â‚à‚µ‚Ù‚©‚ñ]: Greek letter completion.  (line   5)
-* ƒCƒ[ƒW•âŠ®[‚¢‚ß‚¦‚µ‚Ù‚©‚ñ]: Image completion.       (line   5)
-* ”®‹L†ƒCƒ[ƒW•âŠ®[‚·‚¤‚µ‚«‚«‚±‚¤‚¢‚ß‚¦‚µ‚Ù‚©‚ñ]: Image completion.  (line   5)
-* ‘¼‚Ìƒtƒ@ƒCƒ‹‚Ìè’¼‚µ[‚Ù‚©‚Ì‚Ó‚ ‚¢‚é‚Ì‚Ä‚È‚¨‚µ]: Includeonly.  (line  12)
-* ƒCƒ“ƒNƒ‹[ƒh\‘¢[‚¢‚ñ‚­‚é‚¤‚Æ‚±‚¤‚»‚¤]: Inclusion hierarchy browser.  (line   5)
-* ‚¨‚Ü‚©‚¹‰üs[‚¨‚Ü‚©‚¹‚©‚¢‚«‚æ‚¤]: Intelligent newline.  (line   5)
-* ƒvƒŠƒ“ƒgƒAƒEƒg[‚Ó‚è‚ñ‚Æ‚ ‚¤‚Æ]: Invocation.           (line   5)
-* ŠÂ‹«‚Ìíœ[‚©‚ñ‚«‚æ‚¤‚Ì‚³‚­‚µ‚æ]: Killing LaTeX command.  (line   7)
-* ƒ‰ƒxƒ‹©“®¶¬[‚ç‚Ö‚é‚µ‚Æ‚¤‚¹‚¢‚¹‚¢]: label-generation.  (line   5)
-* ƒtƒHƒ“ƒgw’èq[‚Ó‚¨‚ñ‚Æ‚µ‚Ä‚¢‚µ]: largeŒ^•âŠ®.        (line  19)
-* •¶šƒTƒCƒYw’èq[‚à‚µ‚³‚¢‚·‚µ‚Ä‚¢‚µ]: largeŒ^•âŠ®.    (line  19)
-* ƒ[ƒJƒ‹«‘[‚ë‚¨‚©‚é‚µ‚µ‚æ]: Local dictionary.       (line   5)
-* •ÏX/íœ[‚Ö‚ñ‚±‚¤/‚³‚­‚µ‚æ]: Modifying/Deleting.     (line   5)
-* ƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv[‚¨‚ñ‚ç‚¢‚ñ‚Ö‚é‚Ó]: Online help.      (line   5)
-* ƒL[ƒ[ƒhŒŸõ[‚«‚¢‚í‚ ‚Æ‚¯‚ñ‚³‚­]: Online help.      (line   5)
-* ƒOƒ[ƒoƒ‹ƒwƒ‹ƒv[‚­‚ë‚¨‚Í‚é‚Ö‚é‚Ó]: Online help.      (line  17)
-* ƒvƒ‰ƒCƒx[ƒgƒwƒ‹ƒv[‚Ó‚ç‚¢‚Ö‚¦‚Æ‚Ö‚é‚Ó]: Online help.  (line  17)
-* “ü—Íƒtƒ@ƒCƒ‹•ªŠ„[‚É‚ä‚¤‚è‚æ‚­‚Ó‚ ‚¢‚é‚Ó‚ñ‚©‚Â]: Splitting input files.  (line  12)
-* ƒZƒNƒVƒ‡ƒ“‹æØ‚èˆê——ƒoƒbƒtƒ@[‚¹‚­‚µ‚æ‚ñ‚­‚«‚è‚¢‚¿‚ç‚ñ‚Í‚Â‚Ó‚ ]: view-sectioning.  (line  20)
-* ƒZƒNƒVƒ‡ƒ“‹æØ‚è[‚¹‚­‚µ‚æ‚ñ‚­‚«‚è]: view-sectioning.  (line  44)
-* Œ»İ‚ÌƒJƒ‰ƒ€•\¦[‚¯‚ñ‚³‚¢‚Ì‚©‚ç‚Ş‚Ğ‚æ‚¤‚µ]: What column.  (line  24)
-* apropos:                      Online help.            (line   5)
-* autoload:                     Installation.           (line   5)
-* auto-mode-alist:              Installation.           (line   5)
-* %#BEGIN:                      Fix region for typesetting.  (line   5)
-* beginŒ^•âŠ®[begin‚©‚½‚Ù‚©‚ñ]: beginŒ^•âŠ®.            (line   5)
-* C-c:                          Invocation.             (line   5)
-* Demacs:                       Intro.                  (line   5)
-* .emacs:                       Installation.           (line   5)
-* %#END:                        Fix region for typesetting.  (line   5)
-* end•âŠ®[end‚Ù‚©‚ñ]:           end•âŠ®.                (line   5)
-* ghostview:                    Splitting input files.  (line  17)
-* gmhist:                       Cooperation with other packages.  (line   9)
-* hook•Ï”[hook‚Ö‚ñ‚·‚¤]:       Hook variables.         (line   5)
-* o—ÍI—¹ƒy[ƒW[‚µ‚ä‚Â‚è‚æ‚­‚µ‚ä‚¤‚è‚æ‚¤‚Ö‚¦‚µ]: Print out.  (line  10)
-* includeonly:                  Includeonly.            (line   5)
-* Install:                      Installation.           (line   5)
-* item‚È‚Ç‚ÌŒ…‘µ‚¦[item‚È‚Æ‚Ì‚¯‚½‚»‚ë‚¦]: Filling.      (line   9)
-* o—ÍŠJnƒy[ƒW[‚µ‚ä‚Â‚è‚æ‚­‚©‚¢‚µ‚Ö‚¦‚µ]: Print out.  (line  10)
-* jlatex:                       Invocation.             (line   5)
-* largeŒ^•âŠ®[large‚©‚½‚Ù‚©‚ñ]: largeŒ^•âŠ®.            (line   5)
-* LaTeX:                        Intro.                  (line   5)
-* leftarrow:                    Image completion.       (line   5)
-* lpr format:                   lpr format.             (line   5)
-* lprƒtƒH[ƒ}ƒbƒg‚Ì•ÏX[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ‚Ì‚Ö‚ñ‚±‚¤]: Editing %# notation.  (line  20)
-* lpr‚Ó‚§[‚Ü‚Á‚Æ[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ]: lpr format.         (line   5)
-* lprƒtƒH[ƒ}ƒbƒg[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ]: lpr format.         (line   5)
-* maketitleŒ^•âŠ®[maketitle‚©‚½‚Ù‚©‚ñ]: maketitleŒ^•âŠ®.  (line   5)
-* M-C-@:                        ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  (line   8)
-* M-C-a:                        ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  (line   8)
-* M-C-e:                        ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  (line   8)
-* min-out:                      Cooperation with other packages.  (line  18)
-* M-q:                          Filling.                (line  48)
-* Mule:                         Intro.                  (line   5)
-* Ÿè‚Éincludeonly[‚©‚Â‚Ä‚Éincludeonly]: Includeonly.  (line   5)
-* NTT-jTeX[‚¦‚Ê‚Ä‚¢‚¢‚Ä‚¢‚¢‚µ‚¦‚¢‚Ä‚Â‚­]: Filling.      (line  16)
-* platex:                       Invocation.             (line   5)
-* prefix ,:                     Commenting out.         (line   5)
-* prefix .:                     Commenting out.         (line   5)
-* prefix <:                     Commenting out.         (line   5)
-* prefix >:                     Commenting out.         (line   5)
-* prefix /:                     Online help.            (line   5)
-* prefix ?:                     Online help.            (line   5)
-* prefix &:                     What column.            (line   5)
-* prefix a:                     Accent mark completion.  (line   5)
-* prefix b:                     beginŒ^•âŠ®.            (line   5)
-* prefix c:                     Modifying/Deleting.     (line   5)
-* prefix d:                     Inclusion hierarchy browser.  (line   5)
-* prefix e:                     end•âŠ®.                (line   5)
-* prefix g:                     Cursor jump.            (line   5)
-* prefix i:                     Filling.                (line   9)
-* prefix k:                     Modifying/Deleting.     (line   5)
-* prefix key:                   Invocation.             (line   5)
-* prefix l:                     largeŒ^•âŠ®.            (line   5)
-* prefix m:                     maketitleŒ^•âŠ®.        (line   5)
-* prefix s:                     sectionŒ^•âŠ®.          (line   5)
-* prefix SPC:                   Arbitrary completion.   (line   5)
-* prefix w:                     Changing mode of YaTeX.  (line   5)
-* prefixƒL[•ÏX[prefix‚«‚¢‚Ö‚ñ‚±‚¤]: Lisp variables.   (line   5)
-* ƒy[ƒWŠm”FÈ—ªlpr‹N“®[‚Ö‚¦‚µ‚©‚­‚É‚ñ‚µ‚æ‚¤‚è‚â‚­lpr‚«‚Æ‚¤]: Print out.  (line  13)
-* sectionŒ^•âŠ®[section‚©‚½‚Ù‚©‚ñ]: sectionŒ^•âŠ®.      (line   5)
-* •¡G‚Ètabular[‚Ó‚­‚³‚Â‚Ètabular]: What column.        (line   5)
-* æ‰ñ‚èusepackage[‚³‚«‚Ü‚í‚è]: Usepackage cheker.      (line   5)
-* YaTeX-help-file:              Online help.            (line  17)
-* YaTeX-help-file-private:      Online help.            (line  17)
-* YaTeX-item-regexp:            Filling.                (line  21)
-* YaTeX-math-sign-alist-private: Image completion.      (line  61)
-* yatex-mode-hook:              Hook variables.         (line   5)
-* yatex-mode-load-hook:         Hook variables.         (line   5)
-* YaTeX-nervous:                Local dictionary.       (line  23)
-* .yatexrc:                     Local dictionary.       (line   5)
+* ::                            Greek letter completion.  4.
+* ;:                            Image completion.       4.
+* ƒ°[‚µ‚­‚Ü]:                   Image completion.       4.
+* Š‡‚é[‚­‚­‚é]:                 Enclose section-type command.  4.
+* Š‡‚é[‚­‚­‚é]:                 largeŒ^•âŠ®.            22.
+* ˆø”[‚Ğ‚«‚·‚¤]:               2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh.  4.
+* ‰¢•¶[‚¨‚¤‚Ó‚ñ]:               Accent mark completion.  4.
+* ;©g[;‚µ‚µ‚ñ]:               Image completion.       32.
+* ‡[‚Ş‚¯‚ñ‚½‚¢]:               Image completion.       4.
+* –îˆó[‚â‚µ‚é‚µ]:               Image completion.       4.
+* ƒuƒƒbƒN[‚Ó‚ë‚Â‚­]:           beginŒ^•âŠ®.            81.
+* ƒqƒXƒgƒŠ[‚Ğ‚·‚Æ‚è]:           Cooperation with other packages.  8.
+* Œ…‘µ‚¦[‚¯‚½‚»‚ë‚¦]:           Filling.                4.
+* ‚â‚¿‚å‚¤[‚â‚¿‚æ‚¤]:           Intro.                  4.
+* ƒWƒƒƒ“ƒv[‚µ‚â‚ñ‚Ó]:           view-sectioning.        42.
+* &“ü—Í[&‚É‚ä‚¤‚è‚æ‚­]:         Intelligent newline.    4.
+* İ’è—á[‚¹‚Â‚Ä‚¢‚ê‚¢]:         Sample definitions.     4.
+* •âŠ®[‚·‚¢‚µ‚Ù‚©‚ñ]:       Arbitrary completion.   4.
+* •Â‚¶‚ß‚é[‚Æ‚µ‚±‚ß‚é]:       beginŒ^•âŠ®.            81.
+* Ä‹A•âŠ®[‚³‚¢‚«‚Ù‚©‚ñ]:       Recursive completion.   4.
+* ƒ†[ƒU«‘[‚ä‚¤‚³‚µ‚µ‚æ]:     beginŒ^•âŠ®.            71.
+* ˜_—ŠK‘w[‚ë‚ñ‚è‚©‚¢‚»‚¤]:     view-sectioning.        42.
+* ‚±‚±‚Í‚Ç‚±?[‚±‚±‚Í‚Æ‚±?]:     What column.            4.
+* ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®[‚¨‚¦‚©‚«‚Â‚¤‚é‚«‚Æ‚¤]: ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®.  4.
+* ŠÂ‹«‚Ìæ“ª‚Ö[‚©‚ñ‚«‚æ‚¤‚Ì‚¹‚ñ‚Æ‚¤‚Ö]: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* ŠÂ‹«‚Ì––”ö‚Ö[‚©‚ñ‚«‚æ‚¤‚Ì‚Ü‚Â‚Ğ‚Ö]: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* ŠÂ‹«‚ğƒ}[ƒN[‚©‚ñ‚«‚æ‚¤‚ğ‚Ü‚ ‚­]: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* ƒJƒXƒ^ƒ}ƒCƒY[‚©‚·‚½‚Ü‚¢‚·]:   Customizations.         4.
+* ƒL[ƒAƒTƒCƒ“[‚«‚¢‚ ‚³‚¢‚ñ]:   Customizations.         4.
+* ”®ƒ‚[ƒh[‚·‚¤‚µ‚«‚à‚¨‚Æ]:   Image completion.       4.
+* ƒCƒ“ƒXƒg[ƒ‹[‚¢‚ñ‚·‚Æ‚¨‚é]:   Installation.           4.
+* ƒ^ƒCƒvƒZƒbƒ^[‚½‚¢‚Ó‚¹‚Â‚½]:   Invocation.             4.
+* ƒvƒŒƒ”ƒ…[ƒA[‚Ó‚ê‚Ğ‚ä‚¤‚ ]:   Invocation.             4.
+* ƒAƒEƒgƒ‰ƒCƒ“[‚ ‚¤‚Æ‚ç‚¢‚ñ]:   view-sectioning.        4.
+* ˆø”‚ÌŒÂ”‚ğ•Ï‚¦‚é[‚Ğ‚«‚·‚¤‚Ì‚±‚·‚¤‚ğ‚©‚¦‚é]: 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh.  24.
+* ƒAƒNƒZƒ“ƒg‹L†•âŠ®[‚ ‚­‚¹‚ñ‚Æ‚«‚±‚¤‚Ù‚©‚ñ]: Accent mark completion.  4.
+* ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——[‚©‚·‚½‚Ü‚¢‚·‚Ö‚ñ‚·‚¤‚¢‚¿‚ç‚ñ]: All customizable variables.  4.
+* ŠÂ‹«–¼‚Ì•âŠ®[‚©‚ñ‚«‚æ‚¤‚ß‚¢‚Ì‚Ù‚©‚ñ]: beginŒ^•âŠ®.    4.
+* ƒGƒ‰[C³[‚¦‚ç‚ ‚µ‚ä‚¤‚¹‚¢]: Calling typesetter.     4.
+* ƒ^ƒCƒvƒZƒbƒ^‹N“®[‚½‚¢‚Ó‚¹‚Â‚½‚«‚Æ‚¤]: Calling typesetter.  4.
+* ƒ^ƒCƒvƒZƒbƒgƒGƒ‰[[‚½‚¢‚Ó‚¹‚Â‚Æ‚¦‚ç‚ ]: Calling typesetter.  4.
+* ŠÂ‹«–¼‚Ì•ÏX[‚©‚ñ‚«‚æ‚¤‚ß‚¢‚Ì‚Ö‚ñ‚±‚¤]: Changing LaTeX command.  20.
+* ƒ‚[ƒhØ‚è‘Ö‚¦[‚à‚¤‚Æ‚«‚è‚©‚¦]: Changing mode of YaTeX.  4.
+* ƒ^ƒCƒvƒZƒbƒ^‚Ìg‚¢•ª‚¯[‚½‚¢‚Ó‚¹‚Â‚½‚Ì‚Â‚©‚¢‚í‚¯]: Changing typesetter.  12.
+* ‹N“®‚·‚éƒRƒ}ƒ“ƒh‚ğ•Ï‚¦‚é[‚«‚Æ‚¤‚·‚é‚±‚Ü‚ñ‚Æ‚ğ‚©‚¦‚é]: Changing typesetter.  7.
+* ƒRƒƒ“ƒgƒAƒEƒg[‚±‚ß‚ñ‚Æ‚ ‚¤‚Æ]: Commenting out.       4.
+* ‚»‚Ì‘¼‚ÌƒRƒ}ƒ“ƒh§Œä[‚»‚Ì‚½‚Ì‚±‚Ü‚ñ‚Æ‚¹‚¢‚«‚æ]: Controlling which command to invoke.  4.
+* ‘¼ƒpƒbƒP[ƒW‚Æ‚Ì˜AŒg[‚½‚Í‚Â‚¯‚¦‚µ‚Æ‚Ì‚ê‚ñ‚¯‚¢]: Cooperation with other packages.  4.
+* ƒRƒ}ƒ“ƒhƒqƒXƒgƒŠ[‚±‚Ü‚ñ‚Æ‚Ğ‚·‚Æ‚è]: Cooperation with other packages.  8.
+* ƒJ[ƒ\ƒ‹ƒWƒƒƒ“ƒv[‚©‚ ‚»‚é‚µ‚â‚ñ‚Ó]: Cursor jump.      4.
+* %#‹L–@©‘Ì‚Ì•ÒW[%#‚«‚Ù‚¤‚µ‚½‚¢‚Ì‚Ö‚ñ‚µ‚ä‚¤]: Editing %# notation.  4.
+* ƒpƒ‰ƒOƒ‰ƒt‚ÌŒ…‘µ‚¦[‚Í‚ç‚­‚ç‚Ó‚Ì‚¯‚½‚»‚ë‚¦]: Filling.  47.
+* —ÌˆæŒˆ’è‹K‘¥[‚è‚æ‚¤‚¢‚«‚¯‚Â‚Ä‚¢‚«‚»‚­]: Fix region for typesetting.  25.
+* ’·‚¢ƒtƒ@ƒCƒ‹‚Ì•ÒW[‚È‚©‚¢‚Ó‚ ‚¢‚é‚Ì‚Ö‚ñ‚µ‚ä‚¤]: Fix region for typesetting.  34.
+* ŒÅ’è—Ìˆæ‚Ìƒ^ƒCƒvƒZƒbƒg[‚±‚Ä‚¢‚è‚æ‚¤‚¢‚«‚Ì‚½‚¢‚Ó‚¹‚Â‚Æ]: Fix region for typesetting.  4.
+* ƒMƒŠƒVƒƒ•¶š•âŠ®[‚«‚è‚µ‚â‚à‚µ‚Ù‚©‚ñ]: Greek letter completion.  4.
+* ƒCƒ[ƒW•âŠ®[‚¢‚ß‚¦‚µ‚Ù‚©‚ñ]: Image completion.       4.
+* ”®‹L†ƒCƒ[ƒW•âŠ®[‚·‚¤‚µ‚«‚«‚±‚¤‚¢‚ß‚¦‚µ‚Ù‚©‚ñ]: Image completion.  4.
+* ‘¼‚Ìƒtƒ@ƒCƒ‹‚Ìè’¼‚µ[‚Ù‚©‚Ì‚Ó‚ ‚¢‚é‚Ì‚Ä‚È‚¨‚µ]: Includeonly.  11.
+* ƒCƒ“ƒNƒ‹[ƒh\‘¢[‚¢‚ñ‚­‚é‚¤‚Æ‚±‚¤‚»‚¤]: Inclusion hierarchy browser.  4.
+* ‚¨‚Ü‚©‚¹‰üs[‚¨‚Ü‚©‚¹‚©‚¢‚«‚æ‚¤]: Intelligent newline.  4.
+* ƒvƒŠƒ“ƒgƒAƒEƒg[‚Ó‚è‚ñ‚Æ‚ ‚¤‚Æ]: Invocation.           4.
+* ŠÂ‹«‚Ìíœ[‚©‚ñ‚«‚æ‚¤‚Ì‚³‚­‚µ‚æ]: Killing LaTeX command.  6.
+* ƒ‰ƒxƒ‹©“®¶¬[‚ç‚Ö‚é‚µ‚Æ‚¤‚¹‚¢‚¹‚¢]: label-generation.  4.
+* ƒtƒHƒ“ƒgw’èq[‚Ó‚¨‚ñ‚Æ‚µ‚Ä‚¢‚µ]: largeŒ^•âŠ®.        18.
+* •¶šƒTƒCƒYw’èq[‚à‚µ‚³‚¢‚·‚µ‚Ä‚¢‚µ]: largeŒ^•âŠ®.    18.
+* ƒ[ƒJƒ‹«‘[‚ë‚¨‚©‚é‚µ‚µ‚æ]: Local dictionary.       4.
+* •ÏX/íœ[‚Ö‚ñ‚±‚¤/‚³‚­‚µ‚æ]: Modifying/Deleting.     4.
+* ƒOƒ[ƒoƒ‹ƒwƒ‹ƒv[‚­‚ë‚¨‚Í‚é‚Ö‚é‚Ó]: Online help.      16.
+* ƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv[‚¨‚ñ‚ç‚¢‚ñ‚Ö‚é‚Ó]: Online help.      4.
+* ƒL[ƒ[ƒhŒŸõ[‚«‚¢‚í‚ ‚Æ‚¯‚ñ‚³‚­]: Online help.      4.
+* ƒvƒ‰ƒCƒx[ƒgƒwƒ‹ƒv[‚Ó‚ç‚¢‚Ö‚¦‚Æ‚Ö‚é‚Ó]: Online help.  16.
+* “ü—Íƒtƒ@ƒCƒ‹•ªŠ„[‚É‚ä‚¤‚è‚æ‚­‚Ó‚ ‚¢‚é‚Ó‚ñ‚©‚Â]: Splitting input files.  11.
+* ƒZƒNƒVƒ‡ƒ“‹æØ‚èˆê——ƒoƒbƒtƒ@[‚¹‚­‚µ‚æ‚ñ‚­‚«‚è‚¢‚¿‚ç‚ñ‚Í‚Â‚Ó‚ ]: view-sectioning.  18.
+* ƒZƒNƒVƒ‡ƒ“‹æØ‚è[‚¹‚­‚µ‚æ‚ñ‚­‚«‚è]: view-sectioning.  42.
+* Œ»İ‚ÌƒJƒ‰ƒ€•\¦[‚¯‚ñ‚³‚¢‚Ì‚©‚ç‚Ş‚Ğ‚æ‚¤‚µ]: What column.  23.
+* apropos:                      Online help.            4.
+* autoload:                     Installation.           4.
+* auto-mode-alist:              Installation.           4.
+* %#BEGIN:                      Fix region for typesetting.  4.
+* beginŒ^•âŠ®[begin‚©‚½‚Ù‚©‚ñ]: beginŒ^•âŠ®.            4.
+* C-c:                          Invocation.             4.
+* Demacs:                       Intro.                  4.
+* .emacs:                       Installation.           4.
+* %#END:                        Fix region for typesetting.  4.
+* end•âŠ®[end‚Ù‚©‚ñ]:           end•âŠ®.                4.
+* ghostview:                    Splitting input files.  16.
+* gmhist:                       Cooperation with other packages.  8.
+* hook•Ï”[hook‚Ö‚ñ‚·‚¤]:       Hook variables.         4.
+* o—ÍI—¹ƒy[ƒW[‚µ‚ä‚Â‚è‚æ‚­‚µ‚ä‚¤‚è‚æ‚¤‚Ö‚¦‚µ]: Print out.  9.
+* includeonly:                  Includeonly.            4.
+* Install:                      Installation.           4.
+* item‚È‚Ç‚ÌŒ…‘µ‚¦[item‚È‚Æ‚Ì‚¯‚½‚»‚ë‚¦]: Filling.      8.
+* o—ÍŠJnƒy[ƒW[‚µ‚ä‚Â‚è‚æ‚­‚©‚¢‚µ‚Ö‚¦‚µ]: Print out.  9.
+* jlatex:                       Invocation.             4.
+* largeŒ^•âŠ®[large‚©‚½‚Ù‚©‚ñ]: largeŒ^•âŠ®.            4.
+* LaTeX:                        Intro.                  4.
+* leftarrow:                    Image completion.       4.
+* lpr format:                   lpr format.             4.
+* lprƒtƒH[ƒ}ƒbƒg‚Ì•ÏX[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ‚Ì‚Ö‚ñ‚±‚¤]: Editing %# notation.  18.
+* lpr‚Ó‚§[‚Ü‚Á‚Æ[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ]: lpr format.         4.
+* lprƒtƒH[ƒ}ƒbƒg[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ]: lpr format.         4.
+* maketitleŒ^•âŠ®[maketitle‚©‚½‚Ù‚©‚ñ]: maketitleŒ^•âŠ®.  4.
+* M-C-@:                        ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* M-C-a:                        ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* M-C-e:                        ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* min-out:                      Cooperation with other packages.  17.
+* M-q:                          Filling.                47.
+* Mule:                         Intro.                  4.
+* Ÿè‚Éincludeonly[‚©‚Â‚Ä‚Éincludeonly]: Includeonly.  4.
+* NTT-jTeX[‚¦‚Ê‚Ä‚¢‚¢‚Ä‚¢‚¢‚µ‚¦‚¢‚Ä‚Â‚­]: Filling.      15.
+* platex:                       Invocation.             4.
+* prefix ,:                     Commenting out.         4.
+* prefix .:                     Commenting out.         4.
+* prefix <:                     Commenting out.         4.
+* prefix >:                     Commenting out.         4.
+* prefix /:                     Online help.            4.
+* prefix ?:                     Online help.            4.
+* prefix &:                     What column.            4.
+* prefix a:                     Accent mark completion.  4.
+* prefix b:                     beginŒ^•âŠ®.            4.
+* prefix c:                     Modifying/Deleting.     4.
+* prefix d:                     Inclusion hierarchy browser.  4.
+* prefix e:                     end•âŠ®.                4.
+* prefix g:                     Cursor jump.            4.
+* prefix i:                     Filling.                8.
+* prefix k:                     Modifying/Deleting.     4.
+* prefix key:                   Invocation.             4.
+* prefix l:                     largeŒ^•âŠ®.            4.
+* prefix m:                     maketitleŒ^•âŠ®.        4.
+* prefix s:                     sectionŒ^•âŠ®.          4.
+* prefix SPC:                   Arbitrary completion.   4.
+* prefix w:                     Changing mode of YaTeX.  4.
+* prefixƒL[•ÏX[prefix‚«‚¢‚Ö‚ñ‚±‚¤]: Lisp variables.   4.
+* ƒy[ƒWŠm”FÈ—ªlpr‹N“®[‚Ö‚¦‚µ‚©‚­‚É‚ñ‚µ‚æ‚¤‚è‚â‚­lpr‚«‚Æ‚¤]: Print out.  12.
+* sectionŒ^•âŠ®[section‚©‚½‚Ù‚©‚ñ]: sectionŒ^•âŠ®.      4.
+* •¡G‚Ètabular[‚Ó‚­‚³‚Â‚Ètabular]: What column.        4.
+* æ‰ñ‚èusepackage[‚³‚«‚Ü‚í‚è]: Usepackage cheker.      4.
+* YaTeX-help-file:              Online help.            16.
+* YaTeX-help-file-private:      Online help.            16.
+* YaTeX-item-regexp:            Filling.                20.
+* YaTeX-math-sign-alist-private: Image completion.      57.
+* yatex-mode-hook:              Hook variables.         4.
+* yatex-mode-load-hook:         Hook variables.         4.
+* YaTeX-nervous:                Local dictionary.       22.
+* .yatexrc:                     Local dictionary.       4.
+
+
+
 
 Tag table:
 Node: Top257
 Node: Intro1311
 Node: Terminology1614
-Node: Main features2254
-Node: Installation3315
-Node: Invocation4539
-Node: Calling typesetter5360
-Node: Calling previewer6597
-Node: Print out6913
-Node: %#notation7179
-Node: Changing typesetter7607
-Node: Splitting input files7865
-Node: Fix region for typesetting8821
-Node: lpr format9729
-Node: Controlling which command to invoke10539
-Node: Editing %# notation10934
-Node: Completion11392
-Node: beginŒ^•âŠ®11782
-Node: sectionŒ^•âŠ®14365
-Node: 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh15458
-Node: Enclose section-type command16272
-Node: Recursive completion16509
-Node: view-sectioning16814
-Node: label-generation18010
-Node: largeŒ^•âŠ®18360
-Node: maketitleŒ^•âŠ®18940
-Node: Arbitrary completion19239
-Node: end•âŠ®19552
-Node: Accent mark completion19893
-Node: Image completion20318
-Node: Greek letter completion22133
-Node: Local dictionary22593
-Node: Commenting out23197
-Node: Cursor jump24357
-Node: ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv24574
-Node: ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®25560
-Node: ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv26475
-Node: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv26811
-Node: ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv27168
-Node: Modifying/Deleting27405
-Node: Changing LaTeX command27811
-Node: Killing LaTeX command28361
-Node: Filling29233
-Node: Includeonly30563
-Node: What column31124
-Node: Intelligent newline31903
-Node: Usepackage cheker32935
-Node: Changing mode of YaTeX33362
-Node: Online help33937
-Node: Inclusion hierarchy browser34914
-Node: Cooperation with other packages36192
-Node: Customizations36647
-Node: Lisp variables36944
-Node: All customizable variables37550
-Node: Sample definitions44872
-Node: Hook variables45306
-Node: Hook file46200
-Node: Add-in functions46406
-Node: Etc46633
-Node: Copying46918
-Node: Concept Index47542
+Node: Main features2249
+Node: Installation3282
+Node: Invocation4500
+Node: Calling typesetter5319
+Node: Calling previewer6556
+Node: Print out6872
+Node: %#notation7138
+Node: Changing typesetter7566
+Node: Splitting input files7824
+Node: Fix region for typesetting8776
+Node: lpr format9677
+Node: Controlling which command to invoke10486
+Node: Editing %# notation10887
+Node: Completion11344
+Node: beginŒ^•âŠ®11817
+Node: sectionŒ^•âŠ®14401
+Node: 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh15496
+Node: Enclose section-type command16314
+Node: Recursive completion16551
+Node: view-sectioning16857
+Node: label-generation18053
+Node: largeŒ^•âŠ®18402
+Node: maketitleŒ^•âŠ®18982
+Node: Arbitrary completion19281
+Node: end•âŠ®19594
+Node: Accent mark completion19936
+Node: Image completion20361
+Node: Greek letter completion22178
+Node: Local dictionary22638
+Node: Commenting out23243
+Node: Cursor jump24402
+Node: ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv24639
+Node: ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®25627
+Node: ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv26547
+Node: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv26883
+Node: ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv27240
+Node: Modifying/Deleting27477
+Node: Changing LaTeX command27883
+Node: Killing LaTeX command28434
+Node: Filling29305
+Node: Includeonly30634
+Node: What column31195
+Node: Intelligent newline31974
+Node: Usepackage cheker33007
+Node: Changing mode of YaTeX33433
+Node: Online help34009
+Node: Inclusion hierarchy browser34985
+Node: Cooperation with other packages36263
+Node: Customizations36718
+Node: Lisp variables37015
+Node: All customizable variables37622
+Node: Sample definitions44923
+Node: Hook variables45357
+Node: Hook file46251
+Node: Add-in functions46457
+Node: Etc46684
+Node: Copying46968
+Node: Concept Index47599
 
 End tag table

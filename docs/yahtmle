@@ -1,7 +1,7 @@
 Info file: yahtmle,    -*-Text-*-
 produced by `texinfo-format-buffer'
 from file `yahtmle.tex'
-using `texinfmt.el' version 2.42 of  7 Jul 2006.
+using `texinfmt.el' version 2.38 of 3 July 1998.
 
 START-INFO-DIR-ENTRY
 * yahtml-e: (yahtmle).  Yet Another html-mode for Emacs (English).
@@ -49,9 +49,9 @@ Installing yahtml
 *****************
 * Menu:
 
-* Setting up yahtml::
-* Setting environments for weblint browsers and image viewers::
-* Setting environment variables for WWW pages::
+* Setting up yahtml::           
+* Setting environments for weblint browsers and image viewers::  
+* Setting environment variables for WWW pages::  
 
 
 
@@ -213,10 +213,10 @@ Changing and Deleting
 
 * Menu:
 
-* Changing tags in pairs::
-* Changing entities::
-* URLencoding of strings within region::
-* td-enclosure/tr-enclosure::
+* Changing tags in pairs::      
+* Changing entities::           
+* URLencoding of strings within region::  
+* td-enclosure/tr-enclosure::   
 
 
 
@@ -263,7 +263,7 @@ URLencoding of strings within region
 ====================================
 
 `[prefix] #'
-        ... encode chars that needs to be URLencoded within region
+     	... encode chars that needs to be URLencoded within region
 
 
 
@@ -275,11 +275,11 @@ If you wan to convert series of field into <td>...</td> repetitions for
 table element, td-enclosure or tr-enclosure is convenient.
 
       `[prefix] }'
-
-        ... Enclose each field in a region into <td>...</td>'s.
+     
+     	... Enclose each field in a region into <td>...</td>'s.
       `[prefix] ]'
-
-        ... Enclose each line in a region into <tr>...</tr>'s, with every
+     
+     	... Enclose each line in a region into <tr>...</tr>'s, with every
 line converted to <td>...</td> repetition.  They presume white space as
 field separator by default.  To change this, enter other delimiting
 character for a query.  You can convert CSV, for example, into table by
@@ -299,8 +299,8 @@ CSS(Style Sheets) Support
 
 * Menu:
 
-* CSS-class completion::
-* Reread CSS definition::
+* CSS-class completion::        
+* Reread CSS definition::       
 
 
 
@@ -322,8 +322,8 @@ class like this;
       .caution { font-size: 120%; background-color: 0xc00000;}
 
 when you input any tags via completing-read, yahtml prompts you to input
-class name.  If this is bothering, typing `C-j' instead of
-`RET' (or `C-m') cancels the next prompt to class name completion.
+class name.  If this is bothering, typing `C-j' instead of `RET' (or
+`C-m') cancels the next prompt to class name completion.
 
 
 
@@ -366,7 +366,7 @@ List of customizable variables.  Defaults in parenthesis
 
  -- Variable: yahtml-kanji-code
      Default kanji code. 1=sjis, 2=jis, 3=euc, 4=utf-8 (2) If AddType
-     text/html; charset=xxx" .html is written in .htaccess, this will
+     "text/html; charset=xxx" .html is written in .htaccess, this will
      override yahtml-kanji-code.
 
  -- Variable: yahtml-fill-column
@@ -498,35 +498,38 @@ Index
 
 * Menu:
 
-* Customize:                    Customizations.         (line   5)
-* Demacs:                       Intro.                  (line   5)
-* Key Assign:                   Customizations.         (line   5)
-* LaTeX:                        Intro.                  (line   5)
-* Mule:                         Intro.                  (line   5)
-* yahtml:                       Intro.                  (line   5)
+* Customize:                    Customizations.         4.
+* Demacs:                       Intro.                  4.
+* Key Assign:                   Customizations.         4.
+* LaTeX:                        Intro.                  4.
+* Mule:                         Intro.                  4.
+* yahtml:                       Intro.                  4.
+
+
+
 
 Tag table:
 Node: Top259
 Node: Intro836
 Node: Installation1234
-Node: Setting up yahtml1500
-Node: Setting environments for weblint browsers and image viewers2291
-Node: Setting environment variables for WWW pages2987
-Node: Command Invocation3958
-Node: Completion4386
-Node: Jump5902
-Node: Changing and Deleting6382
-Node: Changing tags in pairs6644
-Node: Changing entities7139
-Node: URLencoding of strings within region7675
-Node: td-enclosure/tr-enclosure7978
-Node: CSS Support8938
-Node: CSS-class completion9149
-Node: Reread CSS definition10002
-Node: Customizations10277
-Node: All customizable variables10553
-Node: Hook variables14320
-Node: Copying14446
-Node: Concept Index15237
+Node: Setting up yahtml1515
+Node: Setting environments for weblint browsers and image viewers2306
+Node: Setting environment variables for WWW pages3002
+Node: Command Invocation3973
+Node: Completion4401
+Node: Jump5917
+Node: Changing and Deleting6397
+Node: Changing tags in pairs6681
+Node: Changing entities7176
+Node: URLencoding of strings within region7712
+Node: td-enclosure/tr-enclosure8013
+Node: CSS Support8979
+Node: CSS-class completion9205
+Node: Reread CSS definition10058
+Node: Customizations10333
+Node: All customizable variables10609
+Node: Hook variables14377
+Node: Copying14503
+Node: Concept Index15294
 
 End tag table
