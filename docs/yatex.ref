@@ -9,6 +9,11 @@
 	  野鳥では、prefix キーをカスタマイズできるため(標準ではC-c)これを
 	[prefix] と表記します。C-c のまま変更していない場合、[prefix] a は
 	C-c a を表わします。
+	  begin型コマンドとは \begin～\endの形式のコマンド、section型コ
+	マンドとは \section{題}のように引数を取るコマンド、large型コマン
+	ドとは {\tt } のような中括弧で囲まれたフォント/サイズ指定子、
+	maketitle型コマンドとは \maketitle のように引数を伴わないコマン
+	ドを指します。
 
 
 【補完】
@@ -26,36 +31,40 @@
 	◆section型補完(領域指定)	[prefix] S
 	◆随時補完			[prefix] SPC
 
-	  即時begin型補完の、環境名の頭文字の対応については、yatex.doc を
-	ご覧ください。領域指定モードでは、マークした位置とポイントの間を
-	\begin{center}…\end{center} や {\large } などで括ります。
+	  即時begin型補完の、環境名の頭文字の対応については、Info マニュ
+	アルをご覧ください。領域指定モードでは、マークした位置とポイント
+	の間を\begin{center}…\end{center} や {\large } などで括ります。
 
 	◆数式記号イメージ補完		;
-	◆ギリシャ文字イメージ補完	/
+	◆ギリシャ文字イメージ補完	:
 
 	  上の2つはTeXの数式環境の中で押した場合のみ有効です。強制的に補
-	完機能を使う場合は、C-u を押してから ; / を押します。
+	完機能を使う場合は、C-u を押してから ; や : を押します。
 
 
 【プロセス起動】
 
 	◆jbibtex起動			[prefix] tb
 	◆jlatex起動			[prefix] tj
-	◆jlatex停止			[prefix] tk	※
+	◆makeindex起動			[prefix] ti
+	◆jlatexのkill			[prefix] tk	※
 	◆プリントアウト		[prefix] tl
 	◆プリントアウト(全ページ)	C-u [prefix] tl
 	◆プレビューア起動		[prefix] tp
+	◆xdvi上で文字列サーチ		[prefix] ts	※※
+	◆lpq起動			[prefix] tq
 	◆jlatex起動(領域指定)		[prefix] tr
 
 	  [prefix] t を押せばメニューが出るので、[prefix] t の次に押すキー
 	は覚えなくて構いません。
 
 	  ※は、MS-DOS では無効です。
+	  ※※は、-remote 機能付きの xdvi でのみ有効です。
 
-	  [prefix] tr の領域指定は、文書中の、 %#BEGIN と書いてある行から、
-	%#END と書いてある行までです。%#END を省略すると、%#BEGINから文書
-	末まで、両方省略すると、マークした位置から、ポイントまでが指定領域
-	となります。
+	  [prefix] tr の領域指定は、文書中の、 %#BEGIN と書いてある行か
+	ら、%#END と書いてある行までです。%#END を省略すると、%#BEGINか
+	ら文書末まで、両方省略するとマークした位置から、ポイントまでが指
+	定領域となります。
 
 
 【カーソルジャンプ】
@@ -66,13 +75,16 @@
 	もちろん jlatex でエラーが生じた場合のみ有効です。
 
 	◆対応するオブジェクトジャンプ	[prefix] g
+	◆別ウィンドウで   〃		[prefix] 4g
 
 	  カーソルジャンプは、[prefix] g を押す時のカーソルの位置により、
 	ジャンプすべき場所を判断します。
 
 	・\begin{}, \end{}の上		対応する \end{},\begin{} へ
 	・%#BEGIN, %#END の上		対応する %#BEGIN, %#END へ
-	・\include(only), \input の上	対応するファイル
+	・\include(only), \input の上   対応するファイルへ
+	・\ref, \label の上             対応する \label, \ref へ
+	・\cite, \bibitem の上          対応する \bibitem, \cite へ
 
 	◆メインファイルへジャンプ	[prefix] ^
 	◆別ウィンドウで   〃		[prefix] 4^
@@ -106,9 +118,18 @@
 【その他】
 	
 	◆itemの桁揃え			[prefix] i
+
+	  \item を使う環境中のみ有効です。\item の項目全体をハングインデ
+	ントします。
+
 	◆LaTeXコマンド変更		[prefix] c
 
-	  \begin{}, \end{} の環境名を同時に変更します。
+	  \begin{}, \end{} の行で起動すると環境名を同時に変更します。
+	section型コマンドの上で起動するとコマンドを変更し、コマンドの引
+	数の位置で起動すると引数を変更します。large型コマンドの上で起動
+	するとフォント/サイズ指定子を変更します。イメージ補完で入力した
+	数式モードコマンドの上で起動すると確定直前のイメージ補完操作に戻
+	ります。
 
 	◆コマンド削除			[prefix] k
 
@@ -123,20 +144,23 @@
 
 	◆モード切り替え		[prefix] w
 
-	  新規作成/更新モード、数式モードの切り替えメニューが出ます。
+	  新規作成/修正モード、数式モードの切り替えメニューが出ます。
 
 	◆%# 記法の編集			[prefix] %
 	◆tabular/array桁位置表示	[prefix] &
 	◆オンラインヘルプ		[prefix] ?
-	◆オンラインヘルプ		[prefix] /
+	◆オンラインapropos		[prefix] /
 	◆おまかせ改行			ESC RET
 
 	  「おまかせ改行」は tabular, array, itemize, enumerate, list,
-	description 環境でで有効です。
+	description 環境で有効です。
+
+
+	◆インクルード構造ブラウズ	[prefix] d
+	◆font-lockし直しメニュー	[prefix] u
 
 							       広瀬雄二
-						    yuuji@ae.keio.ac.jp
-						pcs39334@asciinet.or.jp
+						       yuuji@yatex.org
 
 Local variables:
 mode: text
