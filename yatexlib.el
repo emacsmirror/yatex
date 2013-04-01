@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX and yahtml common libraries, general functions and definitions
-;;; yatexlib.el
-;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Feb 29 09:49:30 2012 on firestorm
+;;; yatexlib.el --- YaTeX and yahtml common libraries
+;;; 
+;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Apr  1 22:44:06 2013 on firestorm
 ;;; $Id$
 
+;;; Code:
 ;; General variables
 (defvar YaTeX-dos (memq system-type '(ms-dos windows-nt OS/2)))
 (defvar YaTeX-macos (memq system-type '(darwin)))
@@ -755,13 +755,15 @@ If no such window exist, switch to buffer BUFFER."
 (defvar YaTeX-skip-next-reader-char ?\C-j)
 (defun YaTeX-read-string-or-skip (&rest args)
   "Read string, or skip if last input char is \C-j."
-  (if (equal last-input-char YaTeX-skip-next-reader-char)
+  (if (equal (if (boundp 'last-input-event) last-input-event last-input-char)
+	     YaTeX-skip-next-reader-char)
       ""
     (apply 'read-string args)))
 
 (defun YaTeX-completing-read-or-skip (&rest args)
   "Do completing-read, or skip if last input char is \C-j."
-  (if (equal last-input-char YaTeX-skip-next-reader-char)
+  (if (equal (if (boundp 'last-input-event) last-input-event last-input-char)
+	     YaTeX-skip-next-reader-char)
       ""
     (apply 'completing-read args)))
 
@@ -839,11 +841,18 @@ NULL includes null string in a list."
 ;; Interface function for windows.el
 ;;;
 ;;;###autoload
+(fset 'YaTeX-last-key
+      (if (fboundp 'win:last-key)
+	  'win:last-key
+	'(lambda () (if (boundp 'last-command-char)
+			last-command-char
+		      last-command-event))))
 (defun YaTeX-switch-to-window ()
   "Switch to windows.el's window decided by last pressed key."
   (interactive)
   (or (featurep 'windows) (error "Why don't you use `windows.el'?"))
-  (win-switch-to-window 1 (- last-command-char win:base-key)))
+  (win-switch-to-window 1 (- (YaTeX-last-key) win:base-key)))
+
 
 ;;;###autoload
 (defun YaTeX-command-to-string (cmd)

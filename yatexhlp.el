@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX helper with LaTeX commands and macros.
-;;; yatexhlp.el
+;;; yatexhlp.el --- YaTeX helper with LaTeX commands and macros
+;;; 
 ;;; (c)1994,1998,2004 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Oct 19 01:13:21 2004 on firestorm
+;;; Last modified Sat Sep  1 08:11:14 2012 on firestorm
 ;;; $Id$
 
+;;; Code:
 (let ((help-file (concat "YATEXHLP."
 			 (cond (YaTeX-japan "jp")
 			       (t "eng"))))

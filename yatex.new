@@ -1,6 +1,11 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.77	last-command-char 廃止対策を追加。
+	=== yatex ===
+	%#DVIPDF でdviからpdfへの変換コマンドを指定可能に。
+	PDFヴューアに xpdf, pdfopen, mupdf, zathura, okular を追加。
+
 1.76	=== yatex ===
 	タイプセットでラベル未定義があったら自動的にrerunする。
 	自動rerun無効化は YaTeX-typeset-auto-rerun を nil に。
@@ -18,7 +23,7 @@
 	M-C-SPC で環境だけでなく数式環境もマークする。
 	[prefix] t d でタイプセッタ起動成功のあと dvipdfmx を起動。
 	\label{}でラベル名を入れたときは \ref{NAME} を自動的にkill-ringに追加。
-	[prefix] t c で\label{NAME} の NAME を変えたら \ref のNAMEも変える。
+	[prefix] c で\label{NAME} の NAME を変えたら \ref のNAMEも変える。
 	同上のことを \cite/\bibitem にも。
 	\bibitem{}を入れたときは \cite{TAG} を自動的にkill-ringに追加。
 	\end 補完のお節介検査の精度を少し上げた。

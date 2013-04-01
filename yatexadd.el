@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX add-in functions.
+;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.20
-;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Mar  9 21:19:09 2012 on firestorm
+;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Apr  1 22:43:00 2013 on firestorm
 ;;; $Id$
 
+;;; Code:
 ;;;
 ;;Sample functions for LaTeX environment.
 ;;;
@@ -432,7 +432,7 @@ YaTeX-make-begin-end."
 (defun YaTeX::label-search-tag ()
   (interactive)
   (let ((case-fold-search t)
-	(tag (regexp-quote (char-to-string last-command-char))))
+	(tag (regexp-quote (char-to-string (YaTeX-last-key)))))
     (cond
      ((save-excursion
 	(forward-char 1)

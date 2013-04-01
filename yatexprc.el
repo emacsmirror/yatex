@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX process handler.
-;;; yatexprc.el
-;;; (c)1993-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Feb 17 22:35:38 2012 on firestorm
+;;; yatexprc.el --- YaTeX process handler
+;;; 
+;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Apr  1 22:44:38 2013 on firestorm
 ;;; $Id$
 
+;;; Code:
 ;(require 'yatex)
 (require 'yatexlib)
 
@@ -849,7 +849,7 @@ error or warning lines in reverse order."
 (defvar YaTeX-dvi2-command-ext-alist
  '(("[agx]dvi\\|dviout" . ".dvi")
    ("ghostview\\|gv" . ".ps")
-   ("acroread\\|pdf\\|Preview\\|TeXShop\\|Skim\\|evince" . ".pdf")))
+   ("acroread\\|xpdf\\|pdfopen\\|Preview\\|TeXShop\\|Skim\\|evince\\|mupdf\\|zathura\\|okular" . ".pdf")))
 
 (defun YaTeX-get-preview-file-name (&optional preview-command)
   "Get file name to preview by inquiring YaTeX-get-latex-command"

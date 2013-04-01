@@ -1,15 +1,14 @@
-;;; -*- Emacs-Lisp -*-
-;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.76
-;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat May 12 14:53:03 2012 on firestorm
+;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
+;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Apr  1 22:40:25 2013 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
+;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.76"
+(defconst YaTeX-revision-number "1.77"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -44,7 +43,7 @@ YaTeX-current-position-register.")
 ;;'main-file	: switch tmp-dic according to main-file directory.
 ;;'directory	: switch tmp-dic dir by dir."
 ;;)
-(defvar YaTeX-use-LaTeX2e t "*Use LaTeX2e or not.  Nil meas latex 2.09")
+(defvar YaTeX-use-LaTeX2e t "*Use LaTeX2e or not.  Nil means latex 2.09")
 
 (defvar tex-command
   (cond
@@ -1364,7 +1363,7 @@ into {\\xxx } braces.
   (setplist 'YaTeX-jmode nil))
 
 (defun YaTeX-self-insert (arg)
-  (call-interactively (global-key-binding (char-to-string last-command-char))))
+  (call-interactively (global-key-binding (char-to-string (YaTeX-last-key)))))
 (defun YaTeX-insert-inherit (&rest args)
   (apply (if (fboundp 'insert-and-inherit) 'insert-and-inherit 'insert)
 	   args))
@@ -1399,7 +1398,7 @@ into {\\xxx } braces.
      ((and (= (preceding-char) ?\\ )
 	   (/= (char-after (- (point) 2)) ?\\ )
 	   (not (YaTeX-in-math-mode-p)))
-      (YaTeX-insert-inherit last-command-char "\n")
+      (YaTeX-insert-inherit (YaTeX-last-key) "\n")
       (indent-to (max 0 col))
       (YaTeX-insert-inherit "\\]")
       (beginning-of-line)
@@ -1507,7 +1506,9 @@ into {\\xxx } braces.
 ;    (backward-char 1))
    (t (YaTeX-self-insert arg))))
 
-(defvar YaTeX-use-jmode-hook (not (and (fboundp 'skk-mode) (boundp 'skk-mode)))
+(defvar YaTeX-use-jmode-hook
+  (and (featurep 'canna) (boundp 'canna:*initialized*) canna:*initialized*)
+  ;; (not (and (fboundp 'skk-mode) (boundp 'skk-mode)))
   "*Non-nil means activate automatic jmode switcher within/out math mode.
 Hopefully, change default to t in the next version of 1.75.")
 (defun YaTeX-jmode-hook (old new)
@@ -1625,7 +1626,8 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?k) (YaTeX-kill-typeset-process YaTeX-typeset-process))
      ((= c ?p) (call-interactively 'YaTeX-preview))
      ((= c ?q) (YaTeX-system "lpq" "*Printer queue*"))
-     ((= c ?d) (YaTeX-typeset-buffer YaTeX-dvipdf-command))
+     ((= c ?d) (YaTeX-typeset-buffer
+		(or (YaTeX-get-builtin "DVIPDF") YaTeX-dvipdf-command)))
      ((= c ?v) (YaTeX-view-error))
      ((= c ?l) (YaTeX-lpr arg))
      ((= c ?m) (YaTeX-switch-mode-menu arg))
@@ -2544,7 +2546,8 @@ because this function is called with no argument."
 	     (progn
 	       (setq maketitle (substring (YaTeX-match-string 0) 1))
 	       (setq memberp (YaTeX-math-member-p maketitle))))
-	(let ((last-command-char (string-to-char (car memberp))))
+	(let*((last-command-char (string-to-char (car memberp)))
+	      (last-command-event last-command-char))
 	  (setq beg (match-beginning 0) end (match-end 0))
 	  (delete-region beg end)
 	  (YaTeX-math-insert-sequence t (cdr memberp))))))

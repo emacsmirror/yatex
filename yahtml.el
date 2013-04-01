@@ -1,10 +1,12 @@
-;;; -*- Emacs-Lisp -*-
-;;; (c) 1994-2012 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Thu May 10 11:06:39 2012 on firestorm
+;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
+;;; (c) 1994-2013 by HIROSE Yuuji [yuuji(@)yatex.org]
+;;; Last modified Mon Apr  1 22:42:29 2013 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.76"
   "Revision number of running yahtml.el")
+
+;;; Commentary:
 
 ;;;[Installation]
 ;;; 
@@ -176,6 +178,7 @@
 ;;;		(‚Æ‚¢‚¤‚©‚Ù‚Æ‚ñ‚Ç‚â‚Á‚Ä‚à‚ç‚Á‚½ ^^;)
 ;;; 
 
+;;; Code:
 
 (require 'yatexlib)
 ;;; --- customizable variable starts here ---
@@ -918,7 +921,7 @@ This program should take -o option to overwrite existing HTML file.")
    (let ((addin (concat "yahtml:" (downcase form))) s a)
      (concat
       (and (setq a (yahtml-css-get-element-completion-alist form))
-	   (not (equal last-command-char ?\C-j))
+	   (not (equal (YaTeX-last-key) ?\C-j))
 	   (memq yahtml-current-completion-type '(multiline inline))
 	   (not (string-match "#" form))
 	   (yahtml-make-optional-argument ;should be made generic?
@@ -2943,7 +2946,8 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 			       (skip-chars-forward "^\"")(point)))))
 		(if (file-exists-p f)
 		    (setq alist
-			  (append alist (yahtml-css-collect-classes-file f)))))
+			  (append alist (yahtml-css-collect-classes-file
+					 f initial)))))
 	    (setq e (point))
 	    (goto-char b)
 	    (while (re-search-forward	;‚¿‚å‚Æ‚¢‚¢‰ÁŒ¸‚ÈREGEXP

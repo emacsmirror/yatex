@@ -1,8 +1,8 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX interfaces for Texinfo mode.
-;;; (c)1994-2012 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Jan  9 20:19:55 2012 on firestorm
+;;; yatexinf.el -- YaTeX interfaces for Texinfo mode
+;;; (c)1994-2013 by HIROSE, Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Apr  1 22:43:58 2013 on firestorm
 
+;;; Code:
 (require 'yatex)
 (or (boundp 'texinfo-mode-map)
     (load "texinfo"))

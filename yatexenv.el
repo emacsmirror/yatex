@@ -1,10 +1,9 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX environment-specific functions.
-;;; yatexenv.el
-;;; (c) 1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Feb 12 11:15:33 2012 on firestorm
+;;; yatexenv.el --- YaTeX environment-specific functions
+;;; (c) 1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Apr  1 22:43:10 2013 on firestorm
 ;;; $Id$
 
+;;; Code:
 ;;;
 ;; Functions for tabular environment
 ;;;
