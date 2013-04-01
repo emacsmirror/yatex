@@ -1,6 +1,6 @@
 ;;; yatexinf.el -- YaTeX interfaces for Texinfo mode
-;;; (c)1994-2012 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:11:25 2012 on firestorm
+;;; (c)1994-2013 by HIROSE, Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Apr  1 22:43:58 2013 on firestorm
 
 ;;; Code:
 (require 'yatex)

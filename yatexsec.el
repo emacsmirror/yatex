@@ -1,7 +1,7 @@
 ;;; yatexsec.el --- YaTeX sectioning browser
 ;;; 
-;;; (c) 1994-2012 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Jan 27 20:11:45 2013 on firestorm
+;;; (c) 1994-2013 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Apr  1 22:46:28 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:

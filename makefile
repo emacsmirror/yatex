@@ -49,7 +49,7 @@ GEO	= -geometry 80x20+0+0
 # make clean		to delete all producted files
 # make ci		to check in all
 # make co		to check out all
-MVER	= 1.76
+MVER	= 1.77
 LISP	= ${LISP18} ${LISP19}
 YAHTML	= yahtml.el
 COMMON	= yatexlib.el yatexprc.el

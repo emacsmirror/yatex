@@ -1,7 +1,7 @@
 ;;; yatexhie.el --- YaTeX hierarchy browser
 ;;; 
-;;; (c)1995-2012 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:11:00 2012 on firestorm
+;;; (c)1995-2013 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Apr  1 22:43:34 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:

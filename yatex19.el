@@ -1,6 +1,6 @@
 ;;; yatex19.el -- YaTeX facilities for Emacs 19 or later
-;;; (c)1994-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:07:31 2012 on firestorm
+;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Apr  1 22:42:46 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:

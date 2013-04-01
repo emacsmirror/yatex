@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager
 ;;; 
-;;; (c)2003-2012 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:13:23 2012 on firestorm
+;;; (c)2003-2013 by HIROSE, Yuuji [yuuji@yatex.org]
+;;; Last modified Mon Apr  1 22:44:31 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
