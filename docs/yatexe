@@ -1,7 +1,7 @@
 Info file: yatexe,    -*-Text-*-
 produced by `texinfo-format-buffer'
 from file `yatexe.tex'
-using `texinfmt.el' version 2.42 of  7 Jul 2006.
+using `texinfmt.el' version 2.38 of 3 July 1998.
 
 START-INFO-DIR-ENTRY
 * YaTeX-e: (yatexe).    Yet Another tex-mode for Emacs (English).
@@ -16,7 +16,7 @@ File: yatexe, Node: Top, Next: What is YaTeX?, Prev: (dir), Up: (dir)
 
 * Menu:
 
-* What is YaTeX?::
+* What is YaTeX?::              
 * Main features::               What YaTeX can do
 * Installation::                Guide to install
 * Typesetting::                 Call typesetting processes
@@ -47,8 +47,7 @@ What is YaTeX?
 **************
 
   YaTeX automates typesetting and previewing of LaTeX and enables
-completing input of LaTeX mark-up command such as
-`\begin{}'..`\end{}'.
+completing input of LaTeX mark-up command such as `\begin{}'..`\end{}'.
 
   YaTeX also supports Demacs which runs on MS-DOS(386), Mule (Multi
 Language Enhancement to GNU Emacs), and latex on DOS.
@@ -132,7 +131,7 @@ execute typeset or preview command.
              ... invoke latex on current environment or whole portion of
      current formulas in math-mode.
 `[prefix] t d'
-        ... invoke dvipdfmx after successful typesetting
+     	... invoke dvipdfmx after successful typesetting
 `[prefix] t k'
              ... kill current typesetting process
 `[prefix] t b'
@@ -150,9 +149,9 @@ execute typeset or preview command.
 
 * Menu:
 
-* Calling typesetter::
-* Calling previewer::
-* Printing out::
+* Calling typesetter::          
+* Calling previewer::           
+* Printing out::                
 
 
 
@@ -239,12 +238,12 @@ the source text.
 
 * Menu:
 
-* Changing typesetter::
-* Splitting input files::
-* Static region for typesetting::
-* Lpr format::
-* Controlling which command to invoke::
-* Editing %# notation::
+* Changing typesetter::         
+* Splitting input files::       
+* Static region for typesetting::  
+* Lpr format::                  
+* Controlling which command to invoke::  
+* Editing %# notation::         
 
 
 
@@ -372,11 +371,11 @@ These %# notation below can control which command to invoke for LaTeX
 related process.
 
       `%#BIBTEX'
-
-        ... Command line for makeindex ([prefix] t i)
+     
+     	... Command line for makeindex ([prefix] t i)
       `%#MAKEINDEX'
-
-        ... Command line for bibtex ([prefix] t b)
+     
+     	... Command line for bibtex ([prefix] t b)
 
 If you want to invoke "makeidx hogehoge" to update index, put the next
 line some upper place in the source, for example.
@@ -416,15 +415,15 @@ kinds of completion type, begin-type, section-type, large-type, etc...
 
 * Menu:
 
-* Begin-type completion::
-* Section-type completion::
-* Large-type completion::
-* Maketitle-type completion::
-* Arbitrary completion::
-* End completion::
-* Accent completion::
-* Image completion::
-* Greek letters completion::
+* Begin-type completion::       
+* Section-type completion::     
+* Large-type completion::       
+* Maketitle-type completion::   
+* Arbitrary completion::        
+* End completion::              
+* Accent completion::           
+* Image completion::            
+* Greek letters completion::    
 
 
 
@@ -486,7 +485,7 @@ function.
 
 The next message will show up in the minibuffer
 
-             Begin environment(default document):
+             Begin environment(default document): 
 
 by typing `[prefix] b'.  Put the wishing environment with completion in
 the minibuffer, and `\begin{env}'...\`\end{env}' will be inserted in the
@@ -554,7 +553,7 @@ will insert the string
 in your LaTeX source.  When you neglect argument such as
 
              (C-v for view) \???{} (default section): vspace*
-             \vspace*{???}:
+             \vspace*{???}: 
 
 YaTeX puts
 
@@ -593,7 +592,7 @@ completion key sequence in the minibuffer.
 
 * Menu:
 
-* view-sectioning::
+* view-sectioning::             
 
 
 
@@ -616,12 +615,12 @@ typing
 `M-x YaTeX-section-overview'
              ... Generate *Sectioning Lines* buffer
 
-from the LaTeX source buffer.  In this listing buffer, typing `u' on
-the sectioning command shifts up the corresponding sectioning command in
+from the LaTeX source buffer.  In this listing buffer, typing `u' on the
+sectioning command shifts up the corresponding sectioning command in
 source text and `d' shifts down.  After marking lines in the listing
-buffer, typing `U' shifts up all sectioning commands in the region,
-and `U' shifts down.  Here are all the key bindings of
-`*Sectioning Lines*' buffer.
+buffer, typing `U' shifts up all sectioning commands in the region, and
+`U' shifts down.  Here are all the key bindings of `*Sectioning Lines*'
+buffer.
 
 `SPC'
              ... Jump to corresponding source line
@@ -654,7 +653,7 @@ such as `{\large }'.  When you type
 
 the message in the minibuffer
 
-             {\??? } (default large):
+             {\??? } (default large): 
 
 prompts prompts you large-type command with completing-read.  There are
 TeX commands to change fonts or sizes, `it', `huge' and so on, in the
@@ -705,7 +704,7 @@ End completion
 ==============
 
   YaTeX automatically detects the opened environment and close it with
-`\end{environment}'.  Though proficient YaTeX users never fail to make
+\`\end{environment}'.  Though proficient YaTeX users never fail to make
 environment with begin-type completion, some may begin an environment
 manually.  In that case, type
 
@@ -756,11 +755,10 @@ YaTeX automatically detects whether the cursor located in math environment
 or not, and change the behavior of key strokes `;' and `:'.
 
   By the way, we often express the leftarrow mark by `<-' for example.
-Considering such image, you can write `\leftarrow' by typing `<-'
-after `;' (semicolon) as a prefix.  In the same way,
-`\longleftarrow' (`<--') is completed by typing `;<--',
-infinity mark which is imitated by `oo' is completed by typing
-`;oo'.
+Considering such image, you can write `\leftarrow' by typing `<-' after
+`;' (semicolon) as a prefix.  In the same way, `\longleftarrow' (`<--') is
+completed by typing `;<--', infinity mark which is imitated by `oo' is
+completed by typing `;oo'.
 
   Here are the sample operations in YaTeX math-mode.
 
@@ -774,11 +772,11 @@ infinity mark which is imitated by `oo' is completed by typing
   In any case, you can quit from image completion and can move to the next
 editing operation if the LaTeX command you want is shown in the buffer.
 
-  `;' itself in math-environment is inserted by `;;'.  Typing
-`TAB' in the midst of image completion shows all of the LaTeX
-commands that start with the same name as string you previously typed in.
-In this menu buffer, press `RET' after moving the cursor (by `n',
-`p', `b', `f') to insert the LaTeX command.
+  `;' itself in math-environment is inserted by `;;'.  Typing `TAB' in the
+midst of image completion shows all of the LaTeX commands that start with
+the same name as string you previously typed in.  In this menu buffer,
+press `RET' after moving the cursor (by `n', `p', `b', `f') to insert the
+LaTeX command.
 
   To know all of the completion table, type `TAB' just after `;'.  And
 here is the sample menu by `TAB' after `;<'.
@@ -786,7 +784,7 @@ here is the sample menu by `TAB' after `;<'.
      KEY             LaTeX sequence          sign
      <               \leq                    <
                                              ~
-     <<              \ll                     <<
+     <<              \ll                     << 
      <-              \leftarrow              <-
      <=              \Leftarrow              <=
 
@@ -806,11 +804,11 @@ completion in the same method.  After prefix `:', typing `a' makes
 `\alpha', `b' makes `\beta' and `g' makes `\gamma' and so on.  First, type
 `:TAB' to know all the correspondence of alphabets vs. Greek letters.
 
-  If you will find `;' or `:' doesn't work in correct position of
-math environment, it may be a bug of YaTeX.  Please send me a bug report
-with the configuration of your text, and avoid it temporarily by typing
-`;' or `:' after universal-argument(`C-u') which forces
-`;' and `:' to work as math-prefix.
+  If you will find `;' or `:' doesn't work in correct position of math
+environment, it may be a bug of YaTeX.  Please send me a bug report with
+the configuration of your text, and avoid it temporarily by typing `;' or
+`:' after universal-argument(`C-u') which forces `;' and `:' to work as
+math-prefix.
 
 
 
@@ -864,10 +862,9 @@ comments or uncomments the paragraph where the cursor belongs.  This
 to `ESC h' by default.  It is NOT predictable what will happen when you
 continuously comment out some paragraph many times.
 
-  You can also comment out an environment between `\begin' and
-`\end', or a `\begin'-\`\end' pair themselves, by making the
-following key strokes on the line where `\begin{}' or
-`\end{}' exists.
+  You can also comment out an environment between `\begin' and `\end', or
+a `\begin'-\`\end' pair themselves, by making the following key strokes on
+the line where `\begin{}' or `\end{}' exists.
 
 `[prefix] >'
              ... comment out from \begin to \`end'
@@ -897,11 +894,11 @@ Cursor jump
 
 * Menu:
 
-* Jump to corresponding object::
-* Invoking image processor::
-* Jump to main file::
-* Jumping around the environment::
-* Jumping to last completion position::
+* Jump to corresponding object::  
+* Invoking image processor::    
+* Jump to main file::           
+* Jumping around the environment::  
+* Jumping to last completion position::  
 
 
 
@@ -939,9 +936,9 @@ the main text, YaTeX switches buffer to `chap1.tex'.
 `[prefix] 4 g'
              ... go to corresponding object in other window
 
-do the same job as `[prefix] g' except it's done in other window.
-Note that this function doesn't work on `begin/end',
-`%#BEGIN/%#END' pairs because it is meaningless.
+do the same job as `[prefix] g' except it's done in other window.  Note
+that this function doesn't work on `begin/end', `%#BEGIN/%#END' pairs
+because it is meaningless.
 
 
 
@@ -985,8 +982,8 @@ Jump to main file
 `[prefix] 4^'
              ... visit main file in other buffer
 
-in a sub text switch the buffer to the main text specified by
-`%#!'  notation.
+in a sub text switch the buffer to the main text specified by `%#!'
+notation.
 
 
 
@@ -1034,8 +1031,8 @@ entered.
 
 * Menu:
 
-* Changing LaTeX commands::
-* Killing LaTeX commands::
+* Changing LaTeX commands::     
+* Killing LaTeX commands::      
 
 
 
@@ -1118,9 +1115,9 @@ newcommand to itemize terms(e.g. `\underlineitem'), put
              (setq YaTeX-item-regexp
                    "\\(\\\\\\(sub\\)*item\\)\\|\\(\\\\underlineitem\\)")
 
-in your `~/.emacs'.  If you are not familiar with regular expression
-for Emacs-Lisp, name  a newcommand  for  `itemize' beginning  with
-`\item' such as `\itembf', not `\bfitem'.
+in your `~/.emacs'.  If you are not familiar with regular expression for
+Emacs-Lisp, name a newcommand for `itemize' beginning with `\item' such as
+`\itembf', not `\bfitem'.
 
   This function reformats the `\item' into `hang-indented' style.  For
 example:
@@ -1170,10 +1167,9 @@ text is not in includeonly list and prompts you
 
              A)dd R)eplace %)comment?
 
-in the minibuffer.  Type `a' if you want to add the current file name
-to `\includeonly' list, `r' to replace \`includeonly' list
-with the current file, and type `%' to comment out the
-`\includeonly' line.
+in the minibuffer.  Type `a' if you want to add the current file name to
+`\includeonly' list, `r' to replace \`includeonly' list with the current
+file, and type `%' to comment out the `\includeonly' line.
 
 
 
@@ -1244,8 +1240,8 @@ line, please call this after the second line if possible.
 
   If you want to apply these trick to other environments, `foo'
 environment for example, define the function named
-`YaTeX-intelligent-newline-foo' to insert corresponding contents.
-That function will be called at the beginning of the next line after the
+`YaTeX-intelligent-newline-foo' to insert corresponding contents.  That
+function will be called at the beginning of the next line after the
 newline is inserted to the current line.  Since the function
 `YaTeX-indent-line' is designed to indent the current line properly,
 calling this function before your code to insert certain contents must be
@@ -1418,9 +1414,9 @@ add-in functions.
 
 * Menu:
 
-* Lisp variables::
-* Add-in functions::
-* Add-in generator::
+* Lisp variables::              
+* Add-in functions::            
+* Add-in generator::            
 
 
 
@@ -1444,10 +1440,10 @@ those bindings, set that variable to 1 instead of `t').
 
 * Menu:
 
-* All customizable variables::
-* Sample definitions::
-* Hook variables::
-* Hook file::
+* All customizable variables::  
+* Sample definitions::          
+* Hook variables::              
+* Hook file::                   
 
 
 
@@ -1534,8 +1530,8 @@ variable by `M-x describe-variable'.
 
  -- Variable: YaTeX-fill-inhibit-environments
      Inhibit fill in these environments (`'("tabular" "tabular*" "array"
-     picture" "eqnarray" "eqnarray*" "equation" "math" "displaymath"
-     verbatim" "verbatim*")')
+     "picture" "eqnarray" "eqnarray*" "equation" "math" "displaymath"
+     "verbatim" "verbatim*")')
 
  -- Variable: YaTeX-uncomment-once
      T for deleting all preceding `%' (`nil')
@@ -1581,7 +1577,7 @@ variable by `M-x describe-variable'.
      `YaTeX-display-hierarchy' searches for sectioning command first, and
      comment line secondary as a file headings.  In latter case, ignore lines
      that match with regular expression of this variable.  Default value of
-     this variable is RCS header expressions and mode specifying line `-*- xxxx
+     this variable is RCS header expressions and mode specifying line `-*- xxxx 
      -*'.
 
  -- Variable: YaTeX-skip-default-reader
@@ -1635,8 +1631,8 @@ variable by `M-x describe-variable'.
      (`(featurep 'hilit19)'
 
  -- Variable: YaTeX-singlecmd-suffix
-     Suffix which is always inserted after maketitle-type macros.
-     `"{}"' is recommended.
+     Suffix which is always inserted after maketitle-type macros.  `"{}"'
+     is recommended.
 
  -- Variable: YaTeX-package-alist-private
      Alist of LaTeX2e-package name vs. lists of macros in it.  Set this
@@ -1765,10 +1761,10 @@ Procedure
 
 * Menu:
 
-* How the add-in function works::
-* How the function is called::
-* Useful functions for creating add-in::
-* Contribution::
+* How the add-in function works::  
+* How the function is called::  
+* Useful functions for creating add-in::  
+* Contribution::                
 
 
 
@@ -1826,15 +1822,14 @@ You do set-mark-command at point A and then move to point B.  Typing
 
      \frac{a/c}
 
-Normally, the expression `a/c' is translated to
-`\frac{a}{c}'. An enclosing add-in is useful for modifying
-`/' to `}{'.
+Normally, the expression `a/c' is translated to `\frac{a}{c}'. An
+enclosing add-in is useful for modifying `/' to `}{'.
 
 * Menu:
 
-* Defining option-add-in::
-* Defining argument-add-in::
-* Defining enclosing-add-in::
+* Defining option-add-in::      
+* Defining argument-add-in::    
+* Defining enclosing-add-in::   
 
 
 
@@ -1875,7 +1870,7 @@ minibuffer.  Here is the created function considering this.
              (defun YaTeX::newcommand (n)	;n is argument position
                (cond
                 ((= n 1)			;1st argument is macro name
-                 (read-string "Command: " "\\")) ;initial input `\'
+                 (read-string "Command: " "\\")) ;initial input `\' 
                 ((= n 2) "")			;do nothing when reading arg#2
                 (t nil)))
 
@@ -1903,7 +1898,7 @@ expression.
          (while (search-forward "/" end t)
            (goto-char (match-beginning 0))
            (if (y-or-n-p "Replace this slash(/) with `}{'")
-          (throw 'done (replace-match "}{")))
+     	  (throw 'done (replace-match "}{")))
            (goto-char (match-end 0)))))
 
 
@@ -1938,10 +1933,9 @@ arguments, [D] means description.
 `[A]'
      Character list which can show up in the brackets
 `[D]'
-        Return the location specifier such as `[htb]'.  When
-     nothing is entered, omit [] itself.  If the possible characters
-     are "htbp", call this function as
-     `(YaTeX:read-position "htbp")'
+        Return the location specifier such as `[htb]'.  When nothing is
+     entered, omit [] itself.  If the possible characters are "htbp", call
+     this function as `(YaTeX:read-position "htbp")'
 
 `[F]'
      YaTeX:read-coordinates
@@ -1949,9 +1943,9 @@ arguments, [D] means description.
      Base prompt, X-axis prompt, Y-axis prompt (each optional)
 `[D]'
        Read the coordinates with the prompt "BasePrompt X-axisPrompt:" for
-     X-axis, "BasePrompt Y-axisPrompt:" for Y-axis, and return it in the form
-     of "(X,Y)".  The default prompts are `Dimension', `X',
-     `Y' respectively.
+     X-axis, "BasePrompt Y-axisPrompt:" for Y-axis, and return it in the
+     form of "(X,Y)".  The default prompts are `Dimension', `X', `Y'
+     respectively.
 
 `[F]'
      YaTeX:check-completion-type
@@ -2005,24 +1999,24 @@ Simple generator
 
   The latter generator is invoked by the next sequence.  `M-x
 YaTeX-generate-simple' This generator can make both "option add-in" and
-argument add-in" (*refer the section add-in functions* *Note How the
+"argument add-in" (*refer the section add-in functions* *Note How the
 add-in function works::), whereas `YaTeX-generate' cannot make "argument
 addin".
 
   For example, assume you have the LaTeX command as follows.
 
-        \epsinput[t](250,50){hoge.eps}{plain}{Picture of foo}
-                 (A)  (B)     (1)      (2)      (3)
-        (A)Optional parameter to specify the position
-           One of t(top), b(bottom), l(left), r(right)
-        (B)Maximum size of frame
-        (1)1st argument is filename of EPS file
-        (2)2nd argument indicates
-                plain		do nothing
-                frame		make frame around image
-                dframe		make double-frame around image
-           for included EPS file.
-        (3)Caption for the picture
+     	\epsinput[t](250,50){hoge.eps}{plain}{Picture of foo}
+     	         (A)  (B)     (1)      (2)      (3)
+     	(A)Optional parameter to specify the position
+     	   One of t(top), b(bottom), l(left), r(right)
+     	(B)Maximum size of frame
+     	(1)1st argument is filename of EPS file
+     	(2)2nd argument indicates
+     		plain		do nothing
+     		frame		make frame around image
+     		dframe		make double-frame around image
+     	   for included EPS file.
+     	(3)Caption for the picture
 
   Now get start with generation.  Typing `M-x YaTeX-generate-simple'
 brings the prompt:
@@ -2067,7 +2061,7 @@ EPS file, the completion style is `Position', and the possible characters
 are t, b, l, and r.  To tell these information to generator, operate as
 follows.
 
-                     Read type(1)....           p
+                     Read type(1).... 		p
                      Acceptable characters:		tblr RET
 
   (B) is coordinate.  So its completion style is coOrd.  We want a prompt
@@ -2114,10 +2108,10 @@ is `Completion'.
   Then all the candidates ready to be read.  Type single RET after
 entering all.
 
-                Item[1](RET to exit):		plain RET
-                Item[2](RET to exit):		frame RET
-                Item[3](RET to exit):		dframe RET
-                Item[4](RET to exit):		RET
+     		Item[1](RET to exit):		plain RET
+     		Item[2](RET to exit):		frame RET
+     		Item[3](RET to exit):		dframe RET
+     		Item[4](RET to exit):		RET
 
   The following prompt asks whether the entered string must belong to
 candidates or not.  In this case, since the argument must be one of
@@ -2187,66 +2181,66 @@ my feelings) without notice :-p.
 
 Tag table:
 Node: Top256
-Node: What is YaTeX?1583
-Node: Main features1956
-Node: Installation3485
-Node: Typesetting4262
-Node: Calling typesetter5357
-Node: Calling previewer7561
-Node: Printing out7922
-Node: %#notation8214
-Node: Changing typesetter8585
-Node: Splitting input files8949
-Node: Static region for typesetting10374
-Node: Lpr format11503
-Node: Controlling which command to invoke12576
-Node: Editing %# notation13163
-Node: Completion13707
-Node: Begin-type completion14196
-Node: Section-type completion17238
-Node: view-sectioning19659
-Node: Large-type completion21239
-Node: Maketitle-type completion21969
-Node: Arbitrary completion22521
-Node: End completion22911
-Node: Accent completion23380
-Node: Image completion23997
-Node: Greek letters completion26252
-Node: Local dictionaries26979
-Node: Commenting out27916
-Node: Cursor jump29375
-Node: Jump to corresponding object29666
-Node: Invoking image processor31066
-Node: Jump to main file32409
-Node: Jumping around the environment32775
-Node: Jumping to last completion position33193
-Node: Changing and Deleting33702
-Node: Changing LaTeX commands34083
-Node: Killing LaTeX commands35260
-Node: Filling36445
-Node: Updation of includeonly38300
-Node: What column39097
-Node: Intelligent newline40182
-Node: Usepackage checker41835
-Node: Online help42426
-Node: Browsing file hierarchy44101
-Node: Cooperation with other packages45838
-Node: Customizations46543
-Node: Lisp variables46839
-Node: All customizable variables47798
-Node: Sample definitions57593
-Node: Hook variables58106
-Node: Hook file58810
-Node: Add-in functions59149
-Node: How the add-in function works59987
-Node: Defining option-add-in62173
-Node: Defining argument-add-in62895
-Node: Defining enclosing-add-in63776
-Node: How the function is called64632
-Node: Useful functions for creating add-in65308
-Node: Contribution66718
-Node: Add-in generator66992
-Node: Etcetera72452
-Node: Copying73057
+Node: What is YaTeX?1597
+Node: Main features1970
+Node: Installation3499
+Node: Typesetting4276
+Node: Calling typesetter5406
+Node: Calling previewer7610
+Node: Printing out7971
+Node: %#notation8263
+Node: Changing typesetter8681
+Node: Splitting input files9045
+Node: Static region for typesetting10470
+Node: Lpr format11599
+Node: Controlling which command to invoke12672
+Node: Editing %# notation13265
+Node: Completion13809
+Node: Begin-type completion14369
+Node: Section-type completion17412
+Node: view-sectioning19847
+Node: Large-type completion21427
+Node: Maketitle-type completion22158
+Node: Arbitrary completion22710
+Node: End completion23100
+Node: Accent completion23570
+Node: Image completion24187
+Node: Greek letters completion26444
+Node: Local dictionaries27171
+Node: Commenting out28108
+Node: Cursor jump29567
+Node: Jump to corresponding object29879
+Node: Invoking image processor31280
+Node: Jump to main file32623
+Node: Jumping around the environment32988
+Node: Jumping to last completion position33406
+Node: Changing and Deleting33915
+Node: Changing LaTeX commands34307
+Node: Killing LaTeX commands35484
+Node: Filling36669
+Node: Updation of includeonly38520
+Node: What column39317
+Node: Intelligent newline40402
+Node: Usepackage checker42056
+Node: Online help42647
+Node: Browsing file hierarchy44322
+Node: Cooperation with other packages46059
+Node: Customizations46764
+Node: Lisp variables47098
+Node: All customizable variables48102
+Node: Sample definitions57901
+Node: Hook variables58414
+Node: Hook file59118
+Node: Add-in functions59457
+Node: How the add-in function works60317
+Node: Defining option-add-in62516
+Node: Defining argument-add-in63238
+Node: Defining enclosing-add-in64120
+Node: How the function is called64974
+Node: Useful functions for creating add-in65650
+Node: Contribution67055
+Node: Add-in generator67329
+Node: Etcetera72701
+Node: Copying73306
 
 End tag table
