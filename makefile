@@ -17,7 +17,7 @@ EMACSDIR= ${PREFIX}/share/${EMACS}
 ## Meadow (Sample)
 #EMACS	= meadow
 #EMACSDIR = c:/usr/local/meadow
-## CarbonEmacs on Darwin (Sample)
+## Cocoa(or Carbon)Emacs on Darwin (Sample)
 #EMACS	= /Applications/Emacs.app/Contents/MacOS/Emacs
 #PREFIX	= /Applications/Emacs.app/Contents/Resources
 #EMACSDIR = ${PREFIX}
