@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager
 ;;; 
 ;;; (c)2003-2013 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:44:31 2013 on firestorm
+;;; Last modified Mon May  6 17:20:43 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -38,7 +38,9 @@
 			 "rotatebox" "scalebox" "resizebox" "reflectbox")
      		(option . YaTeX-package-graphics-driver-alist))
     ("color"	(section "textcolor" "colorbox" "pagecolor" "color")
-     		(option . YaTeX-package-graphics-driver-alist))
+     		(option . YaTeX-package-graphics-driver-alist)
+		(default-option . "usenames,dvipsnames"))
+    ("xcolor"	(same-as . "color"))
     ("ulem"	(section "uline" "uuline" "uwave")
 		(option ("normalem")))
     ("multicol"	(env "multicols")))
@@ -55,7 +57,8 @@ package.  Its cdr can be a symbol whose value is alist.
 An good example is the value of YaTeX-package-alist-default.")
 
 (defvar YaTeX-package-graphics-driver-alist
-  '(("dvips") ("xdvi") ("dvipdf") ("pdftex") ("dvipsone") ("dviwindo")
+  '(("dvips") ("dvipsnames") ("usenames")
+    ("xdvi") ("dvipdf") ("pdftex") ("dvipsone") ("dviwindo")
     ("emtex") ("dviwin") ("oztex") ("textures") ("pctexps") ("pctexwin")
     ("pctexhp") ("pctex32") ("truetex") ("tcidvi") ("vtex"))
   "Drivers alist of graphics/color stylefile's supporting deveces.
@@ -91,13 +94,16 @@ TYPE is a symbol, one of 'env, 'section, 'maketitle."
       (setq list (cdr list)))
     pkglist))
 
-(defun YaTeX-package-option-lookup (pkg)
+(defun YaTeX-package-option-lookup (pkg &optional key)
   "Look up options for specified pkg and returne them in alist form.
-Just only accocing against the alist of YaTeX-package-alist-*"
-  (let ((l (cdr (assq 'option
-		      (assoc pkg (append YaTeX-package-alist-private
-					 YaTeX-package-alist-default))))))
-    (if (symbolp l) (symbol-value l) l)))
+Just only associng against the alist of YaTeX-package-alist-*"
+  (let*((list (append YaTeX-package-alist-private YaTeX-package-alist-default))
+	(l (cdr (assq (or key 'option) (assoc pkg list))))
+	(recur (cdr (assq 'same-as (assoc pkg list)))))
+    (cond
+     (recur (YaTeX-package-option-lookup recur key))
+     ((symbolp l) (symbol-value l))
+     (t l))))
 
 (defvar YaTeX-package-resolved-list nil
   "List of macros whose package is confirmed to be loaded.")
@@ -170,12 +176,15 @@ Search the usepackage for MACRO of the TYPE."
 			(YaTeX-package-option-lookup pkg))
 		  (if optlist
 		      (let ((minibuffer-completion-table optlist)
-			    (delim ",") (w (car (car optlist))))
+			    (delim ",") (w (car (car optlist)))
+			    (dflt (YaTeX-package-option-lookup
+				   pkg 'default-option)))
 			(setq option
 			      (read-from-minibuffer
 			       (format "Any option for {%s}?: " pkg)
-			       (if (= (length optlist) 1)
-				   (if YaTeX-emacs-19 (cons w 0) w))
+			       (let ((v (or dflt
+					    (and (= (length optlist) 1) w))))
+				 (and v (if YaTeX-emacs-19 (cons v 0) v)))
 			       YaTeX-minibuffer-completion-map)
 			      option (if (string< "" option)
 					 (concat "[" option "]")
