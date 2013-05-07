@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager
 ;;; 
 ;;; (c)2003-2013 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Mon May  6 17:20:43 2013 on firestorm
+;;; Last modified Tue May  7 09:55:01 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -75,11 +75,14 @@ as of 2004/1/19.  Thanks.")
 Optional second argument TYPE limits the macro type.
 TYPE is a symbol, one of 'env, 'section, 'maketitle."
   (let ((list (append YaTeX-package-alist-private YaTeX-package-alist-default))
-	element x val pkg pkglist r)
+	origlist element x sameas val pkg pkglist r)
+    (setq origlist list)
     (while list
       (setq element (car list)
 	    pkg (car element)
 	    element (cdr element))
+      (if (setq sameas (assq 'same-as element)) ;non-recursive retrieval
+	  (setq element (cdr (assoc (cdr sameas) origlist))))
       (if (setq r (catch 'found
 		    (while element
 		      (setq x (car element)
