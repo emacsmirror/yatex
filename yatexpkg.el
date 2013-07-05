@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager
 ;;; 
 ;;; (c)2003-2013 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Tue May  7 09:55:01 2013 on firestorm
+;;; Last modified Fri Jul  5 23:30:48 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -32,7 +32,7 @@
     ("amsmath"	(env . YaTeX-package-ams-envs)
      		(section "tag" "tag*"))
     ("amssymb"	(maketitle "leqq" "geqq" "mathbb" "mathfrak"
-			   "fallingdotseq"
+			   "fallingdotseq" "therefore" "because"
 			   "lll" "ggg")) ;very few.  Please tell us!
     ("graphicx" (section "includegraphics"
 			 "rotatebox" "scalebox" "resizebox" "reflectbox")
