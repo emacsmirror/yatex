@@ -1,6 +1,6 @@
 ;;; yatexenv.el --- YaTeX environment-specific functions
 ;;; (c) 1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:43:10 2013 on firestorm
+;;; Last modified Wed Nov 20 14:14:39 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -170,6 +170,7 @@ Return the list of (No.ofCols PointEndofFormat)"
 
 (fset 'YaTeX-intelligent-newline-array 'YaTeX-intelligent-newline-tabular)
 (fset 'YaTeX-intelligent-newline-supertabular 'YaTeX-intelligent-newline-tabular)
+(fset 'YaTeX-intelligent-newline-longtable 'YaTeX-intelligent-newline-tabular)
 
 (defun YaTeX-intelligent-newline-align ()
   "Intelligent newline function for align.
