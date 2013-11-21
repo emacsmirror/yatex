@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:43:00 2013 on firestorm
+;;; Last modified Thu Nov 21 15:50:56 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1921,19 +1921,35 @@ and print them to standard output."
     (if (string= "" str) ""
       (concat "[" str "]"))))
 
+(defun YaTeX::get-boundingbox (file)
+  "Return the bound box as a string
+This function relies on gs(ghostscript) command installed."
+  (let ((str (YaTeX-command-to-string
+	      (format "gs -sDEVICE=bbox -dBATCH -dNOPAUSE %s" file))))
+    (if (string-match
+	 "%%BoundingBox:\\s \\([0-9]+\\s [0-9]+\\s [0-9]+\\s [0-9]+\\)"
+	 str)
+	(substring str (match-beginning 1) (match-end 1)))))
+
 (defun YaTeX::includegraphics (argp)
   "Add-in for \\includegraphics"
   (let ((imgfile (YaTeX::include argp "Image File: "))
 	(case-fold-search t) info bb noupdate needclose c)
-    (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\)$" imgfile)
+    (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\|pdf\\)$" imgfile)
 	 (file-exists-p imgfile)
 	 (or (fboundp 'yahtml-get-image-info)
 	     (progn
 	       (load "yahtml" t) (featurep 'yahtml))) ;(require 'yahtml nil t)
-	 (setq info (yahtml-get-image-info imgfile))
-	 (car info)			;if has width value
-	 (car (cdr info))		;if has height value
-	 (setq bb (format "bb=%d %d %d %d" 0 0 (car info) (car (cdr info))))
+	 (if (string-match "\\.pdf" imgfile)
+	     (and
+	      (setq info (YaTeX::get-boundingbox imgfile))
+	      (stringp info)
+	      (string< "" info)
+	      (setq bb (format "bb=%s" info)))
+	   (setq info (yahtml-get-image-info imgfile))
+	   (car info)			;if has width value
+	   (car (cdr info))		;if has height value
+	   (setq bb (format "bb=%d %d %d %d" 0 0 (car info) (car (cdr info)))))
 	 (save-excursion
 	   (cond
 	    ((and (save-excursion
@@ -1952,7 +1968,13 @@ and print them to standard output."
 		      (memq (setq c (read-char)) '(?y ?Y ?\  ?c ?C))
 		    (message "")))
 	     (goto-char (match-end 0))
-	     (message "")
+	     (message "`bb=' %s"
+		      (format
+		       (if YaTeX-japan
+			   "の値はファイル名の上で `%s' を押してファイル名を再入力して更新できます。"
+			 "values can be update by typing `%s' on file name.")
+		       (key-description
+			(car (where-is-internal 'YaTeX-change-*)))))
 	     (if (looking-at "\\[") (forward-char 1)
 	       (insert-before-markers "[")
 	       (setq needclose t))
@@ -1977,7 +1999,7 @@ and print them to standard output."
   '(("version") ("plext") ("url") ("fancybox") ("pifont") ("longtable")
     ("ascmac") ("bm") ("graphics") ("graphicx") ("alltt") ("misc") ("eclbkbox")
     ("amsmath") ("amssymb") ("xymtex") ("chemist")
-    ("a4j") ("array") ("epsf") ("color") ("epsfig") ("floatfig")
+    ("a4j") ("array") ("epsf") ("color") ("xcolor") ("epsfig") ("floatfig")
     ("landscape") ("path") ("supertabular") ("twocolumn")
     ("latexsym") ("times") ("makeidx"))
   "Default completion table for arguments of \\usepackage")
