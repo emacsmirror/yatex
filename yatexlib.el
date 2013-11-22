@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries
 ;;; 
 ;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:44:06 2013 on firestorm
+;;; Last modified Fri Nov 22 07:53:13 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1464,9 +1464,10 @@ This function is a makeshift for YaTeX and yahtml."
 		    (face-font 'bold)
 		    "giveup!"))
 	    sz medium-i bold-r)
-	(string-match
-	 "^-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-\\(\\([0-9]+\\)\\)" df)
-	(setq sz (or (match-string 1 df) "16"))
+	(if (string-match
+	     "^-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-\\(\\([0-9]+\\)\\)" df)
+	    (setq sz (or (match-string 1 df) "16"))
+	  (setq sz "16"))
 	(setq medium-i (format "-medium-i-[^-]+--%s" sz)
 	      bold-r (format "-bold-r-[^-]+--%s" sz))
 	(while flist
