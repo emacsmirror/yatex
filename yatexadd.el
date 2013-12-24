@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Nov 21 15:50:56 2013 on firestorm
+;;; Last modified Tue Dec 24 08:53:15 2013 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1902,9 +1902,13 @@ and print them to standard output."
 
 (defun YaTeX:includegraphics ()
   "Add-in for \\includegraphics's option"
-  (let (width height (scale "") angle str)
-    (setq width (YaTeX-read-string-or-skip "Width: ")
-	  height (YaTeX-read-string-or-skip "Height: "))
+  (let (width height (scale "") angle str (delim "-0-9*+/.")
+	(minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
+	(tbl (append YaTeX:style-parameters-local
+		     YaTeX:style-parameters-private
+		     YaTeX:style-parameters-default)))
+    (setq width (YaTeX-completing-read-or-skip "Width: " tbl nil)
+	  height (YaTeX-completing-read-or-skip "Height: " tbl nil))
     (or (string< "" width) (string< "" height)
 	(setq scale (YaTeX-read-string-or-skip "Scale: ")))
     (setq angle (YaTeX-read-string-or-skip "Angle(0-359): "))
@@ -2001,7 +2005,7 @@ This function relies on gs(ghostscript) command installed."
     ("amsmath") ("amssymb") ("xymtex") ("chemist")
     ("a4j") ("array") ("epsf") ("color") ("xcolor") ("epsfig") ("floatfig")
     ("landscape") ("path") ("supertabular") ("twocolumn")
-    ("latexsym") ("times") ("makeidx"))
+    ("latexsym") ("times") ("makeidx") ("geometry") ("type1cm"))
   "Default completion table for arguments of \\usepackage")
 
 (defvar YaTeX::usepackage-alist-private nil
