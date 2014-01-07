@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
-;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jan  8 07:43:42 2014 on firestorm
+;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed Jan  8 07:49:58 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.77.1"
+(defconst YaTeX-revision-number "1.77.2"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -1686,7 +1686,7 @@ Optional second argument CHAR is for non-interactive call from menu."
 	  YaTeX-refcommand-def-regexp-default))
 
 (defvar YaTeX-refcommand-ref-regexp-default
-  "\\(page\\|eq\\|fig\\)?ref\\|cite")
+  "\\(page\\|eq\\|fig\\|c\\)?ref\\|cite")
 (defvar YaTeX-refcommand-ref-regexp-private nil
   "*Regexp of referring label commands")
 (defvar YaTeX-refcommand-ref-regexp
