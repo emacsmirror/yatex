@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager
 ;;; 
 ;;; (c)2003-2014 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Wed Jan  8 07:50:29 2014 on firestorm
+;;; Last modified Wed Jan  8 08:18:12 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -44,7 +44,12 @@
     ("ulem"	(section "uline" "uuline" "uwave")
 		(option ("normalem")))
     ("multicol"	(env "multicols"))
-    ("cref"	(section "cleveref")))
+    ("cref"	(section "cleveref"))
+    ("crefrange"	(same-as . "cref"))
+    ("cpageref"		(same-as . "cref"))
+    ("labelcref"	(same-as . "cref"))
+    ("labelcpageref"	(same-as . "cref"))
+    )
   "Default package vs. macro list.
 Alists contains '(PACKAGENAME . MACROLIST)
 PACKAGENAME     Basename of package(String).

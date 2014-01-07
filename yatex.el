@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jan  8 07:49:58 2014 on firestorm
+;;; Last modified Wed Jan  8 08:16:45 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -261,14 +261,14 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("newenvironment" 3) ("newtheorem" 2)
      ("cline") ("framebox") ("savebox" 2) ("sbox" 2) ("newsavebox") ("usebox")
      ("date") ("put") ("ref") ("pageref") ("tabref") ("figref") ("raisebox" 2)
-     ("cref") ;cleveref
      ("multicolumn" 3) ("shortstack") ("parbox" 2)
      ;; for mathmode accent
      ("tilde") ("hat") ("check") ("bar") ("dot") ("ddot") ("vec")
      ("widetilde") ("widehat") ("overline") ("overrightarrow")
      ;; section types in mathmode
      ("frac" 2) ("sqrt") ("mathrm") ("mathbf") ("mathit")
-
+     ;;cleveref
+     ("cref") ("crefrange") ("cpageref") ("labelcref") ("labelcpageref")
      )
    (if YaTeX-use-LaTeX2e
        '(("documentclass") ("usepackage")
@@ -882,7 +882,7 @@ you can put REGION into that environment between \\begin and \\end."
 	  "ref")
 	 ((and (looking-at "[a-z \t]")
 	       (progn (skip-chars-backward "a-z \t")
-		      (looking-at "table\\|figure\\|formula")))
+		      (looking-at "table\\|figure\\|formula\\|eq\\(\\.\\|uation\\)")))
 	  "ref")
 	 ((save-excursion
 	    (skip-chars-backward "[^ƒA-ƒ“]")
@@ -1686,9 +1686,13 @@ Optional second argument CHAR is for non-interactive call from menu."
 	  YaTeX-refcommand-def-regexp-default))
 
 (defvar YaTeX-refcommand-ref-regexp-default
-  "\\(page\\|eq\\|fig\\|c\\)?ref\\|cite")
+  "\\(page\\|eq\\|fig\\)?ref\\|cite"
+  "Regexp of LaTeX's label-referring macros.
+Searching for this will be done without `\\\\'.
+So you need not add patterns if new referring macro ends with \"ref\".")
 (defvar YaTeX-refcommand-ref-regexp-private nil
-  "*Regexp of referring label commands")
+  "*Regexp of referring label commands.
+See documentation of `YaTeX-refcommand-ref-regexp-default'.")
 (defvar YaTeX-refcommand-ref-regexp
   (concat (if YaTeX-refcommand-ref-regexp-private
 	      (concat YaTeX-refcommand-ref-regexp-private "\\|"))
