@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Nov 21 16:15:16 2013 on firestorm
+;;; Last modified Wed Jan  8 07:43:42 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -261,6 +261,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("newenvironment" 3) ("newtheorem" 2)
      ("cline") ("framebox") ("savebox" 2) ("sbox" 2) ("newsavebox") ("usebox")
      ("date") ("put") ("ref") ("pageref") ("tabref") ("figref") ("raisebox" 2)
+     ("cref") ;cleveref
      ("multicolumn" 3) ("shortstack") ("parbox" 2)
      ;; for mathmode accent
      ("tilde") ("hat") ("check") ("bar") ("dot") ("ddot") ("vec")

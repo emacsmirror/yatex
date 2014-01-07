@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager
 ;;; 
 ;;; (c)2003-2013 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Jul  5 23:30:48 2013 on firestorm
+;;; Last modified Wed Jan  8 07:44:40 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -43,7 +43,8 @@
     ("xcolor"	(same-as . "color"))
     ("ulem"	(section "uline" "uuline" "uwave")
 		(option ("normalem")))
-    ("multicol"	(env "multicols")))
+    ("multicol"	(env "multicols"))
+    ("cref"	(section "cleveref")))
   "Default package vs. macro list.
 Alists contains '(PACKAGENAME . MACROLIST)
 PACKAGENAME     Basename of package(String).

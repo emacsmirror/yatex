@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Dec 24 08:53:15 2013 on firestorm
+;;; Last modified Wed Jan  8 07:44:08 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1248,6 +1248,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
       
 
 (fset 'YaTeX::pageref 'YaTeX::ref)
+(fset 'YaTeX::cref 'YaTeX::ref)
 (defun YaTeX::tabref (argp)	    ; For the style file of IPSJ journal
   (YaTeX::ref
    argp nil nil
