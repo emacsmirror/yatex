@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2013 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon Apr  1 22:42:29 2013 on firestorm
+;;; Last modified Fri Jan 17 19:10:27 2014 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.76"
@@ -437,6 +437,7 @@ normal and region mode.  To customize yahtml, user should use this function."
     ("h1") ("h2") ("h3") ("h4") ("h5") ("h6")
     ;; ("p") ;This makes indentation screwed up!
     ("style") ("script") ("noscript") ("div") ("object") ("ins") ("del")
+    ("option")
     ))
 
 (if yahtml-html4-strict
@@ -2775,7 +2776,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 
 (defun yahtml-intelligent-newline-select ()
   (interactive)
-  (insert "<" (if yahtml-prefer-upcases "OPTION" "option") "> ")
+  (yahtml-insert-single (if yahtml-prefer-upcases "OPTION" "option"))
   (yahtml-indent-line))
 
 (defun yahtml-intelligent-newline-style ()
