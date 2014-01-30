@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jan  8 08:16:45 2014 on firestorm
+;;; Last modified Thu Jan 30 21:36:57 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.77.2"
+(defconst YaTeX-revision-number "1.77.3"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -189,7 +189,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 
 (defvar YaTeX-auto-math-mode t
   "*T for changing YaTeX-math mode automatically.")
-(defvar YaTeX-use-AMS-LaTeX nil
+(defvar YaTeX-use-AMS-LaTeX t
   "*T for using AMS-LaTeX")
 
 (defvar yatex-mode-hook nil
