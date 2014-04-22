@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan 30 21:36:57 2014 on firestorm
+;;; Last modified Wed Apr 23 08:17:02 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1619,7 +1619,7 @@ Optional second argument CHAR is for non-interactive call from menu."
     (require 'yatexprc)			;for Nemacs's bug
     (select-window sw)
     (cond
-     ((= c ?j) (YaTeX-typeset-buffer))
+     ((memq c '(?j ?\C-j)) (YaTeX-typeset-buffer)) ; memq for usability test
      ((= c ?r) (YaTeX-typeset-region))
      ((= c ?e) (YaTeX-typeset-environment))
      ((= c ?b) (YaTeX-call-builtin-on-file
