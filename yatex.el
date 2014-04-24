@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Apr 23 08:17:02 2014 on firestorm
+;;; Last modified Thu Apr 24 22:47:19 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1634,7 +1634,6 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?v) (YaTeX-view-error))
      ((= c ?l) (YaTeX-lpr arg))
      ((= c ?m) (YaTeX-switch-mode-menu arg))
-     ((= c ?b) (YaTeX-insert-string "\\"))
      ((= c ?s) (YaTeX-xdvi-remote-search arg)))))
 
 (if (fboundp 'wrap-function-to-control-ime)
