@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2013 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Tue Jun  3 09:28:49 2014 on firestorm
+;;; Last modified Tue Jun  3 09:40:02 2014 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.76"
@@ -1726,7 +1726,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	   (setq c (preceding-char))
 	   (delete-backward-char 1)
 	   nil))			;Fall through to the next 't block
-     (t (insert (format "&#%x;" c))))))
+     (t (insert (format "&#x%x;" c))))))
 
 (defun yahtml:!--\#include ()
   (let ((file (yahtml-read-parameter "file" "")))
