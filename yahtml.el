@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2013 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Fri Jan 17 19:10:27 2014 on firestorm
+;;; Last modified Tue Jun  3 09:28:49 2014 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.76"
@@ -1711,7 +1711,8 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
     (while l
       (setq mess (format "%s %c" mess (car (car l)) (cdr (car l)))
 	    l (cdr l)))
-    (message "Char-entity reference:  %s  SPC=& RET=&; Other=&#..;" mess)
+    (message "Char-entity reference:  %s  SPC=& RET=&; BS=%s Other=&#..;"
+	     mess (if YaTeX-japan "’¼‘O‚Ì•¶Žš" "Preceding-Char"))
     (setq c (read-char))
     (cond
      ((equal c (car-safe (assoc c list)))
@@ -1721,7 +1722,11 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
       (forward-char -1))
      ((equal c ? )
       (insert ?&))
-     (t (insert (format "&#%d;" c))))))
+     ((and (memq c '(127 8))
+	   (setq c (preceding-char))
+	   (delete-backward-char 1)
+	   nil))			;Fall through to the next 't block
+     (t (insert (format "&#%x;" c))))))
 
 (defun yahtml:!--\#include ()
   (let ((file (yahtml-read-parameter "file" "")))
