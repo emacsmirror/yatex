@@ -1,5 +1,5 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
-;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
 ;;; Last modified Sun Jul  6 13:25:42 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.77.1"
+(defconst YaTeX-revision-number "1.77.3"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -189,7 +189,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 
 (defvar YaTeX-auto-math-mode t
   "*T for changing YaTeX-math mode automatically.")
-(defvar YaTeX-use-AMS-LaTeX nil
+(defvar YaTeX-use-AMS-LaTeX t
   "*T for using AMS-LaTeX")
 
 (defvar yatex-mode-hook nil
@@ -267,7 +267,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("widetilde") ("widehat") ("overline") ("overrightarrow")
      ;; section types in mathmode
      ("frac" 2) ("sqrt") ("mathrm") ("mathbf") ("mathit")
-
+     ;;cleveref
+     ("cref") ("crefrange") ("cpageref") ("labelcref") ("labelcpageref")
      )
    (if YaTeX-use-LaTeX2e
        '(("documentclass") ("usepackage")
@@ -881,7 +882,7 @@ you can put REGION into that environment between \\begin and \\end."
 	  "ref")
 	 ((and (looking-at "[a-z \t]")
 	       (progn (skip-chars-backward "a-z \t")
-		      (looking-at "table\\|figure\\|formula")))
+		      (looking-at "table\\|figure\\|formula\\|eq\\(\\.\\|uation\\)")))
 	  "ref")
 	 ((save-excursion
 	    (skip-chars-backward "[^ƒA-ƒ“]")
@@ -1618,7 +1619,7 @@ Optional second argument CHAR is for non-interactive call from menu."
     (require 'yatexprc)			;for Nemacs's bug
     (select-window sw)
     (cond
-     ((= c ?j) (YaTeX-typeset-buffer))
+     ((memq c '(?j ?\C-j)) (YaTeX-typeset-buffer)) ; memq for usability test
      ((= c ?r) (YaTeX-typeset-region))
      ((= c ?e) (YaTeX-typeset-environment))
      ((= c ?b) (YaTeX-call-builtin-on-file
@@ -1633,7 +1634,6 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?v) (YaTeX-view-error))
      ((= c ?l) (YaTeX-lpr arg))
      ((= c ?m) (YaTeX-switch-mode-menu arg))
-     ((= c ?b) (YaTeX-insert-string "\\"))
      ((= c ?s) (YaTeX-xdvi-remote-search arg)))))
 
 (if (fboundp 'wrap-function-to-control-ime)
@@ -1685,9 +1685,13 @@ Optional second argument CHAR is for non-interactive call from menu."
 	  YaTeX-refcommand-def-regexp-default))
 
 (defvar YaTeX-refcommand-ref-regexp-default
-  "\\(page\\|eq\\|fig\\)?ref\\|cite")
+  "\\(page\\|eq\\|fig\\)?ref\\|cite"
+  "Regexp of LaTeX's label-referring macros.
+Searching for this will be done without `\\\\'.
+So you need not add patterns if new referring macro ends with \"ref\".")
 (defvar YaTeX-refcommand-ref-regexp-private nil
-  "*Regexp of referring label commands")
+  "*Regexp of referring label commands.
+See documentation of `YaTeX-refcommand-ref-regexp-default'.")
 (defvar YaTeX-refcommand-ref-regexp
   (concat (if YaTeX-refcommand-ref-regexp-private
 	      (concat YaTeX-refcommand-ref-regexp-private "\\|"))

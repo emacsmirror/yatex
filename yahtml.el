@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2013 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon Apr  1 22:42:29 2013 on firestorm
+;;; Last modified Tue Jun  3 09:40:02 2014 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.76"
@@ -437,6 +437,7 @@ normal and region mode.  To customize yahtml, user should use this function."
     ("h1") ("h2") ("h3") ("h4") ("h5") ("h6")
     ;; ("p") ;This makes indentation screwed up!
     ("style") ("script") ("noscript") ("div") ("object") ("ins") ("del")
+    ("option")
     ))
 
 (if yahtml-html4-strict
@@ -1710,7 +1711,8 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
     (while l
       (setq mess (format "%s %c" mess (car (car l)) (cdr (car l)))
 	    l (cdr l)))
-    (message "Char-entity reference:  %s  SPC=& RET=&; Other=&#..;" mess)
+    (message "Char-entity reference:  %s  SPC=& RET=&; BS=%s Other=&#..;"
+	     mess (if YaTeX-japan "’¼‘O‚Ì•¶Žš" "Preceding-Char"))
     (setq c (read-char))
     (cond
      ((equal c (car-safe (assoc c list)))
@@ -1720,7 +1722,11 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
       (forward-char -1))
      ((equal c ? )
       (insert ?&))
-     (t (insert (format "&#%d;" c))))))
+     ((and (memq c '(127 8))
+	   (setq c (preceding-char))
+	   (delete-backward-char 1)
+	   nil))			;Fall through to the next 't block
+     (t (insert (format "&#x%x;" c))))))
 
 (defun yahtml:!--\#include ()
   (let ((file (yahtml-read-parameter "file" "")))
@@ -2775,7 +2781,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 
 (defun yahtml-intelligent-newline-select ()
   (interactive)
-  (insert "<" (if yahtml-prefer-upcases "OPTION" "option") "> ")
+  (yahtml-insert-single (if yahtml-prefer-upcases "OPTION" "option"))
   (yahtml-indent-line))
 
 (defun yahtml-intelligent-newline-style ()

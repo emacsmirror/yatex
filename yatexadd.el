@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.20
-;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
 ;;; Last modified Sun Jul  6 13:59:09 2014 on firestorm
 ;;; $Id$
 
@@ -1248,6 +1248,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
       
 
 (fset 'YaTeX::pageref 'YaTeX::ref)
+(fset 'YaTeX::cref 'YaTeX::ref)
 (defun YaTeX::tabref (argp)	    ; For the style file of IPSJ journal
   (YaTeX::ref
    argp nil nil
@@ -1904,9 +1905,13 @@ and print them to standard output."
 
 (defun YaTeX:includegraphics ()
   "Add-in for \\includegraphics's option"
-  (let (width height (scale "") angle str)
-    (setq width (YaTeX-read-string-or-skip "Width: ")
-	  height (YaTeX-read-string-or-skip "Height: "))
+  (let (width height (scale "") angle str (delim "-0-9*+/.")
+	(minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
+	(tbl (append YaTeX:style-parameters-local
+		     YaTeX:style-parameters-private
+		     YaTeX:style-parameters-default)))
+    (setq width (YaTeX-completing-read-or-skip "Width: " tbl nil)
+	  height (YaTeX-completing-read-or-skip "Height: " tbl nil))
     (or (string< "" width) (string< "" height)
 	(setq scale (YaTeX-read-string-or-skip "Scale: ")))
     (setq angle (YaTeX-read-string-or-skip "Angle(0-359): "))
@@ -2003,7 +2008,7 @@ This function relies on gs(ghostscript) command installed."
     ("amsmath") ("amssymb") ("xymtex") ("chemist")
     ("a4j") ("array") ("epsf") ("color") ("xcolor") ("epsfig") ("floatfig")
     ("landscape") ("path") ("supertabular") ("twocolumn")
-    ("latexsym") ("times") ("makeidx"))
+    ("latexsym") ("times") ("makeidx") ("geometry") ("type1cm"))
   "Default completion table for arguments of \\usepackage")
 
 (defvar YaTeX::usepackage-alist-private nil
