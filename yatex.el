@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Nov 21 16:15:16 2013 on firestorm
+;;; Last modified Sun Jul  6 13:25:42 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1909,6 +1909,7 @@ See also the documentation of YaTeX-processed-file-regexp-alist.")
   '(("tgif" . ".obj")
     ("gimp" . ".xcf") ("gimp" . ".xcf.gz") ("gimp" . ".xcf.bz2")
     ("inkscape" . ".svg") ("inkscape" . ".svgz") ("inkscape" . ".ai")
+    ("dia" . ".dia")
     ("soffice" . ".odg")
     ("gimp" . ".jpeg") ("gimp" . ".jpg") ("gimp" . ".png")
     ("evince" . ".ps")
