@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Nov 21 15:50:56 2013 on firestorm
+;;; Last modified Sun Jul  6 13:59:09 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1708,7 +1708,9 @@ and print them to standard output."
     (save-excursion
       (YaTeX-visit-main t)
       (let*((insert-default-directory)
-	    (file (read-file-name (or prompt "Input file: ") "")))
+	    (default (and (boundp 'old) (stringp old) old))
+	    (file (read-file-name (or prompt "Input file: ") ""
+				  default nil default)))
 	(setq file (substring file 0 (string-match "\\.tex$" file))))))))
 
 (fset 'YaTeX::input 'YaTeX::include)
