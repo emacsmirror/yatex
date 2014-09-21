@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jul  6 13:59:09 2014 on firestorm
+;;; Last modified Sun Sep 21 14:14:59 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1576,6 +1576,7 @@ and print them to standard output."
     ("\\tabcolsep")
     ("\\textheight")
     ("\\textwidth")
+    ("\\columnwidth")
     ("\\topmargin")
     ("\\topsep")
     ("\\topskip")
