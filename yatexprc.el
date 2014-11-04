@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:44:38 2013 on firestorm
+;;; Last modified Wed Nov  5 08:28:49 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -608,7 +608,10 @@ PROC should be process identifier."
    (let* ((command (read-string-with-history
 		    "Preview command: "
 		    (YaTeX-replace-format
-		     (or (YaTeX-get-builtin "PREVIEW") dvi2-command)
+		     (or (YaTeX-get-builtin "PREVIEW")
+			 (if (eq (get 'dvi2-command 'format) 'pdf)
+			     tex-pdfview-command
+			   dvi2-command))
 		     "p" (format (cond
 				  (YaTeX-dos "-y:%s")
 				  (t "-paper %s"))
@@ -859,6 +862,9 @@ error or warning lines in reverse order."
 	 (fname (if rin (substring latex-cmd (1+ rin)) ""))
 	 (r (YaTeX-assoc-regexp preview-command YaTeX-dvi2-command-ext-alist))
 	 (ext (if r (cdr r) "")))
+    (and (null r)
+	 (eq (get 'dvi2-command 'format) 'pdf)
+	 (setq ext "pdf"))
     (concat
      (if (string= fname "")
 	 (setq fname (substring (file-name-nondirectory
@@ -997,7 +1003,7 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
   (let ((ff (function (lambda (f)
 			(if setbuf (set-buffer (find-file-noselect f))
 			  (find-file f)))))
-	b-in main-file YaTeX-create-file-prefix-g
+	b-in main-file mfa YaTeX-create-file-prefix-g
 	(hilit-auto-highlight (not setbuf)))
     (if (setq b-in (YaTeX-get-builtin "!"))
 	(setq main-file (YaTeX-guess-parent b-in)))
@@ -1022,9 +1028,9 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
        ((and main-file
 	     (file-exists-p (setq main-file (concat "../" main-file)))
 	     (or b-in
-		 (y-or-n-p (concat (expand-file-name main-file)
+		 (y-or-n-p (concat (setq mfa (expand-file-name main-file))
 				   " is main file?:"))))
-	(setq YaTeX-parent-file main-file)
+	(setq YaTeX-parent-file mfa)
 	;(YaTeX-switch-to-buffer main-file setbuf)
 	(funcall ff main-file)
 	)
