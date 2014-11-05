@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Nov  5 08:28:49 2014 on firestorm
+;;; Last modified Wed Nov  5 09:07:25 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1035,7 +1035,7 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
 	(funcall ff main-file)
 	)
        (t (setq main-file (read-file-name "Enter your main text: " nil nil 1))
-	  (setq YaTeX-parent-file main-file)
+	  (setq YaTeX-parent-file (expand-file-name main-file))
 	 ; (YaTeX-switch-to-buffer main-file setbuf))
 	  (funcall ff main-file))
        )))
