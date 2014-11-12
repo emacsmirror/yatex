@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jul  6 13:25:42 2014 on firestorm
+;;; Last modified Sun Sep 21 21:57:39 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -60,6 +60,13 @@ YaTeX-current-position-register.")
     "xdvi -geo +0+0 -s 4")
   "*Default previewer command including its option.
 This default value is for X window system.")
+
+(defvar tex-pdfview-command	;previewer command for your site
+  (cond
+   (YaTeX-dos	"acroread")
+   (YaTeX-macos	"open")
+   (t		"evince"))
+  "*Default PDF viewer command including its option.")
 
 (defvar makeindex-command (if YaTeX-dos "makeind" "makeindex")
   "*Default makeindex command.")
@@ -1619,7 +1626,8 @@ Optional second argument CHAR is for non-interactive call from menu."
     (require 'yatexprc)			;for Nemacs's bug
     (select-window sw)
     (cond
-     ((memq c '(?j ?\C-j)) (YaTeX-typeset-buffer)) ; memq for usability test
+     ((memq c '(?j ?\C-j)) (YaTeX-typeset-buffer) ; memq for usability test
+      (put 'dvi2-command 'format 'dvi))
      ((= c ?r) (YaTeX-typeset-region))
      ((= c ?e) (YaTeX-typeset-environment))
      ((= c ?b) (YaTeX-call-builtin-on-file
@@ -1630,7 +1638,8 @@ Optional second argument CHAR is for non-interactive call from menu."
      ((= c ?p) (call-interactively 'YaTeX-preview))
      ((= c ?q) (YaTeX-system "lpq" "*Printer queue*"))
      ((= c ?d) (YaTeX-typeset-buffer
-		(or (YaTeX-get-builtin "DVIPDF") YaTeX-dvipdf-command)))
+		(or (YaTeX-get-builtin "DVIPDF") YaTeX-dvipdf-command))
+      (put 'dvi2-command 'format 'pdf))
      ((= c ?v) (YaTeX-view-error))
      ((= c ?l) (YaTeX-lpr arg))
      ((= c ?m) (YaTeX-switch-mode-menu arg))
@@ -2019,9 +2028,10 @@ Macro's argument number stored to propname 'argc."
 	       (goto-char (match-beginning 0))
 	       (throw 'found t))
 	  ;;If inside of parentheses, try to escape.
-	  (while (condition-case err
-		     (progn (up-list -1) t)
-		   (error nil)))
+	  (while (and (not (= (preceding-char) ?\])) ;skip optional arg
+		      (condition-case err
+			  (progn (up-list -1) t)
+			(error nil))))
 	  (while (equal (preceding-char) ?\]) (backward-list))
 	  ;;(2) search command directly
 	  (skip-chars-forward "^{}[]")
