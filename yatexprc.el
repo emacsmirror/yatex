@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Nov  5 09:07:25 2014 on firestorm
+;;; Last modified Thu Nov 13 08:49:02 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -602,12 +602,9 @@ PROC should be process identifier."
 (defvar YaTeX-preview-file-history nil
   "Holds minibuffer history of file to preview.")
 (put 'YaTeX-preview-file-history 'no-default t)
-(defun YaTeX-preview (preview-command preview-file)
-  "Execute xdvi (or other) to tex-preview."
-  (interactive
-   (let* ((command (read-string-with-history
-		    "Preview command: "
-		    (YaTeX-replace-format
+(defun YaTeX-preview-default-previewer ()
+  "Return default previewer for this document"
+  (YaTeX-replace-format
 		     (or (YaTeX-get-builtin "PREVIEW")
 			 (if (eq (get 'dvi2-command 'format) 'pdf)
 			     tex-pdfview-command
@@ -615,17 +612,33 @@ PROC should be process identifier."
 		     "p" (format (cond
 				  (YaTeX-dos "-y:%s")
 				  (t "-paper %s"))
-				 (YaTeX-get-paper-type)))
-		    'YaTeX-preview-command-history))
-	  (file (read-string-with-history
-		 "Preview file: "
-		 (if (get 'dvi2-command 'region)
+				 (YaTeX-get-paper-type))))
+(defun YaTeX-preview-default-main (command)
+  "Return default preview target file"
+  (if (get 'dvi2-command 'region)
 		     (substring YaTeX-texput-file
 				0 (rindex YaTeX-texput-file ?.))
-		   (YaTeX-get-preview-file-name command))
-		 'YaTeX-preview-file-history)))
+		   (YaTeX-get-preview-file-name command)))
+(defun YaTeX-preview (preview-command preview-file &optional as-default)
+  "Execute xdvi (or other) to tex-preview."
+  (interactive
+   (let* ((previewer (YaTeX-preview-default-previewer))
+	  (as-default current-prefix-arg)
+	  (command (if as-default
+		       previewer
+		     (read-string-with-history
+		      "Preview command: "
+		      previewer
+		      'YaTeX-preview-command-history)))
+	  (target (YaTeX-preview-default-main command))
+	  (file (if as-default
+		    target
+		  (read-string-with-history
+		   "Preview file: "
+		   target
+		   'YaTeX-preview-file-history))))
      (list command file)))
-  (setq dvi2-command preview-command)	;`dvi2command' is buffer local
+  (setq dvi2-command preview-command)	;`dvi2-command' is buffer local
   (save-excursion
     (YaTeX-visit-main t)
     (if YaTeX-dos (setq preview-file (expand-file-name preview-file)))
