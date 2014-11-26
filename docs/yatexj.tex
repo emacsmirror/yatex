@@ -13,7 +13,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Fri May 11 15:40:21 2012 on firestorm
+@c Last modified Wed Nov 26 09:40:04 2014 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -196,8 +196,8 @@ userpackage
         @dots{} 文書を作成する時の漢字コード
 @item dviprint-command-format
         @dots{} ファイルの印刷に使われるコマンド列の書式
-@item makeindex-command
-        @dots{} makeindexコマンド
+@item YaTeX-dvipdf-command
+        @dots{} DVIをPDFに変換するコマンド
 @end table
 
 これらを変更する場合は、やはり@file{~/.emacs}にて、たとえば
@@ -528,6 +528,8 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
 	@dots{} makeindexを行なうコマンドライン([prefix] t b)
  @item %#MAKEINDEX
 	@dots{} bibtexを行なうコマンドライン([prefix] t i)
+ @item %#DVIPDF
+	@dots{} DVIからPDF変換を行なうコマンドライン([prefix] t d)
 @end table
 
 行頭がこれらのキーワードで始まる行をLa@TeX{}文書の先頭付近に書いておけば、
