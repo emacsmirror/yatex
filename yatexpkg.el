@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager
 ;;; 
 ;;; (c)2003-2014 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Wed Jan  8 08:18:12 2014 on firestorm
+;;; Last modified Tue Dec 16 13:22:00 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -64,7 +64,7 @@ An good example is the value of YaTeX-package-alist-default.")
 
 (defvar YaTeX-package-graphics-driver-alist
   '(("dvips") ("dvipsnames") ("usenames")
-    ("xdvi") ("dvipdf") ("pdftex") ("dvipsone") ("dviwindo")
+    ("xdvi") ("dvipdfmx") ("pdftex") ("dvipsone") ("dviwindo")
     ("emtex") ("dviwin") ("oztex") ("textures") ("pctexps") ("pctexwin")
     ("pctexhp") ("pctex32") ("truetex") ("tcidvi") ("vtex"))
   "Drivers alist of graphics/color stylefile's supporting deveces.
