@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 21 21:57:39 2014 on firestorm
+;;; Last modified Tue Dec 16 10:23:28 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.77.3"
+(defconst YaTeX-revision-number "1.77.4"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -690,6 +690,10 @@ more features are available and they are documented in the manual.
 	local-abbrev-table yatex-mode-abbrev-table)
   (if (fboundp 'comment-indent-new-line) ;for Emacs21
       (setq comment-line-break-function 'YaTeX-comment-line-break))
+  ;; +dnd for X11 w/ emacs23+
+  (and window-system (featurep 'dnd) (require 'yatex23 nil t)
+       (set (make-local-variable 'dnd-protocol-alist)
+	    (cons (cons "^file:" 'YaTeX-dnd-handler) dnd-protocol-alist)))
 
   (if (and YaTeX-use-font-lock (featurep 'font-lock))
       (progn

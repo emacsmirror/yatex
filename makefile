@@ -49,8 +49,8 @@ GEO	= -geometry 80x20+0+0
 # make clean		to delete all producted files
 # make ci		to check in all
 # make co		to check out all
-MVER	= 1.77
-LISP	= ${LISP18} ${LISP19}
+MVER	= 1.78
+LISP	= ${LISP18} ${LISP19} ${LISP23}
 YAHTML	= yahtml.el
 COMMON	= yatexlib.el yatexprc.el
 LISP18	= comment.el yatex.el yatexadd.el yatexgen.el yatexenv.el \
@@ -58,6 +58,7 @@ LISP18	= comment.el yatex.el yatexadd.el yatexgen.el yatexenv.el \
 	  yatexmth.el yatexhks.el yatexhlp.el \
 	  yatexm-o.el yatexsec.el  yatexhie.el yatexpkg.el ${YAHTML}
 LISP19	= yatex19.el
+LISP23	= yatex23.el
 DOCS	= ${DOCSRC} ${DOCOBJ} ${NEWS}
 NEWS	= yatex.new
 DOCHTML	= docs/htmlqa docs/htmlqa.eng docs/yahtmlj.tex docs/yahtmle.tex

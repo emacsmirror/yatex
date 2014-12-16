@@ -1,9 +1,9 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2013 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Tue Jun  3 09:40:02 2014 on firestorm
+;;; Last modified Tue Dec 16 11:11:25 2014 on firestorm
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.76"
+(defconst yahtml-revision-number "1.77"
   "Revision number of running yahtml.el")
 
 ;;; Commentary:
@@ -661,6 +661,12 @@ T for static indentation depth")
 	      (font-lock-mode 1) ;;Why should I fontify again???
 	      ;; in yatex-mode, there's no need to refontify...
 	      (font-lock-fontify-buffer)))))
+  ;; +dnd for X11 w/ emacs23+
+  (and window-system (featurep 'dnd)
+       (set (make-local-variable 'dnd-protocol-alist)
+	    (cons (cons "^\\(file\\|https?\\):" 'yahtml-dnd-handler)
+		  dnd-protocol-alist)))
+
   (set-syntax-table yahtml-syntax-table)
   (use-local-map yahtml-mode-map)
   (YaTeX-read-user-completion-table)
@@ -3127,6 +3133,33 @@ If no matches found in yahtml-path-url-alist, return raw file name."
   (interactive "P")
   (font-lock-mode -1)			;is stupid, but sure.
   (font-lock-mode 1))
+
+;;;
+;; Drag-n-Drop
+;;;
+(defun yahtml-dnd-handler (uri action)
+  "DnD handler for yahtml mode
+Convert image URI to img-src and others to a-href."
+  (let*((file (dnd-get-local-file-name uri))
+	(path (if file (file-relative-name file) uri))
+	(case-fold-search t)
+	(geom ""))
+    (cond
+     ((memq action '(copy link move private))
+      (cond
+       ((string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\|tiff?\\)$" path)
+	(if file
+	    (setq geom (yahtml-get-image-info path)
+		  geom (if (car geom)
+			   (apply 'format " width=\"%s\" height=\"%s\"" geom)
+			 "")))
+	(insert (format "<img src=\"%s\" alt=\"%s\"%s>"
+			path (file-name-nondirectory path) geom)))
+       
+       (t (insert (format "<a href=\"%s\"></a>" path))
+	  (forward-char -4))))
+     (t (message "No handler for action `%s'" action))))
+  action)
 
 (run-hooks 'yahtml-load-hook)
 (provide 'yahtml)

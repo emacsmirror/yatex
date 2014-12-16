@@ -170,8 +170,8 @@ File: yatexj, Node: Installation, Next: Invocation, Prev: Main features, Up: Top
              ... •¶‘‚ğì¬‚·‚é‚ÌŠ¿šƒR[ƒh
 `dviprint-command-format'
              ... ƒtƒ@ƒCƒ‹‚Ìˆóü‚Ég‚í‚ê‚éƒRƒ}ƒ“ƒh—ñ‚Ì‘®
-`makeindex-command'
-             ... makeindexƒRƒ}ƒ“ƒh
+`YaTeX-dvipdf-command'
+             ... DVI‚ğPDF‚É•ÏŠ·‚·‚éƒRƒ}ƒ“ƒh
 
 ‚±‚ê‚ç‚ğ•ÏX‚·‚éê‡‚ÍA‚â‚Í‚è`~/.emacs'‚É‚ÄA‚½‚Æ‚¦‚Î(setq tex-command
 "pdflatex") ‚Ì‚æ‚¤‚É‚µ‚Ä‚­‚¾‚³‚¢B‚Ç‚Ì‚æ‚¤‚È’l‚ğƒZƒbƒg‚·‚ê‚Î—Ç‚¢‚©‚É‚Â‚¢‚Ä
@@ -460,6 +460,9 @@ LaTeX •¶‘‚ÉŠÖ˜A‚·‚éƒRƒ}ƒ“ƒh‚ÍˆÈ‰º‚Ì %# ‹L–@‚Åw’è‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·B
       `%#MAKEINDEX'
      
      	... bibtex‚ğs‚È‚¤ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“([prefix] t i)
+      `%#DVIPDF'
+     
+     	... DVI‚©‚çPDF•ÏŠ·‚ğs‚È‚¤ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“([prefix] t d)
 
 s“ª‚ª‚±‚ê‚ç‚ÌƒL[ƒ[ƒh‚Ån‚Ü‚és‚ğLaTeX•¶‘‚Ìæ“ª•t‹ß‚É‘‚¢‚Ä‚¨‚¯‚ÎA‚»
 ‚ê‚Åw’è‚µ‚½ƒRƒ}ƒ“ƒh‚ğ‹N“®‚Å‚«‚Ü‚·B
@@ -1636,8 +1639,7 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
      1=Shift JIS, 2=JIS, 3=EUC, 4=UTF-8 (2 (MS-DOS‚Å‚Í1))
 
  -- Variable: tex-command
-     LaTeXƒ^ƒCƒvƒZƒbƒ^ƒRƒ}ƒ“ƒh–¼ (`"platex"')
-
+     LaTeXƒ^ƒCƒvƒZƒbƒ^ƒRƒ}ƒ“ƒh–¼ (`"platex"')
 
  -- Variable: dvi2-command
      ƒvƒŒƒ”ƒ…[ƒAƒRƒ}ƒ“ƒh–¼ (`"xdvi -geo +0+0 -s 4"')
@@ -1955,109 +1957,131 @@ File: yatexj, Node: Concept Index, Prev: Copying, Up: Top
 * ::                            Greek letter completion.  4.
 * ;:                            Image completion.       4.
 * ƒ°[‚µ‚­‚Ü]:                   Image completion.       4.
-* Š‡‚é[‚­‚­‚é]:                 Enclose section-type command.  4.
-* Š‡‚é[‚­‚­‚é]:                 largeŒ^•âŠ®.            22.
-* ˆø”[‚Ğ‚«‚·‚¤]:               2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh.  4.
-* ‰¢•¶[‚¨‚¤‚Ó‚ñ]:               Accent mark completion.  4.
-* ;©g[;‚µ‚µ‚ñ]:               Image completion.       32.
+* ‚é[‚­‚­‚é]:                 Enclose section-type command.  4.
+* ‚é[‚­‚­‚é]:                 largeŒ^•b
+®.            22.
+* ˆøzÙ‚Ğ‚«‚·‚¤]:               2ŒÂˆÈã‚Ìˆøz€ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh.  4.
+* ¢•6[‚¨‚¤‚Ó‚ñ]:               Accent mark completion.  4.
+* ;©äz;‚µ‚µ‚ñ]:               Image completion.       32.
 * ‡[‚Ş‚¯‚ñ‚½‚¢]:               Image completion.       4.
-* –îˆó[‚â‚µ‚é‚µ]:               Image completion.       4.
-* ƒuƒƒbƒN[‚Ó‚ë‚Â‚­]:           beginŒ^•âŠ®.            81.
+* –nó[‚â‚µ‚é‚µ]:               Image completion.       4.
+* ƒuƒƒbƒN[‚Ó‚ë‚Â‚­]:           beginŒ^•b
+®.            81.
 * ƒqƒXƒgƒŠ[‚Ğ‚·‚Æ‚è]:           Cooperation with other packages.  8.
-* Œ…‘µ‚¦[‚¯‚½‚»‚ë‚¦]:           Filling.                4.
+* Œ…‘5¦[‚¯‚½‚»‚ë‚¦]:           Filling.                4.
 * ‚â‚¿‚å‚¤[‚â‚¿‚æ‚¤]:           Intro.                  4.
 * ƒWƒƒƒ“ƒv[‚µ‚â‚ñ‚Ó]:           view-sectioning.        42.
-* &“ü—Í[&‚É‚ä‚¤‚è‚æ‚­]:         Intelligent newline.    4.
-* İ’è—á[‚¹‚Â‚Ä‚¢‚ê‚¢]:         Sample definitions.     4.
-* •âŠ®[‚·‚¢‚µ‚Ù‚©‚ñ]:       Arbitrary completion.   4.
-* •Â‚¶‚ß‚é[‚Æ‚µ‚±‚ß‚é]:       beginŒ^•âŠ®.            81.
-* Ä‹A•âŠ®[‚³‚¢‚«‚Ù‚©‚ñ]:       Recursive completion.   4.
-* ƒ†[ƒU«‘[‚ä‚¤‚³‚µ‚µ‚æ]:     beginŒ^•âŠ®.            71.
-* ˜_—ŠK‘w[‚ë‚ñ‚è‚©‚¢‚»‚¤]:     view-sectioning.        42.
+* &“|Í[&‚É‚ä‚¤‚è‚æ‚­]:         Intelligent newline.    4.
+* Ÿ1è—á[‚¹‚Â‚Ä‚¢‚ê‚¢]:         Sample definitions.     4.
+* x-•b
+®[‚·‚¢‚µ‚Ù‚©‚ñ]:       Arbitrary completion.   4.
+* •B¶‚ß‚é[‚Æ‚µ‚±‚ß‚é]:       beginŒ^•b
+®.            81.
+* Ä‹A•b
+®[‚³‚¢‚«‚Ù‚©‚ñ]:       Recursive completion.   4.
+* ƒ†[ƒU«‘[ä‚¤‚³‚µ‚µ‚æ]:     beginŒ^•b
+®.            71.
+* ˜_Kw[‚ë‚ñ‚è‚©‚¢‚»‚¤]:     view-sectioning.        42.
 * ‚±‚±‚Í‚Ç‚±?[‚±‚±‚Í‚Æ‚±?]:     What column.            4.
-* ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®[‚¨‚¦‚©‚«‚Â‚¤‚é‚«‚Æ‚¤]: ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®.  4.
-* ŠÂ‹«‚Ìæ“ª‚Ö[‚©‚ñ‚«‚æ‚¤‚Ì‚¹‚ñ‚Æ‚¤‚Ö]: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
-* ŠÂ‹«‚Ì––”ö‚Ö[‚©‚ñ‚«‚æ‚¤‚Ì‚Ü‚Â‚Ğ‚Ö]: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
-* ŠÂ‹«‚ğƒ}[ƒN[‚©‚ñ‚«‚æ‚¤‚ğ‚Ü‚ ‚­]: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* ‚¨G•`«ƒc[ƒ‹‹N“.[‚¨‚¦‚©‚«‚Â‚¤‚é‚«‚Æ‚¤]: ‚¨G•`«ƒc[ƒ‹‹N“..  4.
+* B‹«‚Ìã‘ª‚Ö[‚©‚ñ‚«‚æ‚¤‚Ì‚¹‚ñ‚Æ‚¤‚Ö]: B‹«‚ğ˜†Ê‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* B‹«‚Ì–ö‚Ö[‚©‚ñ‚«‚æ‚¤‚Ì‚Ü‚Â‚Ğ‚Ö]: B‹«‚ğ˜†Ê‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* B‹«‚ğƒ}[ƒN[‚©‚ñ‚«‚æ‚¤‚ğ‚Ü‚ ‚­]: B‹«‚ğ˜†Ê‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
 * ƒJƒXƒ^ƒ}ƒCƒY[‚©‚·‚½‚Ü‚¢‚·]:   Customizations.         4.
 * ƒL[ƒAƒTƒCƒ“[‚«‚¢‚ ‚³‚¢‚ñ]:   Customizations.         4.
-* ”®ƒ‚[ƒh[‚·‚¤‚µ‚«‚à‚¨‚Æ]:   Image completion.       4.
+* zŒ®ƒ‚[ƒh[‚·‚¤‚µ‚«‚à‚¨‚Æ]:   Image completion.       4.
 * ƒCƒ“ƒXƒg[ƒ‹[‚¢‚ñ‚·‚Æ‚¨‚é]:   Installation.           4.
 * ƒ^ƒCƒvƒZƒbƒ^[‚½‚¢‚Ó‚¹‚Â‚½]:   Invocation.             4.
 * ƒvƒŒƒ”ƒ…[ƒA[‚Ó‚ê‚Ğ‚ä‚¤‚ ]:   Invocation.             4.
 * ƒAƒEƒgƒ‰ƒCƒ“[‚ ‚¤‚Æ‚ç‚¢‚ñ]:   view-sectioning.        4.
-* ˆø”‚ÌŒÂ”‚ğ•Ï‚¦‚é[‚Ğ‚«‚·‚¤‚Ì‚±‚·‚¤‚ğ‚©‚¦‚é]: 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh.  24.
-* ƒAƒNƒZƒ“ƒg‹L†•âŠ®[‚ ‚­‚¹‚ñ‚Æ‚«‚±‚¤‚Ù‚©‚ñ]: Accent mark completion.  4.
-* ƒJƒXƒ^ƒ}ƒCƒY•Ï”ˆê——[‚©‚·‚½‚Ü‚¢‚·‚Ö‚ñ‚·‚¤‚¢‚¿‚ç‚ñ]: All customizable variables.  4.
-* ŠÂ‹«–¼‚Ì•âŠ®[‚©‚ñ‚«‚æ‚¤‚ß‚¢‚Ì‚Ù‚©‚ñ]: beginŒ^•âŠ®.    4.
-* ƒGƒ‰[C³[‚¦‚ç‚ ‚µ‚ä‚¤‚¹‚¢]: Calling typesetter.     4.
-* ƒ^ƒCƒvƒZƒbƒ^‹N“®[‚½‚¢‚Ó‚¹‚Â‚½‚«‚Æ‚¤]: Calling typesetter.  4.
+* ˆøz€ÌŒÂz€ğ•O¦‚é[‚Ğ‚«‚·‚¤‚Ì‚±‚·‚¤‚ğ‚©‚¦‚é]: 2ŒÂˆÈã‚Ìˆøz€ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh.  24.
+* ƒAƒNƒZƒ“ƒg‹L†•b
+®[‚ ‚­‚¹‚ñ‚Æ‚«‚±‚¤‚Ù‚©‚ñ]: Accent mark completion.  4.
+* ƒJƒXƒ^ƒ}ƒCƒY•O”j——[‚©‚·‚½‚Ü‚¢‚·‚Ö‚ñ‚·‚¤‚¢‚¿‚ç‚ñ]: All customizable variables.  4.
+* B‹«–<Ì•b
+®[‚©‚ñ‚«‚æ‚¤‚ß‚¢‚Ì‚Ù‚©‚ñ]: beginŒ^•b
+®.    4.
+* ƒGƒ‰[CŠz‚¦‚ç‚ ‚µ‚ä‚¤‚¹‚¢]: Calling typesetter.     4.
+* ƒ^ƒCƒvƒZƒbƒ^‹N“.[‚½‚¢‚Ó‚¹‚Â‚½‚«‚Æ‚¤]: Calling typesetter.  4.
 * ƒ^ƒCƒvƒZƒbƒgƒGƒ‰[[‚½‚¢‚Ó‚¹‚Â‚Æ‚¦‚ç‚ ]: Calling typesetter.  4.
-* ŠÂ‹«–¼‚Ì•ÏX[‚©‚ñ‚«‚æ‚¤‚ß‚¢‚Ì‚Ö‚ñ‚±‚¤]: Changing LaTeX command.  20.
-* ƒ‚[ƒhØ‚è‘Ö‚¦[‚à‚¤‚Æ‚«‚è‚©‚¦]: Changing mode of YaTeX.  4.
-* ƒ^ƒCƒvƒZƒbƒ^‚Ìg‚¢•ª‚¯[‚½‚¢‚Ó‚¹‚Â‚½‚Ì‚Â‚©‚¢‚í‚¯]: Changing typesetter.  12.
-* ‹N“®‚·‚éƒRƒ}ƒ“ƒh‚ğ•Ï‚¦‚é[‚«‚Æ‚¤‚·‚é‚±‚Ü‚ñ‚Æ‚ğ‚©‚¦‚é]: Changing typesetter.  7.
+* B‹«–<Ì•OX[‚©‚ñ‚«‚æ‚¤‚ß‚¢‚Ì‚Ö‚ñ‚±‚¤]: Changing LaTeX command.  20.
+* ƒ‚[ƒhœ€è‘V¦[‚à‚¤‚Æ‚«‚è‚©‚¦]: Changing mode of YaTeX.  4.
+* ƒ^ƒCƒvƒZƒbƒ^‚Ìg‚¢•*¯[‚½‚¢‚Ó‚¹‚Â‚½‚Ì‚Â‚©‚¢‚í‚¯]: Changing typesetter.  12.
+* ‹N“.·‚éƒRƒ}ƒ“ƒh‚ğ•O¦‚é[‚«‚Æ‚¤‚·‚é‚±‚Ü‚ñ‚Æ‚ğ‚©‚¦‚é]: Changing typesetter.  7.
 * ƒRƒƒ“ƒgƒAƒEƒg[‚±‚ß‚ñ‚Æ‚ ‚¤‚Æ]: Commenting out.       4.
-* ‚»‚Ì‘¼‚ÌƒRƒ}ƒ“ƒh§Œä[‚»‚Ì‚½‚Ì‚±‚Ü‚ñ‚Æ‚¹‚¢‚«‚æ]: Controlling which command to invoke.  4.
-* ‘¼ƒpƒbƒP[ƒW‚Æ‚Ì˜AŒg[‚½‚Í‚Â‚¯‚¦‚µ‚Æ‚Ì‚ê‚ñ‚¯‚¢]: Cooperation with other packages.  4.
+* ‚»‚Ì‘<ÌƒRƒ}ƒ“ƒh„+ä[‚»‚Ì‚½‚Ì‚±‚Ü‚ñ‚Æ‚¹‚¢‚«‚æ]: Controlling which command to invoke.  4.
+* ‘<pƒbƒP[ƒW‚Æ‚Ì˜Ag[‚½‚Í‚Â‚¯‚¦‚µ‚Æ‚Ì‚ê‚ñ‚¯‚¢]: Cooperation with other packages.  4.
 * ƒRƒ}ƒ“ƒhƒqƒXƒgƒŠ[‚±‚Ü‚ñ‚Æ‚Ğ‚·‚Æ‚è]: Cooperation with other packages.  8.
 * ƒJ[ƒ\ƒ‹ƒWƒƒƒ“ƒv[‚©‚ ‚»‚é‚µ‚â‚ñ‚Ó]: Cursor jump.      4.
-* %#‹L–@©‘Ì‚Ì•ÒW[%#‚«‚Ù‚¤‚µ‚½‚¢‚Ì‚Ö‚ñ‚µ‚ä‚¤]: Editing %# notation.  4.
-* ƒpƒ‰ƒOƒ‰ƒt‚ÌŒ…‘µ‚¦[‚Í‚ç‚­‚ç‚Ó‚Ì‚¯‚½‚»‚ë‚¦]: Filling.  47.
-* —ÌˆæŒˆ’è‹K‘¥[‚è‚æ‚¤‚¢‚«‚¯‚Â‚Ä‚¢‚«‚»‚­]: Fix region for typesetting.  25.
-* ’·‚¢ƒtƒ@ƒCƒ‹‚Ì•ÒW[‚È‚©‚¢‚Ó‚ ‚¢‚é‚Ì‚Ö‚ñ‚µ‚ä‚¤]: Fix region for typesetting.  34.
-* ŒÅ’è—Ìˆæ‚Ìƒ^ƒCƒvƒZƒbƒg[‚±‚Ä‚¢‚è‚æ‚¤‚¢‚«‚Ì‚½‚¢‚Ó‚¹‚Â‚Æ]: Fix region for typesetting.  4.
-* ƒMƒŠƒVƒƒ•¶š•âŠ®[‚«‚è‚µ‚â‚à‚µ‚Ù‚©‚ñ]: Greek letter completion.  4.
-* ƒCƒ[ƒW•âŠ®[‚¢‚ß‚¦‚µ‚Ù‚©‚ñ]: Image completion.       4.
-* ”®‹L†ƒCƒ[ƒW•âŠ®[‚·‚¤‚µ‚«‚«‚±‚¤‚¢‚ß‚¦‚µ‚Ù‚©‚ñ]: Image completion.  4.
-* ‘¼‚Ìƒtƒ@ƒCƒ‹‚Ìè’¼‚µ[‚Ù‚©‚Ì‚Ó‚ ‚¢‚é‚Ì‚Ä‚È‚¨‚µ]: Includeonly.  11.
-* ƒCƒ“ƒNƒ‹[ƒh\‘¢[‚¢‚ñ‚­‚é‚¤‚Æ‚±‚¤‚»‚¤]: Inclusion hierarchy browser.  4.
-* ‚¨‚Ü‚©‚¹‰üs[‚¨‚Ü‚©‚¹‚©‚¢‚«‚æ‚¤]: Intelligent newline.  4.
+* %#‹L–@©‘LÌ•RW[%#‚«‚Ù‚¤‚µ‚½‚¢‚Ì‚Ö‚ñ‚µ‚ä‚¤]: Editing %# notation.  4.
+* ƒpƒ‰ƒOƒ‰ƒt‚ÌŒ…‘5¦[‚Í‚ç‚­‚ç‚Ó‚Ì‚¯‚½‚»‚ë‚¦]: Filling.  47.
+* —ÌˆæŒˆä‰K‘%[‚è‚æ‚¤‚¢‚«‚¯‚Â‚Ä‚¢‚«‚»‚­]: Fix region for typesetting.  25.
+* Œ!¢ƒtƒ@ƒCƒ‹‚Ì•RW[‚È‚©‚¢‚Ó‚ ‚¢‚é‚Ì‚Ö‚ñ‚µ‚ä‚¤]: Fix region for typesetting.  34.
+* ŒÅä•Ìˆæ‚Ìƒ^ƒCƒvƒZƒbƒg[‚±‚Ä‚¢‚è‚æ‚¤‚¢‚«‚Ì‚½‚¢‚Ó‚¹‚Â‚Æ]: Fix region for typesetting.  4.
+* ƒMƒŠƒVƒƒ•6šb.[‚«‚è‚µ‚â‚à‚µ‚Ù‚©‚ñ]: Greek letter completion.  4.
+* ƒCƒ[ƒW•b
+®[‚¢‚ß‚¦‚µ‚Ù‚©‚ñ]: Image completion.       4.
+* zŒ®‹L†ƒCƒ[ƒW•b
+®[‚·‚¤‚µ‚«‚«‚±‚¤‚¢‚ß‚¦‚µ‚Ù‚©‚ñ]: Image completion.  4.
+* ‘<Ìƒtƒ@ƒCƒ‹‚Ìè€µ[‚Ù‚©‚Ì‚Ó‚ ‚¢‚é‚Ì‚Ä‚È‚¨‚µ]: Includeonly.  11.
+* ƒCƒ“ƒNƒ‹[ƒh\‘"[‚¢‚ñ‚­‚é‚¤‚Æ‚±‚¤‚»‚¤]: Inclusion hierarchy browser.  4.
+* ‚¨‚Ü‚©‚¹üs[‚¨‚Ü‚©‚¹‚©‚¢‚«‚æ‚¤]: Intelligent newline.  4.
 * ƒvƒŠƒ“ƒgƒAƒEƒg[‚Ó‚è‚ñ‚Æ‚ ‚¤‚Æ]: Invocation.           4.
-* ŠÂ‹«‚Ìíœ[‚©‚ñ‚«‚æ‚¤‚Ì‚³‚­‚µ‚æ]: Killing LaTeX command.  6.
-* ƒ‰ƒxƒ‹©“®¶¬[‚ç‚Ö‚é‚µ‚Æ‚¤‚¹‚¢‚¹‚¢]: label-generation.  4.
-* ƒtƒHƒ“ƒgw’èq[‚Ó‚¨‚ñ‚Æ‚µ‚Ä‚¢‚µ]: largeŒ^•âŠ®.        18.
-* •¶šƒTƒCƒYw’èq[‚à‚µ‚³‚¢‚·‚µ‚Ä‚¢‚µ]: largeŒ^•âŠ®.    18.
-* ƒ[ƒJƒ‹«‘[‚ë‚¨‚©‚é‚µ‚µ‚æ]: Local dictionary.       4.
-* •ÏX/íœ[‚Ö‚ñ‚±‚¤/‚³‚­‚µ‚æ]: Modifying/Deleting.     4.
+* B‹«‚Ìí[)‚ñ‚«‚æ‚¤‚Ì‚³‚­‚µ‚æ]: Killing LaTeX command.  6.
+* ƒ‰ƒxƒ‹©“.¶†Ù‚ç‚Ö‚é‚µ‚Æ‚¤‚¹‚¢‚¹‚¢]: label-generation.  4.
+* ƒtƒHƒ“ƒgwäŒq[‚Ó‚¨‚ñ‚Æ‚µ‚Ä‚¢‚µ]: largeŒ^•b
+®.        18.
+* •6šTƒCƒYwäŒq[‚à‚µ‚³‚¢‚·‚µ‚Ä‚¢‚µ]: largeŒ^•b
+®.    18.
+* ƒ[ƒJƒ‹«‘[ë‚¨‚©‚é‚µ‚µ‚æ]: Local dictionary.       4.
+* •OX/í[V‚ñ‚±‚¤/‚³‚­‚µ‚æ]: Modifying/Deleting.     4.
 * ƒOƒ[ƒoƒ‹ƒwƒ‹ƒv[‚­‚ë‚¨‚Í‚é‚Ö‚é‚Ó]: Online help.      16.
 * ƒIƒ“ƒ‰ƒCƒ“ƒwƒ‹ƒv[‚¨‚ñ‚ç‚¢‚ñ‚Ö‚é‚Ó]: Online help.      4.
 * ƒL[ƒ[ƒhŒŸõ[‚«‚¢‚í‚ ‚Æ‚¯‚ñ‚³‚­]: Online help.      4.
 * ƒvƒ‰ƒCƒx[ƒgƒwƒ‹ƒv[‚Ó‚ç‚¢‚Ö‚¦‚Æ‚Ö‚é‚Ó]: Online help.  16.
-* “ü—Íƒtƒ@ƒCƒ‹•ªŠ„[‚É‚ä‚¤‚è‚æ‚­‚Ó‚ ‚¢‚é‚Ó‚ñ‚©‚Â]: Splitting input files.  11.
-* ƒZƒNƒVƒ‡ƒ“‹æØ‚èˆê——ƒoƒbƒtƒ@[‚¹‚­‚µ‚æ‚ñ‚­‚«‚è‚¢‚¿‚ç‚ñ‚Í‚Â‚Ó‚ ]: view-sectioning.  18.
-* ƒZƒNƒVƒ‡ƒ“‹æØ‚è[‚¹‚­‚µ‚æ‚ñ‚­‚«‚è]: view-sectioning.  42.
-* Œ»İ‚ÌƒJƒ‰ƒ€•\¦[‚¯‚ñ‚³‚¢‚Ì‚©‚ç‚Ş‚Ğ‚æ‚¤‚µ]: What column.  23.
+* “|Íƒtƒ@ƒCƒ‹•*
+„[‚É‚ä‚¤‚è‚æ‚­‚Ó‚ ‚¢‚é‚Ó‚ñ‚©‚Â]: Splitting input files.  11.
+* ƒZƒNƒVƒ‡ƒ“‹æœ€èˆê——ƒoƒbƒtƒ@[‚¹‚­‚µ‚æ‚ñ‚­‚«‚è‚¢‚¿‚ç‚ñ‚Í‚Â‚Ó‚ ]: view-sectioning.  18.
+* ƒZƒNƒVƒ‡ƒ“‹æœ€è[‚¹‚­‚µ‚æ‚ñ‚­‚«‚è]: view-sectioning.  42.
+* Œ»İ‚ÌƒJƒ‰ƒ€•\¦[‚¯‚ñ‚³‚¢‚Ì‚©‚ç‚Ş‚Ğ‚æ‚¤‚µ]: What column.  23.
 * apropos:                      Online help.            4.
 * autoload:                     Installation.           4.
 * auto-mode-alist:              Installation.           4.
 * %#BEGIN:                      Fix region for typesetting.  4.
-* beginŒ^•âŠ®[begin‚©‚½‚Ù‚©‚ñ]: beginŒ^•âŠ®.            4.
+* beginŒ^•b
+®[begin‚©‚½‚Ù‚©‚ñ]: beginŒ^•b
+®.            4.
 * C-c:                          Invocation.             4.
 * Demacs:                       Intro.                  4.
 * .emacs:                       Installation.           4.
 * %#END:                        Fix region for typesetting.  4.
-* end•âŠ®[end‚Ù‚©‚ñ]:           end•âŠ®.                4.
+* end•b
+®[end‚Ù‚©‚ñ]:           end•b
+®.                4.
 * ghostview:                    Splitting input files.  16.
 * gmhist:                       Cooperation with other packages.  8.
-* hook•Ï”[hook‚Ö‚ñ‚·‚¤]:       Hook variables.         4.
+* hook•O”[hook‚Ö‚ñ‚·‚¤]:       Hook variables.         4.
 * o—ÍI—¹ƒy[ƒW[‚µ‚ä‚Â‚è‚æ‚­‚µ‚ä‚¤‚è‚æ‚¤‚Ö‚¦‚µ]: Print out.  9.
 * includeonly:                  Includeonly.            4.
 * Install:                      Installation.           4.
-* item‚È‚Ç‚ÌŒ…‘µ‚¦[item‚È‚Æ‚Ì‚¯‚½‚»‚ë‚¦]: Filling.      8.
-* o—ÍŠJnƒy[ƒW[‚µ‚ä‚Â‚è‚æ‚­‚©‚¢‚µ‚Ö‚¦‚µ]: Print out.  9.
+* item‚È‚Ç‚ÌŒ…‘5¦[item‚È‚Æ‚Ì‚¯‚½‚»‚ë‚¦]: Filling.      8.
+* o—ÍJnƒy[ƒW[‚µ‚ä‚Â‚è‚æ‚­‚©‚¢‚µ‚Ö‚¦‚µ]: Print out.  9.
 * jlatex:                       Invocation.             4.
-* largeŒ^•âŠ®[large‚©‚½‚Ù‚©‚ñ]: largeŒ^•âŠ®.            4.
+* largeŒ^•b
+®[large‚©‚½‚Ù‚©‚ñ]: largeŒ^•b
+®.            4.
 * LaTeX:                        Intro.                  4.
 * leftarrow:                    Image completion.       4.
 * lpr format:                   lpr format.             4.
-* lprƒtƒH[ƒ}ƒbƒg‚Ì•ÏX[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ‚Ì‚Ö‚ñ‚±‚¤]: Editing %# notation.  18.
+* lprƒtƒH[ƒ}ƒbƒg‚Ì•OX[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ‚Ì‚Ö‚ñ‚±‚¤]: Editing %# notation.  18.
 * lpr‚Ó‚§[‚Ü‚Á‚Æ[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ]: lpr format.         4.
 * lprƒtƒH[ƒ}ƒbƒg[lpr‚Ó‚¨‚¨‚Ü‚Â‚Æ]: lpr format.         4.
-* maketitleŒ^•âŠ®[maketitle‚©‚½‚Ù‚©‚ñ]: maketitleŒ^•âŠ®.  4.
-* M-C-@:                        ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
-* M-C-a:                        ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
-* M-C-e:                        ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* maketitleŒ^•b
+®[maketitle‚©‚½‚Ù‚©‚ñ]: maketitleŒ^•b
+®.  4.
+* M-C-@:                        B‹«‚ğ˜†Ê‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* M-C-a:                        B‹«‚ğ˜†Ê‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
+* M-C-e:                        B‹«‚ğ˜†Ê‚Æ‚µ‚½ƒWƒƒƒ“ƒv.  7.
 * min-out:                      Cooperation with other packages.  17.
 * M-q:                          Filling.                47.
 * Mule:                         Intro.                  4.
@@ -2072,24 +2096,31 @@ File: yatexj, Node: Concept Index, Prev: Copying, Up: Top
 * prefix ?:                     Online help.            4.
 * prefix &:                     What column.            4.
 * prefix a:                     Accent mark completion.  4.
-* prefix b:                     beginŒ^•âŠ®.            4.
+* prefix b:                     beginŒ^•b
+®.            4.
 * prefix c:                     Modifying/Deleting.     4.
 * prefix d:                     Inclusion hierarchy browser.  4.
-* prefix e:                     end•âŠ®.                4.
+* prefix e:                     end•b
+®.                4.
 * prefix g:                     Cursor jump.            4.
 * prefix i:                     Filling.                8.
 * prefix k:                     Modifying/Deleting.     4.
 * prefix key:                   Invocation.             4.
-* prefix l:                     largeŒ^•âŠ®.            4.
-* prefix m:                     maketitleŒ^•âŠ®.        4.
-* prefix s:                     sectionŒ^•âŠ®.          4.
+* prefix l:                     largeŒ^•b
+®.            4.
+* prefix m:                     maketitleŒ^•b
+®.        4.
+* prefix s:                     sectionŒ^•b
+®.          4.
 * prefix SPC:                   Arbitrary completion.   4.
 * prefix w:                     Changing mode of YaTeX.  4.
-* prefixƒL[•ÏX[prefix‚«‚¢‚Ö‚ñ‚±‚¤]: Lisp variables.   4.
-* ƒy[ƒWŠm”FÈ—ªlpr‹N“®[‚Ö‚¦‚µ‚©‚­‚É‚ñ‚µ‚æ‚¤‚è‚â‚­lpr‚«‚Æ‚¤]: Print out.  12.
-* sectionŒ^•âŠ®[section‚©‚½‚Ù‚©‚ñ]: sectionŒ^•âŠ®.      4.
-* •¡G‚Ètabular[‚Ó‚­‚³‚Â‚Ètabular]: What column.        4.
-* æ‰ñ‚èusepackage[‚³‚«‚Ü‚í‚è]: Usepackage cheker.      4.
+* prefixƒL[•OX[prefix‚«‚¢‚Ö‚ñ‚±‚¤]: Lisp variables.   4.
+* ƒy[ƒWm”FÈ—ªlpr‹N“.[‚Ö‚¦‚µ‚©‚­‚É‚ñ‚µ‚æ‚¤‚è‚â‚­lpr‚«‚Æ‚¤]: Print out.  12.
+* sectionŒ^•b
+®[section‚©‚½‚Ù‚©‚ñ]: sectionŒ^•b
+®.      4.
+* •!G‚Ètabular[‚Ó‚­‚³‚Â‚Ètabular]: What column.        4.
+* ã‡ñ‚èusepackage[‚³‚«‚Ü‚í‚è]: Usepackage cheker.      4.
 * YaTeX-help-file:              Online help.            16.
 * YaTeX-help-file-private:      Online help.            16.
 * YaTeX-item-regexp:            Filling.                20.
@@ -2101,68 +2132,69 @@ File: yatexj, Node: Concept Index, Prev: Copying, Up: Top
 
 
 
+
 
 Tag table:
-Node: Top257
-Node: Intro1311
-Node: Terminology1614
-Node: Main features2249
-Node: Installation3282
-Node: Invocation4500
-Node: Calling typesetter5319
-Node: Calling previewer6556
-Node: Print out6872
-Node: %#notation7138
-Node: Changing typesetter7566
-Node: Splitting input files7824
-Node: Fix region for typesetting8776
-Node: lpr format9677
-Node: Controlling which command to invoke10486
-Node: Editing %# notation10887
-Node: Completion11344
-Node: beginŒ^•âŠ®11817
-Node: sectionŒ^•âŠ®14401
-Node: 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh15496
-Node: Enclose section-type command16314
-Node: Recursive completion16551
-Node: view-sectioning16857
-Node: label-generation18053
-Node: largeŒ^•âŠ®18402
-Node: maketitleŒ^•âŠ®18982
-Node: Arbitrary completion19281
-Node: end•âŠ®19594
-Node: Accent mark completion19936
-Node: Image completion20361
-Node: Greek letter completion22178
-Node: Local dictionary22638
-Node: Commenting out23243
-Node: Cursor jump24402
-Node: ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv24639
-Node: ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®25627
-Node: ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv26547
-Node: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv26883
-Node: ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv27240
-Node: Modifying/Deleting27477
-Node: Changing LaTeX command27883
-Node: Killing LaTeX command28434
-Node: Filling29305
-Node: Includeonly30634
-Node: What column31195
-Node: Intelligent newline31974
-Node: Usepackage cheker33007
-Node: Changing mode of YaTeX33433
-Node: Online help34009
-Node: Inclusion hierarchy browser34985
-Node: Cooperation with other packages36263
-Node: Customizations36718
-Node: Lisp variables37015
-Node: All customizable variables37622
-Node: Sample definitions44923
-Node: Hook variables45357
-Node: Hook file46251
-Node: Add-in functions46457
-Node: Etc46684
-Node: Copying46968
-Node: Concept Index47599
+Node: Top254
+Node: Intro1308
+Node: Terminology1611
+Node: Main features2246
+Node: Installation3279
+Node: Invocation4503
+Node: Calling typesetter5322
+Node: Calling previewer6559
+Node: Print out6875
+Node: %#notation7141
+Node: Changing typesetter7569
+Node: Splitting input files7827
+Node: Fix region for typesetting8779
+Node: lpr format9680
+Node: Controlling which command to invoke10489
+Node: Editing %# notation10960
+Node: Completion11417
+Node: beginŒ^•âŠ®11890
+Node: sectionŒ^•âŠ®14474
+Node: 2ŒÂˆÈã‚Ìˆø”‚ğ‚Æ‚é sectionŒ^ƒRƒ}ƒ“ƒh15569
+Node: Enclose section-type command16387
+Node: Recursive completion16624
+Node: view-sectioning16930
+Node: label-generation18126
+Node: largeŒ^•âŠ®18475
+Node: maketitleŒ^•âŠ®19055
+Node: Arbitrary completion19354
+Node: end•âŠ®19667
+Node: Accent mark completion20009
+Node: Image completion20434
+Node: Greek letter completion22251
+Node: Local dictionary22711
+Node: Commenting out23316
+Node: Cursor jump24475
+Node: ‘Î‰ƒIƒuƒWƒFƒNƒg‚Ö‚ÌƒWƒƒƒ“ƒv24712
+Node: ‚¨ŠG•`‚«ƒc[ƒ‹‹N“®25700
+Node: ƒƒCƒ“ƒtƒ@ƒCƒ‹‚Ö‚ÌƒWƒƒƒ“ƒv26620
+Node: ŠÂ‹«‚ğ’PˆÊ‚Æ‚µ‚½ƒWƒƒƒ“ƒv26956
+Node: ÅŒã‚Ì•âŠ®ˆÊ’u‚Ö‚ÌƒWƒƒƒ“ƒv27313
+Node: Modifying/Deleting27550
+Node: Changing LaTeX command27956
+Node: Killing LaTeX command28507
+Node: Filling29378
+Node: Includeonly30707
+Node: What column31268
+Node: Intelligent newline32047
+Node: Usepackage cheker33080
+Node: Changing mode of YaTeX33506
+Node: Online help34082
+Node: Inclusion hierarchy browser35058
+Node: Cooperation with other packages36336
+Node: Customizations36791
+Node: Lisp variables37088
+Node: All customizable variables37695
+Node: Sample definitions44996
+Node: Hook variables45430
+Node: Hook file46324
+Node: Add-in functions46530
+Node: Etc46757
+Node: Copying47041
+Node: Concept Index47672
 
 End tag table

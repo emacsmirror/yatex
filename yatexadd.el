@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 21 14:14:59 2014 on firestorm
+;;; Last modified Tue Dec 16 09:45:09 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1939,9 +1939,9 @@ This function relies on gs(ghostscript) command installed."
 	 str)
 	(substring str (match-beginning 1) (match-end 1)))))
 
-(defun YaTeX::includegraphics (argp)
+(defun YaTeX::includegraphics (argp &optional file doclip)
   "Add-in for \\includegraphics"
-  (let ((imgfile (YaTeX::include argp "Image File: "))
+  (let ((imgfile (or file (YaTeX::include argp "Image File: ")))
 	(case-fold-search t) info bb noupdate needclose c)
     (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\|pdf\\)$" imgfile)
 	 (file-exists-p imgfile)
@@ -1971,10 +1971,11 @@ This function relies on gs(ghostscript) command installed."
 	     (replace-match bb))
 	    (noupdate nil)
 	    ((and (match-beginning 1)
-		  (prog2
-		      (message "Insert `%s'?  Y)es N)o C)yes+`clip': " bb)
-		      (memq (setq c (read-char)) '(?y ?Y ?\  ?c ?C))
-		    (message "")))
+		  (or doclip
+		      (prog2
+			  (message "Insert `%s'?  Y)es N)o C)yes+`clip': " bb)
+			  (memq (setq c (read-char)) '(?y ?Y ?\  ?c ?C))
+			(message ""))))
 	     (goto-char (match-end 0))
 	     (message "`bb=' %s"
 		      (format
