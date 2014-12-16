@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.20
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Dec 16 09:45:09 2014 on firestorm
+;;; Last modified Tue Dec 16 12:54:54 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1975,6 +1975,7 @@ This function relies on gs(ghostscript) command installed."
 		      (prog2
 			  (message "Insert `%s'?  Y)es N)o C)yes+`clip': " bb)
 			  (memq (setq c (read-char)) '(?y ?Y ?\  ?c ?C))
+			(setq doclip (memq c '(?c ?C)))
 			(message ""))))
 	     (goto-char (match-end 0))
 	     (message "`bb=' %s"
@@ -1988,7 +1989,7 @@ This function relies on gs(ghostscript) command installed."
 	       (insert-before-markers "[")
 	       (setq needclose t))
 	     (insert-before-markers bb)
-	     (if (memq c '(?c ?C)) (insert-before-markers ",clip"))
+	     (if doclip (insert-before-markers ",clip"))
 	     (if needclose (insert-before-markers "]")
 	       (or (looking-at "\\]") (insert-before-markers ","))))
 	    (t (YaTeX-push-to-kill-ring bb)))))
