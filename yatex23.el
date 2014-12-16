@@ -1,6 +1,6 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
 ;;; (c)2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Dec 16 11:08:10 2014 on firestorm
+;;; Last modified Tue Dec 16 11:29:14 2014 on firestorm
 ;;; $Id:$
 
 ;;; Code:
@@ -18,8 +18,8 @@ Convert local image URI to \\includegraphcis{} and
        ((memq action '(copy link move private))
 	(cond
 	 ((string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\|tiff?\\|e?ps\\|pdf\\)$" path)
-	  (insert "\\includegraphics"
-		  "{" (YaTeX::includegraphics 1 path t) "}")
+	  (insert "\\includegraphics")
+	  (insert "{" (YaTeX::includegraphics 1 path t) "}")
 	  (YaTeX-package-auto-usepackage "includegraphics" 'section))
 	 ((string-match "\\.tex$" path)
 	  (insert "\\include{" path "}"))
