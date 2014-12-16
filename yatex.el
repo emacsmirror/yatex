@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Dec 16 10:23:28 2014 on firestorm
+;;; Last modified Tue Dec 16 15:43:59 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -60,6 +60,18 @@ YaTeX-current-position-register.")
     "xdvi -geo +0+0 -s 4")
   "*Default previewer command including its option.
 This default value is for X window system.")
+
+(defvar YaTeX-cmd-gimp "gimp")
+(defvar YaTeX-cmd-tgif "tgif")
+(defvar YaTeX-cmd-inkscape "inkscape")
+(defvar YaTeX-cmd-dia "dia")
+(defvar YaTeX-cmd-ooo "soffice")
+(defvar YaTeX-cmd-gs "gs")
+(defvar YaTeX-cmd-edit-ps YaTeX-cmd-gimp)
+(defvar YaTeX-cmd-edit-pdf YaTeX-cmd-ooo)
+(defvar YaTeX-cmd-edit-ai YaTeX-cmd-inkscape)
+(defvar YaTeX-cmd-edit-svg YaTeX-cmd-inkscape)
+(defvar YaTeX-cmd-edit-images YaTeX-cmd-gimp)
 
 (defvar tex-pdfview-command	;previewer command for your site
   (cond
@@ -1923,18 +1935,24 @@ fj–ì’¹‚Ì‰ï‚Å•·‚±‚¤!
 See also the documentation of YaTeX-processed-file-regexp-alist.")
 
 (defvar YaTeX-file-processor-alist-default
-  '(("tgif" . ".obj")
-    ("gimp" . ".xcf") ("gimp" . ".xcf.gz") ("gimp" . ".xcf.bz2")
-    ("inkscape" . ".svg") ("inkscape" . ".svgz") ("inkscape" . ".ai")
-    ("dia" . ".dia")
-    ("soffice" . ".odg")
-    ("gimp" . ".jpeg") ("gimp" . ".jpg") ("gimp" . ".png")
-    ("evince" . ".ps")
-    ("evince" . ".eps")
-    ("soffice" . ".pdf")
-    (t . ".tex")
-    (t . ".sty")
-    (t . ""))
+  (list (cons YaTeX-cmd-tgif ".obj")
+	(cons YaTeX-cmd-gimp ".xcf")
+	(cons YaTeX-cmd-gimp ".xcf.gz")
+	(cons YaTeX-cmd-gimp ".xcf.bz2")
+	(cons YaTeX-cmd-edit-svg ".svg")
+	(cons YaTeX-cmd-edit-svg ".svgz")
+	(cons YaTeX-cmd-edit-ai ".ai")
+	'("dia" . ".dia")
+	(cons YaTeX-cmd-ooo ".odg")
+	(cons YaTeX-cmd-edit-images ".jpeg")
+	(cons YaTeX-cmd-edit-images ".jpg")
+	(cons YaTeX-cmd-edit-images ".png")
+	(cons YaTeX-cmd-edit-ps ".ps")
+	(cons YaTeX-cmd-edit-ps ".eps")
+	(cons YaTeX-cmd-edit-pdf ".pdf")
+	'(t . ".tex")
+	'(t . ".sty")
+	'(t . ""))
   "See the documentation of YaTeX-file-processor-alist.")
 
 (defun YaTeX-goto-corresponding-file-processor (&optional other)
