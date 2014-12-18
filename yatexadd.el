@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.21
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 18 11:52:36 2014 on firestorm
+;;; Last modified Thu Dec 18 17:28:29 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1943,19 +1943,23 @@ This function relies on gs(ghostscript) command installed."
 (defun YaTeX::includegraphics (argp &optional file doclip)
   "Add-in for \\includegraphics"
   (let ((imgfile (or file (YaTeX::include argp "Image File: ")))
+	(imgfilepath
+	 (save-excursion
+	   (YaTeX-visit-main t)
+	   (expand-file-name imgfile default-directory)))
 	(case-fold-search t) info bb noupdate needclose c)
     (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\|pdf\\)$" imgfile)
-	 (file-exists-p imgfile)
+	 (file-exists-p imgfilepath)
 	 (or (fboundp 'yahtml-get-image-info)
 	     (progn
 	       (load "yahtml" t) (featurep 'yahtml))) ;(require 'yahtml nil t)
 	 (if (string-match "\\.pdf" imgfile)
 	     (and
-	      (setq info (YaTeX::get-boundingbox imgfile))
+	      (setq info (YaTeX::get-boundingbox imgfilepath))
 	      (stringp info)
 	      (string< "" info)
 	      (setq bb (format "bb=%s" info)))
-	   (setq info (yahtml-get-image-info imgfile))
+	   (setq info (yahtml-get-image-info imgfilepath))
 	   (car info)			;if has width value
 	   (car (cdr info))		;if has height value
 	   (setq bb (format "bb=%d %d %d %d" 0 0 (car info) (car (cdr info)))))
