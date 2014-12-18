@@ -13,7 +13,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Wed Nov 26 09:40:04 2014 on firestorm
+@c Last modified Thu Dec 18 11:45:39 2014 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -1895,6 +1895,40 @@ makeindexコマンド (@code{"makeindex"} (MS-DOSでは@code{"makeind"}))
 
 @defvar YaTeX-dvipdf-command
 dviをPDFに変換するコマンド (@code{"dvipdfmx"})
+@end defvar
+
+@defvar YaTeX-cmd-gimp
+GIMPを起動するコマンド (code{"gimp"})
+@end defvar
+@defvar YaTeX-cmd-tgif
+tgifを起動するコマンド (code{"tgif"})
+@end defvar
+@defvar YaTeX-cmd-inkscape
+Inkscapeを起動するコマンド (code{"inkscape"})
+@end defvar
+@defvar YaTeX-cmd-dia
+Diaを起動するコマンド (code{"dia"})
+@end defvar
+@defvar YaTeX-cmd-ooo
+OpenOffice.orgまたはLibreOfficeを起動するコマンド (code{"soffice"})
+@end defvar
+@defvar YaTeX-cmd-gs
+Ghostscriptを起動するコマンド (code{"gs"})
+@end defvar
+@defvar YaTeX-cmd-edit-ps
+PostScriptファイルを編集するコマンド (変数code{"YaTeX-cmd-gimp"}の値)
+@end defvar
+@defvar YaTeX-cmd-edit-pdf
+PDFファイルを編集するコマンド (変数code{"YaTeX-cmd-ooo"}の値)
+@end defvar
+@defvar YaTeX-cmd-edit-ai
+.aiファイルを編集するコマンド (変数code{"YaTeX-cmd-inkscape"}の値)
+@end defvar
+@defvar YaTeX-cmd-edit-svg
+SVGファイルを編集するコマンド (変数code{"YaTeX-cmd-inkscape"}の値)
+@end defvar
+@defvar YaTeX-cmd-edit-images
+その他画像ファイルを編集するコマンド (変数code{"YaTeX-cmd-gimp"}の値)
 @end defvar
 
 @defvar YaTeX-need-nonstop
