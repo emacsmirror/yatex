@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager
 ;;; 
 ;;; (c)2003-2014 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Tue Dec 16 13:22:00 2014 on firestorm
+;;; Last modified Thu Dec 18 18:03:48 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -49,6 +49,7 @@
     ("cpageref"		(same-as . "cref"))
     ("labelcref"	(same-as . "cref"))
     ("labelcpageref"	(same-as . "cref"))
+    ("wrapfig"	(env "wrapfigure" "wraptable"))
     )
   "Default package vs. macro list.
 Alists contains '(PACKAGENAME . MACROLIST)
