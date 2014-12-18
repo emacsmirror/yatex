@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.21
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 18 17:28:29 2014 on firestorm
+;;; Last modified Thu Dec 18 17:37:11 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1942,7 +1942,7 @@ This function relies on gs(ghostscript) command installed."
 
 (defun YaTeX::includegraphics (argp &optional file doclip)
   "Add-in for \\includegraphics"
-  (let ((imgfile (or file (YaTeX::include argp "Image File: ")))
+  (let*((imgfile (or file (YaTeX::include argp "Image File: ")))
 	(imgfilepath
 	 (save-excursion
 	   (YaTeX-visit-main t)
