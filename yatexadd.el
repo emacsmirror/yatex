@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.21
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 18 17:37:11 2014 on firestorm
+;;; Last modified Thu Dec 18 22:53:03 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -24,7 +24,7 @@ Notice that this function refers the let-variable `env' in
 YaTeX-make-begin-end."
   (let ((width "") bars (rule "") (and "") (j 1) loc ans (hline "\\hline"))
     (if (string= YaTeX-env-name "tabular*")
-	(setq width (concat "{" (read-string "Width: ") "}")))
+	(setq width (concat "{" (YaTeX:read-length "Width: ") "}")))
     (setq loc (YaTeX:read-position "tb")
 	  bars (string-to-int
 		(read-string "Number of columns(0 for default format): " "3")))
@@ -99,6 +99,15 @@ YaTeX-make-begin-end."
   (let ((pos (YaTeX:read-oneof oneof)))
     (if (string= pos "")  "" (concat "[" pos "]"))))
 
+(defun YaTeX:read-length (prompt)
+  "Read a LaTeX dimensional parameter with magnifying numerics prepend."
+  (let ((minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
+	(delim "-0-9*+/.")
+	(tbl (append YaTeX:style-parameters-local
+		     YaTeX:style-parameters-private
+		     YaTeX:style-parameters-default)))
+    (YaTeX-completing-read-or-skip prompt tbl nil)))
+
 ;;;
 ;; Functions for figure environemnt
 ;;;
@@ -160,7 +169,7 @@ YaTeX-make-begin-end."
   (if (fboundp 'YaTeX-toggle-math-mode)
       (YaTeX-toggle-math-mode t)))		;force math-mode ON.
 
-(mapcar '(lambda (f) (fset f 'YaTeX:equation))
+(mapcar (function (lambda (f) (fset f 'YaTeX:equation)))
 	'(YaTeX:eqnarray YaTeX:eqnarray* YaTeX:align YaTeX:align*
 	  YaTeX:split YaTeX:multline YaTeX:multline* YaTeX:gather YaTeX:gather*
 	  YaTeX:aligned* YaTeX:gathered YaTeX:gathered*
@@ -178,7 +187,7 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:minipage ()
   (concat (YaTeX:read-position "cbt")
-	  "{" (read-string "Width: ") "}"))
+	  "{" (YaTeX:read-length "Width: ") "}"))
 
 (defun YaTeX:thebibliography ()
   (setq YaTeX-section-name "bibitem")
@@ -186,6 +195,18 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:multicols ()
   (concat "{" (read-string "Number of columns: ") "}"))
+
+
+;; wrapfig.sty
+(defun YaTeX:wrapfigure ()
+  (YaTeX-help "wrapfigure")
+  (concat
+   (let ((lines (YaTeX-read-string-or-skip "Wrap Lines(Optional): ")))
+     (if (string< "" lines)
+	 (concat "[" lines "]")))
+   "{" (YaTeX:read-oneof "rlioRLIO" t) "}"
+   "{" (YaTeX:read-length "Image width: ") "}"))
+ 
 
 ;;;
 ;;Sample functions for section-type command.
@@ -204,7 +225,7 @@ YaTeX-make-begin-end."
     (concat (YaTeX:read-coordinates "Dimension")
 	    (YaTeX:read-position "lsrtb")))
    (t
-    (let ((width (read-string "Width: ")))
+    (let ((width (YaTeX:read-length "Width: ")))
       (if (string< "" width)
 	  (progn
 	    (or (equal (aref width 0) ?\[)
@@ -221,7 +242,7 @@ YaTeX-make-begin-end."
   (YaTeX:read-position "tbc"))
 (defun YaTeX::parbox (argp)
   (cond
-   ((= argp 1) (read-string "Width: "))
+   ((= argp 1) (YaTeX:read-length "Width: "))
    ((= argp 2) (read-string "Text: "))))
 
 (defun YaTeX::dashbox ()
@@ -1906,13 +1927,9 @@ and print them to standard output."
 
 (defun YaTeX:includegraphics ()
   "Add-in for \\includegraphics's option"
-  (let (width height (scale "") angle str (delim "-0-9*+/.")
-	(minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
-	(tbl (append YaTeX:style-parameters-local
-		     YaTeX:style-parameters-private
-		     YaTeX:style-parameters-default)))
-    (setq width (YaTeX-completing-read-or-skip "Width: " tbl nil)
-	  height (YaTeX-completing-read-or-skip "Height: " tbl nil))
+  (let (width height (scale "") angle str)
+    (setq width (YaTeX:read-length "Width: ")
+	  height (YaTeX:read-length "Height: "))
     (or (string< "" width) (string< "" height)
 	(setq scale (YaTeX-read-string-or-skip "Scale: ")))
     (setq angle (YaTeX-read-string-or-skip "Angle(0-359): "))
@@ -1920,11 +1937,11 @@ and print them to standard output."
 	  (mapconcat
 	   'concat
 	   (delq nil
-		 (mapcar '(lambda (s)
+		 (mapcar (function (lambda (s)
 			    (and (stringp (symbol-value s))
 				 (string< "" (symbol-value s))
 				 (format "%s=%s" s (symbol-value s))))
-			 '(width height scale angle)))
+			 '(width height scale angle))))
 	   ","))
     (if (string= "" str) ""
       (concat "[" str "]"))))
@@ -2052,9 +2069,9 @@ This function relies on gs(ghostscript) command installed."
 (defun YaTeX::maskbox (argp)
   (cond
    ((equal argp 1)
-    (read-string "Width: "))
+    (YaTeX:read-length "Width: "))
    ((equal argp 2)
-    (read-string "Height: "))
+    (YaTeX:read-length "Height: "))
    ((equal argp 3)
     (let (c)
       (while (not (memq c '(?A ?B ?C ?D ?E ?F ?G ?H ?I ?J ?K)))
