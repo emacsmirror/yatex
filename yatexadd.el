@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
-;;; yatexadd.el rev.20
+;;; yatexadd.el rev.21
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Dec 16 12:54:54 2014 on firestorm
+;;; Last modified Thu Dec 18 11:52:36 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1933,7 +1933,8 @@ and print them to standard output."
   "Return the bound box as a string
 This function relies on gs(ghostscript) command installed."
   (let ((str (YaTeX-command-to-string
-	      (format "gs -sDEVICE=bbox -dBATCH -dNOPAUSE %s" file))))
+	      (format "%s -sDEVICE=bbox -dBATCH -dNOPAUSE %s"
+		      YaTeX-cmd-gs file))))
     (if (string-match
 	 "%%BoundingBox:\\s \\([0-9]+\\s [0-9]+\\s [0-9]+\\s [0-9]+\\)"
 	 str)
