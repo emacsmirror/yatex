@@ -1,7 +1,7 @@
 ;;; yatexhlp.el --- YaTeX helper with LaTeX commands and macros
 ;;; 
 ;;; (c)1994,1998,2004 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Sep  1 08:11:14 2012 on firestorm
+;;; Last modified Thu Dec 18 17:53:52 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -302,8 +302,9 @@ as a help file."
       (message "No matches found.")))
 
 ;;;###autoload
-(defun YaTeX-help ()
-  "Show help buffer of LaTeX/TeX commands or macros."
+(defun YaTeX-help (&optional macro)
+  "Show help buffer of LaTeX/TeX commands or macros.
+Optional argument MACRO, if supplied, is directly selected to keyword."
   (interactive)
   (let (p beg end command)
     (save-excursion
@@ -311,6 +312,7 @@ as a help file."
 	  (goto-char (match-end 0)))
       (setq p (point))			;remember current position.
       (cond
+       (macro nil)
        ((YaTeX-on-begin-end-p)
 	;;if on \begin or \end, extract its environment.
 	(setq command
@@ -331,10 +333,11 @@ as a help file."
 	    (search-forward "}" (point-end-of-line))
 	    (setq command (buffer-substring beg (match-beginning 0)))))
       (setq command
-	    (completing-read
-	     "Describe (La)TeX command: "
-	     YaTeX-help-entries nil nil command))
-      );end excursion
+	    (or macro
+		(completing-read
+		 "Describe (La)TeX command: "
+		 YaTeX-help-entries nil nil command))));end excursion
+
     (setq YaTeX-help-saved-config (current-window-configuration))
     (or (YaTeX-refer-help command YaTeX-help-file)
 	(YaTeX-refer-help command YaTeX-help-file-private)
