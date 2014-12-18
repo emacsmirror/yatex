@@ -1,6 +1,6 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
 ;;; (c)2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 18 18:26:55 2014 on firestorm
+;;; Last modified Thu Dec 18 22:59:02 2014 on firestorm
 ;;; $Id:$
 
 ;;; Code:
@@ -73,9 +73,8 @@ Convert local image URI to \\includegraphcis{} and
 	      )
 	  (set-marker envstart nil) ;;sure to reset marker
 	  action))
-       ((string-match "\\.tex$" path)
-	(insert "\\include{" path "}"))
-       ))
+       ((string-match "\\(.*\\)\\.tex$" path)
+	(insert "\\include{" (match-string 1 path) "}"))))
      (t (message "%s" action)))))
 
 (provide 'yatex23)
