@@ -1,6 +1,11 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.78	Drag&Dropサポートを追加。
+	=== yatex ===
+	主な外部コマンド名を変数化。
+	[prefix] t d の直後のデフォルトヴューアはPDF用のものに。
+
 1.77	last-command-char 廃止対策を追加。
 	=== yatex ===
 	%#DVIPDF でdviからpdfへの変換コマンドを指定可能に。
