@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 18 18:20:39 2014 on firestorm
+;;; Last modified Fri Dec 19 07:46:21 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -105,7 +105,7 @@ specify the `from usage' and `to usage' with their option by format string
   "*Command name to convert dvi file to PDF.")
 
 (defvar YaTeX-default-document-style
-  (concat (if YaTeX-japan "j") "article")
+  (concat (if YaTeX-japan "js") "article")
   "*Default LaTeX Documentstyle for YaTeX-typeset-region.")
 
 (defvar YaTeX-need-nonstop nil
