@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Dec 19 07:46:21 2014 on firestorm
+;;; Last modified Sat Dec 20 19:43:33 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -765,6 +765,7 @@ more features are available and they are documented in the manual.
 (autoload 'YaTeX-get-builtin "yatexprc" "Get %# built-in." t)
 (autoload 'YaTeX-system "yatexprc" "Call system command" t)
 (autoload 'YaTeX-save-buffers "yatexprc" "Save buffers of same major mode" t)
+(autoload 'YaTeX-goto-corresponding-viewer "yatexprc" "Viewer jump line" t)
 
 ;;autoload from yatexmth.el
 (autoload 'YaTeX-math-insert-sequence "yatexmth" "Image input." t)
@@ -2190,6 +2191,7 @@ even if on `%#' notation."
      ;;	  YaTeX-equation-env-regexp	;to delay loading
      ;;	  (or (YaTeX-inner-environment t) "document"))
      ;;	 (YaTeX-goto-corresponding-leftright)))
+     ((YaTeX-goto-corresponding-viewer))
      (t (message "I don't know where to go.")))))
 
 (defun YaTeX-goto-corresponding-*-other-window (arg)

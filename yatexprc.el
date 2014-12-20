@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Nov 13 08:49:02 2014 on firestorm
+;;; Last modified Sat Dec 20 20:14:43 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -699,7 +699,51 @@ by region."
 	     (concat (YaTeX-get-preview-file-name) ".dvi")))
       (message "Searching `%s'...Done" str))))
 
-(defun YaTeX-set-virtual-error-position (file-sym line-sym)
+(defun YaTeX-preview-jlfmt-xdvi ()
+  "Call xdvi -sourceposition to DVI corresponding to current main file"
+  (interactive)
+)
+
+(defvar YaTeX-cmd-displayline "/Applications/Skim.app/Contents/SharedSupport/displayline")
+(defun YaTeX-preview-jump-line ()
+  "Call jump-line function of various previewer on current main file"
+  (interactive)
+  (save-excursion
+    (save-restriction
+      (widen)
+      (let*((pf (or YaTeX-parent-file
+		    (save-excursion (YaTeX-visit-main t) (buffer-file-name))))
+	    (pd (file-name-directory pf))
+	    (bnr (substring pf 0 (string-match "\\....$" pf)))
+	    (cf (file-relative-name (buffer-file-name) pd))
+	    (buffer (get-buffer-create " *preview-jump-line*"))
+	    (line (count-lines (point-min) (point-end-of-line)))
+	    (previewer (YaTeX-preview-default-previewer))
+	    (cmd (cond
+		  ((string-match "xdvi" previewer)
+		   (format "%s -nofork -sourceposition '%d %s' %s.dvi"
+			   YaTeX-xdvi-remote-program
+			   line cf bnr))
+		  ((string-match "Skim" previewer)
+		   (format "%s %d %s.pdf %s"
+			   YaTeX-cmd-displayline line bnr cf))
+		  ((string-match "sumatra" previewer)
+		   (format "%s %s.pdf %d %s"
+			   previewer bnr line cf))
+		  ((string-match "evince" previewer)
+		   (format "%s %s.pdf %d %s"
+			   "fwdevince" bnr line cf)))))
+	(YaTeX-typeset cmd buffer)))))
+
+(defun YaTeX-goto-corresponding-viewer ()
+  (let ((cmd (or (YaTeX-get-builtin "!") tex-command)))
+    (if (string-match "-src\\|synctex=" cmd)
+	(progn
+	  (YaTeX-preview-jump-line)
+	  t)				;for YaTeX-goto-corresponding-*
+      nil)))
+
+	 (defun YaTeX-set-virtual-error-position (file-sym line-sym)
   "Replace the value of FILE-SYM, LINE-SYM by virtual error position."
   (cond
    ((and (get 'dvi2-command 'region)
@@ -915,9 +959,9 @@ will be given to the shell."
      (cond
       (magic
        (cond
-	(switch (if (string-match "\\s " magic) magic
+	(switch (if (string-match "\\s [^-]\\S *$" magic) magic
 		  (concat magic " " parent)))
-	(t (concat (substring magic 0 (string-match "\\s " magic)) " "))))
+	(t (concat (substring magic 0 (string-match "\\s [^-]\\S *$" magic)) " "))))
       (t (concat tex-command " " (if switch parent))))
      (list (cons "f" tparent)
 	   (cons "r" (substring tparent 0 (rindex tparent ?.)))))))
@@ -1056,8 +1100,8 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
 
 (defun YaTeX-guess-parent (command-line)
   (setq command-line
-	(if (string-match ".*\\s " command-line)
-	    (substring command-line (match-end 0))
+	(if (string-match "\\s \\([^-]\\S *\\)$" command-line)
+	    (substring command-line (match-beginning 1))
 	  (file-name-nondirectory (buffer-file-name)))
 	command-line
 	(concat (if (string-match "\\(.*\\)\\." command-line)
