@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.21
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 18 22:53:03 2014 on firestorm
+;;; Last modified Sat Dec 20 14:55:10 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1940,8 +1940,8 @@ and print them to standard output."
 		 (mapcar (function (lambda (s)
 			    (and (stringp (symbol-value s))
 				 (string< "" (symbol-value s))
-				 (format "%s=%s" s (symbol-value s))))
-			 '(width height scale angle))))
+				 (format "%s=%s" s (symbol-value s)))))
+			 '(width height scale angle)))
 	   ","))
     (if (string= "" str) ""
       (concat "[" str "]"))))
