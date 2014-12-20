@@ -1,6 +1,6 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
 ;;; (c)2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 18 22:59:02 2014 on firestorm
+;;; Last modified Fri Dec 19 21:43:54 2014 on firestorm
 ;;; $Id:$
 
 ;;; Code:
@@ -69,12 +69,15 @@ Convert local image URI to \\includegraphcis{} and
 			       (key-description
 				(car (where-is-internal 'undo)))))
 		      (put 'YaTeX-dnd-auto-figure 'guide t)))))
-	      (YaTeX-help "includegraphics")
-	      )
+	      (YaTeX-help "includegraphics"))
 	  (set-marker envstart nil) ;;sure to reset marker
 	  action))
        ((string-match "\\(.*\\)\\.tex$" path)
-	(insert "\\include{" (match-string 1 path) "}"))))
+	(insert "\\include{" (match-string 1 path) "}"))
+       ((string-match "\\(.*\\)\\.bib$" path)
+	(insert "\\bibliography{" (match-string 1 path) "}"))
+       ((string-match "\\.ind$" path)
+	(insert "\\input{" path "}"))))
      (t (message "%s" action)))))
 
 (provide 'yatex23)
