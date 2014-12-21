@@ -1,7 +1,7 @@
 ;;; yatexhlp.el --- YaTeX helper with LaTeX commands and macros
 ;;; 
-;;; (c)1994,1998,2004 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 18 17:53:52 2014 on firestorm
+;;; (c)1994,1998,2004,2014 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sun Dec 21 14:14:34 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -45,8 +45,8 @@
   (setq YaTeX-help-mode-map (make-sparse-keymap))
   (let ((map YaTeX-help-mode-map))
     (suppress-keymap map)
-    (define-key map "j" '(lambda () (interactive) (scroll-up 1)))
-    (define-key map "k" '(lambda () (interactive) (scroll-up -1)))
+    (define-key map "j" (function (lambda () (interactive) (scroll-up 1))))
+    (define-key map "k" (function (lambda () (interactive) (scroll-up -1))))
     (define-key map "n" 'next-line)
     (define-key map "p" 'previous-line)
     (define-key map " " 'scroll-up)

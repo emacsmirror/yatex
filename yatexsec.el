@@ -1,7 +1,7 @@
 ;;; yatexsec.el --- YaTeX sectioning browser
 ;;; 
 ;;; (c) 1994-2013 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:46:28 2013 on firestorm
+;;; Last modified Sun Dec 21 14:16:35 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -55,9 +55,9 @@ This must be the heighest number in YaTeX-sectioning-level.")
   (define-key YaTeX-sectioning-minibuffer-map "\C-r"
     'YaTeX-sectioning-scroll-down)
   (define-key YaTeX-sectioning-minibuffer-map "\C-w"
-    '(lambda () (interactive) (YaTeX-sectioning-scroll-down 1)))
+    (function (lambda () (interactive) (YaTeX-sectioning-scroll-down 1))))
   (define-key YaTeX-sectioning-minibuffer-map "\C-z"
-    '(lambda () (interactive) (YaTeX-sectioning-scroll-up 1)))
+    (function (lambda () (interactive) (YaTeX-sectioning-scroll-up 1))))
   (define-key YaTeX-sectioning-minibuffer-map "\C-l"
     'YaTeX-sectioning-recenter)
   (define-key YaTeX-sectioning-minibuffer-map "?"

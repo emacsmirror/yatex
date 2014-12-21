@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries
 ;;; 
 ;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Nov 22 07:53:13 2013 on firestorm
+;;; Last modified Sun Dec 21 14:15:24 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -287,8 +287,8 @@ history list variable."
       (delete-region (point) (progn (forward-sexp) (point)))
       (delete-blank-lines)
       (insert "(setq " name " '(\n")
-      (mapcar '(lambda (s)
-		 (insert (format "%s\n" (prin1-to-string s))))
+      (mapcar (function (lambda (s)
+			  (insert (format "%s\n" (prin1-to-string s)))))
 	      value)
       (insert "))\n\n")
       (delete-blank-lines)
@@ -844,9 +844,9 @@ NULL includes null string in a list."
 (fset 'YaTeX-last-key
       (if (fboundp 'win:last-key)
 	  'win:last-key
-	'(lambda () (if (boundp 'last-command-char)
-			last-command-char
-		      last-command-event))))
+	(function (lambda () (if (boundp 'last-command-char)
+				 last-command-char
+			       last-command-event)))))
 (defun YaTeX-switch-to-window ()
   "Switch to windows.el's window decided by last pressed key."
   (interactive)

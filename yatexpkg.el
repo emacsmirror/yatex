@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager
 ;;; 
 ;;; (c)2003-2014 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Thu Dec 18 18:03:48 2014 on firestorm
+;;; Last modified Sun Dec 21 14:16:14 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -128,9 +128,10 @@ Search the usepackage for MACRO of the TYPE."
 	(usepkgrx (concat
 		   YaTeX-ec-regexp
 		   "\\(usepackage\\|include\\)\\b"))
-	(register '(lambda () (set-buffer cb)
+	(register (function
+		   (lambda () (set-buffer cb)
 		     (set (make-local-variable 'YaTeX-package-resolved-list)
-			  (cons macro YaTeX-package-resolved-list))))
+			  (cons macro YaTeX-package-resolved-list)))))
 	(begdoc (concat YaTeX-ec "begin{document}"))
 	pb pkg optlist (option "") mb0 uspkgargs)
     (if (or (YaTeX-member macro YaTeX-package-resolved-list)

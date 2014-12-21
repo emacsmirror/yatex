@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 21 12:13:34 2014 on firestorm
+;;; Last modified Sun Dec 21 14:02:49 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -483,8 +483,8 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   (YaTeX-define-key "$" 'YaTeX-insert-dollars-region)
   (YaTeX-define-key "i" 'YaTeX-fill-item)
   (YaTeX-define-key "\\"
-   '(lambda () (interactive)
-      (insert (if (YaTeX-in-math-mode-p) "\\backslash" "\\textbackslash"))))
+   (function(lambda () (interactive)
+      (insert (if (YaTeX-in-math-mode-p) "\\backslash" "\\textbackslash")))))
   (if YaTeX-no-begend-shortcut
       (progn
 	(YaTeX-define-key "B" 'YaTeX-make-begin-end-region)
@@ -528,12 +528,12 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   (YaTeX-define-key "d" 'YaTeX-display-hierarchy)
   (YaTeX-define-key "x" YaTeX-user-extensional-map)
   (YaTeX-define-key "n"
-    '(lambda () (interactive)
-       (insert "\\" (if (YaTeX-on-section-command-p "o?oalign") "crcr" "\\"))))
+    (function(lambda () (interactive)
+       (insert "\\" (if (YaTeX-on-section-command-p "o?oalign") "crcr" "\\")))))
   (if YaTeX-dos
       (define-key YaTeX-prefix-map "\C-r"
-	'(lambda () (interactive)
-	   (YaTeX-set-screen-height YaTeX-saved-screen-height) (recenter)))))
+	(function(lambda () (interactive)
+	   (YaTeX-set-screen-height YaTeX-saved-screen-height) (recenter))))))
 
 (defvar YaTeX-section-completion-map nil
   "*Key map used at YaTeX completion in the minibuffer.")

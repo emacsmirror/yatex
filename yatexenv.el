@@ -1,6 +1,6 @@
 ;;; yatexenv.el --- YaTeX environment-specific functions
 ;;; (c) 1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Nov 20 14:14:39 2013 on firestorm
+;;; Last modified Sun Dec 21 13:58:31 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -198,10 +198,11 @@ Count the number of & in the first align line and insert that many &s."
     (YaTeX-indent-line)))
 
 (mapcar
- '(lambda (s)
+ (function
+  (lambda (s)
     (fset (intern (concat  "YaTeX-intelligent-newline-"
 			   (symbol-name s)))
-	  'YaTeX-intelligent-newline-align))
+	  'YaTeX-intelligent-newline-align)))
  '(align* flalign  flalign* matrix pmatrix bmatrix Bmatrix vmatrix Vmatrix
    cases eqnarray eqnarray* alignat alignat*))
 

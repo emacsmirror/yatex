@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2013 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Tue Dec 16 11:11:25 2014 on firestorm
+;;; Last modified Sun Dec 21 14:02:00 2014 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.77"
@@ -344,8 +344,8 @@ normal and region mode.  To customize yahtml, user should use this function."
     (YaTeX-define-key "l" 'yahtml-insert-tag map)
     (YaTeX-define-key "L" 'yahtml-insert-tag-region map)
     (YaTeX-define-key "m" 'yahtml-insert-single map)
-    (YaTeX-define-key "n" '(lambda () (interactive) (insert (if yahtml-prefer-upcases "<BR>" "<br>"))) map)
-    (YaTeX-define-key "-" '(lambda () (interactive) (insert (if yahtml-prefer-upcases "<HR>" "<hr>") "\n")) map)
+    (YaTeX-define-key "n" (function(lambda () (interactive) (insert (if yahtml-prefer-upcases "<BR>" "<br>")))) map)
+    (YaTeX-define-key "-" (function(lambda () (interactive) (insert (if yahtml-prefer-upcases "<HR>" "<hr>") "\n"))) map)
     (YaTeX-define-key "p" 'yahtml-insert-p map)
     (if YaTeX-no-begend-shortcut
 	(progn
@@ -818,11 +818,12 @@ T for static indentation depth")
 	   (cons "typeface" yahtml-menu-map-typeface)))))
   (if (featurep 'xemacs)
       (add-hook 'yahtml-mode-hook
-		'(lambda ()
+		(function
+		 (lambda ()
 		   (or (assoc "yahtml" current-menubar)
 		       (progn
 			 (set-buffer-menubar (copy-sequence current-menubar))
-			 (add-submenu nil yahtml-menu-map))))))))
+			 (add-submenu nil yahtml-menu-map)))))))))
 
 ;;; ----------- Completion ----------
 (defvar yahtml-last-begend "html")
@@ -1017,7 +1018,7 @@ If optional argument FILE is specified collect labels in FILE."
 	  (with-output-to-temp-buffer "*Completions*"
 	    (princ "Possible completinos are:\n")
 	    (princ
-	     (mapconcat '(lambda (x) x)  (funcall listfunc) "\n")))
+	     (mapconcat (function(lambda (x) x))  (funcall listfunc) "\n")))
 	(delete-region (point) beg)
 	(insert cmpl)))
      ((null cmpl)
@@ -1224,8 +1225,8 @@ Not used yet.")
 (defun yahtml-make-style-parameter (proplist)
   "Make CSS property definitions in style attribute."
   (mapconcat
-   '(lambda (x) (if (and (cdr x) (string< "" (cdr x)))
-		    (format "%s: %s;" (car x) (cdr x))))
+   (function (lambda (x) (if (and (cdr x) (string< "" (cdr x)))
+			     (format "%s: %s;" (car x) (cdr x)))))
    (delq nil proplist)
    " "))
 

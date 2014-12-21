@@ -1,6 +1,6 @@
 ;;; yatex19.el -- YaTeX facilities for Emacs 19 or later
 ;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:42:46 2013 on firestorm
+;;; Last modified Sun Dec 21 14:03:48 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -54,11 +54,11 @@
 	(list
 	 (if YaTeX-auto-math-mode nil
 	   (cons 'math (cons "Toggle math-mode"
-			     '(lambda () (interactive)
-				(YaTeX-switch-mode-menu nil ?t)))))
+			     (function(lambda () (interactive)
+				(YaTeX-switch-mode-menu nil ?t))))))
 	 (cons 'mod (cons "Toggle Modify Mode"
-			  '(lambda () (interactive)
-			     (YaTeX-switch-mode-menu nil ?m))))))))
+			  (function(lambda () (interactive)
+			     (YaTeX-switch-mode-menu nil ?m)))))))))
 (defvar YaTeX-mode-menu-map-percent (make-sparse-keymap "percent"))
 (YaTeX-define-menu
  'YaTeX-mode-menu-map-percent
@@ -227,11 +227,12 @@
 
 (and (featurep 'xemacs)
      (add-hook 'yatex-mode-hook
-	       '(lambda ()
+	       (function
+		(lambda ()
 		  (or (assoc "YaTeX" current-menubar)
 		      (progn
 			(set-buffer-menubar (copy-sequence current-menubar))
-			(add-submenu nil YaTeX-mode-menu-map))))))
+			(add-submenu nil YaTeX-mode-menu-map)))))))
 
 ;; Other key bindings for window-system
 ;(YaTeX-define-key [?\C- ] 'YaTeX-do-completion)
