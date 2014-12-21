@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 21 11:36:21 2014 on firestorm
+;;; Last modified Sun Dec 21 13:56:03 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -732,14 +732,20 @@ by region."
 			   YaTeX-xdvi-remote-program
 			   line cf bnr))
 		  ((string-match "Skim" previewer)
-		   (format "%s %d %s.pdf %s"
+		   (format "%s %d '%s.pdf' '%s'"
 			   YaTeX-cmd-displayline line bnr cf))
-		  ((string-match "sumatra" previewer)
-		   (format "%s %s.pdf %d %s"
-			   previewer bnr line cf))
+		  ((string-match "sumatra" previewer)	;;??
+		   (format "%s \"%s.pdf\" -forward-search \"%s\" %d %s"
+			   previewer bnr cf line))
 		  ((string-match "evince" previewer)
-		   (format "%s %s.pdf %d %s"
-			   "fwdevince" bnr line cf)))))
+		   (format "%s '%s.pdf' %d '%s'"
+			   "fwdevince" bnr line cf))
+		  ((string-match "qpdfview" previewer)	;;??
+		   (format "%s '%s.pdf' '#src:%s:%d:0'"
+			   previewer bnr cf line))
+		  ((string-match "okular" previewer)	;;??
+		   (format "%s '%s.pdf' '#src:%d' '%s'"
+			   previewer bnr line cf)))))
 	(YaTeX-system cmd "jump-line" 'noask pdir)))))
 
 (defun YaTeX-goto-corresponding-viewer ()
