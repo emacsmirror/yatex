@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 21 14:02:49 2014 on firestorm
+;;; Last modified Sun Dec 21 23:13:59 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -676,22 +676,7 @@ more features are available and they are documented in the manual.
 	    YaTeX-math-mode indent-line-function comment-line-break-function
 	    comment-start comment-start-skip
 	    ))
-  (cond ((null YaTeX-kanji-code)
-	 nil)
-	((boundp 'MULE)
-	 (set-file-coding-system  YaTeX-coding-system))
-	((and YaTeX-emacs-20 (boundp 'buffer-file-coding-system))
-	 (setq buffer-file-coding-system
-	       (or (and (fboundp 'set-auto-coding) buffer-file-name
-			(save-excursion
-			  (goto-char (point-min))
-			  (set-auto-coding buffer-file-name (buffer-size))))
-		   YaTeX-coding-system)))
-	((featurep 'mule)
-	 (set-file-coding-system YaTeX-coding-system))
-	((boundp 'NEMACS)
-	 (make-local-variable 'kanji-fileio-code)
-	 (setq kanji-fileio-code YaTeX-kanji-code)))
+  (YaTeX-set-file-coding-system YaTeX-kanji-code YaTeX-coding-system)
   (setq fill-column YaTeX-fill-column
 	fill-prefix YaTeX-fill-prefix
 	paragraph-start    YaTeX-paragraph-start

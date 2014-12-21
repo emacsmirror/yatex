@@ -1,7 +1,7 @@
 ;;; yatexhlp.el --- YaTeX helper with LaTeX commands and macros
 ;;; 
 ;;; (c)1994,1998,2004,2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 21 14:14:34 2014 on firestorm
+;;; Last modified Sun Dec 21 22:55:07 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -159,7 +159,7 @@ Where:	<DELIM> is the value of YaTeX-help-delimiter.
 		  (concat "^" (regexp-quote YaTeX-help-delimiter)) nil 1)
 		 (- (point) (length YaTeX-help-delimiter))))
       (YaTeX-showup-buffer
-       hbuf (function (lambda (x) (nth 3 (window-edges x)))) t)
+       hbuf 'YaTeX-showup-buffer-bottom-most t)
       (set-buffer hbuf)
       (setq buffer-read-only nil)
       (if append (goto-char (point-max)) (erase-buffer))
@@ -226,7 +226,7 @@ Where:	<DELIM> is the value of YaTeX-help-delimiter.
   (let ((buf (get-buffer-create "**Description**"))
 	(conf (current-window-configuration)))
     (YaTeX-showup-buffer
-     buf (function (lambda (x) (nth 3 (window-edges x)))) t)
+     buf 'YaTeX-showup-buffer-bottom-most t)
     (make-local-variable 'YaTeX-help-file-current)
     (make-local-variable 'YaTeX-help-command-current)
     (make-local-variable 'YaTeX-help-saved-config)
@@ -266,8 +266,7 @@ as a help file."
 	(sw (selected-window))
 	(head (concat "^" (regexp-quote YaTeX-help-delimiter)))
 	pt command)
-    (YaTeX-showup-buffer
-     ab (function (lambda (x) (nth 3 (window-edges x)))))
+    (YaTeX-showup-buffer ab 'YaTeX-showup-buffer-bottom-most)
     (select-window (get-buffer-window ab))
     (set-buffer ab)			;assertion
     (setq buffer-read-only nil)

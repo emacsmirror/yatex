@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 21 13:56:03 2014 on firestorm
+;;; Last modified Mon Dec 22 00:00:27 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -64,6 +64,7 @@
   (save-excursion
     (let ((p (point)) (window (selected-window)) execdir (cb (current-buffer))
 	  (map YaTeX-typesetting-mode-map)
+	  (background (string-match "\\*bg:" buffer))
 	  (outcode
 	   (cond ((eq major-mode 'yatex-mode) YaTeX-coding-system)
 		 ((eq major-mode 'yahtml-mode) yahtml-kanji-code))))
@@ -78,8 +79,10 @@
       (setq execdir default-directory)
       ;;Select lower-most window if there are more than 2 windows and
       ;;typeset buffer not seen.
-      (YaTeX-showup-buffer
-       buffer (function (lambda (x) (nth 3 (window-edges x)))))
+      (if background
+	  nil				;do not showup
+	(YaTeX-showup-buffer
+	 buffer 'YaTeX-showup-buffer-bottom-most))
       (set-buffer (get-buffer-create buffer))
       (setq default-directory execdir)
       (cd execdir)
@@ -137,17 +140,19 @@
 	(insert " ")
 	(set-marker (process-mark YaTeX-typeset-process) (1- (point))))
       (if (bolp) (forward-line -1))	;what for?
-      (if (and YaTeX-emacs-19 window-system)
-	  (let ((win (get-buffer-window buffer t)) owin)
-	    (select-frame (window-frame win))
-	    (setq owin (selected-window))
-	    (select-window win)
-	    (goto-char (point-max))
-	    (recenter -1)
-	    (select-window owin))
-	(select-window (get-buffer-window buffer))
-	(goto-char (point-max))
-	(recenter -1))
+      (cond
+       (background nil)
+       ((and YaTeX-emacs-19 window-system)
+	(let ((win (get-buffer-window buffer t)) owin)
+	  (select-frame (window-frame win))
+	  (setq owin (selected-window))
+	  (select-window win)
+	  (goto-char (point-max))
+	  (recenter -1)
+	    (select-window owin)))
+       (t (select-window (get-buffer-window buffer))
+	  (goto-char (point-max))
+	  (recenter -1)))
       (select-window window)
       (switch-to-buffer cb)
       (YaTeX-remove-nonstopmode))))
@@ -250,7 +255,7 @@ thus, it call bibtex only if warning messages about citation are seen.")
 		       (setq tobecalled thiscmd shortname "+typeset"))
 		      (t
 		       nil))			  ;no need to call any process
-		     (progn
+		     (progn ;;Something occurs to call next command
 		       (insert
 			(format
 			 "===!!! %s !!!===\n"
@@ -274,18 +279,20 @@ thus, it call bibtex only if warning messages about citation are seen.")
 		   (cond
 		    ((and ppcmd (string-match "finish" mes))
 		     (insert (format "=======> Success! Calling %s\n" ppcmd))
-		     (setq mode-name	; set process name
-			   (concat
-			    mode-name "+"
-			    (substring ppcmd 0 (string-match " " ppcmd))))
+		     (if (symbolp ppcmd)
+			 (funcall ppcmd)
+		       (setq mode-name	; set process name
+			     (concat
+			      mode-name "+"
+			      (substring ppcmd 0 (string-match " " ppcmd))))
 					; to reach here, 'start-process exists on this emacsen
-		     (set-process-sentinel
-		      (start-process
-		       mode-name
-		       pbuf		; Use this buffer twice.
-		       shell-file-name YaTeX-shell-command-option
-		       ppcmd)
-		      'YaTeX-typeset-sentinel))
+		       (set-process-sentinel
+			(start-process
+			 mode-name
+			 pbuf		; Use this buffer twice.
+			 shell-file-name YaTeX-shell-command-option
+			 ppcmd)
+			'YaTeX-typeset-sentinel)))
 		    (t ;pull back original mode-name
 		     (setq mode-name "typeset"))))
 		 (forward-char 1))
@@ -299,7 +306,7 @@ thus, it call bibtex only if warning messages about citation are seen.")
 (defvar YaTeX-texput-file "texput.tex"
   "*File name for temporary file of typeset-region.")
 
-(defun YaTeX-typeset-region ()
+(defun YaTeX-typeset-region (&optional pp)
   "Paste the region to the file `texput.tex' and execute typesetter.
 The region is specified by the rule:
 	(1)If keyword `%#BEGIN' is found in the upper direction from (point).
@@ -310,17 +317,21 @@ The region is specified by the rule:
 	(2)If no `%#BEGIN' usage is found before the (point),
 		->Assume the text between current (point) and (mark) as region.
 DON'T forget to eliminate the `%#BEGIN/%#END' notation after editing
-operation to the region."
+operation to the region.
+Optional second argument PP specifies post-processor command which will be
+called with one argument of current file name whitout extension."
   (interactive)
   (save-excursion
     (let*
 	((end "") typeout ;Type out message that tells the method of cutting.
 	 (texput YaTeX-texput-file)
+	 (texputroot (substring texput 0 (string-match "\\.tex$" texput)))
 	 (cmd (concat (YaTeX-get-latex-command nil) " " texput))
 	 (buffer (current-buffer)) opoint preamble (subpreamble "") main
 	 (hilit-auto-highlight nil)	;for Emacs19 with hilit19
+	 ppcmd
 	 reg-begin reg-end lineinfo)
-
+      (setq ppcmd (if (stringp pp) (concat pp " " texputroot) pp))
       (save-excursion
 	(if (search-backward "%#BEGIN" nil t)
 	    (progn
@@ -368,9 +379,11 @@ operation to the region."
 	(set-buffer (find-file-noselect texput)))
       ;;(find-file YaTeX-texput-file)
       (erase-buffer)
+      (YaTeX-set-file-coding-system YaTeX-kanji-code YaTeX-coding-system)
       (if (and (eq major-mode 'yatex-mode) YaTeX-need-nonstop)
 	  (insert "\\nonstopmode{}\n"))
-      (insert preamble "\n" subpreamble "\n")
+      (insert preamble "\n" subpreamble "\n"
+	      "\\pagestyle{empty}\n\\thispagestyle{empty}\n")
       (setq lineinfo (list (count-lines 1 (point-end-of-line)) lineinfo))
       (insert-buffer-substring buffer reg-begin reg-end)
       (insert "\\typeout{" typeout end "}\n") ;Notice the selected method.
@@ -378,18 +391,70 @@ operation to the region."
       (basic-save-buffer)
       (kill-buffer (current-buffer))
       (set-buffer main)		;return to parent file or itself.
-      (YaTeX-typeset cmd YaTeX-typeset-buffer)
+      (YaTeX-typeset cmd YaTeX-typeset-buffer nil nil ppcmd)
       (switch-to-buffer buffer)		;for Emacs-19
       (put 'dvi2-command 'region t)
       (put 'dvi2-command 'file buffer)
       (put 'dvi2-command 'offset lineinfo))))
 
+(defvar YaTeX-typeset-conv2image-process nil "Process of conv2image chain")
+(defun YaTeX-typeset-conv2image-chain ()
+  (let*((proc (or YaTeX-typeset-process YaTeX-typeset-conv2image-process))
+	(prevname (process-name proc))
+	(target "texput.jpg")
+	(math (get 'YaTeX-typeset-conv2image-chain 'math))
+	(conv (format "convert -density %d - %s" (if math 250 100) target))
+	(chain (list (format "dvips -E -o - texput|%s" conv)))
+	(curproc (member prevname chain))
+	img)
+    (if (not (= (process-exit-status proc) 0))
+	(progn
+	  (YaTeX-showup-buffer		;nevers comes here(?)
+	   (current-buffer) 'YaTeX-showup-buffer-bottom-most)
+	  (message "Region typesetting FAILED"))
+      (setq command
+	    (if curproc (car (cdr-safe curproc)) (car chain)))
+      (if command
+	  (progn
+	    (insert (format "Calling `%s'...\n" command))
+	    (set-process-sentinel
+	     (setq YaTeX-typeset-conv2image-process
+		   (start-process
+		    command
+		    (current-buffer)
+		    shell-file-name YaTeX-shell-command-option command))
+	     'YaTeX-typeset-sentinel)
+	    (put 'YaTeX-typeset-process 'ppcmd
+		 (cons (cons (get-buffer-process (current-buffer))
+			     'YaTeX-typeset-conv2image-chain)
+		       (get 'YaTeX-typeset-process 'ppcmd))))
+	;; After all chain executed, display image in current window
+	(YaTeX-showup-buffer
+	 (get-buffer-create " *YaTeX-region-image*")
+	 'YaTeX-showup-buffer-bottom-most t)
+	(remove-images (point-min) (point-max))
+	(erase-buffer)
+	;(put-image (create-image (expand-file-name target)) (point))
+	(insert-image-file target)
+	(goto-char (point-min))
+	(setq img (plist-get (text-properties-at (point)) 'intangible))
+	(if img
+	    (let ((height (cdr (image-size img))))
+	      (enlarge-window
+	       (- (ceiling (min height (/ (frame-height) 2)))
+		  (window-height)))))))))
+
 (defun YaTeX-typeset-environment ()
   "Typeset current math environment"
   (interactive)
   (save-excursion
-    (YaTeX-mark-environment)
-    (YaTeX-typeset-region)))
+    (let ((math (YaTeX-in-math-mode-p)))
+      (YaTeX-mark-environment)
+      (if (and (featurep 'image) window-system)
+	  (let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer)))
+	    (put 'YaTeX-typeset-conv2image-chain 'math math)
+	    (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain))
+	(YaTeX-typeset-region)))))
 
 (defun YaTeX-typeset-buffer (&optional pp)
   "Typeset whole buffer.
@@ -549,8 +614,7 @@ Optional third argument BASEDIR changes default-directory there."
       (setq default-directory (cd (or basedir df)))
       (erase-buffer)
       (insert (format "Calling `%s'..." command))
-      (YaTeX-showup-buffer
-       buffer (function (lambda (x) (nth 3 (window-edges x)))))
+      (YaTeX-showup-buffer buffer 'YaTeX-showup-buffer-bottom-most)
       (if (not (fboundp 'start-process))
 	  (call-process
 	   shell-file-name nil buffer nil YaTeX-shell-command-option command)
@@ -652,7 +716,7 @@ Optional third argument BASEDIR changes default-directory there."
     (if YaTeX-dos (setq preview-file (expand-file-name preview-file)))
     (let ((pbuffer "*dvi-preview*") (dir default-directory))
       (YaTeX-showup-buffer
-       pbuffer (function (lambda (x) (nth 3 (window-edges x)))))
+       pbuffer 'YaTeX-showup-buffer-bottom-most)
       (set-buffer (get-buffer-create pbuffer))
       (erase-buffer)
       (setq default-directory dir)	;for 18
@@ -1032,7 +1096,7 @@ page range description."
       (YaTeX-visit-main t) ;;change execution directory
       (setq dir default-directory)
       (YaTeX-showup-buffer
-       lbuffer (function (lambda (x) (nth 3 (window-edges x)))))
+       lbuffer 'YaTeX-showup-buffer-bottom-most)
       (set-buffer (get-buffer-create lbuffer))
       (erase-buffer)
       (cd dir)				;for 19
