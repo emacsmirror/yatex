@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Dec 20 20:14:43 2014 on firestorm
+;;; Last modified Sun Dec 21 11:36:21 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -537,28 +537,36 @@ PROC should be process identifier."
 	  (interrupt-process proc)
 	  (delete-process proc))))))
 
-(defun YaTeX-system (command buffer)
-  "Execute some command on buffer.  Not a official function."
+(defun YaTeX-system (command name &optional noask basedir)
+  "Execute some COMMAND with process name `NAME'.  Not a official function.
+Optional second argument NOASK skip query when privious process running.
+Optional third argument BASEDIR changes default-directory there."
   (save-excursion
-    (YaTeX-showup-buffer
-     buffer (function (lambda (x) (nth 3 (window-edges x)))))
-    (let ((df default-directory))		;preserve current buf's pwd
-      (set-buffer (get-buffer-create buffer))	;1.61.3
-      (setq default-directory df)
-      (cd df))
-    (erase-buffer)
-    (if (not (fboundp 'start-process))
-	(call-process
-	 shell-file-name nil buffer nil YaTeX-shell-command-option command)
-      (if (and (get-buffer-process buffer)
-	       (eq (process-status (get-buffer-process buffer)) 'run)
-	       (not
-		(y-or-n-p (format "Process %s is running. Continue?" buffer))))
-	  nil
-	(set-process-buffer
-	 (start-process
-	  "system" buffer shell-file-name YaTeX-shell-command-option command)
-	 (get-buffer buffer))))))
+    (let ((df default-directory)
+	  (buffer (get-buffer-create (format " *%s*" name)))
+	  proc status)
+      (set-buffer buffer)
+      (setq default-directory (cd (or basedir df)))
+      (erase-buffer)
+      (insert (format "Calling `%s'..." command))
+      (YaTeX-showup-buffer
+       buffer (function (lambda (x) (nth 3 (window-edges x)))))
+      (if (not (fboundp 'start-process))
+	  (call-process
+	   shell-file-name nil buffer nil YaTeX-shell-command-option command)
+	(if (and (setq proc (get-buffer-process buffer))
+		 (setq status (process-status proc))
+		 (eq status 'run)
+		 (not noask)
+		 (not
+		  (y-or-n-p (format "Process %s is running. Continue?" buffer))))
+	    nil
+	  (if (eq status 'run)
+	      (progn (interrupt-process proc) (delete-process proc)))
+	  (set-process-buffer
+	   (start-process
+	    name buffer shell-file-name YaTeX-shell-command-option command)
+	   (get-buffer buffer)))))))
 
 (defvar YaTeX-default-paper-type "a4"
   "*Default paper type.")
@@ -701,8 +709,7 @@ by region."
 
 (defun YaTeX-preview-jlfmt-xdvi ()
   "Call xdvi -sourceposition to DVI corresponding to current main file"
-  (interactive)
-)
+  (interactive))
 
 (defvar YaTeX-cmd-displayline "/Applications/Skim.app/Contents/SharedSupport/displayline")
 (defun YaTeX-preview-jump-line ()
@@ -713,9 +720,9 @@ by region."
       (widen)
       (let*((pf (or YaTeX-parent-file
 		    (save-excursion (YaTeX-visit-main t) (buffer-file-name))))
-	    (pd (file-name-directory pf))
+	    (pdir (file-name-directory pf))
 	    (bnr (substring pf 0 (string-match "\\....$" pf)))
-	    (cf (file-relative-name (buffer-file-name) pd))
+	    (cf (file-relative-name (buffer-file-name) pdir))
 	    (buffer (get-buffer-create " *preview-jump-line*"))
 	    (line (count-lines (point-min) (point-end-of-line)))
 	    (previewer (YaTeX-preview-default-previewer))
@@ -733,7 +740,7 @@ by region."
 		  ((string-match "evince" previewer)
 		   (format "%s %s.pdf %d %s"
 			   "fwdevince" bnr line cf)))))
-	(YaTeX-typeset cmd buffer)))))
+	(YaTeX-system cmd "jump-line" 'noask pdir)))))
 
 (defun YaTeX-goto-corresponding-viewer ()
   (let ((cmd (or (YaTeX-get-builtin "!") tex-command)))
@@ -1121,13 +1128,14 @@ SETBUF is t(Use it only from Emacs-Lisp program)."
   (basic-save-buffer)
   (let ((cmm major-mode))
     (save-excursion
-      (mapcar '(lambda (buf)
+      (mapcar (function
+	       (lambda (buf)
 		 (set-buffer buf)
 		 (if (and (buffer-file-name buf)
 			  (eq major-mode cmm)
 			  (buffer-modified-p buf)
 			  (y-or-n-p (format "Save %s" (buffer-name buf))))
-		     (save-buffer buf)))
+		     (save-buffer buf))))
 	      (buffer-list)))))
 
 (provide 'yatexprc)

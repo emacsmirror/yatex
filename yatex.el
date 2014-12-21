@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Dec 20 19:43:33 2014 on firestorm
+;;; Last modified Sun Dec 21 11:05:59 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1654,7 +1654,7 @@ Optional second argument CHAR is for non-interactive call from menu."
 		"MAKEINDEX" makeindex-command arg))
      ((= c ?k) (YaTeX-kill-typeset-process YaTeX-typeset-process))
      ((= c ?p) (call-interactively 'YaTeX-preview))
-     ((= c ?q) (YaTeX-system "lpq" "*Printer queue*"))
+     ((= c ?q) (YaTeX-system "lpq" "Printer queue"))
      ((= c ?d) (YaTeX-typeset-buffer
 		(or (YaTeX-get-builtin "DVIPDF") YaTeX-dvipdf-command))
       (put 'dvi2-command 'format 'pdf))
@@ -2006,9 +2006,8 @@ See also the documentation of YaTeX-processed-file-regexp-alist.")
 		(let ((default-directory basedir))
 		  (cond
 		   ((stringp cmd)
-		    (let ((buf (concat "* " cmd " " src " *")))
-		      (YaTeX-system (concat cmd " " src) buf)
-		      t))
+		    (YaTeX-system (concat cmd " " src) cmd)
+		    t)
 		   ((eq t cmd)
 		    (let ((parent buffer-file-name))
 		      (funcall
