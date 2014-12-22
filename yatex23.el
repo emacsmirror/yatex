@@ -1,6 +1,6 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
 ;;; (c)2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Dec 19 21:43:54 2014 on firestorm
+;;; Last modified Mon Dec 22 11:15:48 2014 on firestorm
 ;;; $Id:$
 
 ;;; Code:
@@ -35,7 +35,8 @@ Convert local image URI to \\includegraphcis{} and
 	      (insert "\\includegraphics")
 	      (insert "{" (YaTeX::includegraphics 1 path t) "}")
 	      (save-excursion
-		(YaTeX-package-auto-usepackage "includegraphics" 'section))
+		(YaTeX-package-auto-usepackage
+		 "includegraphics" 'section "graphicx" "dvipdfmx"))
 	      (cond
 	       (b
 		(undo-boundary)
