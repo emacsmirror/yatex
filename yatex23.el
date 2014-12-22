@@ -1,12 +1,15 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
 ;;; (c)2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 22 11:15:48 2014 on firestorm
-;;; $Id:$
+;;; Last modified Mon Dec 22 11:26:19 2014 on firestorm
+;;; $Id$
 
 ;;; Code:
 (defvar YaTeX-dnd-auto-figure "figure"
   "*If set, include dropped \\includegraphcs{} into that environment.
 The value should be string.  Set this `nil' to disable enclosing.")
+(defvar YaTeX-dnd-auto-figure-package (cons "graphicx" "dvipdfmx")
+  "*Default LaTeX package and its option for \\includegraphics")
+
 (defun YaTeX-dnd-handler (uri action)
   "DnD handler for yatex-mode
 Convert local image URI to \\includegraphcis{} and
@@ -36,7 +39,9 @@ Convert local image URI to \\includegraphcis{} and
 	      (insert "{" (YaTeX::includegraphics 1 path t) "}")
 	      (save-excursion
 		(YaTeX-package-auto-usepackage
-		 "includegraphics" 'section "graphicx" "dvipdfmx"))
+		 "includegraphics" 'section
+		 (car YaTeX-dnd-auto-figure-package)
+		 (cdr YaTeX-dnd-auto-figure-package)))
 	      (cond
 	       (b
 		(undo-boundary)
