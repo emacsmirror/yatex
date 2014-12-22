@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 22 22:23:52 2014 on firestorm
+;;; Last modified Mon Dec 22 22:57:20 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.77.6"
+(defconst YaTeX-revision-number "1.77.7"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -37,12 +37,6 @@ make a trip to any other part of text other than you are writing, you can
 return to the editing paragraph by calling register-to-point with argument
 YaTeX-current-position-register.")
 
-;;(defvar YaTeX-tmp-dic-unit 'main-file
-;;  "*Default switching unit of temporary dictionary.
-;;There are two switching unit:
-;;'main-file	: switch tmp-dic according to main-file directory.
-;;'directory	: switch tmp-dic dir by dir."
-;;)
 (defvar YaTeX-use-LaTeX2e t "*Use LaTeX2e or not.  Nil means latex 2.09")
 
 (defvar tex-command
