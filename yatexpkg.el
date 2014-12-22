@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager
 ;;; 
 ;;; (c)2003-2014 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Dec 21 14:16:14 2014 on firestorm
+;;; Last modified Mon Dec 22 11:12:19 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -118,9 +118,12 @@ Just only associng against the alist of YaTeX-package-alist-*"
 (defvar YaTeX-package-resolved-list nil
   "List of macros whose package is confirmed to be loaded.")
 
-(defun YaTeX-package-auto-usepackage (macro type)
+(defun YaTeX-package-auto-usepackage (macro type &optional autopkg autoopt)
   "(Semi)Automatically add the \\usepackage line to main-file.
-Search the usepackage for MACRO of the TYPE."
+Search the usepackage for MACRO of the TYPE.
+Optional second and third argument AUTOPKG, AUTOOPT are selected
+without query.  Thus those two argument (Full)automatically add
+a \\usepackage line."
   (let ((cb (current-buffer))
 	(wc (current-window-configuration))
 	(usepackage (concat YaTeX-ec "usepackage"))
@@ -171,18 +174,22 @@ Search the usepackage for MACRO of the TYPE."
 	      ;;corresponding \usepackage found
 	      (funcall register)
 	    ;; not found, insert it.
-	    (if (y-or-n-p
-		 (format "`%s' requires package. Put \\usepackage now?" macro))
+	    (if (or
+		 autopkg
+		 (y-or-n-p
+		  (format "`%s' requires package. Put \\usepackage now?"
+			  macro)))
 		(progn
 		  (require 'yatexadd)
 		  (setq pkg
-			(completing-read
-			 "Load which package?(TAB for list): "
-			 pkglist nil nil
-			 ;;initial input
-			 (if (= (length pkglist) 1)
-			     (let ((w (car (car pkglist))))
-			       (if YaTeX-emacs-19 (cons w 0) w))))
+			(or autopkg
+			    (completing-read
+			     "Load which package?(TAB for list): "
+			     pkglist nil nil
+			     ;;initial input
+			     (if (= (length pkglist) 1)
+				 (let ((w (car (car pkglist))))
+				   (if YaTeX-emacs-19 (cons w 0) w)))))
 			optlist
 			(YaTeX-package-option-lookup pkg))
 		  (if optlist
@@ -191,12 +198,14 @@ Search the usepackage for MACRO of the TYPE."
 			    (dflt (YaTeX-package-option-lookup
 				   pkg 'default-option)))
 			(setq option
-			      (read-from-minibuffer
-			       (format "Any option for {%s}?: " pkg)
-			       (let ((v (or dflt
-					    (and (= (length optlist) 1) w))))
-				 (and v (if YaTeX-emacs-19 (cons v 0) v)))
-			       YaTeX-minibuffer-completion-map)
+			      (or
+			       autoopt
+			       (read-from-minibuffer
+				(format "Any option for {%s}?: " pkg)
+				(let ((v (or dflt
+					     (and (= (length optlist) 1) w))))
+				  (and v (if YaTeX-emacs-19 (cons v 0) v)))
+				YaTeX-minibuffer-completion-map))
 			      option (if (string< "" option)
 					 (concat "[" option "]")
 				       ""))))
