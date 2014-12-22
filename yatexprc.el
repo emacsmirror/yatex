@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 22 00:00:27 2014 on firestorm
+;;; Last modified Mon Dec 22 10:01:02 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -397,15 +397,35 @@ called with one argument of current file name whitout extension."
       (put 'dvi2-command 'file buffer)
       (put 'dvi2-command 'offset lineinfo))))
 
+(defvar YaTeX-preview-image-mode-map nil
+  "Keymap used in YaTeX-preview-image-mode")
+(defun YaTeX-preview-image-mode ()
+  (interactive)
+  (if YaTeX-preview-image-mode-map
+      nil
+    (let ((map (setq YaTeX-preview-image-mode-map (make-sparse-keymap))))
+      (define-key map "q" (lambda()(interactive)
+			    (kill-buffer)
+			    (select-window
+			     (or (get 'YaTeX-typeset-process 'win)
+				 (selected-window)))))
+      (define-key map "j" (lambda()(interactive) (scroll-up 1)))
+      (define-key map "k" (lambda()(interactive) (scroll-up -1)))))
+  (use-local-map YaTeX-preview-image-mode-map))
+
 (defvar YaTeX-typeset-conv2image-process nil "Process of conv2image chain")
 (defun YaTeX-typeset-conv2image-chain ()
   (let*((proc (or YaTeX-typeset-process YaTeX-typeset-conv2image-process))
 	(prevname (process-name proc))
-	(target "texput.jpg")
+	(target "texput.png")
 	(math (get 'YaTeX-typeset-conv2image-chain 'math))
-	(conv (format "convert -density %d - %s" (if math 250 100) target))
-	(chain (list (format "dvips -E -o - texput|%s" conv)))
+	;(conv (format "convert -density %d - %s" (if math 250 100) target))
+	;(chain (list (format "dvips -E -o - texput|%s" conv)))
+	(conv (format "convert -alpha off - %s"  target))
+	(chain (list (format "dvips -x 3000 -E -o - texput|%s" conv)))
 	(curproc (member prevname chain))
+	(w (get 'YaTeX-typeset-conv2image-chain 'win))
+	(pwd default-directory)
 	img)
     (if (not (= (process-exit-status proc) 0))
 	(progn
@@ -429,15 +449,18 @@ called with one argument of current file name whitout extension."
 			     'YaTeX-typeset-conv2image-chain)
 		       (get 'YaTeX-typeset-process 'ppcmd))))
 	;; After all chain executed, display image in current window
+	(select-window w)
+	(setq foo (selected-window))
 	(YaTeX-showup-buffer
 	 (get-buffer-create " *YaTeX-region-image*")
 	 'YaTeX-showup-buffer-bottom-most t)
 	(remove-images (point-min) (point-max))
 	(erase-buffer)
-	;(put-image (create-image (expand-file-name target)) (point))
+	(cd pwd)			;when reuse from other source
+					;(put-image (create-image (expand-file-name target)) (point))
 	(insert-image-file target)
-	(goto-char (point-min))
 	(setq img (plist-get (text-properties-at (point)) 'intangible))
+	(YaTeX-preview-image-mode)
 	(if img
 	    (let ((height (cdr (image-size img))))
 	      (enlarge-window
@@ -453,6 +476,7 @@ called with one argument of current file name whitout extension."
       (if (and (featurep 'image) window-system)
 	  (let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer)))
 	    (put 'YaTeX-typeset-conv2image-chain 'math math)
+	    (put 'YaTeX-typeset-conv2image-chain 'win (selected-window))
 	    (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain))
 	(YaTeX-typeset-region)))))
 
