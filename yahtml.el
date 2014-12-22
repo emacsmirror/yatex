@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2013 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Sun Dec 21 14:02:00 2014 on firestorm
+;;; Last modified Mon Dec 22 22:17:24 2014 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.77"
@@ -2500,10 +2500,61 @@ Interactive prefix argument consults enclosing element other than td."
 ;	(apply 'YaTeX-saved-indent-new-comment-line (if soft (list soft))))
 ;    (fset 'move-to-column yahtml-saved-move-to-column)))
 
+;;;
+;;; ---------- move forward/backward field ----------
+;;;
+(defun yahtml-element-path ()
+  "Return the element path from <body> at point as a list"
+  (let (path elm)
+    (save-excursion
+      (while (and (YaTeX-beginning-of-environment)
+		  (looking-at (concat "<\\(" yahtml-command-regexp "\\)\\>"))
+		  (not (string= (setq elm (downcase (YaTeX-match-string 1)))
+				"body")))
+	(setq path (cons elm path)
+	      elm nil))
+      (and elm (setq path (cons elm path))))))
+
+(defun yahtml-forward-field (arg)
+  "Move ARGth forward cell to table element.
+ENVINFO is a cons of target element name and its beginning point."
+  (interactive "p")
+  (let (inenv elm path sibs)
+    (cond
+     ((< arg 0) (yahtml-backward-field (- arg)))
+     ((= arg 0) nil)
+     ((and (setq path (nreverse (yahtml-element-path)))
+	   (catch 'sibling
+	     (while path
+	       (if (setq elm (car-safe
+			      (member (car path) '("td" "th" "li" "dt" "dd"))))
+		   (throw 'sibling elm))
+	       (setq path (cdr path)))))
+      (setq inenv (YaTeX-in-environment-p elm)
+	    sibs (cdr (assoc elm '(("td" . "td\\|th")
+				   ("th" . "td\\|th")
+				   ("li" . "li")
+				   ("dt" . "dt\\|dd")
+				   ("dd" . "dt\\|dd")))))
+      (goto-char (cdr inenv))
+      (while (>= (setq arg (1- arg)) 0)
+	(yahtml-goto-corresponding-begend)
+	(if (looking-at "<") (forward-list 1))
+	(skip-chars-forward "^<"))
+      (while (looking-at "\\s \\|\\(</\\)")
+	(if (match-beginning 1) (forward-list 1)
+	  (skip-chars-forward "\n\t ")))
+      (forward-list 1) ;; step into environment
+      (skip-chars-forward " \t\n")
+      (if (looking-at (concat "<\\(" sibs "\\)\\>"))
+	  (forward-list 1))
+      ))))
+
+
 ;;; 
 ;;; ---------- indentation ----------
 ;;; 
-(defun yahtml-indent-line ()
+(defun yahtml-indent-line-1 ()
   "Indent a line (faster wrapper)"
   (interactive)
   (let (indent)
@@ -2525,6 +2576,18 @@ Interactive prefix argument consults enclosing element other than td."
 		(YaTeX-reindent indent)))
 	  (and (bolp) (skip-chars-forward " \t")))
       (yahtml-indent-line-real))))
+
+(defun yahtml-indent-line ()
+  "Indent a line (Second level wrapper).
+See also yahtml-indent-line-1 and yahtml-indent-line-real."
+  (interactive)
+  (let ((cc (current-column)) (p (point)))
+    (yahtml-indent-line-1)
+    (and (= cc (current-column))
+	 (= p (point))
+	 (equal last-command 'yahtml-indent-line)
+	 (yahtml-forward-field 1))))
+	   
 
 (defun yahtml-this-indent ()
   (let ((envs "[uod]l\\|table\\|[ht][rhd0-6]\\|select\\|blockquote\\|center\\|menu\\|dir\\|d[td]\\|li")

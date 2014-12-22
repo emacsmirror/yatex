@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 21 23:13:59 2014 on firestorm
+;;; Last modified Mon Dec 22 22:23:52 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -2677,7 +2677,7 @@ ENV is given in the form of environment's name or its list."
 		    (regexp-quote
 		     (YaTeX-replace-format-args
 		      YaTeX-struct-begin env "" ""))
-		    "\\)\\|\\("
+		    "\\>\\)\\|\\("
 		    (regexp-quote
 		     (YaTeX-replace-format-args
 		      YaTeX-struct-end env "" ""))
@@ -3013,6 +3013,42 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
       (if (string= c "t") (insert (YaTeX-read-accent-char c)))
       (forward-char 1))))
 
+;; Field skip in tabular
+(defun YaTeX-forward-field (arg)
+  "Move forward to the ARGth next column field of table."
+  (interactive "p")
+  (if (< arg 0)
+      (YaTeX-backward-field (- arg))
+    (let ((ep (save-excursion (YaTeX-end-of-environment) (point)))
+	  (wc (car (YaTeX-array-what-column-internal))))
+      (while (>= (setq arg (1- arg)) 0)
+	(skip-chars-forward "^&\\\\")
+	(while (and (not (eobp))
+		    (> ep (point))
+		    (looking-at "\\&\\|\\\\")
+		    (= wc (car (YaTeX-array-what-column-internal))))
+	  (skip-chars-forward "&\\\\" ep)
+	  (skip-chars-forward "\n\t " ep))))))
+
+(defun YaTeX-backward-field (arg)
+  "Move backward to the ARGth next column field of table."
+  (interactive "p")
+  (if (< arg 0)
+      (YaTeX-forward-field (- arg))
+    (let ((bp (save-excursion
+		(YaTeX-beginning-of-environment)
+		(point-end-of-line)))
+	  (wc (car (YaTeX-array-what-column-internal))))
+      (while (>= (setq arg (1- arg)) 0)
+	(skip-chars-backward "^&\\\\" bp)
+	(while (and (not (bobp))
+		    (< bp (point))
+		    (memq (preceding-char) '(?& ?\\))
+		    (= wc (car (YaTeX-array-what-column-internal))))
+	  (skip-chars-backward "&\\\\" bp)
+	  (skip-chars-backward "\n\t " bp))
+	(if (eolp) (skip-chars-forward "^&\\\\"))))))
+
 ;; Indentation
 (defun YaTeX-current-indentation ()
   "Return the indentation of current environment."
@@ -3116,7 +3152,7 @@ All verbatime-like environment name should match with.")
      ((YaTeX-literal-p)			;verbatims
       (tab-to-tab-stop))
      ((string-match "\\(tabular\\|array\\)" inenv) ;1.73
-      (let ((n 1))
+      (let ((n 1) (cc (current-column)) (p (point)))
 	(condition-case err
 	    (save-excursion
 	      (beginning-of-line)
@@ -3128,7 +3164,12 @@ All verbatime-like environment name should match with.")
 	(YaTeX-reindent
 	 (+ (YaTeX-current-indentation)
 	    YaTeX-environment-indent
-	    (* (1- n) YaTeX-tabular-indentation)))))
+	    (* (1- n) YaTeX-tabular-indentation)))
+	(and (= cc (current-column))
+	     (= p (point))
+	     (equal last-command 'YaTeX-indent-line)
+	     ;; if NO indent action occured, move to the next column
+	     (YaTeX-forward-field 1))))
      ((and inenv (not (equal "document" inenv)))
       (funcall indent-relative))
      ((YaTeX-on-section-command-p YaTeX-sectioning-regexp)
