@@ -1,13 +1,16 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
 ;;; (c)2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 22 11:26:19 2014 on firestorm
+;;; Last modified Tue Dec 23 12:44:35 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
 (defvar YaTeX-dnd-auto-figure "figure"
   "*If set, include dropped \\includegraphcs{} into that environment.
 The value should be string.  Set this `nil' to disable enclosing.")
-(defvar YaTeX-dnd-auto-figure-package (cons "graphicx" "dvipdfmx")
+(defvar YaTeX-dnd-auto-figure-package
+  (cons "graphicx"
+	(cond ((string-match "pdflatex" tex-command) "pdftex")
+	      (t "dvipdfmx")))
   "*Default LaTeX package and its option for \\includegraphics")
 
 (defun YaTeX-dnd-handler (uri action)

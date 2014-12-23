@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 22 10:01:02 2014 on firestorm
+;;; Last modified Tue Dec 23 11:53:48 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -422,7 +422,7 @@ called with one argument of current file name whitout extension."
 	;(conv (format "convert -density %d - %s" (if math 250 100) target))
 	;(chain (list (format "dvips -E -o - texput|%s" conv)))
 	(conv (format "convert -alpha off - %s"  target))
-	(chain (list (format "dvips -x 3000 -E -o - texput|%s" conv)))
+	(chain (list (format "dvips -x 2000 -E -o - texput|%s" conv)))
 	(curproc (member prevname chain))
 	(w (get 'YaTeX-typeset-conv2image-chain 'win))
 	(pwd default-directory)
@@ -472,7 +472,8 @@ called with one argument of current file name whitout extension."
   (interactive)
   (save-excursion
     (let ((math (YaTeX-in-math-mode-p)))
-      (YaTeX-mark-environment)
+      (or (equal (YaTeX-inner-environment t) "document")
+	  (YaTeX-mark-environment))
       (if (and (featurep 'image) window-system)
 	  (let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer)))
 	    (put 'YaTeX-typeset-conv2image-chain 'math math)
@@ -799,7 +800,6 @@ by region."
   "Call xdvi -sourceposition to DVI corresponding to current main file"
   (interactive))
 
-(defvar YaTeX-cmd-displayline "/Applications/Skim.app/Contents/SharedSupport/displayline")
 (defun YaTeX-preview-jump-line ()
   "Call jump-line function of various previewer on current main file"
   (interactive)

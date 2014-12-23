@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 22 22:57:20 2014 on firestorm
+;;; Last modified Tue Dec 23 12:07:26 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -61,6 +61,8 @@ This default value is for X window system.")
 (defvar YaTeX-cmd-dia "dia")
 (defvar YaTeX-cmd-ooo "soffice")
 (defvar YaTeX-cmd-gs "gs")
+(defvar YaTeX-cmd-displayline
+  "/Applications/Skim.app/Contents/SharedSupport/displayline")
 (defvar YaTeX-cmd-edit-ps YaTeX-cmd-gimp)
 (defvar YaTeX-cmd-edit-pdf YaTeX-cmd-ooo)
 (defvar YaTeX-cmd-edit-ai YaTeX-cmd-inkscape)
@@ -70,7 +72,9 @@ This default value is for X window system.")
 (defvar tex-pdfview-command	;previewer command for your site
   (cond
    (YaTeX-dos	"acroread")
-   (YaTeX-macos	"open")
+   (YaTeX-macos	(cond
+		 ((file-executable-p YaTeX-cmd-displayline) "open -a Skim")
+		 (t "open")))
    (t		"evince"))
   "*Default PDF viewer command including its option.")
 
