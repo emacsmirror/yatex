@@ -1722,8 +1722,9 @@ instead.
 \end{figure*}
 
 includegraphics
-\usepackage{graphicx}  ... \includegraphics[Options]{graphicfile.eps}
+\usepackage[DRIVER]{graphicx}  ... \includegraphics[Options]{graphicfile.eps}
 Include graphics。Requires `graphicx' package.
+Typical [DRIVER] is [dvipdfmx].
 Possible [Options] are as follows.
 scale=X
 width=W
@@ -1734,6 +1735,36 @@ origin=RotationOrigin  (One of `c', `tl', `tr', `bl' or `br')
 bb=llx lly urx ury    (Specify BoundingBox)
 viewport=llx lly urx ury  (Rerative to BoundingBox)
 trim=left bottom right top
+
+[Example]
+% Preamble
+\usepackage[dvipdfmx]{graphicx}
+% document body
+\begin{figure}[h]\centering
+ \includegraphics[width=0.4\columnwidth,bb=0 0 400 300]{foo.jpg}
+ \caption{foo image}\label{foo-fig}
+\end{figure}
+Figure \ref{foo-fig} says that foo is foo.
+% YaTeX automatically inserts `bb=' line when you input \includegraphics{}
+% with completion.
+
+wrapfigure
+\begin{wrapfigure}[LINES]{POS}[OVH]{WIDTH} ...Images... \end{wrapfigure}
+LINES(Optional)	Number of narrow lines
+POS		One of `r l i o' (Right, Left, Inside, Outside)
+		R L I O for float
+OVH(Optional)	Overhangs for margin
+WIDTH		Width of figure
+
+[Example]
+% Preamble
+\usepackage{wrapfig}
+% body of document
+\begin{wrapfigure}{r}{4cm}
+ \includegraphics[width=3cm,bb=0 0 640 480,clip]{foo.jpg}
+ \caption{foo image}\label{foo-jpg}
+\end{wrapfigure}
+
 
 abstract
 \begin{abstract} ... \end{abstract}

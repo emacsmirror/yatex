@@ -507,29 +507,30 @@ Index
 
 
 
+
 
 Tag table:
-Node: Top259
-Node: Intro836
-Node: Installation1234
-Node: Setting up yahtml1515
-Node: Setting environments for weblint browsers and image viewers2306
-Node: Setting environment variables for WWW pages3002
-Node: Command Invocation3973
-Node: Completion4401
-Node: Jump5917
-Node: Changing and Deleting6397
-Node: Changing tags in pairs6681
-Node: Changing entities7176
-Node: URLencoding of strings within region7712
-Node: td-enclosure/tr-enclosure8013
-Node: CSS Support8979
-Node: CSS-class completion9205
-Node: Reread CSS definition10058
-Node: Customizations10333
-Node: All customizable variables10609
-Node: Hook variables14377
-Node: Copying14503
-Node: Concept Index15294
+Node: Top256
+Node: Intro833
+Node: Installation1231
+Node: Setting up yahtml1512
+Node: Setting environments for weblint browsers and image viewers2303
+Node: Setting environment variables for WWW pages2999
+Node: Command Invocation3970
+Node: Completion4398
+Node: Jump5914
+Node: Changing and Deleting6394
+Node: Changing tags in pairs6678
+Node: Changing entities7173
+Node: URLencoding of strings within region7709
+Node: td-enclosure/tr-enclosure8010
+Node: CSS Support8976
+Node: CSS-class completion9202
+Node: Reread CSS definition10055
+Node: Customizations10330
+Node: All customizable variables10606
+Node: Hook variables14374
+Node: Copying14500
+Node: Concept Index15291
 
 End tag table

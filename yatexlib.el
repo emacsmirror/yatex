@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries
 ;;; 
 ;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:44:06 2013 on firestorm
+;;; Last modified Sun Dec 21 23:55:30 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -287,8 +287,8 @@ history list variable."
       (delete-region (point) (progn (forward-sexp) (point)))
       (delete-blank-lines)
       (insert "(setq " name " '(\n")
-      (mapcar '(lambda (s)
-		 (insert (format "%s\n" (prin1-to-string s))))
+      (mapcar (function (lambda (s)
+			  (insert (format "%s\n" (prin1-to-string s)))))
 	      value)
       (insert "))\n\n")
       (delete-blank-lines)
@@ -481,7 +481,7 @@ corresponding real arguments ARGS."
 (defun point-end-of-line ()
   (save-excursion (end-of-line)(point)))
 
-
+(defun YaTeX-showup-buffer-bottom-most (x) (nth 3 (window-edges x)))
 ;;;###autoload
 (defun YaTeX-showup-buffer (buffer &optional func select)
   "Make BUFFER show up in certain window (but current window)
@@ -514,6 +514,9 @@ that window.  This function never selects minibuffer window."
 	  ;(other-window 1);This does not work properly on Emacs-19
 	  (select-window (get-lru-window))
 	  (switch-to-buffer buffer)
+	  (if (< (window-height) (/ YaTeX-default-pop-window-height 2))
+	      (enlarge-window (- YaTeX-default-pop-window-height
+				 (window-height))))
 	  (or select (select-window window)))
 	 (t				;if one-window
 	  (cond
@@ -780,6 +783,25 @@ If no such window exist, switch to buffer BUFFER."
 		     (throw 'found (car l)))
 		 (setq l (cdr l)))))))))
 
+(defun YaTeX-set-file-coding-system (code coding)
+  "Set current buffer's coding system according to symbol."
+  (cond ((null code)
+	 nil)
+	((boundp 'MULE)
+	 (set-file-coding-system  coding))
+	((and YaTeX-emacs-20 (boundp 'buffer-file-coding-system))
+	 (setq buffer-file-coding-system
+	       (or (and (fboundp 'set-auto-coding) buffer-file-name
+			(save-excursion
+			  (goto-char (point-min))
+			  (set-auto-coding buffer-file-name (buffer-size))))
+		   coding)))
+	((featurep 'mule)
+	 (set-file-coding-system coding))
+	((boundp 'NEMACS)
+	 (make-local-variable 'kanji-fileio-code)
+	 (setq kanji-fileio-code code))))
+
 (defun YaTeX-insert-file-contents (file visit &optional beg end)
   (cond
    ((and (string< "19" emacs-version) (not (featurep 'xemacs)))
@@ -844,9 +866,9 @@ NULL includes null string in a list."
 (fset 'YaTeX-last-key
       (if (fboundp 'win:last-key)
 	  'win:last-key
-	'(lambda () (if (boundp 'last-command-char)
-			last-command-char
-		      last-command-event))))
+	(function (lambda () (if (boundp 'last-command-char)
+				 last-command-char
+			       last-command-event)))))
 (defun YaTeX-switch-to-window ()
   "Switch to windows.el's window decided by last pressed key."
   (interactive)
@@ -1464,9 +1486,10 @@ This function is a makeshift for YaTeX and yahtml."
 		    (face-font 'bold)
 		    "giveup!"))
 	    sz medium-i bold-r)
-	(string-match
-	 "^-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-\\(\\([0-9]+\\)\\)" df)
-	(setq sz (or (match-string 1 df) "16"))
+	(if (string-match
+	     "^-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-[^-]*-\\(\\([0-9]+\\)\\)" df)
+	    (setq sz (or (match-string 1 df) "16"))
+	  (setq sz "16"))
 	(setq medium-i (format "-medium-i-[^-]+--%s" sz)
 	      bold-r (format "-bold-r-[^-]+--%s" sz))
 	(while flist

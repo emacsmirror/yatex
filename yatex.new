@@ -1,6 +1,19 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.78	Drag&Dropサポートを追加。
+	tabular環境内で2連続以上Tabで、1カラム進む機能を追加。
+	=== yatex ===
+	主な外部コマンド名を変数化。
+	[prefix] t d の直後のデフォルトヴューアはPDF用のものに。
+	「%#!コマンド -オプション」のときは親ファイル指定なしと判定。
+	地の段落での [prefix] t g でヴューアの forward-search を試みる。
+	[prefix] t e の環境タイプセットの結果を可能なら画像に。
+	[prefix] t e を環境外で呼んだ場合はパラグラフをタイプセット。
+	[prefix] t e を領域活性状態で呼んだらその領域をタイプセット。
+	=== yahtml ===
+	table, ul, ol, dl 内で2連続以上Tabで、1カラム進む機能を追加。
+
 1.77	last-command-char 廃止対策を追加。
 	=== yatex ===
 	%#DVIPDF でdviからpdfへの変換コマンドを指定可能に。

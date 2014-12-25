@@ -8,7 +8,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Fri May 11 15:40:49 2012 on firestorm
+@c Last modified Fri Dec 26 00:09:22 2014 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -419,6 +419,8 @@ La@TeX{} related process.
 	@dots{} Command line for makeindex ([prefix] t i)
  @item %#MAKEINDEX
 	@dots{} Command line for bibtex ([prefix] t b)
+ @item %#DVIPDF
+	@dots{} Command line for dvipdf(mx) ([prefix] t b)
 @end table
 
 If you want to invoke ``makeidx hogehoge'' to update index,
@@ -1690,6 +1692,47 @@ Default makeindex command (@code{"makeindex"} (@code{"makeind"} on MS-DOS))
 
 @defvar YaTeX-dvipdf-command
 Default command name to convert .dvi to PDF (@code{"dvipdfmx"})
+@end defvar
+
+@defvar YaTeX-cmd-gimp
+Command name of GIMP (code{"gimp"})
+@end defvar
+@defvar YaTeX-cmd-tgif
+Command name of tgif (code{"tgif"})
+@end defvar
+@defvar YaTeX-cmd-inkscape
+Command name of Inkscape (code{"inkscape"})
+@end defvar
+@defvar YaTeX-cmd-dia
+Command name of Dia (code{"dia"})
+@end defvar
+@defvar YaTeX-cmd-ooo
+Command name of OpenOffice.org/LibreOffice (code{"soffice"})
+@end defvar
+@defvar YaTeX-cmd-gs
+Command name of Ghostscript (code{"gs"})
+@end defvar
+@defvar YaTeX-cmd-dvips
+Command name of dvips (code{"dvips"})
+@end defvar
+@defvar YaTeX-cmd-displayline
+Command name of displayline
+(code{"/Applications/Skim.app/Contents/SharedSupport/displayline"})
+@end defvar
+@defvar YaTeX-cmd-edit-ps
+Command name for editing PostScript files(Value of code{"YaTeX-cmd-gimp"})
+@end defvar
+@defvar YaTeX-cmd-edit-pdf
+Command name for editing PDF files(Value of code{"YaTeX-cmd-ooo"})
+@end defvar
+@defvar YaTeX-cmd-edit-ai
+Command name for editing `.ai' files(Value of code{"YaTeX-cmd-inkscape"})
+@end defvar
+@defvar YaTeX-cmd-edit-svg
+Command name for editing SVG files(Value of code{"YaTeX-cmd-inkscape"})
+@end defvar
+@defvar YaTeX-cmd-edit-images
+Command name for editing image files(Value of code{"YaTeX-cmd-gimp"})
 @end defvar
 
 @defvar YaTeX-need-nonstop

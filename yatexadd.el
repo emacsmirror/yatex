@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
-;;; yatexadd.el rev.20
-;;; (c)1991-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:43:00 2013 on firestorm
+;;; yatexadd.el rev.21
+;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sat Dec 20 14:55:10 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -24,7 +24,7 @@ Notice that this function refers the let-variable `env' in
 YaTeX-make-begin-end."
   (let ((width "") bars (rule "") (and "") (j 1) loc ans (hline "\\hline"))
     (if (string= YaTeX-env-name "tabular*")
-	(setq width (concat "{" (read-string "Width: ") "}")))
+	(setq width (concat "{" (YaTeX:read-length "Width: ") "}")))
     (setq loc (YaTeX:read-position "tb")
 	  bars (string-to-int
 		(read-string "Number of columns(0 for default format): " "3")))
@@ -99,6 +99,15 @@ YaTeX-make-begin-end."
   (let ((pos (YaTeX:read-oneof oneof)))
     (if (string= pos "")  "" (concat "[" pos "]"))))
 
+(defun YaTeX:read-length (prompt)
+  "Read a LaTeX dimensional parameter with magnifying numerics prepend."
+  (let ((minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
+	(delim "-0-9*+/.")
+	(tbl (append YaTeX:style-parameters-local
+		     YaTeX:style-parameters-private
+		     YaTeX:style-parameters-default)))
+    (YaTeX-completing-read-or-skip prompt tbl nil)))
+
 ;;;
 ;; Functions for figure environemnt
 ;;;
@@ -160,7 +169,7 @@ YaTeX-make-begin-end."
   (if (fboundp 'YaTeX-toggle-math-mode)
       (YaTeX-toggle-math-mode t)))		;force math-mode ON.
 
-(mapcar '(lambda (f) (fset f 'YaTeX:equation))
+(mapcar (function (lambda (f) (fset f 'YaTeX:equation)))
 	'(YaTeX:eqnarray YaTeX:eqnarray* YaTeX:align YaTeX:align*
 	  YaTeX:split YaTeX:multline YaTeX:multline* YaTeX:gather YaTeX:gather*
 	  YaTeX:aligned* YaTeX:gathered YaTeX:gathered*
@@ -178,7 +187,7 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:minipage ()
   (concat (YaTeX:read-position "cbt")
-	  "{" (read-string "Width: ") "}"))
+	  "{" (YaTeX:read-length "Width: ") "}"))
 
 (defun YaTeX:thebibliography ()
   (setq YaTeX-section-name "bibitem")
@@ -186,6 +195,18 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:multicols ()
   (concat "{" (read-string "Number of columns: ") "}"))
+
+
+;; wrapfig.sty
+(defun YaTeX:wrapfigure ()
+  (YaTeX-help "wrapfigure")
+  (concat
+   (let ((lines (YaTeX-read-string-or-skip "Wrap Lines(Optional): ")))
+     (if (string< "" lines)
+	 (concat "[" lines "]")))
+   "{" (YaTeX:read-oneof "rlioRLIO" t) "}"
+   "{" (YaTeX:read-length "Image width: ") "}"))
+ 
 
 ;;;
 ;;Sample functions for section-type command.
@@ -204,7 +225,7 @@ YaTeX-make-begin-end."
     (concat (YaTeX:read-coordinates "Dimension")
 	    (YaTeX:read-position "lsrtb")))
    (t
-    (let ((width (read-string "Width: ")))
+    (let ((width (YaTeX:read-length "Width: ")))
       (if (string< "" width)
 	  (progn
 	    (or (equal (aref width 0) ?\[)
@@ -221,7 +242,7 @@ YaTeX-make-begin-end."
   (YaTeX:read-position "tbc"))
 (defun YaTeX::parbox (argp)
   (cond
-   ((= argp 1) (read-string "Width: "))
+   ((= argp 1) (YaTeX:read-length "Width: "))
    ((= argp 2) (read-string "Text: "))))
 
 (defun YaTeX::dashbox ()
@@ -1248,6 +1269,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
       
 
 (fset 'YaTeX::pageref 'YaTeX::ref)
+(fset 'YaTeX::cref 'YaTeX::ref)
 (defun YaTeX::tabref (argp)	    ; For the style file of IPSJ journal
   (YaTeX::ref
    argp nil nil
@@ -1575,6 +1597,7 @@ and print them to standard output."
     ("\\tabcolsep")
     ("\\textheight")
     ("\\textwidth")
+    ("\\columnwidth")
     ("\\topmargin")
     ("\\topsep")
     ("\\topskip")
@@ -1708,7 +1731,9 @@ and print them to standard output."
     (save-excursion
       (YaTeX-visit-main t)
       (let*((insert-default-directory)
-	    (file (read-file-name (or prompt "Input file: ") "")))
+	    (default (and (boundp 'old) (stringp old) old))
+	    (file (read-file-name (or prompt "Input file: ") ""
+				  default nil default)))
 	(setq file (substring file 0 (string-match "\\.tex$" file))))))))
 
 (fset 'YaTeX::input 'YaTeX::include)
@@ -1903,8 +1928,8 @@ and print them to standard output."
 (defun YaTeX:includegraphics ()
   "Add-in for \\includegraphics's option"
   (let (width height (scale "") angle str)
-    (setq width (YaTeX-read-string-or-skip "Width: ")
-	  height (YaTeX-read-string-or-skip "Height: "))
+    (setq width (YaTeX:read-length "Width: ")
+	  height (YaTeX:read-length "Height: "))
     (or (string< "" width) (string< "" height)
 	(setq scale (YaTeX-read-string-or-skip "Scale: ")))
     (setq angle (YaTeX-read-string-or-skip "Angle(0-359): "))
@@ -1912,28 +1937,49 @@ and print them to standard output."
 	  (mapconcat
 	   'concat
 	   (delq nil
-		 (mapcar '(lambda (s)
+		 (mapcar (function (lambda (s)
 			    (and (stringp (symbol-value s))
 				 (string< "" (symbol-value s))
-				 (format "%s=%s" s (symbol-value s))))
+				 (format "%s=%s" s (symbol-value s)))))
 			 '(width height scale angle)))
 	   ","))
     (if (string= "" str) ""
       (concat "[" str "]"))))
 
-(defun YaTeX::includegraphics (argp)
+(defun YaTeX::get-boundingbox (file)
+  "Return the bound box as a string
+This function relies on gs(ghostscript) command installed."
+  (let ((str (YaTeX-command-to-string
+	      (format "%s -sDEVICE=bbox -dBATCH -dNOPAUSE %s"
+		      YaTeX-cmd-gs file))))
+    (if (string-match
+	 "%%BoundingBox:\\s \\([0-9]+\\s [0-9]+\\s [0-9]+\\s [0-9]+\\)"
+	 str)
+	(substring str (match-beginning 1) (match-end 1)))))
+
+(defun YaTeX::includegraphics (argp &optional file doclip)
   "Add-in for \\includegraphics"
-  (let ((imgfile (YaTeX::include argp "Image File: "))
+  (let*((imgfile (or file (YaTeX::include argp "Image File: ")))
+	(imgfilepath
+	 (save-excursion
+	   (YaTeX-visit-main t)
+	   (expand-file-name imgfile default-directory)))
 	(case-fold-search t) info bb noupdate needclose c)
-    (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\)$" imgfile)
-	 (file-exists-p imgfile)
+    (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\|pdf\\)$" imgfile)
+	 (file-exists-p imgfilepath)
 	 (or (fboundp 'yahtml-get-image-info)
 	     (progn
 	       (load "yahtml" t) (featurep 'yahtml))) ;(require 'yahtml nil t)
-	 (setq info (yahtml-get-image-info imgfile))
-	 (car info)			;if has width value
-	 (car (cdr info))		;if has height value
-	 (setq bb (format "bb=%d %d %d %d" 0 0 (car info) (car (cdr info))))
+	 (if (string-match "\\.pdf" imgfile)
+	     (and
+	      (setq info (YaTeX::get-boundingbox imgfilepath))
+	      (stringp info)
+	      (string< "" info)
+	      (setq bb (format "bb=%s" info)))
+	   (setq info (yahtml-get-image-info imgfilepath))
+	   (car info)			;if has width value
+	   (car (cdr info))		;if has height value
+	   (setq bb (format "bb=%d %d %d %d" 0 0 (car info) (car (cdr info)))))
 	 (save-excursion
 	   (cond
 	    ((and (save-excursion
@@ -1947,17 +1993,25 @@ and print them to standard output."
 	     (replace-match bb))
 	    (noupdate nil)
 	    ((and (match-beginning 1)
-		  (prog2
-		      (message "Insert `%s'?  Y)es N)o C)yes+`clip': " bb)
-		      (memq (setq c (read-char)) '(?y ?Y ?\  ?c ?C))
-		    (message "")))
+		  (or doclip
+		      (prog2
+			  (message "Insert `%s'?  Y)es N)o C)yes+`clip': " bb)
+			  (memq (setq c (read-char)) '(?y ?Y ?\  ?c ?C))
+			(setq doclip (memq c '(?c ?C)))
+			(message ""))))
 	     (goto-char (match-end 0))
-	     (message "")
+	     (message "`bb=' %s"
+		      (format
+		       (if YaTeX-japan
+			   "の値はファイル名の上で `%s' を押してファイル名を再入力して更新できます。"
+			 "values can be update by typing `%s' on file name.")
+		       (key-description
+			(car (where-is-internal 'YaTeX-change-*)))))
 	     (if (looking-at "\\[") (forward-char 1)
 	       (insert-before-markers "[")
 	       (setq needclose t))
 	     (insert-before-markers bb)
-	     (if (memq c '(?c ?C)) (insert-before-markers ",clip"))
+	     (if doclip (insert-before-markers ",clip"))
 	     (if needclose (insert-before-markers "]")
 	       (or (looking-at "\\]") (insert-before-markers ","))))
 	    (t (YaTeX-push-to-kill-ring bb)))))
@@ -1977,9 +2031,9 @@ and print them to standard output."
   '(("version") ("plext") ("url") ("fancybox") ("pifont") ("longtable")
     ("ascmac") ("bm") ("graphics") ("graphicx") ("alltt") ("misc") ("eclbkbox")
     ("amsmath") ("amssymb") ("xymtex") ("chemist")
-    ("a4j") ("array") ("epsf") ("color") ("epsfig") ("floatfig")
+    ("a4j") ("array") ("epsf") ("color") ("xcolor") ("epsfig") ("floatfig")
     ("landscape") ("path") ("supertabular") ("twocolumn")
-    ("latexsym") ("times") ("makeidx"))
+    ("latexsym") ("times") ("makeidx") ("geometry") ("type1cm"))
   "Default completion table for arguments of \\usepackage")
 
 (defvar YaTeX::usepackage-alist-private nil
@@ -2015,9 +2069,9 @@ and print them to standard output."
 (defun YaTeX::maskbox (argp)
   (cond
    ((equal argp 1)
-    (read-string "Width: "))
+    (YaTeX:read-length "Width: "))
    ((equal argp 2)
-    (read-string "Height: "))
+    (YaTeX:read-length "Height: "))
    ((equal argp 3)
     (let (c)
       (while (not (memq c '(?A ?B ?C ?D ?E ?F ?G ?H ?I ?J ?K)))

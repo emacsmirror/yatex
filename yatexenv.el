@@ -1,6 +1,6 @@
 ;;; yatexenv.el --- YaTeX environment-specific functions
 ;;; (c) 1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:43:10 2013 on firestorm
+;;; Last modified Mon Dec 22 12:49:03 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -12,24 +12,27 @@
 (defun YaTeX-array-what-column-internal ()
   "Return the cons of matching column and its title of array environment.
 When calling from a program, make sure to be in array/tabular environment."
-  (let ((p (point)) beg eot bor (nlptn "\\\\\\\\") (andptn "[^\\]&")
+  (let ((p (point)) bot beg eot bor eoll (nlptn "\\\\\\\\") (andptn "[^\\]&")
 	(n 0) j
 	(firsterr "This line might be the first row."))
     (save-excursion
       (YaTeX-beginning-of-environment)
+      (setq eoll (save-excursion	;end of logical line
+		   (YaTeX-goto-corresponding-environment) (point)))
       (search-forward "{" p) (up-list 1)
       (search-forward "{" p) (up-list 1)
       ;;(re-search-forward andptn p)
-      (while (progn (search-forward "&" p)
+      (setq bot (point))		;beginning of tabular
+      (while (progn (search-forward "&" eoll)
 		    (equal (char-after (1- (match-beginning 0))) ?\\ )))
       (setq beg (1- (point)))		;beg is the point of the first &
-      (or (re-search-forward nlptn p t)
+      (or (re-search-forward nlptn eoll t)
 	  (error firsterr))
       (setq eot (point))		;eot is the point of the first \\
       (goto-char p)
-      (or (re-search-backward nlptn beg t)
-	  (error firsterr))
-      (setq bor (point))		;bor is the beginning of this row.
+      (setq bor (if (re-search-backward nlptn bot 1)
+		     (point)		;bor is the beginning of this row.
+		  bot))
       (while (< (1- (point)) p)
 	(if (equal (following-char) ?&)
 	    (forward-char 1)
@@ -54,8 +57,8 @@ When calling from a program, make sure to be in array/tabular environment."
 	(setq j (1- j)))
       (skip-chars-forward "\\s ")
       (list n
-	    (buffer-substring
-	     (point)
+	    (YaTeX-buffer-substring
+	     (progn (skip-chars-forward "\n \t") (point))
 	     (progn
 	       (re-search-forward (concat andptn "\\|" nlptn) eot)
 	       (goto-char (match-beginning 0))
@@ -170,6 +173,7 @@ Return the list of (No.ofCols PointEndofFormat)"
 
 (fset 'YaTeX-intelligent-newline-array 'YaTeX-intelligent-newline-tabular)
 (fset 'YaTeX-intelligent-newline-supertabular 'YaTeX-intelligent-newline-tabular)
+(fset 'YaTeX-intelligent-newline-longtable 'YaTeX-intelligent-newline-tabular)
 
 (defun YaTeX-intelligent-newline-align ()
   "Intelligent newline function for align.
@@ -197,10 +201,11 @@ Count the number of & in the first align line and insert that many &s."
     (YaTeX-indent-line)))
 
 (mapcar
- '(lambda (s)
+ (function
+  (lambda (s)
     (fset (intern (concat  "YaTeX-intelligent-newline-"
 			   (symbol-name s)))
-	  'YaTeX-intelligent-newline-align))
+	  'YaTeX-intelligent-newline-align)))
  '(align* flalign  flalign* matrix pmatrix bmatrix Bmatrix vmatrix Vmatrix
    cases eqnarray eqnarray* alignat alignat*))
 

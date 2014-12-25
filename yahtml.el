@@ -1,9 +1,9 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2013 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon Apr  1 22:42:29 2013 on firestorm
+;;; Last modified Mon Dec 22 22:17:24 2014 on firestorm
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.76"
+(defconst yahtml-revision-number "1.77"
   "Revision number of running yahtml.el")
 
 ;;; Commentary:
@@ -344,8 +344,8 @@ normal and region mode.  To customize yahtml, user should use this function."
     (YaTeX-define-key "l" 'yahtml-insert-tag map)
     (YaTeX-define-key "L" 'yahtml-insert-tag-region map)
     (YaTeX-define-key "m" 'yahtml-insert-single map)
-    (YaTeX-define-key "n" '(lambda () (interactive) (insert (if yahtml-prefer-upcases "<BR>" "<br>"))) map)
-    (YaTeX-define-key "-" '(lambda () (interactive) (insert (if yahtml-prefer-upcases "<HR>" "<hr>") "\n")) map)
+    (YaTeX-define-key "n" (function(lambda () (interactive) (insert (if yahtml-prefer-upcases "<BR>" "<br>")))) map)
+    (YaTeX-define-key "-" (function(lambda () (interactive) (insert (if yahtml-prefer-upcases "<HR>" "<hr>") "\n"))) map)
     (YaTeX-define-key "p" 'yahtml-insert-p map)
     (if YaTeX-no-begend-shortcut
 	(progn
@@ -437,6 +437,7 @@ normal and region mode.  To customize yahtml, user should use this function."
     ("h1") ("h2") ("h3") ("h4") ("h5") ("h6")
     ;; ("p") ;This makes indentation screwed up!
     ("style") ("script") ("noscript") ("div") ("object") ("ins") ("del")
+    ("option")
     ))
 
 (if yahtml-html4-strict
@@ -660,6 +661,12 @@ T for static indentation depth")
 	      (font-lock-mode 1) ;;Why should I fontify again???
 	      ;; in yatex-mode, there's no need to refontify...
 	      (font-lock-fontify-buffer)))))
+  ;; +dnd for X11 w/ emacs23+
+  (and window-system (featurep 'dnd)
+       (set (make-local-variable 'dnd-protocol-alist)
+	    (cons (cons "^\\(file\\|https?\\):" 'yahtml-dnd-handler)
+		  dnd-protocol-alist)))
+
   (set-syntax-table yahtml-syntax-table)
   (use-local-map yahtml-mode-map)
   (YaTeX-read-user-completion-table)
@@ -811,11 +818,12 @@ T for static indentation depth")
 	   (cons "typeface" yahtml-menu-map-typeface)))))
   (if (featurep 'xemacs)
       (add-hook 'yahtml-mode-hook
-		'(lambda ()
+		(function
+		 (lambda ()
 		   (or (assoc "yahtml" current-menubar)
 		       (progn
 			 (set-buffer-menubar (copy-sequence current-menubar))
-			 (add-submenu nil yahtml-menu-map))))))))
+			 (add-submenu nil yahtml-menu-map)))))))))
 
 ;;; ----------- Completion ----------
 (defvar yahtml-last-begend "html")
@@ -1010,7 +1018,7 @@ If optional argument FILE is specified collect labels in FILE."
 	  (with-output-to-temp-buffer "*Completions*"
 	    (princ "Possible completinos are:\n")
 	    (princ
-	     (mapconcat '(lambda (x) x)  (funcall listfunc) "\n")))
+	     (mapconcat (function(lambda (x) x))  (funcall listfunc) "\n")))
 	(delete-region (point) beg)
 	(insert cmpl)))
      ((null cmpl)
@@ -1217,8 +1225,8 @@ Not used yet.")
 (defun yahtml-make-style-parameter (proplist)
   "Make CSS property definitions in style attribute."
   (mapconcat
-   '(lambda (x) (if (and (cdr x) (string< "" (cdr x)))
-		    (format "%s: %s;" (car x) (cdr x))))
+   (function (lambda (x) (if (and (cdr x) (string< "" (cdr x)))
+			     (format "%s: %s;" (car x) (cdr x)))))
    (delq nil proplist)
    " "))
 
@@ -1710,7 +1718,8 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
     (while l
       (setq mess (format "%s %c" mess (car (car l)) (cdr (car l)))
 	    l (cdr l)))
-    (message "Char-entity reference:  %s  SPC=& RET=&; Other=&#..;" mess)
+    (message "Char-entity reference:  %s  SPC=& RET=&; BS=%s Other=&#..;"
+	     mess (if YaTeX-japan "’¼‘O‚Ì•¶Žš" "Preceding-Char"))
     (setq c (read-char))
     (cond
      ((equal c (car-safe (assoc c list)))
@@ -1720,7 +1729,11 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
       (forward-char -1))
      ((equal c ? )
       (insert ?&))
-     (t (insert (format "&#%d;" c))))))
+     ((and (memq c '(127 8))
+	   (setq c (preceding-char))
+	   (delete-backward-char 1)
+	   nil))			;Fall through to the next 't block
+     (t (insert (format "&#x%x;" c))))))
 
 (defun yahtml:!--\#include ()
   (let ((file (yahtml-read-parameter "file" "")))
@@ -2487,10 +2500,61 @@ Interactive prefix argument consults enclosing element other than td."
 ;	(apply 'YaTeX-saved-indent-new-comment-line (if soft (list soft))))
 ;    (fset 'move-to-column yahtml-saved-move-to-column)))
 
+;;;
+;;; ---------- move forward/backward field ----------
+;;;
+(defun yahtml-element-path ()
+  "Return the element path from <body> at point as a list"
+  (let (path elm)
+    (save-excursion
+      (while (and (YaTeX-beginning-of-environment)
+		  (looking-at (concat "<\\(" yahtml-command-regexp "\\)\\>"))
+		  (not (string= (setq elm (downcase (YaTeX-match-string 1)))
+				"body")))
+	(setq path (cons elm path)
+	      elm nil))
+      (and elm (setq path (cons elm path))))))
+
+(defun yahtml-forward-field (arg)
+  "Move ARGth forward cell to table element.
+ENVINFO is a cons of target element name and its beginning point."
+  (interactive "p")
+  (let (inenv elm path sibs)
+    (cond
+     ((< arg 0) (yahtml-backward-field (- arg)))
+     ((= arg 0) nil)
+     ((and (setq path (nreverse (yahtml-element-path)))
+	   (catch 'sibling
+	     (while path
+	       (if (setq elm (car-safe
+			      (member (car path) '("td" "th" "li" "dt" "dd"))))
+		   (throw 'sibling elm))
+	       (setq path (cdr path)))))
+      (setq inenv (YaTeX-in-environment-p elm)
+	    sibs (cdr (assoc elm '(("td" . "td\\|th")
+				   ("th" . "td\\|th")
+				   ("li" . "li")
+				   ("dt" . "dt\\|dd")
+				   ("dd" . "dt\\|dd")))))
+      (goto-char (cdr inenv))
+      (while (>= (setq arg (1- arg)) 0)
+	(yahtml-goto-corresponding-begend)
+	(if (looking-at "<") (forward-list 1))
+	(skip-chars-forward "^<"))
+      (while (looking-at "\\s \\|\\(</\\)")
+	(if (match-beginning 1) (forward-list 1)
+	  (skip-chars-forward "\n\t ")))
+      (forward-list 1) ;; step into environment
+      (skip-chars-forward " \t\n")
+      (if (looking-at (concat "<\\(" sibs "\\)\\>"))
+	  (forward-list 1))
+      ))))
+
+
 ;;; 
 ;;; ---------- indentation ----------
 ;;; 
-(defun yahtml-indent-line ()
+(defun yahtml-indent-line-1 ()
   "Indent a line (faster wrapper)"
   (interactive)
   (let (indent)
@@ -2512,6 +2576,18 @@ Interactive prefix argument consults enclosing element other than td."
 		(YaTeX-reindent indent)))
 	  (and (bolp) (skip-chars-forward " \t")))
       (yahtml-indent-line-real))))
+
+(defun yahtml-indent-line ()
+  "Indent a line (Second level wrapper).
+See also yahtml-indent-line-1 and yahtml-indent-line-real."
+  (interactive)
+  (let ((cc (current-column)) (p (point)))
+    (yahtml-indent-line-1)
+    (and (= cc (current-column))
+	 (= p (point))
+	 (equal last-command 'yahtml-indent-line)
+	 (yahtml-forward-field 1))))
+	   
 
 (defun yahtml-this-indent ()
   (let ((envs "[uod]l\\|table\\|[ht][rhd0-6]\\|select\\|blockquote\\|center\\|menu\\|dir\\|d[td]\\|li")
@@ -2775,7 +2851,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 
 (defun yahtml-intelligent-newline-select ()
   (interactive)
-  (insert "<" (if yahtml-prefer-upcases "OPTION" "option") "> ")
+  (yahtml-insert-single (if yahtml-prefer-upcases "OPTION" "option"))
   (yahtml-indent-line))
 
 (defun yahtml-intelligent-newline-style ()
@@ -3121,6 +3197,33 @@ If no matches found in yahtml-path-url-alist, return raw file name."
   (interactive "P")
   (font-lock-mode -1)			;is stupid, but sure.
   (font-lock-mode 1))
+
+;;;
+;; Drag-n-Drop
+;;;
+(defun yahtml-dnd-handler (uri action)
+  "DnD handler for yahtml mode
+Convert image URI to img-src and others to a-href."
+  (let*((file (dnd-get-local-file-name uri))
+	(path (if file (file-relative-name file) uri))
+	(case-fold-search t)
+	(geom ""))
+    (cond
+     ((memq action '(copy link move private))
+      (cond
+       ((string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\|tiff?\\)$" path)
+	(if file
+	    (setq geom (yahtml-get-image-info path)
+		  geom (if (car geom)
+			   (apply 'format " width=\"%s\" height=\"%s\"" geom)
+			 "")))
+	(insert (format "<img src=\"%s\" alt=\"%s\"%s>"
+			path (file-name-nondirectory path) geom)))
+       
+       (t (insert (format "<a href=\"%s\"></a>" path))
+	  (forward-char -4))))
+     (t (message "No handler for action `%s'" action))))
+  action)
 
 (run-hooks 'yahtml-load-hook)
 (provide 'yahtml)

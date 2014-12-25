@@ -1,7 +1,7 @@
 ;;; yatexhie.el --- YaTeX hierarchy browser
 ;;; 
 ;;; (c)1995-2013 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Apr  1 22:43:34 2013 on firestorm
+;;; Last modified Sun Dec 21 14:05:20 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -75,8 +75,9 @@ If FILE is nil, beginning with current buffer's file."
 			(YaTeX-get-builtin "!")
 			(setq YaTeX-parent-file parent))))
 	      (cons (buffer-file-name (current-buffer))
-		    (mapcar '(lambda (f) 	;return value
-			       (YaTeX-document-hierarchy f basedir))
+		    (mapcar (function 		;return value
+			     (lambda (f)
+			       (YaTeX-document-hierarchy f basedir)))
 			    (YaTeX-all-included-files))))))
     (message "Parsing [%s]...done" (file-name-nondirectory file))))
 
