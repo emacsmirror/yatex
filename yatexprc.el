@@ -1,8 +1,8 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
-;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Dec 26 00:50:41 2014 on firestorm
-;;; $Id: yatexprc.el,v 4b34515f7bbb 2014-12-26 00:59 +0900 yuuji $
+;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Fri Dec 26 01:07:52 2014 on firestorm
+;;; $Id$
 
 ;;; Code:
 ;(require 'yatex)
