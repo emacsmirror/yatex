@@ -1,7 +1,7 @@
 ;;; yatex19.el -- YaTeX facilities for Emacs 19 or later
 ;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
 ;;; Last modified Sun Dec 21 14:03:48 2014 on firestorm
-;;; $Id: yatex19.el,v 1.78 2014/12/25 15:11:02 yuuji Rel $
+;;; $Id$
 
 ;;; Code:
 ;(require 'yatex)

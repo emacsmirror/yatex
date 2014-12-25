@@ -2,7 +2,7 @@
 ;;; 
 ;;; (c)1994,1998,2004,2014 by HIROSE Yuuji.[yuuji@yatex.org]
 ;;; Last modified Sun Dec 21 22:55:07 2014 on firestorm
-;;; $Id: yatexhlp.el,v 1.78 2014/12/25 15:11:02 yuuji Rel $
+;;; $Id$
 
 ;;; Code:
 (let ((help-file (concat "YATEXHLP."

@@ -1,7 +1,7 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
 ;;; (c)2014 by HIROSE Yuuji.[yuuji@yatex.org]
 ;;; Last modified Tue Dec 23 12:44:35 2014 on firestorm
-;;; $Id: yatex23.el,v 1.78 2014/12/25 15:11:02 yuuji Rel $
+;;; $Id$
 
 ;;; Code:
 (defvar YaTeX-dnd-auto-figure "figure"
