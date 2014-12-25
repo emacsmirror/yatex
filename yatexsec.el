@@ -2,7 +2,7 @@
 ;;; 
 ;;; (c) 1994-2013 by HIROSE Yuuji [yuuji@yatex.org]
 ;;; Last modified Sun Dec 21 14:16:35 2014 on firestorm
-;;; $Id$
+;;; $Id: yatexsec.el,v 1.78 2014/12/25 15:11:02 yuuji Rel $
 
 ;;; Code:
 (defvar YaTeX-sectioning-level

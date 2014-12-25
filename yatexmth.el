@@ -2,7 +2,7 @@
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji [yuuji@yatex.org]
 ;;; Last modified Fri Jul  5 23:28:28 2013 on firestorm
-;;; $Id$
+;;; $Id: yatexmth.el,v 1.78 2014/12/25 15:11:02 yuuji Rel $
 
 ;;; Commentary:
 ;;; [Customization guide]

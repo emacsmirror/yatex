@@ -2,7 +2,7 @@
 ;;; 
 ;;; (c)1995-2013 by HIROSE Yuuji [yuuji@yatex.org]
 ;;; Last modified Sun Dec 21 14:05:20 2014 on firestorm
-;;; $Id$
+;;; $Id: yatexhie.el,v 1.78 2014/12/25 15:11:02 yuuji Rel $
 
 ;;; Code:
 ;; ----- Customizable variables -----

@@ -2,7 +2,7 @@
 
 ;;; (c)1991-1995,1999,2000 by HIROSE Yuuji.[yuuji@yatex.org]
 ;;; Last modified Sun Dec 21 14:04:49 2014 on firestorm
-;;; $Id$
+;;; $Id: yatexgen.el,v 1.78 2014/12/25 15:11:02 yuuji Rel $
 
 ;;; Code:
 (require 'yatex)

@@ -3,7 +3,7 @@
 # Create new HTML file referring other HTML file in the same directory.
 # (C)2010 by HIROSE Yuuji [yuuji@yatex.org]
 # Last modified Mon Sep  6 16:16:33 2010 on firestorm
-# $Id$
+# $Id: newpage.rb,v 33c8875f52f9 2012-01-12 12:26 +0900 yuuji $
 # http://www.yatex.org
 # Example:
 #	newpage.rb		Create new index.html by copying template.

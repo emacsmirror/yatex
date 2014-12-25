@@ -1,8 +1,8 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 25 22:12:33 2014 on firestorm
-;;; $Id$
+;;; Last modified Fri Dec 26 00:50:41 2014 on firestorm
+;;; $Id: yatexprc.el,v 4b34515f7bbb 2014-12-26 00:59 +0900 yuuji $
 
 ;;; Code:
 ;(require 'yatex)
@@ -462,7 +462,7 @@ called with one argument of current file name whitout extension."
 		       (get 'YaTeX-typeset-process 'ppcmd))))
 	;; After all chain executed, display image in current window
 	(cond
-	 ((and nil (featurep 'image) window-system)
+	 ((and (featurep 'image) window-system)
 	  ;; If direct image displaying available in running Emacs,
 	  ;; display target image into the next window in Emacs.
 	  (select-window w)

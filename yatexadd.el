@@ -2,7 +2,7 @@
 ;;; yatexadd.el rev.21
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
 ;;; Last modified Sat Dec 20 14:55:10 2014 on firestorm
-;;; $Id$
+;;; $Id: yatexadd.el,v 1.78 2014/12/25 15:25:17 yuuji Exp $
 
 ;;; Code:
 ;;;

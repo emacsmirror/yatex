@@ -322,17 +322,17 @@ HTML屋はCSS(Cascading Style Sheets)のクラス名を補完入力することができます。
 力確定のときにリターンキー(またはC-m)ではなく、C-jを押せばclass補完入力を
 キャンセルできます。たとえば
 
-      [prefix] l                    行内タグ補完を起動
-         (または[prefix] l SPC)
+      `[prefix] l'                    行内タグ補完を起動
+         (または`[prefix] l SPC')
       tt                                  <tt></tt>をいれたいのでttと入力
-      C-m
+      `C-m'
 
 とした場合は続いて class= と補完プロンプトが出ますが、
 
-      [prefix] l                    行内タグ補完を起動
-         (または[prefix] l SPC)
+      `[prefix] l'                    行内タグ補完を起動
+         (または`[prefix] l SPC')
       tt                                  <tt></tt>をいれたいのでttと入力
-      C-j
+      `C-j'
 
 と最後を `C-j' で入力した場合は class 補完プロンプトは出ません。
 
@@ -511,35 +511,36 @@ File: yahtmlj, Node: Concept Index, Prev: Copying, Up: Top
 * カスタマイズ[かすたまいす]:   Customizations.         4.
 * キーアサイン[きいあさいん]:   Customizations.         4.
 * Demacs:                       Intro.                  4.
-* HTML屋[HTMLや]:               Intro.                  4.
+* HTMLｮ[HTMLや]:               Intro.                  4.
 * LaTeX:                        Intro.                  4.
 * Mule:                         Intro.                  4.
 
 
 
+
 
 Tag table:
-Node: Top260
-Node: Intro729
-Node: Installation1008
-Node: yahtml起動のための設定1196
-Node: lintプログラム/ブラウザ/イメージヴューア環境等の設定1850
-Node: WWWページ環境用変数の設定2350
-Node: Command Invocation3121
-Node: Completion3448
-Node: Jump4432
-Node: Changing and Deleting4831
-Node: 対タグの変更5005
-Node: 文字参照への変更5355
-Node: リジョン内文字のURLencode5738
-Node: td括り/tr括り5972
-Node: CSS Support6601
-Node: CSS-class completion6799
-Node: Reread CSS file7783
-Node: Customizations8005
-Node: All customizable variables8229
-Node: Hook variables11227
-Node: Copying11339
-Node: Concept Index11842
+Node: Top257
+Node: Intro726
+Node: Installation1005
+Node: yahtml起動のための設定1193
+Node: lintプログラム/ブラウザ/イメージヴューア環境等の設定1847
+Node: WWWページ環境用変数の設定2347
+Node: Command Invocation3118
+Node: Completion3445
+Node: Jump4429
+Node: Changing and Deleting4828
+Node: 対タグの変更5002
+Node: 文字参照への変更5352
+Node: リジョン内文字のURLencode5735
+Node: td括り/tr括り5969
+Node: CSS Support6598
+Node: CSS-class completion6796
+Node: Reread CSS file7792
+Node: Customizations8014
+Node: All customizable variables8238
+Node: Hook variables11236
+Node: Copying11348
+Node: Concept Index11851
 
 End tag table

@@ -2,7 +2,7 @@
 ;;; 
 ;;; (c)2003-2014 by HIROSE, Yuuji [yuuji@yatex.org]
 ;;; Last modified Mon Dec 22 11:12:19 2014 on firestorm
-;;; $Id$
+;;; $Id: yatexpkg.el,v 1.78 2014/12/25 15:11:02 yuuji Rel $
 
 ;;; Code:
 (defvar YaTeX-package-ams-envs
