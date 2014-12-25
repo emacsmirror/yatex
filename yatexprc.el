@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Dec 23 11:53:48 2014 on firestorm
+;;; Last modified Thu Dec 25 22:12:33 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -397,6 +397,8 @@ called with one argument of current file name whitout extension."
       (put 'dvi2-command 'file buffer)
       (put 'dvi2-command 'offset lineinfo))))
 
+(defvar YaTeX-use-image-preview t
+  "*Use or else view graphic preview image via [prefix] t e.")
 (defvar YaTeX-preview-image-mode-map nil
   "Keymap used in YaTeX-preview-image-mode")
 (defun YaTeX-preview-image-mode ()
@@ -422,14 +424,24 @@ called with one argument of current file name whitout extension."
 	;(conv (format "convert -density %d - %s" (if math 250 100) target))
 	;(chain (list (format "dvips -E -o - texput|%s" conv)))
 	(conv (format "convert -alpha off - %s"  target))
-	(chain (list (format "dvips -x 2000 -E -o - texput|%s" conv)))
+	(chain (list (format "%s -x %d -E -o - texput|%s"
+			     ;; This function is the first evaluation code.
+			     ;; If you find these command line does not work
+			     ;; on your system, please tell the author
+			     ;; which commands should be taken to achieve
+			     ;; one-shot png previewing on your system
+			     ;; before publishing patch on the Web.
+			     ;; Please please please please please.
+			     YaTeX-cmd-dvips
+			     (if math 3000 2000)
+			     conv)))
 	(curproc (member prevname chain))
 	(w (get 'YaTeX-typeset-conv2image-chain 'win))
 	(pwd default-directory)
 	img)
     (if (not (= (process-exit-status proc) 0))
 	(progn
-	  (YaTeX-showup-buffer		;nevers comes here(?)
+	  (YaTeX-showup-buffer		;never comes here(?)
 	   (current-buffer) 'YaTeX-showup-buffer-bottom-most)
 	  (message "Region typesetting FAILED"))
       (setq command
@@ -449,32 +461,48 @@ called with one argument of current file name whitout extension."
 			     'YaTeX-typeset-conv2image-chain)
 		       (get 'YaTeX-typeset-process 'ppcmd))))
 	;; After all chain executed, display image in current window
-	(select-window w)
-	(setq foo (selected-window))
-	(YaTeX-showup-buffer
-	 (get-buffer-create " *YaTeX-region-image*")
-	 'YaTeX-showup-buffer-bottom-most t)
-	(remove-images (point-min) (point-max))
-	(erase-buffer)
-	(cd pwd)			;when reuse from other source
+	(cond
+	 ((and nil (featurep 'image) window-system)
+	  ;; If direct image displaying available in running Emacs,
+	  ;; display target image into the next window in Emacs.
+	  (select-window w)
+	  (setq foo (selected-window))
+	  (YaTeX-showup-buffer
+	   (get-buffer-create " *YaTeX-region-image*")
+	   'YaTeX-showup-buffer-bottom-most t)
+	  (remove-images (point-min) (point-max))
+	  (erase-buffer)
+	  (cd pwd)			;when reuse from other source
 					;(put-image (create-image (expand-file-name target)) (point))
-	(insert-image-file target)
-	(setq img (plist-get (text-properties-at (point)) 'intangible))
-	(YaTeX-preview-image-mode)
-	(if img
-	    (let ((height (cdr (image-size img))))
-	      (enlarge-window
-	       (- (ceiling (min height (/ (frame-height) 2)))
-		  (window-height)))))))))
+	  (insert-image-file target)
+	  (setq img (plist-get (text-properties-at (point)) 'intangible))
+	  (YaTeX-preview-image-mode)
+	  (if img
+	      (let ((height (cdr (image-size img))))
+		(enlarge-window
+		 (- (ceiling (min height (/ (frame-height) 2)))
+		    (window-height))))))
+	 (t
+	  ;; Without direct image, display image with image viewer
+	  (YaTeX-system
+	   (format "%s %s" YaTeX-cmd-view-images target)
+	   "YaTeX-region-image"
+	   'noask)
+	  )
+	 )))))
 
 (defun YaTeX-typeset-environment ()
   "Typeset current math environment"
   (interactive)
   (save-excursion
     (let ((math (YaTeX-in-math-mode-p)))
-      (or (equal (YaTeX-inner-environment t) "document")
-	  (YaTeX-mark-environment))
-      (if (and (featurep 'image) window-system)
+      (cond
+       ((and (fboundp 'region-active-p) (region-active-p))
+	nil)				;if region is active, use it
+       ((equal (or (YaTeX-inner-environment t) "document") "document")
+	(mark-paragraph))
+       (t (YaTeX-mark-environment)))
+      (if YaTeX-use-image-preview
 	  (let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer)))
 	    (put 'YaTeX-typeset-conv2image-chain 'math math)
 	    (put 'YaTeX-typeset-conv2image-chain 'win (selected-window))
@@ -595,14 +623,21 @@ FILE changes the default file name."
 			     (format "%s %s" default mainroot))
 			 'YaTeX-call-command-history))
 	  (if (or update (null b-in))
-	      (if (y-or-n-p "Use this command line in the future? ")
+	      (if (y-or-n-p "Memorize this command line in this file? ")
 		  (YaTeX-getset-builtin builtin-type command) ;keep in a file
 		(setq YaTeX-call-builtin-on-file	      ;keep in memory
 		      (cons (cons builtin-type command)
-			    (delete (assoc builtin-type alist) alist)))))))
+			    (delete (assoc builtin-type alist) alist)))
+		(message "`%s' kept in memory.  Type `%s %s' to override."
+			 command
+			 (key-description
+			  (car (where-is-internal 'universal-argument)))
+			 (key-description (this-command-keys)))
+		(sit-for 2)))))
     (YaTeX-typeset
      command
-     (format " *YaTeX-%s*" (downcase builtin-type)))))
+     (format " *YaTeX-%s*" (downcase builtin-type))
+     builtin-type builtin-type)))
 
 (defun YaTeX-kill-typeset-process (proc)
   "Kill process PROC after sending signal to PROC.
@@ -638,7 +673,8 @@ Optional third argument BASEDIR changes default-directory there."
       (set-buffer buffer)
       (setq default-directory (cd (or basedir df)))
       (erase-buffer)
-      (insert (format "Calling `%s'..." command))
+      (insert (format "Calling `%s'...\n" command)
+	      "==Kill this buffer to STOP process==")
       (YaTeX-showup-buffer buffer 'YaTeX-showup-buffer-bottom-most)
       (if (not (fboundp 'start-process))
 	  (call-process
@@ -822,18 +858,24 @@ by region."
 		  ((string-match "Skim" previewer)
 		   (format "%s %d '%s.pdf' '%s'"
 			   YaTeX-cmd-displayline line bnr cf))
-		  ((string-match "sumatra" previewer)	;;??
-		   (format "%s \"%s.pdf\" -forward-search \"%s\" %d %s"
-			   previewer bnr cf line))
 		  ((string-match "evince" previewer)
 		   (format "%s '%s.pdf' %d '%s'"
 			   "fwdevince" bnr line cf))
-		  ((string-match "qpdfview" previewer)	;;??
-		   (format "%s '%s.pdf' '#src:%s:%d:0'"
-			   previewer bnr cf line))
-		  ((string-match "okular" previewer)	;;??
-		   (format "%s '%s.pdf' '#src:%d' '%s'"
-			   previewer bnr line cf)))))
+		  ;;
+		  ;; These lines below for other PDF viewer is not confirmed
+		  ;; yet. If you find correct command line, PLEASE TELL
+		  ;; IT TO THE AUTHOR before publishing patch on the web.
+		  ;; ..PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE..
+		  ;; ((string-match "sumatra" previewer)	;;??
+		  ;;  (format "%s \"%s.pdf\" -forward-search \"%s\" %d"
+		  ;; 	   previewer bnr cf line))
+		  ;; ((string-match "qpdfview" previewer)	;;??
+		  ;;  (format "%s '%s.pdf#src:%s:%d:0'" ;if NG, tell 
+		  ;; 	   previewer bnr cf line))
+		  ;; ((string-match "okular" previewer)	;;??
+		  ;;  (format "%s '%s.pdf#src:%d' '%s'"
+		  ;; 	   previewer bnr line cf))
+		  )))
 	(YaTeX-system cmd "jump-line" 'noask pdir)))))
 
 (defun YaTeX-goto-corresponding-viewer ()

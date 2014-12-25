@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Dec 23 12:07:26 2014 on firestorm
+;;; Last modified Fri Dec 26 00:04:43 2014 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.77.7"
+(defconst YaTeX-revision-number "1.78"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -61,6 +61,7 @@ This default value is for X window system.")
 (defvar YaTeX-cmd-dia "dia")
 (defvar YaTeX-cmd-ooo "soffice")
 (defvar YaTeX-cmd-gs "gs")
+(defvar YaTeX-cmd-dvips "dvips") ;Set "pdvips" for Vine Linux
 (defvar YaTeX-cmd-displayline
   "/Applications/Skim.app/Contents/SharedSupport/displayline")
 (defvar YaTeX-cmd-edit-ps YaTeX-cmd-gimp)
@@ -68,6 +69,7 @@ This default value is for X window system.")
 (defvar YaTeX-cmd-edit-ai YaTeX-cmd-inkscape)
 (defvar YaTeX-cmd-edit-svg YaTeX-cmd-inkscape)
 (defvar YaTeX-cmd-edit-images YaTeX-cmd-gimp)
+(defvar YaTeX-cmd-view-images "display -geometry +0+0")
 
 (defvar tex-pdfview-command	;previewer command for your site
   (cond
@@ -3025,8 +3027,10 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
 		    (> ep (point))
 		    (looking-at "\\&\\|\\\\")
 		    (= wc (car (YaTeX-array-what-column-internal))))
-	  (skip-chars-forward "&\\\\" ep)
-	  (skip-chars-forward "\n\t " ep))))))
+	  (skip-chars-forward "&" ep)
+	  (while (looking-at "[\n\t ]+\\|\\\\\\\\\\|\\\\.line\\>")
+	    (goto-char (match-end 0))
+	    ))))))
 
 (defun YaTeX-backward-field (arg)
   "Move backward to the ARGth next column field of table."
