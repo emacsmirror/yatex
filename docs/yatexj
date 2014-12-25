@@ -1661,6 +1661,35 @@ File: yatexj, Node: All customizable variables, Next: Sample definitions, Prev: 
  -- Variable: YaTeX-dvipdf-command
      dviをPDFに変換するコマンド (`"dvipdfmx"')
 
+ -- Variable: YaTeX-cmd-gimp
+     GIMPを起動するコマンド (code{"gimp"})
+ -- Variable: YaTeX-cmd-tgif
+     tgifを起動するコマンド (code{"tgif"})
+ -- Variable: YaTeX-cmd-inkscape
+     Inkscapeを起動するコマンド (code{"inkscape"})
+ -- Variable: YaTeX-cmd-dia
+     Diaを起動するコマンド (code{"dia"})
+ -- Variable: YaTeX-cmd-ooo
+     OpenOffice.orgまたはLibreOfficeを起動するコマンド (code{"soffice"})
+ -- Variable: YaTeX-cmd-gs
+     Ghostscriptを起動するコマンド (code{"gs"})
+ -- Variable: YaTeX-cmd-dvips
+     dvipsを起動するコマンド(環境によってはpdvipsなど) (code{"dvips"})
+ -- Variable: YaTeX-cmd-displayline
+     displaylineを起動するコマンド
+     (code{"/Applications/Skim.app/Contents/SharedSupport/displayline"})
+ -- Variable: YaTeX-cmd-edit-ps
+     PostScriptファイルを編集するコマンド (変数code{"YaTeX-cmd-gimp"}の値)
+ -- Variable: YaTeX-cmd-edit-pdf
+     PDFファイルを編集するコマンド (変数code{"YaTeX-cmd-ooo"}の値)
+ -- Variable: YaTeX-cmd-edit-ai
+     .aiファイルを編集するコマンド (変数code{"YaTeX-cmd-inkscape"}の値)
+ -- Variable: YaTeX-cmd-edit-svg
+     SVGファイルを編集するコマンド (変数code{"YaTeX-cmd-inkscape"}の値)
+
+ -- Variable: YaTeX-cmd-edit-images
+     その他画像ファイルを編集するコマンド (変数code{"YaTeX-cmd-gimp"}の値)
+
  -- Variable: YaTeX-need-nonstop
      `\nonstopmode{}'を自動的に付加するか (`nil')
 
@@ -2189,12 +2218,12 @@ Node: Cooperation with other packages36336
 Node: Customizations36791
 Node: Lisp variables37088
 Node: All customizable variables37695
-Node: Sample definitions44996
-Node: Hook variables45430
-Node: Hook file46324
-Node: Add-in functions46530
-Node: Etc46757
-Node: Copying47041
-Node: Concept Index47672
+Node: Sample definitions46069
+Node: Hook variables46503
+Node: Hook file47397
+Node: Add-in functions47603
+Node: Etc47830
+Node: Copying48114
+Node: Concept Index48745
 
 End tag table

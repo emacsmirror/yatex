@@ -1504,6 +1504,37 @@ variable by `M-x describe-variable'.
  -- Variable: YaTeX-dvipdf-command
      Default command name to convert .dvi to PDF (`"dvipdfmx"')
 
+ -- Variable: YaTeX-cmd-gimp
+     Command name of GIMP (code{"gimp"})
+ -- Variable: YaTeX-cmd-tgif
+     Command name of tgif (code{"tgif"})
+ -- Variable: YaTeX-cmd-inkscape
+     Command name of Inkscape (code{"inkscape"})
+ -- Variable: YaTeX-cmd-dia
+     Command name of Dia (code{"dia"})
+ -- Variable: YaTeX-cmd-ooo
+     Command name of OpenOffice.org/LibreOffice (code{"soffice"})
+ -- Variable: YaTeX-cmd-gs
+     Command name of Ghostscript (code{"gs"})
+ -- Variable: YaTeX-cmd-dvips
+     Command name of dvips (code{"dvips"})
+ -- Variable: YaTeX-cmd-displayline
+     Command name of displayline
+     (code{"/Applications/Skim.app/Contents/SharedSupport/displayline"})
+ -- Variable: YaTeX-cmd-edit-ps
+     Command name for editing PostScript files(Value of
+     code{"YaTeX-cmd-gimp"})
+ -- Variable: YaTeX-cmd-edit-pdf
+     Command name for editing PDF files(Value of code{"YaTeX-cmd-ooo"})
+ -- Variable: YaTeX-cmd-edit-ai
+     Command name for editing `.ai' files(Value of
+     code{"YaTeX-cmd-inkscape"})
+ -- Variable: YaTeX-cmd-edit-svg
+     Command name for editing SVG files(Value of
+     code{"YaTeX-cmd-inkscape"})
+ -- Variable: YaTeX-cmd-edit-images
+     Command name for editing image files(Value of code{"YaTeX-cmd-gimp"})
+
  -- Variable: YaTeX-need-nonstop
      Put `\nonstopmode{}' or not (`nil')
 
@@ -2232,19 +2263,19 @@ Node: Cooperation with other packages46133
 Node: Customizations46838
 Node: Lisp variables47172
 Node: All customizable variables48176
-Node: Sample definitions57975
-Node: Hook variables58488
-Node: Hook file59192
-Node: Add-in functions59531
-Node: How the add-in function works60391
-Node: Defining option-add-in62590
-Node: Defining argument-add-in63312
-Node: Defining enclosing-add-in64194
-Node: How the function is called65048
-Node: Useful functions for creating add-in65724
-Node: Contribution67129
-Node: Add-in generator67403
-Node: Etcetera72775
-Node: Copying73380
+Node: Sample definitions59211
+Node: Hook variables59724
+Node: Hook file60428
+Node: Add-in functions60767
+Node: How the add-in function works61627
+Node: Defining option-add-in63826
+Node: Defining argument-add-in64548
+Node: Defining enclosing-add-in65430
+Node: How the function is called66284
+Node: Useful functions for creating add-in66960
+Node: Contribution68365
+Node: Add-in generator68639
+Node: Etcetera74011
+Node: Copying74616
 
 End tag table
