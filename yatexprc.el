@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Dec 26 01:07:52 2014 on firestorm
+;;; Last modified Fri Dec 26 16:14:48 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -866,15 +866,18 @@ by region."
 		  ;; yet. If you find correct command line, PLEASE TELL
 		  ;; IT TO THE AUTHOR before publishing patch on the web.
 		  ;; ..PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE PLEASE..
-		  ;; ((string-match "sumatra" previewer)	;;??
-		  ;;  (format "%s \"%s.pdf\" -forward-search \"%s\" %d"
-		  ;; 	   previewer bnr cf line))
-		  ;; ((string-match "qpdfview" previewer)	;;??
-		  ;;  (format "%s '%s.pdf#src:%s:%d:0'" ;if NG, tell 
-		  ;; 	   previewer bnr cf line))
-		  ;; ((string-match "okular" previewer)	;;??
-		  ;;  (format "%s '%s.pdf#src:%d' '%s'"
-		  ;; 	   previewer bnr line cf))
+		  ((string-match "sumatra" previewer)	;;??
+		   (format "%s \"%s.pdf\" -forward-search \"%s\" %d"
+			   ;;Send patch to the author, please
+			   previewer bnr cf line))
+		  ((string-match "qpdfview" previewer)	;;??
+		   (format "%s '%s.pdf#src:%s:%d:0'"
+			   ;;Send patch to the author, please
+		  	   previewer bnr cf line))
+		  ((string-match "okular" previewer)	;;??
+		   (format "%s '%s.pdf#src:%d' '%s'"
+			   ;;Send patch to the author, please
+		  	   previewer bnr line cf))
 		  )))
 	(YaTeX-system cmd "jump-line" 'noask pdir)))))
 
