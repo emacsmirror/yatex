@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Dec 26 16:14:48 2014 on firestorm
+;;; Last modified Sun Dec 28 23:35:01 2014 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -136,9 +136,11 @@
 		      (setq YaTeX-typeset-marker (make-marker)))
 		  (point))
       (insert (format "Call `%s'\n" command))
-      (if YaTeX-dos (message "Done.")
+      (cond
+       ((fboundp 'start-process)
 	(insert " ")
 	(set-marker (process-mark YaTeX-typeset-process) (1- (point))))
+       (t (message "Done.")))
       (if (bolp) (forward-line -1))	;what for?
       (cond
        (background nil)
