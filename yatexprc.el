@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 28 23:35:01 2014 on firestorm
+;;; Last modified Mon Dec 29 18:04:06 2014 on sdr
 ;;; $Id$
 
 ;;; Code:
@@ -179,7 +179,7 @@ thus, it call bibtex only if warning messages about citation are seen.")
 		tobecalled shortname
 		(thiscmd (get 'YaTeX-typeset-process 'thiscmd))
 		(ppprop (get 'YaTeX-typeset-process 'ppcmd))
-		(ppcmd (cdr (assq proc ppprop)))
+z		(ppcmd (cdr (assq proc ppprop)))
 		(bcprop (get 'YaTeX-typeset-process 'bibcmd))
 		(bibcmd (cdr (assq proc bcprop))))
 	   (put 'YaTeX-typeset-process 'ppcmd ;erase ppcmd
@@ -279,23 +279,28 @@ thus, it call bibtex only if warning messages about citation are seen.")
 			   (put 'YaTeX-typeset-process 'thiscmd thiscmd)))
 		   ;; If ppcmd is active, call it.
 		   (cond
+		    ((and ppcmd (symbolp ppcmd) (fboundp ppcmd))
+		     ;; If ppcmd is set and it is a function symbol,
+		     ;; call it whenever command succeeded or not
+		     (funcall ppcmd))
 		    ((and ppcmd (string-match "finish" mes))
 		     (insert (format "=======> Success! Calling %s\n" ppcmd))
-		     (if (symbolp ppcmd)
-			 (funcall ppcmd)
-		       (setq mode-name	; set process name
-			     (concat
-			      mode-name "+"
-			      (substring ppcmd 0 (string-match " " ppcmd))))
+		     (setq mode-name	; set process name
+			   (concat
+			    mode-name "+"
+			    (substring ppcmd 0 (string-match " " ppcmd))))
 					; to reach here, 'start-process exists on this emacsen
-		       (set-process-sentinel
-			(start-process
-			 mode-name
-			 pbuf		; Use this buffer twice.
-			 shell-file-name YaTeX-shell-command-option
-			 ppcmd)
-			'YaTeX-typeset-sentinel)))
+		     (set-process-sentinel
+		      (start-process
+		       mode-name
+		       pbuf		; Use this buffer twice.
+		       shell-file-name YaTeX-shell-command-option
+		       ppcmd)
+		      'YaTeX-typeset-sentinel))
 		    (t ;pull back original mode-name
+		     ;;Confirm process buffer to be shown when error occured
+		     (YaTeX-showup-buffer pbuf 'YaTeX-showup-buffer-bottom-most)
+		     (message "Command FAILED!")
 		     (setq mode-name "typeset"))))
 		 (forward-char 1))
 	     (setq YaTeX-typeset-process nil)
@@ -417,6 +422,40 @@ called with one argument of current file name whitout extension."
       (define-key map "k" (lambda()(interactive) (scroll-up -1)))))
   (use-local-map YaTeX-preview-image-mode-map))
 
+(defvar YaTeX-typeset-pdf2image-chain
+  (cond
+   ((YaTeX-executable-find "pdfcrop")	;Mac OS X
+    (list
+     "pdfcrop --clip %b.pdf tmp.pdf"
+     (if (YaTeX-executable-find "convert")
+	 "convert -density %d tmp.pdf %b.%f"
+       "sips -s format %f -s dpiWidth %d -s dpiHeight %d %b.pdf --out %b.%f")
+     "rm -f tmp.pdf")))
+  "*Pipe line of command as a list to create image file from PDF.
+See also doc-string of YaTeX-typeset-dvi2image-chain.")
+
+(defvar YaTeX-typeset-dvi2image-chain
+  (cond
+   ((YaTeX-executable-find "dvipng")
+    (list "dvipng %b"))
+   ((YaTeX-executable-find YaTeX-cmd-dvips)
+    (list
+     (format "%s -E -o %%b.eps %%b.dvi" YaTeX-cmd-dvips)
+     "convert -alpha off -density %d %b.eps %b.png")))
+  "*Pipe line of command as a list to create png file from DVI or PDF.
+%-notation rewritten list:
+ %b	basename of target file(\"texput\")
+ %f	Output format(\"png\")
+ %d	DPI
+")
+
+(defvar YaTeX-typeset-conv2image-chain-alist
+  (list (cons 'pdf YaTeX-typeset-pdf2image-chain)
+	(cons 'dvi YaTeX-typeset-dvi2image-chain))
+  "Default alist for creating image files from DVI/PDF.
+The value is generated from YaTeX-typeset-pdf2image-chain and
+YaTeX-typeset-dvi2image-chain.")
+
 (defvar YaTeX-typeset-conv2image-process nil "Process of conv2image chain")
 (defun YaTeX-typeset-conv2image-chain ()
   (let*((proc (or YaTeX-typeset-process YaTeX-typeset-conv2image-process))
@@ -425,22 +464,25 @@ called with one argument of current file name whitout extension."
 	(math (get 'YaTeX-typeset-conv2image-chain 'math))
 	;(conv (format "convert -density %d - %s" (if math 250 100) target))
 	;(chain (list (format "dvips -E -o - texput|%s" conv)))
-	(conv (format "convert -alpha off - %s"  target))
-	(chain (list (format "%s -x %d -E -o - texput|%s"
-			     ;; This function is the first evaluation code.
-			     ;; If you find these command line does not work
-			     ;; on your system, please tell the author
-			     ;; which commands should be taken to achieve
-			     ;; one-shot png previewing on your system
-			     ;; before publishing patch on the Web.
-			     ;; Please please please please please.
-			     YaTeX-cmd-dvips
-			     (if math 3000 2000)
-			     conv)))
+	;(conv (format "convert -alpha off - %s"  target))
+	(case-fold-search t)
+	(srctype (or (get 'YaTeX-typeset-conv2image-chain 'srctype)
+		     (if (save-excursion
+			   (re-search-backward "this is pdftex" nil t))
+			 'pdf 'dvi)))
+	(chain (cdr (assq srctype YaTeX-typeset-conv2image-chain-alist)))
+	;; This function is the first evaluation code.
+	;; If you find these command line does not work
+	;; on your system, please tell the author
+	;; which commands should be taken to achieve
+	;; one-shot png previewing on your system
+	;; before publishing patch on the Web.
+	;; Please please please please please.
 	(curproc (member prevname chain))
 	(w (get 'YaTeX-typeset-conv2image-chain 'win))
 	(pwd default-directory)
 	img)
+    (setq foo (cons (cons prevname (process-exit-status proc)) foo))
     (if (not (= (process-exit-status proc) 0))
 	(progn
 	  (YaTeX-showup-buffer		;never comes here(?)
@@ -449,14 +491,19 @@ called with one argument of current file name whitout extension."
       (setq command
 	    (if curproc (car (cdr-safe curproc)) (car chain)))
       (if command
-	  (progn
-	    (insert (format "Calling `%s'...\n" command))
+	  (let ((cmdline (YaTeX-replace-formats
+			  command
+			  (list (cons "b" "texput")
+				(cons "f" "png")
+				(cons "d" (if math "300" "200"))))))
+	    (insert (format "Calling `%s'...\n" cmdline))
 	    (set-process-sentinel
 	     (setq YaTeX-typeset-conv2image-process
 		   (start-process
 		    command
 		    (current-buffer)
-		    shell-file-name YaTeX-shell-command-option command))
+		    shell-file-name YaTeX-shell-command-option
+		    cmdline))
 	     'YaTeX-typeset-sentinel)
 	    (put 'YaTeX-typeset-process 'ppcmd
 		 (cons (cons (get-buffer-process (current-buffer))
@@ -468,7 +515,7 @@ called with one argument of current file name whitout extension."
 	  ;; If direct image displaying available in running Emacs,
 	  ;; display target image into the next window in Emacs.
 	  (select-window w)
-	  (setq foo (selected-window))
+	  ;(setq foo (selected-window))
 	  (YaTeX-showup-buffer
 	   (get-buffer-create " *YaTeX-region-image*")
 	   'YaTeX-showup-buffer-bottom-most t)
@@ -494,19 +541,22 @@ called with one argument of current file name whitout extension."
 	 )))))
 
 (defun YaTeX-typeset-environment ()
-  "Typeset current math environment"
+  "Typeset current environment or paragraph.
+If region activated, use it."
   (interactive)
   (save-excursion
     (let ((math (YaTeX-in-math-mode-p)))
       (cond
        ((and (fboundp 'region-active-p) (region-active-p))
 	nil)				;if region is active, use it
+       (math (YaTeX-mark-environment))
        ((equal (or (YaTeX-inner-environment t) "document") "document")
 	(mark-paragraph))
        (t (YaTeX-mark-environment)))
       (if YaTeX-use-image-preview
 	  (let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer)))
 	    (put 'YaTeX-typeset-conv2image-chain 'math math)
+	    (put 'YaTeX-typeset-conv2image-chain 'srctype nil)
 	    (put 'YaTeX-typeset-conv2image-chain 'win (selected-window))
 	    (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain))
 	(YaTeX-typeset-region)))))
