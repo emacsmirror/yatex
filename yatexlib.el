@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries
 ;;; 
 ;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 21 23:55:30 2014 on firestorm
+;;; Last modified Mon Dec 29 13:54:17 2014 on sdr
 ;;; $Id$
 
 ;;; Code:
@@ -891,6 +891,19 @@ NULL includes null string in a list."
 	      (buffer-string))
 	  (kill-buffer tbuf))))))
       
+;;; (defun YaTeX-executable-find(cmd)...)
+(fset 'YaTeX-executable-find
+      (if (fboundp 'executable-find)
+	  'executable-find
+	(function (lambda (cmd)
+		    (let ((list exec-path) path)
+		      (catch 'exec
+			(while list
+			  (if (file-executable-p
+			       (setq path (expand-file-name cmd (car list))))
+			      (throw 'exec path))
+			  (setq list (cdr list)))))))))
+
 ;;;###autoload
 (defun YaTeX-reindent (col)
   "Remove current indentation and reindento to COL column."
