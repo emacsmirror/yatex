@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 29 18:04:06 2014 on sdr
+;;; Last modified Mon Dec 29 22:42:27 2014 on sdr
 ;;; $Id$
 
 ;;; Code:
@@ -482,7 +482,6 @@ YaTeX-typeset-dvi2image-chain.")
 	(w (get 'YaTeX-typeset-conv2image-chain 'win))
 	(pwd default-directory)
 	img)
-    (setq foo (cons (cons prevname (process-exit-status proc)) foo))
     (if (not (= (process-exit-status proc) 0))
 	(progn
 	  (YaTeX-showup-buffer		;never comes here(?)
