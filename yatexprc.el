@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 29 22:42:27 2014 on sdr
+;;; Last modified Tue Dec 30 09:17:29 2014 on sdr
 ;;; $Id$
 
 ;;; Code:
@@ -437,11 +437,11 @@ See also doc-string of YaTeX-typeset-dvi2image-chain.")
 (defvar YaTeX-typeset-dvi2image-chain
   (cond
    ((YaTeX-executable-find "dvipng")
-    (list "dvipng %b"))
+    (list "dvipng %b.dvi"))
    ((YaTeX-executable-find YaTeX-cmd-dvips)
     (list
      (format "%s -E -o %%b.eps %%b.dvi" YaTeX-cmd-dvips)
-     "convert -alpha off -density %d %b.eps %b.png")))
+     "convert -alpha off -density %d %b.eps %b.%f")))
   "*Pipe line of command as a list to create png file from DVI or PDF.
 %-notation rewritten list:
  %b	basename of target file(\"texput\")
@@ -460,15 +460,13 @@ YaTeX-typeset-dvi2image-chain.")
 (defun YaTeX-typeset-conv2image-chain ()
   (let*((proc (or YaTeX-typeset-process YaTeX-typeset-conv2image-process))
 	(prevname (process-name proc))
-	(target "texput.png")
+	(texput "texput") (format "jpg")
+	(target (concat texput "." format))
 	(math (get 'YaTeX-typeset-conv2image-chain 'math))
-	;(conv (format "convert -density %d - %s" (if math 250 100) target))
-	;(chain (list (format "dvips -E -o - texput|%s" conv)))
-	;(conv (format "convert -alpha off - %s"  target))
-	(case-fold-search t)
 	(srctype (or (get 'YaTeX-typeset-conv2image-chain 'srctype)
-		     (if (save-excursion
-			   (re-search-backward "this is pdftex" nil t))
+		     (if (file-newer-than-file-p
+			  (concat texput ".pdf")
+			  (concat texput ".dvi"))
 			 'pdf 'dvi)))
 	(chain (cdr (assq srctype YaTeX-typeset-conv2image-chain-alist)))
 	;; This function is the first evaluation code.
@@ -493,7 +491,7 @@ YaTeX-typeset-dvi2image-chain.")
 	  (let ((cmdline (YaTeX-replace-formats
 			  command
 			  (list (cons "b" "texput")
-				(cons "f" "png")
+				(cons "f" format)
 				(cons "d" (if math "300" "200"))))))
 	    (insert (format "Calling `%s'...\n" cmdline))
 	    (set-process-sentinel
