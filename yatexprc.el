@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Dec 30 09:17:29 2014 on sdr
+;;; Last modified Wed Dec 31 22:42:56 2014 on sdr
 ;;; $Id$
 
 ;;; Code:
@@ -527,7 +527,11 @@ YaTeX-typeset-dvi2image-chain.")
 	      (let ((height (cdr (image-size img))))
 		(enlarge-window
 		 (- (ceiling (min height (/ (frame-height) 2)))
-		    (window-height))))))
+		    (window-height)))))
+	  ;; Remember elapsed time, which will be threshold in auto-preview
+	  (put 'YaTeX-typeset-conv2image-chain 'elapse
+	       (YaTeX-elapsed-time
+		(get 'YaTeX-typeset-conv2image-chain 'start) (current-time))))
 	 (t
 	  ;; Without direct image, display image with image viewer
 	  (YaTeX-system
@@ -537,26 +541,95 @@ YaTeX-typeset-dvi2image-chain.")
 	  )
 	 )))))
 
+
+(defvar YaTeX-typeset-environment-timer nil)
+(defun YaTeX-typeset-environment-timer ()
+  "Update preview image in the 
+Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
+  (let*((plist (get 'YaTeX-typeset-environment-timer 'laststate))
+	(b (nth 0 plist))
+	(s (nth 1 plist))
+	(e (nth 2 plist))
+	(p (nth 3 plist))
+	(q (nth 4 plist))
+	(st (nth 5 plist))
+	(tm (nth 6 plist))
+	(thresh (* 2 (or (get 'YaTeX-typeset-conv2image-chain 'elapse) 1))))
+    (cond
+     ;; In minibuffer, do nothing
+     ((minibuffer-window-active-p (selected-window)) nil)
+     ;; If point went out from last environment, cancel timer
+     ;;;((and (message "s=%d, e=%d, p=%d" s e (point)) nil))
+     ((or (not (eq b (window-buffer (selected-window))))
+	  (< (point) s)
+	  (> (point) e))
+      (YaTeX-typeset-environment-cancel-auto))
+     ;;;((and (message "e=%d, p=%d t=%s" e (point) (current-time)) nil))
+     ;; If recently called, hold
+     ((< (YaTeX-elapsed-time tm (current-time)) thresh)
+      nil)
+     ;; If condition changed from last call, do it
+     ((and (/= p (preceding-char))
+	   (/= q (char-after (- (point) 1)))
+	   (not (string= st (YaTeX-buffer-substring s e))))
+      (YaTeX-typeset-environment)))))
+
 (defun YaTeX-typeset-environment ()
   "Typeset current environment or paragraph.
 If region activated, use it."
   (interactive)
   (save-excursion
-    (let ((math (YaTeX-in-math-mode-p)))
+    (let ((math (YaTeX-in-math-mode-p)) usetimer)
       (cond
        ((and (fboundp 'region-active-p) (region-active-p))
 	nil)				;if region is active, use it
-       (math (YaTeX-mark-environment))
+       (math (setq usetimer t) (YaTeX-mark-environment))
        ((equal (or (YaTeX-inner-environment t) "document") "document")
 	(mark-paragraph))
-       (t (YaTeX-mark-environment)))
+       (t (setq usetimer t) (YaTeX-mark-environment)))
       (if YaTeX-use-image-preview
-	  (let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer)))
+	  (let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer))
+		(b (region-beginning)) (e (region-end)))
 	    (put 'YaTeX-typeset-conv2image-chain 'math math)
 	    (put 'YaTeX-typeset-conv2image-chain 'srctype nil)
 	    (put 'YaTeX-typeset-conv2image-chain 'win (selected-window))
-	    (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain))
+	    (put 'YaTeX-typeset-conv2image-chain 'start (current-time))
+	    (put 'YaTeX-typeset-environment-timer 'laststate
+		 (list (current-buffer) b e (preceding-char)
+		       (char-after (- (point) 2))
+		       (YaTeX-buffer-substring b e)
+		       (current-time)))
+	    (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain)
+	    (if usetimer (YaTeX-typeset-environment-auto)))
 	(YaTeX-typeset-region)))))
+
+(defvar YaTeX-on-the-fly-preview-image (string-to-number "0.1")
+  "*Control the on-the-fly update of preview environment by an image.
+Nil disables on-the-fly update.  Otherwise on-the-fly update is enabled
+with update interval specified by this value.")
+
+(defun YaTeX-typeset-environment-auto ()
+  "Turn on on-the-fly preview-image"
+  (if YaTeX-typeset-environment-timer
+      nil
+    (setq YaTeX-typeset-environment-timer
+	  (run-with-idle-timer
+	   (max (string-to-number "0.1")
+		(cond
+		 ((numberp YaTeX-on-the-fly-preview-image) 
+		  YaTeX-on-the-fly-preview-image)
+		 ((stringp YaTeX-on-the-fly-preview-image)
+		  (string-to-number YaTeX-on-the-fly-preview-image))
+		 (t 1)))
+	   t 'YaTeX-typeset-environment-timer))))
+
+(defun YaTeX-typeset-environment-cancel-auto ()
+  "Cancel typeset-environment timer."
+  (interactive)
+  (cancel-timer YaTeX-typeset-environment-timer)
+  (setq YaTeX-typeset-environment-timer nil)
+  (message "Auto-preview canceled"))
+
 
 (defun YaTeX-typeset-buffer (&optional pp)
   "Typeset whole buffer.
