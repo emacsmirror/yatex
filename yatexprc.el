@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Dec 31 22:42:56 2014 on sdr
+;;; Last modified Sat Jan  3 23:37:49 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -404,8 +404,10 @@ called with one argument of current file name whitout extension."
       (put 'dvi2-command 'file buffer)
       (put 'dvi2-command 'offset lineinfo))))
 
-(defvar YaTeX-use-image-preview t
-  "*Use or else view graphic preview image via [prefix] t e.")
+(defvar YaTeX-use-image-preview "jpg"
+  "*Nil means not using image preview by [prefix] t e.
+Acceptable value is one of \"jpg\" or \"png\", which specifies
+format of preview image.")
 (defvar YaTeX-preview-image-mode-map nil
   "Keymap used in YaTeX-preview-image-mode")
 (defun YaTeX-preview-image-mode ()
@@ -436,7 +438,8 @@ See also doc-string of YaTeX-typeset-dvi2image-chain.")
 
 (defvar YaTeX-typeset-dvi2image-chain
   (cond
-   ((YaTeX-executable-find "dvipng")
+   ((and (equal YaTeX-use-image-preview "png")
+	 (YaTeX-executable-find "dvipng"))
     (list "dvipng %b.dvi"))
    ((YaTeX-executable-find YaTeX-cmd-dvips)
     (list
@@ -460,7 +463,8 @@ YaTeX-typeset-dvi2image-chain.")
 (defun YaTeX-typeset-conv2image-chain ()
   (let*((proc (or YaTeX-typeset-process YaTeX-typeset-conv2image-process))
 	(prevname (process-name proc))
-	(texput "texput") (format "jpg")
+	(texput "texput")
+	(format YaTeX-use-image-preview)
 	(target (concat texput "." format))
 	(math (get 'YaTeX-typeset-conv2image-chain 'math))
 	(srctype (or (get 'YaTeX-typeset-conv2image-chain 'srctype)
@@ -571,7 +575,7 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
      ;; If condition changed from last call, do it
      ((and (/= p (preceding-char))
 	   (/= q (char-after (- (point) 1)))
-	   (not (string= st (YaTeX-buffer-substring s e))))
+	   (not (string= st (YaTeX-buffer-substring s (min e (point-max))))))
       (YaTeX-typeset-environment)))))
 
 (defun YaTeX-typeset-environment ()
@@ -600,7 +604,15 @@ If region activated, use it."
 		       (YaTeX-buffer-substring b e)
 		       (current-time)))
 	    (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain)
-	    (if usetimer (YaTeX-typeset-environment-auto)))
+	    (if usetimer
+		(progn
+		  (if YaTeX-on-the-fly-overlay
+		      (move-overlay YaTeX-on-the-fly-overlay b e)
+		    (overlay-put
+		     (setq YaTeX-on-the-fly-overlay (make-overlay b e))
+		     'face 'YaTeX-on-the-fly-activated-face))
+		  (YaTeX-typeset-environment-auto)
+		  )))
 	(YaTeX-typeset-region)))))
 
 (defvar YaTeX-on-the-fly-preview-image (string-to-number "0.1")
@@ -628,6 +640,7 @@ with update interval specified by this value.")
   (interactive)
   (cancel-timer YaTeX-typeset-environment-timer)
   (setq YaTeX-typeset-environment-timer nil)
+  (delete-overlay YaTeX-on-the-fly-overlay)
   (message "Auto-preview canceled"))
 
 

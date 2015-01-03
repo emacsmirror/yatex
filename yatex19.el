@@ -1,6 +1,6 @@
 ;;; yatex19.el -- YaTeX facilities for Emacs 19 or later
 ;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 21 14:03:48 2014 on firestorm
+;;; Last modified Sat Jan  3 23:45:25 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -484,6 +484,14 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 
 (defun YaTeX-19-create-face (sym fgcolor &optional bgcolor)
   "Create face named SYM with face of FGCOLOR/BGCOLOR."
+  (if (consp fgcolor)
+      (setq fgcolor (if (eq YaTeX-background-mode 'light)
+			(car fgcolor)
+		      (cdr fgcolor))))
+  (if (consp bgcolor)
+      (setq bgcolor (if (eq YaTeX-background-mode 'light)
+			(car bgcolor)
+		      (cdr bgcolor))))
   (cond
    ((and YaTeX-use-font-lock (fboundp 'defface))
     (custom-declare-face
@@ -632,7 +640,8 @@ towards to lowest sectioning unit.  Numbers should be written in percentage.")
 		    (if single (list single 0 'macro))))))))))
 
 ;;2006/6/23 new face, `delimiter' introduced
-(YaTeX-19-create-face 'delimiter "saddlebrown" "ivory")
+(YaTeX-19-create-face
+ 'delimiter '("saddlebrown" . "lightyellow") '("ivory". "navy"))
 
 ;;(YaTeX-19-collect-macros)	;causes an error
 (defun YaTeX-hilit-setup-alist ()

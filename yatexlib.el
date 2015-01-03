@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries
 ;;; 
 ;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 29 13:54:17 2014 on sdr
+;;; Last modified Sun Jan  4 00:16:04 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1428,7 +1428,7 @@ This function is a makeshift for YaTeX and yahtml."
     '((((class static-color)) (:bold t))
       (((type tty)) (:bold t))
       (((class color) (background dark)) (:foreground "khaki" :bold t))
-      (((class color) (background light)) (:foreground "Goldenrod"))
+      (((class color) (background light)) (:foreground "DarkGoldenrod4"))
       (t (:bold t :underline t)))
     "Font Lock mode face used to highlight formula."
     :group 'font-lock-faces)
@@ -1438,7 +1438,7 @@ This function is a makeshift for YaTeX and yahtml."
     '((((class static-color)) (:bold t))
       (((type tty)) (:bold t))
       (((class color) (background dark))
-       (:foreground "saddlebrown" :background "ivory" :bold t))
+       (:foreground "lightyellow3" :background "navy" :bold t))
       (((class color) (background light)) (:foreground "red"))
       (t (:bold t :underline t)))
     "Font Lock mode face used to highlight delimiters."
@@ -1451,7 +1451,7 @@ This function is a makeshift for YaTeX and yahtml."
       (((class color) (background dark))
        (:foreground "khaki" :bold t :underline t))
       (((class color) (background light))
-       (:foreground "Goldenrod" :underline t))
+       (:foreground "DarkGoldenrod4" :underline t))
       (t (:bold t :underline t)))
     "Font Lock mode face used to highlight subscripts in formula."
     :group 'font-lock-faces)
@@ -1463,7 +1463,7 @@ This function is a makeshift for YaTeX and yahtml."
       (((class color) (background dark))
        (:bold nil :foreground "ivory" :background "lightyellow4"))
       (((class color) (background light))
-       (:underline t :foreground "gold"))
+       (:underline t :foreground "DarkGoldenrod3"))
       (t (:bold t :underline t)))
     "Font Lock mode face used to highlight superscripts in formula."
     :group 'font-lock-faces)

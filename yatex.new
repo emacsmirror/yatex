@@ -1,6 +1,10 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.79	=== yatex ===
+	数式環境など特定環境内の [prefix] t e で On-the-fly preview 発動。
+
+
 1.78	Drag&Dropサポートを追加。
 	tabular環境内で2連続以上Tabで、1カラム進む機能を追加。
 	=== yatex ===
