@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan  4 19:11:36 2015 on firestorm
+;;; Last modified Sun Jan  4 19:56:26 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -582,49 +582,56 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
      ((not (string= st (YaTeX-buffer-substring s (overlay-end overlay))))
       (YaTeX-typeset-environment)))))
 
+(defun YaTeX-typeset-environment-1 ()
+  (let ((math (YaTeX-in-math-mode-p)) usetimer)
+    (cond
+     ((and YaTeX-on-the-fly-overlay (overlayp YaTeX-on-the-fly-overlay)
+	   (member YaTeX-on-the-fly-overlay (overlays-at (point))))
+      ;; If current position is in on-the-fly overlay,
+      ;; use that region again
+      (setq math (get 'YaTeX-typeset-conv2image-chain 'math))
+      (push-mark (overlay-start YaTeX-on-the-fly-overlay))
+      (goto-char (overlay-end YaTeX-on-the-fly-overlay)))
+     ((and (fboundp 'region-active-p) (region-active-p))
+      nil)				;if region is active, use it
+     (math (setq usetimer t) (YaTeX-mark-environment))
+     ((equal (or (YaTeX-inner-environment t) "document") "document")
+      (mark-paragraph))
+     (t (setq usetimer t) (YaTeX-mark-environment)))
+    (if YaTeX-use-image-preview
+	(let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer))
+	      (b (region-beginning)) (e (region-end)))
+	  (put 'YaTeX-typeset-conv2image-chain 'math math)
+	  (put 'YaTeX-typeset-conv2image-chain 'srctype nil)
+	  (put 'YaTeX-typeset-conv2image-chain 'win (selected-window))
+	  (put 'YaTeX-typeset-conv2image-chain 'start (current-time))
+	  (put 'YaTeX-typeset-environment-timer 'laststate
+	       (list (current-buffer) b e (preceding-char)
+		     (char-after (- (point) 2))
+		     (YaTeX-buffer-substring b e)
+		     (current-time)))
+	  (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain)
+	  (if usetimer
+	      (progn
+		(if YaTeX-on-the-fly-overlay
+		    (move-overlay YaTeX-on-the-fly-overlay b e)
+		  (overlay-put
+		   (setq YaTeX-on-the-fly-overlay (make-overlay b e))
+		   'face 'YaTeX-on-the-fly-activated-face))
+		(YaTeX-typeset-environment-auto)
+		)))
+      (YaTeX-typeset-region))))
+
 (defun YaTeX-typeset-environment ()
   "Typeset current environment or paragraph.
 If region activated, use it."
   (interactive)
-  (save-excursion
-    (let ((math (YaTeX-in-math-mode-p)) usetimer)
-      (cond
-       ((and YaTeX-on-the-fly-overlay (overlayp YaTeX-on-the-fly-overlay)
-	     (member YaTeX-on-the-fly-overlay (overlays-at (point))))
-	;; If current position is in on-the-fly overlay,
-	;; use that region again
-	(setq math (get 'YaTeX-typeset-conv2image-chain 'math))
-	(push-mark (overlay-start YaTeX-on-the-fly-overlay))
-	(goto-char (overlay-end YaTeX-on-the-fly-overlay)))
-       ((and (fboundp 'region-active-p) (region-active-p))
-	nil)				;if region is active, use it
-       (math (setq usetimer t) (YaTeX-mark-environment))
-       ((equal (or (YaTeX-inner-environment t) "document") "document")
-	(mark-paragraph))
-       (t (setq usetimer t) (YaTeX-mark-environment)))
-      (if YaTeX-use-image-preview
-	  (let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer))
-		(b (region-beginning)) (e (region-end)))
-	    (put 'YaTeX-typeset-conv2image-chain 'math math)
-	    (put 'YaTeX-typeset-conv2image-chain 'srctype nil)
-	    (put 'YaTeX-typeset-conv2image-chain 'win (selected-window))
-	    (put 'YaTeX-typeset-conv2image-chain 'start (current-time))
-	    (put 'YaTeX-typeset-environment-timer 'laststate
-		 (list (current-buffer) b e (preceding-char)
-		       (char-after (- (point) 2))
-		       (YaTeX-buffer-substring b e)
-		       (current-time)))
-	    (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain)
-	    (if usetimer
-		(progn
-		  (if YaTeX-on-the-fly-overlay
-		      (move-overlay YaTeX-on-the-fly-overlay b e)
-		    (overlay-put
-		     (setq YaTeX-on-the-fly-overlay (make-overlay b e))
-		     'face 'YaTeX-on-the-fly-activated-face))
-		  (YaTeX-typeset-environment-auto)
-		  )))
-	(YaTeX-typeset-region)))))
+  (let ((md (match-data)))
+    (unwind-protect
+	(save-excursion
+	  (YaTeX-typeset-environment-1))
+      (store-match-data md))))
+
 
 (defvar YaTeX-on-the-fly-preview-interval (string-to-number "0.9")
   "*Control the on-the-fly update of preview environment by an image.

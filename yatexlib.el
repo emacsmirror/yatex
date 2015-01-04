@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries
 ;;; 
 ;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan  4 00:16:04 2015 on firestorm
+;;; Last modified Sun Jan  4 21:04:29 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1119,7 +1119,7 @@ to most recent sectioning command."
 	    (goto-char curp)
 	    (error "Cannot found the end of current environment."))
 	(YaTeX-goto-corresponding-environment)
-	(beginning-of-line)		;for confirmation
+	;;(beginning-of-line)		;for confirmation ;OUT 2015/1/4
 	(if (< curp (point))
 	    (progn
 	      (message "Mark this environment?(y or n): ")
@@ -1128,8 +1128,10 @@ to most recent sectioning command."
 		(error "Abort.  Please call again at more proper position."))))
 	(set-mark-command nil)
 	(YaTeX-goto-corresponding-environment)
-	(end-of-line)
-	(if (eobp) nil (forward-char 1))))))
+	(goto-char (match-end 0))
+	;;(end-of-line)				;OUT 2015/1/5
+	;;(if (eobp) nil (forward-char 1))	;OUT 2015/1/5
+	))))
 
 (defun YaTeX-kill-buffer (buffer)
   "Make effort to show parent buffer after kill."
