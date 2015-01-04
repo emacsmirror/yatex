@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan  4 19:00:38 2015 on firestorm
+;;; Last modified Sun Jan  4 19:11:36 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -299,11 +299,11 @@ z		(ppcmd (cdr (assq proc ppprop)))
 		      'YaTeX-typeset-sentinel))
 		    (t 
 		     (if (equal 0 (process-exit-status proc))
-			 ;;Confirm process buffer to be shown when error
-			 (progn
-			   (YaTeX-showup-buffer
-			    pbuf 'YaTeX-showup-buffer-bottom-most)
-			   (message "Command FAILED!")))
+			 nil		;do nothing at successful exit
+		       ;;Confirm process buffer to be shown when error
+		       (YaTeX-showup-buffer
+			pbuf 'YaTeX-showup-buffer-bottom-most)
+		       (message "Command FAILED!"))
 		     ;;pull back original mode-name
 		     (setq mode-name "typeset"))))
 		 (forward-char 1))
