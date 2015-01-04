@@ -8,7 +8,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Fri Dec 26 00:09:22 2014 on firestorm
+@c Last modified Sun Jan  4 18:17:02 2015 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -1692,6 +1692,12 @@ Default makeindex command (@code{"makeindex"} (@code{"makeind"} on MS-DOS))
 
 @defvar YaTeX-dvipdf-command
 Default command name to convert .dvi to PDF (@code{"dvipdfmx"})
+@end defvar
+
+@defvar YaTeX-on-the-fly-preview-interval
+Interval time in seconds of idle to trigger on-the-fly preview of
+environment by @kbd{[prefix] t e}(0.9).
+@code{Nil} disables on-the-fly preview.
 @end defvar
 
 @defvar YaTeX-cmd-gimp

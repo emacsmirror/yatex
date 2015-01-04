@@ -13,7 +13,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Fri Dec 26 00:09:05 2014 on firestorm
+@c Last modified Sun Jan  4 18:15:05 2015 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -1895,6 +1895,12 @@ makeindexコマンド (@code{"makeindex"} (MS-DOSでは@code{"makeind"}))
 
 @defvar YaTeX-dvipdf-command
 dviをPDFに変換するコマンド (@code{"dvipdfmx"})
+@end defvar
+
+@defvar YaTeX-on-the-fly-preview-interval
+@kbd{[prefix] t e}で環境即時プレヴューをする場合の変換処理までの
+無操作時間(秒) (0.9)
+@code{nil} の場合は即時プレヴューをしない。
 @end defvar
 
 @defvar YaTeX-cmd-gimp

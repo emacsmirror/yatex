@@ -47,15 +47,16 @@
 
 [Process invoking]
 
-    *invoke bibtex                    [prefix] tb
     *invoke latex                     [prefix] tj
+    *invoke latex (on region)         [prefix] tr
+    *on-the-fly preview environment   [prefix] te
+    *invoke bibtex                    [prefix] tb
     *invoke makeindex                 [prefix] ti
     *kill current typesetting process [prefix] tk **
     *lpr dvi-file                     [prefix] tl
     *lpr dvi-file (all pages)   C-u   [prefix] tl
     *invoke previewer                 [prefix] tp
     *invoke lpq                       [prefix] tq
-    *invoke jlatex (on region)        [prefix] tr
 
 	Hitting [prefix] t will get you the menu, so there is no need to
 	remember the key after [prefix] t.
@@ -71,7 +72,7 @@
 	*To the typeset error		[prefix] '
 
 	Will jump to the position where the typeset error occurred from the
-	end.  Only effective when there was a error returned from latex.
+	end.  Only effective when there was a error returned from typesetter.
 
     *Jump to corresponding object                         [prefix] g
     *Jump to corresponding object (in another her window) [prefix] 4g
@@ -84,6 +85,7 @@
         -on a \include(only) or \input  to the matching file
         -on a \ref or \label            to the matching \label or \ref
         -on a \cite or \bibitem         to the matching \bibitem or \cite
+	-other 	       			to the matching line in previewer
 
         *Jump to the main file                   [prefix] ^
         *Jump to the main file in another window [prefix] 4^
@@ -153,6 +155,7 @@
 	enumerate, list and description environments.
 
 	*Browse included structure		[prefix] d
+	*Force re-highlight font-lock		[prefix] u
 
 							    HIROSE Yuuji
 							yuuji@yatex.org
