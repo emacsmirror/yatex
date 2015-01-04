@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Jan  3 23:37:49 2015 on firestorm
+;;; Last modified Sun Jan  4 19:00:38 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -297,10 +297,14 @@ z		(ppcmd (cdr (assq proc ppprop)))
 		       shell-file-name YaTeX-shell-command-option
 		       ppcmd)
 		      'YaTeX-typeset-sentinel))
-		    (t ;pull back original mode-name
-		     ;;Confirm process buffer to be shown when error occured
-		     (YaTeX-showup-buffer pbuf 'YaTeX-showup-buffer-bottom-most)
-		     (message "Command FAILED!")
+		    (t 
+		     (if (equal 0 (process-exit-status proc))
+			 ;;Confirm process buffer to be shown when error
+			 (progn
+			   (YaTeX-showup-buffer
+			    pbuf 'YaTeX-showup-buffer-bottom-most)
+			   (message "Command FAILED!")))
+		     ;;pull back original mode-name
 		     (setq mode-name "typeset"))))
 		 (forward-char 1))
 	     (setq YaTeX-typeset-process nil)
@@ -558,6 +562,7 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
 	(q (nth 4 plist))
 	(st (nth 5 plist))
 	(tm (nth 6 plist))
+	(overlay YaTeX-on-the-fly-overlay)
 	(thresh (* 2 (or (get 'YaTeX-typeset-conv2image-chain 'elapse) 1))))
     (cond
      ;; In minibuffer, do nothing
@@ -566,16 +571,15 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
      ;;;((and (message "s=%d, e=%d, p=%d" s e (point)) nil))
      ((or (not (eq b (window-buffer (selected-window))))
 	  (< (point) s)
-	  (> (point) e))
+	  (not (overlayp overlay))
+	  (not (eq (overlay-buffer overlay) (current-buffer)))
+	  (> (point) (overlay-end overlay)))
       (YaTeX-typeset-environment-cancel-auto))
      ;;;((and (message "e=%d, p=%d t=%s" e (point) (current-time)) nil))
      ;; If recently called, hold
-     ((< (YaTeX-elapsed-time tm (current-time)) thresh)
-      nil)
+     ;;; ((< (YaTeX-elapsed-time tm (current-time)) thresh) nil)
      ;; If condition changed from last call, do it
-     ((and (/= p (preceding-char))
-	   (/= q (char-after (- (point) 1)))
-	   (not (string= st (YaTeX-buffer-substring s (min e (point-max))))))
+     ((not (string= st (YaTeX-buffer-substring s (overlay-end overlay))))
       (YaTeX-typeset-environment)))))
 
 (defun YaTeX-typeset-environment ()
@@ -585,6 +589,13 @@ If region activated, use it."
   (save-excursion
     (let ((math (YaTeX-in-math-mode-p)) usetimer)
       (cond
+       ((and YaTeX-on-the-fly-overlay (overlayp YaTeX-on-the-fly-overlay)
+	     (member YaTeX-on-the-fly-overlay (overlays-at (point))))
+	;; If current position is in on-the-fly overlay,
+	;; use that region again
+	(setq math (get 'YaTeX-typeset-conv2image-chain 'math))
+	(push-mark (overlay-start YaTeX-on-the-fly-overlay))
+	(goto-char (overlay-end YaTeX-on-the-fly-overlay)))
        ((and (fboundp 'region-active-p) (region-active-p))
 	nil)				;if region is active, use it
        (math (setq usetimer t) (YaTeX-mark-environment))
@@ -615,7 +626,7 @@ If region activated, use it."
 		  )))
 	(YaTeX-typeset-region)))))
 
-(defvar YaTeX-on-the-fly-preview-image (string-to-number "0.1")
+(defvar YaTeX-on-the-fly-preview-interval (string-to-number "0.9")
   "*Control the on-the-fly update of preview environment by an image.
 Nil disables on-the-fly update.  Otherwise on-the-fly update is enabled
 with update interval specified by this value.")
@@ -628,10 +639,10 @@ with update interval specified by this value.")
 	  (run-with-idle-timer
 	   (max (string-to-number "0.1")
 		(cond
-		 ((numberp YaTeX-on-the-fly-preview-image) 
-		  YaTeX-on-the-fly-preview-image)
-		 ((stringp YaTeX-on-the-fly-preview-image)
-		  (string-to-number YaTeX-on-the-fly-preview-image))
+		 ((numberp YaTeX-on-the-fly-preview-interval) 
+		  YaTeX-on-the-fly-preview-interval)
+		 ((stringp YaTeX-on-the-fly-preview-interval)
+		  (string-to-number YaTeX-on-the-fly-preview-interval))
 		 (t 1)))
 	   t 'YaTeX-typeset-environment-timer))))
 
