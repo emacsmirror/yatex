@@ -1,6 +1,6 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
 ;;; (c)2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan  4 17:14:59 2015 on firestorm
+;;; Last modified Sun Jan  4 23:19:02 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -95,7 +95,7 @@ Convert local image URI to \\includegraphcis{} and
   "Overlay of on-the-fly preview image")
 (defface YaTeX-on-the-fly-activated-face
   (list
-   (list (list '(class color))
+   (list (list '(class color) '(min-colors 65536))
 	 (list ':background
 	       (if (eq YaTeX-background-mode 'light)
 		   (car YaTeX-on-the-fly-bg-face)

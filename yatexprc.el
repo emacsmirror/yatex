@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan  4 19:56:26 2015 on firestorm
+;;; Last modified Sun Jan  4 23:26:54 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -408,10 +408,12 @@ called with one argument of current file name whitout extension."
       (put 'dvi2-command 'file buffer)
       (put 'dvi2-command 'offset lineinfo))))
 
-(defvar YaTeX-use-image-preview "jpg"
+(defvar YaTeX-use-image-preview "png"
   "*Nil means not using image preview by [prefix] t e.
 Acceptable value is one of \"jpg\" or \"png\", which specifies
-format of preview image.")
+format of preview image.  NOTE that if your system has /usr/bin/sips
+not having convert(ImageMagick), jpeg format is automatically taken
+for conversion.")
 (defvar YaTeX-preview-image-mode-map nil
   "Keymap used in YaTeX-preview-image-mode")
 (defun YaTeX-preview-image-mode ()
@@ -435,20 +437,21 @@ format of preview image.")
      "pdfcrop --clip %b.pdf tmp.pdf"
      (if (YaTeX-executable-find "convert")
 	 "convert -density %d tmp.pdf %b.%f"
-       "sips -s format %f -s dpiWidth %d -s dpiHeight %d %b.pdf --out %b.%f")
+       ;; If we use sips, specify jpeg as format
+       "sips -s format jpeg -s dpiWidth %d -s dpiHeight %d %b.pdf --out %b.jpg")
      "rm -f tmp.pdf")))
   "*Pipe line of command as a list to create image file from PDF.
 See also doc-string of YaTeX-typeset-dvi2image-chain.")
 
 (defvar YaTeX-typeset-dvi2image-chain
   (cond
-   ((and (equal YaTeX-use-image-preview "png")
-	 (YaTeX-executable-find "dvipng"))
-    (list "dvipng %b.dvi"))
    ((YaTeX-executable-find YaTeX-cmd-dvips)
     (list
      (format "%s -E -o %%b.eps %%b.dvi" YaTeX-cmd-dvips)
-     "convert -alpha off -density %d %b.eps %b.%f")))
+     "convert -alpha off -density %d %b.eps %b.%f"))
+   ((and (equal YaTeX-use-image-preview "png")
+	 (YaTeX-executable-find "dvipng"))
+    (list "dvipng %b.dvi")))
   "*Pipe line of command as a list to create png file from DVI or PDF.
 %-notation rewritten list:
  %b	basename of target file(\"texput\")
