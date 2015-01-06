@@ -25,6 +25,7 @@ yahtml.el		野鳥風 html モード
 yatex.el		野鳥・主 Emacs-Lisp ファイル
 yatex.new		各バージョンの変更履歴
 yatex19.el		Emacs-19(Mule2)用の設定
+yatex23.el		Emacs-23以降用の設定
 yatexadd.el		付加関数の定義例
 yatexenv.el		LaTeX 環境依存の関数
 yatexgen.el		野鳥用付加関数自動作成モード
