@@ -3,30 +3,25 @@
 Installation of YaTeX / 野鳥のインストール
 ******************************************
 
-Put these expressions into your ~/.emacs
-まず ~/.emacsに下の2項目を加えます。
-
-      (setq auto-mode-alist
-           (cons (cons "\\.tex$" 'yatex-mode) auto-mode-alist))
-      (autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
-
-Then, add certain path name where you put files of YaTeX to your
-load-path.  If you want to put them in `~/src/emacs', write
-次に野鳥の emacs-lisp ファイル群を置くディレクトリを load-path に加えます。
-たとえば、`~/src/emacs/yatex'に置くのであれば、
-
-     (setq load-path (cons (expand-file-name "~/src/emacs/yatex") load-path))
-
-in your ~/.emacs.
-などとします。
-
-Then edit makefile and exec the next command.
-続いて makefile を編集し、
+First, take a look at makefile to confirm or modify EMACS= and PREFIX=
+lines and exec the next command.
+このディレクトリにある makefile の EMACS= と PREFIX= の行を確認し、
+必要なら修正した後に以下のコマンドを起動してください。
 
 	% make install 
 	(or "sudo make install")
 
-でインストールを行ってください。
+Then, type `make show-init' on the shell in this directory as below
+and ou will get elisp expressions.  Add the expressions to your ~/.emacs.
+続いて以下のようにコマンドを起動し、得られた結果出力を ~/.emacs
+に足してください。
+
+	% make show-init
+
+After copying output from make command to your ~/.emacs, you will be able to
+use yatex-mode for *.tex files.
+以上で、初期設定は終わりです。
+
 
 Without installing to default-dir, you can use yatex by adding the elisp
 obtained by below to ~/.emacs.
@@ -34,36 +29,6 @@ obtained by below to ~/.emacs.
 普通に使えます。
 
 	% make show-init2
-
-
-If `make install' fails, do as follows;
-もし `make install' でうまく行かない時は下記のように手動でインストール
-を行ってください。
-
-First, copy `*.el' to suitable directory.
-最初に、野鳥の emacs-lisp ファイル群を適当なディレクトリにコピーします。
-
-Then copy `help/YATEXHLP.eng' to $EMACS/etc directory, which is
-displayed by typin `exec-directory C-j' in the *scratch* buffer
-(on Emacs19, $exec-directory/../../site-lisp).
-つぎに、help/YATEXHLP.jp を Emacs の etc ディレクトリに入れます。
-(*scratch* バッファで「exec-directory C-j」とうって示されるところです
- Emacs19以降の場合 doc-directory の ../../site-lisp)
-
-
-Finally, copy `docs/yatexe' and `docs/yahtmle' to Info directory and
-append the contents of `dir' in this directory to `dir' of Info directory.
-最後に、info ディレクトリに docs/yatexj, docs/yatexe, docs/yahtmlj,
-docs/yahtmle をコピーし、info ディレクトリの dir というファイルにこのディ
-レクトリの dir ファイルの中身を追加します。
-
-Note that when you byte-compile yatex19.el, do it on window system.
-This file cannot be compiled on terminal Emacs because it requires
-hilit19.el, which cannot be loaded on terminal Emacs.  But you don't
-have to byte-compile it.
-注意: yatex19.el をバイトコンパイルする時はウィンドウシステム上の emacs 
-で行って下さい。emacs -nw では、hilit19.el がロードできず、正常にコンパ
-イルできません。うまくいかない場合はバイトコンパイルしなくて構いません。
 
 
 About yahtml / yahtmlについて

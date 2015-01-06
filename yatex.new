@@ -3,7 +3,7 @@
 
 1.79	=== yatex ===
 	数式環境など特定環境内の [prefix] t e で On-the-fly preview 発動。
-	YaTeX-help-file のデフォルト位置を site-lisp/yatex/help に変更。
+	YaTeX-help-file のデフォルト位置を site-lisp/yatex/help/ に変更。
 	...
 
 

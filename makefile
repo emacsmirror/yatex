@@ -135,11 +135,12 @@ install-info:
 	done
 
 show-init:
-	@printf '%s\n%s\n%s\n%s\n' \
+	@printf '%s\n' \
 	  '(setq auto-mode-alist' \
 	  "  (cons (cons \"\\.tex$$\" 'yatex-mode) auto-mode-alist))" \
 	  "(autoload 'yatex-mode \"yatex\" \"Yet Another LaTeX mode\" t)" \
-	  "(add-to-list 'load-path \"${LISPDIR}\")"
+	  "(add-to-list 'load-path \"${LISPDIR}\")" \
+	  "(setq YaTeX-help-file \"${LISPDIR}/help/YATEXHLP.eng\")"
 	@printf '(setq tex-command "%s")%s\n' \
 	 `CMDS='platex pdflatex ptex2pdf lualatex' DFLT=latex \
 	  make search-cmd`
