@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  6 08:53:32 2015 on firestorm
+;;; Last modified Tue Jan  6 23:02:32 2015 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.78.4"
+(defconst YaTeX-revision-number "1.78.5"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -1669,7 +1669,7 @@ Optional second argument CHAR is for non-interactive call from menu."
 				 (?b . "BIBTEX")))))
 	(YaTeX-getset-builtin key t))
 
-       ((= c ?b)			;%#BEGIN %#END region
+       ((= c ?B)			;%#BEGIN %#END region
 	(or end (setq beg (min (point) (mark)) end (max (point) (mark))))
 	(set-marker b beg)
 	(set-marker e end)
