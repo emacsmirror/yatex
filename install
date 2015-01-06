@@ -20,16 +20,24 @@ load-path.  If you want to put them in `~/src/emacs', write
 in your ~/.emacs.
 などとします。
 
-Then edit makefile and set your environment variable `DISPLAY' correctly, 
-exec the next.
-続いて makefile を編集し、環境変数 DISPLAY の値を正しくセットしてから
+Then edit makefile and exec the next command.
+続いて makefile を編集し、
 
 	% make install 
+	(or "sudo make install")
 
 でインストールを行ってください。
 
-  If `make install' fails, do as follows;
-  もし `make install' でうまく行かない時は下記のように手動でインストール
+Without installing to default-dir, you can use yatex by adding the elisp
+obtained by below to ~/.emacs.
+インストールしなくても以下のコマンド出力を ~/.emacs に追加すれば
+普通に使えます。
+
+	% make show-init2
+
+
+If `make install' fails, do as follows;
+もし `make install' でうまく行かない時は下記のように手動でインストール
 を行ってください。
 
 First, copy `*.el' to suitable directory.

@@ -1,7 +1,7 @@
 ;;; yatexhlp.el --- YaTeX helper with LaTeX commands and macros
 ;;; 
-;;; (c)1994,1998,2004,2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 21 22:55:07 2014 on firestorm
+;;; (c)1994,1998,2004,2014,2015 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Tue Jan  6 20:24:31 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -12,8 +12,9 @@
        (cond
 	((and (boundp 'site-directory) site-directory) site-directory)
 	((string-match "\\.app/" doc-directory)	;For Emacs.app(Darwin)
-	 (expand-file-name "../site-lisp" doc-directory))
-	(YaTeX-emacs-19 (expand-file-name "../../site-lisp" doc-directory))
+	 (expand-file-name "../site-lisp/yatex" doc-directory))
+	(YaTeX-emacs-19
+	 (expand-file-name "../../site-lisp/yatex" doc-directory))
 	(t exec-directory))))
   (defvar YaTeX-help-file
     (expand-file-name help-file help-dir)
