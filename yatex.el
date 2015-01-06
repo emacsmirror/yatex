@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  6 23:02:32 2015 on firestorm
+;;; Last modified Tue Jan  6 23:19:53 2015 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1656,7 +1656,7 @@ Optional second argument CHAR is for non-interactive call from menu."
   "Operate %# notation."
   ;;Do not use interactive"r" for the functions which require no mark
   (interactive)
-  (message "!)Edit-%%#! B)EGIN-END-region P)review L)Edit-%%#LPR make(I)ndex B)ibtex")
+  (message "!)Edit-%%#! D)VIPDF B)EGIN-END-region P)review L)PR make(I)ndex b)ibtex")
   (let ((c (or char (read-char))) (string "") key
 	(b (make-marker)) (e (make-marker)))
     (save-excursion
@@ -1666,6 +1666,7 @@ Optional second argument CHAR is for non-interactive call from menu."
 				 (?p . "PREVIEW")
 				 (?l . "LPR")
 				 (?i . "MAKEINDEX")
+				 (?d . "DVIPDF")
 				 (?b . "BIBTEX")))))
 	(YaTeX-getset-builtin key t))
 
@@ -1684,8 +1685,7 @@ Optional second argument CHAR is for non-interactive call from menu."
 	(goto-char e)
 	(insert "%#END\n")
 	(set-marker b nil)
-	(set-marker e nil))
-       ))))
+	(set-marker e nil))))))
 
 (defvar YaTeX-refcommand-def-regexp-default
   "label\\|bibitem")
