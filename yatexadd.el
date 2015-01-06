@@ -1,7 +1,7 @@
 ;;; yatexadd.el --- YaTeX add-in functions
 ;;; yatexadd.el rev.21
-;;; (c)1991-2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Dec 20 14:55:10 2014 on firestorm
+;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Tue Jan  6 08:53:41 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:

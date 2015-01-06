@@ -1,6 +1,6 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
-;;; (c)2014 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan  4 23:19:02 2015 on firestorm
+;;; (c)2014-2015 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Tue Jan  6 08:54:04 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:

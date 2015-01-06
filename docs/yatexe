@@ -1504,6 +1504,11 @@ variable by `M-x describe-variable'.
  -- Variable: YaTeX-dvipdf-command
      Default command name to convert .dvi to PDF (`"dvipdfmx"')
 
+ -- Variable: YaTeX-on-the-fly-preview-interval
+     Interval time in seconds of idle to trigger on-the-fly preview of
+     environment by `[prefix] t e'(0.9).  `Nil' disables on-the-fly
+     preview.
+
  -- Variable: YaTeX-cmd-gimp
      Command name of GIMP (code{"gimp"})
  -- Variable: YaTeX-cmd-tgif
@@ -2263,19 +2268,19 @@ Node: Cooperation with other packages46133
 Node: Customizations46838
 Node: Lisp variables47172
 Node: All customizable variables48176
-Node: Sample definitions59211
-Node: Hook variables59724
-Node: Hook file60428
-Node: Add-in functions60767
-Node: How the add-in function works61627
-Node: Defining option-add-in63826
-Node: Defining argument-add-in64548
-Node: Defining enclosing-add-in65430
-Node: How the function is called66284
-Node: Useful functions for creating add-in66960
-Node: Contribution68365
-Node: Add-in generator68639
-Node: Etcetera74011
-Node: Copying74616
+Node: Sample definitions59413
+Node: Hook variables59926
+Node: Hook file60630
+Node: Add-in functions60969
+Node: How the add-in function works61829
+Node: Defining option-add-in64028
+Node: Defining argument-add-in64750
+Node: Defining enclosing-add-in65632
+Node: How the function is called66486
+Node: Useful functions for creating add-in67162
+Node: Contribution68567
+Node: Add-in generator68841
+Node: Etcetera74213
+Node: Copying74818
 
 End tag table
