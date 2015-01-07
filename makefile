@@ -80,9 +80,9 @@ PACKDIR	= ${TMPDIR}/yatex${VERSION}
 
 all:
 	@echo "Edit this makefile first."
-	@echo 'Type "make install" to install YaTeX.'
-	@echo 'Type "make install-yahtml" to install yahtml.'
-	@echo 'If you cling to elc files. type "make elc" before make install'
+	@echo 'Type "${MAKE} install" to install YaTeX.'
+	@echo 'Type "${MAKE} install-yahtml" to install yahtml.'
+	@echo 'If you love elc files, type "${MAKE} elc" before ${MAKE} install'
 #	@echo "If you don't use X-clinet of Emacs,"
 #	@echo 'type "make install-nw" instead.'
 
@@ -111,7 +111,7 @@ install-real:
 
 install-message:
 	@echo "--------------------------------"
-	@echo "If you have install-info command, type 'make install-info'."
+	@echo "If you have install-info command, type '${MAKE} install-info'."
 	@echo "If not, add next lines into your site's info dir manually."
 	@cat dir
 	@echo "--------------------------------"
@@ -120,12 +120,12 @@ install-message:
 	@echo "  完了. ~/.emacs 等に以下を追加する必要があるかもしれません."
 	@echo
 	@echo ";;; ------ Startup definitions for YaTeX ------ ;;;"
-	@make show-init
+	@${MAKE} show-init
 	@echo ";;; ------------------------------------------- ;;;"
 	@echo
-	@echo " To get elisp above again, call make command as below."
-	@echo " 上記elispを再度得るには以下のようにmakeを起動してください."
-	@echo " % make $${PREFIX:+PREFIX=$$PREFIX }show-init"
+	@echo " To get elisp above again, call ${MAKE} command as below."
+	@echo " 上記elispを再度得るには以下のように${MAKE}を起動してください."
+	@echo " % ${MAKE} $${PREFIX:+PREFIX=$$PREFIX }show-init"
 
 install-info:
 	for f in ${DOCOBJ}; do \
@@ -141,19 +141,19 @@ show-init:
 	  "(autoload 'yatex-mode \"yatex\" \"Yet Another LaTeX mode\" t)" \
 	  "(add-to-list 'load-path \"${LISPDIR}\")" \
 	  "(setq YaTeX-help-file \"${LISPDIR}/help/YATEXHLP.eng\")"
-	@printf '(setq tex-command "%s")%s\n' \
+	@printf '(setq tex-command "%s")\n' \
 	 `CMDS='platex pdflatex ptex2pdf lualatex' DFLT=latex \
-	  make search-cmd`
-	@printf '(setq dvi2-command "%s")%s\n' \
+	  ${MAKE} -s search-cmd`
+	@printf '(setq dvi2-command "%s")\n' \
 	 `CMDS='pxdvi xdvik kxdvi dviout texworks' DFLT=xdvi \
-	  make search-cmd`
-	@printf '(setq tex-pdfview-command "%s")%s\n' \
+	  ${MAKE} -s search-cmd`
+	@printf '(setq tex-pdfview-command "%s")\n' \
 	 `CMDS='evince mupdf xpdf kpdf texworks sumatrapdf' \
 	  DFLT=acroread \
-	  make search-cmd`
+	  ${MAKE} -s search-cmd`
 
 show-init2:
-	@make LISPDIR=$$PWD show-init
+	@${MAKE} LISPDIR=$$PWD show-init
 
 search-cmd:
 	@for f in $$CMDS; do \
