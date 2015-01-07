@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  6 08:56:01 2015 on firestorm
+;;; Last modified Wed Jan  7 09:06:54 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -9,10 +9,10 @@
 (require 'yatexlib)
 
 (defvar YaTeX-typeset-process nil
-  "Process identifier for jlatex")
+  "Process identifier for latex")
 
 (defvar YaTeX-typeset-buffer "*YaTeX-typesetting*"
-  "Process buffer for jlatex")
+  "Process buffer for latex")
 
 (defvar YaTeX-typeset-buffer-syntax nil
   "*Syntax table for typesetting buffer")
@@ -59,7 +59,7 @@
 (defvar YaTeX-typeset-consumption nil)
 (make-variable-buffer-local 'YaTeX-typeset-consumption)
 (defun YaTeX-typeset (command buffer &optional prcname modename ppcmd)
-  "Execute jlatex (or other) to LaTeX typeset."
+  "Execute latex command (or other) to LaTeX typeset."
   (interactive)
   (save-excursion
     (let ((p (point)) (window (selected-window)) execdir (cb (current-buffer))
@@ -1209,9 +1209,9 @@ error or warning lines in reverse order."
 	(widen))))
 
 (defvar YaTeX-dvi2-command-ext-alist
- '(("[agx]dvi\\|dviout" . ".dvi")
+ '(("[agxk]dvi\\|dviout" . ".dvi")
    ("ghostview\\|gv" . ".ps")
-   ("acroread\\|xpdf\\|pdfopen\\|Preview\\|TeXShop\\|Skim\\|evince\\|mupdf\\|zathura\\|okular" . ".pdf")))
+   ("acroread\\|[xk]pdf\\|pdfopen\\|Preview\\|TeXShop\\|Skim\\|evince\\|mupdf\\|zathura\\|okular" . ".pdf")))
 
 (defun YaTeX-get-preview-file-name (&optional preview-command)
   "Get file name to preview by inquiring YaTeX-get-latex-command"
@@ -1238,12 +1238,12 @@ If there is a line which begins with string: \"%#!\", the following
 strings are assumed to be the latex-command and arguments.  The
 default value of latex-command is:
 	tex-command FileName
-and if you write \"%#!jlatex\" in the beginning of certain line.
-	\"jlatex \" FileName
+and if you write \"%#!platex\" in the beginning of certain line.
+	\"platex \" FileName
 will be the latex-command,
-and you write \"%#!jlatex main.tex\" on some line and argument SWITCH
+and you write \"%#!platex main.tex\" on some line and argument SWITCH
 is non-nil, then
-	\"jlatex main.tex\"
+	\"platex main.tex\"
 
 will be given to the shell."
   (let (parent tparent magic)
