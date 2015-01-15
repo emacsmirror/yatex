@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  6 23:19:53 2015 on firestorm
+;;; Last modified Thu Jan 15 10:42:01 2015 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1267,6 +1267,8 @@ into {\\xxx } braces.
 			  (get 'YaTeX-insert-braces 'begend-guide)))))))))
 	env macro not-literal b e)
     (cond
+     ((and (fboundp 'region-active-p) (region-active-p))
+      (YaTeX-insert-braces-region (region-beginning) (region-end)))
      ((YaTeX-jmode) (YaTeX-self-insert arg))
      ((not (YaTeX-closable-p)) (YaTeX-self-insert arg))
      ((save-excursion
