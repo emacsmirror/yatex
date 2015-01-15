@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries
 ;;; 
 ;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan 15 11:22:54 2015 on firestorm
+;;; Last modified Fri Jan 16 08:40:45 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -732,7 +732,8 @@ If no such window exist, switch to buffer BUFFER."
 	(if (fboundp 'completing-read-with-history-in)
 	    (completing-read-with-history-in
 	     minibuffer-history-symbol prompt table predicate must-match initial)
-	  (completing-read prompt table predicate must-match initial))
+	  (save-excursion ;work around to avoid cursor warp
+	    (completing-read prompt table predicate must-match initial)))
       (if (and YaTeX-emacs-19 hsym) (set hsym minibuffer-history)))))
 
 ;;;###autoload
@@ -740,7 +741,8 @@ If no such window exist, switch to buffer BUFFER."
   "Read from minibuffer with general history: gmhist, Emacs-19."
   (cond
    (YaTeX-emacs-19
-    (read-from-minibuffer prompt init map read hsym))
+    (save-excursion ;work around to avoid cursor warp
+      (read-from-minibuffer prompt init map read hsym)))
    (t
     (let ((minibuffer-history-symbol hsym))
       (read-from-minibuffer prompt init map read)))))
@@ -750,7 +752,8 @@ If no such window exist, switch to buffer BUFFER."
   "Read string with history: gmhist(Emacs-18) and Emacs-19."
   (cond
    (YaTeX-emacs-19
-    (read-from-minibuffer prompt init minibuffer-local-map nil hsym))
+    (save-excursion ;work around to avoid cursor warp
+      (read-from-minibuffer prompt init minibuffer-local-map nil hsym)))
    ((featurep 'gmhist-mh)
     (read-with-history-in hsym prompt init))
    (t (read-string prompt init))))
@@ -761,14 +764,16 @@ If no such window exist, switch to buffer BUFFER."
   (if (equal (if (boundp 'last-input-event) last-input-event last-input-char)
 	     YaTeX-skip-next-reader-char)
       ""
-    (apply 'read-string args)))
+    (save-excursion ;work around to avoid cursor warp
+      (apply 'read-string args))))
 
 (defun YaTeX-completing-read-or-skip (&rest args)
   "Do completing-read, or skip if last input char is \C-j."
   (if (equal (if (boundp 'last-input-event) last-input-event last-input-char)
 	     YaTeX-skip-next-reader-char)
       ""
-    (apply 'completing-read args)))
+    (save-excursion ;work around to avoid cursor warp
+      (apply 'completing-read args))))
 
 ;;;###autoload
 (fset 'YaTeX-rassoc
