@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jan  7 09:06:54 2015 on firestorm
+;;; Last modified Thu Jan 15 11:15:07 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -412,7 +412,7 @@ called with one argument of current file name whitout extension."
   "*Nil means not using image preview by [prefix] t e.
 Acceptable value is one of \"jpg\" or \"png\", which specifies
 format of preview image.  NOTE that if your system has /usr/bin/sips
-not having convert(ImageMagick), jpeg format is automatically taken
+while not having convert(ImageMagick), jpeg format is automatically taken
 for conversion.")
 (defvar YaTeX-preview-image-mode-map nil
   "Keymap used in YaTeX-preview-image-mode")
@@ -474,6 +474,7 @@ YaTeX-typeset-dvi2image-chain.")
 	(format YaTeX-use-image-preview)
 	(target (concat texput "." format))
 	(math (get 'YaTeX-typeset-conv2image-chain 'math))
+	(dpi  (get 'YaTeX-typeset-conv2image-chain 'dpi))
 	(srctype (or (get 'YaTeX-typeset-conv2image-chain 'srctype)
 		     (if (file-newer-than-file-p
 			  (concat texput ".pdf")
@@ -503,7 +504,7 @@ YaTeX-typeset-dvi2image-chain.")
 			  command
 			  (list (cons "b" "texput")
 				(cons "f" format)
-				(cons "d" (if math "300" "200"))))))
+				(cons "d" dpi)))))
 	    (insert (format "Calling `%s'...\n" cmdline))
 	    (set-process-sentinel
 	     (setq YaTeX-typeset-conv2image-process
@@ -585,8 +586,30 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
      ((not (string= st (YaTeX-buffer-substring s (overlay-end overlay))))
       (YaTeX-typeset-environment)))))
 
+
+(defun YaTeX-typeset-environment-by-lmp ()
+  (save-excursion
+    (let ((sw (selected-window)))
+      (goto-char opoint)
+      (latex-math-preview-expression)
+      (select-window sw))))
+
+(defun YaTeX-typeset-environment-by-builtin ()
+  (save-excursion
+    (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain)))
+
+(defvar YaTeX-on-the-fly-math-preview-engine
+  (if (fboundp 'latex-math-preview-expression)
+      'YaTeX-typeset-environment-by-lmp
+    'YaTeX-typeset-environment-by-builtin)
+  "Function symbol to use math-preview.
+'YaTeX-typeset-environment-by-lmp for using latex-math-preview,
+'YaTeX-typeset-environment-by-builtin for using yatex-builtin.")
+
 (defun YaTeX-typeset-environment-1 ()
-  (let ((math (YaTeX-in-math-mode-p)) usetimer)
+  (let*((math (YaTeX-in-math-mode-p))
+	(dpi (or (YaTeX-get-builtin "PREVIEWDPI") (if math "300" "200")))
+	(opoint (point))  usetimer)
     (cond
      ((and YaTeX-on-the-fly-overlay (overlayp YaTeX-on-the-fly-overlay)
 	   (member YaTeX-on-the-fly-overlay (overlays-at (point))))
@@ -595,7 +618,7 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
       (setq math (get 'YaTeX-typeset-conv2image-chain 'math))
       (push-mark (overlay-start YaTeX-on-the-fly-overlay))
       (goto-char (overlay-end YaTeX-on-the-fly-overlay)))
-     ((and (fboundp 'region-active-p) (region-active-p))
+     ((YaTeX-region-active-p)
       nil)				;if region is active, use it
      (math (setq usetimer t) (YaTeX-mark-environment))
      ((equal (or (YaTeX-inner-environment t) "document") "document")
@@ -605,6 +628,7 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
 	(let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer))
 	      (b (region-beginning)) (e (region-end)))
 	  (put 'YaTeX-typeset-conv2image-chain 'math math)
+	  (put 'YaTeX-typeset-conv2image-chain 'dpi dpi)
 	  (put 'YaTeX-typeset-conv2image-chain 'srctype nil)
 	  (put 'YaTeX-typeset-conv2image-chain 'win (selected-window))
 	  (put 'YaTeX-typeset-conv2image-chain 'start (current-time))
@@ -613,7 +637,8 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
 		     (char-after (- (point) 2))
 		     (YaTeX-buffer-substring b e)
 		     (current-time)))
-	  (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain)
+	  (if math (funcall YaTeX-on-the-fly-math-preview-engine)
+	    (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain))
 	  (if usetimer
 	      (progn
 		(if YaTeX-on-the-fly-overlay
