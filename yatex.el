@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan 15 10:42:01 2015 on firestorm
+;;; Last modified Thu Jan 15 23:15:51 2015 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.78.5"
+(defconst YaTeX-revision-number "1.78.6"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -864,16 +864,18 @@ by completing read.
 you can put REGION into that environment between \\begin and \\end."
   (interactive "P")
   (let*
-      ((mode (if arg " region" ""))
+      ((region-p (or arg (YaTeX-region-active-p)))
+       (mode (if region-p " region" ""))
        (env
-	(YaTeX-read-environment
-	 (format "Begin environment%s(default %s): " mode YaTeX-env-name))))
+	(save-excursion		;for Emacs24 work-around to avoid point warp 
+	  (YaTeX-read-environment
+	   (format "Begin environment%s(default %s): " mode YaTeX-env-name)))))
     (if (string= env "")
 	(setq env YaTeX-env-name))
     (setq YaTeX-env-name env)
     (YaTeX-update-table
      (list YaTeX-env-name) 'env-table 'user-env-table 'tmp-env-table)
-    (YaTeX-insert-begin-end YaTeX-env-name arg)))
+    (YaTeX-insert-begin-end YaTeX-env-name region-p)))
 
 (defun YaTeX-make-begin-end-region ()
   "Call YaTeX-make-begin-end with ARG to specify region mode."
@@ -928,7 +930,8 @@ the region from BEG to END into the first argument of the LaTeX sequence.
 Optional 4th arg CMD is LaTeX command name, for non-interactive use."
   (interactive "P")
   (setq YaTeX-current-completion-type 'section)
-  (if (equal arg '(4)) (setq beg (region-beginning) end (region-end)))
+  (if (or (equal arg '(4)) (YaTeX-region-active-p))
+      (setq beg (region-beginning) end (region-end)))
   (unwind-protect
       (let*
 	  ((source-window (selected-window))
@@ -1028,7 +1031,9 @@ into {\\xxx } braces.
 \(key binding for universal-argument is \\[universal-argument]\)"
   (interactive "P")
   (YaTeX-sync-local-table 'tmp-fontsize-table)
-  (let* ((mode (if arg "region" ""))
+  (let* ((region-p (if (or arg (YaTeX-region-active-p))
+		       (cons (region-beginning) (region-end))))
+	 (mode (if region-p "region" ""))
 	 (fontsize
 	  (or fontsize
 	      (YaTeX-read-fontsize
@@ -1050,12 +1055,14 @@ into {\\xxx } braces.
 	 (setq fontsize
 	       (cdr (assoc YaTeX-fontsize-name LaTeX2e-fontstyle-alist)))
 	 (setq YaTeX-fontsize-name fontsize))
-    (if arg
-	(save-excursion
-	  (if (> (point) (mark)) (exchange-point-and-mark))
+    (if region-p
+	(let ((b (car region-p))
+	      (e (set-marker (make-marker) (cdr region-p))))
+	  (goto-char b)
 	  (insert "{\\" YaTeX-fontsize-name " ")
-	  (exchange-point-and-mark)
-	  (insert "}"))
+ 	  (goto-char e)
+	  (insert "}")
+	  (set-marker e nil))
       (insert (concat "{\\" YaTeX-fontsize-name " }"))
       (forward-char -1)
       (if YaTeX-current-position-register
@@ -1267,7 +1274,7 @@ into {\\xxx } braces.
 			  (get 'YaTeX-insert-braces 'begend-guide)))))))))
 	env macro not-literal b e)
     (cond
-     ((and (fboundp 'region-active-p) (region-active-p))
+     ((YaTeX-region-active-p)
       (YaTeX-insert-braces-region (region-beginning) (region-end)))
      ((YaTeX-jmode) (YaTeX-self-insert arg))
      ((not (YaTeX-closable-p)) (YaTeX-self-insert arg))
@@ -1388,6 +1395,8 @@ into {\\xxx } braces.
   (interactive "p")
   (let ((col (1- (current-column))))
     (cond
+     ((YaTeX-region-active-p)
+      (YaTeX-insert-brackets-region (region-beginning) (region-end)))
      ((YaTeX-jmode) (YaTeX-self-insert arg))
      ((not (YaTeX-closable-p))
       (YaTeX-self-insert arg))
@@ -1434,6 +1443,8 @@ into {\\xxx } braces.
   "Insert parenthesis pair."
   (interactive "p")
   (cond
+   ((YaTeX-region-active-p)
+    (YaTeX-insert-parens-region (region-beginning) (region-end)))
    ((YaTeX-jmode) (YaTeX-self-insert arg))
    ((not (YaTeX-closable-p)) (YaTeX-self-insert arg))
    ((save-excursion
@@ -2667,64 +2678,6 @@ Default of POINT is (point)."
 		     (YaTeX-quick-in-environment-p
 		      YaTeX-verbatim-environments))))))
       (store-match-data md))))
-
-(defun YaTeX-in-environment-p (env)
-  "Return if current LaTeX environment is ENV.
-ENV is given in the form of environment's name or its list."
-  (let ((md (match-data)) (nest 0) p envrx)
-    (cond
-     ((atom env)
-      (setq envrx
-	    (concat "\\("
-		    (regexp-quote
-		     (YaTeX-replace-format-args
-		      YaTeX-struct-begin env "" ""))
-		    "\\>\\)\\|\\("
-		    (regexp-quote
-		     (YaTeX-replace-format-args
-		      YaTeX-struct-end env "" ""))
-		    "\\)"))
-      (save-excursion
-	(setq p (catch 'open
-		  (while (YaTeX-re-search-active-backward
-			  envrx YaTeX-comment-prefix nil t)
-		    (if (match-beginning 2)
-			(setq nest (1+ nest))
-		      (setq nest (1- nest)))
-		    (if (< nest 0)
-			(throw 'open (cons env (match-beginning 0)))))))))
-     ((listp env)
-      (setq p
-	    (or (YaTeX-in-environment-p (car env))
-		(and (cdr env) (YaTeX-in-environment-p (cdr env)))))))
-    (store-match-data md)
-    p;(or p (YaTeX-in-verb-p (match-beginning 0)))
-    ))
-
-(defun YaTeX-quick-in-environment-p (env)
-  "Check quickly but unsure if current environment is ENV.
-ENV is given in the form of environment's name or its list.
-This function returns correct result only if ENV is NOT nested."
-  (save-excursion
-    (let ((md (match-data)) m0 (p (point)) rc clfound)
-      (cond
-       ((listp env)
-	(or (YaTeX-quick-in-environment-p (car env))
-	    (and (cdr env) (YaTeX-quick-in-environment-p (cdr env)))))
-       (t
-	(unwind-protect
-	    (if (prog1
-		    (YaTeX-search-active-backward
-		     (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
-		     YaTeX-comment-prefix nil t)
-		  (setq m0 (match-beginning 0)))
-		(if (YaTeX-search-active-forward
-		     (YaTeX-replace-format-args
-		      YaTeX-struct-end env)
-		     YaTeX-comment-prefix p t nil)
-		    nil			;if \end{env} found, return nil
-		  (cons env m0)))	;else, return meaningful values
-	  (store-match-data md)))))))
 
 ;; Filling \item
 (defun YaTeX-remove-trailing-comment (start end)

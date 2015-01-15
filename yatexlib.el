@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries
 ;;; 
 ;;; (c)1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan  4 21:04:29 2015 on firestorm
+;;; Last modified Thu Jan 15 11:22:54 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -974,6 +974,64 @@ of 'YaTeX-inner-environment, which can be referred by
 	   (progn (skip-chars-forward open) (1+ (point)))
 	   (progn (skip-chars-forward close) (point)))))))
 
+(defun YaTeX-in-environment-p (env)
+  "Return if current LaTeX environment is ENV.
+ENV is given in the form of environment's name or its list."
+  (let ((md (match-data)) (nest 0) p envrx)
+    (cond
+     ((atom env)
+      (setq envrx
+	    (concat "\\("
+		    (regexp-quote
+		     (YaTeX-replace-format-args
+		      YaTeX-struct-begin env "" ""))
+		    "\\>\\)\\|\\("
+		    (regexp-quote
+		     (YaTeX-replace-format-args
+		      YaTeX-struct-end env "" ""))
+		    "\\)"))
+      (save-excursion
+	(setq p (catch 'open
+		  (while (YaTeX-re-search-active-backward
+			  envrx YaTeX-comment-prefix nil t)
+		    (if (match-beginning 2)
+			(setq nest (1+ nest))
+		      (setq nest (1- nest)))
+		    (if (< nest 0)
+			(throw 'open (cons env (match-beginning 0)))))))))
+     ((listp env)
+      (setq p
+	    (or (YaTeX-in-environment-p (car env))
+		(and (cdr env) (YaTeX-in-environment-p (cdr env)))))))
+    (store-match-data md)
+    p;(or p (YaTeX-in-verb-p (match-beginning 0)))
+    ))
+
+(defun YaTeX-quick-in-environment-p (env)
+  "Check quickly but unsure if current environment is ENV.
+ENV is given in the form of environment's name or its list.
+This function returns correct result only if ENV is NOT nested."
+  (save-excursion
+    (let ((md (match-data)) m0 (p (point)) rc clfound)
+      (cond
+       ((listp env)
+	(or (YaTeX-quick-in-environment-p (car env))
+	    (and (cdr env) (YaTeX-quick-in-environment-p (cdr env)))))
+       (t
+	(unwind-protect
+	    (if (prog1
+		    (YaTeX-search-active-backward
+		     (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
+		     YaTeX-comment-prefix nil t)
+		  (setq m0 (match-beginning 0)))
+		(if (YaTeX-search-active-forward
+		     (YaTeX-replace-format-args
+		      YaTeX-struct-end env)
+		     YaTeX-comment-prefix p t nil)
+		    nil			;if \end{env} found, return nil
+		  (cons env m0)))	;else, return meaningful values
+	  (store-match-data md)))))))
+
 (defun YaTeX-goto-corresponding-environment (&optional allow-mismatch noerr)
   "Go to corresponding begin/end enclosure.
 Optional argument ALLOW-MISMATCH allows mismatch open/clese.  Use this
@@ -1298,6 +1356,9 @@ See yatex19.el for example."
       (if (fboundp 'buffer-substring-no-properties)
 	  'buffer-substring-no-properties
 	'buffer-substring))
+
+(defun YaTeX-region-active-p ()
+  (and (fboundp 'region-active-p) (region-active-p)))
 
 ;;;
 ;; hilit19 vs. font-lock

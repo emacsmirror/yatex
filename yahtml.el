@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2013 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon Dec 22 22:17:24 2014 on firestorm
+;;; Last modified Thu Jan 15 11:34:59 2015 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.77"
@@ -830,7 +830,8 @@ T for static indentation depth")
 (defun yahtml-insert-begend (&optional region env)
   "Insert <cmd> ... </cmd>."
   (interactive "P")
-  (setq yahtml-current-completion-type 'multiline)
+  (setq yahtml-current-completion-type 'multiline
+	region (or region (YaTeX-region-active-p)))
   (let*((completion-ignore-case t)
 	(cmd
 	 (or env
@@ -1646,7 +1647,8 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 (defun yahtml-insert-tag (region-mode &optional tag)
   "Insert <TAG> </TAG> and put cursor inside of them."
   (interactive "P")
-  (setq yahtml-current-completion-type 'inline)
+  (setq yahtml-current-completion-type 'inline
+	region-mode (or region-mode (YaTeX-region-active-p)))
   (or tag
       (let ((completion-ignore-case t))
 	(setq tag
@@ -2492,13 +2494,6 @@ Interactive prefix argument consults enclosing element other than td."
 		    (re-search-forward ps2 nil t)
 		    (match-beginning 0))))
 	(fset 'move-to-column yahtml-saved-move-to-column)))))
-
-;(defun yahtml-indent-new-commnet-line ()
-;  (unwind-protect
-;      (progn
-;	(fset 'move-to-column 'yahtml-move-to-column)
-;	(apply 'YaTeX-saved-indent-new-comment-line (if soft (list soft))))
-;    (fset 'move-to-column yahtml-saved-move-to-column)))
 
 ;;;
 ;;; ---------- move forward/backward field ----------
