@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jan 16 10:27:24 2015 on firestorm
+;;; Last modified Fri Jan 16 19:51:35 2015 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -61,7 +61,8 @@ This default value is for X window system.")
 (defvar YaTeX-cmd-dia "dia")
 (defvar YaTeX-cmd-ooo "soffice")
 (defvar YaTeX-cmd-gs "gs")
-(defvar YaTeX-cmd-dvips "dvips") ;Set "pdvips" for Vine Linux
+(defvar YaTeX-cmd-dvips
+  (if (YaTeX-executable-find "pdvips") "pdvips" "dvips"))
 (defvar YaTeX-cmd-displayline
   "/Applications/Skim.app/Contents/SharedSupport/displayline")
 (defvar YaTeX-cmd-edit-ps YaTeX-cmd-gimp)
@@ -390,7 +391,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 
 (defvar singlecmd-table
   (append
-   '(("maketitle") ("makeindex") ("sloppy") ("protect") ("par")
+   '(("maketitle") ("makeindex") ("sloppy") ("protect") ("par") ("and")
      ("LaTeX") ("TeX") ("item") ("item[]") ("appendix") ("hline") ("kill")
      ;;("rightarrow") ("Rightarrow") ("leftarrow") ("Leftarrow")
      ("pagebreak") ("nopagebreak") ("tableofcontents")
