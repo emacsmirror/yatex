@@ -1,6 +1,6 @@
 ;;; yatex19.el -- YaTeX facilities for Emacs 19 or later -*- coding: sjis -*-
 ;;; (c)1994-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jan 16 10:29:41 2015 on firestorm
+;;; Last modified Fri Jan 16 15:03:58 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -15,10 +15,10 @@
 (defvar YaTeX-background-mode
   (or (if (fboundp 'get-frame-background-mode)
           (get-frame-background-mode (selected-frame)))
-      (if (fboundp 'frame-parameters)
-          (cdr (assq 'background-mode (frame-parameters))))
       (if (boundp 'frame-background-mode)
           frame-background-mode)
+      (if (fboundp 'frame-parameters)
+          (cdr (assq 'background-mode (frame-parameters))))
       (if (boundp 'hilit-background-mode)
           hilit-background-mode)
       (if (face-background 'default)
