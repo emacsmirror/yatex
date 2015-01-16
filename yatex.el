@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jan 16 08:38:34 2015 on firestorm
+;;; Last modified Fri Jan 16 09:19:57 2015 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -972,7 +972,7 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 			    (addin-args (funcall arg-reader j))
 			    (YaTeX-skip-default-reader "")
 			    (t
-			     (read-string
+			     (read-string-with-history
 			      (format "Argument %d of %s: " j section)))))
 		   (insert
 		    (concat		;to allow nil return value
@@ -2209,7 +2209,7 @@ it comments out whole environment"
   (if (not (YaTeX-on-begin-end-p))
       (comment-out-region
        (if alt-prefix
-	   (read-string "Insert prefix: ")
+	   (read-string-with-history "Insert prefix: ")
 	 YaTeX-comment-prefix))
     (YaTeX-comment-uncomment-env 'comment-out-region)))
 
@@ -2218,7 +2218,7 @@ it comments out whole environment"
   (interactive "P")
   (if (not (YaTeX-on-begin-end-p))
       (uncomment-out-region
-       (if alt-prefix (read-string "Remove prefix: ")
+       (if alt-prefix (read-string-with-history "Remove prefix: ")
 	 YaTeX-comment-prefix)
        (region-beginning) (region-end) YaTeX-uncomment-once)
     (YaTeX-comment-uncomment-env 'uncomment-out-region)))
