@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jan 16 10:33:37 2015 on firestorm
+;;; Last modified Fri Jan 16 15:22:23 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -179,7 +179,7 @@ thus, it call bibtex only if warning messages about citation are seen.")
 		tobecalled shortname
 		(thiscmd (get 'YaTeX-typeset-process 'thiscmd))
 		(ppprop (get 'YaTeX-typeset-process 'ppcmd))
-z		(ppcmd (cdr (assq proc ppprop)))
+		(ppcmd (cdr (assq proc ppprop)))
 		(bcprop (get 'YaTeX-typeset-process 'bibcmd))
 		(bibcmd (cdr (assq proc bcprop))))
 	   (put 'YaTeX-typeset-process 'ppcmd ;erase ppcmd
@@ -540,7 +540,7 @@ YaTeX-typeset-dvi2image-chain.")
 		(enlarge-window
 		 (- (ceiling (min height (/ (frame-height) 2)))
 		    (window-height)))))
-	  ;; Remember elapsed time, which will be threshold in auto-preview
+	  ;; Remember elapsed time, which will be threshold in onthefly-preview
 	  (put 'YaTeX-typeset-conv2image-chain 'elapse
 	       (YaTeX-elapsed-time
 		(get 'YaTeX-typeset-conv2image-chain 'start) (current-time))))
@@ -687,8 +687,7 @@ with update interval specified by this value.")
   (cancel-timer YaTeX-typeset-environment-timer)
   (setq YaTeX-typeset-environment-timer nil)
   (delete-overlay YaTeX-on-the-fly-overlay)
-  (message "Auto-preview canceled"))
-
+  (message "On-the-fly preview canceled"))
 
 (defun YaTeX-typeset-buffer (&optional pp)
   "Typeset whole buffer.
