@@ -1,9 +1,9 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
-;;; (c) 1994-2013 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Fri Jan 16 10:00:10 2015 on firestorm
+;;; (c) 1994-2015 by HIROSE Yuuji [yuuji(@)yatex.org]
+;;; Last modified Fri Jan 16 10:44:54 2015 on firestorm
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.77"
+(defconst yahtml-revision-number "1.78.1"
   "Revision number of running yahtml.el")
 
 ;;; Commentary:
@@ -895,14 +895,16 @@ T for static indentation depth")
 	 (save-excursion (insert (format "</%s>" form))))
      (if (search-backward "\"\"" p t) (forward-char 1))))
 
-(defun yahtml-read-css (alist)
+(defun yahtml-read-css (alist &optional element)
   (let ((completion-ignore-case t) (delim " ")
-	(minibuffer-completion-table alist))
+	(minibuffer-completion-table alist)
+	(quotekey (substitute-command-keys "\\[quoted-insert]")))
     (read-from-minibuffer-with-history
-     (substitute-command-keys
-      (if YaTeX-japan
-	  "クラス(複数指定は\\[quoted-insert] SPCで区切る): "
-	"class(or class list delimited by \\[quoted-insert] SPC): "))
+     (if YaTeX-japan
+	 (format "%sクラス(複数指定は%s SPCで区切る): "
+		 (if element (concat element "の") "") quotekey)
+       (format "class%s(multiple class can be delimited by %s SPC): "
+	       (if element (concat " for " element) "") quotekey))
      nil YaTeX-minibuffer-completion-map nil)))
   
 (defvar yahtml-newpage-command "newpage.rb"
@@ -934,7 +936,7 @@ This program should take -o option to overwrite existing HTML file.")
 	   (memq yahtml-current-completion-type '(multiline inline))
 	   (not (string-match "#" form))
 	   (yahtml-make-optional-argument ;should be made generic?
-	    "class" (yahtml-read-css a)))
+	    "class" (yahtml-read-css a form)))
       (if (and (intern-soft addin) (fboundp (intern-soft addin))
 	       (stringp (setq s (funcall (intern addin))))
 	       (string< "" s))
@@ -2144,7 +2146,7 @@ This function should be able to treat white spaces in value, but not yet."
 	(if (and (equal attr "class")	     ;treat "class" attribute specially
 		 (setq css (yahtml-css-get-element-completion-alist tag)))
 	    
-	    (setq new (yahtml-read-css css))
+	    (setq new (yahtml-read-css css tag))
 	  ;;other than "class", read parameter normally
 	  (setq new (yahtml-read-parameter attr)))
 	(goto-char (car (get 'yahtml-on-assignment-p 'region)))
