@@ -1,7 +1,9 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
-1.79	=== yatex ===
+1.79	別フレームに同一バッファがあるときのミニバッファ入力で、
+	ポイント位置がずれるEmacsの問題への対策を入れた。
+	=== yatex ===
 	数式環境など特定環境内の [prefix] t e で On-the-fly preview 発動。
 	YaTeX-help-file のデフォルト位置を site-lisp/yatex/help/ に変更。
 	領域活性時に呼び出す補完は領域括りになるようにした。
