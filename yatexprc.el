@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jan 16 15:22:23 2015 on firestorm
+;;; Last modified Sun Jan 18 21:50:18 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -536,7 +536,7 @@ YaTeX-typeset-dvi2image-chain.")
 	  (setq img (plist-get (text-properties-at (point)) 'intangible))
 	  (YaTeX-preview-image-mode)
 	  (if img
-	      (let ((height (cdr (image-size img))))
+	      (let ((height (1+ (cdr (image-size img)))))
 		(enlarge-window
 		 (- (ceiling (min height (/ (frame-height) 2)))
 		    (window-height)))))
@@ -573,6 +573,7 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
      ((minibuffer-window-active-p (selected-window)) nil)
      ;; If point went out from last environment, cancel timer
      ;;;((and (message "s=%d, e=%d, p=%d" s e (point)) nil))
+     ((null (buffer-file-name)) nil) ;;At momentary-string-display, it's nil.
      ((or (not (eq b (window-buffer (selected-window))))
 	  (< (point) s)
 	  (not (overlayp overlay))
@@ -609,7 +610,8 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
 (defun YaTeX-typeset-environment-1 ()
   (let*((math (YaTeX-in-math-mode-p))
 	(dpi (or (YaTeX-get-builtin "PREVIEWDPI") (if math "300" "200")))
-	(opoint (point))  usetimer)
+	(opoint (point))
+	usetimer)
     (cond
      ((and YaTeX-on-the-fly-overlay (overlayp YaTeX-on-the-fly-overlay)
 	   (member YaTeX-on-the-fly-overlay (overlays-at (point))))
@@ -639,15 +641,7 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
 		     (current-time)))
 	  (if math (funcall YaTeX-on-the-fly-math-preview-engine)
 	    (YaTeX-typeset-region 'YaTeX-typeset-conv2image-chain))
-	  (if usetimer
-	      (progn
-		(if YaTeX-on-the-fly-overlay
-		    (move-overlay YaTeX-on-the-fly-overlay b e)
-		  (overlay-put
-		   (setq YaTeX-on-the-fly-overlay (make-overlay b e))
-		   'face 'YaTeX-on-the-fly-activated-face))
-		(YaTeX-typeset-environment-auto)
-		)))
+	  (if usetimer (YaTeX-typeset-environment-auto b e)))
       (YaTeX-typeset-region))))
 
 (defun YaTeX-typeset-environment ()
@@ -666,26 +660,53 @@ If region activated, use it."
 Nil disables on-the-fly update.  Otherwise on-the-fly update is enabled
 with update interval specified by this value.")
 
-(defun YaTeX-typeset-environment-auto ()
+(defun YaTeX-typeset-environment-auto (beg end)
   "Turn on on-the-fly preview-image"
   (if YaTeX-typeset-environment-timer
-      nil
-    (setq YaTeX-typeset-environment-timer
-	  (run-with-idle-timer
-	   (max (string-to-number "0.1")
-		(cond
-		 ((numberp YaTeX-on-the-fly-preview-interval) 
-		  YaTeX-on-the-fly-preview-interval)
-		 ((stringp YaTeX-on-the-fly-preview-interval)
-		  (string-to-number YaTeX-on-the-fly-preview-interval))
-		 (t 1)))
-	   t 'YaTeX-typeset-environment-timer))))
+      (cancel-timer YaTeX-typeset-environment-timer))
+  (if YaTeX-on-the-fly-overlay
+      (move-overlay YaTeX-on-the-fly-overlay beg end)
+    (overlay-put
+     (setq YaTeX-on-the-fly-overlay (make-overlay beg end))
+     'face 'YaTeX-on-the-fly-activated-face))
+  (setq YaTeX-typeset-environment-timer
+	(run-with-idle-timer
+	 (max (string-to-number "0.1")
+	      (cond
+	       ((numberp YaTeX-on-the-fly-preview-interval) 
+		YaTeX-on-the-fly-preview-interval)
+	       ((stringp YaTeX-on-the-fly-preview-interval)
+		(string-to-number YaTeX-on-the-fly-preview-interval))
+	       (t 1)))
+	 t 'YaTeX-typeset-environment-timer)))
+
+(defun YaTeX-typeset-environment-activate-onthefly ()
+  (if (get-text-property (point) 'onthefly)
+      (save-excursion
+	(if YaTeX-typeset-environment-timer
+	    (progn
+	      (cancel-timer YaTeX-typeset-environment-timer)
+	      (setq YaTeX-typeset-environment-timer nil)))
+	(if (YaTeX-on-begin-end-p)
+	    (if (match-beginning 1) ;on beginning
+		(goto-char (match-end 0))
+	      (goto-char (match-beginning 0))))
+	(YaTeX-typeset-environment))))
 
 (defun YaTeX-typeset-environment-cancel-auto ()
   "Cancel typeset-environment timer."
   (interactive)
-  (cancel-timer YaTeX-typeset-environment-timer)
-  (setq YaTeX-typeset-environment-timer nil)
+  (if YaTeX-typeset-environment-timer
+      (cancel-timer YaTeX-typeset-environment-timer))
+  (setq YaTeX-typeset-environment-timer
+	(run-with-idle-timer
+	 (string-to-number "0.1")
+	 t
+	 'YaTeX-typeset-environment-activate-onthefly))
+  (put-text-property (overlay-start YaTeX-on-the-fly-overlay)
+		     (1- (overlay-end YaTeX-on-the-fly-overlay))
+		     'onthefly
+		     t)
   (delete-overlay YaTeX-on-the-fly-overlay)
   (message "On-the-fly preview canceled"))
 
