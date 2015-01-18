@@ -1,7 +1,7 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Jan 16 10:33:07 2015 on firestorm
+;;; Last modified Sun Jan 18 08:37:07 2015 on sdr
 ;;; $Id$
 
 ;;; Commentary:
@@ -660,7 +660,6 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 	(kill-buffer YaTeX-math-menu-buffer))
       command)))
 
-;
 (defun YaTeX-math-show-image (image &optional exit-char)
   "Momentarily display IMAGE at the beginning of the next line;
 erase it on the next keystroke.  The window is recentered if necessary
