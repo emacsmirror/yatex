@@ -5,6 +5,8 @@
 	ポイント位置がずれるEmacsの問題への対策を入れた。
 	=== yatex ===
 	数式環境など特定環境内の [prefix] t e で On-the-fly preview 発動。
+	環境に対する On-the-fly preview は編集中持続する。
+	持続中の On-the-fly preview の無効化は何もない場所で [prefix] k。
 	YaTeX-help-file のデフォルト位置を site-lisp/yatex/help/ に変更。
 	領域活性時に呼び出す補完は領域括りになるようにした。
 	=== yahtml ===

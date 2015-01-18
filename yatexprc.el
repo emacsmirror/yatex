@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 18 22:22:44 2015 on firestorm
+;;; Last modified Sun Jan 18 23:17:57 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -609,7 +609,7 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
 
 (defun YaTeX-typeset-environment-1 ()
   (let*((math (YaTeX-in-math-mode-p))
-	(dpi (or (YaTeX-get-builtin "PREVIEWDPI") (if math "300" "200")))
+	(dpi (or (YaTeX-get-builtin "IMAGEDPI") (if math "300" "200")))
 	(opoint (point))
 	usetimer)
     (cond
@@ -693,7 +693,13 @@ with update interval specified by this value.")
 	      (goto-char (match-beginning 0))))
 	(YaTeX-typeset-environment))))
 
-(defun YaTeX-typeset-environment-cancel-auto ()
+(defun YaTeX-on-the-fly-cancel ()
+  "Reset on-the-fly stickiness"
+  (interactive)
+  (YaTeX-typeset-environment-cancel-auto 'stripoff)
+  t)					;t for kill-*
+  
+(defun YaTeX-typeset-environment-cancel-auto (&optional stripoff)
   "Cancel typeset-environment timer."
   (interactive)
   (if YaTeX-typeset-environment-timer
@@ -703,12 +709,17 @@ with update interval specified by this value.")
 	 (string-to-number "0.1")
 	 t
 	 'YaTeX-typeset-environment-activate-onthefly))
-  (put-text-property (overlay-start YaTeX-on-the-fly-overlay)
-		     (1- (overlay-end YaTeX-on-the-fly-overlay))
-		     'onthefly
-		     t)
-  (delete-overlay YaTeX-on-the-fly-overlay)
-  (message "On-the-fly preview canceled"))
+  (let ((ov YaTeX-on-the-fly-overlay))
+    (if stripoff
+	(remove-text-properties (overlay-start ov)
+				(1- (overlay-end ov))
+				'(onthefly))
+      (put-text-property (overlay-start YaTeX-on-the-fly-overlay)
+			 (1- (overlay-end YaTeX-on-the-fly-overlay))
+			 'onthefly
+			 t))
+    (delete-overlay ov)
+    (message "On-the-fly preview deactivated")))
 
 (defun YaTeX-typeset-buffer (&optional pp)
   "Typeset whole buffer.
