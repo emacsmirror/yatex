@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 18 21:50:18 2015 on firestorm
+;;; Last modified Sun Jan 18 22:22:44 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -688,7 +688,7 @@ with update interval specified by this value.")
 	      (cancel-timer YaTeX-typeset-environment-timer)
 	      (setq YaTeX-typeset-environment-timer nil)))
 	(if (YaTeX-on-begin-end-p)
-	    (if (match-beginning 1) ;on beginning
+	    (if (or (match-beginning 1) (match-beginning 3)) ;on beginning
 		(goto-char (match-end 0))
 	      (goto-char (match-beginning 0))))
 	(YaTeX-typeset-environment))))

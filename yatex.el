@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jan 16 19:51:35 2015 on firestorm
+;;; Last modified Sun Jan 18 22:22:42 2015 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -2145,7 +2145,7 @@ Call this function after YaTeX-on-section-command-p."
        (concat "\\(" YaTeX-struct-name-regexp "\\)") "" "" "")
       "\\|\\("
       YaTeX-ec-regexp  ;;"[][()]\\)"
-      "[][]\\)"
+      "\\[\\|\\]\\)"
       )
      (point-end-of-line) t)))
 
