@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 18 22:22:42 2015 on firestorm
+;;; Last modified Sun Jan 18 23:41:01 2015 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.78.7"
+(defconst YaTeX-revision-number "1.78.8"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -1670,17 +1670,18 @@ Optional second argument CHAR is for non-interactive call from menu."
   "Operate %# notation."
   ;;Do not use interactive"r" for the functions which require no mark
   (interactive)
-  (message "!)Edit-%%#! D)VIPDF B)EGIN-END-region P)review L)PR make(I)ndex b)ibtex")
+  (message "!)Edit-%%#! D)VIPDF B)EGIN-END-region P)review L)PR M)akeidx b)ibtex dp(I)")
   (let ((c (or char (read-char))) (string "") key
 	(b (make-marker)) (e (make-marker)))
     (save-excursion
       (cond
-       ((rindex "!plib" c)		;Edit %#xxx
+       ((rindex "!plmibd" c)		;Edit %#xxx
 	(setq key (cdr (assq c '((?! . "!")
 				 (?p . "PREVIEW")
 				 (?l . "LPR")
-				 (?i . "MAKEINDEX")
+				 (?m . "MAKEINDEX")
 				 (?d . "DVIPDF")
+				 (?i . "IMAGEDPI")
 				 (?b . "BIBTEX")))))
 	(YaTeX-getset-builtin key t))
 
@@ -2604,6 +2605,9 @@ Non-nil for ARG kills its contents too."
    ((YaTeX-on-section-command-p YaTeX-command-token-regexp);on any command
     (YaTeX-kill-section-command (match-beginning 0) arg))
    ((YaTeX-kill-paren arg))
+   ((and (fboundp 'overlays-at)
+	 (member YaTeX-on-the-fly-overlay (overlays-at (point))))
+    (YaTeX-on-the-fly-cancel))
    (t (message "I don't know what to kill."))))
 
 (defun YaTeX-change-* ()
