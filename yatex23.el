@@ -1,6 +1,6 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
 ;;; (c)2014-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  6 08:54:04 2015 on firestorm
+;;; Last modified Sun Jan 18 21:12:27 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -17,7 +17,7 @@ The value should be string.  Set this `nil' to disable enclosing.")
   "DnD handler for yatex-mode
 Convert local image URI to \\includegraphcis{} and
 .tex file names to \\include{}."
-  (let*((file (dnd-get-local-file-name uri))
+  (let*((file (dnd-get-local-file-name uri t))
 	(path (save-excursion
 		(YaTeX-visit-main t)
 		(file-relative-name file)))
