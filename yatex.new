@@ -9,6 +9,7 @@
 	持続中の On-the-fly preview の無効化は何もない場所で [prefix] k。
 	YaTeX-help-file のデフォルト位置を site-lisp/yatex/help/ に変更。
 	領域活性時に呼び出す補完は領域括りになるようにした。
+	タイプセットでPDF出力がありそうなときは次回previewをPDFヴューアに。
 	=== yahtml ===
 	領域活性時に呼び出す補完は領域括りになるようにした。
 	...

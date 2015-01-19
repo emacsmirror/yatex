@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 18 23:17:57 2015 on firestorm
+;;; Last modified Mon Jan 19 08:35:39 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -299,7 +299,16 @@ thus, it call bibtex only if warning messages about citation are seen.")
 		      'YaTeX-typeset-sentinel))
 		    (t 
 		     (if (equal 0 (process-exit-status proc))
-			 nil		;do nothing at successful exit
+			 ;; Successful typesetting done
+			 (if (save-excursion
+			       (re-search-backward
+				(concat
+				 "^Output written on .*\\.pdf (.*page,"
+				 "\\|\\.dvi -> .*\\.pdf$")
+				nil t))
+			     ;; If PDF output log found in buffer,
+			     ;; set next default previewer to 'pdf viewer
+			     (put 'dvi2-command 'format 'pdf))
 		       ;;Confirm process buffer to be shown when error
 		       (YaTeX-showup-buffer
 			pbuf 'YaTeX-showup-buffer-bottom-most)
