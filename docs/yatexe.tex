@@ -8,7 +8,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Thu Jan 15 13:28:10 2015 on firestorm
+@c Last modified Wed Feb 11 11:44:13 2015 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -1948,6 +1948,13 @@ and the number of column position in tabular.
 @defvar YaTeX-noindent-env-regexp
 Regexp of environment names that should begin with no indentation.
 All verbatime-like environment name should match with.
+@end defvar
+
+@defvar YaTeX-electric-indent-mode
+Emacs 24.4 introduces automatic indentation of current and new lines.
+This might be annoying for some people.  Pass this value to the function
+'electric-indent-local-mode.  If you prefer to stop electric-indent-mode
+in yatex-mode, set `-1' to this variable.
 @end defvar
 
 @defvar YaTeX-ref-default-label-string

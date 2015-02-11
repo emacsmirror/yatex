@@ -65,8 +65,8 @@ Main features
    * Jumping to error line(`C-c '')
    * Completing-read of LaTeX commands such as `\begin{}', `\section' etc.
      (`C-c b', `C-c s', `C-c l', `C-c m')
-   * Enclosing text into LaTeX environments or commands (`C-u'
-     ABOVEKEYSTROKES)
+   * Enclosing text into LaTeX environments or commands (ABOVEKEYSTROKES
+     after region setting)
    * Displaying the structure of text at entering sectioning commands
    * Lump shifting of sectioning commands (*Note view-sectioning::)
    * Learning unknown/new LaTeX commands for the next completion
@@ -124,12 +124,12 @@ assume all `[prefix]' as `C-c' in this document.  These key strokes
 execute typeset or preview command.
 
 `[prefix] t j'
-             ... invoke latex
+             ... invoke typesetter
 `[prefix] t r'
-             ... invoke latex on region
+             ... invoke typesetter on region
 `[prefix] t e'
-             ... invoke latex on current environment or whole portion of
-     current formulas in math-mode.
+             ... `on-the-fly preview' on current environment or whole
+     portion of current formulas in math-mode
 `[prefix] t d'
      	... invoke dvipdfmx after successful typesetting
 `[prefix] t k'
@@ -192,14 +192,20 @@ if you edit one file, and is the same as main file's if you edit splitting
 files.
 
   The `[prefix] te' key automatically marks current inner environment or
-inner math mode and then call typeset-region with marked region.  This is
-convenient to quick view of current tabular environment or current editing
-formulas.  Keeping previewer window for `texput.dvi' is handy for
-debugging.  Since `[prefix] te' selects the inner-most environment as
-region, it is not suitable for partial typesetting of doubly or more
-composed environment.  If you want to do partial typesetting for a nested
-environment, use `[prefix] tr' for static-region, which is described in
-the section *Note %#notation::.
+inner math mode or paragraph, and then call typeset-region with marked
+region.  This is convenient to quick view of current tabular environment
+or current editing formulas.  If running Emacs has the ability of
+displaying images, typeset image will be shown in the next window.
+Further more, if you modify the content within that environment, YaTeX
+performs `on-the-fly' preview that automatically update preview image as
+you typed.
+
+If your Emacs does not supply on-the-fly preview, keeping previewer window
+for `texput.dvi' is handy for debugging.  Since `[prefix] te' selects the
+inner-most environment as region, it is not suitable for partial
+typesetting of doubly or more composed environment.  If you want to do
+partial typesetting for a nested environment, use `[prefix] tr' for
+static-region, which is described in the section *Note %#notation::.
 
 
 
@@ -329,7 +335,7 @@ pair.
 
 
 
-File: yatexe, Node: Lpr format, Next: Controlling which command to invoke, Prev: Static region for typesetting, Up: %#notation
+File: yatexe, Node: Lpr format, Prev: Static region for typesetting, Up: %#notation
 
 Lpr format
 ==========
@@ -418,15 +424,16 @@ kinds of completion type, begin-type, section-type, large-type, etc...
 
 * Menu:
 
-* Begin-type completion::       
-* Section-type completion::     
-* Large-type completion::       
-* Maketitle-type completion::   
-* Arbitrary completion::        
-* End completion::              
-* Accent completion::           
-* Image completion::            
-* Greek letters completion::    
+* Begin-type completion::
+* Section-type completion::
+* Large-type completion::
+* Maketitle-type completion::
+* Arbitrary completion::
+* End completion::
+* Accent completion::
+* Image completion::
+* Greek letters completion::
+* Inserting parentheses::
 
 
 
@@ -501,21 +508,15 @@ At the completion of certain environments, the expected initial entry will
 automatically inserted such as `\item' for `itemize' environment.  If you
 don't want the entry, it can be removed by undoing.
 
-  If you want to enclose some paragraphs which have already been written,
-invoke the begin-type completion with changing the case of `b' of key
-sequence upper(or invoke it with universal argument by `C-u' prefix).
+  If you want to enclose some paragraphs which have already been written
+into environment, invoke the begin-type completion right after region
+marking.
 
-  The following example encloses a region with `description' environment.
+If you set `transient-mark-mode' to `nil' in your `~/.emacs', typing
+`C-space' (`set-mark-command') twice turns `transient-mark-mode' on
+temporarily.  Then, type call begin-type completion to enclose text into a
+environment.
 
-`[prefix] B D'
-`(or ESC 1 [prefix] b D)'
-`(or  C-u  [prefix] b D)'
-
-             ... begin-type completion for region
-
-  This enclosing holds good for the completing input by `[prefix] b SPC'.
-`[prefix] B SPC' enclose a region with the environment selected by
-completing-read.
 
 
 
@@ -662,9 +663,8 @@ prompts prompts you large-type command with completing-read.  There are
 TeX commands to change fonts or sizes, `it', `huge' and so on, in the
 completion table.
 
-  Region-based completion is also invoked by changing the letter after
-prefix key stroke as `[prefix] L'.  It encloses the region by braces with
-large-type command.
+  Region-based completion is also invoked by calling completion after
+region activated.
 
 
 
@@ -797,7 +797,7 @@ Emacs-Lisp variable `YaTeX-math-sign-alist-private'.  See also
 
 
 
-File: yatexe, Node: Greek letters completion, Prev: Image completion, Up: Completion
+File: yatexe, Node: Greek letters completion, Next: Inserting parentheses, Prev: Image completion, Up: Completion
 
 Greek letters completion
 ========================
@@ -812,6 +812,18 @@ environment, it may be a bug of YaTeX.  Please send me a bug report with
 the configuration of your text, and avoid it temporarily by typing `;' or
 `:' after universal-argument(`C-u') which forces `;' and `:' to work as
 math-prefix.
+
+
+
+File: yatexe, Node: Inserting parentheses, Prev: Greek letters completion, Up: Completion
+
+Inserting parentheses
+=====================
+
+  Typing opening parenthesis, one of `(', `{ and `['', automatically
+inserts the closing one.  If a opening bracket is typed after `\', `\]' is
+automatically inserted with computed indentation.  If you stop automatic
+insertion, type `C-q' before opening parenthesis.
 
 
 
@@ -1508,6 +1520,15 @@ variable by `M-x describe-variable'.
      Interval time in seconds of idle to trigger on-the-fly preview of
      environment by `[prefix] t e'(0.9).  `Nil' disables on-the-fly
      preview.
+
+ -- Variable: YaTeX-on-the-fly-math-preview-engine
+     Function symbol to use on-the-fly preview of MATH environment started
+     by `[prefix] t e' (`'YaTeX-typeset-environment-by-lmp' which calls
+     latex-math-preview-expression function if latex-math-preview is
+     available, otherwise `'YaTeX-typeset-environment-by-builtin' which
+     alls built-in function).
+
+     `Nil' disables on-the-fly preview.
 
  -- Variable: YaTeX-cmd-gimp
      Command name of GIMP (code{"gimp"})
@@ -2223,64 +2244,65 @@ Tag table:
 Node: Top253
 Node: What is YaTeX?1594
 Node: Main features1967
-Node: Installation3496
-Node: Typesetting4273
-Node: Calling typesetter5403
-Node: Calling previewer7607
-Node: Printing out7968
-Node: %#notation8260
-Node: Changing typesetter8678
-Node: Splitting input files9042
-Node: Static region for typesetting10467
-Node: Lpr format11596
-Node: Controlling which command to invoke12669
-Node: Editing %# notation13339
-Node: Completion13883
-Node: Begin-type completion14443
-Node: Section-type completion17486
-Node: view-sectioning19921
-Node: Large-type completion21501
-Node: Maketitle-type completion22232
-Node: Arbitrary completion22784
-Node: End completion23174
-Node: Accent completion23644
-Node: Image completion24261
-Node: Greek letters completion26518
-Node: Local dictionaries27245
-Node: Commenting out28182
-Node: Cursor jump29641
-Node: Jump to corresponding object29953
-Node: Invoking image processor31354
-Node: Jump to main file32697
-Node: Jumping around the environment33062
-Node: Jumping to last completion position33480
-Node: Changing and Deleting33989
-Node: Changing LaTeX commands34381
-Node: Killing LaTeX commands35558
-Node: Filling36743
-Node: Updation of includeonly38594
-Node: What column39391
-Node: Intelligent newline40476
-Node: Usepackage checker42130
-Node: Online help42721
-Node: Browsing file hierarchy44396
-Node: Cooperation with other packages46133
-Node: Customizations46838
-Node: Lisp variables47172
-Node: All customizable variables48176
-Node: Sample definitions59413
-Node: Hook variables59926
-Node: Hook file60630
-Node: Add-in functions60969
-Node: How the add-in function works61829
-Node: Defining option-add-in64028
-Node: Defining argument-add-in64750
-Node: Defining enclosing-add-in65632
-Node: How the function is called66486
-Node: Useful functions for creating add-in67162
-Node: Contribution68567
-Node: Add-in generator68841
-Node: Etcetera74213
-Node: Copying74818
+Node: Installation3511
+Node: Typesetting4288
+Node: Calling typesetter5435
+Node: Calling previewer7962
+Node: Printing out8323
+Node: %#notation8615
+Node: Changing typesetter9033
+Node: Splitting input files9397
+Node: Static region for typesetting10822
+Node: Lpr format11951
+Node: Controlling which command to invoke12981
+Node: Editing %# notation13651
+Node: Completion14195
+Node: Begin-type completion14710
+Node: Section-type completion17565
+Node: view-sectioning20000
+Node: Large-type completion21580
+Node: Maketitle-type completion22234
+Node: Arbitrary completion22786
+Node: End completion23176
+Node: Accent completion23646
+Node: Image completion24263
+Node: Greek letters completion26520
+Node: Inserting parentheses27276
+Node: Local dictionaries27683
+Node: Commenting out28620
+Node: Cursor jump30079
+Node: Jump to corresponding object30391
+Node: Invoking image processor31792
+Node: Jump to main file33135
+Node: Jumping around the environment33500
+Node: Jumping to last completion position33918
+Node: Changing and Deleting34427
+Node: Changing LaTeX commands34819
+Node: Killing LaTeX commands35996
+Node: Filling37181
+Node: Updation of includeonly39032
+Node: What column39829
+Node: Intelligent newline40914
+Node: Usepackage checker42568
+Node: Online help43159
+Node: Browsing file hierarchy44834
+Node: Cooperation with other packages46571
+Node: Customizations47276
+Node: Lisp variables47610
+Node: All customizable variables48614
+Node: Sample definitions60262
+Node: Hook variables60775
+Node: Hook file61479
+Node: Add-in functions61818
+Node: How the add-in function works62678
+Node: Defining option-add-in64877
+Node: Defining argument-add-in65599
+Node: Defining enclosing-add-in66481
+Node: How the function is called67335
+Node: Useful functions for creating add-in68011
+Node: Contribution69416
+Node: Add-in generator69690
+Node: Etcetera75062
+Node: Copying75667
 
 End tag table

@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2015 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Fri Jan 16 10:44:54 2015 on firestorm
+;;; Last modified Wed Feb 11 08:58:55 2015 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.78.1"
@@ -285,6 +285,10 @@ at each reserved chars.")
 (defvar yahtml-html4-strict t
   "*Non-nil means editing HTML 4.01 Strict.
 Completing read for obsoleted attributes disabled.")
+
+(defvar yahtml-electric-indent-mode -1
+  "*(Emacs 24.4+) Pass this value to electric-indent-local-mode.
+-1 means `off'.")
 
 ;;; --- customizable variable ends here ---
 (defvar yahtml-prefix-map nil)
@@ -671,10 +675,12 @@ T for static indentation depth")
   (use-local-map yahtml-mode-map)
   (YaTeX-read-user-completion-table)
   (yahtml-css-scan-styles)
-  (turn-on-auto-fill)			;Sorry, this is prerequisite
+  ;(turn-on-auto-fill)			;Sorry, this is prerequisite
   (and (= 0 (buffer-size)) (file-exists-p yahtml-template-file)
        (y-or-n-p (format "Insert %s?" yahtml-template-file))
        (insert-file-contents (expand-file-name yahtml-template-file)))
+  (if (fboundp 'electric-indent-local-mode)
+      (electric-indent-local-mode yahtml-electric-indent-mode))
   (run-hooks 'text-mode-hook 'yahtml-mode-hook)
 
   ;; This warning should be removed after a while(2000/12/2)

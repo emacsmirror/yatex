@@ -13,7 +13,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Thu Jan 15 12:42:54 2015 on firestorm
+@c Last modified Wed Feb 11 11:42:41 2015 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -2175,6 +2175,12 @@ tabular/array 環境で現在行の先頭位置が表の第Nカラムのときは
 @defvar YaTeX-noindent-env-regexp
 別の環境内にあっても \begin@{@} が行頭から始まるべき環境名の正規表現。
 verbatim環境などを指定する。
+@end defvar
+
+@defvar YaTeX-electric-indent-mode
+Emacs 24.4 で導入された改行時の、自動インデントをどうするか。
+この値がそのまま electric-indent-local-mode に渡される。
+-1でoff。
 @end defvar
 
 @defvar YaTeX-ref-default-label-string

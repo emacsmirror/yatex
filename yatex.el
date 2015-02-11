@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 18 23:41:01 2015 on firestorm
+;;; Last modified Wed Feb 11 11:40:20 2015 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.78.8"
+(defconst YaTeX-revision-number "1.78.9"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -230,6 +230,10 @@ Nil for removing only one commenting character at the beginning-of-line.")
 
 (defvar YaTeX-tabular-indentation 4
   "*Indentation column-depth of continueing line in tabular environment.")
+
+(defvar YaTeX-electric-indent-mode -1
+  "*(for Emacs 24.4+) Pass this value to electric-indent-local-mode.
+-1 means `off'.")
 
 ;;-- Math mode values --
 
@@ -709,7 +713,9 @@ more features are available and they are documented in the manual.
   (YaTeX-read-user-completion-table)
   (and (fboundp 'YaTeX-hilit-setup-alist) (YaTeX-hilit-setup-alist))
   (makunbound 'inenv)
-  (turn-on-auto-fill)			;1.63
+  ;(turn-on-auto-fill)			;1.63 -> 1.79off
+  (if (fboundp 'electric-indent-local-mode)
+      (electric-indent-local-mode YaTeX-electric-indent-mode))
   (and (= 0 (buffer-size)) (file-exists-p YaTeX-template-file)
        (y-or-n-p (format "Insert %s?" YaTeX-template-file))
        (insert-file-contents (expand-file-name YaTeX-template-file)))
