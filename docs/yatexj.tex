@@ -13,7 +13,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Wed Feb 11 11:42:41 2015 on firestorm
+@c Last modified Fri Feb 13 08:17:31 2015 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -534,12 +534,20 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
 
 @table @code
+ @item %#PREVIEW
+	@dots{} Command line for DVI viewing ([prefix] t p)
  @item %#BIBTEX
 	@dots{} makeindexを行なうコマンドライン([prefix] t b)
  @item %#MAKEINDEX
 	@dots{} bibtexを行なうコマンドライン([prefix] t i)
  @item %#DVIPDF
 	@dots{} DVIからPDF変換を行なうコマンドライン([prefix] t d)
+ @item %#LPR
+	@dots{} 印刷用のコマンドライン([prefix] t l)
+ @item %#PDFVIEW
+	@dots{} PDFファイルを見るためのコマンドライン
+ @item %#IMAGEDPI
+	@dots{} 即時プレヴュー(on-the-fly preview)用の画像のDPI
 @end table
 
 行頭がこれらのキーワードで始まる行をLa@TeX{}文書の先頭付近に書いておけば、

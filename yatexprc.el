@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Jan 19 08:35:39 2015 on firestorm
+;;; Last modified Fri Feb 13 08:07:20 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -959,14 +959,15 @@ Optional third argument BASEDIR changes default-directory there."
 (defun YaTeX-preview-default-previewer ()
   "Return default previewer for this document"
   (YaTeX-replace-format
-		     (or (YaTeX-get-builtin "PREVIEW")
-			 (if (eq (get 'dvi2-command 'format) 'pdf)
-			     tex-pdfview-command
-			   dvi2-command))
-		     "p" (format (cond
-				  (YaTeX-dos "-y:%s")
-				  (t "-paper %s"))
-				 (YaTeX-get-paper-type))))
+   (if (eq (get 'dvi2-command 'format) 'pdf)
+       (or (YaTeX-get-builtin "PDFVIEW")
+	   tex-pdfview-command)
+     (or (YaTeX-get-builtin "PREVIEW")
+	 dvi2-command))
+   "p" (format (cond
+		(YaTeX-dos "-y:%s")
+		(t "-paper %s"))
+	       (YaTeX-get-paper-type))))
 (defun YaTeX-preview-default-main (command)
   "Return default preview target file"
   (if (get 'dvi2-command 'region)

@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Feb 11 11:40:20 2015 on firestorm
+;;; Last modified Fri Feb 13 08:11:15 2015 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -1676,17 +1676,18 @@ Optional second argument CHAR is for non-interactive call from menu."
   "Operate %# notation."
   ;;Do not use interactive"r" for the functions which require no mark
   (interactive)
-  (message "!)Edit-%%#! D)VIPDF B)EGIN-END-region P)review L)PR M)akeidx b)ibtex dp(I)")
+  (message "!)Edit-%%#! D)VIPDF B)EGIN-END P)review pdf(V)iew L)PR M)akeidx b)ibtex dp(I)")
   (let ((c (or char (read-char))) (string "") key
 	(b (make-marker)) (e (make-marker)))
     (save-excursion
       (cond
-       ((rindex "!plmibd" c)		;Edit %#xxx
+       ((rindex "!plmibdv" c)		;Edit %#xxx
 	(setq key (cdr (assq c '((?! . "!")
 				 (?p . "PREVIEW")
 				 (?l . "LPR")
 				 (?m . "MAKEINDEX")
 				 (?d . "DVIPDF")
+				 (?v . "PDFVIEW")
 				 (?i . "IMAGEDPI")
 				 (?b . "BIBTEX")))))
 	(YaTeX-getset-builtin key t))

@@ -8,7 +8,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Wed Feb 11 11:44:13 2015 on firestorm
+@c Last modified Fri Feb 13 08:15:26 2015 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -422,12 +422,20 @@ These %# notation below can control which command to invoke for
 La@TeX{} related process.
 
 @table @code
- @item %#BIBTEX
-	@dots{} Command line for makeindex ([prefix] t i)
+ @item %#PREVIEW
+	@dots{} Command line for DVI viewing ([prefix] t p)
  @item %#MAKEINDEX
+	@dots{} Command line for makeindex ([prefix] t i)
+ @item %#BIBTEX
 	@dots{} Command line for bibtex ([prefix] t b)
  @item %#DVIPDF
 	@dots{} Command line for dvipdf(mx) ([prefix] t b)
+ @item %#LPR
+	@dots{} Command line for printing out([prefix] t l)
+ @item %#PDFVIEW
+	@dots{} Command line for PDF viewing
+ @item %#IMAGEDPI
+	@dots{} DPI value for converting to on-the-fly prewview image
 @end table
 
 If you want to invoke ``makeidx hogehoge'' to update index,
