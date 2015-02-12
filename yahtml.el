@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2015 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Wed Feb 11 08:58:55 2015 on firestorm
+;;; Last modified Wed Feb 11 12:17:03 2015 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.78.1"
@@ -2522,7 +2522,8 @@ Interactive prefix argument consults enclosing element other than td."
 				"body")))
 	(setq path (cons elm path)
 	      elm nil))
-      (and elm (setq path (cons elm path))))))
+      (and elm (setq path (cons elm path)))
+      path)))
 
 (defun yahtml-forward-field (arg)
   "Move ARGth forward cell to table element.
