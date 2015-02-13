@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Feb 13 08:11:15 2015 on firestorm
+;;; Last modified Fri Feb 13 20:40:56 2015 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -44,16 +44,18 @@ YaTeX-current-position-register.")
    (YaTeX-use-LaTeX2e "platex")
    (YaTeX-japan "jlatex")
    (t "latex"))
-  "*Default command for typesetting LaTeX text.")
+  "*Default command for typesetting LaTeX text.
+Overridden with `%#! CommandLine...' in the buffer.")
 
 (defvar bibtex-command (if YaTeX-japan "jbibtex" "bibtex")
-  "*Default command of BibTeX.")
+  "*Default command of BibTeX.
+Overridden with `%#BIBTEX CommandLine...' in the buffer.")
 
 (defvar dvi2-command		;previewer command for your site
   (if YaTeX-dos "dviout -wait=0"
     "xdvi -geo +0+0 -s 4")
   "*Default previewer command including its option.
-This default value is for X window system.")
+Overridden with `%#PREVIEW CommandLine...' in the buffer.")
 
 (defvar YaTeX-cmd-gimp "gimp")
 (defvar YaTeX-cmd-tgif "tgif")
@@ -79,15 +81,18 @@ This default value is for X window system.")
 		 ((file-executable-p YaTeX-cmd-displayline) "open -a Skim")
 		 (t "open")))
    (t		"evince"))
-  "*Default PDF viewer command including its option.")
+  "*Default PDF viewer command including its option.
+Overridden with `%#PDFVIEW CommandLine...' in the buffer.")
 
 (defvar makeindex-command (if YaTeX-dos "makeind" "makeindex")
-  "*Default makeindex command.")
+  "*Default makeindex command.
+Overridden with `%#MAKEINDEX CommandLine...' in the buffer.")
 
 (defvar dviprint-command-format
   (if YaTeX-dos "dviprt %s %f%t"
       "dvi2ps %f %t %s | lpr")
   "*Command line string to print out current file.
+Overridden with `%#LPR CommandLine...' in the buffer.
 Format string %s will be replaced by the filename.  Do not forget to
 specify the `from usage' and `to usage' with their option by format string
 %f and %t.
@@ -103,7 +108,8 @@ specify the `from usage' and `to usage' with their option by format string
 
 (defvar YaTeX-dvipdf-command
   "dvipdfmx"
-  "*Command name to convert dvi file to PDF.")
+  "*Command name to convert dvi file to PDF.
+Overridden with `%#DVIPDF CommandLine...' in the buffer.")
 
 (defvar YaTeX-default-document-style
   (concat (if YaTeX-japan "js") "article")
@@ -2153,7 +2159,7 @@ Call this function after YaTeX-on-section-command-p."
        (concat "\\(" YaTeX-struct-name-regexp "\\)") "" "" "")
       "\\|\\("
       YaTeX-ec-regexp  ;;"[][()]\\)"
-      "\\[\\|\\]\\)"
+      "[\\]\\[]\\)"
       )
      (point-end-of-line) t)))
 
