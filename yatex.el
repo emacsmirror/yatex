@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jul  8 13:33:56 2015 on duke
+;;; Last modified Wed Jul  8 13:41:17 2015 on duke
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -617,7 +617,7 @@ nil: Do not care (Preserve coding-system)
 (if YaTeX-mode-syntax-table-nonparen nil
   (setq YaTeX-mode-syntax-table-nonparen
 	(make-syntax-table YaTeX-mode-syntax-table))
-  (let ((zenparens "()ijuvwxyzmnopst") (i 0) s)
+  (let ((zenparens "()ijuvwxyzmnopstqrkl") (i 0) s)
     (while (string-match "." zenparens i)
       (setq s (substring zenparens (match-beginning 0) (match-end 0))
 	    i (1+ i))
