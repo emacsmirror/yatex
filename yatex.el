@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Feb 13 20:40:56 2015 on firestorm
+;;; Last modified Wed Jul  8 13:41:17 2015 on duke
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -611,6 +611,18 @@ nil: Do not care (Preserve coding-system)
   (modify-syntax-entry ?% "<" YaTeX-mode-syntax-table)
   (modify-syntax-entry ?\\ "/" YaTeX-mode-syntax-table)
   (modify-syntax-entry ?~ " " YaTeX-mode-syntax-table))
+
+(defvar YaTeX-mode-syntax-table-nonparen nil
+  "Syntax table for yatex-mode with normal parentheses treated white spaces")
+(if YaTeX-mode-syntax-table-nonparen nil
+  (setq YaTeX-mode-syntax-table-nonparen
+	(make-syntax-table YaTeX-mode-syntax-table))
+  (let ((zenparens "()ijuvwxyzmnopstqrkl") (i 0) s)
+    (while (string-match "." zenparens i)
+      (setq s (substring zenparens (match-beginning 0) (match-end 0))
+	    i (1+ i))
+      (modify-syntax-entry
+       (string-to-char s) " " YaTeX-mode-syntax-table-nonparen))))
 
 ;---------- Provide YaTeX-mode ----------
 ;;;
@@ -2064,10 +2076,14 @@ Macro's argument number stored to propname 'argc."
 	       (goto-char (match-beginning 0))
 	       (throw 'found t))
 	  ;;If inside of parentheses, try to escape.
-	  (while (and (not (= (preceding-char) ?\])) ;skip optional arg
-		      (condition-case err
-			  (progn (up-list -1) t)
-			(error nil))))
+	  (unwind-protect
+	      (progn
+		(set-syntax-table YaTeX-mode-syntax-table-nonparen)
+		(while (and (not (= (preceding-char) ?\])) ;skip optional arg
+			    (condition-case err
+				(progn (up-list -1) t)
+			      (error nil)))))
+	    (set-syntax-table YaTeX-mode-syntax-table))
 	  (while (equal (preceding-char) ?\]) (backward-list))
 	  ;;(2) search command directly
 	  (skip-chars-forward "^{}[]")
