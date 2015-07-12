@@ -1,10 +1,9 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX add-in functions.
-;;; yatexadd.el rev.20
-;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Mar  9 21:19:09 2012 on firestorm
+;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
+;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed Jul  8 09:15:15 2015 on firestorm
 ;;; $Id$
 
+;;; Code:
 ;;;
 ;;Sample functions for LaTeX environment.
 ;;;
@@ -24,10 +23,11 @@ Notice that this function refers the let-variable `env' in
 YaTeX-make-begin-end."
   (let ((width "") bars (rule "") (and "") (j 1) loc ans (hline "\\hline"))
     (if (string= YaTeX-env-name "tabular*")
-	(setq width (concat "{" (read-string "Width: ") "}")))
+	(setq width (concat "{" (YaTeX:read-length "Width: ") "}")))
     (setq loc (YaTeX:read-position "tb")
 	  bars (string-to-int
-		(read-string "Number of columns(0 for default format): " "3")))
+		(YaTeX-read-string-or-skip
+		 "Number of columns(0 for default format): " "3")))
     (if (<= bars 0)
 	(setq				;if 0, simple format
 	 rule YaTeX:tabular-default-rule
@@ -41,7 +41,7 @@ YaTeX-make-begin-end."
       (setq ans (read-char))
       (cond
        ((or (equal ans ?t) (equal ans ?T))
-	(setq ans (read-string "Rule width: " "1pt")
+	(setq ans (read-string-with-history "Rule width: " "1pt")
 	      rule (concat
 		    "@{" (format YaTeX:tabular-thick-vrule ans) "}"
 		    rule
@@ -50,7 +50,7 @@ YaTeX-make-begin-end."
        (t (setq rule (concat "|" rule "|")
 		hline "\\hline"))))
 
-    (setq rule (read-string "rule format: " rule))
+    (setq rule (YaTeX-read-string-or-skip "rule format: " rule))
     (setq YaTeX-single-command "hline")
 
     (format "%s%s{%s}" width loc rule)))
@@ -58,10 +58,10 @@ YaTeX-make-begin-end."
 (fset 'YaTeX:tabular* 'YaTeX:tabular)
 (fset 'YaTeX:supertabular 'YaTeX:tabular)
 (defun YaTeX:alignat ()
-  (concat "{" (read-string "Number of columns: ") "}"))
+  (concat "{" (read-string-with-history "Number of columns: ") "}"))
 (defun YaTeX:array ()
   (concat (YaTeX:read-position "tb")
-	  "{" (read-string "Column format: ") "}"))
+	  "{" (read-string-with-history "Column format: ") "}"))
 (defun YaTeX:subequations ()
   (message (if YaTeX-japan "•ª‚©‚è‚â‚·‚¢ƒRƒƒ“ƒg‚É•Ï‚¦‚é‚Æref•âŠ®‚ªŠy‚æ"
 	     "Changing comment string reduces effort at `ref' completion"))
@@ -98,6 +98,15 @@ YaTeX-make-begin-end."
   "Read a LaTeX (optional) position format such as `[htbp]'."
   (let ((pos (YaTeX:read-oneof oneof)))
     (if (string= pos "")  "" (concat "[" pos "]"))))
+
+(defun YaTeX:read-length (prompt)
+  "Read a LaTeX dimensional parameter with magnifying numerics prepend."
+  (let ((minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
+	(delim "-0-9*+/.")
+	(tbl (append YaTeX:style-parameters-local
+		     YaTeX:style-parameters-private
+		     YaTeX:style-parameters-default)))
+    (YaTeX-completing-read-or-skip prompt tbl nil)))
 
 ;;;
 ;; Functions for figure environemnt
@@ -160,32 +169,38 @@ YaTeX-make-begin-end."
   (if (fboundp 'YaTeX-toggle-math-mode)
       (YaTeX-toggle-math-mode t)))		;force math-mode ON.
 
-(mapcar '(lambda (f) (fset f 'YaTeX:equation))
+(mapcar (function (lambda (f) (fset f 'YaTeX:equation)))
 	'(YaTeX:eqnarray YaTeX:eqnarray* YaTeX:align YaTeX:align*
 	  YaTeX:split YaTeX:multline YaTeX:multline* YaTeX:gather YaTeX:gather*
 	  YaTeX:aligned* YaTeX:gathered YaTeX:gathered*
 	  YaTeX:alignat YaTeX:alignat* YaTeX:xalignat YaTeX:xalignat*
 	  YaTeX:xxalignat YaTeX:xxalignat*))
 
-(defun YaTeX:alignat ()
-  (YaTeX:equation)
-  (concat "{" (read-string "Number of cols: ") "}"))
-
-
-
 (defun YaTeX:list ()
   "%\n{} %default label\n{} %formatting parameter")
 
 (defun YaTeX:minipage ()
   (concat (YaTeX:read-position "cbt")
-	  "{" (read-string "Width: ") "}"))
+	  "{" (YaTeX:read-length "Width: ") "}"))
 
 (defun YaTeX:thebibliography ()
   (setq YaTeX-section-name "bibitem")
-  (concat "{" (read-string "Longest label: ") "}"))
+  (concat "{" (read-string-with-history "Longest label: ") "}"))
 
 (defun YaTeX:multicols ()
-  (concat "{" (read-string "Number of columns: ") "}"))
+  (concat "{" (read-string-with-history "Number of columns: ") "}"))
+
+
+;; wrapfig.sty
+(defun YaTeX:wrapfigure ()
+  (YaTeX-help "wrapfigure")
+  (concat
+   (let ((lines (YaTeX-read-string-or-skip "Wrap Lines(Optional): ")))
+     (if (string< "" lines)
+	 (concat "[" lines "]")))
+   "{" (YaTeX:read-oneof "rlioRLIO" t) "}"
+   "{" (YaTeX:read-length "Image width: ") "}"))
+ 
 
 ;;;
 ;;Sample functions for section-type command.
@@ -193,7 +208,7 @@ YaTeX-make-begin-end."
 (defun YaTeX:multiput ()
   (concat (YaTeX:read-coordinates "Pos")
 	  (YaTeX:read-coordinates "Step")
-	  "{" (read-string "How many times: ") "}"))
+	  "{" (read-string-with-history "How many times: ") "}"))
 
 (defun YaTeX:put ()
   (YaTeX:read-coordinates "Pos"))
@@ -204,7 +219,7 @@ YaTeX-make-begin-end."
     (concat (YaTeX:read-coordinates "Dimension")
 	    (YaTeX:read-position "lsrtb")))
    (t
-    (let ((width (read-string "Width: ")))
+    (let ((width (YaTeX:read-length "Width: ")))
       (if (string< "" width)
 	  (progn
 	    (or (equal (aref width 0) ?\[)
@@ -221,17 +236,17 @@ YaTeX-make-begin-end."
   (YaTeX:read-position "tbc"))
 (defun YaTeX::parbox (argp)
   (cond
-   ((= argp 1) (read-string "Width: "))
-   ((= argp 2) (read-string "Text: "))))
+   ((= argp 1) (YaTeX:read-length "Width: "))
+   ((= argp 2) (YaTeX-read-string-or-skip "Text: "))))
 
 (defun YaTeX::dashbox ()
-  (concat "{" (read-string "Dash dimension: ") "}"
+  (concat "{" (read-string-with-history "Dash dimension: ") "}"
 	  (YaTeX:read-coordinates "Dimension")))
 
 (defun YaTeX::savebox (argp)
   (cond
-   ((= argp 1) (read-string "Saved into name: " "\\"))
-   ((= argp 2) (read-string "Text: "))))
+   ((= argp 1) (read-string-with-history "Saved into name: " "\\"))
+   ((= argp 2) (YaTeX-read-string-or-skip "Text: "))))
 
 (defvar YaTeX-minibuffer-quick-map nil)
 (if YaTeX-minibuffer-quick-map nil
@@ -280,13 +295,15 @@ YaTeX-make-begin-end."
 (defun YaTeX:read-coordinates (&optional mes varX varY)
   (concat
    "("
-   (read-string (format "%s %s: " (or mes "Dimension") (or varX "X")))
+   (read-string-with-history
+    (format "%s %s: " (or mes "Dimension") (or varX "X")))
    ","
-   (read-string (format "%s %s: " (or mes "Dimension") (or varY "Y")))
+   (read-string-with-history
+    (format "%s %s: " (or mes "Dimension") (or varY "Y")))
    ")"))
 
 (defun YaTeX:itembox ()
-  (concat "{" (read-string "Item heading string: ") "}"))
+  (concat "{" (YaTeX-read-string-or-skip "Item heading string: ") "}"))
 
 ;;;
 ;;Sample functions for maketitle-type command.
@@ -301,9 +318,9 @@ YaTeX-make-begin-end."
 (defun YaTeX:lim ()
   "Insert limit notation of \\lim."
   (YaTeX:check-completion-type 'maketitle)
-  (let ((var (read-string "Variable: ")) limit)
+  (let ((var (read-string-with-history "Variable: ")) limit)
     (if (string= "" var) ""
-      (setq limit (read-string "Limit ($ means infinity): "))
+      (setq limit (read-string-with-history "Limit ($ means infinity): "))
       (if (string= "$" limit) (setq limit "\\infty"))
       (concat "_{" var " \\rightarrow " limit "}"))))
 
@@ -314,15 +331,16 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:read-boundary (ULchar)
   "Read boundary usage by _ or ^.  _ or ^ is indicated by argument ULchar."
-  (let ((bndry (read-string (concat ULchar "{???} ($ for infinity): "))))
+  (let ((bndry (read-string-with-history
+		(concat ULchar "{???} ($ for infinity): "))))
     (if (string= bndry "") ""
       (if (string= bndry "$") (setq bndry "\\infty"))
       (concat ULchar "{" bndry "}"))))
 
 (defun YaTeX:verb ()
   "Enclose \\verb's contents with the same characters."
-  (let ((quote-char (read-string "Quoting char: " "|"))
-	(contents (read-string "Quoted contents: ")))
+  (let ((quote-char (read-string-with-history "Quoting char: " "|"))
+	(contents (YaTeX-read-string-or-skip "Quoted contents: ")))
     (concat quote-char contents quote-char)))
 
 (fset 'YaTeX:verb* 'YaTeX:verb)
@@ -332,12 +350,12 @@ YaTeX-make-begin-end."
   nil)
 
 (defun YaTeX:cite ()
-  (let ((comment (read-string "Comment for citation: ")))
+  (let ((comment (YaTeX-read-string-or-skip "Comment for citation: ")))
     (if (string= comment "") ""
       (concat "[" comment "]"))))
 
 (defun YaTeX:bibitem ()
-  (let ((label (read-string "Citation label for bibitem: ")))
+  (let ((label (YaTeX-read-string-or-skip "Citation label for bibitem: ")))
     (if (string= label "") ""
       (concat "[" label "]"))))
 
@@ -432,7 +450,7 @@ YaTeX-make-begin-end."
 (defun YaTeX::label-search-tag ()
   (interactive)
   (let ((case-fold-search t)
-	(tag (regexp-quote (char-to-string last-command-char))))
+	(tag (regexp-quote (char-to-string (YaTeX-last-key)))))
     (cond
      ((save-excursion
 	(forward-char 1)
@@ -588,7 +606,7 @@ First argument is LaTeX macro's name, second is macro's argument.")
   (let ((default (condition-case nil
 		     (YaTeX::ref-default-label)
 		   (error (substring (current-time-string) 4)))))
-    (read-string "Give a label for this line: "
+    (YaTeX-read-string-or-skip "Give a label for this line: "
 		 (if YaTeX-emacs-19 (cons default 1) default))))
 
 (defun YaTeX::ref-getset-label (buffer point &optional noset)
@@ -1235,7 +1253,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
     (let*((chmode (boundp (intern-soft "old")))
 	  (dlab (if chmode old ;if called via YaTeX-change-section (tricky...)
 		  (YaTeX::ref-default-label)))
-	  (label (read-string
+	  (label (read-string-with-history
 		  (format "New %s name: " (or labname "label"))
 		  (cons dlab 1))))
       (if (string< "" label)
@@ -1248,6 +1266,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
       
 
 (fset 'YaTeX::pageref 'YaTeX::ref)
+(fset 'YaTeX::cref 'YaTeX::ref)
 (defun YaTeX::tabref (argp)	    ; For the style file of IPSJ journal
   (YaTeX::ref
    argp nil nil
@@ -1378,7 +1397,7 @@ and print them to standard output."
 	   (hilit-auto-highlight nil)
 	   (pcnt (regexp-quote YaTeX-comment-prefix))
 	   (bibrx (concat YaTeX-ec-regexp "bibliography{\\([^}]+\\)}"))
-	   (bibptn (read-string "Pattern: "))
+	   (bibptn (YaTeX-read-string-or-skip "Pattern: "))
 	   (bbuf (get-buffer-create " *bibitems*"))
 	   (standard-output bbuf)
 	   (me 'YaTeX::cite)		;shuld set this for using YaTeX::ref
@@ -1485,13 +1504,14 @@ and print them to standard output."
 (defun YaTeX::newcommand (&optional argp)
   (cond
    ((= argp 1)
-    (let ((command (read-string "Define newcommand: " "\\")))
+    (let ((command (read-string-with-history "Define newcommand: " "\\")))
       (put 'YaTeX::newcommand 'command (substring command 1))
       command))
    ((= argp 2)
     (let ((argc
-	   (string-to-int (read-string "Number of arguments(Default 0): ")))
-	  (def (read-string "Definition: "))
+	   (string-to-int
+	    (read-string-with-history "Number of arguments(Default 0): ")))
+	  (def (YaTeX-read-string-or-skip "Definition: "))
 	  (command (get 'YaTeX::newcommand 'command)))
       ;;!!! It's illegal to insert string in the add-in function !!!
       (if (> argc 0) (insert (format "[%d]" argc)))
@@ -1518,7 +1538,7 @@ and print them to standard output."
 (defun YaTeX::newcounter (&optional argp)
   (cond
    ((= argp 1)
-    (read-string "New counter name: "))
+    (read-string-with-history "New counter name: "))
    (t "")))
 
 ;;
@@ -1575,6 +1595,7 @@ and print them to standard output."
     ("\\tabcolsep")
     ("\\textheight")
     ("\\textwidth")
+    ("\\columnwidth")
     ("\\topmargin")
     ("\\topsep")
     ("\\topskip")
@@ -1600,7 +1621,7 @@ and print them to standard output."
      nil nil "\\")
     )
    ((equal 2 argp)
-    (read-string-with-history "Length: " nil 'YaTeX:length-history))))
+    (YaTeX-read-string-or-skip "Length: " nil 'YaTeX:length-history))))
 
 (fset 'YaTeX::addtolength 'YaTeX::setlength)
 
@@ -1615,13 +1636,13 @@ and print them to standard output."
      'YaTeX:style-parameters-local
      nil nil "\\"))
    ((equal 2 argp)
-    (read-string "Text: "))))
+    (YaTeX-read-string-or-skip "Text: "))))
 
 (defun YaTeX::newlength (&optional argp)
   "YaTeX add-in function for arguments of \\newlength"
   (cond
    ((equal argp 1)
-    (let ((length (read-string "Length variable: " "\\")))
+    (let ((length (read-string-with-history "Length variable: " "\\")))
       (if (string< "" length)
 	  (YaTeX-update-table
 	   (list length)
@@ -1635,11 +1656,11 @@ and print them to standard output."
   "YaTeX add-in function for arguments of \\multicolumn."
   (cond
    ((equal 1 argp)
-    (read-string "Number of columns: "))
+    (read-string-with-history "Number of columns: "))
    ((equal 2 argp)
     (YaTeX:read-oneof "|lrc" nil t))
    ((equal 3 argp)
-    (read-string "Item: "))))
+    (YaTeX-read-string-or-skip "Item: "))))
 
 (defvar YaTeX:documentstyles-default
   '(("article") ("jarticle") ("j-article")
@@ -1708,7 +1729,9 @@ and print them to standard output."
     (save-excursion
       (YaTeX-visit-main t)
       (let*((insert-default-directory)
-	    (file (read-file-name (or prompt "Input file: ") "")))
+	    (default (and (boundp 'old) (stringp old) old))
+	    (file (read-file-name (or prompt "Input file: ") ""
+				  default nil default)))
 	(setq file (substring file 0 (string-match "\\.tex$" file))))))))
 
 (fset 'YaTeX::input 'YaTeX::include)
@@ -1784,12 +1807,12 @@ and print them to standard output."
 	    YaTeX-default-documentclass sname)))))
 
 (defun YaTeX::title (&optional argp)
-  (prog1 (read-string "Document Title: ")
+  (prog1 (YaTeX-read-string-or-skip "Document Title: ")
     (setq YaTeX-section-name "author"
 	  YaTeX-single-command "maketitle")))
 
 (defun YaTeX::author (&optional argp)
-  (prog1 (read-string "Document Author: ")
+  (prog1 (YaTeX-read-string-or-skip "Document Author: ")
     (setq YaTeX-section-name "date"
 	  YaTeX-single-command "maketitle")))
 
@@ -1843,7 +1866,7 @@ and print them to standard output."
   "Add-in for \\color's argument"
   (cond
    ((= argp 1) (YaTeX::color-completing-read "Color: "))
-   ((= argp 2) (read-string "Colored string: "))))
+   ((= argp 2) (YaTeX-read-string-or-skip "Colored string: "))))
 
 (fset 'YaTeX:color 'YaTeX:textcolor)
 (fset 'YaTeX::color 'YaTeX::textcolor)
@@ -1857,14 +1880,13 @@ and print them to standard output."
   (cond
    ((= argp 1) (YaTeX::color-completing-read "Frame color: "))
    ((= argp 2) (YaTeX::color-completing-read "Inner color: "))
-   ((= argp 3) (read-string "Colored string: "))))
+   ((= argp 3) (YaTeX-read-string-or-skip "Colored string: "))))
 
 (defun YaTeX:scalebox ()
   "Add-in for \\scalebox"
-  (let ((vmag (read-string
-	       (if YaTeX-japan "”{—¦(•‰‚Å”½“]): "
+  (let ((vmag (YaTeX-read-string-or-skip (if YaTeX-japan "”{—¦(•‰‚Å”½“]): "
 		 "Magnification(Negative for flipped): ")))
-	(hmag (read-string (if YaTeX-japan "c”{—¦(È—ª‰Â): "
+	(hmag (YaTeX-read-string-or-skip (if YaTeX-japan "c”{—¦(È—ª‰Â): "
 			     "Vertical magnification(Optional): "))))
     (if (and hmag (string< "" hmag))
 	(format "{%s}[%s]" vmag hmag)
@@ -1879,9 +1901,11 @@ and print them to standard output."
       (if (string< "" (setq r (YaTeX:read-oneof "htbpB")))
 	  (concat "[origin=" r "]")))
      ((memq c '(?X ?x ?Y ?y))
-      (setq r (read-string "" (if YaTeX-emacs-19 (cons defx 3) defx))
+      (setq r (read-string-with-history
+	       "" (if YaTeX-emacs-19 (cons defx 3) defx))
 	    x (if (string< "x=" r) r)
-	    r (read-string "" (if YaTeX-emacs-19 (cons defy 3) defy))
+	    r (read-string-with-history
+	       "" (if YaTeX-emacs-19 (cons defy 3) defy))
 	    y (if (string< "y=" r) r)
 	    something (or x y))
       (format "%s%s%s%s%s"
@@ -1895,16 +1919,16 @@ and print them to standard output."
   "Argument add-in for \\rotatebox"
   (cond
    ((= argp 1)
-    (read-string (if YaTeX-japan "‰ñ“]Šp(“x; ¶‰ñ‚è): "
+    (read-string-with-history (if YaTeX-japan "‰ñ“]Šp(“x; ¶‰ñ‚è): "
 		   "Angle in degree(unclockwise): ")))
    ((= argp 2)
-	(read-string (if YaTeX-japan "ƒeƒLƒXƒg: " "Text: ")))))
+	(YaTeX-read-string-or-skip (if YaTeX-japan "ƒeƒLƒXƒg: " "Text: ")))))
 
 (defun YaTeX:includegraphics ()
   "Add-in for \\includegraphics's option"
   (let (width height (scale "") angle str)
-    (setq width (YaTeX-read-string-or-skip "Width: ")
-	  height (YaTeX-read-string-or-skip "Height: "))
+    (setq width (YaTeX:read-length "Width: ")
+	  height (YaTeX:read-length "Height: "))
     (or (string< "" width) (string< "" height)
 	(setq scale (YaTeX-read-string-or-skip "Scale: ")))
     (setq angle (YaTeX-read-string-or-skip "Angle(0-359): "))
@@ -1912,28 +1936,59 @@ and print them to standard output."
 	  (mapconcat
 	   'concat
 	   (delq nil
-		 (mapcar '(lambda (s)
+		 (mapcar (function (lambda (s)
 			    (and (stringp (symbol-value s))
 				 (string< "" (symbol-value s))
-				 (format "%s=%s" s (symbol-value s))))
+				 (format "%s=%s" s (symbol-value s)))))
 			 '(width height scale angle)))
 	   ","))
     (if (string= "" str) ""
       (concat "[" str "]"))))
 
-(defun YaTeX::includegraphics (argp)
+(defvar YaTeX::get-boundingbox-cmd YaTeX-cmd-gs
+  "Command to get bounding box from PDF files.
+Possible values are `gs' and `extractbb'.")
+
+(defun YaTeX::get-boundingbox (file)
+  "Return the bound box as a string
+This function relies on gs(ghostscript) command installed."
+  (let ((str (YaTeX-command-to-string
+	      (format
+	       (cond
+		((string-match "extractbb" YaTeX::get-boundingbox-cmd)
+		 "%s -O %s")
+		((string-match "gs" YaTeX::get-boundingbox-cmd)
+		 "%s -sDEVICE=bbox -dBATCH -dNOPAUSE %s")
+		(t "echo %s %s"))
+	       YaTeX::get-boundingbox-cmd file))))
+    (if (string-match
+	 "%%BoundingBox:\\s \\([0-9]+\\s [0-9]+\\s [0-9]+\\s [0-9]+\\)"
+	 str)
+	(substring str (match-beginning 1) (match-end 1)))))
+
+(defun YaTeX::includegraphics (argp &optional file doclip)
   "Add-in for \\includegraphics"
-  (let ((imgfile (YaTeX::include argp "Image File: "))
+  (let*((imgfile (or file (YaTeX::include argp "Image File: ")))
+	(imgfilepath
+	 (save-excursion
+	   (YaTeX-visit-main t)
+	   (expand-file-name imgfile default-directory)))
 	(case-fold-search t) info bb noupdate needclose c)
-    (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\)$" imgfile)
-	 (file-exists-p imgfile)
+    (and (string-match "\\.\\(jpe?g\\|png\\|gif\\|bmp\\|pdf\\)$" imgfile)
+	 (file-exists-p imgfilepath)
 	 (or (fboundp 'yahtml-get-image-info)
 	     (progn
 	       (load "yahtml" t) (featurep 'yahtml))) ;(require 'yahtml nil t)
-	 (setq info (yahtml-get-image-info imgfile))
-	 (car info)			;if has width value
-	 (car (cdr info))		;if has height value
-	 (setq bb (format "bb=%d %d %d %d" 0 0 (car info) (car (cdr info))))
+	 (if (string-match "\\.pdf" imgfile)
+	     (and
+	      (setq info (YaTeX::get-boundingbox imgfilepath))
+	      (stringp info)
+	      (string< "" info)
+	      (setq bb (format "bb=%s" info)))
+	   (setq info (yahtml-get-image-info imgfilepath))
+	   (car info)			;if has width value
+	   (car (cdr info))		;if has height value
+	   (setq bb (format "bb=%d %d %d %d" 0 0 (car info) (car (cdr info)))))
 	 (save-excursion
 	   (cond
 	    ((and (save-excursion
@@ -1947,17 +2002,25 @@ and print them to standard output."
 	     (replace-match bb))
 	    (noupdate nil)
 	    ((and (match-beginning 1)
-		  (prog2
-		      (message "Insert `%s'?  Y)es N)o C)yes+`clip': " bb)
-		      (memq (setq c (read-char)) '(?y ?Y ?\  ?c ?C))
-		    (message "")))
+		  (or doclip
+		      (prog2
+			  (message "Insert `%s'?  Y)es N)o C)yes+`clip': " bb)
+			  (memq (setq c (read-char)) '(?y ?Y ?\  ?c ?C))
+			(setq doclip (memq c '(?c ?C)))
+			(message ""))))
 	     (goto-char (match-end 0))
-	     (message "")
+	     (message "`bb=' %s"
+		      (format
+		       (if YaTeX-japan
+			   "‚Ì’l‚Íƒtƒ@ƒCƒ‹–¼‚Ìã‚Å `%s' ‚ð‰Ÿ‚µ‚Äƒtƒ@ƒCƒ‹–¼‚ðÄ“ü—Í‚µ‚ÄXV‚Å‚«‚Ü‚·B"
+			 "values can be update by typing `%s' on file name.")
+		       (key-description
+			(car (where-is-internal 'YaTeX-change-*)))))
 	     (if (looking-at "\\[") (forward-char 1)
 	       (insert-before-markers "[")
 	       (setq needclose t))
 	     (insert-before-markers bb)
-	     (if (memq c '(?c ?C)) (insert-before-markers ",clip"))
+	     (if doclip (insert-before-markers ",clip"))
 	     (if needclose (insert-before-markers "]")
 	       (or (looking-at "\\]") (insert-before-markers ","))))
 	    (t (YaTeX-push-to-kill-ring bb)))))
@@ -1977,9 +2040,9 @@ and print them to standard output."
   '(("version") ("plext") ("url") ("fancybox") ("pifont") ("longtable")
     ("ascmac") ("bm") ("graphics") ("graphicx") ("alltt") ("misc") ("eclbkbox")
     ("amsmath") ("amssymb") ("xymtex") ("chemist")
-    ("a4j") ("array") ("epsf") ("color") ("epsfig") ("floatfig")
+    ("a4j") ("array") ("epsf") ("color") ("xcolor") ("epsfig") ("floatfig")
     ("landscape") ("path") ("supertabular") ("twocolumn")
-    ("latexsym") ("times") ("makeidx"))
+    ("latexsym") ("times") ("makeidx") ("geometry") ("type1cm"))
   "Default completion table for arguments of \\usepackage")
 
 (defvar YaTeX::usepackage-alist-private nil
@@ -2004,7 +2067,7 @@ and print them to standard output."
 (defun YaTeX::mask (argp)
   (cond
    ((equal argp 1)
-    (read-string "String: "))
+    (YaTeX-read-string-or-skip "String: "))
    ((equal argp 2)
     (let (c)
       (while (not (memq c '(?A ?B ?C ?D ?E ?F ?G ?H ?I ?J ?K)))
@@ -2015,9 +2078,9 @@ and print them to standard output."
 (defun YaTeX::maskbox (argp)
   (cond
    ((equal argp 1)
-    (read-string "Width: "))
+    (YaTeX:read-length "Width: "))
    ((equal argp 2)
-    (read-string "Height: "))
+    (YaTeX:read-length "Height: "))
    ((equal argp 3)
     (let (c)
       (while (not (memq c '(?A ?B ?C ?D ?E ?F ?G ?H ?I ?J ?K)))
@@ -2027,12 +2090,12 @@ and print them to standard output."
    ((equal argp 4)
     (YaTeX:read-oneof "lcr" 'quick))
    ((equal argp 5)
-    (read-string "String: "))))
+    (YaTeX-read-string-or-skip "String: "))))
 
 (defun YaTeX::textcircled (argp)
   (cond
    ((equal argp 1)
-    (let ((char (read-string "Circled char: "))
+    (let ((char (read-string-with-history "Circled char: "))
 	  (left "") (right "") c)
       (setq c (read-char
 	       "Enclose also with (s)mall (t)iny s(C)riptsize (N)one:"))
@@ -2129,7 +2192,7 @@ and print them to standard output."
 (defun YaTeX::DeclareMathOperator (argp)
   (cond
    ((equal argp 1)
-    (read-string "Operator: " "\\"))))
+    (YaTeX-read-string-or-skip "Operator: " "\\"))))
 
 ;;;
 ;; Add-in functions for large-type command.

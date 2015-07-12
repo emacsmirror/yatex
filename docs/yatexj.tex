@@ -13,7 +13,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Fri May 11 15:40:21 2012 on firestorm
+@c Last modified Fri Feb 13 08:17:31 2015 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -124,7 +124,7 @@ large型コマンド
 コマンドの補完入力
 (@kbd{C-c b}, @kbd{C-c s}, @kbd{C-c l}, @kbd{C-c m})
 @item 既に入力したテキストを環境やコマンド引数の中に取り込む括り補完
-(@kbd{C-u} +通常補完キー)
+(リジョン指定後に通常補完キー)
 @item セクション区切り入力時の文書構造アウトライン表示
 @item セクションコマンドの一括シフト (@ref{view-sectioning})
 @item 補完辞書の学習
@@ -196,8 +196,8 @@ userpackage
         @dots{} 文書を作成する時の漢字コード
 @item dviprint-command-format
         @dots{} ファイルの印刷に使われるコマンド列の書式
-@item makeindex-command
-        @dots{} makeindexコマンド
+@item YaTeX-dvipdf-command
+        @dots{} DVIをPDFに変換するコマンド
 @end table
 
 これらを変更する場合は、やはり@file{~/.emacs}にて、たとえば
@@ -228,8 +228,9 @@ LaTeXソースの編集中、次のキー入力により、platex などのタイプセットプログラ
 @item [prefix] t r
         @dots{} タイプセッタ起動(領域指定)
 @item [prefix] t e
-        @dots{} タイプセッタ起動
-        (ポイント位置の環境または数式モードのみ対象)
+        @dots{} 部分タイプセット&プレヴュー
+        (ポイント位置の段落、環境または数式モードのみをタイプセットして
+        隣のバッファに組版結果の画像を出す)
 @item [prefix] t k
         @dots{} 動作中のタイプセッタの停止
 @item [prefix] t b
@@ -296,11 +297,20 @@ LaTeXソースの編集中、次のキー入力により、platex などのタイプセットプログラ
 @subsection 環境タイプセット
 
   @kbd{[prefix] te} を押すと、ポイント位置の最も内側の環境、または数式モー
-ド内の場合はその数式モード全体が自動的に領域選択されて、領域タイプセットを
-呼び出します。tabular環境や数式モードで複雑なものを作っている場合は確かめた
-い部分だけを確認できるので便利です。これも @file{texput.tex} に該当部分を
-書き出します。プレヴューアで @file{texput.dvi} を開いたままにしておけば
-修正と確認が素早くできるでしょう。
+ド内の場合はその数式モード全体、あるいは環境がなければその段落が自動的に
+領域選択されて、領域タイプセットを呼び出します。
+tabular環境や数式モードで複雑なものを作っている場合は確かめたい部分だけを
+確認できるので便利です。Emacsが画像表示可能な場合は、
+部分タイプセットの結果を画像化して隣のウィンドウに表示します。また、
+特定の環境で呼び出した場合は、環境内の文字を書き換える度に自動的に
+プレビュー画像を更新します(on-the-flyプレヴュー)。
+自動表示されない場合はプレヴューアで @file{texput.dvi}
+を開いたままにしておけば修正と確認が素早くできるでしょう。
+
+  画像プレヴューの場合の大きさ(解像度)はデフォルトで200dpi(数式は300dpi)です。
+dpiを変えたい場合はLaTeXソースのどこかに
+@code{%#PREVIEWDPI 150}
+のようにdpi値を書いてください。
 
 @node Calling previewer, Print out, Calling typesetter, Invocation
 @comment  node-name,  next,  previous,  up
@@ -524,10 +534,20 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
 
 @table @code
+ @item %#PREVIEW
+	@dots{} Command line for DVI viewing ([prefix] t p)
  @item %#BIBTEX
 	@dots{} makeindexを行なうコマンドライン([prefix] t b)
  @item %#MAKEINDEX
 	@dots{} bibtexを行なうコマンドライン([prefix] t i)
+ @item %#DVIPDF
+	@dots{} DVIからPDF変換を行なうコマンドライン([prefix] t d)
+ @item %#LPR
+	@dots{} 印刷用のコマンドライン([prefix] t l)
+ @item %#PDFVIEW
+	@dots{} PDFファイルを見るためのコマンドライン
+ @item %#IMAGEDPI
+	@dots{} 即時プレヴュー(on-the-fly preview)用の画像のDPI
 @end table
 
 行頭がこれらのキーワードで始まる行をLa@TeX{}文書の先頭付近に書いておけば、
@@ -568,15 +588,16 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
 ができます。
 
 @menu
-* begin型補完::                 
-* section型補完::               
-* large型補完::                 
-* maketitle型補完::             
+* begin型補完::
+* section型補完::
+* large型補完::
+* maketitle型補完::
 * Arbitrary completion::        随時補完
-* end補完::                     
+* end補完::
 * Accent mark completion::      アクセント記号補完
 * Image completion::            数式記号イメージ補完
 * Greek letter completion::     ギリシャ文字補完
+* Inserting parens::
 @end menu
 
 @node begin型補完, section型補完, Completion, Completion
@@ -676,17 +697,19 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
 @cindex 閉じ込める[としこめる]
 
   例えばあるパラグラフを description 環境の中に入れたいときは、
-そのパラグラフをマークしてから、
+そのパラグラフをマークしてから、補完機能を呼び出してください(description
+環境の場合は @kbd{[prefix] b D})。
 
-@table @kbd
-@item [prefix] B D
-@itemx (または ESC 1 [prefix] b D)
-@itemx (または  C-u  [prefix] b D など)
-@end table
+選択された領域を括ります。ただしこれは @code{transient-mark-mode} が t
+(Emacsの標準)になっている場合のみで、普段
+@code{transient-mark-mode} を @code{nil} にしている場合は、
+補完キー前に @code{universal-argument} 指定(@kbd{C-u})
+をタイプしてから @kbd{[prefix] b D} など、補完キーを
+タイプすれば括り補完になります。
+なおEmacs22以降であれば @code{transient-mark-mode} 無効時も
+@code{set-mark-command} (@kbd{C-space})の連打で一時的に
+@code{transient-mark-mode} が有効になります。
 
-とタイプしてください。これは、@kbd{[prefix] b SPC}の補完入力にもあてはまり、
-@kbd{b} を大文字に変えて、@kbd{[prefix] B SPC} とタイプすれば、あらかじめ
-マークしておいたリジョンを、begin と end の環境で括ります。
 
 @node section型補完, large型補完, begin型補完, Completion
 @comment  node-name,  next,  previous,  up
@@ -799,8 +822,11 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 @subsection 既に書いたテキストを括る
 @cindex 括る[くくる]
 
-  また、起動コマンドの@kbd{s}を大文字に変えて起動すると、あらかじめ書
-いた文章を section 型コマンドの第一引数として括ります。
+  また、section型補完機能の呼び出し時に領域選択状態にしておくと
+領域内のテキストを section 型コマンドの第一引数として括ります。
+これも普段 @code{transient-mark-mode} を @code{nil} にしている場合は
+@kbd{C-u} のあとに補完キーをタイプすれば強制的に括り補完になります。
+
 
 @node Recursive completion, view-sectioning, Enclose section-type command, section型補完
 @comment  node-name,  next,  previous,  up
@@ -909,8 +935,7 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 
   また、begin型補完の時と同様、先に書いてしまった一連の文章の文字のサイズ
 を変えたいと思う時がありますが、そのような時は、サイズや大きさを変えたい文
-字の範囲をマークしてから、呼び出しキーを @kbd{[prefix] L} と、大文字の L 
-に変えて呼び出せば、そのリジョン全体が、ブレースで囲まれます。
+字の範囲をマークしてからlarge型補完を呼んでください。
 
 @node maketitle型補完, Arbitrary completion, large型補完, Completion
 @comment  node-name,  next,  previous,  up
@@ -1080,7 +1105,7 @@ Emacs-Lisp 変数 @code{YaTeX-math-sign-alist-private}  に定義してください。
 照してください。
 @cindex YaTeX-math-sign-alist-private
 
-@node Greek letter completion,  , Image completion, Completion
+@node Greek letter completion, Inserting parens, Image completion, Completion
 @comment  node-name,  next,  previous,  up
 @section ギリシャ文字補完
 @cindex ギリシャ文字補完[きりしやもしほかん]
@@ -1097,6 +1122,18 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 かない場合は、@kbd{C-u ;}のように universal-argument をつけてキーを押すこ
 とにより、強制的にイメージ補完に入ることができます。また、この時にどのよう
 な状態で数式環境内判定に失敗したかをご連絡下さい。
+
+@node Inserting parens,  , Greek letter completion, Completion
+@section 括弧入力補助
+@cindex 括弧入力補助[かつこにゆうりよくほしよ]
+
+  3種類ある括弧 () {} [] の開き括弧を入れたときに閉じ括弧を自動的に入れます。
+@code{\} の直後にの @code{[} を入れると行を分けてインデントを揃え、
+数式入力に備えます。その他 La@TeX{} のマクロに応じて括弧の釣合の取れた
+状態に導きます。開き括弧そのものを1つだけ入れたいときは @kbd{C-q} で
+クォート入力するか、@kbd{[prefix] w m} で修正モードをOFFにしてください。
+
+  領域選択してから開き括弧を入れるとその領域をその種類の括弧で括ります。
 
 @node Local dictionary, Commenting out, Completion, Top
 @comment  node-name,  next,  previous,  up
@@ -1895,6 +1932,60 @@ makeindexコマンド (@code{"makeindex"} (MS-DOSでは@code{"makeind"}))
 dviをPDFに変換するコマンド (@code{"dvipdfmx"})
 @end defvar
 
+@defvar YaTeX-on-the-fly-preview-interval
+@kbd{[prefix] t e}で環境即時previewをする場合の変換処理までの
+無操作時間(秒) (0.9)
+@code{nil} の場合は即時プレヴューをしない。
+@end defvar
+
+@defvar YaTeX-on-the-fly-math-preview-engine
+@kbd{[prefix] t e}で数式環境を即時previewする時に用いるエンジン
+(latex-math-previewが利用可能なときは latex-math-preview-expression を呼ぶ
+@code{'YaTeX-typeset-environment-by-lmp}
+そうでないときは内蔵関数を呼ぶ @code{'YaTeX-typeset-environment-by-builtin})
+@end defvar
+
+@defvar YaTeX-cmd-gimp
+GIMPを起動するコマンド (code{"gimp"})
+@end defvar
+@defvar YaTeX-cmd-tgif
+tgifを起動するコマンド (code{"tgif"})
+@end defvar
+@defvar YaTeX-cmd-inkscape
+Inkscapeを起動するコマンド (code{"inkscape"})
+@end defvar
+@defvar YaTeX-cmd-dia
+Diaを起動するコマンド (code{"dia"})
+@end defvar
+@defvar YaTeX-cmd-ooo
+OpenOffice.orgまたはLibreOfficeを起動するコマンド (code{"soffice"})
+@end defvar
+@defvar YaTeX-cmd-gs
+Ghostscriptを起動するコマンド (code{"gs"})
+@end defvar
+@defvar YaTeX-cmd-dvips
+dvipsを起動するコマンド(環境によってはpdvipsなど) (code{"dvips"})
+@end defvar
+@defvar YaTeX-cmd-displayline
+displaylineを起動するコマンド
+(code{"/Applications/Skim.app/Contents/SharedSupport/displayline"})
+@end defvar
+@defvar YaTeX-cmd-edit-ps
+PostScriptファイルを編集するコマンド (変数code{"YaTeX-cmd-gimp"}の値)
+@end defvar
+@defvar YaTeX-cmd-edit-pdf
+PDFファイルを編集するコマンド (変数code{"YaTeX-cmd-ooo"}の値)
+@end defvar
+@defvar YaTeX-cmd-edit-ai
+.aiファイルを編集するコマンド (変数code{"YaTeX-cmd-inkscape"}の値)
+@end defvar
+@defvar YaTeX-cmd-edit-svg
+SVGファイルを編集するコマンド (変数code{"YaTeX-cmd-inkscape"}の値)
+@end defvar
+@defvar YaTeX-cmd-edit-images
+その他画像ファイルを編集するコマンド (変数code{"YaTeX-cmd-gimp"}の値)
+@end defvar
+
 @defvar YaTeX-need-nonstop
 @code{\nonstopmode@{@}}を自動的に付加するか (@code{nil})
 @end defvar
@@ -2092,6 +2183,12 @@ tabular/array 環境で現在行の先頭位置が表の第Nカラムのときは
 @defvar YaTeX-noindent-env-regexp
 別の環境内にあっても \begin@{@} が行頭から始まるべき環境名の正規表現。
 verbatim環境などを指定する。
+@end defvar
+
+@defvar YaTeX-electric-indent-mode
+Emacs 24.4 で導入された改行時の、自動インデントをどうするか。
+この値がそのまま electric-indent-local-mode に渡される。
+-1でoff。
 @end defvar
 
 @defvar YaTeX-ref-default-label-string

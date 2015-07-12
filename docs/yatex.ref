@@ -44,16 +44,18 @@
 
 【プロセス起動】
 
+	◆latex起動			[prefix] tj
+	◆latex+dvipdfmx起動		[prefix] td
+	◆環境の即時プレビュー		[prefix] te
+	◆latex起動(領域指定)		[prefix] tr
 	◆jbibtex起動			[prefix] tb
-	◆jlatex起動			[prefix] tj
 	◆makeindex起動			[prefix] ti
-	◆jlatexのkill			[prefix] tk	※
+	◆latexプロセスのkill		[prefix] tk	※
 	◆プリントアウト		[prefix] tl
 	◆プリントアウト(全ページ)	C-u [prefix] tl
 	◆プレビューア起動		[prefix] tp
 	◆xdvi上で文字列サーチ		[prefix] ts	※※
 	◆lpq起動			[prefix] tq
-	◆jlatex起動(領域指定)		[prefix] tr
 
 	  [prefix] t を押せばメニューが出るので、[prefix] t の次に押すキー
 	は覚えなくて構いません。
@@ -72,7 +74,7 @@
 	◆タイプセットエラー箇所へ	[prefix] '
 
 	  タイプセットエラー発生箇所へ(末尾から)遡って順次ジャンプします。
-	もちろん jlatex でエラーが生じた場合のみ有効です。
+	タイプセット時にエラーが生じた場合のみ有効です。
 
 	◆対応するオブジェクトジャンプ	[prefix] g
 	◆別ウィンドウで   〃		[prefix] 4g
@@ -85,6 +87,7 @@
 	・\include(only), \input の上   対応するファイルへ
 	・\ref, \label の上             対応する \label, \ref へ
 	・\cite, \bibitem の上          対応する \bibitem, \cite へ
+	・その他 	  		対応するプレヴューア位置へ
 
 	◆メインファイルへジャンプ	[prefix] ^
 	◆別ウィンドウで   〃		[prefix] 4^

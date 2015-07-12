@@ -1738,8 +1738,9 @@ AMS-LaTeX や HyperRef と同時に使えるが、これらよりも後に
 \end{figure*}
 
 includegraphics
-\usepackage{graphicx}  ... \includegraphics[オプション]{graphicfile.eps}
+\usepackage[ドライバ]{graphicx}  ... \includegraphics[オプション]{IMG.eps}
 画像を取り込む。要 graphicx パッケージ。
+「ドライバ」は dvipdfmx 等。
 「オプション」は以下のものが指定可能。
 scale=拡大率
 width=幅
@@ -1750,6 +1751,34 @@ origin=回転の中心位置  (c, tl, tr, bl, brのどれか)
 bb=llx lly urx ury    (BoundingBoxとなる矩形対角座標を指定)
 viewport=llx lly urx ury  (BoundingBox内の相対的座標で切り取る)
 trim=left bottom right top  (指定した幅を切り取る)
+
+【使用例】
+% プリアンブル
+\usepackage[dvipdfmx]{graphicx}
+% 本文
+\begin{figure}[h]\centering
+ \includegraphics[width=0.4\columnwidth,bb=0 0 400 300]{hoge.jpg}
+ \caption{hogeの仕組}\label{hoge-fig}
+\end{figure}
+図\ref{hoge-fig}にあるとおり、ほげはほげなのだ。
+% \includegraphics{} を補完入力するとbb=行はyatexが勝手に調べて入れる。
+
+wrapfigure
+\begin{wrapfigure}[LINES]{POS}[OVH]{WIDTH} ...画像... \end{wrapfigure}
+LINES(省略可)	回り込みする行数(デフォルトは画像の高さ分)
+POS		r l i o のどれか(右、左、見開き内側、外側)
+		大文字 R L I O は画像フロート
+OVH(省略可)	画像の張り出しマージン(\wrapoverhang 通常0)
+WIDTH		回り込みする(画像込みの)幅
+
+【使用例】
+% プリアンブル
+\usepackage{wrapfig}
+% 本文
+\begin{wrapfigure}{r}{4cm}
+ \includegraphics[width=3cm,bb=0 0 640 480,clip]{hoge.jpg}
+ \caption{ほげほげ}\label{hoge-jpg}
+\end{wrapfigure}
 
 abstract
 \begin{abstract} ... \end{abstract}

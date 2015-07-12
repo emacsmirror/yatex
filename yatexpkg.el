@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX package manager
-;;; yatexpkg.el
-;;; (c)2003-2012 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Jan  9 20:13:53 2012 on firestorm
+;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
+;;; 
+;;; (c)2003-2015 by HIROSE, Yuuji [yuuji@yatex.org]
+;;; Last modified Fri Feb 13 22:45:46 2015 on firestorm
 ;;; $Id$
 
+;;; Code:
 (defvar YaTeX-package-ams-envs
   (mapcar 'car YaTeX-ams-env-table))
 
@@ -32,16 +32,26 @@
     ("amsmath"	(env . YaTeX-package-ams-envs)
      		(section "tag" "tag*"))
     ("amssymb"	(maketitle "leqq" "geqq" "mathbb" "mathfrak"
-			   "fallingdotseq"
+			   "fallingdotseq" "therefore" "because"
 			   "lll" "ggg")) ;very few.  Please tell us!
     ("graphicx" (section "includegraphics"
 			 "rotatebox" "scalebox" "resizebox" "reflectbox")
      		(option . YaTeX-package-graphics-driver-alist))
     ("color"	(section "textcolor" "colorbox" "pagecolor" "color")
-     		(option . YaTeX-package-graphics-driver-alist))
+     		(option . YaTeX-package-graphics-driver-alist)
+		(default-option . "usenames,dvipsnames"))
+    ("xcolor"	(same-as . "color"))
     ("ulem"	(section "uline" "uuline" "uwave")
 		(option ("normalem")))
-    ("multicol"	(env "multicols")))
+    ("multicol"	(env "multicols"))
+    ("cref"	(section "cleveref"))
+    ("crefrange"	(same-as . "cref"))
+    ("cpageref"		(same-as . "cref"))
+    ("labelcref"	(same-as . "cref"))
+    ("labelcpageref"	(same-as . "cref"))
+    ("wrapfig"	(env "wrapfigure" "wraptable"))
+    ("setspace"	(env "spacing") (section "setstretch"))
+    )
   "Default package vs. macro list.
 Alists contains '(PACKAGENAME . MACROLIST)
 PACKAGENAME     Basename of package(String).
@@ -55,7 +65,8 @@ package.  Its cdr can be a symbol whose value is alist.
 An good example is the value of YaTeX-package-alist-default.")
 
 (defvar YaTeX-package-graphics-driver-alist
-  '(("dvips") ("xdvi") ("dvipdf") ("pdftex") ("dvipsone") ("dviwindo")
+  '(("dvips") ("dvipsnames") ("usenames")
+    ("xdvi") ("dvipdfmx") ("pdftex") ("dvipsone") ("dviwindo")
     ("emtex") ("dviwin") ("oztex") ("textures") ("pctexps") ("pctexwin")
     ("pctexhp") ("pctex32") ("truetex") ("tcidvi") ("vtex"))
   "Drivers alist of graphics/color stylefile's supporting deveces.
@@ -72,11 +83,14 @@ as of 2004/1/19.  Thanks.")
 Optional second argument TYPE limits the macro type.
 TYPE is a symbol, one of 'env, 'section, 'maketitle."
   (let ((list (append YaTeX-package-alist-private YaTeX-package-alist-default))
-	element x val pkg pkglist r)
+	origlist element x sameas val pkg pkglist r)
+    (setq origlist list)
     (while list
       (setq element (car list)
 	    pkg (car element)
 	    element (cdr element))
+      (if (setq sameas (assq 'same-as element)) ;non-recursive retrieval
+	  (setq element (cdr (assoc (cdr sameas) origlist))))
       (if (setq r (catch 'found
 		    (while element
 		      (setq x (car element)
@@ -91,20 +105,26 @@ TYPE is a symbol, one of 'env, 'section, 'maketitle."
       (setq list (cdr list)))
     pkglist))
 
-(defun YaTeX-package-option-lookup (pkg)
+(defun YaTeX-package-option-lookup (pkg &optional key)
   "Look up options for specified pkg and returne them in alist form.
-Just only accocing against the alist of YaTeX-package-alist-*"
-  (let ((l (cdr (assq 'option
-		      (assoc pkg (append YaTeX-package-alist-private
-					 YaTeX-package-alist-default))))))
-    (if (symbolp l) (symbol-value l) l)))
+Just only associng against the alist of YaTeX-package-alist-*"
+  (let*((list (append YaTeX-package-alist-private YaTeX-package-alist-default))
+	(l (cdr (assq (or key 'option) (assoc pkg list))))
+	(recur (cdr (assq 'same-as (assoc pkg list)))))
+    (cond
+     (recur (YaTeX-package-option-lookup recur key))
+     ((symbolp l) (symbol-value l))
+     (t l))))
 
 (defvar YaTeX-package-resolved-list nil
   "List of macros whose package is confirmed to be loaded.")
 
-(defun YaTeX-package-auto-usepackage (macro type)
+(defun YaTeX-package-auto-usepackage (macro type &optional autopkg autoopt)
   "(Semi)Automatically add the \\usepackage line to main-file.
-Search the usepackage for MACRO of the TYPE."
+Search the usepackage for MACRO of the TYPE.
+Optional second and third argument AUTOPKG, AUTOOPT are selected
+without query.  Thus those two argument (Full)automatically add
+a \\usepackage line."
   (let ((cb (current-buffer))
 	(wc (current-window-configuration))
 	(usepackage (concat YaTeX-ec "usepackage"))
@@ -112,9 +132,10 @@ Search the usepackage for MACRO of the TYPE."
 	(usepkgrx (concat
 		   YaTeX-ec-regexp
 		   "\\(usepackage\\|include\\)\\b"))
-	(register '(lambda () (set-buffer cb)
+	(register (function
+		   (lambda () (set-buffer cb)
 		     (set (make-local-variable 'YaTeX-package-resolved-list)
-			  (cons macro YaTeX-package-resolved-list))))
+			  (cons macro YaTeX-package-resolved-list)))))
 	(begdoc (concat YaTeX-ec "begin{document}"))
 	pb pkg optlist (option "") mb0 uspkgargs)
     (if (or (YaTeX-member macro YaTeX-package-resolved-list)
@@ -154,29 +175,38 @@ Search the usepackage for MACRO of the TYPE."
 	      ;;corresponding \usepackage found
 	      (funcall register)
 	    ;; not found, insert it.
-	    (if (y-or-n-p
-		 (format "`%s' requires package. Put \\usepackage now?" macro))
+	    (if (or
+		 autopkg
+		 (y-or-n-p
+		  (format "`%s' requires package. Put \\usepackage now?"
+			  macro)))
 		(progn
 		  (require 'yatexadd)
 		  (setq pkg
-			(completing-read
-			 "Load which package?(TAB for list): "
-			 pkglist nil nil
-			 ;;initial input
-			 (if (= (length pkglist) 1)
-			     (let ((w (car (car pkglist))))
-			       (if YaTeX-emacs-19 (cons w 0) w))))
+			(or autopkg
+			    (completing-read
+			     "Load which package?(TAB for list): "
+			     pkglist nil nil
+			     ;;initial input
+			     (if (= (length pkglist) 1)
+				 (let ((w (car (car pkglist))))
+				   (if YaTeX-emacs-19 (cons w 0) w)))))
 			optlist
 			(YaTeX-package-option-lookup pkg))
 		  (if optlist
 		      (let ((minibuffer-completion-table optlist)
-			    (delim ",") (w (car (car optlist))))
+			    (delim ",") (w (car (car optlist)))
+			    (dflt (YaTeX-package-option-lookup
+				   pkg 'default-option)))
 			(setq option
-			      (read-from-minibuffer
-			       (format "Any option for {%s}?: " pkg)
-			       (if (= (length optlist) 1)
-				   (if YaTeX-emacs-19 (cons w 0) w))
-			       YaTeX-minibuffer-completion-map)
+			      (or
+			       autoopt
+			       (read-from-minibuffer
+				(format "Any option for {%s}?: " pkg)
+				(let ((v (or dflt
+					     (and (= (length optlist) 1) w))))
+				  (and v (if YaTeX-emacs-19 (cons v 0) v)))
+				YaTeX-minibuffer-completion-map))
 			      option (if (string< "" option)
 					 (concat "[" option "]")
 				       ""))))

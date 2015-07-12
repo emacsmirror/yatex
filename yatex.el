@@ -1,15 +1,14 @@
-;;; -*- Emacs-Lisp -*-
-;;; Yet Another tex-mode for emacs - //–ì’¹//
-;;; yatex.el rev. 1.76
-;;; (c)1991-2012 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat May 12 14:53:03 2012 on firestorm
+;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
+;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed Jul  8 13:41:17 2015 on duke
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
+;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.76"
+(defconst YaTeX-revision-number "1.78.9"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -38,37 +37,62 @@ make a trip to any other part of text other than you are writing, you can
 return to the editing paragraph by calling register-to-point with argument
 YaTeX-current-position-register.")
 
-;;(defvar YaTeX-tmp-dic-unit 'main-file
-;;  "*Default switching unit of temporary dictionary.
-;;There are two switching unit:
-;;'main-file	: switch tmp-dic according to main-file directory.
-;;'directory	: switch tmp-dic dir by dir."
-;;)
-(defvar YaTeX-use-LaTeX2e t "*Use LaTeX2e or not.  Nil meas latex 2.09")
+(defvar YaTeX-use-LaTeX2e t "*Use LaTeX2e or not.  Nil means latex 2.09")
 
 (defvar tex-command
   (cond
    (YaTeX-use-LaTeX2e "platex")
    (YaTeX-japan "jlatex")
    (t "latex"))
-  "*Default command for typesetting LaTeX text.")
+  "*Default command for typesetting LaTeX text.
+Overridden with `%#! CommandLine...' in the buffer.")
 
 (defvar bibtex-command (if YaTeX-japan "jbibtex" "bibtex")
-  "*Default command of BibTeX.")
+  "*Default command of BibTeX.
+Overridden with `%#BIBTEX CommandLine...' in the buffer.")
 
 (defvar dvi2-command		;previewer command for your site
   (if YaTeX-dos "dviout -wait=0"
     "xdvi -geo +0+0 -s 4")
   "*Default previewer command including its option.
-This default value is for X window system.")
+Overridden with `%#PREVIEW CommandLine...' in the buffer.")
+
+(defvar YaTeX-cmd-gimp "gimp")
+(defvar YaTeX-cmd-tgif "tgif")
+(defvar YaTeX-cmd-inkscape "inkscape")
+(defvar YaTeX-cmd-dia "dia")
+(defvar YaTeX-cmd-ooo "soffice")
+(defvar YaTeX-cmd-gs "gs")
+(defvar YaTeX-cmd-dvips
+  (if (YaTeX-executable-find "pdvips") "pdvips" "dvips"))
+(defvar YaTeX-cmd-displayline
+  "/Applications/Skim.app/Contents/SharedSupport/displayline")
+(defvar YaTeX-cmd-edit-ps YaTeX-cmd-gimp)
+(defvar YaTeX-cmd-edit-pdf YaTeX-cmd-ooo)
+(defvar YaTeX-cmd-edit-ai YaTeX-cmd-inkscape)
+(defvar YaTeX-cmd-edit-svg YaTeX-cmd-inkscape)
+(defvar YaTeX-cmd-edit-images YaTeX-cmd-gimp)
+(defvar YaTeX-cmd-view-images "display -geometry +0+0")
+
+(defvar tex-pdfview-command	;previewer command for your site
+  (cond
+   (YaTeX-dos	"acroread")
+   (YaTeX-macos	(cond
+		 ((file-executable-p YaTeX-cmd-displayline) "open -a Skim")
+		 (t "open")))
+   (t		"evince"))
+  "*Default PDF viewer command including its option.
+Overridden with `%#PDFVIEW CommandLine...' in the buffer.")
 
 (defvar makeindex-command (if YaTeX-dos "makeind" "makeindex")
-  "*Default makeindex command.")
+  "*Default makeindex command.
+Overridden with `%#MAKEINDEX CommandLine...' in the buffer.")
 
 (defvar dviprint-command-format
   (if YaTeX-dos "dviprt %s %f%t"
       "dvi2ps %f %t %s | lpr")
   "*Command line string to print out current file.
+Overridden with `%#LPR CommandLine...' in the buffer.
 Format string %s will be replaced by the filename.  Do not forget to
 specify the `from usage' and `to usage' with their option by format string
 %f and %t.
@@ -84,10 +108,11 @@ specify the `from usage' and `to usage' with their option by format string
 
 (defvar YaTeX-dvipdf-command
   "dvipdfmx"
-  "*Command name to convert dvi file to PDF.")
+  "*Command name to convert dvi file to PDF.
+Overridden with `%#DVIPDF CommandLine...' in the buffer.")
 
 (defvar YaTeX-default-document-style
-  (concat (if YaTeX-japan "j") "article")
+  (concat (if YaTeX-japan "js") "article")
   "*Default LaTeX Documentstyle for YaTeX-typeset-region.")
 
 (defvar YaTeX-need-nonstop nil
@@ -157,6 +182,7 @@ for YaTeX-uncomment-paragraph.")
   "*Regexp of verb family.  Do not contain preceding \\\\ nor \\(\\).")
 (defvar YaTeX-fill-inhibit-environments
   (append '("tabular" "tabular*" "array" "picture" "eqnarray" "eqnarray*"
+	    "longtable"
 	    "equation" "equation*" "math" "displaymath")
 	  YaTeX-verbatim-environments)
   "*In these environments, YaTeX inhibits fill-paragraph from formatting.
@@ -171,6 +197,7 @@ Define those environments as a form of list.")
 (defvar YaTeX-array-env-regexp
   (concat
    "array\\*?\\|eqnarray\\*?\\|tabbing\\|tabular\\*?\\|"	;LaTeX
+   "longtable\\|"						;LaTeX2e
    "matrix\\|pmatrix\\|bmatrix\\|vmatrix\\|Vmatrix\\|"		;AMS-LaTeX
    "align\\*?\\|split\\*?\\|aligned\\*?\\|alignat\\*?\\|"	;AMS-LaTeX
    "[bpvV]?matrix\\|smallmatrix\\|cases\\|"			;AMS-LaTeX
@@ -188,7 +215,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 
 (defvar YaTeX-auto-math-mode t
   "*T for changing YaTeX-math mode automatically.")
-(defvar YaTeX-use-AMS-LaTeX nil
+(defvar YaTeX-use-AMS-LaTeX t
   "*T for using AMS-LaTeX")
 
 (defvar yatex-mode-hook nil
@@ -209,6 +236,10 @@ Nil for removing only one commenting character at the beginning-of-line.")
 
 (defvar YaTeX-tabular-indentation 4
   "*Indentation column-depth of continueing line in tabular environment.")
+
+(defvar YaTeX-electric-indent-mode -1
+  "*(for Emacs 24.4+) Pass this value to electric-indent-local-mode.
+-1 means `off'.")
 
 ;;-- Math mode values --
 
@@ -266,7 +297,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("widetilde") ("widehat") ("overline") ("overrightarrow")
      ;; section types in mathmode
      ("frac" 2) ("sqrt") ("mathrm") ("mathbf") ("mathit")
-
+     ;;cleveref
+     ("cref") ("crefrange") ("cpageref") ("labelcref") ("labelcpageref")
      )
    (if YaTeX-use-LaTeX2e
        '(("documentclass") ("usepackage")
@@ -326,6 +358,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("thebibliography") ("theindex") ("flushleft") ("flushright")
      ("minipage")
      ("supertabular")
+     ("wrapfigure") ("wraptable")
      )
    (if YaTeX-use-LaTeX2e
        '(("comment")			;defined in version
@@ -368,7 +401,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 
 (defvar singlecmd-table
   (append
-   '(("maketitle") ("makeindex") ("sloppy") ("protect") ("par")
+   '(("maketitle") ("makeindex") ("sloppy") ("protect") ("par") ("and")
      ("LaTeX") ("TeX") ("item") ("item[]") ("appendix") ("hline") ("kill")
      ;;("rightarrow") ("Rightarrow") ("leftarrow") ("Leftarrow")
      ("pagebreak") ("nopagebreak") ("tableofcontents")
@@ -461,8 +494,8 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   (YaTeX-define-key "$" 'YaTeX-insert-dollars-region)
   (YaTeX-define-key "i" 'YaTeX-fill-item)
   (YaTeX-define-key "\\"
-   '(lambda () (interactive)
-      (insert (if (YaTeX-in-math-mode-p) "\\backslash" "\\textbackslash"))))
+   (function(lambda () (interactive)
+      (insert (if (YaTeX-in-math-mode-p) "\\backslash" "\\textbackslash")))))
   (if YaTeX-no-begend-shortcut
       (progn
 	(YaTeX-define-key "B" 'YaTeX-make-begin-end-region)
@@ -506,12 +539,12 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   (YaTeX-define-key "d" 'YaTeX-display-hierarchy)
   (YaTeX-define-key "x" YaTeX-user-extensional-map)
   (YaTeX-define-key "n"
-    '(lambda () (interactive)
-       (insert "\\" (if (YaTeX-on-section-command-p "o?oalign") "crcr" "\\"))))
+    (function(lambda () (interactive)
+       (insert "\\" (if (YaTeX-on-section-command-p "o?oalign") "crcr" "\\")))))
   (if YaTeX-dos
       (define-key YaTeX-prefix-map "\C-r"
-	'(lambda () (interactive)
-	   (YaTeX-set-screen-height YaTeX-saved-screen-height) (recenter)))))
+	(function(lambda () (interactive)
+	   (YaTeX-set-screen-height YaTeX-saved-screen-height) (recenter))))))
 
 (defvar YaTeX-section-completion-map nil
   "*Key map used at YaTeX completion in the minibuffer.")
@@ -578,6 +611,18 @@ nil: Do not care (Preserve coding-system)
   (modify-syntax-entry ?% "<" YaTeX-mode-syntax-table)
   (modify-syntax-entry ?\\ "/" YaTeX-mode-syntax-table)
   (modify-syntax-entry ?~ " " YaTeX-mode-syntax-table))
+
+(defvar YaTeX-mode-syntax-table-nonparen nil
+  "Syntax table for yatex-mode with normal parentheses treated white spaces")
+(if YaTeX-mode-syntax-table-nonparen nil
+  (setq YaTeX-mode-syntax-table-nonparen
+	(make-syntax-table YaTeX-mode-syntax-table))
+  (let ((zenparens "()ijuvwxyzmnopstqrkl") (i 0) s)
+    (while (string-match "." zenparens i)
+      (setq s (substring zenparens (match-beginning 0) (match-end 0))
+	    i (1+ i))
+      (modify-syntax-entry
+       (string-to-char s) " " YaTeX-mode-syntax-table-nonparen))))
 
 ;---------- Provide YaTeX-mode ----------
 ;;;
@@ -654,22 +699,7 @@ more features are available and they are documented in the manual.
 	    YaTeX-math-mode indent-line-function comment-line-break-function
 	    comment-start comment-start-skip
 	    ))
-  (cond ((null YaTeX-kanji-code)
-	 nil)
-	((boundp 'MULE)
-	 (set-file-coding-system  YaTeX-coding-system))
-	((and YaTeX-emacs-20 (boundp 'buffer-file-coding-system))
-	 (setq buffer-file-coding-system
-	       (or (and (fboundp 'set-auto-coding) buffer-file-name
-			(save-excursion
-			  (goto-char (point-min))
-			  (set-auto-coding buffer-file-name (buffer-size))))
-		   YaTeX-coding-system)))
-	((featurep 'mule)
-	 (set-file-coding-system YaTeX-coding-system))
-	((boundp 'NEMACS)
-	 (make-local-variable 'kanji-fileio-code)
-	 (setq kanji-fileio-code YaTeX-kanji-code)))
+  (YaTeX-set-file-coding-system YaTeX-kanji-code YaTeX-coding-system)
   (setq fill-column YaTeX-fill-column
 	fill-prefix YaTeX-fill-prefix
 	paragraph-start    YaTeX-paragraph-start
@@ -681,6 +711,10 @@ more features are available and they are documented in the manual.
 	local-abbrev-table yatex-mode-abbrev-table)
   (if (fboundp 'comment-indent-new-line) ;for Emacs21
       (setq comment-line-break-function 'YaTeX-comment-line-break))
+  ;; +dnd for X11 w/ emacs23+
+  (and window-system (featurep 'dnd) (require 'yatex23 nil t)
+       (set (make-local-variable 'dnd-protocol-alist)
+	    (cons (cons "^file:" 'YaTeX-dnd-handler) dnd-protocol-alist)))
 
   (if (and YaTeX-use-font-lock (featurep 'font-lock))
       (progn
@@ -697,7 +731,9 @@ more features are available and they are documented in the manual.
   (YaTeX-read-user-completion-table)
   (and (fboundp 'YaTeX-hilit-setup-alist) (YaTeX-hilit-setup-alist))
   (makunbound 'inenv)
-  (turn-on-auto-fill)			;1.63
+  ;(turn-on-auto-fill)			;1.63 -> 1.79off
+  (if (fboundp 'electric-indent-local-mode)
+      (electric-indent-local-mode YaTeX-electric-indent-mode))
   (and (= 0 (buffer-size)) (file-exists-p YaTeX-template-file)
        (y-or-n-p (format "Insert %s?" YaTeX-template-file))
        (insert-file-contents (expand-file-name YaTeX-template-file)))
@@ -739,6 +775,7 @@ more features are available and they are documented in the manual.
 (autoload 'YaTeX-get-builtin "yatexprc" "Get %# built-in." t)
 (autoload 'YaTeX-system "yatexprc" "Call system command" t)
 (autoload 'YaTeX-save-buffers "yatexprc" "Save buffers of same major mode" t)
+(autoload 'YaTeX-goto-corresponding-viewer "yatexprc" "Viewer jump line" t)
 
 ;;autoload from yatexmth.el
 (autoload 'YaTeX-math-insert-sequence "yatexmth" "Image input." t)
@@ -852,16 +889,18 @@ by completing read.
 you can put REGION into that environment between \\begin and \\end."
   (interactive "P")
   (let*
-      ((mode (if arg " region" ""))
+      ((region-p (or arg (YaTeX-region-active-p)))
+       (mode (if region-p " region" ""))
        (env
-	(YaTeX-read-environment
-	 (format "Begin environment%s(default %s): " mode YaTeX-env-name))))
+	(save-excursion		;for Emacs24 work-around to avoid point warp 
+	  (YaTeX-read-environment
+	   (format "Begin environment%s(default %s): " mode YaTeX-env-name)))))
     (if (string= env "")
 	(setq env YaTeX-env-name))
     (setq YaTeX-env-name env)
     (YaTeX-update-table
      (list YaTeX-env-name) 'env-table 'user-env-table 'tmp-env-table)
-    (YaTeX-insert-begin-end YaTeX-env-name arg)))
+    (YaTeX-insert-begin-end YaTeX-env-name region-p)))
 
 (defun YaTeX-make-begin-end-region ()
   "Call YaTeX-make-begin-end with ARG to specify region mode."
@@ -880,7 +919,7 @@ you can put REGION into that environment between \\begin and \\end."
 	  "ref")
 	 ((and (looking-at "[a-z \t]")
 	       (progn (skip-chars-backward "a-z \t")
-		      (looking-at "table\\|figure\\|formula")))
+		      (looking-at "table\\|figure\\|formula\\|eq\\(\\.\\|uation\\)")))
 	  "ref")
 	 ((save-excursion
 	    (skip-chars-backward "[^ƒA-ƒ“]")
@@ -916,7 +955,8 @@ the region from BEG to END into the first argument of the LaTeX sequence.
 Optional 4th arg CMD is LaTeX command name, for non-interactive use."
   (interactive "P")
   (setq YaTeX-current-completion-type 'section)
-  (if (equal arg '(4)) (setq beg (region-beginning) end (region-end)))
+  (if (or (equal arg '(4)) (YaTeX-region-active-p))
+      (setq beg (region-beginning) end (region-end)))
   (unwind-protect
       (let*
 	  ((source-window (selected-window))
@@ -957,7 +997,7 @@ Optional 4th arg CMD is LaTeX command name, for non-interactive use."
 			    (addin-args (funcall arg-reader j))
 			    (YaTeX-skip-default-reader "")
 			    (t
-			     (read-string
+			     (read-string-with-history
 			      (format "Argument %d of %s: " j section)))))
 		   (insert
 		    (concat		;to allow nil return value
@@ -1016,7 +1056,9 @@ into {\\xxx } braces.
 \(key binding for universal-argument is \\[universal-argument]\)"
   (interactive "P")
   (YaTeX-sync-local-table 'tmp-fontsize-table)
-  (let* ((mode (if arg "region" ""))
+  (let* ((region-p (if (or arg (YaTeX-region-active-p))
+		       (cons (region-beginning) (region-end))))
+	 (mode (if region-p "region" ""))
 	 (fontsize
 	  (or fontsize
 	      (YaTeX-read-fontsize
@@ -1038,12 +1080,14 @@ into {\\xxx } braces.
 	 (setq fontsize
 	       (cdr (assoc YaTeX-fontsize-name LaTeX2e-fontstyle-alist)))
 	 (setq YaTeX-fontsize-name fontsize))
-    (if arg
-	(save-excursion
-	  (if (> (point) (mark)) (exchange-point-and-mark))
+    (if region-p
+	(let ((b (car region-p))
+	      (e (set-marker (make-marker) (cdr region-p))))
+	  (goto-char b)
 	  (insert "{\\" YaTeX-fontsize-name " ")
-	  (exchange-point-and-mark)
-	  (insert "}"))
+ 	  (goto-char e)
+	  (insert "}")
+	  (set-marker e nil))
       (insert (concat "{\\" YaTeX-fontsize-name " }"))
       (forward-char -1)
       (if YaTeX-current-position-register
@@ -1255,6 +1299,8 @@ into {\\xxx } braces.
 			  (get 'YaTeX-insert-braces 'begend-guide)))))))))
 	env macro not-literal b e)
     (cond
+     ((YaTeX-region-active-p)
+      (YaTeX-insert-braces-region (region-beginning) (region-end)))
      ((YaTeX-jmode) (YaTeX-self-insert arg))
      ((not (YaTeX-closable-p)) (YaTeX-self-insert arg))
      ((save-excursion
@@ -1364,7 +1410,7 @@ into {\\xxx } braces.
   (setplist 'YaTeX-jmode nil))
 
 (defun YaTeX-self-insert (arg)
-  (call-interactively (global-key-binding (char-to-string last-command-char))))
+  (call-interactively (global-key-binding (char-to-string (YaTeX-last-key)))))
 (defun YaTeX-insert-inherit (&rest args)
   (apply (if (fboundp 'insert-and-inherit) 'insert-and-inherit 'insert)
 	   args))
@@ -1374,6 +1420,8 @@ into {\\xxx } braces.
   (interactive "p")
   (let ((col (1- (current-column))))
     (cond
+     ((YaTeX-region-active-p)
+      (YaTeX-insert-brackets-region (region-beginning) (region-end)))
      ((YaTeX-jmode) (YaTeX-self-insert arg))
      ((not (YaTeX-closable-p))
       (YaTeX-self-insert arg))
@@ -1399,7 +1447,7 @@ into {\\xxx } braces.
      ((and (= (preceding-char) ?\\ )
 	   (/= (char-after (- (point) 2)) ?\\ )
 	   (not (YaTeX-in-math-mode-p)))
-      (YaTeX-insert-inherit last-command-char "\n")
+      (YaTeX-insert-inherit (YaTeX-last-key) "\n")
       (indent-to (max 0 col))
       (YaTeX-insert-inherit "\\]")
       (beginning-of-line)
@@ -1420,6 +1468,8 @@ into {\\xxx } braces.
   "Insert parenthesis pair."
   (interactive "p")
   (cond
+   ((YaTeX-region-active-p)
+    (YaTeX-insert-parens-region (region-beginning) (region-end)))
    ((YaTeX-jmode) (YaTeX-self-insert arg))
    ((not (YaTeX-closable-p)) (YaTeX-self-insert arg))
    ((save-excursion
@@ -1507,7 +1557,9 @@ into {\\xxx } braces.
 ;    (backward-char 1))
    (t (YaTeX-self-insert arg))))
 
-(defvar YaTeX-use-jmode-hook (not (and (fboundp 'skk-mode) (boundp 'skk-mode)))
+(defvar YaTeX-use-jmode-hook
+  (and (featurep 'canna) (boundp 'canna:*initialized*) canna:*initialized*)
+  ;; (not (and (fboundp 'skk-mode) (boundp 'skk-mode)))
   "*Non-nil means activate automatic jmode switcher within/out math mode.
 Hopefully, change default to t in the next version of 1.75.")
 (defun YaTeX-jmode-hook (old new)
@@ -1615,7 +1667,8 @@ Optional second argument CHAR is for non-interactive call from menu."
     (require 'yatexprc)			;for Nemacs's bug
     (select-window sw)
     (cond
-     ((= c ?j) (YaTeX-typeset-buffer))
+     ((memq c '(?j ?\C-j)) (YaTeX-typeset-buffer) ; memq for usability test
+      (put 'dvi2-command 'format 'dvi))
      ((= c ?r) (YaTeX-typeset-region))
      ((= c ?e) (YaTeX-typeset-environment))
      ((= c ?b) (YaTeX-call-builtin-on-file
@@ -1624,12 +1677,13 @@ Optional second argument CHAR is for non-interactive call from menu."
 		"MAKEINDEX" makeindex-command arg))
      ((= c ?k) (YaTeX-kill-typeset-process YaTeX-typeset-process))
      ((= c ?p) (call-interactively 'YaTeX-preview))
-     ((= c ?q) (YaTeX-system "lpq" "*Printer queue*"))
-     ((= c ?d) (YaTeX-typeset-buffer YaTeX-dvipdf-command))
+     ((= c ?q) (YaTeX-system "lpq" "Printer queue"))
+     ((= c ?d) (YaTeX-typeset-buffer
+		(or (YaTeX-get-builtin "DVIPDF") YaTeX-dvipdf-command))
+      (put 'dvi2-command 'format 'pdf))
      ((= c ?v) (YaTeX-view-error))
      ((= c ?l) (YaTeX-lpr arg))
      ((= c ?m) (YaTeX-switch-mode-menu arg))
-     ((= c ?b) (YaTeX-insert-string "\\"))
      ((= c ?s) (YaTeX-xdvi-remote-search arg)))))
 
 (if (fboundp 'wrap-function-to-control-ime)
@@ -1640,20 +1694,23 @@ Optional second argument CHAR is for non-interactive call from menu."
   "Operate %# notation."
   ;;Do not use interactive"r" for the functions which require no mark
   (interactive)
-  (message "!)Edit-%%#! B)EGIN-END-region P)review L)Edit-%%#LPR make(I)ndex B)ibtex")
+  (message "!)Edit-%%#! D)VIPDF B)EGIN-END P)review pdf(V)iew L)PR M)akeidx b)ibtex dp(I)")
   (let ((c (or char (read-char))) (string "") key
 	(b (make-marker)) (e (make-marker)))
     (save-excursion
       (cond
-       ((rindex "!plib" c)		;Edit %#xxx
+       ((rindex "!plmibdv" c)		;Edit %#xxx
 	(setq key (cdr (assq c '((?! . "!")
 				 (?p . "PREVIEW")
 				 (?l . "LPR")
-				 (?i . "MAKEINDEX")
+				 (?m . "MAKEINDEX")
+				 (?d . "DVIPDF")
+				 (?v . "PDFVIEW")
+				 (?i . "IMAGEDPI")
 				 (?b . "BIBTEX")))))
 	(YaTeX-getset-builtin key t))
 
-       ((= c ?b)			;%#BEGIN %#END region
+       ((= c ?B)			;%#BEGIN %#END region
 	(or end (setq beg (min (point) (mark)) end (max (point) (mark))))
 	(set-marker b beg)
 	(set-marker e end)
@@ -1668,8 +1725,7 @@ Optional second argument CHAR is for non-interactive call from menu."
 	(goto-char e)
 	(insert "%#END\n")
 	(set-marker b nil)
-	(set-marker e nil))
-       ))))
+	(set-marker e nil))))))
 
 (defvar YaTeX-refcommand-def-regexp-default
   "label\\|bibitem")
@@ -1681,9 +1737,13 @@ Optional second argument CHAR is for non-interactive call from menu."
 	  YaTeX-refcommand-def-regexp-default))
 
 (defvar YaTeX-refcommand-ref-regexp-default
-  "\\(page\\|eq\\|fig\\)?ref\\|cite")
+  "\\(page\\|eq\\|fig\\)?ref\\|cite"
+  "Regexp of LaTeX's label-referring macros.
+Searching for this will be done without `\\\\'.
+So you need not add patterns if new referring macro ends with \"ref\".")
 (defvar YaTeX-refcommand-ref-regexp-private nil
-  "*Regexp of referring label commands")
+  "*Regexp of referring label commands.
+See documentation of `YaTeX-refcommand-ref-regexp-default'.")
 (defvar YaTeX-refcommand-ref-regexp
   (concat (if YaTeX-refcommand-ref-regexp-private
 	      (concat YaTeX-refcommand-ref-regexp-private "\\|"))
@@ -1902,17 +1962,24 @@ fj–ì’¹‚Ì‰ï‚Å•·‚±‚¤!
 See also the documentation of YaTeX-processed-file-regexp-alist.")
 
 (defvar YaTeX-file-processor-alist-default
-  '(("tgif" . ".obj")
-    ("gimp" . ".xcf") ("gimp" . ".xcf.gz") ("gimp" . ".xcf.bz2")
-    ("inkscape" . ".svg") ("inkscape" . ".svgz") ("inkscape" . ".ai")
-    ("soffice" . ".odg")
-    ("gimp" . ".jpeg") ("gimp" . ".jpg") ("gimp" . ".png")
-    ("evince" . ".ps")
-    ("evince" . ".eps")
-    ("soffice" . ".pdf")
-    (t . ".tex")
-    (t . ".sty")
-    (t . ""))
+  (list (cons YaTeX-cmd-tgif ".obj")
+	(cons YaTeX-cmd-gimp ".xcf")
+	(cons YaTeX-cmd-gimp ".xcf.gz")
+	(cons YaTeX-cmd-gimp ".xcf.bz2")
+	(cons YaTeX-cmd-edit-svg ".svg")
+	(cons YaTeX-cmd-edit-svg ".svgz")
+	(cons YaTeX-cmd-edit-ai ".ai")
+	'("dia" . ".dia")
+	(cons YaTeX-cmd-ooo ".odg")
+	(cons YaTeX-cmd-edit-images ".jpeg")
+	(cons YaTeX-cmd-edit-images ".jpg")
+	(cons YaTeX-cmd-edit-images ".png")
+	(cons YaTeX-cmd-edit-ps ".ps")
+	(cons YaTeX-cmd-edit-ps ".eps")
+	(cons YaTeX-cmd-edit-pdf ".pdf")
+	'(t . ".tex")
+	'(t . ".sty")
+	'(t . ""))
   "See the documentation of YaTeX-file-processor-alist.")
 
 (defun YaTeX-goto-corresponding-file-processor (&optional other)
@@ -1964,9 +2031,8 @@ See also the documentation of YaTeX-processed-file-regexp-alist.")
 		(let ((default-directory basedir))
 		  (cond
 		   ((stringp cmd)
-		    (let ((buf (concat "* " cmd " " src " *")))
-		      (YaTeX-system (concat cmd " " src) buf)
-		      t))
+		    (YaTeX-system (concat cmd " " src) cmd)
+		    t)
 		   ((eq t cmd)
 		    (let ((parent buffer-file-name))
 		      (funcall
@@ -2010,9 +2076,14 @@ Macro's argument number stored to propname 'argc."
 	       (goto-char (match-beginning 0))
 	       (throw 'found t))
 	  ;;If inside of parentheses, try to escape.
-	  (while (condition-case err
-		     (progn (up-list -1) t)
-		   (error nil)))
+	  (unwind-protect
+	      (progn
+		(set-syntax-table YaTeX-mode-syntax-table-nonparen)
+		(while (and (not (= (preceding-char) ?\])) ;skip optional arg
+			    (condition-case err
+				(progn (up-list -1) t)
+			      (error nil)))))
+	    (set-syntax-table YaTeX-mode-syntax-table))
 	  (while (equal (preceding-char) ?\]) (backward-list))
 	  ;;(2) search command directly
 	  (skip-chars-forward "^{}[]")
@@ -2104,7 +2175,7 @@ Call this function after YaTeX-on-section-command-p."
        (concat "\\(" YaTeX-struct-name-regexp "\\)") "" "" "")
       "\\|\\("
       YaTeX-ec-regexp  ;;"[][()]\\)"
-      "[][]\\)"
+      "[\\]\\[]\\)"
       )
      (point-end-of-line) t)))
 
@@ -2148,6 +2219,7 @@ even if on `%#' notation."
      ;;	  YaTeX-equation-env-regexp	;to delay loading
      ;;	  (or (YaTeX-inner-environment t) "document"))
      ;;	 (YaTeX-goto-corresponding-leftright)))
+     ((YaTeX-goto-corresponding-viewer))
      (t (message "I don't know where to go.")))))
 
 (defun YaTeX-goto-corresponding-*-other-window (arg)
@@ -2168,7 +2240,7 @@ it comments out whole environment"
   (if (not (YaTeX-on-begin-end-p))
       (comment-out-region
        (if alt-prefix
-	   (read-string "Insert prefix: ")
+	   (read-string-with-history "Insert prefix: ")
 	 YaTeX-comment-prefix))
     (YaTeX-comment-uncomment-env 'comment-out-region)))
 
@@ -2177,7 +2249,7 @@ it comments out whole environment"
   (interactive "P")
   (if (not (YaTeX-on-begin-end-p))
       (uncomment-out-region
-       (if alt-prefix (read-string "Remove prefix: ")
+       (if alt-prefix (read-string-with-history "Remove prefix: ")
 	 YaTeX-comment-prefix)
        (region-beginning) (region-end) YaTeX-uncomment-once)
     (YaTeX-comment-uncomment-env 'uncomment-out-region)))
@@ -2544,7 +2616,8 @@ because this function is called with no argument."
 	     (progn
 	       (setq maketitle (substring (YaTeX-match-string 0) 1))
 	       (setq memberp (YaTeX-math-member-p maketitle))))
-	(let ((last-command-char (string-to-char (car memberp))))
+	(let*((last-command-char (string-to-char (car memberp)))
+	      (last-command-event last-command-char))
 	  (setq beg (match-beginning 0) end (match-end 0))
 	  (delete-region beg end)
 	  (YaTeX-math-insert-sequence t (cdr memberp))))))
@@ -2561,6 +2634,9 @@ Non-nil for ARG kills its contents too."
    ((YaTeX-on-section-command-p YaTeX-command-token-regexp);on any command
     (YaTeX-kill-section-command (match-beginning 0) arg))
    ((YaTeX-kill-paren arg))
+   ((and (fboundp 'overlays-at)
+	 (member YaTeX-on-the-fly-overlay (overlays-at (point))))
+    (YaTeX-on-the-fly-cancel))
    (t (message "I don't know what to kill."))))
 
 (defun YaTeX-change-* ()
@@ -2636,64 +2712,6 @@ Default of POINT is (point)."
 		     (YaTeX-quick-in-environment-p
 		      YaTeX-verbatim-environments))))))
       (store-match-data md))))
-
-(defun YaTeX-in-environment-p (env)
-  "Return if current LaTeX environment is ENV.
-ENV is given in the form of environment's name or its list."
-  (let ((md (match-data)) (nest 0) p envrx)
-    (cond
-     ((atom env)
-      (setq envrx
-	    (concat "\\("
-		    (regexp-quote
-		     (YaTeX-replace-format-args
-		      YaTeX-struct-begin env "" ""))
-		    "\\)\\|\\("
-		    (regexp-quote
-		     (YaTeX-replace-format-args
-		      YaTeX-struct-end env "" ""))
-		    "\\)"))
-      (save-excursion
-	(setq p (catch 'open
-		  (while (YaTeX-re-search-active-backward
-			  envrx YaTeX-comment-prefix nil t)
-		    (if (match-beginning 2)
-			(setq nest (1+ nest))
-		      (setq nest (1- nest)))
-		    (if (< nest 0)
-			(throw 'open (cons env (match-beginning 0)))))))))
-     ((listp env)
-      (setq p
-	    (or (YaTeX-in-environment-p (car env))
-		(and (cdr env) (YaTeX-in-environment-p (cdr env)))))))
-    (store-match-data md)
-    p;(or p (YaTeX-in-verb-p (match-beginning 0)))
-    ))
-
-(defun YaTeX-quick-in-environment-p (env)
-  "Check quickly but unsure if current environment is ENV.
-ENV is given in the form of environment's name or its list.
-This function returns correct result only if ENV is NOT nested."
-  (save-excursion
-    (let ((md (match-data)) m0 (p (point)) rc clfound)
-      (cond
-       ((listp env)
-	(or (YaTeX-quick-in-environment-p (car env))
-	    (and (cdr env) (YaTeX-quick-in-environment-p (cdr env)))))
-       (t
-	(unwind-protect
-	    (if (prog1
-		    (YaTeX-search-active-backward
-		     (YaTeX-replace-format-args YaTeX-struct-begin env "" "")
-		     YaTeX-comment-prefix nil t)
-		  (setq m0 (match-beginning 0)))
-		(if (YaTeX-search-active-forward
-		     (YaTeX-replace-format-args
-		      YaTeX-struct-end env)
-		     YaTeX-comment-prefix p t nil)
-		    nil			;if \end{env} found, return nil
-		  (cons env m0)))	;else, return meaningful values
-	  (store-match-data md)))))))
 
 ;; Filling \item
 (defun YaTeX-remove-trailing-comment (start end)
@@ -2984,6 +3002,44 @@ See the documentation of `YaTeX-saved-indent-new-comment-line'."
       (if (string= c "t") (insert (YaTeX-read-accent-char c)))
       (forward-char 1))))
 
+;; Field skip in tabular
+(defun YaTeX-forward-field (arg)
+  "Move forward to the ARGth next column field of table."
+  (interactive "p")
+  (if (< arg 0)
+      (YaTeX-backward-field (- arg))
+    (let ((ep (save-excursion (YaTeX-end-of-environment) (point)))
+	  (wc (car (YaTeX-array-what-column-internal))))
+      (while (>= (setq arg (1- arg)) 0)
+	(skip-chars-forward "^&\\\\")
+	(while (and (not (eobp))
+		    (> ep (point))
+		    (looking-at "\\&\\|\\\\")
+		    (= wc (car (YaTeX-array-what-column-internal))))
+	  (skip-chars-forward "&" ep)
+	  (while (looking-at "[\n\t ]+\\|\\\\\\\\\\|\\\\.line\\>")
+	    (goto-char (match-end 0))
+	    ))))))
+
+(defun YaTeX-backward-field (arg)
+  "Move backward to the ARGth next column field of table."
+  (interactive "p")
+  (if (< arg 0)
+      (YaTeX-forward-field (- arg))
+    (let ((bp (save-excursion
+		(YaTeX-beginning-of-environment)
+		(point-end-of-line)))
+	  (wc (car (YaTeX-array-what-column-internal))))
+      (while (>= (setq arg (1- arg)) 0)
+	(skip-chars-backward "^&\\\\" bp)
+	(while (and (not (bobp))
+		    (< bp (point))
+		    (memq (preceding-char) '(?& ?\\))
+		    (= wc (car (YaTeX-array-what-column-internal))))
+	  (skip-chars-backward "&\\\\" bp)
+	  (skip-chars-backward "\n\t " bp))
+	(if (eolp) (skip-chars-forward "^&\\\\"))))))
+
 ;; Indentation
 (defun YaTeX-current-indentation ()
   "Return the indentation of current environment."
@@ -3087,7 +3143,7 @@ All verbatime-like environment name should match with.")
      ((YaTeX-literal-p)			;verbatims
       (tab-to-tab-stop))
      ((string-match "\\(tabular\\|array\\)" inenv) ;1.73
-      (let ((n 1))
+      (let ((n 1) (cc (current-column)) (p (point)))
 	(condition-case err
 	    (save-excursion
 	      (beginning-of-line)
@@ -3099,7 +3155,12 @@ All verbatime-like environment name should match with.")
 	(YaTeX-reindent
 	 (+ (YaTeX-current-indentation)
 	    YaTeX-environment-indent
-	    (* (1- n) YaTeX-tabular-indentation)))))
+	    (* (1- n) YaTeX-tabular-indentation)))
+	(and (= cc (current-column))
+	     (= p (point))
+	     (equal last-command 'YaTeX-indent-line)
+	     ;; if NO indent action occured, move to the next column
+	     (YaTeX-forward-field 1))))
      ((and inenv (not (equal "document" inenv)))
       (funcall indent-relative))
      ((YaTeX-on-section-command-p YaTeX-sectioning-regexp)

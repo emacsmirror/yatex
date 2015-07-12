@@ -32,39 +32,25 @@
 	
 *I ain't got the privilege to write in the Info directory...
 	
-	 Get yourself made root.  If you can't, have them install Mule2
-	and add
+	 Get yourself made root.  If you can't, write this:
 	
 		(setq Info-default-directory-list
 		      (cons "YOUR INFO DIRECTORY"
 			    Info-default-directory-list))
 	
 	to your ~/.emacs.  Now your personal  files will be added to the
-	menu when you  invoke info.  By the way,  Mule1 will not release
-	memories, so processes will pile up and be heavier on the system
-	compared to Mule2.   Nemacs  has already become obsolete  by the
-	developers,  so no further  comments for  usage  of Nemacs.  Get
-	yourself Mule2 with flying colors :-)
+	menu when you  invoke info.
 	
 *Emacs can't find the help file.
-       
-	The help  file is  set to  be placed  in $EMACS/etc/ for Nemacs,
-	Mule1  and $EMACS/site-lisp/ for Mule2.    If you don't have the
-	privilege to put them in a public location, copy it to your home
-	directory and set YaTeX-help-file to that file name.
 	
-*I can't read info on Nemacs
+	If  you  don't have  the  privilege  to  put  them in  a  public
+	location, copy it to your home directory and set YaTeX-help-file
+	to that file name.
 	
-	The  info file  was  formatted  on  Mule,  so it can't  be  read
-	correctly on Nemacs  (or  Demacs based  on Nemacs)  because  the
-	internal Japanese processing   is different.  Read  it on  Mule.
-	Use the Emacs-Lisp  package in texinfo-3.1.tar.gz to format  the
-	Texinfo file.
-
 	
 [Operations]
 ============
-*I accidentally learned in a wrong LaTeX command.
+*I accidentally learned in a wrong LaTeX macro in my dictionary.
 	
 	There should be  a line with  the wrong command in the  .yatexrc
 	file in your home or current directory.  Erase or fix that line,
@@ -209,19 +195,24 @@
 	
 *Is it possible to include personal template file template.tex handily?
 	
-	Try Emacs-19's standard package `autoinsert.el' please.  Or its
-	upper compatible package auto-insert-tkld might also be good.
-	You can get auto-insert-tkld via anonymous ftp
-	ftp://ftp.ae.keio.ac.jp/pub/emacs-lisp/util/
-	ftp://archive.cis.ohio-state.edu/pub/gnu/elisp-archive/
+	Put your template.tex into your ~/work directory where YaTeX
+	seeks by default.  If you change the location to another place,
+	set the lisp-variable as below.
+	(setq YaTeX-template-file "~/other/location/template.tex")
 	
 *It is bothering for me to determine I should call bibtex or latex...
 	
-	Why don't you try `latexmk' perl script, which is a TeX specific 
-	tool as `make'?  It detects the dependency among the TeX-related 
-	files such as .tex, .bib, and so on, and will execute suitable
-	commands in a suitable sequence.  You can find `latexmk' script
-	in a directory of supports/latexmk in some CTAN ftp directory.
+	Since version 1.76, YaTeX  automatically call bibtex/latex twice
+	if  needed.  In  most case,  you don't  have to  repeat to  call
+	typesetter  or bibtex.   If you  use `latexmk'  described below,
+	YaTeX's auto  rerun functionality should be  disabled by setting
+	like this:
+	(setq YaTeX-typeset-auto-rerun nil)
+	
+	The  `latexmk' perl  script, which  is  a TeX  specific tool  to
+	automate generation  of LaTeX document.  You  can find `latexmk'
+	some CTAN ftp directory.
+	(eg. http://www.ctan.org/pkg/latexmk/)
 	
 *Can I inhibit auto-filling against very long <a href="..."> line?
 	
@@ -275,12 +266,6 @@
 	in the future  will possibly disable YaTeX  from fontifying.  If
 	you are thinking of graduating from hilit19,  it might be better
 	to keep old setting about it...
-	
-*It's sooo slow when I click YaTeX on the menu bar.
-	
-	I  don't know  why.  Probably  a  problem with Emacs-19.  You'll
-	just have to bear with it.  It won't be so slow the second time.
-	Anyway, you probably won't use the menu at all, do you?
 	
 *Is there any way of displaying `\it' strings in the italic font?
 	

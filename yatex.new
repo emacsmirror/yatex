@@ -1,6 +1,38 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.79	別フレームに同一バッファがあるときのミニバッファ入力で、
+	ポイント位置がずれるEmacsの問題への対策を入れた。
+	=== yatex ===
+	数式環境など特定環境内の [prefix] t e で On-the-fly preview 発動。
+	環境に対する On-the-fly preview は編集中持続する。
+	持続中の On-the-fly preview の無効化は何もない場所で [prefix] k。
+	YaTeX-help-file のデフォルト位置を site-lisp/yatex/help/ に変更。
+	領域活性時に呼び出す補完は領域括りになるようにした。
+	タイプセットでPDF出力がありそうなときは次回previewをPDFヴューアに。
+	=== yahtml ===
+	領域活性時に呼び出す補完は領域括りになるようにした。
+	...
+
+
+1.78	Drag&Dropサポートを追加。
+	tabular環境内で2連続以上Tabで、1カラム進む機能を追加。
+	=== yatex ===
+	主な外部コマンド名を変数化。
+	[prefix] t d の直後のデフォルトヴューアはPDF用のものに。
+	「%#!コマンド -オプション」のときは親ファイル指定なしと判定。
+	地の段落での [prefix] t g でヴューアの forward-search を試みる。
+	[prefix] t e の環境タイプセットの結果を可能なら画像に。
+	[prefix] t e を環境外で呼んだ場合はパラグラフをタイプセット。
+	[prefix] t e を領域活性状態で呼んだらその領域をタイプセット。
+	=== yahtml ===
+	table, ul, ol, dl 内で2連続以上Tabで、1カラム進む機能を追加。
+
+1.77	last-command-char 廃止対策を追加。
+	=== yatex ===
+	%#DVIPDF でdviからpdfへの変換コマンドを指定可能に。
+	PDFヴューアに xpdf, pdfopen, mupdf, zathura, okular を追加。
+
 1.76	=== yatex ===
 	タイプセットでラベル未定義があったら自動的にrerunする。
 	自動rerun無効化は YaTeX-typeset-auto-rerun を nil に。
@@ -18,7 +50,7 @@
 	M-C-SPC で環境だけでなく数式環境もマークする。
 	[prefix] t d でタイプセッタ起動成功のあと dvipdfmx を起動。
 	\label{}でラベル名を入れたときは \ref{NAME} を自動的にkill-ringに追加。
-	[prefix] t c で\label{NAME} の NAME を変えたら \ref のNAMEも変える。
+	[prefix] c で\label{NAME} の NAME を変えたら \ref のNAMEも変える。
 	同上のことを \cite/\bibitem にも。
 	\bibitem{}を入れたときは \cite{TAG} を自動的にkill-ringに追加。
 	\end 補完のお節介検査の精度を少し上げた。

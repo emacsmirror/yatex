@@ -1,8 +1,9 @@
-;;; -*- Emacs-Lisp -*-
-;;; Sample startup file to invoke yatex-mode with outline-minor mode.
-;;; (c)1993 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Jun 27 12:10:15 2003 on firestorm
+;;; yatexm-o.el --- Sample to invoke yatex-mode with outline-minor mode
 
+;;; (c)1993 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Sun Dec 21 14:15:47 2014 on firestorm
+
+;;; Code:
 ;;;
 ;; outline-minor-mode(使用しない場合は不要です)
 ;;; 
@@ -25,12 +26,14 @@
 (autoload 'yatex-mode "yatex" "Yet Another LaTeX mode" t)
 ;;↓min-outを使用しない場合、;;@ の行は不要です。
 (defvar yatex-mode-hook
-  '(lambda ()
+  (function
+   (lambda ()
      (setq outline-regexp LaTeX-outline-regexp)			    ;;@
      (outline-minor-mode 1)					    ;;@
-     ))
+     )))
 (defvar yatex-mode-load-hook
-  '(lambda ()
+  (function
+   (lambda ()
      (setq-default outline-prefix-char (concat YaTeX-prefix "\C-o"));;@
      (require 'min-out)						    ;;@
      ;;auctex 付属の min-out.el の場合これ↓
@@ -38,4 +41,4 @@
      ;;Emacs 付属の outline.el の場合これ↓
      (define-key outline-mode-prefix-map "\C-?" 'hide-subtree)
      (YaTeX-define-begend-key "ba" "abstract")
-     ))
+     )))

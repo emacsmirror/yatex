@@ -8,7 +8,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Fri May 11 15:40:49 2012 on firestorm
+@c Last modified Fri Feb 13 08:15:26 2015 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -77,7 +77,7 @@ Language Enhancement to GNU Emacs), and latex on DOS.
         @code{\section} etc. 
         (@kbd{C-c b}, @kbd{C-c s}, @kbd{C-c l}, @kbd{C-c m})
 @item Enclosing text into La@TeX{} environments or commands
-      (@kbd{C-u} @var{AboveKeyStrokes})
+      (@var{AboveKeyStrokes} after region setting)
 @item Displaying the structure of text at entering sectioning commands
 @item Lump shifting of sectioning commands (@ref{view-sectioning})
 @item Learning unknown/new La@TeX{} commands for the next completion
@@ -146,12 +146,12 @@ strokes execute typeset or preview command.
 
 @table @kbd
 @item [prefix] t j
-        @dots{} invoke latex
+        @dots{} invoke typesetter
 @item [prefix] t r
-        @dots{} invoke latex on region
+        @dots{} invoke typesetter on region
 @item [prefix] t e
-        @dots{} invoke latex on current environment or whole
-         portion of current formulas in math-mode.
+        @dots{} `on-the-fly preview' on current environment or whole
+         portion of current formulas in math-mode
 @item [prefix] t d
 	@dots{} invoke dvipdfmx after successful typesetting
 @item [prefix] t k
@@ -215,9 +215,16 @@ file if you edit one  file,  and is the same as main file's if you
 edit splitting files.
 
   The @kbd{[prefix] te} key automatically marks current inner environment
-or inner math mode and then call typeset-region with marked region.  This
+or inner math mode or paragraph, and then call typeset-region with marked
+region.  This
 is convenient to quick view of current tabular environment or current
-editing formulas.  Keeping previewer window for @file{texput.dvi} is handy
+editing formulas.  If running Emacs has the ability of displaying images,
+typeset image will be shown in the next window.  Further more,
+if you modify the content within that environment, YaTeX performs
+`on-the-fly' preview that automatically update preview image as you typed.
+
+If your Emacs does not supply on-the-fly preview,
+keeping previewer window for @file{texput.dvi} is handy
 for debugging.  Since @kbd{[prefix] te} selects the inner-most environment
 as region, it is not suitable for partial typesetting of doubly or more
 composed environment.  If you want to do partial typesetting for a nested
@@ -369,7 +376,7 @@ environment such as `tabular' many times.  It is also useful to put only
 @code{%#BEGIN} alone at the middle of very long text.  Do not forget to
 erase @code{%#BEGIN} @code{%#END} pair.
 
-@node Lpr format, Controlling which command to invoke, Static region for typesetting, %#notation
+@node Lpr format,  , Static region for typesetting, %#notation
 @comment  node-name,  next,  previous,  up
 @section Lpr format
 @cindex lpr format
@@ -415,10 +422,20 @@ These %# notation below can control which command to invoke for
 La@TeX{} related process.
 
 @table @code
- @item %#BIBTEX
-	@dots{} Command line for makeindex ([prefix] t i)
+ @item %#PREVIEW
+	@dots{} Command line for DVI viewing ([prefix] t p)
  @item %#MAKEINDEX
+	@dots{} Command line for makeindex ([prefix] t i)
+ @item %#BIBTEX
 	@dots{} Command line for bibtex ([prefix] t b)
+ @item %#DVIPDF
+	@dots{} Command line for dvipdf(mx) ([prefix] t b)
+ @item %#LPR
+	@dots{} Command line for printing out([prefix] t l)
+ @item %#PDFVIEW
+	@dots{} Command line for PDF viewing
+ @item %#IMAGEDPI
+	@dots{} DPI value for converting to on-the-fly prewview image
 @end table
 
 If you want to invoke ``makeidx hogehoge'' to update index,
@@ -462,15 +479,16 @@ automatically erased.
 kinds of completion type, begin-type, section-type, large-type, etc...
 
 @menu
-* Begin-type completion::       
-* Section-type completion::     
-* Large-type completion::       
-* Maketitle-type completion::   
-* Arbitrary completion::        
-* End completion::              
-* Accent completion::           
-* Image completion::            
-* Greek letters completion::    
+* Begin-type completion::
+* Section-type completion::
+* Large-type completion::
+* Maketitle-type completion::
+* Arbitrary completion::
+* End completion::
+* Accent completion::
+* Image completion::
+* Greek letters completion::
+* Inserting parentheses::
 @end menu
 
 @node Begin-type completion, Section-type completion, Completion, Completion
@@ -557,26 +575,15 @@ At the completion of certain environments, the expected initial entry will
 automatically inserted such as @code{\item} for @code{itemize}
 environment.  If you don't want the entry, it can be removed by undoing.
 
-  If you want to  enclose some paragraphs  which have already been
-written, invoke the  begin-type completion with changing  the case
-of @kbd{b} of key sequence upper(or invoke it with  universal argument
-by @kbd{C-u} prefix).
+  If you want to enclose some paragraphs which have already been written
+into environment, invoke the begin-type completion right after region marking.
 @cindex enclose region into environment
 
-  The following example encloses a region with `description'
-environment.
+If you set @code{transient-mark-mode} to @code{nil} in your
+@file{~/.emacs},  typing @kbd{C-space} (@code{set-mark-command}) twice
+turns @code{transient-mark-mode} on temporarily.  Then, type call
+begin-type completion to enclose text into a environment.
 
-@table @kbd
-@item [prefix] B D
-@itemx (or ESC 1 [prefix] b D)
-@itemx (or  C-u  [prefix] b D)
-
-        @dots{} begin-type completion for region
-@end table
-
-  This enclosing holds good for the completing input by @kbd{[prefix] b
-SPC}.  @kbd{[prefix] B SPC} enclose a region with the environment selected
-by completing-read.
 
 @node Section-type completion, Large-type completion, Begin-type completion, Completion
 @comment  node-name,  next,  previous,  up
@@ -753,9 +760,8 @@ prompts prompts you large-type command with completing-read.  There are
 TeX commands to change fonts or sizes, @code{it}, @code{huge} and so on,
 in the completion table.
 
-  Region-based completion is also invoked by changing the letter after
-prefix key stroke as @kbd{[prefix] L}.  It encloses the region by braces
-with large-type command.
+  Region-based completion is also invoked by calling completion
+after region activated.
 
 @node Maketitle-type completion, Arbitrary completion, Large-type completion, Completion
 @comment  node-name,  next,  previous,  up
@@ -910,7 +916,7 @@ KEY             LaTeX sequence          sign
 Emacs-Lisp variable @code{YaTeX-math-sign-alist-private}.  See also
 @file{yatexmth.el} for the information of the structure of this variable.
 
-@node Greek letters completion,  , Image completion, Completion
+@node Greek letters completion, Inserting parentheses, Image completion, Completion
 @comment  node-name,  next,  previous,  up
 @section Greek letters completion
 @cindex Greek letters completion
@@ -927,6 +933,15 @@ math environment, it may be a bug of YaTeX.  Please send me a bug report
 with the configuration of your text, and avoid it temporarily by typing
 @kbd{;} or @kbd{:} after universal-argument(@kbd{C-u}) which forces
 @kbd{;} and @kbd{:} to work as math-prefix.
+
+@node Inserting parentheses,  , Greek letters completion, Completion
+@section Inserting parentheses
+
+  Typing opening parenthesis, one of @code{(}, @code{@{ and @code{[}},
+automatically inserts the closing one.  If a opening bracket is typed
+after @code{\}, @code{\]} is automatically inserted with computed
+indentation.  If you stop automatic insertion, type @kbd{C-q} before
+opening parenthesis.
 
 @node Local dictionaries, Commenting out, Completion, Top
 @comment  node-name,  next,  previous,  up
@@ -1692,6 +1707,63 @@ Default makeindex command (@code{"makeindex"} (@code{"makeind"} on MS-DOS))
 Default command name to convert .dvi to PDF (@code{"dvipdfmx"})
 @end defvar
 
+@defvar YaTeX-on-the-fly-preview-interval
+Interval time in seconds of idle to trigger on-the-fly preview of
+environment by @kbd{[prefix] t e}(0.9).
+@code{Nil} disables on-the-fly preview.
+@end defvar
+
+@defvar YaTeX-on-the-fly-math-preview-engine
+Function symbol to use on-the-fly preview of MATH environment
+started by @kbd{[prefix] t e} (@code{'YaTeX-typeset-environment-by-lmp}
+which calls latex-math-preview-expression function if latex-math-preview
+is available, otherwise @code{'YaTeX-typeset-environment-by-builtin} which
+alls built-in function).
+
+@code{Nil} disables on-the-fly preview.
+@end defvar
+
+@defvar YaTeX-cmd-gimp
+Command name of GIMP (code{"gimp"})
+@end defvar
+@defvar YaTeX-cmd-tgif
+Command name of tgif (code{"tgif"})
+@end defvar
+@defvar YaTeX-cmd-inkscape
+Command name of Inkscape (code{"inkscape"})
+@end defvar
+@defvar YaTeX-cmd-dia
+Command name of Dia (code{"dia"})
+@end defvar
+@defvar YaTeX-cmd-ooo
+Command name of OpenOffice.org/LibreOffice (code{"soffice"})
+@end defvar
+@defvar YaTeX-cmd-gs
+Command name of Ghostscript (code{"gs"})
+@end defvar
+@defvar YaTeX-cmd-dvips
+Command name of dvips (code{"dvips"})
+@end defvar
+@defvar YaTeX-cmd-displayline
+Command name of displayline
+(code{"/Applications/Skim.app/Contents/SharedSupport/displayline"})
+@end defvar
+@defvar YaTeX-cmd-edit-ps
+Command name for editing PostScript files(Value of code{"YaTeX-cmd-gimp"})
+@end defvar
+@defvar YaTeX-cmd-edit-pdf
+Command name for editing PDF files(Value of code{"YaTeX-cmd-ooo"})
+@end defvar
+@defvar YaTeX-cmd-edit-ai
+Command name for editing `.ai' files(Value of code{"YaTeX-cmd-inkscape"})
+@end defvar
+@defvar YaTeX-cmd-edit-svg
+Command name for editing SVG files(Value of code{"YaTeX-cmd-inkscape"})
+@end defvar
+@defvar YaTeX-cmd-edit-images
+Command name for editing image files(Value of code{"YaTeX-cmd-gimp"})
+@end defvar
+
 @defvar YaTeX-need-nonstop
 Put @code{\nonstopmode@{@}} or not (@code{nil})
 @end defvar
@@ -1884,6 +1956,13 @@ and the number of column position in tabular.
 @defvar YaTeX-noindent-env-regexp
 Regexp of environment names that should begin with no indentation.
 All verbatime-like environment name should match with.
+@end defvar
+
+@defvar YaTeX-electric-indent-mode
+Emacs 24.4 introduces automatic indentation of current and new lines.
+This might be annoying for some people.  Pass this value to the function
+'electric-indent-local-mode.  If you prefer to stop electric-indent-mode
+in yatex-mode, set `-1' to this variable.
 @end defvar
 
 @defvar YaTeX-ref-default-label-string

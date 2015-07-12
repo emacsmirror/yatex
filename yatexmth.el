@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX math-mode-specific functions.
-;;; yatexmth.el
-;;; (c)1993-2012 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Tue Jan 24 08:58:56 2012 on firestorm
+;;; yatexmth.el --- YaTeX math-mode-specific functions -*- coding: sjis -*-
+;;; 
+;;; (c)1993-2015 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Sun Jul 12 10:02:36 2015 on firestorm
 ;;; $Id$
 
+;;; Commentary:
 ;;; [Customization guide]
 ;;;
 ;;;	  By default,  you can use two  completion  groups in YaTeX math
@@ -84,6 +84,7 @@
 ;;;	これらを ~/.emacs に書いておけば、math-mode で自分専用のイメージ
 ;;;	補完が利用できます。
 
+;;; Code:
 (defvar YaTeX-jisold
   (and (boundp 'dos-machine-type)
        (eq dos-machine-type 'pc98)))
@@ -309,6 +310,8 @@
    ("[]"	"Box"		"[]")
    ("no"	"notag"		"\\notag")
    (":"		"colon"		":")
+   (".'."	"therefore"	(".'." "∴"))
+   ("'.'"	"because"	("'.'" "∵"))
    ("Diamond"	"Diamond"	"/\\\n\\/")
    ("3"		"triangle"	"/\\\n~~")
    ("C"		"clubsuit"	" o\no+o\n |")
@@ -450,7 +453,7 @@
 ;;;
 ;;YaTeX math-mode functions
 ;;;
-;;;###autoload from yatex.el
+;;;###autoload
 (defun YaTeX-toggle-math-mode (&optional arg)
   (interactive "P")
   (or (memq 'YaTeX-math-mode mode-line-format) nil
@@ -657,7 +660,6 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 	(kill-buffer YaTeX-math-menu-buffer))
       command)))
 
-;
 (defun YaTeX-math-show-image (image &optional exit-char)
   "Momentarily display IMAGE at the beginning of the next line;
 erase it on the next keystroke.  The window is recentered if necessary
@@ -687,7 +689,9 @@ at least you get to read the beginning."
 				    2))))
 	      (let ((char (read-char)))
 		(or (eq char exit-char)
-		    (setq unread-command-char char))))
+		    (if (boundp 'unread-command-events)
+			(setq unread-command-events (list char))
+		      (setq unread-command-char char)))))
 	  (if insert-end
 	      (save-excursion
 		(delete-region insert-start insert-end)))
@@ -699,7 +703,7 @@ at least you get to read the beginning."
   (interactive "P")
   (let*((key (or initial "")) regkey str  last-char list i
 	(case-fold-search nil) match sign
-	(this-key (char-to-string last-command-char))
+	(this-key (char-to-string (YaTeX-last-key)))
 	(alistsym (cdr (assoc this-key YaTeX-math-key-list)))
 	(alistname (symbol-name alistsym))
 	(alist (symbol-value alistsym))
@@ -779,7 +783,9 @@ at least you get to read the beginning."
     (cond
      ((memq result '(t select))
       (if (eq result t)
-	  (setq unread-command-char last-char)
+	  (if (boundp 'unread-command-events)
+	      (setq unread-command-events (list last-char))
+	    (setq unread-command-char last-char))
 	(message "Done."))
       (if (assoc YaTeX-single-command section-table)
 	  (YaTeX-make-section nil nil nil YaTeX-single-command)

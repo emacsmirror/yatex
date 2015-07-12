@@ -1,10 +1,10 @@
-;;; -*- Emacs-Lisp -*-
-;;; YaTeX sectioning browser.
-;;; yatexsec.el
-;;; (c) 1994-2012 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Jan  9 20:20:32 2012 on firestorm
+;;; yatexsec.el --- YaTeX sectioning browser
+;;; 
+;;; (c) 1994-2013 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Sun Dec 21 14:16:35 2014 on firestorm
 ;;; $Id$
 
+;;; Code:
 (defvar YaTeX-sectioning-level
   '(("part" . 0)
     ("chapter" . 1)
@@ -55,9 +55,9 @@ This must be the heighest number in YaTeX-sectioning-level.")
   (define-key YaTeX-sectioning-minibuffer-map "\C-r"
     'YaTeX-sectioning-scroll-down)
   (define-key YaTeX-sectioning-minibuffer-map "\C-w"
-    '(lambda () (interactive) (YaTeX-sectioning-scroll-down 1)))
+    (function (lambda () (interactive) (YaTeX-sectioning-scroll-down 1))))
   (define-key YaTeX-sectioning-minibuffer-map "\C-z"
-    '(lambda () (interactive) (YaTeX-sectioning-scroll-up 1)))
+    (function (lambda () (interactive) (YaTeX-sectioning-scroll-up 1))))
   (define-key YaTeX-sectioning-minibuffer-map "\C-l"
     'YaTeX-sectioning-recenter)
   (define-key YaTeX-sectioning-minibuffer-map "?"
@@ -181,7 +181,7 @@ If optional argument KEEP is non-nil, only shows the line."
 (defun YaTeX-sectioning-hide ()
   "Call YaTeX-sectioning-hide-under with argument according to pressed key."
   (interactive)
-  (YaTeX-sectioning-hide-under (- last-command-char ?0)))
+  (YaTeX-sectioning-hide-under (- (YaTeX-last-key) ?0)))
 
 (defun YaTeX-sectioning-help ()
   "Show help of sectioning."
