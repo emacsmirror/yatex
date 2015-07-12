@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2015 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Jan 16 10:33:26 2015 on firestorm
+;;; Last modified Fri Feb 13 22:45:46 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -50,6 +50,7 @@
     ("labelcref"	(same-as . "cref"))
     ("labelcpageref"	(same-as . "cref"))
     ("wrapfig"	(env "wrapfigure" "wraptable"))
+    ("setspace"	(env "spacing") (section "setstretch"))
     )
   "Default package vs. macro list.
 Alists contains '(PACKAGENAME . MACROLIST)
