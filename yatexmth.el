@@ -1,7 +1,7 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Jan 18 08:37:07 2015 on sdr
+;;; Last modified Sun Jul 12 10:02:36 2015 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -453,7 +453,7 @@
 ;;;
 ;;YaTeX math-mode functions
 ;;;
-;;;###autoload from yatex.el
+;;;###autoload
 (defun YaTeX-toggle-math-mode (&optional arg)
   (interactive "P")
   (or (memq 'YaTeX-math-mode mode-line-format) nil
