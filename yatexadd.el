@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jul  8 09:15:15 2015 on firestorm
+;;; Last modified Fri Aug 28 20:52:57 2015 on zxr
 ;;; $Id$
 
 ;;; Code:
@@ -2104,6 +2104,27 @@ This function relies on gs(ghostscript) command installed."
        ((memq c '(?t ?T)) (setq left "{\\tiny " right "}"))
        ((memq c '(?c ?C)) (setq left "{\\scriptsize " right "}")))
       (format "%s%s%s" left char right)))))
+
+;;; -------------------- beamer stuff --------------------
+(defvar YaTeX:frame-option-alist-default
+  '(("plain") ("containverbatim") ("shrink") ("squeeze")
+    ("allowframebreaks") ("label=")))
+(defvar YaTeX:frame-option-alist-private nil
+  "*Alist for completion list of the argument for `frame' environemnt")
+(defvar YaTeX:frame-option-alist
+  (append YaTeX:frame-option-alist-private YaTeX:frame-option-alist-default))
+
+(defun YaTeX:frame ()
+  (let*((minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
+	(delim ",")
+	(opt (YaTeX-completing-read-or-skip
+	      "Frame option: " YaTeX:frame-option-alist))
+	(title (YaTeX-read-string-or-skip "Title: "))
+	(subtitle (YaTeX-read-string-or-skip "Subtitle: ")))
+    (concat
+     (if (string< "" opt)	(concat "[" opt "]"))
+     (if (string< "" title)	(concat "{" title "}"))
+     (if (string< "" subtitle)	(concat "{" subtitle "}")))))
 
 ;;; -------------------- math-mode stuff --------------------
 (defun YaTeX::tilde (&optional pos)
