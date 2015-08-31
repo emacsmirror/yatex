@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Aug 28 20:52:57 2015 on zxr
+;;; Last modified Mon Aug 31 11:57:05 2015 on zxr
 ;;; $Id$
 
 ;;; Code:
@@ -2107,7 +2107,7 @@ This function relies on gs(ghostscript) command installed."
 
 ;;; -------------------- beamer stuff --------------------
 (defvar YaTeX:frame-option-alist-default
-  '(("plain") ("containverbatim") ("shrink") ("squeeze")
+  '(("plain") ("containsverbatim") ("shrink") ("squeeze")
     ("allowframebreaks") ("label=")))
 (defvar YaTeX:frame-option-alist-private nil
   "*Alist for completion list of the argument for `frame' environemnt")
