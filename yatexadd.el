@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Aug 31 22:27:11 2015 on zxr
+;;; Last modified Mon Aug 31 22:28:40 2015 on zxr
 ;;; $Id$
 
 ;;; Code:
@@ -2150,7 +2150,7 @@ This function relies on gs(ghostscript) command installed."
 			       colw)
 			     (or (YaTeX-match-string 2)
 				 (YaTeX-match-string 4)
-				 "\\linewidth"))
+				 "\\textwidth"))
 		cw (YaTeX:read-length
 		    (format "Column width(default: %s): " defw)))
 	  (if (string= "" cw) (setq cw defw))
@@ -2166,7 +2166,7 @@ This function relies on gs(ghostscript) command installed."
   (cond
    ((= argp 1) (YaTeX:column-read-width))))
 (defvar YaTeX:columns-option-alist
-  '(("t") ("T") ("b") ("c") ("onlytextwidth") ("totalwidth=0.9\\linewidth"))
+  '(("t") ("T") ("b") ("c") ("onlytextwidth") ("totalwidth=0.9\\textwidth"))
   "*Default option alist for completing columns environment of Beamer")
 
 (defun YaTeX:columns ()
