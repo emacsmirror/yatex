@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Aug 31 11:57:05 2015 on zxr
+;;; Last modified Mon Aug 31 22:22:33 2015 on zxr
 ;;; $Id$
 
 ;;; Code:
@@ -2121,10 +2121,63 @@ This function relies on gs(ghostscript) command installed."
 	      "Frame option: " YaTeX:frame-option-alist))
 	(title (YaTeX-read-string-or-skip "Title: "))
 	(subtitle (YaTeX-read-string-or-skip "Subtitle: ")))
+    (setq YaTeX-env-name "columns")
     (concat
      (if (string< "" opt)	(concat "[" opt "]"))
      (if (string< "" title)	(concat "{" title "}"))
      (if (string< "" subtitle)	(concat "{" subtitle "}")))))
+
+(defun YaTeX:column-read-width ()
+  "Completing function for column environment/macro of Beamer"
+  (let ((md (match-data)) (colsinf (YaTeX-quick-in-environment-p "columns"))
+	(colw (float 1)) defw cw)
+    (unwind-protect
+	(progn
+	  (save-excursion
+	    (while (YaTeX-re-search-active-backward
+		    (concat
+		     "\\\\begin{column}{\\([.0-9]+\\)\\(\\\\.*width\\)}"
+		     "\\|"
+		     "\\\\column{\\([.0-9]+\\)\\(\\\\.*width\\)}")
+		    YaTeX-comment-prefix
+		    (cdr colsinf) t)
+	      (setq colw (- colw (string-to-number
+				  (or (YaTeX-match-string 1)
+				      (YaTeX-match-string 3)))))))
+	  (setq defw (format "%.1f%s"
+			     (if (= colw (float 1))
+				 (string-to-number "0.5")
+			       colw)
+			     (or (YaTeX-match-string 2)
+				 (YaTeX-match-string 4)
+				 "\\textwidth"))
+		cw (YaTeX:read-length
+		    (format "Column width(default: %s): " defw)))
+	  (if (string= "" cw) (setq cw defw))
+	  (prog1
+	      cw
+	    (setq YaTeX-section-name "column")))
+      (store-match-data md))))
+
+(defun YaTeX:column ()
+  (if (eq YaTeX-current-completion-type 'begin)
+      (concat "{" (YaTeX:column-read-width) "}")))
+(defun YaTeX::column (argp)
+  (cond
+   ((= argp 1) (YaTeX:column-read-width))))
+(defvar YaTeX:columns-option-alist
+  '(("t") ("T") ("b") ("c") ("onlytextwidth") ("totalwidth=0.9\\linewidth"))
+  "*Default option alist for completing columns environment of Beamer")
+
+(defun YaTeX:columns ()
+  (setq YaTeX-section-name "column"
+	YaTeX-env-name "column")
+  (let*((minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
+	(delim ",=")
+	(tbl (append YaTeX:columns-option-alist)) ;XX
+	(opt (YaTeX-completing-read-or-skip "columns option: " tbl)))
+    (if (string< "" opt)
+	(concat "[" opt "]"))))
 
 ;;; -------------------- math-mode stuff --------------------
 (defun YaTeX::tilde (&optional pos)

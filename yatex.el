@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Aug 28 21:02:24 2015 on zxr
+;;; Last modified Mon Aug 31 11:59:17 2015 on zxr
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -361,7 +361,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("minipage")
      ("supertabular")
      ("wrapfigure") ("wraptable")
-     ("frame") ("block") ("example")				;beamer
+     ("frame") ("block") ("example") ("columns") ("column")	;beamer
      )
    (if YaTeX-use-LaTeX2e
        '(("comment")			;defined in version
