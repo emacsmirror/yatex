@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Aug 31 22:22:33 2015 on zxr
+;;; Last modified Mon Aug 31 22:27:11 2015 on zxr
 ;;; $Id$
 
 ;;; Code:
@@ -2150,7 +2150,7 @@ This function relies on gs(ghostscript) command installed."
 			       colw)
 			     (or (YaTeX-match-string 2)
 				 (YaTeX-match-string 4)
-				 "\\textwidth"))
+				 "\\linewidth"))
 		cw (YaTeX:read-length
 		    (format "Column width(default: %s): " defw)))
 	  (if (string= "" cw) (setq cw defw))
