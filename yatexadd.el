@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Aug 31 22:28:40 2015 on zxr
+;;; Last modified Mon Aug 31 22:40:47 2015 on zxr
 ;;; $Id$
 
 ;;; Code:
@@ -2130,9 +2130,16 @@ This function relies on gs(ghostscript) command installed."
 (defun YaTeX:column-read-width ()
   "Completing function for column environment/macro of Beamer"
   (let ((md (match-data)) (colsinf (YaTeX-quick-in-environment-p "columns"))
-	(colw (float 1)) defw cw)
+	(totalw (float 1)) restw (ww "\\textwidth") defw cw)
     (unwind-protect
 	(progn
+	  (if (save-excursion
+		(YaTeX-re-search-active-backward
+		 "totalwidth=\\([.0-9]+\\)\\(\\\\.*width\\)"
+		 YaTeX-comment-prefix (cdr colsinf) t))
+	      (setq totalw (float (string-to-number (YaTeX-match-string 1)))
+		    ww (YaTeX-match-string 2)))
+	  (setq restw totalw)
 	  (save-excursion
 	    (while (YaTeX-re-search-active-backward
 		    (concat
@@ -2141,16 +2148,14 @@ This function relies on gs(ghostscript) command installed."
 		     "\\\\column{\\([.0-9]+\\)\\(\\\\.*width\\)}")
 		    YaTeX-comment-prefix
 		    (cdr colsinf) t)
-	      (setq colw (- colw (string-to-number
-				  (or (YaTeX-match-string 1)
-				      (YaTeX-match-string 3)))))))
-	  (setq defw (format "%.1f%s"
-			     (if (= colw (float 1))
-				 (string-to-number "0.5")
-			       colw)
+	      (setq restw (- restw (string-to-number
+				    (or (YaTeX-match-string 1)
+					(YaTeX-match-string 3)))))))
+	  (setq defw (format "%.2f%s"
+			     (if (= totalw restw) (/ totalw 2) restw)
 			     (or (YaTeX-match-string 2)
 				 (YaTeX-match-string 4)
-				 "\\textwidth"))
+				 ww))
 		cw (YaTeX:read-length
 		    (format "Column width(default: %s): " defw)))
 	  (if (string= "" cw) (setq cw defw))
