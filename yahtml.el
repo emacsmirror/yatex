@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2015 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Wed Feb 11 12:17:03 2015 on firestorm
+;;; Last modified Fri Sep 25 14:39:19 2015 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.78.1"
@@ -369,6 +369,7 @@ normal and region mode.  To customize yahtml, user should use this function."
       (yahtml-define-begend-key "b3" "h3" map)
       (yahtml-define-begend-key "ba" "a" map)
       (yahtml-define-begend-key "bf" "form" map)
+      (yahtml-define-begend-key "bl" "label" map)
       (yahtml-define-begend-key "bs" "select" map)
       (yahtml-define-begend-key "bv" "div" map)
       (yahtml-define-begend-key "bS" "span" map)
@@ -473,7 +474,7 @@ normal and region mode.  To customize yahtml, user should use this function."
   (append
    '(("dfn") ("em") ("cite") ("code") ("kbd") ("samp") ("caption")
      ("strong") ("var") ("b") ("i") ("tt") ("big") ("small")
-     ("sup") ("sub") ("span") ("abbr"))
+     ("sup") ("sub") ("span") ("abbr") ("label"))
    (if (not yahtml-html4-strict)
        '(("strike") ("s") ("u") ("font")))
    yahtml-env-table)
@@ -1479,8 +1480,9 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 (defun yahtml:table ()
   "Add-in function for `table'"
   (let ((b (read-string-with-history "border="))
-	(a (yahtml-read-parameter
-	    "align" nil '(("align" ("right")("center"))))))
+	(a (if yahtml-html4-strict ""
+	     (yahtml-read-parameter
+	      "align" nil '(("align" ("right")("center")))))))
     (if yahtml-html4-strict
 	(yahtml-make-optional-argument
 	 "style"
