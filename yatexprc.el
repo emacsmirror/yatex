@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Oct  1 15:46:06 2015 on firestorm
+;;; Last modified Thu Oct  1 15:52:50 2015 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -567,7 +567,6 @@ YaTeX-typeset-dvi2image-chain.")
 (defun YaTeX-typeset-environment-timer ()
   "Update preview image in the 
 Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
-  (require 'yatex23)
   (let*((plist (get 'YaTeX-typeset-environment-timer 'laststate))
 	(b (nth 0 plist))
 	(s (nth 1 plist))
@@ -618,6 +617,7 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
 'YaTeX-typeset-environment-by-builtin for using yatex-builtin.")
 
 (defun YaTeX-typeset-environment-1 ()
+  (require 'yatex23)
   (let*((math (YaTeX-in-math-mode-p))
 	(dpi (or (YaTeX-get-builtin "IMAGEDPI") (if math "300" "200")))
 	(opoint (point))
