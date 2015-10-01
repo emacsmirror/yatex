@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jul  8 13:41:17 2015 on duke
+;;; Last modified Mon Aug 31 11:59:17 2015 on zxr
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -299,6 +299,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("frac" 2) ("sqrt") ("mathrm") ("mathbf") ("mathit")
      ;;cleveref
      ("cref") ("crefrange") ("cpageref") ("labelcref") ("labelcpageref")
+     ;; beamer
+     ("frametitle") ("framesubtitle")
      )
    (if YaTeX-use-LaTeX2e
        '(("documentclass") ("usepackage")
@@ -349,7 +351,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 ; Set tex-environment possible completion
 (defvar env-table
   (append
-   '(("quote") ("quotation") ("center") ("verse") ("document")
+   '(("quote") ("quotation") ("centerc") ("verse") ("document")
      ("verbatim") ("itemize") ("enumerate") ("description")
      ("list") ("tabular") ("tabular*") ("table") ("tabbing") ("titlepage")
      ("sloppypar") ("picture") ("displaymath")
@@ -359,6 +361,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("minipage")
      ("supertabular")
      ("wrapfigure") ("wraptable")
+     ("frame") ("block") ("example") ("columns") ("column")	;beamer
      )
    (if YaTeX-use-LaTeX2e
        '(("comment")			;defined in version
@@ -410,6 +413,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("linebreak") ("pagebreak") ("noindent") ("indent")
      ("left") ("right") ("dots") ("smallskip") ("medskip") ("bigskip")
      ("displaystyle")
+     ("onslide") ("pause")		;beamer
      )
    (if YaTeX-greek-by-maketitle-completion
        '(("alpha") ("beta") ("gamma") ("delta") ("epsilon")
