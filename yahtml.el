@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2015 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Fri Sep 25 14:39:19 2015 on firestorm
+;;; Last modified Wed Oct  7 09:45:01 2015 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.78.1"
@@ -383,7 +383,7 @@ normal and region mode.  To customize yahtml, user should use this function."
     (YaTeX-define-key "k" 'yahtml-kill-* map)
     (YaTeX-define-key "c" 'yahtml-change-* map)
     (YaTeX-define-key "t" 'yahtml-browse-menu map)
-    (YaTeX-define-key "a" 'yahtml-complete-mark map)
+    (YaTeX-define-key "a" 'yahtml-char-entity-ref map)
     (YaTeX-define-key "'" 'yahtml-prev-error map)
     (YaTeX-define-key ";" 'yahtml-translate-region map)
     (YaTeX-define-key ":" 'yahtml-translate-reverse-region map)
@@ -2977,18 +2977,19 @@ If no matches found in yahtml-path-url-alist, return raw file name."
   (if (eolp) (forward-char 1)))
 
 ;;; ---------- complete marks ----------
-(defun yahtml-complete-mark ()
-  "Complete &gt, &lt, &ampersand, and &quote."
+(defun yahtml-char-entity-ref ()
+  "Complete &gt;, &lt;, &amp;, and &quot;."
   (interactive)
   (message "1:< 2:> 3:& 4:\" 5:' 6:nbsp")
-  (let ((c (read-char)))
-    (setq c (if (or (< c ?0) (> c ?7))
-		(string-match (regexp-quote (char-to-string c)) "<>&\"")
+  (let ((c (read-char)) d)
+    (setq d (if (or (< c ?0) (> c ?7))
+		(string-match (regexp-quote (char-to-string c)) "<>&\"' ")
 	      (- c ?1)))
-    (if (or (< c 0) (> c 6))
-	nil
+    (cond
+     ((null d) (insert (format "&#x%x;" c)))
+     ((and (>= d 0) (<= d 6))
       (insert (format "&%s;"
-		      (nth c '("lt" "gt" "amp" "quot" "apos" "nbsp")))))))
+		      (nth d '("lt" "gt" "amp" "quot" "apos" "nbsp"))))))))
 
 
 ;;; ---------- jump to error line ----------
