@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2015 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Wed Oct  7 09:45:01 2015 on firestorm
+;;; Last modified Tue Jan  5 10:17:40 2016 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.78.1"
@@ -564,7 +564,7 @@ T for static indentation depth")
 (defun yahtml-dir-default-charset ()
   (let*((fn (file-name-nondirectory (or buffer-file-name "")))
 	(ext (substring fn (or (string-match "\\.[a-z0-9]+$" fn) 0)))
-	(ptn (format "^\\s *AddType.*charset=\\(.*\\)\\%s$" ext))
+	(ptn (format "^\\s *AddType.*charset=\\(.*\\)\\%s\\>" ext))
 	(case-fold-search t)
 	line
 	charset)
