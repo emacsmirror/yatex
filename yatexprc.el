@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Oct  1 15:52:50 2015 on firestorm
+;;; Last modified Fri Jan  8 08:18:14 2016 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1069,7 +1069,8 @@ by region."
 		    (save-excursion (YaTeX-visit-main t) (buffer-file-name))))
 	    (pdir (file-name-directory pf))
 	    (bnr (substring pf 0 (string-match "\\....$" pf)))
-	    (cf (file-relative-name (buffer-file-name) pdir))
+	    ;(cf (file-relative-name (buffer-file-name) pdir))
+	    (cf (buffer-file-name)) ;2016-01-08
 	    (buffer (get-buffer-create " *preview-jump-line*"))
 	    (line (count-lines (point-min) (point-end-of-line)))
 	    (previewer (YaTeX-preview-default-previewer))
