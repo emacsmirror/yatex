@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2015 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Tue Jan  5 10:17:40 2016 on firestorm
+;;; Last modified Sat Jul 16 13:32:35 2016 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.78.1"
@@ -425,7 +425,7 @@ normal and region mode.  To customize yahtml, user should use this function."
 
 ;;; Completion tables for `form'
 (defvar yahtml-form-table
-  '(("img") ("input") ("link") ("meta")))
+  '(("img") ("input") ("link") ("meta") ("label")))
 (defvar yahtml-user-form-table nil)
 (defvar yahtml-tmp-form-table nil)
 (defvar yahtml-last-form "img")
@@ -442,7 +442,7 @@ normal and region mode.  To customize yahtml, user should use this function."
     ("h1") ("h2") ("h3") ("h4") ("h5") ("h6")
     ;; ("p") ;This makes indentation screwed up!
     ("style") ("script") ("noscript") ("div") ("object") ("ins") ("del")
-    ("option")
+    ("option") ("datalist")
     ))
 
 (if yahtml-html4-strict
@@ -951,18 +951,20 @@ This program should take -o option to overwrite existing HTML file.")
 	""))))
 
 (defvar yahtml-completing-buffer nil)
-(defun yahtml-collect-labels (&optional file)
+(defun yahtml-collect-labels (&optional file ptn withouthash)
   "Collect current buffers label (<?? name=...>).
 If optional argument FILE is specified collect labels in FILE."
-  (let (list end)
+  (let ((attrptn (concat "\\(" (or ptn "name\\|id") "\\)\\s *="))
+	(hash (if withouthash "" "#"))
+	list end)
     (save-excursion
-      (set-buffer yahtml-completing-buffer)
+      (set-buffer (or yahtml-completing-buffer (current-buffer)))
       (if file (let (hilit-auto-highlight)
 		 (set-buffer (find-file-noselect file))))
       (save-excursion
 	(goto-char (point-min))
 	(while ;(re-search-forward "<\\w+\\b" nil t)
-	    (re-search-forward "\\(name\\|id\\)\\s *=" nil t)
+	    (re-search-forward attrptn nil t)
 	  ;(setq bound (match-end 0))
 	  ;(search-forward ">" nil t)
 	  (setq end (match-end 0))
@@ -973,9 +975,12 @@ If optional argument FILE is specified collect labels in FILE."
 		 (skip-chars-forward " \t\n")
 		 (looking-at "\"?#?\\([^\">]+\\)\"?\\b")))
 	      (setq list (cons
-			  (list (concat "#" (YaTeX-match-string 1)))
+			  (list (concat hash (YaTeX-match-string 1)))
 			  list))))
 	list))))
+
+(defun yahtml-collect-ids (&optional file)
+  (yahtml-collect-labels file "id" 'withouthash))
 
 (defvar yahtml-url-completion-map nil "Key map used in URL completion buffer")
 (if yahtml-url-completion-map nil
@@ -1417,9 +1422,14 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 
 (defun yahtml:select ()
   "Add-in function for `select' input format"
-  (setq yahtml-last-single-cmd "option")
+  (setq yahtml-last-single-cmd "option"  ;;<- it's old
+	yahtml-last-typeface-cmd "option")
   (concat " " (if yahtml-prefer-upcase-attributes "NAME" "name") "=\""
 	  (read-string-with-history "name: ") "\""))
+(defun yahtml:label ()
+  "Add-in function for `<label>'"
+  (concat " " (if yahtml-prefer-upcase-attributes "FOR" "for") "=\""
+	  (read-string-with-history "for: ") "\""))
 
 (defun yahtml:ol ()
   "Add-in function for <ol>"
@@ -1448,21 +1458,30 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 
 (defun yahtml:input ()
   "Add-in function for `input' form"
-  (let ((size "") name type value checked (maxlength "")
+  (let ((size "") name type value id (maxlength "")
 	(l yahtml-prefer-upcase-attributes))
     (setq name (read-string-with-history "name: ")
 	  type (YaTeX-completing-read-or-skip "type (default=text): "
 				yahtml-input-types nil t)
-	  value (YaTeX-read-string-or-skip "value: "))
-    (if (string-match "text\\|password\\|^$" type)
+	  value (YaTeX-read-string-or-skip "value: ")
+	  id (YaTeX-read-string-or-skip "id: "))
+    (if (string-match "text\\|password\\|^$" typxe)
 	(setq size (YaTeX-read-string-or-skip "size: ")
 	      maxlength (YaTeX-read-string-or-skip "maxlength: ")))
     (concat
      (if l "NAME" "name") "=\"" name "\""
      (yahtml-make-optional-argument "type" type)
      (yahtml-make-optional-argument "value" value)
+     (yahtml-make-optional-argument "id" id)
      (yahtml-make-optional-argument "size" size)
      (yahtml-make-optional-argument "maxlength" maxlength))))
+
+(defun yahtml:datalist ()
+  "Add-in function for `datalist' form"
+  (setq yahtml-last-typeface-cmd "option")
+  (let ((ids (yahtml-collect-ids)))
+    (yahtml-make-optional-argument
+     "id" (YaTeX-completing-read-or-skip "id: " ids nil t))))
 
 (defun yahtml:textarea ()
   "Add-in function for `textarea'"
@@ -2837,6 +2856,11 @@ If no matches found in yahtml-path-url-alist, return raw file name."
   (yahtml-indent-line))
 
 (fset 'yahtml-intelligent-newline-ol 'yahtml-intelligent-newline-ul)
+
+(defun yahtml-intelligent-newline-datalist ()
+  (interactive)
+  (yahtml-insert-form "option")
+  (save-excursion (yahtml-insert-form "/option")))
 
 (defun yahtml-intelligent-newline-dl ()
   (interactive)
