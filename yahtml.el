@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2015 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Sat Aug 13 16:52:40 2016 on mt09
+;;; Last modified Sat Aug 13 16:56:50 2016 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.78.1"
@@ -1441,8 +1441,9 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	  (read-string-with-history "name: ") "\""))
 (defun yahtml:label ()
   "Add-in function for `<label>'"
-  (concat " " (if yahtml-prefer-upcase-attributes "FOR" "for") "=\""
-	  (read-string-with-history "for: ") "\""))
+  (yahtml-make-optional-argument
+   "for"
+   (YaTeX-completing-read-or-skip "for=" (yahtml-collect-ids) nil t)))
 
 (defun yahtml:ol ()
   "Add-in function for <ol>"
