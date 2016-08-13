@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2015 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Sat Jul 16 13:32:35 2016 on firestorm
+;;; Last modified Sat Aug 13 16:52:40 2016 on mt09
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.78.1"
@@ -425,7 +425,7 @@ normal and region mode.  To customize yahtml, user should use this function."
 
 ;;; Completion tables for `form'
 (defvar yahtml-form-table
-  '(("img") ("input") ("link") ("meta") ("label")))
+  '(("img") ("input") ("link") ("meta") ("label") ("source")))
 (defvar yahtml-user-form-table nil)
 (defvar yahtml-tmp-form-table nil)
 (defvar yahtml-last-form "img")
@@ -443,6 +443,8 @@ normal and region mode.  To customize yahtml, user should use this function."
     ;; ("p") ;This makes indentation screwed up!
     ("style") ("script") ("noscript") ("div") ("object") ("ins") ("del")
     ("option") ("datalist")
+    ;;HTML5
+    ("video") ("audio")
     ))
 
 (if yahtml-html4-strict
@@ -870,7 +872,7 @@ T for static indentation depth")
 	(insert "\n")
 	(indent-to-column cc)
 	(insert (format "</%s>" cmd)))
-      (if (string-match "^a\\|p$" cmd)	;aÇ∆påàÇﬂë≈ÇøÇ¡ÇƒÇÃÇ™î¸ÇµÇ≠Ç»Ç¢Åc
+      (if (string-match "^[ap]$" cmd)	;aÇ∆påàÇﬂë≈ÇøÇ¡ÇƒÇÃÇ™î¸ÇµÇ≠Ç»Ç¢Åc
 	  (newline)
 	(yahtml-intelligent-newline nil))
       (yahtml-indent-line))))
@@ -941,7 +943,7 @@ This program should take -o option to overwrite existing HTML file.")
       (and (setq a (yahtml-css-get-element-completion-alist form))
 	   (not (equal (YaTeX-last-key) ?\C-j))
 	   (memq yahtml-current-completion-type '(multiline inline))
-	   (not (string-match "#" form))
+	   (not (string-match "#\\|source" form))
 	   (yahtml-make-optional-argument ;should be made generic?
 	    "class" (yahtml-read-css a form)))
       (if (and (intern-soft addin) (fboundp (intern-soft addin))
@@ -1157,7 +1159,7 @@ Not used yet.")
   '(("align" ("top") ("middle") ("bottom") ("left") ("right") ("center"))
     ("clear" ("left") ("right") ("center") ("all") ("none"))
     ("lang" ("ja") ("en") ("kr") ("ch") ("fr"))
-    ("src" . file) ("file" . file)
+    ("src" . file) ("file" . file) ("poster" . file)
     ("background" . file)
     ("class file name" . file) ("data" . file)
     ("method" ("POST") ("GET"))
@@ -1181,7 +1183,7 @@ Not used yet.")
     ("image/jpeg") ("image/gif") ("image/tiff") ("image/png") ("video/mpeg"))
   "Alist of content-types")
 
-(defun yahtml-read-parameter (par &optional default alist)
+(defun yahtml-read-parameter (par &optional default alist predicate)
   (let* ((alist
 	  (cdr-safe (assoc (downcase par)
 			   (or alist yahtml-parameters-completion-alist))))
@@ -1190,7 +1192,7 @@ Not used yet.")
     (cond
      ((eq alist 'file)
       (let ((insert-default-directory))
-	(read-file-name prompt "" default nil "")))
+	(read-file-name prompt "" default nil "" predicate)))
      ((eq alist 'command)
       (if (fboundp 'read-shell-command)
 	  (read-shell-command prompt)
@@ -1202,6 +1204,17 @@ Not used yet.")
       (completing-read-with-history prompt alist nil nil default))
      (t 
       (read-string-with-history prompt default)))))
+
+(defun yahtml-read-file-name-regexp
+    (prompt regexp &optional dir default-filename mustmatch initial)
+  (let ((pred
+	 (function
+	  (lambda (f)
+	    (or (file-name-directory f)
+		(string-match regexp f)))))
+	(insert-default-directory nil))
+    (read-file-name prompt dir default-filename mustmatch initial pred)))
+    
       
 (defun yahtml-make-optional-argument (opt arg)
   "Make optional argument string."
@@ -1779,6 +1792,38 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
   (format "cmd=\"%s\"--"
 	  (yahtml-read-parameter "cmd" "" '(("cmd" . command)))))
 
+(defun yahtml:media-read-options (&optional opts-alist)
+  (let*((delim " ")
+	(minibuffer-completion-table
+	 (or opts-alist '(("autoplay") ("controls") ("loop") ("preload"))))
+	(quotekey (substitute-command-keys "\\[quoted-insert]")))
+    (read-from-minibuffer-with-history
+     (format "Media Opts(`%s SPC' for more options): " quotekey)
+     "controls" YaTeX-minibuffer-completion-map)))
+
+(defun yahtml:audio ()
+  ;preload autoplay loop controls: `src' be specified via `source'
+  (yahtml:media-read-options))
+
+(defun yahtml:video ()
+  ;`src' be specified via `source'
+  (let ((poster (yahtml-make-optional-argument
+		 "poster"
+		 (yahtml-read-file-name-regexp
+		  "Poster: " "\\.\\(gif\\|png\\|jpg\\|w?bmp\\|pict\\|tif\\)"
+		  "")))
+	(opts (yahtml:media-read-options)))
+    (concat poster (if (string< "" opts) (concat " " opts)))))
+
+(defvar yahtml-media-file-regexp
+  "\\.\\(mp[0-9]\\|wav\\|og[gv]\\|opus\\|aac\\)"
+  "*Default filename regexp of media files.")
+
+(defun yahtml:source ()
+  ;; source element must have src attribute
+  (format "src=\"%s\"" (yahtml-read-file-name-regexp
+			"source: " yahtml-media-file-regexp "" "" nil "")))
+    
 ;;; ---------- Jump ----------
 (defun yahtml-on-href-p ()
   "Check if point is on href clause."
@@ -2985,6 +3030,22 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 	    (insert line)
 	    (goto-char (+ 8 cp))
 	    (yahtml-indent-line)))))))
+
+(defun yahtml-intelligent-newline-audio ()
+  (let (b e)
+    (if (save-excursion
+	  (goto-char (setq b (get 'YaTeX-inner-environment 'point)))
+	  (forward-list 1)
+	  (setq e (point))
+	  (catch 'src
+	    (while (re-search-forward "\\s src\\>" e t)
+	      (skip-chars-forward " \t\n")
+	      (and (looking-at "=") (throw 'src t)))))
+	;; if src= attribute found, do nothing
+	(setq yahtml-last-begend "p")
+      (yahtml-insert-single "source")
+      )))
+(fset 'yahtml-intelligent-newline-video 'yahtml-intelligent-newline-audio)
 
 ;;; ---------- Marking ----------
 (defun yahtml-mark-begend ()
