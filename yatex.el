@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Nov 11 10:10:16 2015 on firestorm
+;;; Last modified Sat Oct  1 21:10:43 2016 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -307,7 +307,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("textbf") ("textgt") ("textit") ("textmc") ("textmd") ("textnormal")
 	 ("textrm") ("textsc") ("textsf") ("textsl") ("texttt") ("textup")
 	 ("mathbf") ("mathcal") ("mathit") ("mathnormal") ("mathrm")
-	 ("mathsf") ("mathtt")
+	 ("mathsf") ("mathtt") ("text")
 	 ("textcircled")
 	 ("scalebox" 1) ;is faking of argument position
 	 ("rotatebox" 2) ("resizebox" 3) ("reflectbox")
