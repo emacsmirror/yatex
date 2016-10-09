@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2015 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Feb 13 22:45:46 2015 on firestorm
+;;; Last modified Sun Oct  9 15:57:44 2016 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -27,6 +27,7 @@
 
     ("alltt"	(env "alltt"))
     ("misc"	(section "verbfile" "listing"))
+    ("verbatim"	(section "verbatiminput"))
     ("eclbkbox"	(env "breakbox"))
     ("supertabular" (env "supertabular"))
     ("amsmath"	(env . YaTeX-package-ams-envs)
