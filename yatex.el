@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Oct  1 21:10:43 2016 on firestorm
+;;; Last modified Thu Dec 15 14:29:36 2016 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -283,7 +283,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("footnote") ("footnotetext") ("index")
      ("hspace*") ("vspace*") ("bibliography") ("bibitem") ("cite")
      ("input") ("include") ("includeonly") ("mbox") ("hbox") ("caption")
-     ("arabic")
+     ("arabic") ("cetering") ("uline")
      ("newcounter")
      ("newlength") ("setlength" 2) ("addtolength" 2) ("settowidth" 2)
      ("setcounter" 2) ("addtocounter" 2) ("stepcounter" 2)
