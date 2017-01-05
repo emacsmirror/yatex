@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  5 17:45:50 2017 on firestorm
+;;; Last modified Thu Jan  5 23:13:23 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -66,7 +66,7 @@ YaTeX-make-begin-end."
   (message (if YaTeX-japan "•ª‚©‚è‚â‚·‚¢ƒRƒƒ“ƒg‚É•Ï‚¦‚é‚Æref•âŠ®‚ªŠy‚æ"
 	     "Changing comment string reduces effort at `ref' completion"))
   (concat " " YaTeX-comment-prefix
-	  (YaTeX::ref-default-label "%H:%M")
+	  (YaTeX::ref-default-label " %Y-%m-%d %H:%M")
 	  (if YaTeX-japan "‚Ì®ŒQ" "equations")))
 
 (defun YaTeX:read-oneof (oneof &optional quick allow-dup)
@@ -568,6 +568,7 @@ part (%y+(%b|%m)+%d or %qx).")
   "Default auto-genarated label string."
   ;; We do not use (format-time-string) for emacs-19
   (let*((ts (substring (current-time-string) 4))
+	(Y (substring ts -4))
 	(y (substring ts -2))
 	(b (substring ts 0 3))
 	(d (format "%d" (string-to-int (substring ts 4 6))))
@@ -587,6 +588,7 @@ part (%y+(%b|%m)+%d or %qx).")
     (YaTeX-replace-formats
      (or format YaTeX-ref-default-label-string)
      (list (cons "y" y)
+	   (cons "Y" Y)
 	   (cons "b" b)
 	   (cons "m" m)
 	   (cons "d" d)

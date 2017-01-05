@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  5 17:45:40 2017 on firestorm
+;;; Last modified Thu Jan  5 23:13:56 2017 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.79"
+(defconst YaTeX-revision-number "1.79.1"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
