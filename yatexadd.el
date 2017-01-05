@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
-;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Aug 31 22:40:47 2015 on zxr
+;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Jan  5 17:45:50 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:

@@ -1,6 +1,6 @@
 ;;; yatexenv.el --- YaTeX environment-specific functions
-;;; (c) 1994-2013 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Dec 22 12:49:03 2014 on firestorm
+;;; (c) 1994-2017 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Jan  5 17:45:53 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:

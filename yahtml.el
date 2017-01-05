@@ -1,9 +1,9 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
-;;; (c) 1994-2015 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Sat Aug 13 16:56:50 2016 on firestorm
+;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
+;;; Last modified Thu Jan  5 17:45:36 2017 on firestorm
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.78.1"
+(defconst yahtml-revision-number "1.79"
   "Revision number of running yahtml.el")
 
 ;;; Commentary:
