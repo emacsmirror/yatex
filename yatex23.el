@@ -1,8 +1,9 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
-;;; (c)2014-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 18 21:12:27 2015 on firestorm
+;;; (c)2014-2017 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Jan  5 17:45:48 2017 on firestorm
 ;;; $Id$
 
+(require 'yatex19)
 ;;; Code:
 (defvar YaTeX-dnd-auto-figure "figure"
   "*If set, include dropped \\includegraphcs{} into that environment.

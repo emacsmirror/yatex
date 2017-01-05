@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
-;;; (c)1993-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Feb 13 08:07:20 2015 on firestorm
+;;; (c)1993-2017 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Jan  5 17:46:36 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -617,6 +617,7 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
 'YaTeX-typeset-environment-by-builtin for using yatex-builtin.")
 
 (defun YaTeX-typeset-environment-1 ()
+  (require 'yatex23)
   (let*((math (YaTeX-in-math-mode-p))
 	(dpi (or (YaTeX-get-builtin "IMAGEDPI") (if math "300" "200")))
 	(opoint (point))
@@ -1068,7 +1069,8 @@ by region."
 		    (save-excursion (YaTeX-visit-main t) (buffer-file-name))))
 	    (pdir (file-name-directory pf))
 	    (bnr (substring pf 0 (string-match "\\....$" pf)))
-	    (cf (file-relative-name (buffer-file-name) pdir))
+	    ;(cf (file-relative-name (buffer-file-name) pdir))
+	    (cf (buffer-file-name)) ;2016-01-08
 	    (buffer (get-buffer-create " *preview-jump-line*"))
 	    (line (count-lines (point-min) (point-end-of-line)))
 	    (previewer (YaTeX-preview-default-previewer))

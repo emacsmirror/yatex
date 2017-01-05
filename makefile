@@ -48,7 +48,7 @@ GEO	= -geometry 80x20+0+0
 # make clean		to delete all producted files
 # make ci		to check in all
 # make co		to check out all
-MVER	= 1.78
+MVER	= 1.79
 LISP	= ${LISP18} ${LISP19} ${LISP23}
 YAHTML	= yahtml.el
 COMMON	= yatexlib.el yatexprc.el
@@ -240,10 +240,6 @@ tci:
 
 dostci:
 	ci -l${MVER}.0 -Ncurrent @rcsfile
-
-gohome:
-	zip -u -r /com/okoma/yuuji/tmp/dosconv/yatex.zip . \
-	-x '*RCS/*' -x 'texinfo/*'
 
 RSYNCDIR	= ${HOME}/http/yatex/rsync/yatex
 #sync:	

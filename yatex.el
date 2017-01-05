@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
-;;; (c)1991-2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jul  8 13:41:17 2015 on duke
+;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Jan  5 17:45:40 2017 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.78.9"
+(defconst YaTeX-revision-number "1.79"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -283,7 +283,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("footnote") ("footnotetext") ("index")
      ("hspace*") ("vspace*") ("bibliography") ("bibitem") ("cite")
      ("input") ("include") ("includeonly") ("mbox") ("hbox") ("caption")
-     ("arabic")
+     ("arabic") ("cetering") ("uline")
      ("newcounter")
      ("newlength") ("setlength" 2) ("addtolength" 2) ("settowidth" 2)
      ("setcounter" 2) ("addtocounter" 2) ("stepcounter" 2)
@@ -299,13 +299,15 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("frac" 2) ("sqrt") ("mathrm") ("mathbf") ("mathit")
      ;;cleveref
      ("cref") ("crefrange") ("cpageref") ("labelcref") ("labelcpageref")
+     ;; beamer
+     ("frametitle") ("framesubtitle")
      )
    (if YaTeX-use-LaTeX2e
        '(("documentclass") ("usepackage")
 	 ("textbf") ("textgt") ("textit") ("textmc") ("textmd") ("textnormal")
 	 ("textrm") ("textsc") ("textsf") ("textsl") ("texttt") ("textup")
 	 ("mathbf") ("mathcal") ("mathit") ("mathnormal") ("mathrm")
-	 ("mathsf") ("mathtt")
+	 ("mathsf") ("mathtt") ("text")
 	 ("textcircled")
 	 ("scalebox" 1) ;is faking of argument position
 	 ("rotatebox" 2) ("resizebox" 3) ("reflectbox")
@@ -359,6 +361,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("minipage")
      ("supertabular")
      ("wrapfigure") ("wraptable")
+     ("frame") ("block") ("example") ("columns") ("column")	;beamer
      )
    (if YaTeX-use-LaTeX2e
        '(("comment")			;defined in version
@@ -410,6 +413,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("linebreak") ("pagebreak") ("noindent") ("indent")
      ("left") ("right") ("dots") ("smallskip") ("medskip") ("bigskip")
      ("displaystyle")
+     ("onslide") ("pause")		;beamer
      )
    (if YaTeX-greek-by-maketitle-completion
        '(("alpha") ("beta") ("gamma") ("delta") ("epsilon")
