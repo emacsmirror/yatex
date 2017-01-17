@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan 17 22:33:39 2017 on firestorm
+;;; Last modified Wed Jan 18 07:44:11 2017 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -339,7 +339,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
     ("smallmatrix") ("cases") ("subequations")))
 ;; Prepare list(not alist) for YaTeX::ref in yatexadd.el
 (defvar YaTeX-math-other-env-alist-default
-  '(("numcases" "subnumcases"))
+  '(("numcases") ("subnumcases"))
   "Default alist of additional environments for equations")
 (defvar YaTeX-math-other-env-alist-private nil
   "*User defined alist of additional environments for equations")
@@ -347,6 +347,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
   (append YaTeX-math-other-env-alist-default
 	  YaTeX-math-other-env-alist-private)
   "Alist of additional environments for equations")
+(defvar YaTeX-math-other-env-list
+  (mapcar 'car YaTeX-math-other-env-alist))
 
 (defvar YaTeX-math-begin-list
   (mapcar 'car YaTeX-ams-math-begin-alist))
