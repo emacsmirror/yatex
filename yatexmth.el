@@ -1,7 +1,7 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2017 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Thu Jan  5 17:46:22 2017 on firestorm
+;;; Last modified Tue Jan 17 22:33:52 2017 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -522,7 +522,8 @@ This function refers a local variable `source-window' in YaTeX-make-section."
 	      ;;  "equation*" "cases" "flalign" "flalign*"
 	      ;;  "alignat*" "xalignat" "xalignat*" "xxalignat" "xxalignat*"
 	      YaTeX-math-begin-list
-	    )))
+	    )
+	  YaTeX-math-other-env-alist))
 	(let*((p (point)) (nest 0) me0 r firstp dollar
 	      (delim (concat YaTeX-sectioning-regexp "\\|^$\\|^\C-l"))
 	      (boundary

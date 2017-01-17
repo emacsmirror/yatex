@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  5 23:13:56 2017 on firestorm
+;;; Last modified Tue Jan 17 22:33:39 2017 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -338,11 +338,20 @@ Nil for removing only one commenting character at the beginning-of-line.")
     ("split") ("split*") ("aligned") ("aligned*") ("alignedat") ("gathered")
     ("smallmatrix") ("cases") ("subequations")))
 ;; Prepare list(not alist) for YaTeX::ref in yatexadd.el
+(defvar YaTeX-math-other-env-alist-default
+  '(("numcases" "subnumcases"))
+  "Default alist of additional environments for equations")
+(defvar YaTeX-math-other-env-alist-private nil
+  "*User defined alist of additional environments for equations")
+(defvar YaTeX-math-other-env-alist
+  (append YaTeX-math-other-env-alist-default
+	  YaTeX-math-other-env-alist-private)
+  "Alist of additional environments for equations")
+
 (defvar YaTeX-math-begin-list
   (mapcar 'car YaTeX-ams-math-begin-alist))
 (defvar YaTeX-math-gathering-list	;used in yatexadd.el#yatex::ref
   (mapcar 'car YaTeX-ams-math-gathering-alist))
-
 
 (defvar YaTeX-ams-env-table
   (append YaTeX-ams-math-begin-alist YaTeX-ams-math-gathering-alist)
@@ -370,7 +379,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("alltt")			;defined in alltt
 	 ("multicols")			;defined in multicol
 	 ("breakbox")))			;defined in eclbkbox
-   (if YaTeX-use-AMS-LaTeX YaTeX-ams-env-table))
+   (if YaTeX-use-AMS-LaTeX YaTeX-ams-env-table)
+   YaTeX-math-other-env-alist)
   "Default completion table for begin-type completion.")
 
 (defvar user-env-table nil)
