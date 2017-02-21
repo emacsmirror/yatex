@@ -1251,8 +1251,11 @@ error or warning lines in reverse order."
       (setq s
 	    (buffer-substring
 	     (progn (forward-char 1) (point))
-	     (progn (skip-chars-forward "^ \n" (point-end-of-line))
-		    (point))))
+	     (if (re-search-forward
+		  "\\.\\(tex\\|sty\\|ltx\\)\\>" nil (point-end-of-line))
+		 (match-end 0)
+	       (skip-chars-forward "^ \n" (point-end-of-line))
+	       (point))))
       (if (string= "" s) default s))))
       
 (defun YaTeX-put-nonstopmode ()
