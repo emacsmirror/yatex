@@ -1149,7 +1149,7 @@ error or warning lines in reverse order."
     (goto-char (setq b0 (match-beginning 0)))
     (skip-chars-forward "^0-9" (match-end 0))
     (setq error-line
-	  (string-to-int
+	  (YaTeX-str2int
 	   (buffer-substring
 	    (point)
 	    (progn (skip-chars-forward "0-9" (match-end 0)) (point))))
@@ -1189,7 +1189,7 @@ error or warning lines in reverse order."
 	(if (eobp) (insert (this-command-keys))
 	  (error "No line number expression."))
       (goto-char (match-beginning 0))
-      (setq error-line (string-to-int
+      (setq error-line (YaTeX-str2int
 			(buffer-substring (match-beginning 1) (match-end 1)))
 	    error-file (expand-file-name
 			(YaTeX-get-error-file YaTeX-current-TeX-buffer)))

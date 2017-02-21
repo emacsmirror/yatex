@@ -43,7 +43,7 @@ When calling from a program, make sure to be in array/tabular environment."
        ((> n 1)
 	(re-search-backward andptn)	;Sure to find!
 	(while (re-search-backward "\\\\multicolumn{\\([0-9]+\\)}" bor t)
-	  (setq n (+ n (string-to-int
+	  (setq n (+ n (YaTeX-str2int
 			(buffer-substring (match-beginning 1)
 					  (match-end 1)))
 		     -1)))))
@@ -101,7 +101,7 @@ When calling from a program, make sure to be in array/tabular environment."
 	  (forward-list 1))
 	 ((equal elt ?*)		;*{N}{EXP} -> Repeat EXP N times
 	  (skip-chars-forward "^{" end)
-	  (setq cols (* (string-to-int
+	  (setq cols (* (YaTeX-str2int
 			 (buffer-substring
 			  (1+ (point))
 			  (progn (forward-list 1) (1- (point)))))
@@ -136,7 +136,7 @@ Return the list of (No.ofCols PointEndofFormat)"
 	     ((eq type 'alignat)
 	      (max
 	       1
-	       (* 2 (string-to-int
+	       (* 2 (YaTeX-str2int
 		     (buffer-substring
 		      (point)
 		      (progn (up-list -1) (forward-list 1) (1- (point))))))))

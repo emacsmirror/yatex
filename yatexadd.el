@@ -25,7 +25,7 @@ YaTeX-make-begin-end."
     (if (string= YaTeX-env-name "tabular*")
 	(setq width (concat "{" (YaTeX:read-length "Width: ") "}")))
     (setq loc (YaTeX:read-position "tb")
-	  bars (string-to-int
+	  bars (YaTeX-str2int
 		(YaTeX-read-string-or-skip
 		 "Number of columns(0 for default format): " "3")))
     (if (<= bars 0)
@@ -1511,7 +1511,7 @@ and print them to standard output."
       command))
    ((= argp 2)
     (let ((argc
-	   (string-to-int
+	   (YaTeX-str2int
 	    (read-string-with-history "Number of arguments(Default 0): ")))
 	  (def (YaTeX-read-string-or-skip "Definition: "))
 	  (command (get 'YaTeX::newcommand 'command)))
