@@ -1,6 +1,6 @@
 ;;; yatexgen.el --- YaTeX add-in function generator(rev.5)
 
-;;; (c)1991-1995,1999,2000 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; (c)1991-1995,1999,2000,2017 by HIROSE Yuuji.[yuuji@yatex.org]
 ;;; Last modified Sun Dec 21 14:04:49 2014 on firestorm
 ;;; $Id$
 
@@ -582,6 +582,6 @@ Referencing variables in parent function YaTeX-generate-parse-add-in."
        (YaTeX-generate-option-type command)
      (YaTeX-generate-argument-type
       command
-      (string-to-int (read-string "How many arguments?: ")))) nil))
+      (YaTeX-str2int (read-string "How many arguments?: ")))) nil))
 
 (provide 'yatexgen)

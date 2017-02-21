@@ -8,7 +8,7 @@
 ;;; Code:
 (require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.79.1"
+(defconst YaTeX-revision-number "1.79.2"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -1310,7 +1310,7 @@ into {\\xxx } braces.
 		 (car (where-is-internal 'YaTeX-make-begin-end))))
 	       (point))
 	      (put 'YaTeX-insert-braces 'begend-guide
-		   (+ 1 (string-to-int ;increment counter of beg-end guidance
+		   (+ 1 (YaTeX-str2int ;increment counter of beg-end guidance
 			 (prin1-to-string
 			  (get 'YaTeX-insert-braces 'begend-guide)))))))))
 	env macro not-literal b e)

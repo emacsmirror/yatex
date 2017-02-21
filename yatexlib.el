@@ -1,16 +1,25 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
 ;;; (c)1994-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  5 17:46:13 2017 on firestorm
+;;; Last modified Sat Jan 28 15:59:00 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
+
+;; High-precedence compatible function
+(fset 'YaTeX-str2int
+      (if (fboundp 'string-to-number)
+	  (function
+	   (lambda (string &optional base)
+	     (ceiling (string-to-number string base))))
+	'string-to-int))
+
 ;; General variables
 (defvar YaTeX-dos (memq system-type '(ms-dos windows-nt OS/2)))
 (defvar YaTeX-macos (memq system-type '(darwin)))
-(defvar YaTeX-emacs-19 (>= (string-to-int emacs-version) 19))
-(defvar YaTeX-emacs-20 (>= (string-to-int emacs-version) 20))
-(defvar YaTeX-emacs-21 (>= (string-to-int emacs-version) 21))
+(defvar YaTeX-emacs-19 (>= (YaTeX-str2int emacs-version) 19))
+(defvar YaTeX-emacs-20 (>= (YaTeX-str2int emacs-version) 20))
+(defvar YaTeX-emacs-21 (>= (YaTeX-str2int emacs-version) 21))
 (defvar YaTeX-user-completion-table
   (if YaTeX-dos "~/_yatexrc" "~/.yatexrc")
   "*Default filename in which user completion table is saved.")
@@ -559,7 +568,7 @@ Otherwise split window conventionally."
 	    (if (numberp height)
 		(+ height 2)
 	      (/ (* (YaTeX-screen-height)
-		    (string-to-int height))
+		    (YaTeX-str2int height))
 		 100)))
 	 (- (YaTeX-screen-height) window-min-height 1))
 	window-min-height))))
@@ -1037,7 +1046,7 @@ This function returns correct result only if ENV is NOT nested."
 		  (cons env m0)))	;else, return meaningful values
 	  (store-match-data md)))))))
 
-(defun YaTeX-goto-corresponding-environment (&optional allow-mismatch noerr)
+(defun YaTeX-goto-corresponding-environment (&optional allow-mismatch noerr bg)
   "Go to corresponding begin/end enclosure.
 Optional argument ALLOW-MISMATCH allows mismatch open/clese.  Use this
 for \left(, \right).
@@ -1049,14 +1058,14 @@ Optional third argument NOERR causes no error for unballanced environment."
 	  (m1 (match-beginning 1))	;environment in \begin{}
 	  (m2 (match-beginning 2))	;environment in \end{}
 	  (m3 (match-beginning 3)))	;environment in \[ \] \( \)
-      ;(setq env (regexp-quote (buffer-substring p (match-beginning 0))))
+					;(setq env (regexp-quote (buffer-substring p (match-beginning 0))))
       (if (cond
 	   (m1				;if begin{xxx}
 	    (setq env
 		  (if allow-mismatch YaTeX-struct-name-regexp
 		    (regexp-quote (buffer-substring m1 (match-end 1)))))
-	;    (setq regexp (concat "\\(\\\\end{" env "}\\)\\|"
-	;			 "\\(\\\\begin{" env "}\\)"))
+					;    (setq regexp (concat "\\(\\\\end{" env "}\\)\\|"
+					;			 "\\(\\\\begin{" env "}\\)"))
 	    (setq regexp
 		  (concat
 		   "\\("
@@ -1071,8 +1080,8 @@ Optional third argument NOERR causes no error for unballanced environment."
 	    (setq env
 		  (if allow-mismatch YaTeX-struct-name-regexp
 		    (regexp-quote (buffer-substring m2 (match-end 2)))))
-	;   (setq regexp (concat "\\(\\\\begin{" env "}\\)\\|"
-	;			 "\\(\\\\end{" env "}\\)"))
+					;   (setq regexp (concat "\\(\\\\begin{" env "}\\)\\|"
+					;			 "\\(\\\\end{" env "}\\)"))
 	    (setq regexp
 		  (concat
 		   "\\("
@@ -1110,7 +1119,7 @@ Optional third argument NOERR causes no error for unballanced environment."
 	      (funcall
 	       (if noerr 'message 'error)
 	       "Corresponding environment `%s' not found." env)
-	      (sit-for 1)
+	      (or bg (sit-for 1))
 	      nil))))))
 
 (defun YaTeX-end-environment ()

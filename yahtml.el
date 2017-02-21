@@ -3,7 +3,7 @@
 ;;; Last modified Thu Jan  5 17:45:36 2017 on firestorm
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.79"
+(defconst yahtml-revision-number "1.79.2"
   "Revision number of running yahtml.el")
 
 ;;; Commentary:
@@ -1302,7 +1302,7 @@ Not used yet.")
 			   (cons "align" alg))
 		       (if (string< "" brd)
 			   (cons "border"
-				 (format "%dpx" (string-to-int brd))))))))
+				 (format "%dpx" (YaTeX-str2int brd))))))))
 	      (concat
 	       (yahtml-make-optional-argument "border" brd)
 	       (yahtml-make-optional-argument "align" alg))))))
@@ -1524,7 +1524,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	      (append
 	       (if (string< "" b)
 		   (list
-		    (cons "border" (format "%dpx solid" (string-to-int b)))
+		    (cons "border" (format "%dpx solid" (YaTeX-str2int b)))
 		    (cons "border-collapse" "collapse")))
 	       (if (string< "" a)
 		   (cond
@@ -2995,7 +2995,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 		 (progn
 		   (skip-chars-forward "\"' \t\n")
 		   (looking-at "[0-9]+")))
-	    (setq cols (+ (string-to-int (YaTeX-match-string 0)) cols))
+	    (setq cols (+ (YaTeX-str2int (YaTeX-match-string 0)) cols))
 	  (setq cols (1+ cols)))
 	(goto-char rb)
 	(setq p (point)))
@@ -3095,7 +3095,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 	(let ((f (if (string= "" (YaTeX-match-string 1))
 		     YaTeX-current-file-name
 		   (YaTeX-match-string 1)))
-	      (l (string-to-int (or (YaTeX-match-string 2)
+	      (l (YaTeX-str2int (or (YaTeX-match-string 2)
 				    (YaTeX-match-string 3)))))
 	  (if sit (sit-for 1))
 	  (forward-line -1)
