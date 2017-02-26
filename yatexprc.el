@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  5 17:46:36 2017 on firestorm
+;;; Last modified Sun Feb 26 11:33:27 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1113,7 +1113,7 @@ by region."
 	  t)				;for YaTeX-goto-corresponding-*
       nil)))
 
-	 (defun YaTeX-set-virtual-error-position (file-sym line-sym)
+(defun YaTeX-set-virtual-error-position (file-sym line-sym)
   "Replace the value of FILE-SYM, LINE-SYM by virtual error position."
   (cond
    ((and (get 'dvi2-command 'region)
@@ -1131,9 +1131,14 @@ error or warning lines in reverse order."
   (interactive)
   (let ((cur-buf (save-excursion (YaTeX-visit-main t) (buffer-name)))
 	(cur-win (selected-window))
+	tsb-frame-selwin
 	b0 bound errorp error-line typeset-win error-buffer error-win)
     (if (null (get-buffer YaTeX-typeset-buffer))
 	(error "There is no typesetting buffer."))
+    (and (fboundp 'selected-frame)
+	 (setq typeset-win (get-buffer-window YaTeX-typeset-buffer t))
+	 (setq tsb-frame-selwin (frame-selected-window typeset-win)))
+
     (YaTeX-showup-buffer YaTeX-typeset-buffer nil t)
     (if (and (markerp YaTeX-typeset-marker)
 	     (eq (marker-buffer YaTeX-typeset-marker) (current-buffer)))
@@ -1157,9 +1162,23 @@ error or warning lines in reverse order."
     (if (or (null error-line) (equal 0 error-line))
 	(error "Can't detect error position."))
     (YaTeX-set-virtual-error-position 'error-buffer 'error-line)
+
+    (select-window typeset-win)
+    (skip-chars-backward "0-9")
+    (recenter (/ (window-height) 2))
+    (sit-for 1)
+    (goto-char b0)
+    (and tsb-frame-selwin (select-window tsb-frame-selwin)) ;restore selwin
+
     (setq error-win (get-buffer-window error-buffer))
     (select-window cur-win)
     (cond
+     (t (goto-buffer-window error-buffer)
+	(if (fboundp 'raise-frame)
+	    (let ((edit-frame (window-frame (selected-window))))
+	      (raise-frame edit-frame)
+	      (select-frame edit-frame)))
+	)
      (error-win (select-window error-win))
      ((eq (get-lru-window) typeset-win)
       (YaTeX-switch-to-buffer error-buffer))
@@ -1170,11 +1189,6 @@ error or warning lines in reverse order."
     (message "LaTeX %s in `%s' on line: %d."
 	     (if errorp "error" "warning")
 	     error-buffer error-line)
-    (select-window typeset-win)
-    (skip-chars-backward "0-9")
-    (recenter (/ (window-height) 2))
-    (sit-for 1)
-    (goto-char b0)
     (select-window error-win)))
 
 (defun YaTeX-jump-error-line ()
