@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jan 18 07:44:11 2017 on firestorm
+;;; Last modified Mon Mar  6 17:40:50 2017 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -296,7 +296,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("tilde") ("hat") ("check") ("bar") ("dot") ("ddot") ("vec")
      ("widetilde") ("widehat") ("overline") ("overrightarrow")
      ;; section types in mathmode
-     ("frac" 2) ("sqrt") ("mathrm") ("mathbf") ("mathit")
+     ("frac" 2) ("sqrt") ("mathrm") ("mathbf") ("mathit") ("mathbb")
+     ("mathscr") ("mathrsfs")
      ;;cleveref
      ("cref") ("crefrange") ("cpageref") ("labelcref") ("labelcpageref")
      ;; beamer

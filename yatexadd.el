@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Feb 22 08:17:25 2017 on firestorm
+;;; Last modified Mon Mar  6 08:52:37 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1012,7 +1012,7 @@ YaTeX-sectioning-levelÇÃêîílÇ≈éwíË.")
 		    existlabel
 		    (buffer-substring
 		     (match-beginning 0)
-		     (if (re-search-forward itemsep nil t)
+		     (if (re-search-forward itemsep nil 1)
 			 (progn (goto-char (match-beginning 0))
 				(skip-chars-backward " \t")
 				(1- (point)))

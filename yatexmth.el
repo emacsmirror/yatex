@@ -1,7 +1,7 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2017 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Wed Jan 18 07:40:11 2017 on firestorm
+;;; Last modified Mon Mar  6 17:41:31 2017 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -321,6 +321,7 @@
    ("mi"	"mathit"	"\\mathit{}")
    ("mr"	"mathrm"	"\\mathrm{}")
    ("mb"	"mathbf"	"\\mathbf{}")
+   ("mB"	"mathbb"	"\\mathbb{}")
    ("mt"	"mathtt"	"\\mathtt{}")
    ("ms"	"mathsf"	"\\mathsf{}")
    ("mc"	"mathcal"	"\\mathcal{}")

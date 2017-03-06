@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2017 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Tue Jan 17 17:42:47 2017 on firestorm
+;;; Last modified Mon Mar  6 17:39:08 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -35,6 +35,7 @@
     ("amssymb"	(maketitle "leqq" "geqq" "mathbb" "mathfrak"
 			   "fallingdotseq" "therefore" "because"
 			   "lll" "ggg")) ;very few.  Please tell us!
+    ("mathrsfs"	(section "mathscr"))
     ("graphicx" (section "includegraphics"
 			 "rotatebox" "scalebox" "resizebox" "reflectbox")
      		(option . YaTeX-package-graphics-driver-alist))
