@@ -1,6 +1,6 @@
 ;;; yatexenv.el --- YaTeX environment-specific functions
 ;;; (c) 1994-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  5 17:45:53 2017 on firestorm
+;;; Last modified Thu May  4 10:19:20 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -391,6 +391,11 @@ Count the number of & in the first align line and insert that many &s."
 
 (fset 'YaTeX-enclose-eqnarray 'YaTeX-enclose-equation)
 (fset 'YaTeX-enclose-eqnarray* 'YaTeX-enclose-equation)
+(mapcar (function	;; Add all AMS LaTeX envs
+	 (lambda (sym)
+	   (fset (intern (concat "YaTeX-enclose-" (car sym)))
+		 'YaTeX-enclose-equation)))
+	YaTeX-ams-math-begin-alist)
 
 (defun YaTeX-enclose-verbatim (beg end)) ;do nothing when enclose verbatim
 (fset 'YaTeX-enclose-verbatim* 'YaTeX-enclose-verbatim)
