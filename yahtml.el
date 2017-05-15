@@ -1,9 +1,9 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Thu Jan  5 17:45:36 2017 on firestorm
+;;; Last modified Tue May 16 08:13:52 2017 on firestorm
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.79.2"
+(defconst yahtml-revision-number "1.79.3"
   "Revision number of running yahtml.el")
 
 ;;; Commentary:
@@ -444,7 +444,7 @@ normal and region mode.  To customize yahtml, user should use this function."
     ("style") ("script") ("noscript") ("div") ("object") ("ins") ("del")
     ("option") ("datalist")
     ;;HTML5
-    ("video") ("audio")
+    ("video") ("audio") ("figure")
     ))
 
 (if yahtml-html4-strict
@@ -476,7 +476,10 @@ normal and region mode.  To customize yahtml, user should use this function."
   (append
    '(("dfn") ("em") ("cite") ("code") ("kbd") ("samp") ("caption")
      ("strong") ("var") ("b") ("i") ("tt") ("big") ("small")
-     ("sup") ("sub") ("span") ("abbr") ("label"))
+     ("sup") ("sub") ("span") ("abbr") ("label")
+     ;; HTML5
+     ("figcaption")
+     )
    (if (not yahtml-html4-strict)
        '(("strike") ("s") ("u") ("font")))
    yahtml-env-table)
@@ -1447,7 +1450,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 
 (defun yahtml:ol ()
   "Add-in function for <ol>"
-  (setq yahtml-last-single-cmd "li")
+  (setq yahtml-last-typeface-cmd "li")
   (let ((start (YaTeX-read-string-or-skip "start="))
 	(type (YaTeX-completing-read-or-skip
 	       "type=" '(("1") ("a") ("A") ("i") ("I")) nil t)))
@@ -1455,11 +1458,11 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
      (yahtml-make-optional-argument "start" start)
      (yahtml-make-optional-argument "type" type))))
 (defun yahtml:ul ()
-  (setq yahtml-last-single-cmd "li") "")
+  (setq yahtml-last-typeface-cmd "li") "")
 (defun yahtml:dl ()
-  (setq yahtml-last-single-cmd "dt") "")
+  (setq yahtml-last-typeface-cmd "dt") "")
 (defun yahtml:dt ()
-  (setq yahtml-last-single-cmd "dd") "")
+  (setq yahtml-last-typeface-cmd "dd") "")
 
 (defun yahtml:p ()
   (if yahtml-html4-strict nil
@@ -1569,8 +1572,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 
 (defun yahtml:tr ()
   "Add-in function for `tr'"
-  (setq ;yahtml-last-begend "td"		;; which do you prefer?
-	yahtml-last-typeface-cmd "td")
+  (setq yahtml-last-typeface-cmd "td")
   "")
 
 (defun yahtml:link ()

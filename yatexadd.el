@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Mar  6 08:52:37 2017 on firestorm
+;;; Last modified Tue Mar  7 09:30:50 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -853,37 +853,39 @@ See the documetation of YaTeX::ref-labeling-regexp-alist.")
   "*ref補完で収集するセクショニングコマンドの下限レベル
 YaTeX-sectioning-levelの数値で指定.")
 
-(defun YaTeX::ref-1 ()
+(defun YaTeX::ref-1 (&optional nest-level)
   ;; Sub-function of YaTeX::ref() for recursive call
   ;; DO NOT CALL FROM OTHER FUNCTIONS but YaTeX:ref()
-  (while (YaTeX-re-search-active-forward
-	  regexp ;;counter
-	  percent nil t)
+  (setq nest-level (or nest-level 0))
+  (let ((labelleader (substring "     " 0 nest-level))
+	label)
+    (while (YaTeX-re-search-active-forward
+	    regexp ;;counter
+	    percent nil t)
 					;(goto-char (match-beginning 0))
-    (setq e0 (match-end 0))
-    (cond
-     ;; 
-     ;;2005/10/21 Skip it if predicate function returns nil
-     ((and predf
-	   (let ((md (match-data)))
-	     (prog1
-		 (condition-case nil
-		     (not (funcall predf))
-		   (error nil))
-	       (store-match-data md)))))
-     ((YaTeX-literal-p) nil)
-     ((YaTeX-match-string 1)
-      ;;if standard counter commands found 
-      (setq cmd (YaTeX-match-string 2)
-	    m0 (match-beginning 0))
-      (setq match-point (match-beginning 0))
-      (or initl
-	  (if (< p (point)) (setq initl lnum)))
+      (setq e0 (match-end 0))
       (cond
-       ;; In any case, variables e0 should be set
-       ((and YaTeX-use-AMS-LaTeX
-	     (string-match YaTeX::ref-nestable-counter-regexp cmd))
-	(let (label)
+       ;; 
+       ;;2005/10/21 Skip it if predicate function returns nil
+       ((and predf
+	     (let ((md (match-data)))
+	       (prog1
+		   (condition-case nil
+		       (not (funcall predf))
+		     (error nil))
+		 (store-match-data md)))))
+       ((YaTeX-literal-p) nil)
+       ((YaTeX-match-string 1)
+	;;if standard counter commands found 
+	(setq cmd (YaTeX-match-string 2)
+	      m0 (match-beginning 0))
+	(setq match-point (match-beginning 0))
+	(or initl
+	    (if (< p (point)) (setq initl lnum)))
+	(cond
+	 ;; In any case, variables e0 should be set
+	 ((and YaTeX-use-AMS-LaTeX
+	       (string-match YaTeX::ref-nestable-counter-regexp cmd))
 	  (skip-chars-forward "}")
 	  (setq label (buffer-substring
 		       (point) (min (+ 80 (point)) (point-max))))
@@ -896,217 +898,219 @@ YaTeX-sectioning-levelの数値で指定.")
 	  (if (looking-at "\\\\label{\\([^}]+\\)}")
 	      (setq label (format "(labe:%s)" (YaTeX-match-string 1))
 		    e0 (match-end 1)))
-	  (funcall output (format "--subequation--%s" label) e0 'eqn)))
-       ((string-match mathenvs cmd) ;;if matches mathematical env
-	(skip-chars-forward "}")
-	(setq x (point)
-	      envname (substring
-		       cmd (match-beginning 0) (match-end 0)))
-	(save-restriction
-	  (narrow-to-region
-	   m0
-	   (save-excursion
-	     (YaTeX-re-search-active-forward
-	      (setq endrx (format "%send{%s}" YaTeX-ec-regexp
-				  (regexp-quote envname)))
-	      percent nil t)))
-	  (catch 'scan
-	    (while (YaTeX-re-search-active-forward
-		    (concat
-		     "\\\\end{\\(" (regexp-quote envname) "\\)"	;;(1)
-		     "\\|\\\\\\(notag\\)"			;;2
-		     (if (string-match
-			  YaTeX::ref-mathenv-exp1-regexp  cmd)
-			 "" "\\|\\(\\\\\\\\\\)$") ;;3
-		     )
-		    percent nil t)
-	      (let*((quit (match-beginning 1))
-		    (notag (match-beginning 2))
-		    (newln (match-beginning 3))
-		    (label ".......................") l2
-		    (e (point)) (m0 (match-beginning 0))
-		    (ln (YaTeX-string-width label)))
-		(cond
-		 (notag
-		  (YaTeX-re-search-active-forward
-		   "\\\\\\\\" percent nil 1)
-		  (setq x (point)))	;use x as \label search bound
-		 ((and newln		; `\\' found
-		       (not (equal (YaTeX-inner-environment)
-				   envname)))
-		  (YaTeX-end-of-environment)
-		  (goto-char (match-end 0)))
-		 (t
-		  (if (YaTeX-re-search-active-backward
-		       YaTeX::ref-labeling-regexp
-		       percent x t)
-		      ;; if \label{x} in math-expression, display it
-		      ;; because formula source is hard to recognize
-		      (progn
-			(goto-char (match-end 0))
-			(setq l2 (format "\"label:%s\""
-					 (buffer-substring
-					  (1- (point))
-					  (progn (forward-sexp -1)
-						 (1+ (point))))))
-			(setq label
-			      (if (< (YaTeX-string-width l2) ln)
-				  (concat
-				   l2
-				   (substring
-				    label
-				    0 (- ln (YaTeX-string-width l2))))
-				l2))
-			(goto-char e)))
-		  (funcall output
-			   (concat
-			    label " "
-			    (buffer-substring x m0))
-			   x 'eqn)
+	  (funcall output
+		   (format "--subequation--%s%s" labelleader label)
+		   e0 'eqn))
+	 ((string-match mathenvs cmd) ;;if matches mathematical env
+	  (skip-chars-forward "}")
+	  (setq x (point)
+		envname (substring
+			 cmd (match-beginning 0) (match-end 0)))
+	  (save-restriction
+	    (narrow-to-region
+	     m0
+	     (save-excursion
+	       (YaTeX-re-search-active-forward
+		(setq endrx (format "%send{%s}" YaTeX-ec-regexp
+				    (regexp-quote envname)))
+		percent nil t)))
+	    (catch 'scan
+	      (while (YaTeX-re-search-active-forward
+		      (concat
+		       "\\\\end{\\(" (regexp-quote envname) "\\)" ;;(1)
+		       "\\|\\\\\\(notag\\)"			  ;;2
+		       (if (string-match
+			    YaTeX::ref-mathenv-exp1-regexp  cmd)
+			   "" "\\|\\(\\\\\\\\\\)$") ;;3
+		       )
+		      percent nil t)
+		(let*((quit (match-beginning 1))
+		      (notag (match-beginning 2))
+		      (newln (match-beginning 3))
+		      (label ".......................") l2
+		      (e (point)) (m0 (match-beginning 0))
+		      (ln (YaTeX-string-width label)))
 		  (cond
-		   ((YaTeX-quick-in-environment-p
-		     YaTeX-math-gathering-list)
-		    ;; if here is inner split/cases/gathered env.,
-		    ;; counter for here is only one.
-		    ;; Go out this environment and,
-		    (YaTeX-end-of-environment)
-		    ;; search next expression unit boundary.
+		   (notag
 		    (YaTeX-re-search-active-forward
-		     (concat endrx "\\|\\\\begin{")
-		     percent nil 1)
-		    (end-of-line)))
-		  (if quit (throw 'scan t)))))
-	      (setq x (point)))))
-	(setq e0 (point)))
-       ((string-match enums cmd)
+		     "\\\\\\\\" percent nil 1)
+		    (setq x (point)))	;use x as \label search bound
+		   ((and newln		; `\\' found
+			 (not (equal (YaTeX-inner-environment)
+				     envname)))
+		    (YaTeX-end-of-environment)
+		    (goto-char (match-end 0)))
+		   (t
+		    (if (YaTeX-re-search-active-backward
+			 YaTeX::ref-labeling-regexp
+			 percent x t)
+			;; if \label{x} in math-expression, display it
+			;; because formula source is hard to recognize
+			(progn
+			  (goto-char (match-end 0))
+			  (setq l2 (format "\"label:%s\""
+					   (buffer-substring
+					    (1- (point))
+					    (progn (forward-sexp -1)
+						   (1+ (point))))))
+			  (setq label
+				(if (< (YaTeX-string-width l2) ln)
+				    (concat
+				     l2
+				     (substring
+				      label
+				      0 (- ln (YaTeX-string-width l2))))
+				  l2))
+			  (goto-char e)))
+		    (funcall output
+			     (concat
+			      labelleader label " "
+			      (buffer-substring x m0))
+			     x 'eqn)
+		    (cond
+		     ((YaTeX-quick-in-environment-p
+		       YaTeX-math-gathering-list)
+		      ;; if here is inner split/cases/gathered env.,
+		      ;; counter for here is only one.
+		      ;; Go out this environment and,
+		      (YaTeX-end-of-environment)
+		      ;; search next expression unit boundary.
+		      (YaTeX-re-search-active-forward
+		       (concat endrx "\\|\\\\begin{")
+		       percent nil 1)
+		      (end-of-line)))
+		    (if quit (throw 'scan t)))))
+		(setq x (point)))))
+	  (setq e0 (point)))
+	 ((string-match enums cmd)
 					;(skip-chars-forward "} \t\n")
-	(save-restriction
-	  (narrow-to-region
-	   (point)
-	   (save-excursion
-	     (YaTeX-goto-corresponding-environment nil t 'nonstop) (point)))
-	  (forward-line 1)
-	  (let ((b0 nil) mb0)
-	    (while (not (eobp))
-	      (setq x (and
-		       (YaTeX-re-search-active-forward
-			(concat YaTeX-ec-regexp "item\\s ")
-			percent nil 1)
-		       (match-beginning 0)))
+	  (save-restriction
+	    (narrow-to-region
+	     (point)
+	     (save-excursion
+	       (YaTeX-goto-corresponding-environment nil t 'nonstop) (point)))
+	    (forward-line 1)
+	    (let ((b0 nil) mb0)
+	      (while (not (eobp))
+		(setq x (and
+			 (YaTeX-re-search-active-forward
+			  (concat YaTeX-ec-regexp "item\\s ")
+			  percent nil 1)
+			 (match-beginning 0)))
 
-	      (if b0			;Inspect sentence after previous \item
-		  (save-excursion
-		    (save-restriction
-		      (let ((md (match-data)))		;save-match-data 
-			(unwind-protect
-			    (progn
-			      (narrow-to-region b0 (or x (point)))
-			      (goto-char (point-min))
-			      (let ((x x)) (YaTeX::ref-1))
-			      (goto-char (point-max)))
-			  (store-match-data md))))))
-	      (if x			;Output THIS \item line
-		  (funcall
-		   output
-		   (concat
-		    existlabel
+		(if b0		  ;Inspect sentence after previous \item
+		    (save-excursion
+		      (save-restriction
+			(let ((md (match-data))) ;save-match-data 
+			  (unwind-protect
+			      (progn
+				(narrow-to-region b0 (or x (point)))
+				(goto-char (point-min))
+				(let ((x x)) (YaTeX::ref-1 (1+ nest-level)))
+				(goto-char (point-max)))
+			    (store-match-data md))))))
+		(if x			;Output THIS \item line
+		    (funcall
+		     output
+		     (concat
+		      labelleader existlabel
+		      (buffer-substring
+		       (match-beginning 0)
+		       (if (re-search-forward itemsep nil 1)
+			   (progn (goto-char (match-beginning 0))
+				  (skip-chars-backward " \t")
+				  (1- (point)))
+			 (point-end-of-line))))
+		     x 'item))
+		(setq b0 (point))
+		))
+	    (setq e0 (point-max))))
+	 ((string-match "bibitem" cmd)	;maybe generated by myself
+	  (setq label "")
+	  (skip-chars-forward " \t")
+	  (if (looking-at "{")		;sure to be true!!
+	      (forward-list 1))
+	  (let ((list '(30 10 65))
+		(delim ";") q lim len l str)
+	    (save-excursion
+	      (setq lim (if (re-search-forward itemsep nil 1)
+			    (match-beginning 0) (point))))
+	    (while list
+	      (skip-chars-forward " \t\n\\")
+	      (setq q (looking-at "[\"'{]")
+		    len (car list)
+		    str
 		    (buffer-substring
-		     (match-beginning 0)
-		     (if (re-search-forward itemsep nil 1)
-			 (progn (goto-char (match-beginning 0))
-				(skip-chars-backward " \t")
-				(1- (point)))
-		       (point-end-of-line))))
-		   x 'item))
-	      (setq b0 (point))
-	      ))
-	  (setq e0 (point-max))))
-       ((string-match "bibitem" cmd)	;maybe generated by myself
-	(setq label "")
-	(skip-chars-forward " \t")
-	(if (looking-at "{")		;sure to be true!!
-	    (forward-list 1))
-	(let ((list '(30 10 65))
-	      (delim ";") q lim len l str)
-	  (save-excursion
-	    (setq lim (if (re-search-forward itemsep nil 1)
-			  (match-beginning 0) (point))))
-	  (while list
-	    (skip-chars-forward " \t\n\\")
-	    (setq q (looking-at "[\"'{]")
-		  len (car list)
-		  str
-		  (buffer-substring
-		   (point)
-		   (progn
-		     (if q (forward-sexp 1)
-		       (search-forward delim lim 1)
-		       (forward-char -1))
-		     (point))))
-	    (if (> (setq l (YaTeX-string-width str)) len)
-		(setq str (concat
-			   (YaTeX-truncate-string-width
-			    str (- len (if q 5 4)))
-			   "... "
-			   (if q (substring str -1)))))
-	    (if (< (setq l (YaTeX-string-width str)) len)
-		(setq str (concat str (make-string (- len l) ? ))))
-	    (if (looking-at delim) (goto-char (match-end 0)))
-	    (setq label (concat label " " str)
-		  list (cdr list)))
-	  (funcall output label match-point 'bib)))
-       ;;else, simple section-type counter
-       ((= (char-after (1- (point))) ?{)
-	(setq label (buffer-substring
-		     (match-beginning 0)
-		     (progn (forward-char -1)
-			    (forward-list 1)
-			    (point))))
-	(funcall output label match-point
-		 (if (string-match "caption" cmd) 'cap 'sec))
-	;; Skip preceding label if exists
-	(if (YaTeX::ref-getset-label (current-buffer) match-point t)
-	    (goto-char (get 'YaTeX::ref-getset-label 'foundpoint)))
-	(if (save-excursion
-	      (skip-chars-forward "\t \n")
-	      (looking-at YaTeX::ref-labeling-regexp))
-	    (setq e0 (match-end 0))))
+		     (point)
+		     (progn
+		       (if q (forward-sexp 1)
+			 (search-forward delim lim 1)
+			 (forward-char -1))
+		       (point))))
+	      (if (> (setq l (YaTeX-string-width str)) len)
+		  (setq str (concat
+			     (YaTeX-truncate-string-width
+			      str (- len (if q 5 4)))
+			     "... "
+			     (if q (substring str -1)))))
+	      (if (< (setq l (YaTeX-string-width str)) len)
+		  (setq str (concat str (make-string (- len l) ? ))))
+	      (if (looking-at delim) (goto-char (match-end 0)))
+	      (setq label (concat label " " str)
+		    list (cdr list)))
+	    (funcall output labelleader label match-point 'bib)))
+	 ;;else, simple section-type counter
+	 ((= (char-after (1- (point))) ?{)
+	  (setq label (buffer-substring
+		       (match-beginning 0)
+		       (progn (forward-char -1)
+			      (forward-list 1)
+			      (point))))
+	  (funcall output labelleader label match-point
+		   (if (string-match "caption" cmd) 'cap 'sec))
+	  ;; Skip preceding label if exists
+	  (if (YaTeX::ref-getset-label (current-buffer) match-point t)
+	      (goto-char (get 'YaTeX::ref-getset-label 'foundpoint)))
+	  (if (save-excursion
+		(skip-chars-forward "\t \n")
+		(looking-at YaTeX::ref-labeling-regexp))
+	      (setq e0 (match-end 0))))
+	 (t
+	  (skip-chars-forward " \t")
+	  (setq label (buffer-substring
+		       (match-beginning 0)
+		       (if (re-search-forward
+			    itemsep
+			    nil t)
+			   (progn
+			     (goto-char (match-beginning 0))
+			     (skip-chars-backward " \t")
+			     (1- (point)))
+			 (point-end-of-line))))
+	  (funcall output labelleader label match-point 'misc)
+	  (if (save-excursion
+		(skip-chars-forward "\t \n")
+		(looking-at YaTeX::ref-labeling-regexp))
+	      (setq e0 (match-end 0)))))
+	) ;;put label buffer
+       ;;
+       ;; if user defined label found
        (t
-	(skip-chars-forward " \t")
-	(setq label (buffer-substring
-		     (match-beginning 0)
-		     (if (re-search-forward
-			  itemsep
-			  nil t)
-			 (progn
-			   (goto-char (match-beginning 0))
-			   (skip-chars-backward " \t")
-			   (1- (point)))
-		       (point-end-of-line))))
-	(funcall output label match-point 'misc)
-	(if (save-excursion
-	      (skip-chars-forward "\t \n")
-	      (looking-at YaTeX::ref-labeling-regexp))
-	    (setq e0 (match-end 0)))))
-      ) ;;put label buffer
-     ;;
-     ;; if user defined label found
-     (t
-      ;; memorize line number and label into property
-      (goto-char (match-beginning 0))
-      (let ((list YaTeX::ref-labeling-regexp-alist)
-	    (cache (symbol-plist 'YaTeX::ref-labeling-regexp)))
-	(while list
-	  (if (looking-at (car (car list)))
-	      (progn
-		(setq label (YaTeX-match-string 0))
-		(put 'YaTeX::ref-labeling-regexp lnum
-		     (YaTeX-match-string (cdr (car list))))
-		(funcall output label 0) ;;0 is dummy, never used
-		(setq list nil)))
-	  (setq list (cdr list))))
-      ))
-    (goto-char e0)))
+	;; memorize line number and label into property
+	(goto-char (match-beginning 0))
+	(let ((list YaTeX::ref-labeling-regexp-alist)
+	      (cache (symbol-plist 'YaTeX::ref-labeling-regexp)))
+	  (while list
+	    (if (looking-at (car (car list)))
+		(progn
+		  (setq label (YaTeX-match-string 0))
+		  (put 'YaTeX::ref-labeling-regexp lnum
+		       (YaTeX-match-string (cdr (car list))))
+		  (funcall output labelleader label 0) ;;0 is dummy, never used
+		  (setq list nil)))
+	    (setq list (cdr list))))
+	))
+      (goto-char e0))))
 
 (defun YaTeX::ref (argp &optional labelcmd refcmd predf)
   (setplist 'YaTeX::ref-labeling-regexp nil) ;erase memory cache
