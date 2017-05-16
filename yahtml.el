@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Tue May 16 08:13:52 2017 on firestorm
+;;; Last modified Tue May 16 12:56:27 2017 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.79.3"
@@ -1826,7 +1826,10 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
   ;; source element must have src attribute
   (format "src=\"%s\"" (yahtml-read-file-name-regexp
 			"source: " yahtml-media-file-regexp "" "" nil "")))
-    
+
+(defun yahtml:figure ()
+  (setq yahtml-last-typeface-cmd "figcaption"))
+
 ;;; ---------- Jump ----------
 (defun yahtml-on-href-p ()
   "Check if point is on href clause."
