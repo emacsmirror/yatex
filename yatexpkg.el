@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2017 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Mar  6 17:39:08 2017 on firestorm
+;;; Last modified Tue May 23 11:33:17 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -34,6 +34,8 @@
      		(section "tag" "tag*"))
     ("amssymb"	(maketitle "leqq" "geqq" "mathbb" "mathfrak"
 			   "fallingdotseq" "therefore" "because"
+			   "varDelta" "varTheta" "varLambda" "varXi" "varPi"
+			   "varSigma" "varUpsilon" "varPhi" "varPsi" "varOmega"
 			   "lll" "ggg")) ;very few.  Please tell us!
     ("mathrsfs"	(section "mathscr"))
     ("graphicx" (section "includegraphics"
