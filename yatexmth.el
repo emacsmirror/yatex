@@ -1,7 +1,7 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2017 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Tue May 23 11:32:21 2017 on firestorm
+;;; Last modified Tue May 23 11:41:17 2017 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -348,22 +348,19 @@
 
 (defvar YaTeX-greek-key-alist-default
   (append
-   '(
-     ("a"	"alpha"		("a" "Éø"))
+   '(("a"	"alpha"		("a" "Éø"))
      ("b"	"beta"		("|>\n|>\n|" "É¿"))
      ("g"	"gamma"		("~r" "É¡"))
      ("G"	"Gamma"		("|~" "É°"))
      ("d"	"delta"		("<~\n<>" "É¬"))
      ("D"	"Delta"		("/\\\n~~" "É¢"))
      ("e"	"epsilon"	"<\n<~")
-     ("e-"	"varepsilon"	" <\n<~")
-     ("e-"	"varepsilon"	("(\n(~" "É√"))
+     ("e-"	"varepsilon"	("(\n(~" "_É√"))
      ("z"	"zeta"		("(~\n >" "Éƒ"))
      ("et"	"eta"		("n\n/" "É≈"))
      ("th"	"theta"		("8" "É∆"))
-     ("th-"	"vartheta"	(" o\no" "É∆"))
      ("Th"	"Theta"		("(8)" "É¶"))
-     ("th-"	"vartheta"	("-8" "-É∆"))
+     ("th-"	"vartheta"	("-8" "_É∆"))
      ("i"	"iota"		("i\n\\_/" "É«"))
      ("k"	"kappa"		("k" "É»"))
      ("l"	"lambda"	("\\n/\\" "É…"))
@@ -373,23 +370,19 @@
      ("x"	"xi"		("E\n >" "ÉÃ"))
      ("X"	"Xi"		("---\n -\n---" "É¨"))
      ("p"	"pi"		("__\n)(" "ÉŒ"))
-     ("p-"	"varpi"		(" __\n)(" "ÉŒ"))
      ("P"	"Pi"		("__\n||" "ÉÆ"))
-     ("p-"	"varpi"		("_\nw" "__\nÉ÷"))
+     ("p-"	"varpi"		("__\n/(" "_ÉŒ"))
      ("r"	"rho"		("/O" "Éœ"))
-     ("r-"	"varrho"	("~O" "Éœ"))
      ("r-"	"varrho"	("/O\n~~" "Éœ\n~~"))
      ("s"	"sigma"		("o~" "É–"))
-     ("s-"	"varsigma"	("o~~" "É–"))
      ("S"	"Sigma"		("\\-+\n >\n/-+" "É∞"))
-     ("s-"	"varsigma"	"(~~ \n>")
+     ("s-"	"varsigma"	"/~~ \n /")
      ("t"	"tau"		("__\n(" "É—"))
      ("u"	"upsilon"	("~v" "É“"))
      ("y"	"upsilon"	("~v" "É“"))
      ("U"	"Upsilon"	("~Y~" "É≤"))
      ("Y"	"Upsilon"	("~Y~" "É≤"))
      ("ph"	"phi"		("  /\n(/)\n/" "É”"))
-     ("ph-"	"varphi"	("   /\n(/)\n/" "É”"))
      ("Ph"	"Phi"		(" _\n(|)\n ~" "É≥"))
      ("ph-"	"varphi"	"\\O\n|")
      ("c"	"chi"		("x" "É‘"))
@@ -399,8 +392,7 @@
      ("w"	"omega"		("w" "É÷"))
      ("O"	"Omega"		("(~)\n~ ~" "É∂"))
      ("W"	"Omega"		("(~)\n~ ~" "É∂"))
-     ("f" "foo")
-     )
+     ("f" "foo"))
    (if YaTeX-use-AMS-LaTeX
        '(
 	 ("G-"	"varGamma"	("/~" "_É°"))
