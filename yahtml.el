@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Tue May 16 12:56:27 2017 on firestorm
+;;; Last modified Mon May 29 09:10:43 2017 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.79.3"
@@ -1918,7 +1918,9 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	(cond
 	 ((string-match "^\\(ht\\|f\\)tps?:" href)
 	  (yahtml-browse-html href))
-	 (t (setq file (substring href 0 (string-match "#" href)))
+	 (t (if (string-match "\&" href)
+		(setq href (yahtml-untranslate-string href)))
+	    (setq file (substring href 0 (string-match "#" href)))
 	    (if (string-match "#" href)
 		(setq name (substring href (1+ (string-match "#" href)))))
 	    (if (string< "" file)
