@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Mar  7 09:30:50 2017 on firestorm
+;;; Last modified Wed May 31 20:57:12 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1058,7 +1058,7 @@ YaTeX-sectioning-levelの数値で指定.")
 	      (if (looking-at delim) (goto-char (match-end 0)))
 	      (setq label (concat label " " str)
 		    list (cdr list)))
-	    (funcall output labelleader label match-point 'bib)))
+	    (funcall output (concat labelleader label) match-point 'bib)))
 	 ;;else, simple section-type counter
 	 ((= (char-after (1- (point))) ?{)
 	  (setq label (buffer-substring
@@ -1066,7 +1066,7 @@ YaTeX-sectioning-levelの数値で指定.")
 		       (progn (forward-char -1)
 			      (forward-list 1)
 			      (point))))
-	  (funcall output labelleader label match-point
+	  (funcall output (concat labelleader label) match-point
 		   (if (string-match "caption" cmd) 'cap 'sec))
 	  ;; Skip preceding label if exists
 	  (if (YaTeX::ref-getset-label (current-buffer) match-point t)
@@ -1087,7 +1087,7 @@ YaTeX-sectioning-levelの数値で指定.")
 			     (skip-chars-backward " \t")
 			     (1- (point)))
 			 (point-end-of-line))))
-	  (funcall output labelleader label match-point 'misc)
+	  (funcall output (concat labelleader label) match-point 'misc)
 	  (if (save-excursion
 		(skip-chars-forward "\t \n")
 		(looking-at YaTeX::ref-labeling-regexp))
@@ -1106,7 +1106,7 @@ YaTeX-sectioning-levelの数値で指定.")
 		  (setq label (YaTeX-match-string 0))
 		  (put 'YaTeX::ref-labeling-regexp lnum
 		       (YaTeX-match-string (cdr (car list))))
-		  (funcall output labelleader label 0) ;;0 is dummy, never used
+		  (funcall (concat output labelleader) label 0) ;;0 is dummy
 		  (setq list nil)))
 	    (setq list (cdr list))))
 	))
