@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed May 31 20:57:12 2017 on firestorm
+;;; Last modified Sat Jun  3 23:23:23 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1106,7 +1106,7 @@ YaTeX-sectioning-level‚Ì”’l‚Åw’è.")
 		  (setq label (YaTeX-match-string 0))
 		  (put 'YaTeX::ref-labeling-regexp lnum
 		       (YaTeX-match-string (cdr (car list))))
-		  (funcall (concat output labelleader) label 0) ;;0 is dummy
+		  (funcall output (concat labelleader label) 0) ;;0 is dummy
 		  (setq list nil)))
 	    (setq list (cdr list))))
 	))
