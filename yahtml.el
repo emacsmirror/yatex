@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon May 29 09:10:43 2017 on firestorm
+;;; Last modified Mon Jun 12 08:40:51 2017 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.79.3"
@@ -1480,9 +1480,10 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
     (setq name (read-string-with-history "name: ")
 	  type (YaTeX-completing-read-or-skip "type (default=text): "
 				yahtml-input-types nil t)
-	  value (YaTeX-read-string-or-skip "value: ")
-	  id (YaTeX-read-string-or-skip "id: "))
-    (if (string-match "text\\|password\\|^$" typxe)
+	  value (YaTeX-read-string-or-skip "value: "))
+    (or (string-match "submit\\|reset" type)
+	(setq id (YaTeX-read-string-or-skip "id: ")))
+    (if (string-match "text\\|password\\|^$" type)
 	(setq size (YaTeX-read-string-or-skip "size: ")
 	      maxlength (YaTeX-read-string-or-skip "maxlength: ")))
     (concat
