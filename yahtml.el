@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon Jun 12 08:40:51 2017 on firestorm
+;;; Last modified Wed Jul 19 13:10:28 2017 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.79.3"
@@ -444,7 +444,7 @@ normal and region mode.  To customize yahtml, user should use this function."
     ("style") ("script") ("noscript") ("div") ("object") ("ins") ("del")
     ("option") ("datalist")
     ;;HTML5
-    ("video") ("audio") ("figure")
+    ("video") ("audio") ("figure") ("iframe")
     ))
 
 (if yahtml-html4-strict
@@ -1002,7 +1002,7 @@ If optional argument FILE is specified collect labels in FILE."
 	(min (if (fboundp 'field-beginning) (field-beginning) (point-min))))
     (setq initial (YaTeX-minibuffer-string))
     (cond
-     ((string-match "^http:" initial)
+     ((string-match "^htt" initial)
       (setq cmpl (try-completion initial yahtml-urls)
 	    listfunc (list 'lambda nil
 			   (list 'all-completions initial 'yahtml-urls))
@@ -1138,25 +1138,29 @@ Not used yet.")
       (set-marker e nil))))
 ;; ab%defgls/.|
 
-(defun yahtml:a ()
-  "Add-in function for <a>"
+(defun yahtml-read-url (prompt)
   (let ((href ""))
     (setq yahtml-completing-buffer (current-buffer)
 	  yahtml-urls (append yahtml-urls-private yahtml-urls-local)
 	  href (yahtml-escape-chars-string
 		(read-from-minibuffer-with-history
-		 "href: " "" yahtml-url-completion-map)))
+		 prompt "" yahtml-url-completion-map)))
     (prog1
-	(concat (yahtml-make-optional-argument
-		 "href" href)
-		(yahtml-make-optional-argument
-		 "name" (read-string-with-history "name: ")))
-      (if (and (string-match "^http://" href)
+	href
+      (if (and (string-match "^https?://" href)
 	       (null (assoc href yahtml-urls-private))
 	       (null (assoc href yahtml-urls-local)))
 	  (YaTeX-update-table
 	   (list href)
 	   'yahtml-urls-private 'yahtml-urls-private 'yahtml-urls-local)))))
+
+(defun yahtml:a ()
+  "Add-in function for <a>"
+  (let ((href (yahtml-read-url "href: ")))
+    (concat (yahtml-make-optional-argument
+	     "href" href)
+	    (yahtml-make-optional-argument
+	     "name" (read-string-with-history "name: ")))))
 
 (defvar yahtml-parameters-completion-alist
   '(("align" ("top") ("middle") ("bottom") ("left") ("right") ("center"))
@@ -1830,6 +1834,15 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 
 (defun yahtml:figure ()
   (setq yahtml-last-typeface-cmd "figcaption"))
+
+(defun yahtml:iframe ()
+  (let ((src (yahtml-read-url "src: ")))
+    (concat
+     (yahtml-make-optional-argument "src" src)
+     (yahtml-make-optional-argument
+      "width" (YaTeX-read-string-or-skip "width: "))
+     (yahtml-make-optional-argument
+      "height" (YaTeX-read-string-or-skip "height: ")))))
 
 ;;; ---------- Jump ----------
 (defun yahtml-on-href-p ()
@@ -2838,7 +2851,7 @@ If no matches found in yahtml-path-url-alist, return raw file name."
 	(if (file-directory-p (car (car list)))
 	    (progn
 	      (setq url (cdr (car list)))
-	      (if (string-match "\\(http://[^/]*\\)/" url)
+	      (if (string-match "\\(https?://[^/]*\\)/" url)
 		  (setq docroot (substring url (match-end 1)))
 		(setq docroot url))
 	      (cond
@@ -3055,6 +3068,9 @@ If no matches found in yahtml-path-url-alist, return raw file name."
       (yahtml-insert-single "source")
       )))
 (fset 'yahtml-intelligent-newline-video 'yahtml-intelligent-newline-audio)
+
+(defun yahtml-intelligent-newline-iframe ()
+  (insert "<p>Your browser does not support iframes.</p>"))
 
 ;;; ---------- Marking ----------
 (defun yahtml-mark-begend ()
