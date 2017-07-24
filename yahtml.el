@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Wed Jul 19 13:10:28 2017 on firestorm
+;;; Last modified Mon Jul 24 11:03:07 2017 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.79.3"
@@ -1270,7 +1270,7 @@ Not used yet.")
 (defun yahtml:img ()
   "Add-in function for <img>"
   (let ((src (yahtml-read-parameter "src"))
-	(alg (yahtml-read-parameter "align"))
+	(alg (if yahtml-html4-strict nil (yahtml-read-parameter "align")))
 	alt
 	(brd (read-string-with-history "border="))
 	(l yahtml-prefer-upcase-attributes)
@@ -1678,9 +1678,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
        (yahtml-make-optional-argument
 	"width" (yahtml-read-parameter "width"))
        (yahtml-make-optional-argument
-	"height" (yahtml-read-parameter "height"))
-       (yahtml-make-optional-argument
-	"align" (yahtml-read-parameter "align"))))
+	"height" (yahtml-read-parameter "height"))))
      (t
       ""))))
 
