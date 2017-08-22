@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue May 16 08:08:28 2017 on firestorm
+;;; Last modified Tue Aug 22 18:11:14 2017 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
@@ -596,7 +596,7 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   "*Initial tex-section completion")
 (defvar YaTeX-fontsize-name "large" "*Initial fontsize completion")
 (defvar YaTeX-single-command "maketitle" "*Initial LaTeX single command")
-(defvar YaTeX-kanji-code (if YaTeX-dos 1 2)
+(defvar YaTeX-kanji-code nil
   "*File kanji code used by Japanese TeX.
 nil: Do not care (Preserve coding-system)
 0: no-converion (mule)
