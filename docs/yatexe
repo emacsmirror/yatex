@@ -65,9 +65,9 @@ Main features
    * Semiautomatic replacing of `\includeonly'
    * Jumping to error line(`C-c '')
    * Completing-read of LaTeX commands such as `\begin{}', `\section' etc.
-     (`C-c b', `C-c s', `C-c l', `C-c m')
+             (`C-c b', `C-c s', `C-c l', `C-c m')
    * Enclosing text into LaTeX environments or commands (ABOVEKEYSTROKES
-     after region setting)
+           after region setting)
    * Displaying the structure of text at entering sectioning commands
    * Lump shifting of sectioning commands (*Note view-sectioning::)
    * Learning unknown/new LaTeX commands for the next completion
@@ -76,15 +76,16 @@ Main features
    * Quick changing or deleting of LaTeX commands(`C-c c', `C-c k')
    * Jumping from and to inter-file, begin<->end, ref<->label(`C-c g')
    * Blanket commenting out or uncommenting (`C-c >', `C-c <', `C-c ,',
-     `C-c .')
+             `C-c .')
    * Easy input of accent mark, math-mode's commands and Greek letters
-     (`C-c a', `;', `:')
+             (`C-c a', `;', `:')
    * Online help for the popular LaTeX commands (`C-c ?', `C-c /')
    * Document files hierarchy browser (`C-c d')
    * Adding automatically \usepackage corresponding to inputting LaTeX
-     macro with completion
+           macro with completion
    * Allow you to forget creating \label{}s, \ref{} or \cite{} completion
-     automatically generate labels.
+           automatically generate labels.
+   * \includegraphics by Drag&Drop of image file
 
 
 
@@ -130,7 +131,7 @@ execute typeset or preview command.
              ... invoke typesetter on region
 `[prefix] t e'
              ... `on-the-fly preview' on current environment or whole
-     portion of current formulas in math-mode
+              portion of current formulas in math-mode
 `[prefix] t d'
         ... invoke dvipdfmx after successful typesetting
 `[prefix] t k'
@@ -293,12 +294,12 @@ ask you the name of main file at the first typesetting.
 (see *Note Cursor jump::), take described below into consideration.
 
    * You can put split texts in sub directory, but not in sub directory of
-     sub directory.
+      sub directory.
    * In the main text, specify the child file name with relative path name
-     such as \include{chap1/sub}, when you include the file in a
-     sub-directory.
+      such as \include{chap1/sub}, when you include the file in a
+      sub-directory.
    * In a sub-text, write `%#!latex main.tex' even if `main.tex' is in the
-     parent directory(not %#!latex ../main.tex).
+      parent directory(not %#!latex ../main.tex).
 
 
 
@@ -336,7 +337,7 @@ pair.
 
 
 
-File: yatexe, Node: Lpr format, Prev: Static region for typesetting, Up: %#notation
+File: yatexe, Node: Lpr format, Next: Controlling which command to invoke, Prev: Static region for typesetting, Up: %#notation
 
 Lpr format
 ==========
@@ -439,6 +440,7 @@ kinds of completion type, begin-type, section-type, large-type, etc...
 
 * Begin-type completion::
 * Section-type completion::
+* Label Generation::
 * Large-type completion::
 * Maketitle-type completion::
 * Arbitrary completion::
@@ -533,7 +535,7 @@ environment.
 
 
 
-File: yatexe, Node: Section-type completion, Next: Large-type completion, Prev: Begin-type completion, Up: Completion
+File: yatexe, Node: Section-type completion, Prev: Begin-type completion, Up: Completion
 
 Section-type completion
 =======================
@@ -655,9 +657,44 @@ and `U' shifts down.  Here are all the key bindings of
              ... Hide sectioning commands whose level is lower than n
 
 
+
+File: yatexe, Node: Label Generation, Next: Large-type completion, Prev: Section-type completion, Up: Completion
+
+Label Generation
+================
+
+When you want to type-in references of `\ref' or `\cite', all you have to
+do is type `[prefix] s ref' without adding labels beforehand.  You will
+see possible LaTeX-counters in the next window even if some counter does
+not have `\label'.  Selecting the counter will automatically set the label
+to that counter.
+
+All possible counter list in the buffer tends to be large.  You can reduce
+the number of list by filtering type of counters by key-commands as
+follows.
+      `M-a'
+
+        ... Show all(disable filtering)
+      `M-c'
+
+        ... Captions only
+      `M-e'
+
+        ... equations (with counters) only
+      `M-i'
+
+        ... numbers items only
+      `M-s'
+
+        ... sections only
+      `M-m'
+
+        ... other counters only
+
+
 
 
-File: yatexe, Node: Large-type completion, Next: Maketitle-type completion, Prev: Section-type completion, Up: Completion
+File: yatexe, Node: Large-type completion, Next: Maketitle-type completion, Prev: Label Generation, Up: Completion
 
 Large-type completion
 =====================
@@ -720,7 +757,7 @@ End completion
 ==============
 
   YaTeX automatically detects the opened environment and close it with
-`\end{environment}'.  Though proficient YaTeX users never fail to make
+\`\end{environment}'.  Though proficient YaTeX users never fail to make
 environment with begin-type completion, some may begin an environment
 manually.  In that case, type
 
@@ -1256,7 +1293,7 @@ contents vs. environments.
    * `tabular', `tabular*', `array'
 
              Corresponding number of `&' and `\\'.  And `\hline' if
-     needed.
+             needed.
 
    * `tabbing'
 
@@ -1606,8 +1643,8 @@ variable by `M-x describe-variable'.
 
  -- Variable: YaTeX-fill-inhibit-environments
      Inhibit fill in these environments (`'("tabular" "tabular*" "array"
-     picture" "eqnarray" "eqnarray*" "equation" "math" "displaymath"
-     verbatim" "verbatim*")')
+     "picture" "eqnarray" "eqnarray*" "equation" "math" "displaymath"
+     "verbatim" "verbatim*")')
 
  -- Variable: YaTeX-uncomment-once
      T for deleting all preceding `%' (`nil')
@@ -2082,10 +2119,11 @@ Simple generator
 ----------------
 
   The latter generator is invoked by the next sequence.  `M-x
-YaTeX-generate-simple' This generator can make both "option add-in" and
-argument add-in" (*refer the section add-in functions* *Note How the
-add-in function works::), whereas `YaTeX-generate' cannot make "argument
-addin".
+                       YaTeX-generate-simple' This generator can make both
+                       "option add-in" and "argument add-in" (*refer the
+                       section add-in functions* *Note How the add-in
+                       function works::), whereas `YaTeX-generate' cannot
+                       make "argument addin".
 
   For example, assume you have the LaTeX command as follows.
 
@@ -2267,65 +2305,66 @@ Tag table:
 Node: Top256
 Node: What is YaTeX?1583
 Node: Main features1956
-Node: Installation3500
-Node: Typesetting4277
-Node: Calling typesetter5389
-Node: Calling previewer7916
-Node: Printing out8277
-Node: %#notation8569
-Node: Changing typesetter8940
-Node: Splitting input files9304
-Node: Static region for typesetting10729
-Node: Lpr format11858
-Node: Controlling which command to invoke12888
-Node: Editing %# notation13845
-Node: Completion14389
-Node: Begin-type completion14904
-Node: Section-type completion17758
-Node: view-sectioning20179
-Node: Large-type completion21759
-Node: Maketitle-type completion22412
-Node: Arbitrary completion22964
-Node: End completion23354
-Node: Accent completion23823
-Node: Image completion24440
-Node: Greek letters completion26695
-Node: Inserting parentheses27451
-Node: Local dictionaries27858
-Node: Commenting out28795
-Node: Cursor jump30254
-Node: Jump to corresponding object30545
-Node: Invoking image processor31945
-Node: Jump to main file33288
-Node: Jumping around the environment33654
-Node: Jumping to last completion position34072
-Node: Changing and Deleting34581
-Node: Changing LaTeX commands34962
-Node: Killing LaTeX commands36139
-Node: Filling37324
-Node: Updation of includeonly39179
-Node: What column39976
-Node: Intelligent newline41061
-Node: Usepackage checker42714
-Node: Online help43305
-Node: Browsing file hierarchy44980
-Node: Cooperation with other packages46717
-Node: Customizations47422
-Node: Lisp variables47718
-Node: All customizable variables48677
-Node: Sample definitions60640
-Node: Hook variables61153
-Node: Hook file61857
-Node: Add-in functions62196
-Node: How the add-in function works63034
-Node: Defining option-add-in65220
-Node: Defining argument-add-in65942
-Node: Defining enclosing-add-in66823
-Node: How the function is called67679
-Node: Useful functions for creating add-in68355
-Node: Contribution69765
-Node: Add-in generator70039
-Node: Etcetera75499
-Node: Copying76104
+Node: Installation3591
+Node: Typesetting4368
+Node: Calling typesetter5489
+Node: Calling previewer8016
+Node: Printing out8377
+Node: %#notation8669
+Node: Changing typesetter9040
+Node: Splitting input files9404
+Node: Static region for typesetting10833
+Node: Lpr format11962
+Node: Controlling which command to invoke13035
+Node: Editing %# notation13992
+Node: Completion14536
+Node: Begin-type completion15072
+Node: Section-type completion17926
+Node: view-sectioning20318
+Node: Label Generation21897
+Node: Large-type completion22797
+Node: Maketitle-type completion23443
+Node: Arbitrary completion23995
+Node: End completion24385
+Node: Accent completion24855
+Node: Image completion25472
+Node: Greek letters completion27727
+Node: Inserting parentheses28483
+Node: Local dictionaries28890
+Node: Commenting out29827
+Node: Cursor jump31286
+Node: Jump to corresponding object31577
+Node: Invoking image processor32977
+Node: Jump to main file34320
+Node: Jumping around the environment34686
+Node: Jumping to last completion position35104
+Node: Changing and Deleting35613
+Node: Changing LaTeX commands35994
+Node: Killing LaTeX commands37171
+Node: Filling38356
+Node: Updation of includeonly40211
+Node: What column41008
+Node: Intelligent newline42093
+Node: Usepackage checker43754
+Node: Online help44345
+Node: Browsing file hierarchy46020
+Node: Cooperation with other packages47757
+Node: Customizations48462
+Node: Lisp variables48758
+Node: All customizable variables49717
+Node: Sample definitions61682
+Node: Hook variables62195
+Node: Hook file62899
+Node: Add-in functions63238
+Node: How the add-in function works64076
+Node: Defining option-add-in66262
+Node: Defining argument-add-in66984
+Node: Defining enclosing-add-in67865
+Node: How the function is called68721
+Node: Useful functions for creating add-in69397
+Node: Contribution70807
+Node: Add-in generator71081
+Node: Etcetera76657
+Node: Copying77262
 
 End tag table
