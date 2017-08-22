@@ -52,8 +52,9 @@ Overridden with `%#! CommandLine...' in the buffer.")
 Overridden with `%#BIBTEX CommandLine...' in the buffer.")
 
 (defvar dvi2-command		;previewer command for your site
-  (if YaTeX-dos "dviout -wait=0"
-    "xdvi -geo +0+0 -s 4")
+  (cond (YaTeX-dos	"dviout -wait=0")
+	(YaTeX-macos	"open -a Preview")
+	(t		"xdvi -geo +0+0 -s 4"))
   "*Default previewer command including its option.
 Overridden with `%#PREVIEW CommandLine...' in the buffer.")
 
