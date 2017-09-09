@@ -2287,9 +2287,12 @@ use/copy/modify/redistribute this software freely but with NO warranty to
 anything as a result of using this software.  Adopting code from this
 program is also free.  But I would not do contract act.
 
+  This software can be treated with: "The 2-Clause BSD License" (since
+2017-09-09, yatex 1.80).
+
 Any reports and suggestions are welcome as long as I feel interests in
 this software.  My possible e-mail address is `yuuji@yatex.org'.  (as of
-Jan.2004) And there is mailing list for YaTeX.  Although the common
+Sep.2017) And there is mailing list for YaTeX.  Although the common
 language is Japanese, questions in English will be welcome.  To join the
 ML, send the mail whose subject is `append' to the address
 `yatex@yatex.org.  If you have some question, please ask to
