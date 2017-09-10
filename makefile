@@ -226,7 +226,7 @@ yahtmlpack:
 	     ${TAR} vzcf ${TMPDIR}/yahtml$$version.tar.gz yatex$$version)
 
 tag:
-	echo hg tag ${VERSION}
+	hg tag yatex-${VERSION}
 # ci:
 # 	ci -r${VERSION} -sRel -f ${RCSFILE}
 # 	ci -u${VERSION} makefile 00readme
