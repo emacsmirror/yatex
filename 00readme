@@ -1,5 +1,5 @@
 ・Mercurialリポジトリでも公開しています(1.74以降)。
-  % hg clone http://www.yatex.org/hgrepos/yatex yatex
+  % hg clone https://www.yatex.org/hgrepos/yatex yatex
   でコピーし、その後は yatex/ ディレクトリ内で hg pull -u して下さい。
 
 ・yatex-1.69 よりバイトコンパイルしないのをデフォルトとしました。
@@ -19,5 +19,5 @@
   鳥」、Hidemaruへの移植版である「飛鳥」、xyzzyへの移植版である「花鳥」
   に関する情報交換のためのメイリングリスト「fj野鳥の会」に是非御参加ください。
   詳しくは docs/qanda ファイル、または
-  http://www.yatex.org/
+  https://www.yatex.org/
   を御覧ください。
