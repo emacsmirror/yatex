@@ -1,4 +1,3 @@
-comment.el		コメントアウト関連
 dir			sample `dir' file for Info
 docs/htmlqa		yahtmlに関する一般的な質問と回答
 docs/htmlqa.eng		Q and A on using yahtml
