@@ -2,7 +2,7 @@
 ;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.79.3"
+(defconst yahtml-revision-number "1.80"
   "Revision number of running yahtml.el")
 
 ;;; Commentary:
