@@ -52,6 +52,9 @@
 ・<META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=x-sjis">を
   認識して漢字コードを設定して欲しいなー。
 	
+	HTML5 で書くのであればこの構文を使うのはやめ、文字集合はUTF-8に
+	絞り <meta charset="utf--8"> と記しましょう。
+	
 	文書の中にファイルのエンコード法を書いてもそもそもそのMETAなんちゃ
 	らを読めない可能性があるので charset をMETAで指定するのは本当に
 	期待した通りには機能しません。たとえば、多国語文書を書く必要が出

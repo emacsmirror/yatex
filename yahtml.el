@@ -1,6 +1,6 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Mon Jul 24 11:03:07 2017 on firestorm
+;;; Last modified Sun Sep 10 15:57:47 2017 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.79.3"
@@ -1174,7 +1174,9 @@ Not used yet.")
     ("rel" . yahtml-link-types-alist)
     ("type" . yahtml-content-types-alist)
     ("codetype" . yahtml-content-types-alist)
-    ("http-equiv" ("Refresh"))))
+    ("http-equiv" ("Refresh") ("Content-Language") ("Content-Type"))
+    ("charset"
+     ("utf-8")("euc-jp")("iso-2022-jp")("iso-8859-1")("shift_jis"))))
 
 (defvar yahtml-link-types-alist 
   '(("alternate") ("stylesheet") ("start") ("next") ("prev")
@@ -1620,27 +1622,29 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	(read-from-minibuffer-with-history
 	 "href: " "" yahtml-url-completion-map)))))))
 
-(defvar yahtml:meta-names
-  '(("name" ("keywords")("author")("copyright")("date")("GENERATOR"))))
+(defvar yahtml:meta-attrs
+  '(("charset" value)
+    ("name" content ("keywords")("author")("copyright")("date")("GENERATOR"))
+    ("http-equiv" content)))
 
 (defun yahtml:meta ()
-  (let ((name (yahtml-make-optional-argument
-	       "name"
-	       (yahtml-read-parameter "name" nil yahtml:meta-names)))
-	http-equiv content)
-    (if (string= "" name)
-	(if (string-match
-	     "Content-type"
-	     (setq http-equiv (yahtml-make-optional-argument
-			       "http-equiv"
-			       (yahtml-read-parameter "http-equiv" nil))))
-	    (error "It's very bad idea to set Content-type in META.  %s"
-		     "See docs/qanda")
-	  (concat http-equiv
-		  (yahtml-make-optional-argument
-		   "content" (yahtml-read-parameter "content"))))
+  (let ((attr (completing-read-with-history
+	       "Meta Attribute: " yahtml:meta-attrs))
+	(case-fold-search t)
+	(completion-ignore-case t)
+	todonext name http-equiv content)
+    (cond
+     ((string= "" attr) nil)
+     ((and (setq todonext (cdr-safe (assoc attr yahtml:meta-attrs)))
+	   (eq 'value (car todonext)))
+      (yahtml-make-optional-argument attr (yahtml-read-parameter attr)))
+     ((eq 'content (car todonext))
+      (setq name (if (cdr todonext)
+		     (completing-read-with-history
+		      (format "%s: " attr) (cdr todonext))
+		   (yahtml-read-parameter attr)))
       (concat
-       name
+       (yahtml-make-optional-argument attr name)
        (yahtml-make-optional-argument
 	"content"
 	(cond
@@ -1657,7 +1661,14 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	  (if (string-match "yahtml" content)
 	      (message "Thank you!"))
 	  content)
-	 (t (read-string-with-history (concat name ": ")))))))))
+	 ((string-match "content-type" name)
+	  (if (string-match "http-equiv" attr )
+	      (error "Use <meta charset=\"...\" instead..  See docs/qanda.")
+	    (yahtml-make-optional-argument
+	     "content" (yahtml-read-parameter "content"))))
+	 (t (read-string-with-history (concat name ": ")))))))
+     (t (yahtml-make-optional-argument
+	 attr (yahtml-read-parameter attr))))))
 
 (defun yahtml:br ()
   (yahtml-make-optional-argument "clear" (yahtml-read-parameter "clear")))
