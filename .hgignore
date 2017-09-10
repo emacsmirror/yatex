@@ -5,6 +5,7 @@ CVS
 .cvsignore
 [._]win*
 __emacs
+*.gz
 *.swp
 trashbox
 *.aux
