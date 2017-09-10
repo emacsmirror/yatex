@@ -1,9 +1,9 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 10 20:30:31 2017 on firestorm
+;;; Last modified Sun Sep 10 21:19:43 2017 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
-;;; http://www.yatex.org/
+;;; https://www.yatex.org/
 
 ;;; Code:
 (require 'yatexlib)
