@@ -1,6 +1,6 @@
 ;;; yatex23.el --- YaTeX facilities for Emacs 23 or later -*- coding: sjis -*-
 ;;; (c)2014-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  5 17:45:48 2017 on firestorm
+;;; Last modified Sun Sep 10 09:52:29 2017 on firestorm
 ;;; $Id$
 
 (require 'yatex19)
@@ -105,10 +105,3 @@ Convert local image URI to \\includegraphcis{} and
   "Face of on-the-fly preview image mode")
 
 (provide 'yatex23)
-
-; Local variables:
-; fill-prefix: ";;; "
-; paragraph-start: "^$\\|\\|;;;$"
-; paragraph-separate: "^$\\|\\|;;;$"
-; coding: sjis
-; End:

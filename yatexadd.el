@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Jun  3 23:23:23 2017 on firestorm
+;;; Last modified Sun Sep 10 09:52:35 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -2368,5 +2368,4 @@ This function relies on gs(ghostscript) command installed."
 ; fill-prefix: ";;; "
 ; paragraph-start: "^$\\|\\|;;;$"
 ; paragraph-separate: "^$\\|\\|;;;$"
-; coding: sjis
 ; End:

@@ -1,6 +1,5 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
 ;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
-;;; Last modified Sun Sep 10 15:57:47 2017 on firestorm
 ;;; $Id$
 
 (defconst yahtml-revision-number "1.79.3"
@@ -3365,5 +3364,4 @@ Convert image URI to img-src and others to a-href."
 ; fill-prefix: ";;; "
 ; paragraph-start: "^$\\|\\|;;;$"
 ; paragraph-separate: "^$\\|\\|;;;$"
-; coding: sjis
 ; End:

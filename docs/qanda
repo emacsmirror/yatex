@@ -709,5 +709,4 @@ Local Variables:
 mode: indented-text
 fill-column: 72
 fill-prefix: "	"
-buffer-file-coding-system: shift_jis-dos
 End:

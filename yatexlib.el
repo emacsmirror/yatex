@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
 ;;; (c)1994-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Jan 28 15:59:00 2017 on firestorm
+;;; Last modified Sun Sep 10 09:53:33 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1703,9 +1703,3 @@ compared by regexp."
 	(kill-emacs))))
 
 (provide 'yatexlib)
-; Local variables:
-; fill-prefix: ";;; "
-; paragraph-start: "^$\\|\\|;;;$"
-; paragraph-separate: "^$\\|\\|;;;$"
-; coding: sjis
-; End:
