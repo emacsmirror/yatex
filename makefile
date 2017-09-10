@@ -46,13 +46,11 @@ GEO	= -geometry 80x20+0+0
 # make package		to create package for relase
 # make yahtmlpack	to create package for relase
 # make clean		to delete all producted files
-# make ci		to check in all
-# make co		to check out all
-MVER	= 1.79
+# make tag		to add release tags
 LISP	= ${LISP18} ${LISP19} ${LISP23}
 YAHTML	= yahtml.el
 COMMON	= yatexlib.el yatexprc.el
-LISP18	= comment.el yatex.el yatexadd.el yatexgen.el yatexenv.el \
+LISP18	= yatex.el yatexadd.el yatexgen.el yatexenv.el \
 	  ${COMMON} \
 	  yatexmth.el yatexhks.el yatexhlp.el \
 	  yatexm-o.el yatexsec.el  yatexhie.el yatexpkg.el ${YAHTML}
@@ -117,14 +115,14 @@ install-message:
 	@echo "--------------------------------"
 	@echo "=== INSTALLATION DONE ==="
 	@echo "  You might need to add these expression below to your ~/.emacs"
-	@echo "  ´°Î». ~/.emacs Åù¤Ë°Ê²¼¤òÄÉ²Ã¤¹¤ëÉ¬Í×¤¬¤¢¤ë¤«¤â¤·¤ì¤Þ¤»¤ó."
+	@echo "  å®Œäº†. ~/.emacs ç­‰ã«ä»¥ä¸‹ã‚’è¿½åŠ ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã‹ã‚‚ã—ã‚Œã¾ã›ã‚“."
 	@echo
 	@echo ";;; ------ Startup definitions for YaTeX ------ ;;;"
 	@${MAKE} show-init
 	@echo ";;; ------------------------------------------- ;;;"
 	@echo
 	@echo " To get elisp above again, call ${MAKE} command as below."
-	@echo " ¾åµ­elisp¤òºÆÅÙÆÀ¤ë¤Ë¤Ï°Ê²¼¤Î¤è¤¦¤Ë${MAKE}¤òµ¯Æ°¤·¤Æ¤¯¤À¤µ¤¤."
+	@echo " ä¸Šè¨˜elispã‚’å†åº¦å¾—ã‚‹ã«ã¯ä»¥ä¸‹ã®ã‚ˆã†ã«${MAKE}ã‚’èµ·å‹•ã—ã¦ãã ã•ã„."
 	@echo " % ${MAKE} $${PREFIX:+PREFIX=$$PREFIX }show-init"
 
 install-info:
@@ -182,7 +180,6 @@ lp:
 
 lp1:	lp
 	echo '(load-file "./yatex.el")'			>>lp.el
-	echo '(load-file "./comment.el")'		>>lp.el
 
 lp2:
 	echo '(setq load-path (cons "'`pwd`'" load-path))'		>>lp.el
@@ -226,7 +223,7 @@ yahtmlpack:
 	     ${TAR} vzcf ${TMPDIR}/yahtml$$version.tar.gz yatex$$version)
 
 tag:
-	echo hg tag ${VERSION}
+	hg tag yatex-${VERSION}
 # ci:
 # 	ci -r${VERSION} -sRel -f ${RCSFILE}
 # 	ci -u${VERSION} makefile 00readme
