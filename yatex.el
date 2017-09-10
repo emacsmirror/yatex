@@ -1,14 +1,13 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 10 09:51:57 2017 on firestorm
+;;; Last modified Sun Sep 10 20:30:31 2017 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; http://www.yatex.org/
 
 ;;; Code:
-(require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.79.4"
+(defconst YaTeX-revision-number "1.80"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -2256,34 +2255,40 @@ If you call this function on the 'begin{}' or 'end{}' line,
 it comments out whole environment"
   (interactive "P")
   (if (not (YaTeX-on-begin-end-p))
-      (comment-out-region
+      (YaTeX-comment-region-sub
        (if alt-prefix
 	   (read-string-with-history "Insert prefix: ")
 	 YaTeX-comment-prefix))
-    (YaTeX-comment-uncomment-env 'comment-out-region)))
+    (YaTeX-comment-uncomment-env 'YaTeX-comment-region-sub)))
 
 (defun YaTeX-uncomment-region (alt-prefix)
   "Uncomment out region by '%'."
   (interactive "P")
   (if (not (YaTeX-on-begin-end-p))
-      (uncomment-out-region
+      (YaTeX-uncomment-region-sub
        (if alt-prefix (read-string-with-history "Remove prefix: ")
 	 YaTeX-comment-prefix)
        (region-beginning) (region-end) YaTeX-uncomment-once)
-    (YaTeX-comment-uncomment-env 'uncomment-out-region)))
+    (YaTeX-comment-uncomment-env 'YaTeX-uncomment-region-sub)))
 
 (defun YaTeX-comment-uncomment-env (func)
   "Comment or uncomment out one LaTeX environment switching function by FUNC."
-  (let (beg (p (point)))
+  (let (beg beg2 (p (point)))
     (save-excursion
-      (beginning-of-line)
-      (setq beg (point))
-      (YaTeX-goto-corresponding-environment)
-      (beginning-of-line)
-      (if (> p (point)) (setq beg (1+ beg)) (forward-char 1))
-      (funcall func YaTeX-comment-prefix beg (point) YaTeX-uncomment-once)))
+	(beginning-of-line)
+	(setq beg (point))
+	(save-match-data
+	  (while (and (not (eobp))
+		      (not (eolp))
+		      (looking-at YaTeX-comment-prefix))
+	    (goto-char (match-end 0))))
+	(setq beg2 (point))
+	(YaTeX-goto-corresponding-environment)
+	(beginning-of-line)
+	(if (> p (point)) (setq beg (1+ beg2)) (forward-char 1))
+	(funcall func YaTeX-comment-prefix beg (point) YaTeX-uncomment-once)))
   (message "%sommented out current environment."
-	   (if (eq func 'comment-out-region) "C" "Un-c")))
+	   (if (string-match "uncom" (symbol-name func)) "Un-c" "C")))
 
 (defun YaTeX-comment-paragraph ()
   "Comment out current paragraph."
@@ -2301,7 +2306,7 @@ it comments out whole environment"
      (t
       (mark-paragraph)
       (if (looking-at paragraph-separate) (forward-line 1))
-      (comment-out-region "%")))))
+      (YaTeX-comment-region-sub "%")))))
 
 (defun YaTeX-uncomment-paragraph ()
   "Uncomment current paragraph."
@@ -2323,7 +2328,7 @@ it comments out whole environment"
 		(paragraph-separate paragraph-start))
 	    (mark-paragraph)
 	    (if (not (bobp)) (forward-line 1))
-	    (uncomment-out-region "%" nil nil YaTeX-uncomment-once))
+	    (YaTeX-uncomment-region-sub "%" nil nil YaTeX-uncomment-once))
 	(message "This line is not a comment line.")))))
 
 (defun YaTeX-remove-prefix (prefix &optional once)

@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
 ;;; (c)1994-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 10 09:53:33 2017 on firestorm
+;;; Last modified Sun Sep 10 18:12:33 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1664,6 +1664,34 @@ compared by regexp."
 	   (- (nth 1 after) (nth 1 before))
 	   (- (/ (nth 2 after) mil)
 	      (/ (nth 2 before) mil))))))
+
+;;;
+;; Moved from comment.el
+;;;
+(defun YaTeX-comment-region-sub (string &optional beg end once)
+  "Inserts STRING at the beginning of every line between BEG and END."
+  (if (not (stringp string)) (setq string YaTeX-comment-prefix))
+  (let ((b (or beg (region-beginning))) (e (or end (region-end))))
+    (save-excursion
+      (goto-char (max b e))
+      (if (bolp)
+	  (forward-line -1))
+      (save-restriction 
+	(narrow-to-region (min b e) (point))
+	(goto-char (point-min))
+	(message "%s" string)
+	(while (re-search-forward "^" nil t)
+	  (insert string))))))
+
+(defun YaTeX-uncomment-region-sub (string &optional beg end once)
+  "Deletes STRING from the beginning of every line between BEG and END."
+  (save-excursion
+    (save-restriction 
+      (narrow-to-region (or beg (region-beginning)) (or end (region-end)))
+      (goto-char (point-min))
+      (while (re-search-forward (concat "^" string) nil t)
+	(replace-match "")
+	(if once (end-of-line))))))
 
 ;;;
 ;; Functions for the Installation time
