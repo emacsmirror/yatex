@@ -225,21 +225,15 @@ yahtmlpack:
 	( version=${VERSION}; cd ${TMPDIR}; \
 	     ${TAR} vzcf ${TMPDIR}/yahtml$$version.tar.gz yatex$$version)
 
-ci:
-	ci -r${VERSION} -sRel -f ${RCSFILE}
-	ci -u${VERSION} makefile 00readme
+tag:
+	echo hg tag ${VERSION}
+# ci:
+# 	ci -r${VERSION} -sRel -f ${RCSFILE}
+# 	ci -u${VERSION} makefile 00readme
 
-co:
-	co ${RCSFILE}
+# co:
+# 	co ${RCSFILE}
 
-co-l:
-	co -l ${RCSFILE}
-
-tci:
-	ci -l${VERSION}.0 -Ncurrent ${RCSFILE} makefile
-
-dostci:
-	ci -l${MVER}.0 -Ncurrent @rcsfile
 
 RSYNCDIR	= ${HOME}/http/yatex/rsync/yatex
 #sync:	
