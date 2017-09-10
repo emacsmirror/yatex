@@ -1,6 +1,6 @@
 ;;; yatexenv.el --- YaTeX environment-specific functions
 ;;; (c) 1994-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  5 17:45:53 2017 on firestorm
+;;; Last modified Thu May  4 10:19:20 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -43,7 +43,7 @@ When calling from a program, make sure to be in array/tabular environment."
        ((> n 1)
 	(re-search-backward andptn)	;Sure to find!
 	(while (re-search-backward "\\\\multicolumn{\\([0-9]+\\)}" bor t)
-	  (setq n (+ n (string-to-int
+	  (setq n (+ n (YaTeX-str2int
 			(buffer-substring (match-beginning 1)
 					  (match-end 1)))
 		     -1)))))
@@ -101,7 +101,7 @@ When calling from a program, make sure to be in array/tabular environment."
 	  (forward-list 1))
 	 ((equal elt ?*)		;*{N}{EXP} -> Repeat EXP N times
 	  (skip-chars-forward "^{" end)
-	  (setq cols (* (string-to-int
+	  (setq cols (* (YaTeX-str2int
 			 (buffer-substring
 			  (1+ (point))
 			  (progn (forward-list 1) (1- (point)))))
@@ -136,7 +136,7 @@ Return the list of (No.ofCols PointEndofFormat)"
 	     ((eq type 'alignat)
 	      (max
 	       1
-	       (* 2 (string-to-int
+	       (* 2 (YaTeX-str2int
 		     (buffer-substring
 		      (point)
 		      (progn (up-list -1) (forward-list 1) (1- (point))))))))
@@ -391,6 +391,11 @@ Count the number of & in the first align line and insert that many &s."
 
 (fset 'YaTeX-enclose-eqnarray 'YaTeX-enclose-equation)
 (fset 'YaTeX-enclose-eqnarray* 'YaTeX-enclose-equation)
+(mapcar (function	;; Add all AMS LaTeX envs
+	 (lambda (sym)
+	   (fset (intern (concat "YaTeX-enclose-" (car sym)))
+		 'YaTeX-enclose-equation)))
+	YaTeX-ams-math-begin-alist)
 
 (defun YaTeX-enclose-verbatim (beg end)) ;do nothing when enclose verbatim
 (fset 'YaTeX-enclose-verbatim* 'YaTeX-enclose-verbatim)

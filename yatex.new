@@ -1,6 +1,24 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.80	string-to-int除外と同時に emacs-18 をサポート外に。
+	2-Clause BSDでもOKという風に書いてみた。
+	RCS管理を外した。
+	== yatex ==
+	ラベル補完バッファで M-e, M-i 等でラベル種の絞り込み可能。
+	dviからPS変換コマンドを少し丁寧に探すようにした。
+	mathbb, mathscr, mathrsfs, text, and, onslide, pause
+	YaTeX-math-other-env-alist-private で追加数式環境を足しやすくした。
+	YaTeX-electric-indent-mode で C-m での自動インデントを制御。
+	%#キーワードに追加: DVIPDF, PDFVIEW, IMAGEDPI(ワンタッチ更新も可)。
+	Beamer用の補完アドインを追加(原案谷村さん)。
+	YaTeX-kanji-code のデフォルトをnil(温存)に変更。
+	== yahtml ==
+	figure, iframe 対応。
+	a要素の属性補完を修正。
+	meta要素の属性補完を拡充、<meta charset="..."> に対応。
+	yahtml-kanji-code のデフォルトを4(UTF-8)に変更。
+
 1.79	別フレームに同一バッファがあるときのミニバッファ入力で、
 	ポイント位置がずれるEmacsの問題への対策を入れた。
 	=== yatex ===

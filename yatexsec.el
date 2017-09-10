@@ -1,6 +1,6 @@
 ;;; yatexsec.el --- YaTeX sectioning browser
 ;;; 
-;;; (c) 1994-2013 by HIROSE Yuuji [yuuji@yatex.org]
+;;; (c) 1994-2017 by HIROSE Yuuji [yuuji@yatex.org]
 ;;; Last modified Sun Dec 21 14:16:35 2014 on firestorm
 ;;; $Id$
 
@@ -134,7 +134,7 @@ This must be the heighest number in YaTeX-sectioning-level.")
 	   (and ln (string< "" ln)
 		(progn
 		  (goto-char (point-min))
-		  (forward-line (max 0 (- (string-to-int ln) 2)))
+		  (forward-line (max 0 (- (YaTeX-str2int ln) 2)))
 		  (and
 		   (search-forward ptn nil t)
 		   (goto-char (match-beginning 0)))))
@@ -345,7 +345,7 @@ Refers the YaTeX-read-section-in-minibuffer's local variable minibuffer-start."
       (set-buffer secbuf)
       (goto-char (point-max))
       (while (re-search-backward pattern nil t)
-	(if (< ln (string-to-int (YaTeX-match-string 1))) nil
+	(if (< ln (YaTeX-str2int (YaTeX-match-string 1))) nil
 	  (beginning-of-line)
 	  (search-forward YaTeX-ec)
 	  (looking-at YaTeX-TeX-token-regexp)

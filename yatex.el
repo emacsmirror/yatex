@@ -1,14 +1,13 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  5 23:13:56 2017 on firestorm
+;;; Last modified Sun Sep 10 21:19:43 2017 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
-;;; http://www.yatex.org/
+;;; https://www.yatex.org/
 
 ;;; Code:
-(require 'comment)
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.79.1"
+(defconst YaTeX-revision-number "1.80"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -52,8 +51,9 @@ Overridden with `%#! CommandLine...' in the buffer.")
 Overridden with `%#BIBTEX CommandLine...' in the buffer.")
 
 (defvar dvi2-command		;previewer command for your site
-  (if YaTeX-dos "dviout -wait=0"
-    "xdvi -geo +0+0 -s 4")
+  (cond (YaTeX-dos	"dviout -wait=0")
+	(YaTeX-macos	"open -a Preview")
+	(t		"xdvi -geo +0+0 -s 4"))
   "*Default previewer command including its option.
 Overridden with `%#PREVIEW CommandLine...' in the buffer.")
 
@@ -296,7 +296,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("tilde") ("hat") ("check") ("bar") ("dot") ("ddot") ("vec")
      ("widetilde") ("widehat") ("overline") ("overrightarrow")
      ;; section types in mathmode
-     ("frac" 2) ("sqrt") ("mathrm") ("mathbf") ("mathit")
+     ("frac" 2) ("sqrt") ("mathrm") ("mathbf") ("mathit") ("mathbb")
+     ("mathscr") ("mathrsfs")
      ;;cleveref
      ("cref") ("crefrange") ("cpageref") ("labelcref") ("labelcpageref")
      ;; beamer
@@ -338,11 +339,22 @@ Nil for removing only one commenting character at the beginning-of-line.")
     ("split") ("split*") ("aligned") ("aligned*") ("alignedat") ("gathered")
     ("smallmatrix") ("cases") ("subequations")))
 ;; Prepare list(not alist) for YaTeX::ref in yatexadd.el
+(defvar YaTeX-math-other-env-alist-default
+  '(("numcases") ("subnumcases"))
+  "Default alist of additional environments for equations")
+(defvar YaTeX-math-other-env-alist-private nil
+  "*User defined alist of additional environments for equations")
+(defvar YaTeX-math-other-env-alist
+  (append YaTeX-math-other-env-alist-default
+	  YaTeX-math-other-env-alist-private)
+  "Alist of additional environments for equations")
+(defvar YaTeX-math-other-env-list
+  (mapcar 'car YaTeX-math-other-env-alist))
+
 (defvar YaTeX-math-begin-list
   (mapcar 'car YaTeX-ams-math-begin-alist))
 (defvar YaTeX-math-gathering-list	;used in yatexadd.el#yatex::ref
   (mapcar 'car YaTeX-ams-math-gathering-alist))
-
 
 (defvar YaTeX-ams-env-table
   (append YaTeX-ams-math-begin-alist YaTeX-ams-math-gathering-alist)
@@ -370,7 +382,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("alltt")			;defined in alltt
 	 ("multicols")			;defined in multicol
 	 ("breakbox")))			;defined in eclbkbox
-   (if YaTeX-use-AMS-LaTeX YaTeX-ams-env-table))
+   (if YaTeX-use-AMS-LaTeX YaTeX-ams-env-table)
+   YaTeX-math-other-env-alist)
   "Default completion table for begin-type completion.")
 
 (defvar user-env-table nil)
@@ -582,7 +595,7 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
   "*Initial tex-section completion")
 (defvar YaTeX-fontsize-name "large" "*Initial fontsize completion")
 (defvar YaTeX-single-command "maketitle" "*Initial LaTeX single command")
-(defvar YaTeX-kanji-code (if YaTeX-dos 1 2)
+(defvar YaTeX-kanji-code nil
   "*File kanji code used by Japanese TeX.
 nil: Do not care (Preserve coding-system)
 0: no-converion (mule)
@@ -1298,7 +1311,7 @@ into {\\xxx } braces.
 		 (car (where-is-internal 'YaTeX-make-begin-end))))
 	       (point))
 	      (put 'YaTeX-insert-braces 'begend-guide
-		   (+ 1 (string-to-int ;increment counter of beg-end guidance
+		   (+ 1 (YaTeX-str2int ;increment counter of beg-end guidance
 			 (prin1-to-string
 			  (get 'YaTeX-insert-braces 'begend-guide)))))))))
 	env macro not-literal b e)
@@ -2242,34 +2255,40 @@ If you call this function on the 'begin{}' or 'end{}' line,
 it comments out whole environment"
   (interactive "P")
   (if (not (YaTeX-on-begin-end-p))
-      (comment-out-region
+      (YaTeX-comment-region-sub
        (if alt-prefix
 	   (read-string-with-history "Insert prefix: ")
 	 YaTeX-comment-prefix))
-    (YaTeX-comment-uncomment-env 'comment-out-region)))
+    (YaTeX-comment-uncomment-env 'YaTeX-comment-region-sub)))
 
 (defun YaTeX-uncomment-region (alt-prefix)
   "Uncomment out region by '%'."
   (interactive "P")
   (if (not (YaTeX-on-begin-end-p))
-      (uncomment-out-region
+      (YaTeX-uncomment-region-sub
        (if alt-prefix (read-string-with-history "Remove prefix: ")
 	 YaTeX-comment-prefix)
        (region-beginning) (region-end) YaTeX-uncomment-once)
-    (YaTeX-comment-uncomment-env 'uncomment-out-region)))
+    (YaTeX-comment-uncomment-env 'YaTeX-uncomment-region-sub)))
 
 (defun YaTeX-comment-uncomment-env (func)
   "Comment or uncomment out one LaTeX environment switching function by FUNC."
-  (let (beg (p (point)))
+  (let (beg beg2 (p (point)))
     (save-excursion
-      (beginning-of-line)
-      (setq beg (point))
-      (YaTeX-goto-corresponding-environment)
-      (beginning-of-line)
-      (if (> p (point)) (setq beg (1+ beg)) (forward-char 1))
-      (funcall func YaTeX-comment-prefix beg (point) YaTeX-uncomment-once)))
+	(beginning-of-line)
+	(setq beg (point))
+	(save-match-data
+	  (while (and (not (eobp))
+		      (not (eolp))
+		      (looking-at YaTeX-comment-prefix))
+	    (goto-char (match-end 0))))
+	(setq beg2 (point))
+	(YaTeX-goto-corresponding-environment)
+	(beginning-of-line)
+	(if (> p (point)) (setq beg (1+ beg2)) (forward-char 1))
+	(funcall func YaTeX-comment-prefix beg (point) YaTeX-uncomment-once)))
   (message "%sommented out current environment."
-	   (if (eq func 'comment-out-region) "C" "Un-c")))
+	   (if (string-match "uncom" (symbol-name func)) "Un-c" "C")))
 
 (defun YaTeX-comment-paragraph ()
   "Comment out current paragraph."
@@ -2287,7 +2306,7 @@ it comments out whole environment"
      (t
       (mark-paragraph)
       (if (looking-at paragraph-separate) (forward-line 1))
-      (comment-out-region "%")))))
+      (YaTeX-comment-region-sub "%")))))
 
 (defun YaTeX-uncomment-paragraph ()
   "Uncomment current paragraph."
@@ -2309,7 +2328,7 @@ it comments out whole environment"
 		(paragraph-separate paragraph-start))
 	    (mark-paragraph)
 	    (if (not (bobp)) (forward-line 1))
-	    (uncomment-out-region "%" nil nil YaTeX-uncomment-once))
+	    (YaTeX-uncomment-region-sub "%" nil nil YaTeX-uncomment-once))
 	(message "This line is not a comment line.")))))
 
 (defun YaTeX-remove-prefix (prefix &optional once)
@@ -3264,7 +3283,3 @@ All verbatime-like environment name should match with.")
 
 ;; `History' was moved to ChangeLog
 ;----------------------------- End of yatex.el -----------------------------
-
-; Local variables:
-; coding: sjis
-; End:

@@ -8,7 +8,7 @@
 
 @iftex
 @c @syncodeindex fn cp
-@c Last modified Fri Feb 13 08:15:26 2015 on firestorm
+@c Last modified Sat Sep  9 23:41:37 2017 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -18,7 +18,7 @@
 @subtitle Yet Another tex-mode for emacs
 @title Wild Bird
 @subtitle // YaTeX //
-@author @copyright{} 1991-2012 by    HIROSE, Yuuji [yuuji@@yatex.org]
+@author @copyright{} 1991-2017 by    HIROSE, Yuuji [yuuji@@yatex.org]
 @end titlepage
 
 @node Top, What is YaTeX?, (dir), (dir)
@@ -29,7 +29,7 @@
 @cindex YaTeX
 
 @menu
-* What is YaTeX?::              
+* What is YaTeX?::
 * Main features::               What YaTeX can do
 * Installation::                Guide to install
 * Typesetting::                 Call typesetting processes
@@ -96,6 +96,7 @@ Language Enhancement to GNU Emacs), and latex on DOS.
       macro with completion
 @item Allow you to forget creating \label@{@}s, \ref@{@} or \cite@{@}
       completion automatically generate labels.
+@item \includegraphics by Drag&Drop of image file
 @end itemize
 
 @node Installation, Typesetting, Main features, Top
@@ -171,9 +172,9 @@ strokes execute typeset or preview command.
 @end table
 
 @menu
-* Calling typesetter::          
-* Calling previewer::           
-* Printing out::                
+* Calling typesetter::
+* Calling previewer::
+* Printing out::
 @end menu
 
 @node Calling typesetter, Calling previewer, Typesetting, Typesetting
@@ -261,12 +262,12 @@ universal-argument as follows:
 notations in the source text.
 
 @menu
-* Changing typesetter::         
-* Splitting input files::       
-* Static region for typesetting::  
-* Lpr format::                  
-* Controlling which command to invoke::  
-* Editing %# notation::         
+* Changing typesetter::
+* Splitting input files::
+* Static region for typesetting::
+* Lpr format::
+* Controlling which command to invoke::
+* Editing %# notation::
 @end menu
 
 @node Changing typesetter, Splitting input files, %#notation, %#notation
@@ -376,7 +377,7 @@ environment such as `tabular' many times.  It is also useful to put only
 @code{%#BEGIN} alone at the middle of very long text.  Do not forget to
 erase @code{%#BEGIN} @code{%#END} pair.
 
-@node Lpr format,  , Static region for typesetting, %#notation
+@node Lpr format, Controlling which command to invoke, Static region for typesetting, %#notation
 @comment  node-name,  next,  previous,  up
 @section Lpr format
 @cindex lpr format
@@ -481,6 +482,7 @@ kinds of completion type, begin-type, section-type, large-type, etc...
 @menu
 * Begin-type completion::
 * Section-type completion::
+* Label Generation::
 * Large-type completion::
 * Maketitle-type completion::
 * Arbitrary completion::
@@ -585,7 +587,7 @@ turns @code{transient-mark-mode} on temporarily.  Then, type call
 begin-type completion to enclose text into a environment.
 
 
-@node Section-type completion, Large-type completion, Begin-type completion, Completion
+@node Section-type completion, , Begin-type completion, Completion
 @comment  node-name,  next,  previous,  up
 @section Section-type completion
 @cindex section-type completion
@@ -687,7 +689,7 @@ completion by typing  YaTeX's   completion key sequence in   the
 minibuffer.
 
 @menu
-* view-sectioning::             
+* view-sectioning::
 @end menu
 
 @node view-sectioning,  , Section-type completion, Section-type completion
@@ -736,8 +738,38 @@ and @kbd{U} shifts down.  Here are all the key bindings of
         @dots{} Hide sectioning commands whose level is lower than n
 @end table
 
+@node  Label Generation, Large-type completion, Section-type completion, Completion
+@section Label Generation
+@comment label generation
+@cindex label generation
+@cindex ref label cite
 
-@node Large-type completion, Maketitle-type completion, Section-type completion, Completion
+When you want to type-in references of @code{\ref} or @code{\cite},
+all you have to do is type @kbd{[prefix] s ref} without adding labels
+beforehand.  You will see possible La@TeX{}-counters in the next window
+even if some counter does not have @code{\label}.  Selecting the counter
+will automatically set the label to that counter.
+
+All possible counter list in the buffer tends to be large.
+You can reduce the number of list by filtering type of counters by
+key-commands as follows.
+@table @kbd
+ @item M-a
+	@dots{} Show all(disable filtering)
+ @item M-c
+	@dots{} Captions only
+ @item M-e
+	@dots{} equations (with counters) only
+ @item M-i
+	@dots{} numbers items only
+ @item M-s
+	@dots{} sections only
+ @item M-m
+	@dots{} other counters only
+@end table
+
+
+@node Large-type completion, Maketitle-type completion, Label Generation, Completion
 @comment  node-name,  next,  previous,  up
 @section Large-type completion
 
@@ -1046,11 +1078,11 @@ work in `commenting out from @code{\begin} to @code{\end}' mode.
 
 
 @menu
-* Jump to corresponding object::  
-* Invoking image processor::    
-* Jump to main file::           
-* Jumping around the environment::  
-* Jumping to last completion position::  
+* Jump to corresponding object::
+* Invoking image processor::
+* Jump to main file::
+* Jumping around the environment::
+* Jumping to last completion position::
 @end menu
 
 @node Jump to corresponding object, Invoking image processor, Cursor jump, Cursor jump
@@ -1194,8 +1226,8 @@ already entered.
 @cindex prefix k
 
 @menu
-* Changing LaTeX commands::     
-* Killing LaTeX commands::      
+* Changing LaTeX commands::
+* Killing LaTeX commands::
 @end menu
 
 @node Changing LaTeX commands, Killing LaTeX commands, Changing and Deleting, Changing and Deleting
@@ -1609,9 +1641,9 @@ file @file{yatexm-o.el} as an example.
 add-in functions.
 
 @menu
-* Lisp variables::              
-* Add-in functions::            
-* Add-in generator::            
+* Lisp variables::
+* Add-in functions::
+* Add-in generator::
 @end menu
 
 @node Lisp variables, Add-in functions, Customizations, Customizations
@@ -1634,10 +1666,10 @@ Capital-letter} remain valid, if you want to disable those bindings, set
 that variable to 1 instead of @code{t}).
 
 @menu
-* All customizable variables::  
-* Sample definitions::          
-* Hook variables::              
-* Hook file::                   
+* All customizable variables::
+* Sample definitions::
+* Hook variables::
+* Hook file::
 @end menu
 
 @node All customizable variables, Sample definitions, Lisp variables, Lisp variables
@@ -2077,10 +2109,10 @@ Put the function into @file{yatexhks.el}
 @end enumerate
 
 @menu
-* How the add-in function works::  
-* How the function is called::  
-* Useful functions for creating add-in::  
-* Contribution::                
+* How the add-in function works::
+* How the function is called::
+* Useful functions for creating add-in::
+* Contribution::
 @end menu
 
 @node How the add-in function works, How the function is called, Add-in functions, Add-in functions
@@ -2155,9 +2187,9 @@ Normally, the expression @code{a/c} is translated to
 @code{/} to @code{@}@{}.
 
 @menu
-* Defining option-add-in::      
-* Defining argument-add-in::    
-* Defining enclosing-add-in::   
+* Defining option-add-in::
+* Defining argument-add-in::
+* Defining enclosing-add-in::
 @end menu
 
 @node Defining option-add-in, Defining argument-add-in, How the add-in function works, How the add-in function works
@@ -2508,9 +2540,12 @@ use/copy/modify/redistribute this software freely  but with NO warranty to
 anything  as a result  of using  this software.   Adopting code  from this
 program is  also free.  But  I would not  do contract act.
 
+  This software can be treated with: ``The 2-Clause BSD License''
+(since 2017-09-09, yatex 1.80).
+
 Any reports  and suggestions are  welcome as long  as I feel  interests in
 this software.  My possible  e-mail address is `yuuji@@yatex.org'.  (as of
-Jan.2004)  And there  is  mailing  list for  YaTeX.   Although the  common
+Sep.2017)  And there  is  mailing  list for  YaTeX.   Although the  common
 language is Japanese,  questions in English will be  welcome.  To join the
 ML,   send  the   mail  whose   subject   is  `append'   to  the   address
 `yatex@@yatex.org.    If   you  have   some   question,   please  ask   to

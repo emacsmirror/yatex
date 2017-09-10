@@ -672,7 +672,7 @@
 	に更新を行なって下さい。Mercurialをインストール後、以下のように
 	して開発版に追随します。
 	
-		hg clone http://www.yatex.org:/hgrepos/yatex
+		hg clone https://www.yatex.org:/hgrepos/yatex
 	
 	で、リポジトリ全体を取得します。開発ブランチは dev なので
 	
@@ -709,5 +709,4 @@ Local Variables:
 mode: indented-text
 fill-column: 72
 fill-prefix: "	"
-buffer-file-coding-system: shift_jis-dos
 End:

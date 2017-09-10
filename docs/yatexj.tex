@@ -13,7 +13,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Fri Feb 13 08:17:31 2015 on firestorm
+@c Last modified Sat Sep  9 23:43:04 2017 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -23,7 +23,7 @@
 @subtitle Yet Another tex-mode for emacs
 @title 『野鳥』
 @subtitle // YaTeX //
-@author @copyright{} 1991-2012 by    HIROSE, Yuuji [yuuji@@yatex.org]
+@author @copyright{} 1991-2017 by    HIROSE, Yuuji [yuuji@@yatex.org]
 @end titlepage
 
 @node Top, Intro, (dir), (dir)
@@ -145,6 +145,7 @@ large型コマンド
 @item 補完入力したマクロに応じて必要な \userpackage を入れてくれる先回り
 userpackage
 @item \labelを打つことはもう忘れよう! refやcite補完入力で自動生成します
+@item 画像ファイルのドラッグ&ドロップによる自動 \includegraphics
 @end itemize
 
 @node Installation, Invocation, Main features, Top
@@ -902,6 +903,24 @@ section 型補完呼び出しに引数を付けてください。例えば上の@samp{addtolength}
 ラベル名を考えるのは苦痛に感じるものです。全てのカウンタにラベルを
 つけるのもたいへんです。もうラベル名に何をつけるか、ラベルをつけるかつけま
 いか、などということは忘れましょう!
+
+ラベルを打つべき項目の選択の際には、可能性のあるすべてのカウンタが表示され
+ます。これを「数式のみ」のように種別で絞りたいときは以下のキーコマンドが
+利用できます。
+@table @kbd
+ @item M-a
+	@dots{} 絞り込みを解除してすべてのカウンタを表示
+ @item M-c
+	@dots{} キャプションのみを表示
+ @item M-e
+	@dots{} 番号のつく数式のみを表示
+ @item M-i
+	@dots{} 番号つき箇条書のみを表示
+ @item M-s
+	@dots{} セクションのみを表示
+ @item M-m
+	@dots{} その他のカウンタのみを表示
+@end table
 
 @node large型補完, maketitle型補完, section型補完, Completion
 @comment  node-name,  next,  previous,  up
@@ -2319,7 +2338,7 @@ Emacs 24.4 で導入された改行時の、自動インデントをどうするか。
 せんが契約締結は辞退します。
 
   苦情、希望、バグ報告、感想等は歓迎いたします。
-連絡は yuuji@@yatex.org まで(2004年1月現在)。
+連絡は yuuji@@yatex.org まで(2017年9月現在)。
 継続的に使用してくださる方はメイリングリスト「fj野鳥の会」に
 是非加入してください。加入方法については本パッケージの @file{docs/qanda}
 ファイルの「その他」の章を御覧ください。
