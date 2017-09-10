@@ -51,7 +51,7 @@
 ;;;	(setq yahtml-kanji-code 2)
 ;;;	;HTMLファイルの漢字コードを変更する場合は
 ;;;	;1=SJIS、2=JIS、3=EUC 4=UTF-8
-;;;	;で設定して下さい。デフォルトは 2 です。
+;;;	;で設定して下さい。デフォルトは 4 です。
 ;;; 
 ;;; を適切に書き換えて ~/.emacs に足して下さい。
 ;;; 
@@ -186,7 +186,7 @@
   "*Prefix key stroke of yahtml functions.")
 (defvar yahtml-image-viewer "display" "*Image viewer program")
 (defvar yahtml-www-browser "firefox" "*WWW Browser command")
-(defvar yahtml-kanji-code 2
+(defvar yahtml-kanji-code 4
   "*Kanji coding system number of html file; 1=sjis, 2=jis, 3=euc, 4=UTF-8")
 ;;(defvar yahtml-coding-system
 ;;  (cdr (assq yahtml-kanji-code YaTeX-kanji-code-alist))
