@@ -1,13 +1,22 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 10 21:19:43 2017 on firestorm
+;;; Last modified Mon Sep 11 14:43:29 2017 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
 
+;;;   This  program  is  distributed  as   a  free  software.   You  can
+;;; use/copy/modify/redistribute  this  software   freely  but  with  NO
+;;; warranty to anything  as a result of using  this software.  Adopting
+;;; code from  this program is also  free.  But I would  not do contract
+;;; act.
+;;;
+;;;   This software can be treated with: ``The 2-Clause BSD License''
+;;; (since 2017-09-09, yatex 1.80).
+
 ;;; Code:
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.80"
+(defconst YaTeX-revision-number "1.80.1"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -424,6 +433,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("newpage") ("clearpage") ("cleardoublepage")
      ("footnotemark") ("verb") ("verb*")
      ("linebreak") ("pagebreak") ("noindent") ("indent")
+     ("raggedright") ("raggedleft") ("centering")
      ("left") ("right") ("dots") ("smallskip") ("medskip") ("bigskip")
      ("displaystyle")
      ("onslide") ("pause")		;beamer
