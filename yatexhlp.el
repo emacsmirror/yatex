@@ -1,7 +1,7 @@
 ;;; yatexhlp.el --- YaTeX helper for LaTeX -*- coding: sjis -*-
 ;;; 
 ;;; (c)1994,1998,2004,2014,2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jan 16 10:31:49 2015 on firestorm
+;;; Last modified Sun Sep 17 10:23:19 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
