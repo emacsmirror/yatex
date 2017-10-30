@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 17 10:22:02 2017 on firestorm
+;;; Last modified Mon Oct 30 21:00:21 2017 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1308,7 +1308,7 @@ error or warning lines in reverse order."
 	 (ext (if r (cdr r) "")))
     (and (null r)
 	 (eq (get 'dvi2-command 'format) 'pdf)
-	 (setq ext "pdf"))
+	 (setq ext ".pdf"))
     (concat
      (if (string= fname "")
 	 (setq fname (substring (file-name-nondirectory
