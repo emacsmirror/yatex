@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  2 17:50:40 2018 on firestorm
+;;; Last modified Tue Jan  2 23:31:34 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -753,8 +753,10 @@ PP command will be called iff typeset command exit successfully"
     (setq pparg (substring cmd 0 (string-match "[;&]" cmd)) ;rm multistmt
 	  pparg (substring pparg (rindex pparg ? ))	 ;get last arg
 	  pparg (substring pparg 0 (rindex pparg ?.))	 ;rm ext
-	  bibcmd (or (YaTeX-get-builtin "BIBTEX") bibtex-command))
-    (or (string-match "\\s " bibcmd)		;if bibcmd has no spaces,
+	  bibcmd (YaTeX-replace-format
+		  (or (YaTeX-get-builtin "BIBTEX") bibtex-command)
+		  "k" (YaTeX-kanji-ptex-mnemonic)))
+    (or (string-match "\\s [^-]" bibcmd)	;if bibcmd has no argument,
 	(setq bibcmd (concat bibcmd pparg)))	;append argument(== %#!)
     (and pp
 	 (stringp pp)
@@ -834,8 +836,10 @@ FILE changes the default file name."
 		  (save-excursion (YaTeX-visit-main t) buffer-file-name)))
 	(mainroot (file-name-nondirectory (substring main 0 (rindex main ?.))))
 	(alist YaTeX-call-builtin-on-file)
-	(b-in (or (YaTeX-get-builtin builtin-type)
-		  (cdr (assoc builtin-type alist))))
+	(b-in (YaTeX-replace-format
+	       (or (YaTeX-get-builtin builtin-type)
+		   (cdr (assoc builtin-type alist)))
+	       "k" (YaTeX-kanji-ptex-mnemonic)))
 	(command b-in))
     (if (or update (null b-in))
 	(progn

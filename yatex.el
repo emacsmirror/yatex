@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  2 19:26:15 2018 on firestorm
+;;; Last modified Tue Jan  2 23:11:09 2018 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -60,7 +60,7 @@ Overridden with `%#! CommandLine...' in the buffer.
 %k -> One of Kanji code mnemonic: euc, jis, sjis, utf8
 ")
 
-(defvar bibtex-command (if YaTeX-japan "jbibtex" "bibtex")
+(defvar bibtex-command (if YaTeX-japan "pbibtex -kanji=%k" "bibtex")
   "*Default command of BibTeX.
 Overridden with `%#BIBTEX CommandLine...' in the buffer.")
 
