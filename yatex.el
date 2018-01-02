@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 17 10:22:43 2017 on firestorm
+;;; Last modified Tue Jan  2 19:26:15 2018 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -49,11 +49,16 @@ YaTeX-current-position-register.")
 
 (defvar tex-command
   (cond
-   (YaTeX-use-LaTeX2e "platex")
+   (YaTeX-use-LaTeX2e "platex -kanji=%k")
    (YaTeX-japan "jlatex")
    (t "latex"))
   "*Default command for typesetting LaTeX text.
-Overridden with `%#! CommandLine...' in the buffer.")
+Overridden with `%#! CommandLine...' in the buffer.
+`%'s followed by a character are replaced as follows:
+%f -> Parent(main) document file name
+%r -> %f without extension
+%k -> One of Kanji code mnemonic: euc, jis, sjis, utf8
+")
 
 (defvar bibtex-command (if YaTeX-japan "jbibtex" "bibtex")
   "*Default command of BibTeX.

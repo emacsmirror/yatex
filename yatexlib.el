@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
 ;;; (c)1994-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 17 10:23:31 2017 on firestorm
+;;; Last modified Tue Jan  2 17:50:03 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -120,6 +120,25 @@ This variable is effective when font-lock is used.
 (make-variable-buffer-local 'YaTeX-parent-file)
 
 ;---------- Define default key bindings on YaTeX mode map ----------
+;;;###autoload
+(defun YaTeX-kanji-ptex-mnemonic ()
+  "Return the kanji-mnemonic of pTeX from current buffer's coding-system."
+  (if (boundp 'NEMACS)
+      (or (cdr-safe (assq kanji-fileio-code
+			  '((1 . "sjis") (2 . "jis") (3 . "euc"))))
+	  "")
+    (let ((coding
+	   (cond
+	    ((boundp 'buffer-file-coding-system)
+	     (symbol-name buffer-file-coding-system))
+	    ((boundp 'file-coding-system) (symbol-name file-coding-system))))
+	  (case-fold-search t))
+      (cond ((string-match "utf-8\\>" coding)			"utf-8")
+	    ((string-match "shift.jis\\|cp932\\>" coding)	"sjis")
+	    ((string-match "junet\\|iso.2022" coding)		"jis")
+	    ((string-match "euc.jp\\|ja.*iso.8bit" coding)	"euc")
+	    (t "")))))
+
 ;;;###autoload
 (defun YaTeX-define-key (key binding &optional map)
   "Define key on YaTeX-prefix-map."

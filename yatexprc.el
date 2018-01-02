@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Oct 30 21:00:21 2017 on firestorm
+;;; Last modified Tue Jan  2 17:50:40 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1351,7 +1351,8 @@ will be given to the shell."
 	(t (concat (substring magic 0 (string-match "\\s [^-]\\S *$" magic)) " "))))
       (t (concat tex-command " " (if switch parent))))
      (list (cons "f" tparent)
-	   (cons "r" (substring tparent 0 (rindex tparent ?.)))))))
+	   (cons "r" (substring tparent 0 (rindex tparent ?.)))
+	   (cons "k" (YaTeX-kanji-ptex-mnemonic))))))
 
 (defvar YaTeX-lpr-command-history nil
   "Holds command line history of YaTeX-lpr.")
