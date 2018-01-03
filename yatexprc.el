@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jan  3 23:54:10 2018 on firestorm
+;;; Last modified Thu Jan  4 00:09:28 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -836,10 +836,8 @@ FILE changes the default file name."
 		  (save-excursion (YaTeX-visit-main t) buffer-file-name)))
 	(mainroot (file-name-nondirectory (substring main 0 (rindex main ?.))))
 	(alist YaTeX-call-builtin-on-file)
-	(b-in (YaTeX-replace-format
-	       (or (YaTeX-get-builtin builtin-type)
-		   (cdr (assoc builtin-type alist)))
-	       "k" (YaTeX-kanji-ptex-mnemonic)))
+	(b-in (or (YaTeX-get-builtin builtin-type)
+		  (cdr (assoc builtin-type alist))))
 	(command b-in))
     (if (or update (null b-in))
 	(progn
@@ -861,7 +859,7 @@ FILE changes the default file name."
 			 (key-description (this-command-keys)))
 		(sit-for 2)))))
     (YaTeX-typeset
-     command
+     (YaTeX-replace-format command "k" (YaTeX-kanji-ptex-mnemonic))
      (format " *YaTeX-%s*" (downcase builtin-type))
      builtin-type builtin-type)))
 
