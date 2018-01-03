@@ -1103,7 +1103,7 @@ by region."
 			   ;;Send patch to the author, please
 		  	   previewer bnr cf line))
 		  ((string-match "okular" previewer)	;;??
-		   (format "%s '%s.pdf#src:%d' '%s'"
+		   (format "%s '%s.pdf#src:%d %s'"
 			   ;;Send patch to the author, please
 		  	   previewer bnr line cf))
 		  )))
