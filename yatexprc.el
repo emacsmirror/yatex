@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
-;;; (c)1993-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  2 23:31:34 2018 on firestorm
+;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed Jan  3 23:54:10 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:

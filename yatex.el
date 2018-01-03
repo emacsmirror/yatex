@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
-;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  2 23:11:09 2018 on firestorm
+;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed Jan  3 23:54:28 2018 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -16,7 +16,7 @@
 
 ;;; Code:
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.80.1"
+(defconst YaTeX-revision-number "1.80.2"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -1994,6 +1994,19 @@ fj–ì’¹‚Ì‰ï‚Å•·‚±‚¤!
   "*Alist of files' processor vs. its extension;
 See also the documentation of YaTeX-processed-file-regexp-alist.")
 
+;; Will go to yatexflt.el
+(defun YaTeX-filter-goto-source (file other-win)
+  "Go to corresponding text source of the graphic file"
+  (cond
+   ((file-exists-p file)
+    (let ((buf (find-file-noselect file)))
+      (funcall (cond (other-win 'YaTeX-switch-to-buffer-other-window)
+		     ((get-buffer-window buf) 'goto-buffer-window)
+		     (t 'YaTeX-switch-to-buffer))
+	       buf)
+      
+  ))))
+
 (defvar YaTeX-file-processor-alist-default
   (list (cons YaTeX-cmd-tgif ".obj")
 	(cons YaTeX-cmd-gimp ".xcf")
@@ -2004,6 +2017,9 @@ See also the documentation of YaTeX-processed-file-regexp-alist.")
 	(cons YaTeX-cmd-edit-ai ".ai")
 	'("dia" . ".dia")
 	(cons YaTeX-cmd-ooo ".odg")
+	(cons 'YaTeX-filter-goto-source ".diag")
+	(cons 'YaTeX-filter-goto-source ".dot")
+	;; List of target file itself below...
 	(cons YaTeX-cmd-edit-images ".jpeg")
 	(cons YaTeX-cmd-edit-images ".jpg")
 	(cons YaTeX-cmd-edit-images ".png")
@@ -2258,12 +2274,7 @@ even if on `%#' notation."
 (defun YaTeX-goto-corresponding-*-other-window (arg)
   "Parse current line and call suitable function."
   (interactive "P")
-  (cond
-   ((YaTeX-goto-corresponding-label arg t))
-   ;;((YaTeX-goto-corresponding-environment))
-   ((YaTeX-goto-corresponding-file t))
-   ;;((YaTeX-goto-corresponding-BEGIN-END))
-   (t (message "I don't know where to go."))))
+  (YaTeX-goto-corresponding-* t))
 
 (defun YaTeX-comment-region (alt-prefix)
   "Comment out region by '%'.
