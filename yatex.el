@@ -62,7 +62,8 @@ Overridden with `%#! CommandLine...' in the buffer.
 
 (defvar bibtex-command (if YaTeX-japan "pbibtex -kanji=%k" "bibtex")
   "*Default command of BibTeX.
-Overridden with `%#BIBTEX CommandLine...' in the buffer.")
+Overridden with `%#BIBTEX CommandLine...' in the buffer.
+Pettern `%k' in a string will be replaced with Kanji-code mnemonic of ptex.")
 
 (defvar dvi2-command		;previewer command for your site
   (cond (YaTeX-dos	"dviout -wait=0")
