@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jan  3 23:54:28 2018 on firestorm
+;;; Last modified Wed Jan  3 23:56:34 2018 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -329,6 +329,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("rotatebox" 2) ("resizebox" 3) ("reflectbox")
 	 ("colorbox" 2) ("fcolorbox" 3) ("textcolor" 2) ("color") ("pagecolor")
 	 ("includegraphics") ("includegraphics*")
+	 ("includesvg")
 	 ("bou")			;defined in plext
 	 ("url")			;defined in url
 	 ("shadowbox") ("doublebox") ("ovalbox") ("Ovalbox")

@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
-;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 17 10:23:10 2017 on firestorm
+;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed Jan  3 23:57:48 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1815,6 +1815,7 @@ and print them to standard output."
 	(setq file (substring file 0 (string-match "\\.tex$" file))))))))
 
 (fset 'YaTeX::input 'YaTeX::include)
+(fset 'YaTeX::svg 'YaTeX::include)
 
 
 ;;; -------------------- LaTeX2e stuff --------------------
