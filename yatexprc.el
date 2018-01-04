@@ -448,7 +448,10 @@ for conversion.")
 	 "convert -density %d tmp.pdf %b.%f"
        ;; If we use sips, specify jpeg as format
        "sips -s format jpeg -s dpiWidth %d -s dpiHeight %d %b.pdf --out %b.jpg")
-     "rm -f tmp.pdf")))
+     "rm -f tmp.pdf"))
+   ((YaTeX-executable-find "convert")
+    (list "convert -trim -density %d %b.pdf %b.%f"))
+   )
   "*Pipe line of command as a list to create image file from PDF.
 See also doc-string of YaTeX-typeset-dvi2image-chain.")
 
