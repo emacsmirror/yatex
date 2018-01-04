@@ -891,8 +891,8 @@ PROC should be process identifier."
 
 (defun YaTeX-system (command name &optional noask basedir)
   "Execute some COMMAND with process name `NAME'.  Not a official function.
-Optional second argument NOASK skip query when privious process running.
-Optional third argument BASEDIR changes default-directory there."
+Optional third argument NOASK skip query when privious process running.
+Optional fourth argument BASEDIR changes default-directory there."
   (save-excursion
     (let ((df default-directory)
 	  (buffer (get-buffer-create (format " *%s*" name)))
@@ -901,7 +901,7 @@ Optional third argument BASEDIR changes default-directory there."
       (setq default-directory (cd (or basedir df)))
       (erase-buffer)
       (insert (format "Calling `%s'...\n" command)
-	      "==Kill this buffer to STOP process==")
+	      "==Kill this buffer to STOP process==\n")
       (YaTeX-showup-buffer buffer 'YaTeX-showup-buffer-bottom-most)
       (if (not (fboundp 'start-process))
 	  (call-process
