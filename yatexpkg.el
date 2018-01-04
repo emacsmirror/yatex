@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2018 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Wed Jan  3 23:57:28 2018 on firestorm
+;;; Last modified Fri Jan  5 00:22:46 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -41,7 +41,7 @@
     ("graphicx" (section "includegraphics"
 			 "rotatebox" "scalebox" "resizebox" "reflectbox")
      		(option . YaTeX-package-graphics-driver-alist))
-    ("svg")	(section "includesvg")
+    ("svg"	(section "includesvg"))
     ("color"	(section "textcolor" "colorbox" "pagecolor" "color")
      		(option . YaTeX-package-graphics-driver-alist)
 		(default-option . "usenames,dvipsnames"))
