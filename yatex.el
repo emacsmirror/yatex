@@ -615,7 +615,7 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
 (defvar YaTeX-kanji-code nil
   "*File kanji code used by Japanese TeX.
 nil: Do not care (Preserve coding-system)
-0: no-converion (mule)
+0: no-conversion (mule)
 1: Shift JIS
 2: JIS
 3: EUC
