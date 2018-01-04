@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
-;;; (c)1994-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  2 17:50:03 2018 on firestorm
+;;; (c)1994-2018 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Jan  4 13:58:20 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1223,6 +1223,23 @@ to most recent sectioning command."
 	;;(end-of-line)				;OUT 2015/1/5
 	;;(if (eobp) nil (forward-char 1))	;OUT 2015/1/5
 	))))
+
+(defun YaTeX-in-BEGEND-p ()
+  "Check if the point is in a %#BEGIN...%#END region.
+Return the list of beginning and ending point of the region and arg-string
+if the point is in BEGEND.  Otherwise nil."
+  (let ((b "%#BEGIN") bp args (e "%#END") (p (point)))
+    (save-excursion
+      (save-match-data			;emacs-19+ yatex1.80+
+	(and (re-search-backward b nil t)
+	     (progn
+	       (setq bp (match-beginning 0))
+	       (goto-char (match-end 0))	;Start to get args of %#BEGIN
+	       (skip-chars-forward " \t")
+	       (setq args (YaTeX-buffer-substring (point) (point-end-of-line))))
+	     (re-search-forward e nil t)
+	     (> (point) p)
+	     (list bp (match-end 0) args))))))
 
 (defun YaTeX-kill-buffer (buffer)
   "Make effort to show parent buffer after kill."
