@@ -21,7 +21,7 @@ File: yatexj, Node: Top, Next: Intro, Prev: (dir), Up: (dir)
 * Main features::               主な機能
 * Installation::                インストール
 * Invocation::                  プロセス起動
-* %#notation ::                 %#記法
+* %#notation ::
 * Completion::                  補完入力
 * Local dictionary::            ローカル辞書
 * Commenting out::              コメントアウト
@@ -326,9 +326,10 @@ File: yatexj, Node: %#notation, Next: Completion, Prev: Invocation, Up: Top
 * Changing typesetter::         タイプセット用コマンドの変更
 * Splitting input files::       入力ファイル分割
 * Fix region for typesetting::  領域の固定
+* Special Filtering Region::
 * lpr format::                  プリントアウトコマンド用フォーマット
 * Controlling which command to invoke::  その他の起動コマンド制御
-* Editing %# notation::         %#記法の編集
+* Editing %# notation::
 
 
 
@@ -422,6 +423,33 @@ File: yatexj, Node: Fix region for typesetting, Next: lpr format, Prev: Splittin
 果をテストすることができます。また、長い .tex ファイルの後半に
 `%#BEGIN' を書いておけば、前半の部分は無視できます。このBEGINとENDの消
 し忘れには十分ご注意下さい。
+
+
+
+File: yatexj, Node: Special Filtering Region, Next: lpr format, Prev: Fix region for typesetting, Up: %#notation
+
+自動外部フィルタ
+================
+
+たとえば、テキストファイルから画像を生成するようなツールに与えるソース
+をLaTeXソース中に埋め込み、その部分だけをツールの標準入力に渡すことが
+できます。そのためには以下のようなソースを文書中に書きます。
+
+     %#BEGIN FILTER{foo.pdf}{blockdiag -T %t -o %o}
+     \if0
+     ---
+     ....blah blah blah...
+     ....blah blah blah...
+     ....blah blah blah...
+     ---
+     \fi
+     %#END
+
+この領域内で `[prefix] t e' をタイプすると、この例であればblahのある3
+行が外部コマンド `"blockdiag -T pdf -o foo.pdf"' の標準入力に渡され、
+結果として foo.pdf が生成されます。この特別なブロックは`[prefix] tb'
+の環境補完で、`.blockdiag' のようなピリオドで始まる特殊環境名を入力す
+ることで自動的に挿入されます。
 
 
 
@@ -2255,66 +2283,67 @@ File: yatexj, Node: Concept Index, Prev: Copying, Up: Top
 
 Tag table:
 Node: Top257
-Node: Intro1311
-Node: Terminology1614
-Node: Main features2254
-Node: Installation3376
-Node: Invocation4636
-Node: Calling typesetter5512
-Node: Calling previewer6973
-Node: Print out7289
-Node: %#notation7555
-Node: Changing typesetter7983
-Node: Splitting input files8241
-Node: Fix region for typesetting9197
-Node: lpr format10105
-Node: Controlling which command to invoke10915
-Node: Editing %# notation11629
-Node: Completion12087
-Node: begin型補完12498
-Node: section型補完15247
-Node: 2個以上の引数をとる section型コマンド16340
-Node: Enclose section-type command17156
-Node: Recursive completion17480
-Node: view-sectioning17785
-Node: label-generation18981
-Node: large型補完19655
-Node: maketitle型補完20189
-Node: Arbitrary completion20488
-Node: end補完20801
-Node: Accent mark completion21142
-Node: Image completion21567
-Node: Greek letter completion23382
-Node: Inserting parens23866
-Node: Local dictionary24214
-Node: Commenting out24818
-Node: Cursor jump25978
-Node: 対応オブジェクトへのジャンプ26195
-Node: お絵描きツール起動27181
-Node: メインファイルへのジャンプ28099
-Node: 環境を単位としたジャンプ28435
-Node: 最後の補完位置へのジャンプ28792
-Node: Modifying/Deleting29029
-Node: Changing LaTeX command29435
-Node: Killing LaTeX command29985
-Node: Filling30857
-Node: Includeonly32187
-Node: What column32748
-Node: Intelligent newline33528
-Node: Usepackage cheker34560
-Node: Changing mode of YaTeX34987
-Node: Online help35563
-Node: Inclusion hierarchy browser36540
-Node: Cooperation with other packages37818
-Node: Customizations38273
-Node: Lisp variables38570
-Node: All customizable variables39177
-Node: Sample definitions48157
-Node: Hook variables48591
-Node: Hook file49486
-Node: Add-in functions49692
-Node: Etc49919
-Node: Copying50204
-Node: Concept Index50828
+Node: Intro1290
+Node: Terminology1593
+Node: Main features2233
+Node: Installation3355
+Node: Invocation4615
+Node: Calling typesetter5491
+Node: Calling previewer6952
+Node: Print out7268
+Node: %#notation7534
+Node: Changing typesetter7975
+Node: Splitting input files8233
+Node: Fix region for typesetting9189
+Node: Special Filtering Region10096
+Node: lpr format10732
+Node: Controlling which command to invoke11542
+Node: Editing %# notation12256
+Node: Completion12714
+Node: begin型補完13125
+Node: section型補完15874
+Node: 2個以上の引数をとる section型コマンド16967
+Node: Enclose section-type command17783
+Node: Recursive completion18107
+Node: view-sectioning18412
+Node: label-generation19608
+Node: large型補完20282
+Node: maketitle型補完20816
+Node: Arbitrary completion21115
+Node: end補完21428
+Node: Accent mark completion21769
+Node: Image completion22194
+Node: Greek letter completion24009
+Node: Inserting parens24493
+Node: Local dictionary24841
+Node: Commenting out25445
+Node: Cursor jump26605
+Node: 対応オブジェクトへのジャンプ26822
+Node: お絵描きツール起動27808
+Node: メインファイルへのジャンプ28726
+Node: 環境を単位としたジャンプ29062
+Node: 最後の補完位置へのジャンプ29419
+Node: Modifying/Deleting29656
+Node: Changing LaTeX command30062
+Node: Killing LaTeX command30612
+Node: Filling31484
+Node: Includeonly32814
+Node: What column33375
+Node: Intelligent newline34155
+Node: Usepackage cheker35187
+Node: Changing mode of YaTeX35614
+Node: Online help36190
+Node: Inclusion hierarchy browser37167
+Node: Cooperation with other packages38445
+Node: Customizations38900
+Node: Lisp variables39197
+Node: All customizable variables39804
+Node: Sample definitions48784
+Node: Hook variables49218
+Node: Hook file50113
+Node: Add-in functions50319
+Node: Etc50546
+Node: Copying50831
+Node: Concept Index51455
 
 End tag table

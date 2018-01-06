@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  4 00:09:28 2018 on firestorm
+;;; Last modified Fri Jan  5 22:48:43 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -353,7 +353,7 @@ called with one argument of current file name whitout extension."
 	 reg-begin reg-end lineinfo)
       (setq ppcmd (if (stringp pp) (concat pp " " texputroot) pp))
       (save-excursion
-	(if (search-backward "%#BEGIN" nil t)
+	(if (re-search-backward "%#BEGIN\\s *$" nil t)
 	    (progn
 	      (setq typeout "--- Region from BEGIN to "
 		    end "the end of the buffer ---"
@@ -478,6 +478,36 @@ See also doc-string of YaTeX-typeset-dvi2image-chain.")
 The value is generated from YaTeX-typeset-pdf2image-chain and
 YaTeX-typeset-dvi2image-chain.")
 
+(defun YaTeX-popup-image (imagesrc buffer &optional func)
+  (let ((sw (selected-window)) image
+	(data-p (and (> (length imagesrc) 128)
+		     (not (file-readable-p imagesrc)))))
+    (save-excursion
+      (cond
+       ((featurep 'image) window-system
+	(YaTeX-showup-buffer		;showup and select
+	 (get-buffer-create buffer)
+	 (or func 'YaTeX-showup-buffer-bottom-most)
+	 t)
+	(remove-images (point-min) (point-max))
+	(erase-buffer)
+	(insert-image
+	 (setq image (create-image
+		      (if data-p imagesrc (expand-file-name imagesrc))
+		      nil data-p)))
+	(YaTeX-preview-image-mode)
+	(let ((height (1+ (cdr (image-size image)))))
+	  (enlarge-window
+	   (- (ceiling (min height (/ (frame-height) 2)))
+	      (window-height))))
+	(select-window sw))
+       (t	;; Without direct image, display image with image viewer
+	(YaTeX-system
+	 (format "%s %s" YaTeX-cmd-view-images target)
+	 "YaTeX-region-image"
+	 'noask)))
+  )))
+
 (defvar YaTeX-typeset-conv2image-process nil "Process of conv2image chain")
 (defun YaTeX-typeset-conv2image-chain ()
   (let*((proc (or YaTeX-typeset-process YaTeX-typeset-conv2image-process))
@@ -531,39 +561,11 @@ YaTeX-typeset-dvi2image-chain.")
 			     'YaTeX-typeset-conv2image-chain)
 		       (get 'YaTeX-typeset-process 'ppcmd))))
 	;; After all chain executed, display image in current window
-	(cond
-	 ((and (featurep 'image) window-system)
-	  ;; If direct image displaying available in running Emacs,
-	  ;; display target image into the next window in Emacs.
-	  (select-window w)
-	  ;(setq foo (selected-window))
-	  (YaTeX-showup-buffer
-	   (get-buffer-create " *YaTeX-region-image*")
-	   'YaTeX-showup-buffer-bottom-most t)
-	  (remove-images (point-min) (point-max))
-	  (erase-buffer)
-	  (cd pwd)			;when reuse from other source
-					;(put-image (create-image (expand-file-name target)) (point))
-	  (insert-image-file target)
-	  (setq img (plist-get (text-properties-at (point)) 'intangible))
-	  (YaTeX-preview-image-mode)
-	  (if img
-	      (let ((height (1+ (cdr (image-size img)))))
-		(enlarge-window
-		 (- (ceiling (min height (/ (frame-height) 2)))
-		    (window-height)))))
-	  ;; Remember elapsed time, which will be threshold in onthefly-preview
-	  (put 'YaTeX-typeset-conv2image-chain 'elapse
-	       (YaTeX-elapsed-time
-		(get 'YaTeX-typeset-conv2image-chain 'start) (current-time))))
-	 (t
-	  ;; Without direct image, display image with image viewer
-	  (YaTeX-system
-	   (format "%s %s" YaTeX-cmd-view-images target)
-	   "YaTeX-region-image"
-	   'noask)
-	  )
-	 )))))
+	(YaTeX-popup-image target " *YaTeX-popup-image*")
+	(put 'YaTeX-typeset-conv2image-chain 'elapse
+	     (YaTeX-elapsed-time
+	      (get 'YaTeX-typeset-conv2image-chain 'start) (current-time)))
+	))))
 
 
 (defvar YaTeX-typeset-environment-timer nil)
@@ -657,6 +659,14 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
 	  (if usetimer (YaTeX-typeset-environment-auto b e)))
       (YaTeX-typeset-region))))
 
+(defun YaTeX-filter-BEGEND ()
+  (let ((begend-info (YaTeX-in-BEGEND-p)))
+    (if begend-info
+	(progn
+	  (require 'yatexflt)
+	  (YaTeX-filter-pass-to-filter begend-info)
+	  ))))
+
 (defun YaTeX-typeset-environment ()
   "Typeset current environment or paragraph.
 If region activated, use it."
@@ -664,7 +674,8 @@ If region activated, use it."
   (let ((md (match-data)))
     (unwind-protect
 	(save-excursion
-	  (YaTeX-typeset-environment-1))
+	  (or (YaTeX-filter-BEGEND)
+	      (YaTeX-typeset-environment-1)))
       (store-match-data md))))
 
 

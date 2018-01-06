@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jan  3 23:56:34 2018 on firestorm
+;;; Last modified Sat Jan  6 22:52:02 2018 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -376,6 +376,61 @@ Nil for removing only one commenting character at the beginning-of-line.")
   (append YaTeX-ams-math-begin-alist YaTeX-ams-math-gathering-alist)
   "*Standard AMS-LaTeX(2e) environment completion table.")
 
+(defvar YaTeX-use-dot-env-extension t
+  "*Use YaTeX's dot-env filter special environment.")
+(defvar YaTeX-filter-special-env-alist-default
+  '((".blockdiag"
+     "blockdiag -T %t -o %o -"
+     "blockdiag {
+  default_fontsize = 32;
+  A -> B;
+}")
+    (".seqdiag" "seqdiag -T %t -o %o -"
+     "seqdiag {
+  client -> server [label = \"SYN\"];
+  client <- server [label = \"SYN/ACK\"];
+  client -> server [label = \"ACK\"];}")
+    (".actdiag" "actdiag -T %t -o %o -"
+     "actdiag {
+  sayHo -> ho -> hohoho
+  lane dj {
+    label = \"DJ\"
+    sayHo [label = \"Say Ho\"]; hohoho [label = \"Ho Ho Ho!\"]; }
+  lane mc { label = \"MC\"; ho [label = \"Hooooh!\"]}}")
+    (".nwdiag" "nwdiag -T %t -o %o -"
+     "nwdiag {
+  network ext {
+    address = \"10.1.2.0/24\"
+    router [address = \"10.1.2.1\"]
+  }
+  network int {
+    address = \"192.168.22.0/24\"
+    router [address = \"192.168.22.1\"]
+    websrv [address = \"192.168.22.80\"]
+    cli-1; cli-2
+  }
+}")
+    (".rackdiag" "rackdiag -T %t -o %o -"
+     "rackdiag {
+  16U;
+  1: UPS [4U]; 5: Storage [3U]; 8: PC [2U]; 8: PC [2U];
+}")
+    (".dot"
+     "dot -T %t -o %o"
+     "digraph {
+  graph [charset=\"utf-8\"]
+}
+bigraph {
+  graph [charset=\"utf-8\"]}"
+     )))
+
+(defvar YaTeX-filter-special-env-alist-private nil)
+(defvar YaTeX-filter-special-env-alist
+  (append YaTeX-filter-special-env-alist-private
+	  YaTeX-filter-special-env-alist-default))
+
+
+
 ; Set tex-environment possible completion
 (defvar env-table
   (append
@@ -399,7 +454,11 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("multicols")			;defined in multicol
 	 ("breakbox")))			;defined in eclbkbox
    (if YaTeX-use-AMS-LaTeX YaTeX-ams-env-table)
-   YaTeX-math-other-env-alist)
+   YaTeX-math-other-env-alist
+   (if YaTeX-use-dot-env-extension
+       '((".blockdiag") (".nwdiag") (".seqdiag") (".rackdiag") (".packetdiag")
+	 (".dot"))
+     ))
   "Default completion table for begin-type completion.")
 
 (defvar user-env-table nil)
@@ -920,7 +979,10 @@ This works also for other defined begin/end tokens to define the structure."
 by completing read.
  If you invoke this command with universal argument,
 \(key binding for universal-argument is \\[universal-argument]\)
-you can put REGION into that environment between \\begin and \\end."
+you can put REGION into that environment between \\begin and \\end.
+If the environment name begins with `.'(dot),
+that environment will be treated as `special environment', which
+enables special feature such as text conversion."
   (interactive "P")
   (let*
       ((region-p (or arg (YaTeX-region-active-p)))
@@ -928,13 +990,17 @@ you can put REGION into that environment between \\begin and \\end."
        (env
 	(save-excursion		;for Emacs24 work-around to avoid point warp 
 	  (YaTeX-read-environment
-	   (format "Begin environment%s(default %s): " mode YaTeX-env-name)))))
+	   (format "Begin environment%s(default %s): " mode YaTeX-env-name))))
+       special)
     (if (string= env "")
 	(setq env YaTeX-env-name))
-    (setq YaTeX-env-name env)
+    (setq special (assoc env YaTeX-filter-special-env-alist)
+	  YaTeX-env-name env)
     (YaTeX-update-table
      (list YaTeX-env-name) 'env-table 'user-env-table 'tmp-env-table)
-    (YaTeX-insert-begin-end YaTeX-env-name region-p)))
+    (if special
+	(YaTeX-insert-filter-special YaTeX-env-name (cdr special) region-p)
+      (YaTeX-insert-begin-end YaTeX-env-name region-p))))
 
 (defun YaTeX-make-begin-end-region ()
   "Call YaTeX-make-begin-end with ARG to specify region mode."
@@ -1261,6 +1327,17 @@ into {\\xxx } braces.
     ((YaTeX-literal-p) ?\")
     ((= (preceding-char) ?\\ ) ?\")
     ;((= (preceding-char) ?\( ) ?\")
+    ((save-excursion (beginning-of-line)
+		     (skip-chars-forward "\t ")
+		     (looking-at "%#"))
+     ?\")
+    ((let ((ovl (overlays-at (point))))
+       (and ovl
+	    (catch 'found
+	      (while ovl
+		(if (overlay-get (car ovl) 'filter-input) (throw 'found t))
+		(setq ovl (cdr ovl))))))
+     ?\")
     ((or (= (preceding-char) 32)
 	 (= (preceding-char) 9)
 	 (= (preceding-char) ?\n)

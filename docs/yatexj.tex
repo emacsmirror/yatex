@@ -13,7 +13,7 @@
 @c ノードいじったら C-l C-u C-n 全部のノード更新 C-l C-u C-e
 @c メニュー増やしたら C-l C-u C-m 全部のメニュー更新 C-l C-u C-a
 @c フォーマットするときは C-l C-e C-b
-@c Last modified Sat Sep  9 23:43:04 2017 on firestorm
+@c Last modified Sat Jan  6 23:49:50 2018 on firestorm
 @syncodeindex vr cp
 @end iftex
 
@@ -35,7 +35,7 @@
 * Main features::               主な機能
 * Installation::                インストール
 * Invocation::                  プロセス起動
-* %#notation ::                 %#記法
+* %#notation ::
 * Completion::                  補完入力
 * Local dictionary::            ローカル辞書
 * Commenting out::              コメントアウト
@@ -357,9 +357,10 @@ universal-argument をつけ、
 * Changing typesetter::         タイプセット用コマンドの変更
 * Splitting input files::       入力ファイル分割
 * Fix region for typesetting::  領域の固定
+* Special Filtering Region::
 * lpr format::                  プリントアウトコマンド用フォーマット
 * Controlling which command to invoke::  その他の起動コマンド制御
-* Editing %# notation::         %#記法の編集
+* Editing %# notation::
 @end menu
 
 @node Changing typesetter, Splitting input files, %#notation , %#notation
@@ -478,6 +479,31 @@ shell に渡すので次のように書けば、ghostview などをプレヴューアに使う時に便
 に @code{%#BEGIN} を書いておけば、前半の部分は無視できます。このBEGINとEND
 の消し忘れには十分ご注意下さい。
 @cindex 長いファイルの編集[なかいふあいるのへんしゆう]
+
+@node Special Filtering Region, lpr format, Fix region for typesetting, %#notation
+@section 自動外部フィルタ
+
+たとえば、テキストファイルから画像を生成するようなツールに与えるソースを
+La@TeX{}ソース中に埋め込み、その部分だけをツールの標準入力に渡すことができ
+ます。そのためには以下のようなソースを文書中に書きます。
+
+@example
+%#BEGIN FILTER{foo.pdf}{blockdiag -T %t -o %o}
+\if0
+---
+....blah blah blah...
+....blah blah blah...
+....blah blah blah...
+---
+\fi
+%#END
+@end example
+
+この領域内で @kbd{[prefix] t e} をタイプすると、この例であればblahのある3行が
+外部コマンド @code{"blockdiag -T pdf -o foo.pdf"} の標準入力に渡され、
+結果として foo.pdf が生成されます。この特別なブロックは
+@kbd{[prefix] tb} の環境補完で、@code{.blockdiag} のようなピリオドで始まる
+特殊環境名を入力することで自動的に挿入されます。
 
 @c @node  Require, lpr format, Fix region for typesetting, %#notation
 @comment  node-name,  next,  previous,  up
@@ -778,7 +804,7 @@ La@TeX{} 文書に関連するコマンドは以下の %# 記法で指定することができます。
 だけが挿入され、改行はせずカーソルは自動的に中括弧の内側に移動します。
 
 @menu
-* 2個以上の引数をとる section型コマンド::  
+* 2個以上の引数をとる section型コマンド::
 * Enclose section-type command::  括り補完
 * Recursive completion::        再帰補完
 * view-sectioning::             セクション区切りのアウトライン表示
@@ -1261,11 +1287,11 @@ TABを押してどのアルファベットにどのギリシャ文字が対応しているか調べてみて
 
 
 @menu
-* 対応オブジェクトへのジャンプ::  
-* お絵描きツール起動::          
-* メインファイルへのジャンプ::  
-* 環境を単位としたジャンプ::    
-* 最後の補完位置へのジャンプ::  
+* 対応オブジェクトへのジャンプ::
+* お絵描きツール起動::
+* メインファイルへのジャンプ::
+* 環境を単位としたジャンプ::
+* 最後の補完位置へのジャンプ::
 @end menu
 
 @node 対応オブジェクトへのジャンプ, お絵描きツール起動, Cursor jump, Cursor jump
