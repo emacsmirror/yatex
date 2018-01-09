@@ -637,10 +637,12 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
       (goto-char (overlay-end YaTeX-on-the-fly-overlay)))
      ((YaTeX-region-active-p)
       nil)				;if region is active, use it
-     (math (setq usetimer t) (YaTeX-mark-environment))
+     (math (setq usetimer YaTeX-on-the-fly-preview-interval)
+	   (YaTeX-mark-environment))
      ((equal (or (YaTeX-inner-environment t) "document") "document")
       (mark-paragraph))
-     (t (setq usetimer t) (YaTeX-mark-environment)))
+     (t (setq usetimer YaTeX-on-the-fly-preview-interval)
+	(YaTeX-mark-environment)))
     (if YaTeX-use-image-preview
 	(let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer))
 	      (b (region-beginning)) (e (region-end)))
