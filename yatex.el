@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Jan  6 22:52:02 2018 on firestorm
+;;; Last modified Tue Jan  9 13:30:45 2018 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -378,58 +378,6 @@ Nil for removing only one commenting character at the beginning-of-line.")
 
 (defvar YaTeX-use-dot-env-extension t
   "*Use YaTeX's dot-env filter special environment.")
-(defvar YaTeX-filter-special-env-alist-default
-  '((".blockdiag"
-     "blockdiag -T %t -o %o -"
-     "blockdiag {
-  default_fontsize = 32;
-  A -> B;
-}")
-    (".seqdiag" "seqdiag -T %t -o %o -"
-     "seqdiag {
-  client -> server [label = \"SYN\"];
-  client <- server [label = \"SYN/ACK\"];
-  client -> server [label = \"ACK\"];}")
-    (".actdiag" "actdiag -T %t -o %o -"
-     "actdiag {
-  sayHo -> ho -> hohoho
-  lane dj {
-    label = \"DJ\"
-    sayHo [label = \"Say Ho\"]; hohoho [label = \"Ho Ho Ho!\"]; }
-  lane mc { label = \"MC\"; ho [label = \"Hooooh!\"]}}")
-    (".nwdiag" "nwdiag -T %t -o %o -"
-     "nwdiag {
-  network ext {
-    address = \"10.1.2.0/24\"
-    router [address = \"10.1.2.1\"]
-  }
-  network int {
-    address = \"192.168.22.0/24\"
-    router [address = \"192.168.22.1\"]
-    websrv [address = \"192.168.22.80\"]
-    cli-1; cli-2
-  }
-}")
-    (".rackdiag" "rackdiag -T %t -o %o -"
-     "rackdiag {
-  16U;
-  1: UPS [4U]; 5: Storage [3U]; 8: PC [2U]; 8: PC [2U];
-}")
-    (".dot"
-     "dot -T %t -o %o"
-     "digraph {
-  graph [charset=\"utf-8\"]
-}
-bigraph {
-  graph [charset=\"utf-8\"]}"
-     )))
-
-(defvar YaTeX-filter-special-env-alist-private nil)
-(defvar YaTeX-filter-special-env-alist
-  (append YaTeX-filter-special-env-alist-private
-	  YaTeX-filter-special-env-alist-default))
-
-
 
 ; Set tex-environment possible completion
 (defvar env-table
@@ -455,10 +403,9 @@ bigraph {
 	 ("breakbox")))			;defined in eclbkbox
    (if YaTeX-use-AMS-LaTeX YaTeX-ams-env-table)
    YaTeX-math-other-env-alist
-   (if YaTeX-use-dot-env-extension
-       '((".blockdiag") (".nwdiag") (".seqdiag") (".rackdiag") (".packetdiag")
-	 (".dot"))
-     ))
+   (and YaTeX-use-dot-env-extension
+	(require 'yatexflt)
+	YaTeX-filter-special-env-alist))
   "Default completion table for begin-type completion.")
 
 (defvar user-env-table nil)

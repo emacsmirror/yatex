@@ -1,7 +1,7 @@
 ;;; yatexflt.el --- YaTeX filter command utilizer -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan  7 11:38:12 2018 on firestorm
+;;; Last modified Tue Jan  9 13:28:56 2018 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -36,7 +36,60 @@
 ;;;	Then foo.pdf file will be generated and the image (as PNG) will
 ;;;	be displayed in the next window.
 
+
 ;;; Code:
+(require 'yatexlib)
+(defvar YaTeX-filter-special-env-alist-default
+  '((".blockdiag"
+     "blockdiag -T %t -o %o -"
+     "blockdiag {
+  default_fontsize = 32;
+  A -> B;
+}")
+    (".seqdiag" "seqdiag -T %t -o %o -"
+     "seqdiag {
+  client -> server [label = \"SYN\"];
+  client <- server [label = \"SYN/ACK\"];
+  client -> server [label = \"ACK\"];}")
+    (".actdiag" "actdiag -T %t -o %o -"
+     "actdiag {
+  sayHo -> ho -> hohoho
+  lane dj {
+    label = \"DJ\"
+    sayHo [label = \"Say Ho\"]; hohoho [label = \"Ho Ho Ho!\"]; }
+  lane mc { label = \"MC\"; ho [label = \"Hooooh!\"]}}")
+    (".nwdiag" "nwdiag -T %t -o %o -"
+     "nwdiag {
+  network ext {
+    address = \"10.1.2.0/24\"
+    router [address = \"10.1.2.1\"]
+  }
+  network int {
+    address = \"192.168.22.0/24\"
+    router [address = \"192.168.22.1\"]
+    websrv [address = \"192.168.22.80\"]
+    cli-1; cli-2
+  }
+}")
+    (".rackdiag" "rackdiag -T %t -o %o -"
+     "rackdiag {
+  16U;
+  1: UPS [4U]; 5: Storage [3U]; 8: PC [2U]; 8: PC [2U];
+}")
+    (".dot"
+     "dot -T %t -o %o"
+     "digraph {
+  graph [charset=\"utf-8\"]
+}
+bigraph {
+  graph [charset=\"utf-8\"]}"
+     )))
+
+(defvar YaTeX-filter-special-env-alist-private nil)
+(defvar YaTeX-filter-special-env-alist
+  (append YaTeX-filter-special-env-alist-private
+	  YaTeX-filter-special-env-alist-default))
+
 (defun YaTeX-filter-filter-set-conversion-flag ()
   (let ((ovl (get 'YaTeX-filter-filter-sentinel 'overlay)))
     (if ovl				;; When successful conversion met,
