@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jan  5 22:48:43 2018 on firestorm
+;;; Last modified Tue Jan  9 13:18:05 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -491,10 +491,12 @@ YaTeX-typeset-dvi2image-chain.")
 	 t)
 	(remove-images (point-min) (point-max))
 	(erase-buffer)
-	(insert-image
-	 (setq image (create-image
-		      (if data-p imagesrc (expand-file-name imagesrc))
-		      nil data-p)))
+	(if data-p
+	    (insert-image
+	     (setq image (create-image imagesrc nil data-p)))
+	  ;; create-image does not re-create img-object for the same file
+	  (insert-image-file (expand-file-name imagesrc))
+	  (setq image (plist-get (text-properties-at (point)) 'intangible)))
 	(YaTeX-preview-image-mode)
 	(let ((height (1+ (cdr (image-size image)))))
 	  (enlarge-window
