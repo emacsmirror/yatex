@@ -49,7 +49,7 @@ GEO	= -geometry 80x20+0+0
 # make tag		to add release tags
 LISP	= ${LISP18} ${LISP19} ${LISP23}
 YAHTML	= yahtml.el
-COMMON	= yatexlib.el yatexprc.el
+COMMON	= yatexlib.el yatexprc.el yatexhlp.el
 LISP18	= yatex.el yatexadd.el yatexgen.el yatexenv.el \
 	  ${COMMON} \
 	  yatexmth.el yatexhks.el yatexhlp.el \

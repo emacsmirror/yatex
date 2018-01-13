@@ -27,6 +27,7 @@ yatex19.el		Emacs-19(Mule2)用の設定
 yatex23.el		Emacs-23以降用の設定
 yatexadd.el		付加関数の定義例
 yatexenv.el		LaTeX 環境依存の関数
+yatexflt.el		外部フィルタコマンドとの連携
 yatexgen.el		野鳥用付加関数自動作成モード
 yatexhie.el		野鳥用ドキュメント階層表示プログラム
 yatexhks.el		hook を詰め込むために使う(ユーザ用)
