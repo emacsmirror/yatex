@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
 ;;; (c)1994-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  4 13:58:20 2018 on firestorm
+;;; Last modified Sun Jan 21 16:29:01 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1224,8 +1224,8 @@ to most recent sectioning command."
 	;;(if (eobp) nil (forward-char 1))	;OUT 2015/1/5
 	))))
 
-(defun YaTeX-in-BEGEND-p ()
-  "Check if the point is in a %#BEGIN...%#END region.
+(defun YaTeX-in-BEGEND-p (&optional pt)
+  "Check if the point (or PT) is in a %#BEGIN...%#END region.
 Return the list of beginning and ending point of the region and arg-string
 if the point is in BEGEND.  Otherwise nil."
   (let ((b "%#BEGIN") bp args (e "%#END") (p (point)))

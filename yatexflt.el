@@ -1,7 +1,7 @@
 ;;; yatexflt.el --- YaTeX filter command utilizer -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  9 13:28:56 2018 on firestorm
+;;; Last modified Sun Jan 21 16:33:16 2018 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -136,13 +136,15 @@ bigraph {
   (save-excursion
     (save-restriction
       (widen)
-      (let (r pl (list (overlays-in (point-min) (point-max))))
+      (let (r prop dest src pl (list (overlays-in (point-min) (point-max))))
 	(while list
-	  (if (and (overlay-get (car list) 'filter-input)
-		   (setq pl (plist-member (overlay-properties (car list))
-					  'converted))
-		   (not (plist-get pl 'converted)))
-	      (setq r (cons (car list) r)))
+	  (setq prop (overlay-properties (car list)))
+	  (if (setq dest (plist-get prop 'filter-output))
+	      (if (if (setq src (plist-get prop 'filter-source))
+		      (file-newer-than-file-p src dest)
+		    (and (setq pl (plist-member prop 'converted))
+			 (not (plist-get pl 'converted))))
+		  (setq r (cons (car list) r))))
 	  (setq list (cdr list)))
 	(nconc r)
 	r))))
@@ -164,7 +166,7 @@ bigraph {
 		    (progn
 		      (overlay-put ovl 'face 'YaTeX-on-the-fly-activated-face)
 		      (message "Non-update source found: Update here: %s "
-			       "Y)es N)o A)bort")
+			       "Y)es N)o S)top-watching-Here A)bort")
 		      (setq ans (read-char))
 		      (cond
 		       ((memq ans '(?Y ?y))
@@ -174,6 +176,7 @@ bigraph {
 			  (message "Waiting for conversion process to finish")
 			  (sit-for 1)))
 		       ((memq ans '(?A ?a)) (throw 'abort t))
+		       ((memq ans '(?S ?s)) (delete-overlay ovl))
 		       (t nil)))
 		  (overlay-put ovl 'face nil))
 		(setq update-list (cdr update-list)))))))
@@ -221,99 +224,161 @@ bigraph {
 	(goto-char (point-max))
 	(insert (format "%s\n" (process-status proc))))))))
 
+(defun YaTeX-filter-parse-filter-region (begend-info)
+  "Return the list of SpecialFilter region.  If not on, return nil.
+BEGEND-INFO is a value from the function YaTeX-in-BEGEND-p.
+Return the alist of:
+'((outfile $OutPutFileName)
+  (source  $InputFileName)  ; or nil for embeded data source
+  (cmdline $CommandLine)
+  (begin $TextRegionBeginning)
+  (end TextRegionEnd))"
+  (if begend-info
+      (let ((b (car begend-info)) (e (nth 1 begend-info))
+	    delim (args (nth 2 begend-info))
+	    (p (point)) openb closeb outfile source cmdline point-beg point-end)
+	(save-excursion
+	  (and
+	   (string-match "FILTER" args) ;easy test
+	   (goto-char (car begend-info))
+	   (re-search-forward
+	    "FILTER\\s *{\\([^}]+\\)}" e t)
+	   (setq outfile (YaTeX-match-string 1))
+	   (goto-char (match-end 0))
+	   (prog2			;Step into the second brace
+	       (skip-chars-forward "\t ")
+	       (looking-at "{")	;Check if 2nd brace surely exists
+	     (skip-chars-forward "{")
+	     (skip-chars-forward "\t"))
+	   (setq openb (point))
+	   (condition-case nil
+	       (progn (up-list 1) t)
+	     (error nil))
+	   (setq closeb (1- (point))
+		 cmdline (YaTeX-buffer-substring openb closeb))
+	   (cond
+	    ((re-search-forward "^\\\\if0\\>" p t)  ;; Embedded source
+	     (forward-line 1)
+	     (setq point-beg (if (looking-at "\\(.\\)\\1\\1") ;Triple chars
+				 (progn (setq delim (YaTeX-match-string 0))
+					(forward-line 1)
+					(point))
+			       (point)))
+	     (re-search-forward "^\\\\fi\\>" e t)
+	     (goto-char (match-beginning 0))
+	     (setq point-end (if delim
+				 (progn
+				   (re-search-backward
+				    (concat "^" (regexp-quote delim))
+				    (1+ point-beg) t)
+				   (match-beginning 0))
+			       (point))))
+	    ((re-search-forward "^\\s *%#SRC{\\(.*\\)}" e t) ; external file
+	     (setq source (YaTeX-match-string 1)
+		   point-beg (match-beginning 0)
+		   point-end (match-end 0)))
+	    (t					;; If source notation not found,
+	     (let ((ovl (overlays-in b e)))	;; clear all remaining overlays
+	       (while ovl
+		 (delete-overlay (car ovl))
+		 (setq ovl (cdr ovl))))))	;; Return nil
+
+	   ;; Then return all values
+	   (list (cons 'outfile outfile)
+		 (cons 'source source)
+		 (cons 'cmdline cmdline)
+		 (cons 'begin point-beg)
+		 (cons 'end point-end)))))))
+
+;;debug;; (YaTeX-filter-parse-filter-region (YaTeX-in-BEGEND-p))
 (defun YaTeX-filter-pass-to-filter (begend-info)
   "Pass current BEGIN FILTER environment to external command."
   (put 'YaTeX-filter-filter-sentinel 'outfile nil)
   ;; begend-info is from YaTeX-in-BEGEND-p: (BEG END ARGS)
   (let ((b (car begend-info)) (e (nth 1 begend-info))
-	(args (nth 2 begend-info))
-	(p (point)) openb closeb outfile cmdline point-if0 point-fi)
+	(r (YaTeX-filter-parse-filter-region begend-info)))
     (save-excursion
-      (if (and begend-info
-	       (string-match "FILTER" args) ;easy test
-	       (goto-char (car begend-info))
-	       (re-search-forward
-		"FILTER\\s *{\\([^}]+\\)}" e t)
-	       (setq outfile (YaTeX-match-string 1))
-	       (goto-char (match-end 0))
-	       (prog2			;Step into the second brace
-		   (skip-chars-forward "\t ")
-		   (looking-at "{")	;Check if 2nd brace surely exists
-		 (skip-chars-forward "{")
-		 (skip-chars-forward "\t"))
-	       (setq openb (point))
-	       (condition-case nil
-		   (progn (up-list 1) t)
-		 (error nil))
-	       (setq closeb (1- (point))
-		     cmdline (YaTeX-buffer-substring openb closeb))
-	       (re-search-forward "^\\\\if0\\>" p t)
-	       (setq point-if0 (point))
-	       (re-search-forward "^\\\\fi\\>" e t)
-	       (setq point-fi (match-beginning 0)))
-	  (let*((case-fold-search t)
-		(type (cond
-		       ((string-match "\\.png$" outfile) "png")
-		       ((string-match "\\.svg$" outfile) "svg")
-		       (t				 "pdf")))
-		(newcmdline (YaTeX-replace-formats
-			     cmdline
-			     (list (cons "t" type)
-				   (cons "o" outfile))))
-		(delim (progn (goto-char point-if0)
-			      (forward-line 1)
-			      (and (looking-at "\\(.\\)\\1\\1") ;Triple chars
-				   (prog1
-				       (YaTeX-match-string 0)
-				     (forward-line 1)))))
-		(text-start (point))
-		(text-end (if (and delim
-				   (re-search-forward
-				    (concat "^" (regexp-quote delim))
-				    point-fi t))
-			      (match-beginning 0)
-			    point-fi))
-		(text (YaTeX-buffer-substring text-start text-end))
-		;;
-		;; Now it's time to start filter process
-		;;
-		(procbuf (YaTeX-system newcmdline "Filter" 'force))
-		(proc (get-buffer-process procbuf))
-		;(procbuf (get-buffer-create " *Filter*"))
-		(ovl (progn
-		       (remove-overlays text-start text-end)
-		       (make-overlay text-start text-end)))
-		(ovlmodhook	;hook function to reset conv-success flag
-		 'YaTeX-filter-filter-unset-conversion-flag))
-	    (if proc
-		(progn
-		  (overlay-put ovl 'filter-input outfile)
-		  (overlay-put ovl 'converted nil)
-		  (overlay-put ovl 'modification-hooks (list ovlmodhook))
-		  (set-process-coding-system proc 'undecided 'utf-8)
-		  (set-process-sentinel proc 'YaTeX-filter-filter-sentinel)
-		  (YaTeX-showup-buffer procbuf)
-		  (set-buffer procbuf)
-		  (setq buffer-read-only nil)
-		  (erase-buffer)
-		  (insert (format "Starting process `%s'...\n" newcmdline))
-		  (set-marker (process-mark proc) (point-max))
-		  (process-send-string proc text)
-		  (process-send-string proc "\n")
-		  (process-send-eof proc) ;Notify stream chunk end
-		  (process-send-eof proc) ;Notify real EOF
-		  (put 'YaTeX-filter-filter-sentinel 'outfile outfile)
-		  (put 'YaTeX-filter-filter-sentinel 'overlay ovl))))))))
+      (if r (let*((case-fold-search t)
+		  (outfile (cdr (assq 'outfile r)))
+		  (source (cdr (assq 'source r)))
+		  (type (cond
+			 ((string-match "\\.png$" outfile) "png")
+			 ((string-match "\\.svg$" outfile) "svg")
+			 ((string-match "\\.tex$" outfile) "tex")
+			 (t				 "pdf")))
+		  (newcmdline (YaTeX-replace-formats
+			       (cdr (assq 'cmdline r))
+			       (list (cons "t" type)
+				     (cons "o" outfile)
+				     (cons "i" source))))
+		  (text-start (cdr (assq 'begin r)))
+		  (text-end (cdr (assq 'end r)))
+		  (text (and (numberp text-start)
+			     (numberp text-end)
+			     (YaTeX-buffer-substring text-start text-end)))
+		  ;;
+		  ;; Now it's time to start filter process
+		  ;;
+		  (procbuf (YaTeX-system newcmdline "Filter" 'force))
+		  (proc (get-buffer-process procbuf))
+		  ;;(procbuf (get-buffer-create " *Filter*"))
+		  (ovl (progn
+			 (remove-overlays text-start text-end)
+			 (make-overlay text-start text-end)))
+		  (ovlmodhook  ;hook function to reset conv-success flag
+		   'YaTeX-filter-filter-unset-conversion-flag))
+	      (if proc
+		  (progn
+		    (overlay-put ovl 'filter-output outfile)
+		    (overlay-put ovl 'filter-source source)
+		    (overlay-put ovl 'converted nil)
+		    (overlay-put ovl 'modification-hooks (list ovlmodhook))
+		    (set-process-coding-system proc 'undecided 'utf-8)
+		    (set-process-sentinel proc 'YaTeX-filter-filter-sentinel)
+		    (YaTeX-showup-buffer procbuf)
+		    (set-buffer procbuf)
+		    (setq buffer-read-only nil)
+		    (erase-buffer)
+		    (insert (format "Starting process `%s'...\n" newcmdline))
+		    (set-marker (process-mark proc) (point-max))
+		    (cond
+		     (text
+		      (process-send-string proc text)
+		      (process-send-string proc "\n")
+		      (process-send-eof proc)	;Notify stream chunk end
+		      (process-send-eof proc)))	;Notify real EOF
+		    (put 'YaTeX-filter-filter-sentinel 'outfile outfile)
+		    (put 'YaTeX-filter-filter-sentinel 'overlay ovl))))))))
 
 (defun YaTeX-insert-filter-special (filter list &optional region-p)
-  (let ((f (YaTeX-read-string-or-skip "Output file: ")))
+  (let*((f (YaTeX-read-string-or-skip
+	    "Output file(Maybe *.(pdf|png|jpg|tex)): "))
+	(insert-default-directory)
+	(cmdargs (car list))
+	(template-text (car (cdr list)))
+	(ifile (read-file-name "Data source(Default: in this buffer): " nil))
+	(in-line (string= "" ifile)))
     (if region-p
 	(if (< (point) (mark)) (exchange-point-and-mark)))
-    (save-excursion (insert "===\n\\fi\n%#END\n"))
+    (save-excursion
+      (insert (if in-line "===\n\\fi\n" "")
+	      "%#END\n"
+	      (cond
+	       ((string-match "\\.tex$" f)
+		(format "\\input{%s}\n" (substring f 0 (match-beginning 0))))
+	       ((string-match "\\.\\(pdf\\|png\\|jpe?g\\|tiff?\\)$" f)
+		(format "%%# \\includegraphics{%s}\n" f)))))
     (and region-p (exchange-point-and-mark))
-    (insert (format "%%#BEGIN FILTER{%s}{%s}\n\\if0\n===\n"
-		    f (or (car list) "")))
-    (save-excursion (insert (or (car (cdr list)) "\n") "\n"))))
+    (insert (format "%%#BEGIN FILTER{%s}{%s}\n%s"
+		    f (or cmdargs "")
+		    (if in-line "\\if0\n===\n" "")))
+    (save-excursion
+      (insert (if in-line
+		  (cond (template-text
+			 (concat template-text
+				 (or (string-match "\n$" template-text) "\n")))
+			(t "\n"))
+		(format "%%#SRC{%s}\n" ifile))))))
 
 (provide 'yatexflt)
 
