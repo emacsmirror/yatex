@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jan 19 22:18:34 2018 on firestorm
+;;; Last modified Tue Jan 23 12:55:49 2018 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -95,7 +95,14 @@ Overridden with `%#PREVIEW CommandLine...' in the buffer.")
    (YaTeX-macos	(cond
 		 ((file-executable-p YaTeX-cmd-displayline) "open -a Skim")
 		 (t "open")))
-   (t		"evince"))
+   ((YaTeX-executable-find "evince")		"evince")
+   ((YaTeX-executable-find "xreader")		"xreader")
+   ((YaTeX-executable-find "atril")		"atril")
+   ((YaTeX-executable-find "okular")		"okular")
+   ((YaTeX-executable-find "kpdf")		"kpdf")
+   ((YaTeX-executable-find "xpdf")		"xpdf")
+   ((YaTeX-executable-find "mupdf")		"mupdf")
+   (t		"acroread"))
   "*Default PDF viewer command including its option.
 Overridden with `%#PDFVIEW CommandLine...' in the buffer.")
 
