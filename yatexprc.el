@@ -445,12 +445,12 @@ for conversion.")
     (list
      "pdfcrop --clip %b.pdf tmp.pdf"
      (if (YaTeX-executable-find "convert")
-	 "convert -density %d tmp.pdf %b.%f"
+	 "convert -alpha off -density %d tmp.pdf %b.%f"
        ;; If we use sips, specify jpeg as format
        "sips -s format jpeg -s dpiWidth %d -s dpiHeight %d %b.pdf --out %b.jpg")
      "rm -f tmp.pdf"))
    ((YaTeX-executable-find "convert")
-    (list "convert -trim -density %d %b.pdf %b.%f"))
+    (list "convert -trim -alpha off -density %d %b.pdf %b.%f"))
    )
   "*Pipe line of command as a list to create image file from PDF.
 See also doc-string of YaTeX-typeset-dvi2image-chain.")
@@ -461,6 +461,10 @@ See also doc-string of YaTeX-typeset-dvi2image-chain.")
     (list
      (format "%s -E -o %%b.eps %%b.dvi" YaTeX-cmd-dvips)
      "convert -alpha off -density %d %b.eps %b.%f"))
+   ((YaTeX-executable-find YaTeX-dvipdf-command)
+    (list
+     (format "%s %%b.dvi" YaTeX-dvipdf-command)
+     "convert -trim -alpha off -density %d %b.pdf %b.%f"))
    ((and (equal YaTeX-use-image-preview "png")
 	 (YaTeX-executable-find "dvipng"))
     (list "dvipng %b.dvi")))
