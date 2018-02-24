@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Jan  9 13:18:05 2018 on firestorm
+;;; Last modified Sat Feb 24 16:40:46 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -115,7 +115,7 @@
 			    (cons YaTeX-typeset-process bibcmd)
 			    (delq (assq YaTeX-typeset-process bcprop) bcprop)))
 	      (put 'YaTeX-typeset-process 'bibcmd bcprop)))))
-      (message (format "Calling `%s'..." command))
+      (message "Calling `%s'..." command)
       (setq YaTeX-current-TeX-buffer (buffer-name))
       (use-local-map map)		;map may be localized
       (set-syntax-table YaTeX-typeset-buffer-syntax)

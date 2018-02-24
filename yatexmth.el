@@ -1,7 +1,7 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2017 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Sep 17 10:23:45 2017 on firestorm
+;;; Last modified Sat Feb 24 16:40:22 2018 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -985,9 +985,9 @@ If optional argument JUMPTO-CO is non-nil, goto corresponding parentheses."
 	    (t
 	     (setq size nil lr nil)))
       (while (not newsize)
-	(message (format (concat "Change from %s: "
+	(message (concat "Change from %s: "
 				 "l(big) L(Big) h(bigg) H(Bigg) "
-				 "r(left-right) n(NONE) ( { [") size))
+				 "r(left-right) n(NONE) ( { [") size)
 	(setq char (read-char)
 	      newsize (cond ((char-equal char ?l) "\\big")
 			    ((char-equal char ?L) "\\Big")
