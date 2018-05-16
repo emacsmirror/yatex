@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jan  3 23:57:48 2018 on firestorm
+;;; Last modified Wed May 16 22:41:56 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1518,6 +1518,23 @@ and print them to standard output."
 	 "cite"))))
 
    (t nil)))
+
+(defvar YaTeX::bibliographystyle-alist-default
+  '(("unsrt")("junsrt")("plain")("jplain")("alpha")("jalpha")
+    ("abbrv")("jabbrv")("jipsj")("jname")("tieice")("tipsj")
+    ("apalike")("ieeetr")("siam")))
+(defvar YaTeX::bibliographystyle-alist-private
+  nil
+  "*Completion table for bibliographystyle")
+
+(defun YaTeX::bibliographystyle(argp)
+  (cond
+   ((= argp 1)
+    (YaTeX-completing-read-or-skip
+     "BibStyle: "
+     (append YaTeX::bibliographystyle-alist-private
+	     YaTeX::bibliographystyle-alist-default)
+     nil))))
 
 (defun YaTeX::bibitem (argp)
   "Add-in function to insert argument of \\bibitem."
