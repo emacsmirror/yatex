@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
 ;;; (c)1994-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 21 16:29:01 2018 on firestorm
+;;; Last modified Wed May 23 07:59:08 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -133,7 +133,7 @@ This variable is effective when font-lock is used.
 	     (symbol-name buffer-file-coding-system))
 	    ((boundp 'file-coding-system) (symbol-name file-coding-system))))
 	  (case-fold-search t))
-      (cond ((string-match "utf-8\\>" coding)			"utf-8")
+      (cond ((string-match "utf-8\\>" coding)			"utf8")
 	    ((string-match "shift.jis\\|cp932\\>" coding)	"sjis")
 	    ((string-match "junet\\|iso.2022" coding)		"jis")
 	    ((string-match "euc.jp\\|ja.*iso.8bit" coding)	"euc")
