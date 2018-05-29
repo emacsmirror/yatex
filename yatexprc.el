@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed May 30 07:02:49 2018 on firestorm
+;;; Last modified Wed May 30 08:32:30 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -822,7 +822,7 @@ PP command will be called iff typeset command exit successfully"
 		   (t nil))
 		  (basic-save-buffer))))
 	  (exchange-point-and-mark)))
-      (switch-to-buffer cb))		;for 19
+      (set-window-buffer nil cb))		;for 19 and 26
     (YaTeX-typeset cmd YaTeX-typeset-buffer nil nil ppcmd)
     (put 'dvi2-command 'region nil)))
 
