@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Feb 24 16:40:46 2018 on firestorm
+;;; Last modified Wed May 30 07:02:49 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -799,7 +799,7 @@ PP command will be called iff typeset command exit successfully"
 		(if (string-match (concat "[{,/]" me "[,}]") s)
 		    nil ; Nothing to do when it's already in includeonly.
 		  (ding)
-		  (switch-to-buffer (current-buffer));Display this buffer.
+		  (set-window-buffer nil (current-buffer));Display this buffer.
 		  (setq
 		   me	  ;;Rewrite my name(me) to contain sub directory name.
 		   (concat
