@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed May 16 22:41:56 2018 on firestorm
+;;; Last modified Wed May 30 13:35:42 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1296,7 +1296,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 				   (overlay-put
 				    (setq ov (make-overlay b e))
 				    'face repface)))
-			     (switch-to-buffer buf)
+			     (set-window-buffer nil buf)	;Emacs26
 			     (while t
 			       (message qmsg new)
 			       (setq ch (read-char))
