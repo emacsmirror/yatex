@@ -52,7 +52,7 @@ YAHTML	= yahtml.el
 COMMON	= yatexlib.el yatexprc.el yatexhlp.el
 LISP18	= yatex.el yatexadd.el yatexgen.el yatexenv.el \
 	  ${COMMON} \
-	  yatexmth.el yatexhks.el yatexhlp.el \
+	  yatexmth.el yatexhks.el yatexhlp.el yatexflt.el \
 	  yatexm-o.el yatexsec.el  yatexhie.el yatexpkg.el ${YAHTML}
 LISP19	= yatex19.el
 LISP23	= yatex23.el
