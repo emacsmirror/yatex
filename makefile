@@ -237,4 +237,4 @@ sync:
 	-hg push
 	-hg push git
 	-hg push cvs
-	(cd ${RSYNCDIR} && cvs ci -m '')
+	(cd ${RSYNCDIR} && hg up -uv && cvs ci -m '')
