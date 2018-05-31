@@ -23,5 +23,5 @@ yahtmlは野鳥のユーザインタフェースを引き継いだHTML用のメ�
 Links
 ----
 * [YaTeX](https://www.yatex.org)
-* [YaTeX - TeX Wiki](https://www.yatex.org)
+* [YaTeX - TeX Wiki](https://texwiki.texjp.org/?YaTeX)
 * [Search yatex with google](https://www.google.com/search?q=yatex)
