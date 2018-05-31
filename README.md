@@ -1,3 +1,5 @@
+About YaTeX
+===========
 YaTeX is an intelligent, acquisitive and integrated package which reduces your
 efforts of composing LaTeX source on Emacs.
 
@@ -17,3 +19,9 @@ Hidemaru, xyzzy エディタへの野鳥の移植版である雷鳥、白鳥、�
 yahtmlは野鳥のユーザインタフェースを引き継いだHTML用のメジャーモードパッケージ
 です。LaTeX ソースの入力に野鳥が欠かせないと気づいたあなたは、おそらく yahtml
 にすぐなじみ同じように使いこなせることでしょう。もちろんその逆も。
+
+Links
+----
+* [YaTeX](https://www.yatex.org)
+* [YaTeX - TeX Wiki](https://www.yatex.org)
+* [Search yatex with google](https://www.google.com/search?q=yatex)
