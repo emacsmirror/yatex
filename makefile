@@ -234,7 +234,6 @@ tag:
 
 RSYNCDIR	= ${HOME}/http/yatex/rsync/yatex
 sync:	
-	hg archive ${PACKDIR}
-	syncdir -A -x CVS ${PACKDIR} ${RSYNCDIR}
+	-hg push cvs
 	(cd ${RSYNCDIR} && cvs ci -m '')
-	rm -rf ${PACKDIR}
+	-hg push git
