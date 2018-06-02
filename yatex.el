@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jun  1 08:30:26 2018 on firestorm
+;;; Last modified Sat Jun  2 14:13:17 2018 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -1955,8 +1955,9 @@ search-last-string, you can repeat search the same label/ref by typing
 
 (defun YaTeX-goto-corresponding-file (&optional other)
   "Visit or switch buffer of corresponding file,
-looking at \\input or \\include or \\includeonly on current line."
-  (if (not (YaTeX-on-includes-p)) nil
+looking at \\input or \\include or \\includeonly or %#SRC{} on current line."
+  (cond
+   ((YaTeX-on-includes-p)
     (let ((parent buffer-file-name) input-file b)
       (save-excursion
 	(if (and (re-search-forward "[{%]" (point-end-of-line) t)
@@ -1975,7 +1976,12 @@ looking at \\input or \\include or \\includeonly on current line."
        (t (YaTeX-switch-to-buffer input-file)))
       (or (YaTeX-get-builtin "!")
 	  YaTeX-parent-file
-	  (setq YaTeX-parent-file parent)))))
+	  (setq YaTeX-parent-file parent))))
+   ;; On %#SRC{somefilters.src}
+   ((YaTeX-on-SRC-p)
+    (let ((src (YaTeX-match-string 1)))
+      (if other (YaTeX-switch-to-buffer-other-window src)
+	(goto-buffer-window (find-file-noselect src)))))))
 
 (defun YaTeX-goto-corresponding-BEGIN-END ()
   (if (not (YaTeX-on-BEGIN-END-p)) nil
@@ -2272,6 +2278,13 @@ even if on `%#' notation."
       (beginning-of-line)
       (re-search-forward
        "\\(%#BEGIN\\)\\|\\(%#END\\)" (point-end-of-line) t))))
+
+(defun YaTeX-on-SRC-p ()
+  (save-excursion
+    (let ((case-fold-search nil))
+      (beginning-of-line)
+      (re-search-forward
+       "%#SRC{\\([^}]+\\)}" (point-end-of-line) t))))
 
 (defun YaTeX-goto-corresponding-* (arg)
   "Parse current line and call suitable function."

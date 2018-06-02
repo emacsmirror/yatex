@@ -1,7 +1,7 @@
 ;;; yatexflt.el --- YaTeX filter command utilizer -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Jun  1 08:28:40 2018 on firestorm
+;;; Last modified Sat Jun  2 15:55:38 2018 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -307,7 +307,8 @@ Return the alist of:
   (put 'YaTeX-filter-filter-sentinel 'outfile nil)
   ;; begend-info is from YaTeX-in-BEGEND-p: (BEG END ARGS)
   (let ((b (car begend-info)) (e (nth 1 begend-info))
-	(r (YaTeX-filter-parse-filter-region begend-info)))
+	(r (YaTeX-filter-parse-filter-region begend-info))
+	insmark)
     (save-excursion
       (if r (let*((case-fold-search t)
 		  (outfile (cdr (assq 'outfile r)))
@@ -352,9 +353,16 @@ Return the alist of:
 		    (erase-buffer)
 		    (insert (format "Starting process `%s'...\n" newcmdline))
 		    (set-marker (process-mark proc) (point-max))
+		    (setq insmark (point-max))
 		    (cond
 		     (text
-		      (process-send-string proc text)
+		      (process-send-string
+		       proc
+		       (if source
+			   (progn
+			     (insert-file-contents-literally source)
+			     (YaTeX-buffer-substring insmark (point-max)))
+			 text))
 		      (process-send-string proc "\n")
 		      (process-send-eof proc)	;Notify stream chunk end
 		      (process-send-eof proc)))	;Notify real EOF
@@ -384,12 +392,16 @@ Return the alist of:
 		    f (or cmdargs "")
 		    (if in-line "\\if0\n===\n" "")))
     (save-excursion
-      (insert (if in-line
-		  (cond (template-text
-			 (concat template-text
-				 (or (string-match "\n$" template-text) "\n")))
-			(t "\n"))
-		(format "%%#SRC{%s}\n" ifile))))))
+      (insert
+       (format "%%#%% If you call program in yatex-mode, type `%se'\n"
+	       (key-description
+		(car (where-is-internal 'YaTeX-typeset-menu))))
+       (if in-line
+	   (cond (template-text
+		  (concat template-text
+			  (or (string-match "\n$" template-text) "\n")))
+		 (t "\n"))
+	 (format "%%#SRC{%s}\n" ifile))))))
 
 (provide 'yatexflt)
 
