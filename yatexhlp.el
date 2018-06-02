@@ -1,7 +1,7 @@
 ;;; yatexhlp.el --- YaTeX helper for LaTeX -*- coding: sjis -*-
 ;;; 
-;;; (c)1994,1998,2004,2014,2015 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 17 10:23:19 2017 on firestorm
+;;; (c)1994,1998,2004,2014,2015,2018 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sat Jun  2 16:45:45 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -302,9 +302,11 @@ as a help file."
       (message "No matches found.")))
 
 ;;;###autoload
-(defun YaTeX-help (&optional macro)
+(defun YaTeX-help (&optional macro ref-only)
   "Show help buffer of LaTeX/TeX commands or macros.
-Optional argument MACRO, if supplied, is directly selected to keyword."
+Optional argument MACRO, if supplied, is directly selected to keyword.
+Non-nil for optional second argument REF-ONLY inhibits call enrich-help
+for non-interactive use."
   (interactive)
   (let (p beg end command)
     (save-excursion
@@ -341,4 +343,5 @@ Optional argument MACRO, if supplied, is directly selected to keyword."
     (setq YaTeX-help-saved-config (current-window-configuration))
     (or (YaTeX-refer-help command YaTeX-help-file)
 	(YaTeX-refer-help command YaTeX-help-file-private)
+	ref-only
 	(YaTeX-enrich-help command))))
