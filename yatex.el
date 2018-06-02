@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed May 30 23:22:15 2018 on firestorm
+;;; Last modified Fri Jun  1 08:30:26 2018 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -866,6 +866,9 @@ more features are available and they are documented in the manual.
 
 ;;autoload from yatexpkg.el
 (autoload 'YaTeX-package-auto-usepackage "yatexpkg" "Auto \\usepackage" t)
+
+;;autoload from yatexflt.el
+(autoload 'YaTeX-filter-goto-source "yatexflt" "Go to graphic source file" t)
 
 ;;;
 ;; YaTeX-mode functions
@@ -2026,19 +2029,6 @@ fj–ì’¹‚Ì‰ï‚Å•·‚±‚¤!
 (defvar YaTeX-file-processor-alist nil
   "*Alist of files' processor vs. its extension;
 See also the documentation of YaTeX-processed-file-regexp-alist.")
-
-;; Will go to yatexflt.el
-(defun YaTeX-filter-goto-source (file other-win)
-  "Go to corresponding text source of the graphic file"
-  (cond
-   ((file-exists-p file)
-    (let ((buf (find-file-noselect file)))
-      (funcall (cond (other-win 'YaTeX-switch-to-buffer-other-window)
-		     ((get-buffer-window buf) 'goto-buffer-window)
-		     (t 'YaTeX-switch-to-buffer))
-	       buf)
-      
-  ))))
 
 (defvar YaTeX-file-processor-alist-default
   (list (cons YaTeX-cmd-tgif ".obj")

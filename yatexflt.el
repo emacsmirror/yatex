@@ -1,7 +1,7 @@
 ;;; yatexflt.el --- YaTeX filter command utilizer -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Jan 21 16:33:16 2018 on firestorm
+;;; Last modified Fri Jun  1 08:28:40 2018 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -84,6 +84,17 @@
 bigraph {
   graph [charset=\"utf-8\"]}"
      )))
+
+;;;###autoload
+(defun YaTeX-filter-goto-source (file other-win)
+  "Go to corresponding text source of the graphic file"
+  (cond
+   ((file-exists-p file)
+    (let ((buf (find-file-noselect file)))
+      (funcall (cond (other-win 'YaTeX-switch-to-buffer-other-window)
+		     ((get-buffer-window buf) 'goto-buffer-window)
+		     (t 'YaTeX-switch-to-buffer))
+	       buf)))))
 
 (defvar YaTeX-filter-special-env-alist-private nil)
 (defvar YaTeX-filter-special-env-alist
