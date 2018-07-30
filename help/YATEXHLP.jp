@@ -1805,6 +1805,95 @@ $rlangle$
 \textbackslash
 バックスラッシュそのもの
 
+FILTER
+%#BEGIN FILTER{OUTPUT}{COMMANDLINE}  ... %#END
+\if0 から \fi までに囲まれた領域、もしくは %#SRC{...} で指定されたファイルを
+外部プログラム COMMANDLINE の標準入力として渡し、OUTPUTファイルを作成させる。
+
+.blockdiag
+%#BEGIN FILTER{OUTPUT}{blockdiag -T %t -o %o -}  ... %#END
+<refer FILTER>
+
+http://blockdiag.com/ja/
+blockdiag によるテキスト→グラフ画像変換を用いる例を示す。
+LaTeXソース中に以下のように書いておく
+
+%#BEGIN FILTER{graph.png}{blockdiag -T %t -o %o -}
+\if0
+===
+blockdiag {
+  default_fontsize = 24;
+    A -> B;
+}
+===
+\fi
+%#END
+
+そして、BEGIN...ENDの領域内で [prefix] t e (環境タイプセット)を呼ぶと
+2つの === で囲まれた部分を入力として
+
+	blockdiag -T png -o graph.png -
+
+が呼ばれ、[ A ] -> [ B ] のようなグラフが graph.png に得られる。
+これをLaTeX本文中で \includegraphics すれば画像のソースを本文と同じ
+ファイルで一元管理できる。
+
+画像のソースを別ファイル(たとえば src.diag)にしたい場合は以下のようにする。
+
+%#BEGIN FILTER{graph.png}{blockdiag -T %t -o %o -}
+%#SRC{src.diag}
+%#END
+
+
+.nwdiag
+%#BEGIN FILTER{OUTPUT}{nwdiag -T %t -o %o -}  ... %#END
+<refer .blockdiag>
+
+.seqdiag
+%#BEGIN FILTER{OUTPUT}{seqdiag -T %t -o %o -}  ... %#END
+<refer .blockdiag>
+
+.actdiag
+%#BEGIN FILTER{OUTPUT}{actdiag -T %t -o %o -}  ... %#END
+<refer .blockdiag>
+
+.rackdiag
+%#BEGIN FILTER{OUTPUT}{rackdiag -T %t -o %o -}  ... %#END
+<refer .blockdiag>
+
+.dot
+%#BEGIN FILTER{OUTPUT}{dot -T %t -o %o}  ... %#END
+<refer FILTER>
+
+http://www.graphviz.org/
+https://ja.wikipedia.org/wiki/Graphviz
+Graphviz によるテキスト→グラフ画像変換を用いる例を示す。
+LaTeXソース中に以下のように書いておく
+
+%#BEGIN FILTER{graph.png}{dot -T %t -o %o}
+\if0
+===
+digraph {
+  graph [charset="utf-8"]
+    A -> B
+}
+===
+\fi
+
+そして、BEGIN...ENDの領域内で [prefix] t e (環境タイプセット)を呼ぶと
+2つの === で囲まれた部分を入力として
+
+	dot -T png -o graph.png
+
+が呼ばれ、
+
+    [ A ]
+     ↓
+    [ B ]
+
+のようなグラフが graph.png に得られる。
+
+
 LaiTeX
 a Little Assistant Interface for TeX on Vz
 おそらくあなたが今 Vz 上で使っているこのモード。
