@@ -1,7 +1,7 @@
 ;;; yatexflt.el --- YaTeX filter command utilizer -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Jun  2 15:55:38 2018 on firestorm
+;;; Last modified Sat Jun  2 18:12:41 2018 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -80,9 +80,8 @@
      "dot -T %t -o %o"
      "digraph {
   graph [charset=\"utf-8\"]
-}
-bigraph {
-  graph [charset=\"utf-8\"]}"
+  A -> B
+}"
      )))
 
 ;;;###autoload
@@ -235,6 +234,11 @@ bigraph {
 	(goto-char (point-max))
 	(insert (format "%s\n" (process-status proc))))))))
 
+(defvar YaTeX-filter-block-marker "==="
+  "Begining and Ending marker for contents for external filter program")
+(defvar YaTeX-filter-src "#SRC"
+  "Keyword for input filename for external filter program")
+
 (defun YaTeX-filter-parse-filter-region (begend-info)
   "Return the list of SpecialFilter region.  If not on, return nil.
 BEGEND-INFO is a value from the function YaTeX-in-BEGEND-p.
@@ -247,7 +251,10 @@ Return the alist of:
   (if begend-info
       (let ((b (car begend-info)) (e (nth 1 begend-info))
 	    delim (args (nth 2 begend-info))
-	    (p (point)) openb closeb outfile source cmdline point-beg point-end)
+	    (p (point)) openb closeb outfile source cmdline point-beg point-end
+	    (src-ptn (format "^\\s *%s%s"
+			     (regexp-quote comment-start)
+			     (regexp-quote YaTeX-filter-src))))
 	(save-excursion
 	  (and
 	   (string-match "FILTER" args) ;easy test
@@ -270,7 +277,7 @@ Return the alist of:
 	   (cond
 	    ((re-search-forward "^\\\\if0\\>" p t)  ;; Embedded source
 	     (forward-line 1)
-	     (setq point-beg (if (looking-at "\\(.\\)\\1\\1") ;Triple chars
+	     (setq point-beg (if (looking-at YaTeX-filter-block-marker)
 				 (progn (setq delim (YaTeX-match-string 0))
 					(forward-line 1)
 					(point))
@@ -284,7 +291,8 @@ Return the alist of:
 				    (1+ point-beg) t)
 				   (match-beginning 0))
 			       (point))))
-	    ((re-search-forward "^\\s *%#SRC{\\(.*\\)}" e t) ; external file
+	    ((re-search-forward
+	      (format "%s{\\(.*\\)}" src-ptn) e t) ; external file
 	     (setq source (YaTeX-match-string 1)
 		   point-beg (match-beginning 0)
 		   point-end (match-end 0)))
@@ -388,14 +396,14 @@ Return the alist of:
 	       ((string-match "\\.\\(pdf\\|png\\|jpe?g\\|tiff?\\)$" f)
 		(format "%%# \\includegraphics{%s}\n" f)))))
     (and region-p (exchange-point-and-mark))
-    (insert (format "%%#BEGIN FILTER{%s}{%s}\n%s"
+    (insert (format "%%#BEGIN FILTER{%s}{%s}\n%s%s"
 		    f (or cmdargs "")
+		    (format "%%#%% If you call program in yatex, type `%se'\n"
+			    (key-description
+			     (car (where-is-internal 'YaTeX-typeset-menu))))
 		    (if in-line "\\if0\n===\n" "")))
     (save-excursion
       (insert
-       (format "%%#%% If you call program in yatex-mode, type `%se'\n"
-	       (key-description
-		(car (where-is-internal 'YaTeX-typeset-menu))))
        (if in-line
 	   (cond (template-text
 		  (concat template-text
