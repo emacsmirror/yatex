@@ -49,10 +49,10 @@ GEO	= -geometry 80x20+0+0
 # make tag		to add release tags
 LISP	= ${LISP18} ${LISP19} ${LISP23}
 YAHTML	= yahtml.el
-COMMON	= yatexlib.el yatexprc.el
+COMMON	= yatexlib.el yatexprc.el yatexhlp.el
 LISP18	= yatex.el yatexadd.el yatexgen.el yatexenv.el \
 	  ${COMMON} \
-	  yatexmth.el yatexhks.el yatexhlp.el \
+	  yatexmth.el yatexhks.el yatexhlp.el yatexflt.el \
 	  yatexm-o.el yatexsec.el  yatexhie.el yatexpkg.el ${YAHTML}
 LISP19	= yatex19.el
 LISP23	= yatex23.el
@@ -233,9 +233,8 @@ tag:
 
 
 RSYNCDIR	= ${HOME}/http/yatex/rsync/yatex
-#sync:	
-#	@-mkdir ${PACKDIR}
-#	@tar cf - ${PACK} | (cd ${PACKDIR}; tar xf -)
-#	syncdir -A -x CVS ${PACKDIR} ${RSYNCDIR}
-#	(cd ${RSYNCDIR}; cvs ci -m '')
-#	rm -rf ${PACKDIR} 
+sync:	
+	-hg push
+	-hg push git
+	-hg push cvs
+	(cd ${RSYNCDIR} && hg up -Cv dev && cvs ci -m '')

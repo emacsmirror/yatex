@@ -1,6 +1,11 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.81	emacs-26 の主要関数の仕様変更に対応。
+	== yatex ==
+	タイプセットコマンド定義中の %k を漢字コード名に変換(-kanji=%k)
+	ドット環境で外部フィルタを自動起動する機能を追加。
+
 1.80	string-to-int除外と同時に emacs-18 をサポート外に。
 	2-Clause BSDでもOKという風に書いてみた。
 	RCS管理を外した。

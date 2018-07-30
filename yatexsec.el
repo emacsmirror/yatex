@@ -1,7 +1,7 @@
 ;;; yatexsec.el --- YaTeX sectioning browser
 ;;; 
 ;;; (c) 1994-2017 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sun Dec 21 14:16:35 2014 on firestorm
+;;; Last modified Wed May 30 13:29:50 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -192,6 +192,7 @@ If optional argument KEEP is non-nil, only shows the line."
 	  (other-window 1)
 	  (setq sb (current-buffer))
 	  (switch-to-buffer hb)
+	  (setq buffer-read-only nil)		;; Emacs26
 	  (erase-buffer)
 	  (insert "===== View sectioning =====
 C-p	Up sectioning level.			0	Show only \\part, 

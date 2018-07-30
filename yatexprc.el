@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
-;;; (c)1993-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Oct 30 21:00:21 2017 on firestorm
+;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed May 30 08:32:30 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -115,7 +115,7 @@
 			    (cons YaTeX-typeset-process bibcmd)
 			    (delq (assq YaTeX-typeset-process bcprop) bcprop)))
 	      (put 'YaTeX-typeset-process 'bibcmd bcprop)))))
-      (message (format "Calling `%s'..." command))
+      (message "Calling `%s'..." command)
       (setq YaTeX-current-TeX-buffer (buffer-name))
       (use-local-map map)		;map may be localized
       (set-syntax-table YaTeX-typeset-buffer-syntax)
@@ -353,7 +353,7 @@ called with one argument of current file name whitout extension."
 	 reg-begin reg-end lineinfo)
       (setq ppcmd (if (stringp pp) (concat pp " " texputroot) pp))
       (save-excursion
-	(if (search-backward "%#BEGIN" nil t)
+	(if (re-search-backward "%#BEGIN\\s *$" nil t)
 	    (progn
 	      (setq typeout "--- Region from BEGIN to "
 		    end "the end of the buffer ---"
@@ -445,10 +445,13 @@ for conversion.")
     (list
      "pdfcrop --clip %b.pdf tmp.pdf"
      (if (YaTeX-executable-find "convert")
-	 "convert -density %d tmp.pdf %b.%f"
+	 "convert -alpha off -density %d tmp.pdf %b.%f"
        ;; If we use sips, specify jpeg as format
        "sips -s format jpeg -s dpiWidth %d -s dpiHeight %d %b.pdf --out %b.jpg")
-     "rm -f tmp.pdf")))
+     "rm -f tmp.pdf"))
+   ((YaTeX-executable-find "convert")
+    (list "convert -trim -alpha off -density %d %b.pdf %b.%f"))
+   )
   "*Pipe line of command as a list to create image file from PDF.
 See also doc-string of YaTeX-typeset-dvi2image-chain.")
 
@@ -458,6 +461,10 @@ See also doc-string of YaTeX-typeset-dvi2image-chain.")
     (list
      (format "%s -E -o %%b.eps %%b.dvi" YaTeX-cmd-dvips)
      "convert -alpha off -density %d %b.eps %b.%f"))
+   ((YaTeX-executable-find YaTeX-dvipdf-command)
+    (list
+     (format "%s %%b.dvi" YaTeX-dvipdf-command)
+     "convert -trim -alpha off -density %d %b.pdf %b.%f"))
    ((and (equal YaTeX-use-image-preview "png")
 	 (YaTeX-executable-find "dvipng"))
     (list "dvipng %b.dvi")))
@@ -474,6 +481,38 @@ See also doc-string of YaTeX-typeset-dvi2image-chain.")
   "Default alist for creating image files from DVI/PDF.
 The value is generated from YaTeX-typeset-pdf2image-chain and
 YaTeX-typeset-dvi2image-chain.")
+
+(defun YaTeX-popup-image (imagesrc buffer &optional func)
+  (let ((sw (selected-window)) image
+	(data-p (and (> (length imagesrc) 128)
+		     (not (file-readable-p imagesrc)))))
+    (save-excursion
+      (cond
+       ((featurep 'image) window-system
+	(YaTeX-showup-buffer		;showup and select
+	 (get-buffer-create buffer)
+	 (or func 'YaTeX-showup-buffer-bottom-most)
+	 t)
+	(remove-images (point-min) (point-max))
+	(erase-buffer)
+	(if data-p
+	    (insert-image
+	     (setq image (create-image imagesrc nil data-p)))
+	  ;; create-image does not re-create img-object for the same file
+	  (insert-image-file (expand-file-name imagesrc))
+	  (setq image (plist-get (text-properties-at (point)) 'intangible)))
+	(YaTeX-preview-image-mode)
+	(let ((height (1+ (cdr (image-size image)))))
+	  (enlarge-window
+	   (- (ceiling (min height (/ (frame-height) 2)))
+	      (window-height))))
+	(select-window sw))
+       (t	;; Without direct image, display image with image viewer
+	(YaTeX-system
+	 (format "%s %s" YaTeX-cmd-view-images target)
+	 "YaTeX-region-image"
+	 'noask)))
+  )))
 
 (defvar YaTeX-typeset-conv2image-process nil "Process of conv2image chain")
 (defun YaTeX-typeset-conv2image-chain ()
@@ -528,39 +567,11 @@ YaTeX-typeset-dvi2image-chain.")
 			     'YaTeX-typeset-conv2image-chain)
 		       (get 'YaTeX-typeset-process 'ppcmd))))
 	;; After all chain executed, display image in current window
-	(cond
-	 ((and (featurep 'image) window-system)
-	  ;; If direct image displaying available in running Emacs,
-	  ;; display target image into the next window in Emacs.
-	  (select-window w)
-	  ;(setq foo (selected-window))
-	  (YaTeX-showup-buffer
-	   (get-buffer-create " *YaTeX-region-image*")
-	   'YaTeX-showup-buffer-bottom-most t)
-	  (remove-images (point-min) (point-max))
-	  (erase-buffer)
-	  (cd pwd)			;when reuse from other source
-					;(put-image (create-image (expand-file-name target)) (point))
-	  (insert-image-file target)
-	  (setq img (plist-get (text-properties-at (point)) 'intangible))
-	  (YaTeX-preview-image-mode)
-	  (if img
-	      (let ((height (1+ (cdr (image-size img)))))
-		(enlarge-window
-		 (- (ceiling (min height (/ (frame-height) 2)))
-		    (window-height)))))
-	  ;; Remember elapsed time, which will be threshold in onthefly-preview
-	  (put 'YaTeX-typeset-conv2image-chain 'elapse
-	       (YaTeX-elapsed-time
-		(get 'YaTeX-typeset-conv2image-chain 'start) (current-time))))
-	 (t
-	  ;; Without direct image, display image with image viewer
-	  (YaTeX-system
-	   (format "%s %s" YaTeX-cmd-view-images target)
-	   "YaTeX-region-image"
-	   'noask)
-	  )
-	 )))))
+	(YaTeX-popup-image target " *YaTeX-popup-image*")
+	(put 'YaTeX-typeset-conv2image-chain 'elapse
+	     (YaTeX-elapsed-time
+	      (get 'YaTeX-typeset-conv2image-chain 'start) (current-time)))
+	))))
 
 
 (defvar YaTeX-typeset-environment-timer nil)
@@ -632,10 +643,12 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
       (goto-char (overlay-end YaTeX-on-the-fly-overlay)))
      ((YaTeX-region-active-p)
       nil)				;if region is active, use it
-     (math (setq usetimer t) (YaTeX-mark-environment))
+     (math (setq usetimer YaTeX-on-the-fly-preview-interval)
+	   (YaTeX-mark-environment))
      ((equal (or (YaTeX-inner-environment t) "document") "document")
       (mark-paragraph))
-     (t (setq usetimer t) (YaTeX-mark-environment)))
+     (t (setq usetimer YaTeX-on-the-fly-preview-interval)
+	(YaTeX-mark-environment)))
     (if YaTeX-use-image-preview
 	(let ((YaTeX-typeset-buffer (concat "*bg:" YaTeX-typeset-buffer))
 	      (b (region-beginning)) (e (region-end)))
@@ -654,6 +667,14 @@ Plist: '(buf begPoint endPoint precedingChar 2precedingChar Substring time)"
 	  (if usetimer (YaTeX-typeset-environment-auto b e)))
       (YaTeX-typeset-region))))
 
+(defun YaTeX-filter-BEGEND ()
+  (let ((begend-info (YaTeX-in-BEGEND-p)))
+    (if begend-info
+	(progn
+	  (require 'yatexflt)
+	  (YaTeX-filter-pass-to-filter begend-info)
+	  ))))
+
 (defun YaTeX-typeset-environment ()
   "Typeset current environment or paragraph.
 If region activated, use it."
@@ -661,7 +682,8 @@ If region activated, use it."
   (let ((md (match-data)))
     (unwind-protect
 	(save-excursion
-	  (YaTeX-typeset-environment-1))
+	  (or (YaTeX-filter-BEGEND)
+	      (YaTeX-typeset-environment-1)))
       (store-match-data md))))
 
 
@@ -753,8 +775,10 @@ PP command will be called iff typeset command exit successfully"
     (setq pparg (substring cmd 0 (string-match "[;&]" cmd)) ;rm multistmt
 	  pparg (substring pparg (rindex pparg ? ))	 ;get last arg
 	  pparg (substring pparg 0 (rindex pparg ?.))	 ;rm ext
-	  bibcmd (or (YaTeX-get-builtin "BIBTEX") bibtex-command))
-    (or (string-match "\\s " bibcmd)		;if bibcmd has no spaces,
+	  bibcmd (YaTeX-replace-format
+		  (or (YaTeX-get-builtin "BIBTEX") bibtex-command)
+		  "k" (YaTeX-kanji-ptex-mnemonic)))
+    (or (string-match "\\s [^-]" bibcmd)	;if bibcmd has no argument,
 	(setq bibcmd (concat bibcmd pparg)))	;append argument(== %#!)
     (and pp
 	 (stringp pp)
@@ -775,7 +799,7 @@ PP command will be called iff typeset command exit successfully"
 		(if (string-match (concat "[{,/]" me "[,}]") s)
 		    nil ; Nothing to do when it's already in includeonly.
 		  (ding)
-		  (switch-to-buffer (current-buffer));Display this buffer.
+		  (set-window-buffer nil (current-buffer));Display this buffer.
 		  (setq
 		   me	  ;;Rewrite my name(me) to contain sub directory name.
 		   (concat
@@ -798,7 +822,7 @@ PP command will be called iff typeset command exit successfully"
 		   (t nil))
 		  (basic-save-buffer))))
 	  (exchange-point-and-mark)))
-      (switch-to-buffer cb))		;for 19
+      (set-window-buffer nil cb))		;for 19 and 26
     (YaTeX-typeset cmd YaTeX-typeset-buffer nil nil ppcmd)
     (put 'dvi2-command 'region nil)))
 
@@ -857,7 +881,7 @@ FILE changes the default file name."
 			 (key-description (this-command-keys)))
 		(sit-for 2)))))
     (YaTeX-typeset
-     command
+     (YaTeX-replace-format command "k" (YaTeX-kanji-ptex-mnemonic))
      (format " *YaTeX-%s*" (downcase builtin-type))
      builtin-type builtin-type)))
 
@@ -886,8 +910,8 @@ PROC should be process identifier."
 
 (defun YaTeX-system (command name &optional noask basedir)
   "Execute some COMMAND with process name `NAME'.  Not a official function.
-Optional second argument NOASK skip query when privious process running.
-Optional third argument BASEDIR changes default-directory there."
+Optional third argument NOASK skip query when privious process running.
+Optional fourth argument BASEDIR changes default-directory there."
   (save-excursion
     (let ((df default-directory)
 	  (buffer (get-buffer-create (format " *%s*" name)))
@@ -896,7 +920,7 @@ Optional third argument BASEDIR changes default-directory there."
       (setq default-directory (cd (or basedir df)))
       (erase-buffer)
       (insert (format "Calling `%s'...\n" command)
-	      "==Kill this buffer to STOP process==")
+	      "==Kill this buffer to STOP process==\n")
       (YaTeX-showup-buffer buffer 'YaTeX-showup-buffer-bottom-most)
       (if (not (fboundp 'start-process))
 	  (call-process
@@ -1099,7 +1123,7 @@ by region."
 			   ;;Send patch to the author, please
 		  	   previewer bnr cf line))
 		  ((string-match "okular" previewer)	;;??
-		   (format "%s '%s.pdf#src:%d' '%s'"
+		   (format "%s '%s.pdf#src:%d %s'"
 			   ;;Send patch to the author, please
 		  	   previewer bnr line cf))
 		  )))
@@ -1296,7 +1320,7 @@ error or warning lines in reverse order."
 (defvar YaTeX-dvi2-command-ext-alist
  '(("[agxk]dvi\\|dviout" . ".dvi")
    ("ghostview\\|gv" . ".ps")
-   ("acroread\\|[xk]pdf\\|pdfopen\\|Preview\\|TeXShop\\|Skim\\|evince\\|mupdf\\|zathura\\|okular" . ".pdf")))
+   ("acroread\\|[xk]pdf\\|pdfopen\\|Preview\\|TeXShop\\|Skim\\|evince\\|atril\\|xreader\\|mupdf\\|zathura\\|okular" . ".pdf")))
 
 (defun YaTeX-get-preview-file-name (&optional preview-command)
   "Get file name to preview by inquiring YaTeX-get-latex-command"
@@ -1351,7 +1375,8 @@ will be given to the shell."
 	(t (concat (substring magic 0 (string-match "\\s [^-]\\S *$" magic)) " "))))
       (t (concat tex-command " " (if switch parent))))
      (list (cons "f" tparent)
-	   (cons "r" (substring tparent 0 (rindex tparent ?.)))))))
+	   (cons "r" (substring tparent 0 (rindex tparent ?.)))
+	   (cons "k" (YaTeX-kanji-ptex-mnemonic))))))
 
 (defvar YaTeX-lpr-command-history nil
   "Holds command line history of YaTeX-lpr.")

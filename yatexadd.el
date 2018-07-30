@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
-;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 17 10:23:10 2017 on firestorm
+;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed May 30 13:35:42 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1296,7 +1296,7 @@ Don't forget to exit from recursive edit by typing \\[exit-recursive-edit]
 				   (overlay-put
 				    (setq ov (make-overlay b e))
 				    'face repface)))
-			     (switch-to-buffer buf)
+			     (set-window-buffer nil buf)	;Emacs26
 			     (while t
 			       (message qmsg new)
 			       (setq ch (read-char))
@@ -1518,6 +1518,23 @@ and print them to standard output."
 	 "cite"))))
 
    (t nil)))
+
+(defvar YaTeX::bibliographystyle-alist-default
+  '(("unsrt")("junsrt")("plain")("jplain")("alpha")("jalpha")
+    ("abbrv")("jabbrv")("jipsj")("jname")("tieice")("tipsj")
+    ("apalike")("ieeetr")("siam")))
+(defvar YaTeX::bibliographystyle-alist-private
+  nil
+  "*Completion table for bibliographystyle")
+
+(defun YaTeX::bibliographystyle(argp)
+  (cond
+   ((= argp 1)
+    (YaTeX-completing-read-or-skip
+     "BibStyle: "
+     (append YaTeX::bibliographystyle-alist-private
+	     YaTeX::bibliographystyle-alist-default)
+     nil))))
 
 (defun YaTeX::bibitem (argp)
   "Add-in function to insert argument of \\bibitem."
@@ -1815,6 +1832,7 @@ and print them to standard output."
 	(setq file (substring file 0 (string-match "\\.tex$" file))))))))
 
 (fset 'YaTeX::input 'YaTeX::include)
+(fset 'YaTeX::svg 'YaTeX::include)
 
 
 ;;; -------------------- LaTeX2e stuff --------------------

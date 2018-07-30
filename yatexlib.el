@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
-;;; (c)1994-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 17 10:23:31 2017 on firestorm
+;;; (c)1994-2018 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Wed May 23 07:59:08 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -120,6 +120,25 @@ This variable is effective when font-lock is used.
 (make-variable-buffer-local 'YaTeX-parent-file)
 
 ;---------- Define default key bindings on YaTeX mode map ----------
+;;;###autoload
+(defun YaTeX-kanji-ptex-mnemonic ()
+  "Return the kanji-mnemonic of pTeX from current buffer's coding-system."
+  (if (boundp 'NEMACS)
+      (or (cdr-safe (assq kanji-fileio-code
+			  '((1 . "sjis") (2 . "jis") (3 . "euc"))))
+	  "")
+    (let ((coding
+	   (cond
+	    ((boundp 'buffer-file-coding-system)
+	     (symbol-name buffer-file-coding-system))
+	    ((boundp 'file-coding-system) (symbol-name file-coding-system))))
+	  (case-fold-search t))
+      (cond ((string-match "utf-8\\>" coding)			"utf8")
+	    ((string-match "shift.jis\\|cp932\\>" coding)	"sjis")
+	    ((string-match "junet\\|iso.2022" coding)		"jis")
+	    ((string-match "euc.jp\\|ja.*iso.8bit" coding)	"euc")
+	    (t "")))))
+
 ;;;###autoload
 (defun YaTeX-define-key (key binding &optional map)
   "Define key on YaTeX-prefix-map."
@@ -1204,6 +1223,23 @@ to most recent sectioning command."
 	;;(end-of-line)				;OUT 2015/1/5
 	;;(if (eobp) nil (forward-char 1))	;OUT 2015/1/5
 	))))
+
+(defun YaTeX-in-BEGEND-p (&optional pt)
+  "Check if the point (or PT) is in a %#BEGIN...%#END region.
+Return the list of beginning and ending point of the region and arg-string
+if the point is in BEGEND.  Otherwise nil."
+  (let ((b "%#BEGIN") bp args (e "%#END") (p (point)))
+    (save-excursion
+      (save-match-data			;emacs-19+ yatex1.80+
+	(and (re-search-backward b nil t)
+	     (progn
+	       (setq bp (match-beginning 0))
+	       (goto-char (match-end 0))	;Start to get args of %#BEGIN
+	       (skip-chars-forward " \t")
+	       (setq args (YaTeX-buffer-substring (point) (point-end-of-line))))
+	     (re-search-forward e nil t)
+	     (> (point) p)
+	     (list bp (match-end 0) args))))))
 
 (defun YaTeX-kill-buffer (buffer)
   "Make effort to show parent buffer after kill."

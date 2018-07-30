@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
-;;; (c)1991-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 17 10:22:43 2017 on firestorm
+;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sat Jun  2 14:13:17 2018 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -16,7 +16,7 @@
 
 ;;; Code:
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.80.1"
+(defconst YaTeX-revision-number "1.80.3"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -49,15 +49,21 @@ YaTeX-current-position-register.")
 
 (defvar tex-command
   (cond
-   (YaTeX-use-LaTeX2e "platex")
+   (YaTeX-use-LaTeX2e "platex -kanji=%k")
    (YaTeX-japan "jlatex")
    (t "latex"))
   "*Default command for typesetting LaTeX text.
-Overridden with `%#! CommandLine...' in the buffer.")
+Overridden with `%#! CommandLine...' in the buffer.
+`%'s followed by a character are replaced as follows:
+%f -> Parent(main) document file name
+%r -> %f without extension
+%k -> One of Kanji code mnemonic: euc, jis, sjis, utf8
+")
 
-(defvar bibtex-command (if YaTeX-japan "jbibtex" "bibtex")
+(defvar bibtex-command (if YaTeX-japan "pbibtex -kanji=%k" "bibtex")
   "*Default command of BibTeX.
-Overridden with `%#BIBTEX CommandLine...' in the buffer.")
+Overridden with `%#BIBTEX CommandLine...' in the buffer.
+Pettern `%k' in a string will be replaced with Kanji-code mnemonic of ptex.")
 
 (defvar dvi2-command		;previewer command for your site
   (cond (YaTeX-dos	"dviout -wait=0")
@@ -89,7 +95,14 @@ Overridden with `%#PREVIEW CommandLine...' in the buffer.")
    (YaTeX-macos	(cond
 		 ((file-executable-p YaTeX-cmd-displayline) "open -a Skim")
 		 (t "open")))
-   (t		"evince"))
+   ((YaTeX-executable-find "evince")		"evince")
+   ((YaTeX-executable-find "xreader")		"xreader")
+   ((YaTeX-executable-find "atril")		"atril")
+   ((YaTeX-executable-find "okular")		"okular")
+   ((YaTeX-executable-find "kpdf")		"kpdf")
+   ((YaTeX-executable-find "xpdf")		"xpdf")
+   ((YaTeX-executable-find "mupdf")		"mupdf")
+   (t		"acroread"))
   "*Default PDF viewer command including its option.
 Overridden with `%#PDFVIEW CommandLine...' in the buffer.")
 
@@ -290,9 +303,10 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("author") ("thanks") ("documentstyle") ("pagestyle") ("thispagestyle")
      ("title") ("underline") ("label") ("makebox")
      ("footnote") ("footnotetext") ("index")
-     ("hspace*") ("vspace*") ("bibliography") ("bibitem") ("cite")
+     ("hspace*") ("vspace*")
+     ("bibliography") ("bibliographystyle") ("bibitem") ("cite")
      ("input") ("include") ("includeonly") ("mbox") ("hbox") ("caption")
-     ("arabic") ("cetering") ("uline")
+     ("arabic") ("centering") ("uline")
      ("newcounter")
      ("newlength") ("setlength" 2) ("addtolength" 2) ("settowidth" 2)
      ("setcounter" 2) ("addtocounter" 2) ("stepcounter" 2)
@@ -323,6 +337,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("rotatebox" 2) ("resizebox" 3) ("reflectbox")
 	 ("colorbox" 2) ("fcolorbox" 3) ("textcolor" 2) ("color") ("pagecolor")
 	 ("includegraphics") ("includegraphics*")
+	 ("includesvg")
 	 ("bou")			;defined in plext
 	 ("url")			;defined in url
 	 ("shadowbox") ("doublebox") ("ovalbox") ("Ovalbox")
@@ -369,6 +384,9 @@ Nil for removing only one commenting character at the beginning-of-line.")
   (append YaTeX-ams-math-begin-alist YaTeX-ams-math-gathering-alist)
   "*Standard AMS-LaTeX(2e) environment completion table.")
 
+(defvar YaTeX-use-dot-env-extension t
+  "*Use YaTeX's dot-env filter special environment.")
+
 ; Set tex-environment possible completion
 (defvar env-table
   (append
@@ -392,7 +410,10 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("multicols")			;defined in multicol
 	 ("breakbox")))			;defined in eclbkbox
    (if YaTeX-use-AMS-LaTeX YaTeX-ams-env-table)
-   YaTeX-math-other-env-alist)
+   YaTeX-math-other-env-alist
+   (and YaTeX-use-dot-env-extension
+	(require 'yatexflt)
+	YaTeX-filter-special-env-alist))
   "Default completion table for begin-type completion.")
 
 (defvar user-env-table nil)
@@ -608,7 +629,7 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
 (defvar YaTeX-kanji-code nil
   "*File kanji code used by Japanese TeX.
 nil: Do not care (Preserve coding-system)
-0: no-converion (mule)
+0: no-conversion (mule)
 1: Shift JIS
 2: JIS
 3: EUC
@@ -846,6 +867,9 @@ more features are available and they are documented in the manual.
 ;;autoload from yatexpkg.el
 (autoload 'YaTeX-package-auto-usepackage "yatexpkg" "Auto \\usepackage" t)
 
+;;autoload from yatexflt.el
+(autoload 'YaTeX-filter-goto-source "yatexflt" "Go to graphic source file" t)
+
 ;;;
 ;; YaTeX-mode functions
 ;;;
@@ -913,7 +937,10 @@ This works also for other defined begin/end tokens to define the structure."
 by completing read.
  If you invoke this command with universal argument,
 \(key binding for universal-argument is \\[universal-argument]\)
-you can put REGION into that environment between \\begin and \\end."
+you can put REGION into that environment between \\begin and \\end.
+If the environment name begins with `.'(dot),
+that environment will be treated as `special environment', which
+enables special feature such as text conversion."
   (interactive "P")
   (let*
       ((region-p (or arg (YaTeX-region-active-p)))
@@ -921,13 +948,17 @@ you can put REGION into that environment between \\begin and \\end."
        (env
 	(save-excursion		;for Emacs24 work-around to avoid point warp 
 	  (YaTeX-read-environment
-	   (format "Begin environment%s(default %s): " mode YaTeX-env-name)))))
+	   (format "Begin environment%s(default %s): " mode YaTeX-env-name))))
+       special)
     (if (string= env "")
 	(setq env YaTeX-env-name))
-    (setq YaTeX-env-name env)
+    (setq special (assoc env YaTeX-filter-special-env-alist)
+	  YaTeX-env-name env)
     (YaTeX-update-table
      (list YaTeX-env-name) 'env-table 'user-env-table 'tmp-env-table)
-    (YaTeX-insert-begin-end YaTeX-env-name region-p)))
+    (if special
+	(YaTeX-insert-filter-special YaTeX-env-name (cdr special) region-p)
+      (YaTeX-insert-begin-end YaTeX-env-name region-p))))
 
 (defun YaTeX-make-begin-end-region ()
   "Call YaTeX-make-begin-end with ARG to specify region mode."
@@ -1254,6 +1285,17 @@ into {\\xxx } braces.
     ((YaTeX-literal-p) ?\")
     ((= (preceding-char) ?\\ ) ?\")
     ;((= (preceding-char) ?\( ) ?\")
+    ((save-excursion (beginning-of-line)
+		     (skip-chars-forward "\t ")
+		     (looking-at "%#"))
+     ?\")
+    ((let ((ovl (overlays-at (point))))
+       (and ovl
+	    (catch 'found
+	      (while ovl
+		(if (overlay-get (car ovl) 'filter-input) (throw 'found t))
+		(setq ovl (cdr ovl))))))
+     ?\")
     ((or (= (preceding-char) 32)
 	 (= (preceding-char) 9)
 	 (= (preceding-char) ?\n)
@@ -1913,8 +1955,9 @@ search-last-string, you can repeat search the same label/ref by typing
 
 (defun YaTeX-goto-corresponding-file (&optional other)
   "Visit or switch buffer of corresponding file,
-looking at \\input or \\include or \\includeonly on current line."
-  (if (not (YaTeX-on-includes-p)) nil
+looking at \\input or \\include or \\includeonly or %#SRC{} on current line."
+  (cond
+   ((YaTeX-on-includes-p)
     (let ((parent buffer-file-name) input-file b)
       (save-excursion
 	(if (and (re-search-forward "[{%]" (point-end-of-line) t)
@@ -1933,7 +1976,12 @@ looking at \\input or \\include or \\includeonly on current line."
        (t (YaTeX-switch-to-buffer input-file)))
       (or (YaTeX-get-builtin "!")
 	  YaTeX-parent-file
-	  (setq YaTeX-parent-file parent)))))
+	  (setq YaTeX-parent-file parent))))
+   ;; On %#SRC{somefilters.src}
+   ((YaTeX-on-SRC-p)
+    (let ((src (YaTeX-match-string 1)))
+      (if other (YaTeX-switch-to-buffer-other-window src)
+	(goto-buffer-window (find-file-noselect src)))))))
 
 (defun YaTeX-goto-corresponding-BEGIN-END ()
   (if (not (YaTeX-on-BEGIN-END-p)) nil
@@ -1998,6 +2046,9 @@ See also the documentation of YaTeX-processed-file-regexp-alist.")
 	(cons YaTeX-cmd-edit-ai ".ai")
 	'("dia" . ".dia")
 	(cons YaTeX-cmd-ooo ".odg")
+	(cons 'YaTeX-filter-goto-source ".diag")
+	(cons 'YaTeX-filter-goto-source ".dot")
+	;; List of target file itself below...
 	(cons YaTeX-cmd-edit-images ".jpeg")
 	(cons YaTeX-cmd-edit-images ".jpg")
 	(cons YaTeX-cmd-edit-images ".png")
@@ -2228,6 +2279,13 @@ even if on `%#' notation."
       (re-search-forward
        "\\(%#BEGIN\\)\\|\\(%#END\\)" (point-end-of-line) t))))
 
+(defun YaTeX-on-SRC-p ()
+  (save-excursion
+    (let ((case-fold-search nil))
+      (beginning-of-line)
+      (re-search-forward
+       "%#SRC{\\([^}]+\\)}" (point-end-of-line) t))))
+
 (defun YaTeX-goto-corresponding-* (arg)
   "Parse current line and call suitable function."
   (interactive "P")
@@ -2252,12 +2310,7 @@ even if on `%#' notation."
 (defun YaTeX-goto-corresponding-*-other-window (arg)
   "Parse current line and call suitable function."
   (interactive "P")
-  (cond
-   ((YaTeX-goto-corresponding-label arg t))
-   ;;((YaTeX-goto-corresponding-environment))
-   ((YaTeX-goto-corresponding-file t))
-   ;;((YaTeX-goto-corresponding-BEGIN-END))
-   (t (message "I don't know where to go."))))
+  (YaTeX-goto-corresponding-* t))
 
 (defun YaTeX-comment-region (alt-prefix)
   "Comment out region by '%'.
