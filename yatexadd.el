@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Oct 22 11:43:47 2018 on firestorm
+;;; Last modified Mon Oct 22 11:46:32 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -2138,7 +2138,7 @@ This function relies on gs(ghostscript) command installed."
     (if (string= "" subcap) ""
       (concat "[" subcap "]"))))
 
-(defun YaTeX::subfigure ()
+(defun YaTeX::subfigure (argp)
   (setq YaTeX-section-name "includegraphics")
   nil)
 
