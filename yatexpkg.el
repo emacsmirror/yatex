@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2018 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Oct 22 11:30:45 2018 on firestorm
+;;; Last modified Mon Oct 22 11:48:49 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -76,7 +76,7 @@ An good example is the value of YaTeX-package-alist-default.")
     ("xdvi") ("dvipdfmx") ("pdftex") ("dvipsone") ("dviwindo")
     ("emtex") ("dviwin") ("oztex") ("textures") ("pctexps") ("pctexwin")
     ("pctexhp") ("pctex32") ("truetex") ("tcidvi") ("vtex"))
-  "Drivers alist of graphics/color stylefile's supporting deveces.
+  "Drivers alist of graphics/color stylefile's supporting devices.
 This list is taken from
 %% graphics.dtx Copyright (C) 1994      David Carlisle Sebastian Rahtz
 %%              Copyright (C) 1995 1996 1997 1998 David Carlisle
