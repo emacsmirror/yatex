@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed May 30 13:35:42 2018 on firestorm
+;;; Last modified Mon Oct 22 11:43:47 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -2133,6 +2133,15 @@ This function relies on gs(ghostscript) command installed."
   (setq YaTeX-section-name "label")
   nil)
 
+(defun YaTeX:subfigure ()
+  (let ((subcap (YaTeX-read-string-or-skip "Sub-caption: ")))
+    (if (string= "" subcap) ""
+      (concat "[" subcap "]"))))
+
+(defun YaTeX::subfigure ()
+  (setq YaTeX-section-name "includegraphics")
+  nil)
+
 
 (defvar YaTeX::usepackage-alist-default
   '(("version") ("plext") ("url") ("fancybox") ("pifont") ("longtable")
@@ -2140,7 +2149,8 @@ This function relies on gs(ghostscript) command installed."
     ("amsmath") ("amssymb") ("xymtex") ("chemist")
     ("a4j") ("array") ("epsf") ("color") ("xcolor") ("epsfig") ("floatfig")
     ("landscape") ("path") ("supertabular") ("twocolumn")
-    ("latexsym") ("times") ("makeidx") ("geometry") ("type1cm"))
+    ("latexsym") ("times") ("makeidx") ("geometry") ("type1cm")
+    ("subfigure"))
   "Default completion table for arguments of \\usepackage")
 
 (defvar YaTeX::usepackage-alist-private nil

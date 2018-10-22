@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2018 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Jan  5 00:22:46 2018 on firestorm
+;;; Last modified Mon Oct 22 11:30:45 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -57,6 +57,7 @@
     ("wrapfig"	(env "wrapfigure" "wraptable"))
     ("setspace"	(env "spacing") (section "setstretch"))
     ("cases"	(env "numcases" "subnumcases"))
+    ("subfigure"	(section "subfigure"))
     )
   "Default package vs. macro list.
 Alists contains '(PACKAGENAME . MACROLIST)
