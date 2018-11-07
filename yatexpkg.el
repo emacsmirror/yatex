@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2018 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Mon Oct 22 11:48:49 2018 on firestorm
+;;; Last modified Wed Nov  7 08:57:36 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -58,6 +58,7 @@
     ("setspace"	(env "spacing") (section "setstretch"))
     ("cases"	(env "numcases" "subnumcases"))
     ("subfigure"	(section "subfigure"))
+    ("okumacro"	(section "ruby" "kenten"))
     )
   "Default package vs. macro list.
 Alists contains '(PACKAGENAME . MACROLIST)

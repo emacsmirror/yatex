@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Oct 22 11:46:32 2018 on firestorm
+;;; Last modified Wed Nov  7 09:01:08 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -2142,6 +2142,11 @@ This function relies on gs(ghostscript) command installed."
   (setq YaTeX-section-name "includegraphics")
   nil)
 
+;; for okumacro
+(defun YaTeX::ruby (argp)
+  (cond
+   ((= argp 1) (YaTeX-read-string-or-skip "Kanji: ")) 
+   ((= argp 2) (YaTeX-read-string-or-skip "Yomi: "))))
 
 (defvar YaTeX::usepackage-alist-default
   '(("version") ("plext") ("url") ("fancybox") ("pifont") ("longtable")
@@ -2150,7 +2155,7 @@ This function relies on gs(ghostscript) command installed."
     ("a4j") ("array") ("epsf") ("color") ("xcolor") ("epsfig") ("floatfig")
     ("landscape") ("path") ("supertabular") ("twocolumn")
     ("latexsym") ("times") ("makeidx") ("geometry") ("type1cm")
-    ("subfigure"))
+    ("subfigure") ("okumacro"))
   "Default completion table for arguments of \\usepackage")
 
 (defvar YaTeX::usepackage-alist-private nil

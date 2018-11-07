@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Oct 22 11:43:30 2018 on firestorm
+;;; Last modified Wed Nov  7 08:56:44 2018 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -16,7 +16,7 @@
 
 ;;; Code:
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.80.4"
+(defconst YaTeX-revision-number "1.80.5"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -325,6 +325,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("cref") ("crefrange") ("cpageref") ("labelcref") ("labelcpageref")
      ("frametitle") ("framesubtitle") 				;; beamer
      ("subfigure")						;; subfigure
+     ("ruby" 2) ("kenten")					;; okumacro
      )
    (if YaTeX-use-LaTeX2e
        '(("documentclass") ("usepackage")
