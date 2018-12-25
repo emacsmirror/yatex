@@ -1,7 +1,7 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions -*- coding: sjis -*-
 ;;; 
-;;; (c)1993-2017 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Sat Feb 24 16:40:22 2018 on firestorm
+;;; (c)1993-2018 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Tue Dec 25 20:02:12 2018 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -1014,7 +1014,7 @@ If optional argument JUMPTO-CO is non-nil, goto corresponding parentheses."
        (t
 	(delete-region (- (point) length) (- (point) paren-length))
 	(backward-char paren-length)))
-      (insert-string newsize)
+      (insert newsize)
       (if big-p (insert ?l))
       (unwind-protect
 	  (progn
@@ -1029,7 +1029,7 @@ If optional argument JUMPTO-CO is non-nil, goto corresponding parentheses."
 	     (t
 	      (delete-region (- (point) length) (- (point) paren-length))
 	      (backward-char paren-length)
-	      (insert-string newsize)
+	      (insert newsize)
 	      (if big-p (insert ?r))
 	      (forward-char paren-length)))
 	    (if (string= lr "l") (backward-list)))
