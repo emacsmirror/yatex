@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2018 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Jan  5 00:22:46 2018 on firestorm
+;;; Last modified Wed Nov  7 08:57:36 2018 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -57,6 +57,8 @@
     ("wrapfig"	(env "wrapfigure" "wraptable"))
     ("setspace"	(env "spacing") (section "setstretch"))
     ("cases"	(env "numcases" "subnumcases"))
+    ("subfigure"	(section "subfigure"))
+    ("okumacro"	(section "ruby" "kenten"))
     )
   "Default package vs. macro list.
 Alists contains '(PACKAGENAME . MACROLIST)
@@ -75,7 +77,7 @@ An good example is the value of YaTeX-package-alist-default.")
     ("xdvi") ("dvipdfmx") ("pdftex") ("dvipsone") ("dviwindo")
     ("emtex") ("dviwin") ("oztex") ("textures") ("pctexps") ("pctexwin")
     ("pctexhp") ("pctex32") ("truetex") ("tcidvi") ("vtex"))
-  "Drivers alist of graphics/color stylefile's supporting deveces.
+  "Drivers alist of graphics/color stylefile's supporting devices.
 This list is taken from
 %% graphics.dtx Copyright (C) 1994      David Carlisle Sebastian Rahtz
 %%              Copyright (C) 1995 1996 1997 1998 David Carlisle

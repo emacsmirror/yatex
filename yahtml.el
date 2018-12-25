@@ -1623,7 +1623,8 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 
 (defvar yahtml:meta-attrs
   '(("charset" value)
-    ("name" content ("keywords")("author")("copyright")("date")("GENERATOR"))
+    ("name" content ("keywords")("author")("copyright")("date")("GENERATOR")
+     ("viewport"))
     ("http-equiv" content)))
 
 (defun yahtml:meta ()
@@ -1665,6 +1666,9 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 	      (error "Use <meta charset=\"...\" instead..  See docs/qanda.")
 	    (yahtml-make-optional-argument
 	     "content" (yahtml-read-parameter "content"))))
+	 ((string-match "viewport" name)
+	  ;; XXX: Very dirty static string
+	  "width=device-width, initial-scale=1")
 	 (t (read-string-with-history (concat name ": ")))))))
      (t (yahtml-make-optional-argument
 	 attr (yahtml-read-parameter attr))))))
