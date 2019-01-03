@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
 ;;; (c)1994-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed May 23 07:59:08 2018 on firestorm
+;;; Last modified Thu Jan  3 12:23:22 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1116,8 +1116,8 @@ Optional third argument NOERR causes no error for unballanced environment."
 		  regexp (format "\\(%s%s\\)\\|\\(%s%s\\)"
 				 YaTeX-ec-regexp
 				 (regexp-quote
-				  (cdr (assq env '((?( . ")") (?) . "(")
-						   (?[ . "]") (?] . "[")))))
+				  (cdr (assq env '((?\( . ")") (?\) . "(")
+						   (?\[ . "]") (?\] . "[")))))
 				 YaTeX-ec-regexp
 				 (regexp-quote (char-to-string env)))
 		  re-s (if (memq env '(?\( ?\[))
