@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
 ;;; (c)1994-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan  3 12:23:22 2019 on firestorm
+;;; Last modified Wed Jan 16 07:55:43 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -130,7 +130,9 @@ This variable is effective when font-lock is used.
     (let ((coding
 	   (cond
 	    ((boundp 'buffer-file-coding-system)
-	     (symbol-name buffer-file-coding-system))
+	     (symbol-name (if (fboundp 'coding-system-name)
+			      (coding-system-name buffer-file-coding-system)
+			    buffer-file-coding-system)))
 	    ((boundp 'file-coding-system) (symbol-name file-coding-system))))
 	  (case-fold-search t))
       (cond ((string-match "utf-8\\>" coding)			"utf8")
