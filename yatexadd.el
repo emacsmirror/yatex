@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Nov  7 09:01:08 2018 on firestorm
+;;; Last modified Wed Jan 16 08:23:13 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1887,7 +1887,7 @@ and print them to standard output."
   "*User defined documentclass alist")
 (defvar YaTeX:documentclasses-local nil
   "*User defined local documentclass alist")
-(defvar YaTeX-default-documentclass (if YaTeX-japan "jarticle" "article")
+(defvar YaTeX-default-documentclass (if YaTeX-japan "jsarticle" "article")
   "*Default documentclass")
 
 (defun YaTeX::documentclass (&optional argp)
