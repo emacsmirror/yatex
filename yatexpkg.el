@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2018 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Wed Nov  7 08:57:36 2018 on firestorm
+;;; Last modified Thu Jan 24 08:00:20 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -32,6 +32,9 @@
     ("supertabular" (env "supertabular"))
     ("amsmath"	(env . YaTeX-package-ams-envs)
      		(section "tag" "tag*"))
+    ("amsart"	(same-as . "amsmath"))
+    ("amsbook"	(same-as . "amsmath"))
+    ("amsproc"	(same-as . "amsmath"))
     ("amssymb"	(maketitle "leqq" "geqq" "mathbb" "mathfrak"
 			   "fallingdotseq" "therefore" "because"
 			   "varDelta" "varTheta" "varLambda" "varXi" "varPi"
