@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan 24 08:00:29 2019 on firestorm
+;;; Last modified Thu Jan 24 15:14:47 2019 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -326,6 +326,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("frametitle") ("framesubtitle") 				;; beamer
      ("subfigure")						;; subfigure
      ("ruby" 2) ("kenten")					;; okumacro
+     ("geometry") ("path")
      )
    (if YaTeX-use-LaTeX2e
        '(("documentclass") ("usepackage")
@@ -398,9 +399,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("eqnarray") ("eqnarray*") ("figure") ("equation") ("equation*")
      ("abstract") ("array")
      ("thebibliography") ("theindex") ("flushleft") ("flushright")
-     ("minipage")
-     ("supertabular")
-     ("wrapfigure") ("wraptable")
+     ("minipage") ("landscape")
+     ("supertabular") ("floatingfigure") ("wrapfigure") ("wraptable")
      ("frame") ("block") ("example") ("columns") ("column")	;beamer
      )
    (if YaTeX-use-LaTeX2e

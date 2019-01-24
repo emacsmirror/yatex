@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Jan 16 08:23:13 2019 on firestorm
+;;; Last modified Thu Jan 24 13:57:49 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -2040,8 +2040,7 @@ and print them to standard output."
 				 (format "%s=%s" s (symbol-value s)))))
 			 '(width height scale angle)))
 	   ","))
-    (if (string= "" str) ""
-      (concat "[" str "]"))))
+    (concat "{" str "}")))
 
 (defvar YaTeX::get-boundingbox-cmd YaTeX-cmd-gs
   "Command to get bounding box from PDF files.
@@ -2148,34 +2147,11 @@ This function relies on gs(ghostscript) command installed."
    ((= argp 1) (YaTeX-read-string-or-skip "Kanji: ")) 
    ((= argp 2) (YaTeX-read-string-or-skip "Yomi: "))))
 
-(defvar YaTeX::usepackage-alist-default
-  '(("version") ("plext") ("url") ("fancybox") ("pifont") ("longtable")
-    ("ascmac") ("bm") ("graphics") ("graphicx") ("alltt") ("misc") ("eclbkbox")
-    ("amsmath") ("amssymb") ("xymtex") ("chemist")
-    ("a4j") ("array") ("epsf") ("color") ("xcolor") ("epsfig") ("floatfig")
-    ("landscape") ("path") ("supertabular") ("twocolumn")
-    ("latexsym") ("times") ("makeidx") ("geometry") ("type1cm")
-    ("subfigure") ("okumacro"))
-  "Default completion table for arguments of \\usepackage")
+;;(require 'yatexpkg)
+(autoload 'YaTeX::usepackage "yatexpkg" "Add-in for \\usepackage{}")
+;;; (defun YaTeX::usepackage()...) MOVED to yatexpkg.el
+;;; See yatexpkg.el
 
-(defvar YaTeX::usepackage-alist-private nil
-  "*Private completion list of the argument for usepackage")
-
-(defvar YaTeX::usepackage-alist-local nil
-  "Directory local  completion list of the argument for usepackage")
-
-(defun YaTeX::usepackage (&optional argp)
-  (cond
-   ((equal argp 1)
-    (setq YaTeX-env-name "document")
-    (let ((minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
-	  (delim ","))
-      (YaTeX-cplread-with-learning
-       (if YaTeX-japan "Use package(ÉJÉìÉ}Ç≈ãÊêÿÇ¡ÇƒOK): "
-	 "Use package(delimitable by comma): ")
-       'YaTeX::usepackage-alist-default
-       'YaTeX::usepackage-alist-private
-       'YaTeX::usepackage-alist-local)))))
 
 (defun YaTeX::mask (argp)
   (cond

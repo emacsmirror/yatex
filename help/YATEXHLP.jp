@@ -1805,6 +1805,35 @@ $rlangle$
 \textbackslash
 バックスラッシュそのもの
 
+geometry
+\geometry{params...}   or   \usepackage[params...]{geometry}
+From: geometry-samples.tex
+以下を参考に:
+
+\geometry{centering}
+\geometry{width=10cm,vscale=.7}
+\geometry{margin=1cm, papersize={12cm,19cm}, resetpaper}
+\geometry{margin=1cm,includeheadfoot}
+\geometry{margin=1cm,includeheadfoot,includemp}
+\geometry{margin=1cm,bindingoffset=1cm,twoside}
+\geometry{hmarginratio=2:1, vmargin=2cm}
+\geometry{hscale=0.5,twoside}
+\geometry{hscale=0.5,asymmetric}
+\geometry{hscale=0.5,heightrounded}
+\geometry{left=1cm,right=4cm,top=2cm,includefoot}
+\geometry{lines=20,left=2cm,right=6cm,top=2cm,twoside}
+\geometry{width=15cm, marginparwidth=3cm, includemp}
+\geometry{hdivide={1cm,,2cm}, vdivide={3cm,8in,}, nohead}
+\geometry{headsep=20pt, head=40pt,foot=20pt,includeheadfoot}
+\geometry{text={6in,8in}, top=2cm, left=2cm}
+\geometry{centering,includemp,twoside,landscape}
+\geometry{mag=1414,margin=2cm}
+\geometry{mag=1414,margin=2truecm,truedimen}
+\geometry{a5paper, landscape, twocolumn, twoside,
+   left=2cm, hmarginratio=2:1, includemp, marginparwidth=43pt,
+   bottom=1cm, foot=.7cm, includefoot, textheight=11cm, heightrounded,
+   columnsep=1cm,verbose}
+
 FILTER
 %#BEGIN FILTER{OUTPUT}{COMMANDLINE}  ... %#END
 \if0 から \fi までに囲まれた領域、もしくは %#SRC{...} で指定されたファイルを
