@@ -1,6 +1,10 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.82	== yatex ==
+	YaTeX::usepackage-alist-default を廃止し、
+	YaTeX-package-alist-default を利用するようにした。
+
 1.81	emacs-26 の主要関数の仕様変更に対応。
 	== yatex ==
 	タイプセットコマンド定義中の %k を漢字コード名に変換(-kanji=%k)
