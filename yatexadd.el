@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan 24 13:57:49 2019 on firestorm
+;;; Last modified Tue Feb 26 22:10:53 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -2040,7 +2040,8 @@ and print them to standard output."
 				 (format "%s=%s" s (symbol-value s)))))
 			 '(width height scale angle)))
 	   ","))
-    (concat "{" str "}")))
+    (if (string= "" str) ""
+      (concat "[" str "]"))))
 
 (defvar YaTeX::get-boundingbox-cmd YaTeX-cmd-gs
   "Command to get bounding box from PDF files.
