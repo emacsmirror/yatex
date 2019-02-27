@@ -361,6 +361,7 @@ normal and region mode.  To customize yahtml, user should use this function."
       (yahtml-define-begend-key "bb" "body" map)
       (yahtml-define-begend-key "bc" "center" map)
       (yahtml-define-begend-key "bd" "dl" map)
+      (yahtml-define-begend-key "bD" "div" map)
       (yahtml-define-begend-key "bu" "ul" map)
       (yahtml-define-begend-key "bo" "ol" map)
       (yahtml-define-begend-key "b1" "h1" map)
