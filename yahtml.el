@@ -374,6 +374,7 @@ normal and region mode.  To customize yahtml, user should use this function."
       (yahtml-define-begend-key "bv" "div" map)
       (yahtml-define-begend-key "bS" "span" map)
       (yahtml-define-begend-key "bp" "pre" map)
+      (yahtml-define-begend-key "bq" "blockquote" map)
       (YaTeX-define-key "b " 'yahtml-insert-begend map)
       (YaTeX-define-key "B " 'yahtml-insert-begend-region map))
     (YaTeX-define-key "e" 'YaTeX-end-environment map)
