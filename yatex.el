@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Jan 24 15:14:47 2019 on firestorm
+;;; Last modified Sat Apr  6 23:38:45 2019 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -554,6 +554,7 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
     (YaTeX-define-begend-key "bD" "description")
     (YaTeX-define-begend-key "be" "enumerate")
     (YaTeX-define-begend-key "bE" "equation")
+    (YaTeX-define-begend-key "bf" "figure")
     (YaTeX-define-begend-key "bi" "itemize")
     (YaTeX-define-begend-key "bl" "flushleft")
     (YaTeX-define-begend-key "bm" "minipage")
