@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Apr 30 23:43:59 2019 on firestorm
+;;; Last modified Sat May 25 14:46:49 2019 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -16,7 +16,7 @@
 
 ;;; Code:
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.81.3"
+(defconst YaTeX-revision-number "1.81.4"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -204,7 +204,7 @@ for YaTeX-uncomment-paragraph.")
   "*Regexp of verb family.  Do not contain preceding \\\\ nor \\(\\).")
 (defvar YaTeX-fill-inhibit-environments
   (append '("tabular" "tabular*" "array" "picture" "eqnarray" "eqnarray*"
-	    "longtable"
+	    "longtable" "tabularx"
 	    "equation" "equation*" "math" "displaymath")
 	  YaTeX-verbatim-environments)
   "*In these environments, YaTeX inhibits fill-paragraph from formatting.
@@ -218,7 +218,7 @@ Define those environments as a form of list.")
   "*Regexp of environments for equations")
 (defvar YaTeX-array-env-regexp
   (concat
-   "array\\*?\\|eqnarray\\*?\\|tabbing\\|tabular\\*?\\|"	;LaTeX
+   "array\\*?\\|eqnarray\\*?\\|tabbing\\|tabularx?\\*?\\|"	;LaTeX
    "longtable\\|"						;LaTeX2e
    "matrix\\|pmatrix\\|bmatrix\\|vmatrix\\|Vmatrix\\|"		;AMS-LaTeX
    "align\\*?\\|split\\*?\\|aligned\\*?\\|alignat\\*?\\|"	;AMS-LaTeX
@@ -402,6 +402,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("minipage") ("landscape")
      ("supertabular") ("floatingfigure") ("wrapfigure") ("wraptable")
      ("frame") ("block") ("example") ("columns") ("column")	;beamer
+     ("tabularx")
      )
    (if YaTeX-use-LaTeX2e
        '(("comment")			;defined in version

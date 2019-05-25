@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
-;;; (c)2003-2018 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Thu Jan 24 14:13:01 2019 on firestorm
+;;; (c)2003-2019 by HIROSE, Yuuji [yuuji@yatex.org]
+;;; Last modified Sat May 25 14:46:27 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -30,6 +30,7 @@
     ("verbatim"	(section "verbatiminput"))
     ("eclbkbox"	(env "breakbox"))
     ("supertabular" (env "supertabular"))
+    ("tabularx" (env "tabularx"))
     ("amsmath"	(env . YaTeX-package-ams-envs)
      		(section "tag" "tag*"))
     ("amsart"	(same-as . "amsmath"))
@@ -155,7 +156,7 @@ a \\usepackage line."
 	(pkglist (YaTeX-package-lookup macro type))
 	(usepkgrx (concat
 		   YaTeX-ec-regexp
-		   "\\(usepackage\\|include\\)\\b"))
+		   "\\(usepackage\\|include\\|documentclass\\)\\b"))
 	(register (function
 		   (lambda () (set-buffer cb)
 		     (set (make-local-variable 'YaTeX-package-resolved-list)
@@ -174,10 +175,8 @@ a \\usepackage line."
 		(goto-char (point-min))
 		(YaTeX-search-active-forward	;if search fails, goto eob
 		 begdoc YaTeX-comment-prefix nil 1)
-		(while ;(YaTeX-re-search-active-backward
-			;usepkgrx YaTeX-comment-prefix nil t)
-		    ;;allow commented out \usepackages 2004/3/16
-		    (re-search-backward usepkgrx nil t)
+		(while (re-search-backward usepkgrx nil t)
+		  ;;allow commented out \usepackages
 		  (setq mb0 (match-beginning 0))
 		  (skip-chars-forward "^{")
 		  (setq uspkgargs (YaTeX-buffer-substring

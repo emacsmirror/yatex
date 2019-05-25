@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
-;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Feb 26 22:10:53 2019 on firestorm
+;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sat May 25 14:46:41 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -22,8 +22,8 @@
 Notice that this function refers the let-variable `env' in
 YaTeX-make-begin-end."
   (let ((width "") bars (rule "") (and "") (j 1) loc ans (hline "\\hline"))
-    (if (string= YaTeX-env-name "tabular*")
-	(setq width (concat "{" (YaTeX:read-length "Width: ") "}")))
+    (if (string-match "tabular[*x]" YaTeX-env-name)
+	(setq width (concat "{" (YaTeX:read-length "Table Width: ") "}")))
     (setq loc (YaTeX:read-position "tb")
 	  bars (YaTeX-str2int
 		(YaTeX-read-string-or-skip
@@ -57,6 +57,7 @@ YaTeX-make-begin-end."
 
 (fset 'YaTeX:tabular* 'YaTeX:tabular)
 (fset 'YaTeX:supertabular 'YaTeX:tabular)
+(fset 'YaTeX:tabularx 'YaTeX:tabular)
 (defun YaTeX:alignat ()
   (concat "{" (read-string-with-history "Number of columns: ") "}"))
 (defun YaTeX:array ()
