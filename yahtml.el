@@ -1,8 +1,8 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
-;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
+;;; (c) 1994-2019 by HIROSE Yuuji [yuuji(@)yatex.org]
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.80"
+(defconst yahtml-revision-number "1.80.1"
   "Revision number of running yahtml.el")
 
 ;;; Commentary:
@@ -1084,6 +1084,8 @@ Not used yet.")
 	(ask (eq yahtml-escape-chars 'ask)))
     (cond
      ((null yahtml-escape-chars) str)
+     ((string-match "%[0-9A-F][0-9A-F]%[0-9A-F][0-9A-F]%[0-9A-F][0-9A-F]" str)
+      str)
      (t
       (while (and (string< "" str)
 		  (setq p (string-match yahtml-unsafe-chars-regexp str)))
