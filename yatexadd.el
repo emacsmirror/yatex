@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat May 25 14:46:41 2019 on firestorm
+;;; Last modified Thu Oct 17 09:44:48 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -2372,6 +2372,10 @@ This function relies on gs(ghostscript) command installed."
    ((eq YaTeX-current-completion-type 'large) "\\/")
    (t nil)))
 (fset 'YaTeX:it 'YaTeX:em)
+
+;;; twocolumn
+(defun YaTeX:twocolumn ()
+  (format "[%s]" (YaTeX-read-string-or-skip "One column paragraph: ")))
 
 ;;; -------------------- End of yatexadd --------------------
 (provide 'yatexadd)

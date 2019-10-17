@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat May 25 14:46:49 2019 on firestorm
+;;; Last modified Thu Oct 17 09:51:11 2019 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -16,7 +16,7 @@
 
 ;;; Code:
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.81.4"
+(defconst YaTeX-revision-number "1.81.5"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -452,6 +452,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
    '(("maketitle") ("makeindex") ("sloppy") ("protect") ("par") ("and")
      ("LaTeX") ("TeX") ("item") ("item[]") ("appendix") ("hline") ("kill")
      ;;("rightarrow") ("Rightarrow") ("leftarrow") ("Leftarrow")
+     ("onecolumn") ("twocolumn")
      ("pagebreak") ("nopagebreak") ("tableofcontents")
      ("newpage") ("clearpage") ("cleardoublepage")
      ("footnotemark") ("verb") ("verb*")
