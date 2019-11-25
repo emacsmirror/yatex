@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed May 30 08:32:30 2018 on firestorm
+;;; Last modified Mon Nov 25 21:01:57 2019 on monster
 ;;; $Id$
 
 ;;; Code:
@@ -168,6 +168,8 @@ thus, it call bibtex only if warning messages about citation are seen.")
 (defvar YaTeX-typeset-rerun-msg "Rerun to get cross-references right.")
 (defvar YaTeX-typeset-citation-msg
   "Warning: Citation \`")
+(defvar YaTeX-typeset-remove-dvi-when-pdf t
+  "*Non-nil means removing dvi file which has same rootname as PDF output")
 (defun YaTeX-typeset-sentinel (proc mes)
   (cond ((null (buffer-name (process-buffer proc)))
          ;; buffer killed
@@ -303,12 +305,22 @@ thus, it call bibtex only if warning messages about citation are seen.")
 			 (if (save-excursion
 			       (re-search-backward
 				(concat
-				 "^Output written on .*\\.pdf (.*page,"
-				 "\\|\\.dvi -> .*\\.pdf$")
+				 "^Output written on \\(.*\\.pdf\\) (.*page,"
+				 "\\|.* -> \\(.*\\.pdf\\)$")
 				nil t))
-			     ;; If PDF output log found in buffer,
-			     ;; set next default previewer to 'pdf viewer
-			     (put 'dvi2-command 'format 'pdf))
+			     (let*((pdf (or (YaTeX-match-string 1)
+					    (YaTeX-match-string 2)))
+				   (rootname (substring
+					      pdf 0 (rindex pdf ?.)))
+				   (dvi (format "%s.dvi" rootname))
+				   (log (format "%s.log" rootname)))
+			       ;; If PDF output log found in buffer,
+			       ;; set next default previewer to 'pdf viewer
+			       (put 'dvi2-command 'format 'pdf)
+			       (if YaTeX-typeset-remove-dvi-when-pdf
+				   (progn
+				     (delete-file log) ;Ugly, should not do here
+				     (delete-file dvi)))))
 		       ;;Confirm process buffer to be shown when error
 		       (YaTeX-showup-buffer
 			pbuf 'YaTeX-showup-buffer-bottom-most)
