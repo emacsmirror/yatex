@@ -4,6 +4,10 @@
 1.82	== yatex ==
 	YaTeX::usepackage-alist-default を廃止し、
 	YaTeX-package-alist-default を利用するようにした。
+	tabularx等対応。
+	PDFまで生成できたときは .log, .dvi ファイルを消すようにした。
+	== yahtml ==
+	URLエンコード混みと思しきURLは再エンコードしないようにした。
 
 1.81	emacs-26 の主要関数の仕様変更に対応。
 	== yatex ==
