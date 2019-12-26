@@ -1,6 +1,6 @@
 ;;; yatexenv.el --- YaTeX environment-specific functions
-;;; (c) 1994-2017 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Sep 17 10:23:16 2017 on firestorm
+;;; (c) 1994-2019 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sat May 25 14:46:33 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -89,7 +89,7 @@ When calling from a program, make sure to be in array/tabular environment."
     (while (< (point) end)
 	(setq elt (following-char))
 	(cond
-	 ((string-match (char-to-string elt) "clr") ;normal indicators.
+	 ((string-match (char-to-string elt) "clrX") ;normal indicators.
 	  (setq cols (1+ cols))
 	  (forward-char 1))
 	 ((equal elt ?|)		;vertical
@@ -174,6 +174,7 @@ Return the list of (No.ofCols PointEndofFormat)"
 (fset 'YaTeX-intelligent-newline-array 'YaTeX-intelligent-newline-tabular)
 (fset 'YaTeX-intelligent-newline-supertabular 'YaTeX-intelligent-newline-tabular)
 (fset 'YaTeX-intelligent-newline-longtable 'YaTeX-intelligent-newline-tabular)
+(fset 'YaTeX-intelligent-newline-tabularx 'YaTeX-intelligent-newline-tabular*)
 
 (defun YaTeX-intelligent-newline-align ()
   "Intelligent newline function for align.

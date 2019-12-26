@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
-;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Tue Dec 25 20:03:02 2018 on firestorm
+;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Dec 26 12:46:41 2019 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -16,7 +16,7 @@
 
 ;;; Code:
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.81.1"
+(defconst YaTeX-revision-number "1.82"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -204,7 +204,7 @@ for YaTeX-uncomment-paragraph.")
   "*Regexp of verb family.  Do not contain preceding \\\\ nor \\(\\).")
 (defvar YaTeX-fill-inhibit-environments
   (append '("tabular" "tabular*" "array" "picture" "eqnarray" "eqnarray*"
-	    "longtable"
+	    "longtable" "tabularx"
 	    "equation" "equation*" "math" "displaymath")
 	  YaTeX-verbatim-environments)
   "*In these environments, YaTeX inhibits fill-paragraph from formatting.
@@ -218,7 +218,7 @@ Define those environments as a form of list.")
   "*Regexp of environments for equations")
 (defvar YaTeX-array-env-regexp
   (concat
-   "array\\*?\\|eqnarray\\*?\\|tabbing\\|tabular\\*?\\|"	;LaTeX
+   "array\\*?\\|eqnarray\\*?\\|tabbing\\|tabularx?\\*?\\|"	;LaTeX
    "longtable\\|"						;LaTeX2e
    "matrix\\|pmatrix\\|bmatrix\\|vmatrix\\|Vmatrix\\|"		;AMS-LaTeX
    "align\\*?\\|split\\*?\\|aligned\\*?\\|alignat\\*?\\|"	;AMS-LaTeX
@@ -326,6 +326,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("frametitle") ("framesubtitle") 				;; beamer
      ("subfigure")						;; subfigure
      ("ruby" 2) ("kenten")					;; okumacro
+     ("geometry") ("path")
      )
    (if YaTeX-use-LaTeX2e
        '(("documentclass") ("usepackage")
@@ -398,10 +399,10 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("eqnarray") ("eqnarray*") ("figure") ("equation") ("equation*")
      ("abstract") ("array")
      ("thebibliography") ("theindex") ("flushleft") ("flushright")
-     ("minipage")
-     ("supertabular")
-     ("wrapfigure") ("wraptable")
+     ("minipage") ("landscape")
+     ("supertabular") ("floatingfigure") ("wrapfigure") ("wraptable")
      ("frame") ("block") ("example") ("columns") ("column")	;beamer
+     ("tabularx")
      )
    (if YaTeX-use-LaTeX2e
        '(("comment")			;defined in version
@@ -451,6 +452,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
    '(("maketitle") ("makeindex") ("sloppy") ("protect") ("par") ("and")
      ("LaTeX") ("TeX") ("item") ("item[]") ("appendix") ("hline") ("kill")
      ;;("rightarrow") ("Rightarrow") ("leftarrow") ("Leftarrow")
+     ("onecolumn") ("twocolumn")
      ("pagebreak") ("nopagebreak") ("tableofcontents")
      ("newpage") ("clearpage") ("cleardoublepage")
      ("footnotemark") ("verb") ("verb*")
@@ -554,6 +556,7 @@ nil enters both open/close parentheses when opening parentheses key pressed.")
     (YaTeX-define-begend-key "bD" "description")
     (YaTeX-define-begend-key "be" "enumerate")
     (YaTeX-define-begend-key "bE" "equation")
+    (YaTeX-define-begend-key "bf" "figure")
     (YaTeX-define-begend-key "bi" "itemize")
     (YaTeX-define-begend-key "bl" "flushleft")
     (YaTeX-define-begend-key "bm" "minipage")

@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
-;;; (c)1991-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Nov  7 09:01:08 2018 on firestorm
+;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Oct 17 09:44:48 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -22,8 +22,8 @@
 Notice that this function refers the let-variable `env' in
 YaTeX-make-begin-end."
   (let ((width "") bars (rule "") (and "") (j 1) loc ans (hline "\\hline"))
-    (if (string= YaTeX-env-name "tabular*")
-	(setq width (concat "{" (YaTeX:read-length "Width: ") "}")))
+    (if (string-match "tabular[*x]" YaTeX-env-name)
+	(setq width (concat "{" (YaTeX:read-length "Table Width: ") "}")))
     (setq loc (YaTeX:read-position "tb")
 	  bars (YaTeX-str2int
 		(YaTeX-read-string-or-skip
@@ -57,6 +57,7 @@ YaTeX-make-begin-end."
 
 (fset 'YaTeX:tabular* 'YaTeX:tabular)
 (fset 'YaTeX:supertabular 'YaTeX:tabular)
+(fset 'YaTeX:tabularx 'YaTeX:tabular)
 (defun YaTeX:alignat ()
   (concat "{" (read-string-with-history "Number of columns: ") "}"))
 (defun YaTeX:array ()
@@ -1887,7 +1888,7 @@ and print them to standard output."
   "*User defined documentclass alist")
 (defvar YaTeX:documentclasses-local nil
   "*User defined local documentclass alist")
-(defvar YaTeX-default-documentclass (if YaTeX-japan "jarticle" "article")
+(defvar YaTeX-default-documentclass (if YaTeX-japan "jsarticle" "article")
   "*Default documentclass")
 
 (defun YaTeX::documentclass (&optional argp)
@@ -2148,34 +2149,11 @@ This function relies on gs(ghostscript) command installed."
    ((= argp 1) (YaTeX-read-string-or-skip "Kanji: ")) 
    ((= argp 2) (YaTeX-read-string-or-skip "Yomi: "))))
 
-(defvar YaTeX::usepackage-alist-default
-  '(("version") ("plext") ("url") ("fancybox") ("pifont") ("longtable")
-    ("ascmac") ("bm") ("graphics") ("graphicx") ("alltt") ("misc") ("eclbkbox")
-    ("amsmath") ("amssymb") ("xymtex") ("chemist")
-    ("a4j") ("array") ("epsf") ("color") ("xcolor") ("epsfig") ("floatfig")
-    ("landscape") ("path") ("supertabular") ("twocolumn")
-    ("latexsym") ("times") ("makeidx") ("geometry") ("type1cm")
-    ("subfigure") ("okumacro"))
-  "Default completion table for arguments of \\usepackage")
+;;(require 'yatexpkg)
+(autoload 'YaTeX::usepackage "yatexpkg" "Add-in for \\usepackage{}")
+;;; (defun YaTeX::usepackage()...) MOVED to yatexpkg.el
+;;; See yatexpkg.el
 
-(defvar YaTeX::usepackage-alist-private nil
-  "*Private completion list of the argument for usepackage")
-
-(defvar YaTeX::usepackage-alist-local nil
-  "Directory local  completion list of the argument for usepackage")
-
-(defun YaTeX::usepackage (&optional argp)
-  (cond
-   ((equal argp 1)
-    (setq YaTeX-env-name "document")
-    (let ((minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
-	  (delim ","))
-      (YaTeX-cplread-with-learning
-       (if YaTeX-japan "Use package(ÉJÉìÉ}Ç≈ãÊêÿÇ¡ÇƒOK): "
-	 "Use package(delimitable by comma): ")
-       'YaTeX::usepackage-alist-default
-       'YaTeX::usepackage-alist-private
-       'YaTeX::usepackage-alist-local)))))
 
 (defun YaTeX::mask (argp)
   (cond
@@ -2394,6 +2372,10 @@ This function relies on gs(ghostscript) command installed."
    ((eq YaTeX-current-completion-type 'large) "\\/")
    (t nil)))
 (fset 'YaTeX:it 'YaTeX:em)
+
+;;; twocolumn
+(defun YaTeX:twocolumn ()
+  (format "[%s]" (YaTeX-read-string-or-skip "One column paragraph: ")))
 
 ;;; -------------------- End of yatexadd --------------------
 (provide 'yatexadd)

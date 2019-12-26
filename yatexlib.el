@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
-;;; (c)1994-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed May 23 07:59:08 2018 on firestorm
+;;; (c)1994-2019 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Dec 26 12:47:45 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -130,7 +130,9 @@ This variable is effective when font-lock is used.
     (let ((coding
 	   (cond
 	    ((boundp 'buffer-file-coding-system)
-	     (symbol-name buffer-file-coding-system))
+	     (symbol-name (if (fboundp 'coding-system-name)
+			      (coding-system-name buffer-file-coding-system)
+			    buffer-file-coding-system)))
 	    ((boundp 'file-coding-system) (symbol-name file-coding-system))))
 	  (case-fold-search t))
       (cond ((string-match "utf-8\\>" coding)			"utf8")
@@ -1116,8 +1118,8 @@ Optional third argument NOERR causes no error for unballanced environment."
 		  regexp (format "\\(%s%s\\)\\|\\(%s%s\\)"
 				 YaTeX-ec-regexp
 				 (regexp-quote
-				  (cdr (assq env '((?( . ")") (?) . "(")
-						   (?[ . "]") (?] . "[")))))
+				  (cdr (assq env '((?\( . ")") (?\) . "(")
+						   (?\[ . "]") (?\] . "[")))))
 				 YaTeX-ec-regexp
 				 (regexp-quote (char-to-string env)))
 		  re-s (if (memq env '(?\( ?\[))

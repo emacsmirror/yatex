@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
-;;; (c)1993-2018 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Mon Nov 25 21:01:57 2019 on monster
+;;; (c)1993-2019 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Thu Dec 26 12:48:12 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1353,6 +1353,8 @@ error or warning lines in reverse order."
        (setq fname (substring fname 0 (rindex fname ?.))))
      ext)))
 
+(defvar YaTeX-proc-feed-relative t
+  "Non-nil means feed process relative path name of target file.")
 (defun YaTeX-get-latex-command (&optional switch)
   "Specify the latex-command name and its argument.
 If there is a line which begins with string: \"%#!\", the following
@@ -1372,7 +1374,9 @@ will be given to the shell."
 	  (cond
 	   (YaTeX-parent-file
 	    (if YaTeX-dos (expand-file-name YaTeX-parent-file)
-	      YaTeX-parent-file))
+	      (if YaTeX-proc-feed-relative
+		  (file-relative-name YaTeX-parent-file)
+		YaTeX-parent-file)))
 	   (t (save-excursion
 		(YaTeX-visit-main t)
 		(file-name-nondirectory (buffer-file-name)))))

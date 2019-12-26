@@ -1,8 +1,8 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
-;;; (c) 1994-2017 by HIROSE Yuuji [yuuji(@)yatex.org]
+;;; (c) 1994-2019 by HIROSE Yuuji [yuuji(@)yatex.org]
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.80"
+(defconst yahtml-revision-number "1.80.1"
   "Revision number of running yahtml.el")
 
 ;;; Commentary:
@@ -361,6 +361,7 @@ normal and region mode.  To customize yahtml, user should use this function."
       (yahtml-define-begend-key "bb" "body" map)
       (yahtml-define-begend-key "bc" "center" map)
       (yahtml-define-begend-key "bd" "dl" map)
+      (yahtml-define-begend-key "bD" "div" map)
       (yahtml-define-begend-key "bu" "ul" map)
       (yahtml-define-begend-key "bo" "ol" map)
       (yahtml-define-begend-key "b1" "h1" map)
@@ -373,6 +374,7 @@ normal and region mode.  To customize yahtml, user should use this function."
       (yahtml-define-begend-key "bv" "div" map)
       (yahtml-define-begend-key "bS" "span" map)
       (yahtml-define-begend-key "bp" "pre" map)
+      (yahtml-define-begend-key "bq" "blockquote" map)
       (YaTeX-define-key "b " 'yahtml-insert-begend map)
       (YaTeX-define-key "B " 'yahtml-insert-begend-region map))
     (YaTeX-define-key "e" 'YaTeX-end-environment map)
@@ -1082,6 +1084,8 @@ Not used yet.")
 	(ask (eq yahtml-escape-chars 'ask)))
     (cond
      ((null yahtml-escape-chars) str)
+     ((string-match "%[0-9A-F][0-9A-F]%[0-9A-F][0-9A-F]%[0-9A-F][0-9A-F]" str)
+      str)
      (t
       (while (and (string< "" str)
 		  (setq p (string-match yahtml-unsafe-chars-regexp str)))

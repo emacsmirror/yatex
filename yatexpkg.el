@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
-;;; (c)2003-2018 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Wed Nov  7 08:57:36 2018 on firestorm
+;;; (c)2003-2019 by HIROSE, Yuuji [yuuji@yatex.org]
+;;; Last modified Sat May 25 14:46:27 2019 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -30,17 +30,37 @@
     ("verbatim"	(section "verbatiminput"))
     ("eclbkbox"	(env "breakbox"))
     ("supertabular" (env "supertabular"))
+    ("tabularx" (env "tabularx"))
     ("amsmath"	(env . YaTeX-package-ams-envs)
      		(section "tag" "tag*"))
+    ("amsart"	(same-as . "amsmath"))
+    ("amsbook"	(same-as . "amsmath"))
+    ("amsproc"	(same-as . "amsmath"))
     ("amssymb"	(maketitle "leqq" "geqq" "mathbb" "mathfrak"
 			   "fallingdotseq" "therefore" "because"
 			   "varDelta" "varTheta" "varLambda" "varXi" "varPi"
 			   "varSigma" "varUpsilon" "varPhi" "varPsi" "varOmega"
 			   "lll" "ggg")) ;very few.  Please tell us!
+    ("latexsym"	(maketitle "mho" "Join" "Box" "Diamond" "leadsto"
+			   "sqsubset" "sqsupset" "lhd" "unlhd" "rhd" "unrhd"))
     ("mathrsfs"	(section "mathscr"))
     ("graphicx" (section "includegraphics"
 			 "rotatebox" "scalebox" "resizebox" "reflectbox")
      		(option . YaTeX-package-graphics-driver-alist))
+    ("xymtex"	(section "Ycyclohexaneh"))	;;XXX we need more and more...
+    ("chemist"	nil)				;;XXX we need completions...
+    ("a4j"	nil)
+    ("array"	nil)
+    ("times"	nil)
+    ("newtx"	nil)
+    ("makeidx"	nil)
+    ("geometry"	(section "geometry"))
+    ("lscape"	(env "landscape"))
+    ("path"	(section "path"))
+    ("epsf"	(section "epsfbox"))
+    ("epsfig"	(section "epsfig"))
+    ("floatflt"	(env "floatingfigure"))
+    ("type1cm"	(section "fontsize"))
     ("svg"	(section "includesvg"))
     ("color"	(section "textcolor" "colorbox" "pagecolor" "color")
      		(option . YaTeX-package-graphics-driver-alist)
@@ -49,11 +69,8 @@
     ("ulem"	(section "uline" "uuline" "uwave")
 		(option ("normalem")))
     ("multicol"	(env "multicols"))
-    ("cref"	(section "cleveref"))
-    ("crefrange"	(same-as . "cref"))
-    ("cpageref"		(same-as . "cref"))
-    ("labelcref"	(same-as . "cref"))
-    ("labelcpageref"	(same-as . "cref"))
+    ("cleveref"	(section "cref" "crefrange" "cpageref" "labelcref"
+			 "labelpageref"))
     ("wrapfig"	(env "wrapfigure" "wraptable"))
     ("setspace"	(env "spacing") (section "setstretch"))
     ("cases"	(env "numcases" "subnumcases"))
@@ -139,7 +156,7 @@ a \\usepackage line."
 	(pkglist (YaTeX-package-lookup macro type))
 	(usepkgrx (concat
 		   YaTeX-ec-regexp
-		   "\\(usepackage\\|include\\)\\b"))
+		   "\\(usepackage\\|include\\|documentclass\\)\\b"))
 	(register (function
 		   (lambda () (set-buffer cb)
 		     (set (make-local-variable 'YaTeX-package-resolved-list)
@@ -158,10 +175,8 @@ a \\usepackage line."
 		(goto-char (point-min))
 		(YaTeX-search-active-forward	;if search fails, goto eob
 		 begdoc YaTeX-comment-prefix nil 1)
-		(while ;(YaTeX-re-search-active-backward
-			;usepkgrx YaTeX-comment-prefix nil t)
-		    ;;allow commented out \usepackages 2004/3/16
-		    (re-search-backward usepkgrx nil t)
+		(while (re-search-backward usepkgrx nil t)
+		  ;;allow commented out \usepackages
 		  (setq mb0 (match-beginning 0))
 		  (skip-chars-forward "^{")
 		  (setq uspkgargs (YaTeX-buffer-substring
@@ -236,4 +251,46 @@ a \\usepackage line."
 	      (funcall register)
 	      (message "Don't forget to put \\usepackage{%s} yourself later"
 		       (car (car pkglist)))) ;doing car car is negligence...
-    ))))))
+	    ))))))
+
+(defvar YaTeX::usepackage-alist-private nil
+  "*Private completion list of the argument for usepackage")
+
+(defvar YaTeX::usepackage-alist-local nil
+  "Directory local  completion list of the argument for usepackage")
+
+(defun YaTeX::usepackage (&optional argp)
+  (cond
+   ((equal argp 1)
+    (setq YaTeX-env-name "document")
+    (let ((minibuffer-local-completion-map YaTeX-minibuffer-completion-map)
+	  (delim ","))
+      (YaTeX-cplread-with-learning
+       (if YaTeX-japan "Use package(ÉJÉìÉ}Ç≈ãÊêÿÇ¡ÇƒOK): "
+	 "Use package(delimitable by comma): ")
+       ;; 'YaTeX::usepackage-alist-default	;; OBSOLETED at 1.82
+       'YaTeX-package-alist-default
+       'YaTeX::usepackage-alist-private
+       'YaTeX::usepackage-alist-local)))))
+
+
+;;;
+;; Add-ins for auxiliary package handled here
+;;;
+(defun YaTeX:floatingfigure ()
+  (concat (YaTeX:read-position "rlpv")
+	  (YaTeX:read-length "Width: ")))
+
+(defvar YaTeX:geometry-default "margin=1.5cm,includeheadfoot,includemp"
+  "*Default options for \\geometry{}")
+(defun YaTeX::geometry (argp)
+  "Add-in for \\geometry's option"
+  ;; cf. https://dayinthelife.at.webry.info/201401/article_2.html
+  (cond
+   ((= argp 1)
+    (YaTeX-help "geometry")
+    (message "Change default by setting YaTeX:geometry-default")
+    (if (string= YaTeX:geometry-default "") ""
+      YaTeX:geometry-default))))
+
+(provide 'yatexpkg)
