@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2020 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Feb  8 18:22:02 2020 on firestorm
+;;; Last modified Sat Feb  8 18:31:09 2020 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -425,7 +425,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 ; Set {\Large }-like completion
 (defvar fontsize-table
   '(("rm") ("em") ("bf") ("boldmath") ("it") ("sl") ("sf") ("sc") ("tt")
-    ("dg") ("dm")
+    ("dg") ("dm") ("mc") ("mcfamily") ("gt") ("gtfamily")
     ("tiny") ("scriptsize") ("footnotesize") ("small")("normalsize")
     ("large") ("Large") ("LARGE") ("huge") ("Huge")
     ("rmfamily") ("sffamily") ("ttfamily")
@@ -438,6 +438,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
   '(("rm" . "rmfamily")
     ("sf" . "sffamily")
     ("tt" . "ttfamily")
+    ("mc" . "mcfamily")
+    ("gt" . "gtfamily")
     ("md" . "mdseries")
     ("bf" . "bfseries")
     ("up" . "upshape")
