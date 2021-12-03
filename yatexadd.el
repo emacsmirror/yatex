@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Oct 17 09:44:48 2019 on firestorm
+;;; Last modified Sat Dec  4 07:11:07 2021 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -305,6 +305,11 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:itembox ()
   (concat "{" (YaTeX-read-string-or-skip "Item heading string: ") "}"))
+
+(defun YaTeX:spacing ()
+  (concat "{" (read-string-with-history "Line spacing by: ") "}"))
+(defun YaTeX::setstretch (argp)
+  (read-string-with-history "Page global Line stretch factor: "))
 
 ;;;
 ;;Sample functions for maketitle-type command.
