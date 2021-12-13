@@ -292,10 +292,10 @@
 	
 *An open parenthesis always get entered in pairs.
 	
-	This should  be better, once  you get used  to it.  If you still
-	don't like    it, turn on modify-mode  using   C-c w m.  Setting
-	YaTeX-close-paren-always to nil will  give this feature from the
-	start.
+	This should be better, once you get used to it.  If you still
+	don't like it, turn on modify-mode using C-c w m.  Setting
+	YaTeX-close-paren-always to 'never will give this feature from
+	the start, nil will stop closing when not at end of line.
 	
 *Funny things happen when I hit ;.
 	
