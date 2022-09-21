@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Dec  4 07:11:07 2021 on firestorm
+;;; Last modified Wed Sep 21 21:22:37 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -193,15 +193,22 @@ YaTeX-make-begin-end."
 
 
 ;; wrapfig.sty
-(defun YaTeX:wrapfigure ()
-  (YaTeX-help "wrapfigure")
-  (concat
-   (let ((lines (YaTeX-read-string-or-skip "Wrap Lines(Optional): ")))
-     (if (string< "" lines)
-	 (concat "[" lines "]")))
-   "{" (YaTeX:read-oneof "rlioRLIO" t) "}"
-   "{" (YaTeX:read-length "Image width: ") "}"))
- 
+(defun YaTeX:wrapfigure (&optional kind)
+  (setq kind (or kind "figure"))
+  (YaTeX-help (concat "wrap" kind))
+  (prog1
+      (concat
+       (let ((lines (YaTeX-read-string-or-skip "Wrap Lines(Optional): ")))
+	 (if (string< "" lines)
+	     (concat "[" lines "]")))
+       "{" (YaTeX:read-oneof "rlioRLIO" t) "}"
+       "{" (YaTeX:read-length (concat (capitalize kind) " width: ")) "}")
+    (setq YaTeX-section-name "includegraphics")))
+
+(defun YaTeX:wraptable ()
+  (prog1
+      (YaTeX:wrapfigure "table")
+    (setq YaTeX-env-name "tabular")))
 
 ;;;
 ;;Sample functions for section-type command.
