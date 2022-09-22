@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
 ;;; (c)1994-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 26 12:47:45 2019 on firestorm
+;;; Last modified Thu Sep 22 11:17:54 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -627,11 +627,13 @@ where ever it appears."
      (where-is-internal olddef keymap))))
 
 ;;;###autoload
-(defun YaTeX-match-string (n &optional m)
-  "Return (buffer-substring (match-beginning n) (match-beginning m))."
+(defun YaTeX-match-string (n &optional m str)
+  "Return (buffer-substring (match-beginning n) (match-beginning m)).
+Optional third argument STR gives substring from string STR."
   (if (match-beginning n)
-      (YaTeX-buffer-substring (match-beginning n)
-			(match-end (or m n)))))
+      (if str (substring str n (or m n))
+	(YaTeX-buffer-substring (match-beginning n)
+				(match-end (or m n))))))
 
 ;;;###autoload
 (defun YaTeX-minibuffer-complete ()
