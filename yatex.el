@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2020 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Sep 21 11:07:10 2022 on firestorm
+;;; Last modified Fri Sep 23 06:28:18 2022 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -329,6 +329,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("ruby" 2) ("kenten")					;; okumacro
      ("geometry") ("path")
      ("setstretch")
+     ("columncolor") ("rowcolor") ("cellcolor")			;; colortbl
      )
    (if YaTeX-use-LaTeX2e
        '(("documentclass") ("usepackage")
@@ -883,7 +884,7 @@ more features are available and they are documented in the manual.
 ;; YaTeX-mode functions
 ;;;
 (defun YaTeX-insert-begin-end (env region-mode)
-  "Insert \\begin{mode-name} and \\end{mode-name}.
+  "Insert \\begin{env-name} and \\end{env-name}.
 This works also for other defined begin/end tokens to define the structure."
   (setq YaTeX-current-completion-type 'begin)
   (let*((ccol (current-column)) beg beg2 exchange
