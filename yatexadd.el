@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Wed Sep 21 21:22:37 2022 on firestorm
+;;; Last modified Thu Sep 22 11:41:04 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1992,6 +1992,48 @@ and print them to standard output."
    ((= argp 1) (YaTeX::color-completing-read "Frame color: "))
    ((= argp 2) (YaTeX::color-completing-read "Inner color: "))
    ((= argp 3) (YaTeX-read-string-or-skip "Colored string: "))))
+
+(defun YaTeX:columncolor ()
+  (let ((model (YaTeX-completing-read-or-skip
+		"Color model: " '(("rgb") ("gray") ("named")))))
+    (put 'YaTeX:columncolor 'model model)
+    (if (string= "" model) "" (concat "[" model "]"))))
+
+(fset 'YaTeX:rowcolor 'YaTeX:columncolor)
+(fset 'YaTeX:cellcolor 'YaTeX:columncolor)
+
+(defun YaTeX::columncolor (argp)
+  (let ((model (get 'YaTeX:columncolor 'model))
+	(type (cond ((string-match "column" YaTeX-section-name) "Column")
+		    ((string-match "row" YaTeX-section-name) "Row")
+		    ((string-match "cell" YaTeX-section-name) "Cell")
+		    (t "Table")))
+	(last (get 'YaTeX::columncolor 'last-color))
+	str)
+    (put 'YaTeX::columncolor 'last-color
+	 (cond
+	  ((equal model "rgb")
+	   (setq str (YaTeX-read-string-or-skip
+		      "R, G, B values: "
+		      (cons (or last "0.6, 0.8, 0.9") 0)))
+	   (cond
+	    ((string-match ",.*," str) str)
+	    ((string-match "\\(\\S +\\)\\s +\\(\\S +\\)\\s +\\(\\S +\\)" str)
+	     (format "%s, %s, %s" (YaTeX-match-string 1 1 str)
+		     (YaTeX-match-string 2 2 str)(YaTeX-match-string 3 3 str)))
+	    (t (message "%s may cause error on typesetting" str)
+	       str)))
+	  ((equal model "gray")
+	   (setq str (YaTeX-read-string-or-skip "Grayscale values(0.0 - 1.0): "))
+	   (if (<= (string-to-number str) 1)
+	       str
+	     (message "%s may be an error.  Values from 0.0 to 1.0 are acceptable")
+	     str))
+	  ((equal model "named")
+	   (YaTeX::color-completing-read (concat type " color")))
+	  ))))
+(fset 'YaTeX::rowcolor 'YaTeX::columncolor)
+(fset 'YaTeX::cellcolor 'YaTeX::columncolor)
 
 (defun YaTeX:scalebox ()
   "Add-in for \\scalebox"
