@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
-;;; (c)1993-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 26 12:48:12 2019 on firestorm
+;;; (c)1993-2022 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sat Sep 24 12:17:14 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1148,6 +1148,34 @@ by region."
 	  (YaTeX-preview-jump-line)
 	  t)				;for YaTeX-goto-corresponding-*
       nil)))
+
+(and (or (featurep 'dbus) (load "dbus" t))
+     ;; Cannot load dbus on emacs without dbus module
+     (fboundp 'url-unhex-string)
+     (fboundp 'dbus-register-signal)
+     ;; From https://texwiki.texjp.org/?Emacs#vecb4fd9
+     (progn
+       (fset 'YaTeX-evince-inverse-search
+	     (if (fboundp 'evince-inverse)
+		 'evince-inverse	;Use previously defined one
+	       (function
+		(lambda (file linecol &rest args)
+		  (let* ((fn (decode-coding-string
+			      (url-unhex-string
+			       (if (string-match "^file:///" file)
+				   (substring file 7) file))
+			      'utf-8))
+			 (buf (YaTeX-switch-to-buffer fn))
+			 (ln  (car linecol))
+			 (col (car (cdr linecol))))
+		    (if (null buf)
+			(error "[Synctex]: Not found [%s]" file)
+		      (goto-line ln)
+		      (move-to-column (max 0 col))))))))
+       (dbus-register-signal
+	:session nil "/org/gnome/evince/Window/0"
+	"org.gnome.evince.Window" "SyncSource"
+        'YaTeX-evince-inverse-search)))
 
 (defun YaTeX-set-virtual-error-position (file-sym line-sym)
   "Replace the value of FILE-SYM, LINE-SYM by virtual error position."
