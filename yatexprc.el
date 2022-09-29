@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2022 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sat Sep 24 12:17:14 2022 on firestorm
+;;; Last modified Thu Sep 29 09:45:03 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1172,10 +1172,13 @@ by region."
 			(error "[Synctex]: Not found [%s]" file)
 		      (goto-line ln)
 		      (move-to-column (max 0 col))))))))
-       (dbus-register-signal
-	:session nil "/org/gnome/evince/Window/0"
-	"org.gnome.evince.Window" "SyncSource"
-        'YaTeX-evince-inverse-search)))
+       (condition-case ()
+	   (dbus-register-signal
+	    :session nil "/org/gnome/evince/Window/0"
+	    "org.gnome.evince.Window" "SyncSource"
+            'YaTeX-evince-inverse-search)
+	 (error
+	  (message "Reverse search not available on this system.")))))
 
 (defun YaTeX-set-virtual-error-position (file-sym line-sym)
   "Replace the value of FILE-SYM, LINE-SYM by virtual error position."
