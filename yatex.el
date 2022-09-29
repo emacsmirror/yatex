@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2020 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Sep 23 06:28:18 2022 on firestorm
+;;; Last modified Thu Sep 29 10:22:07 2022 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -49,7 +49,7 @@ YaTeX-current-position-register.")
 
 (defvar tex-command
   (cond
-   (YaTeX-use-LaTeX2e "platex -kanji=%k")
+   (YaTeX-use-LaTeX2e "platex -kanji=%k -synctex=1")
    (YaTeX-japan "jlatex")
    (t "latex"))
   "*Default command for typesetting LaTeX text.
