@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2022 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Sep 29 09:45:03 2022 on firestorm
+;;; Last modified Thu Sep 29 09:56:02 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -39,7 +39,8 @@
   (cond
    (YaTeX-dos (cdr (assq 1 YaTeX-kanji-code-alist)))
    (YaTeX-emacs-20
-    (cdr (assoc latex-message-kanji-code YaTeX-kanji-code-alist)))
+    (let ((sym (cdr (assoc latex-message-kanji-code YaTeX-kanji-code-alist))))
+      (if (eq sym 'no-conversion) 'undecided sym)))
    ((boundp 'MULE)
     (symbol-value
      (cdr (assoc latex-message-kanji-code YaTeX-kanji-code-alist))))
