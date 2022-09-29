@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Oct 17 09:44:48 2019 on firestorm
+;;; Last modified Thu Sep 22 11:41:04 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -193,15 +193,22 @@ YaTeX-make-begin-end."
 
 
 ;; wrapfig.sty
-(defun YaTeX:wrapfigure ()
-  (YaTeX-help "wrapfigure")
-  (concat
-   (let ((lines (YaTeX-read-string-or-skip "Wrap Lines(Optional): ")))
-     (if (string< "" lines)
-	 (concat "[" lines "]")))
-   "{" (YaTeX:read-oneof "rlioRLIO" t) "}"
-   "{" (YaTeX:read-length "Image width: ") "}"))
- 
+(defun YaTeX:wrapfigure (&optional kind)
+  (setq kind (or kind "figure"))
+  (YaTeX-help (concat "wrap" kind))
+  (prog1
+      (concat
+       (let ((lines (YaTeX-read-string-or-skip "Wrap Lines(Optional): ")))
+	 (if (string< "" lines)
+	     (concat "[" lines "]")))
+       "{" (YaTeX:read-oneof "rlioRLIO" t) "}"
+       "{" (YaTeX:read-length (concat (capitalize kind) " width: ")) "}")
+    (setq YaTeX-section-name "includegraphics")))
+
+(defun YaTeX:wraptable ()
+  (prog1
+      (YaTeX:wrapfigure "table")
+    (setq YaTeX-env-name "tabular")))
 
 ;;;
 ;;Sample functions for section-type command.
@@ -305,6 +312,11 @@ YaTeX-make-begin-end."
 
 (defun YaTeX:itembox ()
   (concat "{" (YaTeX-read-string-or-skip "Item heading string: ") "}"))
+
+(defun YaTeX:spacing ()
+  (concat "{" (read-string-with-history "Line spacing by: ") "}"))
+(defun YaTeX::setstretch (argp)
+  (read-string-with-history "Page global Line stretch factor: "))
 
 ;;;
 ;;Sample functions for maketitle-type command.
@@ -1980,6 +1992,48 @@ and print them to standard output."
    ((= argp 1) (YaTeX::color-completing-read "Frame color: "))
    ((= argp 2) (YaTeX::color-completing-read "Inner color: "))
    ((= argp 3) (YaTeX-read-string-or-skip "Colored string: "))))
+
+(defun YaTeX:columncolor ()
+  (let ((model (YaTeX-completing-read-or-skip
+		"Color model: " '(("rgb") ("gray") ("named")))))
+    (put 'YaTeX:columncolor 'model model)
+    (if (string= "" model) "" (concat "[" model "]"))))
+
+(fset 'YaTeX:rowcolor 'YaTeX:columncolor)
+(fset 'YaTeX:cellcolor 'YaTeX:columncolor)
+
+(defun YaTeX::columncolor (argp)
+  (let ((model (get 'YaTeX:columncolor 'model))
+	(type (cond ((string-match "column" YaTeX-section-name) "Column")
+		    ((string-match "row" YaTeX-section-name) "Row")
+		    ((string-match "cell" YaTeX-section-name) "Cell")
+		    (t "Table")))
+	(last (get 'YaTeX::columncolor 'last-color))
+	str)
+    (put 'YaTeX::columncolor 'last-color
+	 (cond
+	  ((equal model "rgb")
+	   (setq str (YaTeX-read-string-or-skip
+		      "R, G, B values: "
+		      (cons (or last "0.6, 0.8, 0.9") 0)))
+	   (cond
+	    ((string-match ",.*," str) str)
+	    ((string-match "\\(\\S +\\)\\s +\\(\\S +\\)\\s +\\(\\S +\\)" str)
+	     (format "%s, %s, %s" (YaTeX-match-string 1 1 str)
+		     (YaTeX-match-string 2 2 str)(YaTeX-match-string 3 3 str)))
+	    (t (message "%s may cause error on typesetting" str)
+	       str)))
+	  ((equal model "gray")
+	   (setq str (YaTeX-read-string-or-skip "Grayscale values(0.0 - 1.0): "))
+	   (if (<= (string-to-number str) 1)
+	       str
+	     (message "%s may be an error.  Values from 0.0 to 1.0 are acceptable")
+	     str))
+	  ((equal model "named")
+	   (YaTeX::color-completing-read (concat type " color")))
+	  ))))
+(fset 'YaTeX::rowcolor 'YaTeX::columncolor)
+(fset 'YaTeX::cellcolor 'YaTeX::columncolor)
 
 (defun YaTeX:scalebox ()
   "Add-in for \\scalebox"

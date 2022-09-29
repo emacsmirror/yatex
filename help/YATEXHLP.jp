@@ -1771,6 +1771,7 @@ POS		r l i o のどれか(右、左、見開き内側、外側)
 OVH(省略可)	画像の張り出しマージン(\wrapoverhang 通常0)
 WIDTH		回り込みする(画像込みの)幅
 
+
 【使用例】
 % プリアンブル
 \usepackage{wrapfig}
@@ -1779,6 +1780,13 @@ WIDTH		回り込みする(画像込みの)幅
  \includegraphics[width=3cm,bb=0 0 640 480,clip]{hoge.jpg}
  \caption{ほげほげ}\label{hoge-jpg}
 \end{wrapfigure}
+
+wraptable
+\begin{wraptable}[LINES]{POS}[OVH]{WIDTH} ...表... \end{wraptable}
+左右回り込みの表を出力する(table環境と同様のフロート作成)。
+内部にtabular系を入れる点以外についてはwrapfigureと同様。
+
+<refer wrapfigure>
 
 abstract
 \begin{abstract} ... \end{abstract}

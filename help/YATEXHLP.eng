@@ -1765,6 +1765,12 @@ WIDTH		Width of figure
  \caption{foo image}\label{foo-jpg}
 \end{wrapfigure}
 
+wraptable
+\begin{wraptable}[LINES]{POS}[OVH]{WIDTH} ...TABULAR... \end{wraptable}
+Create floating tabular.
+Usage is the same as wrapfigure environment except enclosing tabular.
+
+<refer wrapfigure>
 
 abstract
 \begin{abstract} ... \end{abstract}

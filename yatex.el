@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //野鳥// -*- coding: sjis -*-
-;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 26 12:46:41 2019 on firestorm
+;;; (c)1991-2020 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Fri Sep 23 06:28:18 2022 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -16,7 +16,7 @@
 
 ;;; Code:
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.82"
+(defconst YaTeX-revision-number "1.82.1"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -182,7 +182,7 @@ tにする(古いNTT-jTeXで顕著に現れる)。具体的には、fillするときに各行の終わりに
 	  YaTeX-sectioning-regexp		;sectioning commands
 	  "\\|[A-z]*item\\|begin{\\|end{"	;special declaration
 	  "\\|\\[\\|\\]"
-	  "\\|newpage\\b\\|vspace\\b"
+	  "\\|newpage\\b\\|vspace\\b\\|par\\b"
 	  "\\)")
   "*Paragraph starting regexp of common LaTeX source.  Use this value
 for YaTeX-uncomment-paragraph.")
@@ -192,7 +192,7 @@ for YaTeX-uncomment-paragraph.")
 	  YaTeX-sectioning-regexp		;sectioning commands
 	  "\\|begin{\\|end{"			;special declaration
 	  "\\|\\[\\|\\]"
-	  "\\|newpage\\b\\|vspace\\b"
+	  "\\|newpage\\b\\|vspace\\b\\|par\\b"
 	  "\\)")
   "*Paragraph delimiter regexp of common LaTeX source.  Use this value
 for YaTeX-uncomment-paragraph.")
@@ -315,6 +315,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("cline") ("framebox") ("savebox" 2) ("sbox" 2) ("newsavebox") ("usebox")
      ("date") ("put") ("ref") ("pageref") ("tabref") ("figref") ("raisebox" 2)
      ("multicolumn" 3) ("shortstack") ("parbox" 2)
+     ("textcircled") ("fbox")
      ;; for mathmode accent
      ("tilde") ("hat") ("check") ("bar") ("dot") ("ddot") ("vec")
      ("widetilde") ("widehat") ("overline") ("overrightarrow")
@@ -327,6 +328,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("subfigure")						;; subfigure
      ("ruby" 2) ("kenten")					;; okumacro
      ("geometry") ("path")
+     ("setstretch")
+     ("columncolor") ("rowcolor") ("cellcolor")			;; colortbl
      )
    (if YaTeX-use-LaTeX2e
        '(("documentclass") ("usepackage")
@@ -402,7 +405,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
      ("minipage") ("landscape")
      ("supertabular") ("floatingfigure") ("wrapfigure") ("wraptable")
      ("frame") ("block") ("example") ("columns") ("column")	;beamer
-     ("tabularx")
+     ("tabularx") ("spacing")
      )
    (if YaTeX-use-LaTeX2e
        '(("comment")			;defined in version
@@ -424,7 +427,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 ; Set {\Large }-like completion
 (defvar fontsize-table
   '(("rm") ("em") ("bf") ("boldmath") ("it") ("sl") ("sf") ("sc") ("tt")
-    ("dg") ("dm")
+    ("dg") ("dm") ("mc") ("mcfamily") ("gt") ("gtfamily")
     ("tiny") ("scriptsize") ("footnotesize") ("small")("normalsize")
     ("large") ("Large") ("LARGE") ("huge") ("Huge")
     ("rmfamily") ("sffamily") ("ttfamily")
@@ -437,6 +440,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
   '(("rm" . "rmfamily")
     ("sf" . "sffamily")
     ("tt" . "ttfamily")
+    ("mc" . "mcfamily")
+    ("gt" . "gtfamily")
     ("md" . "mdseries")
     ("bf" . "bfseries")
     ("up" . "upshape")
@@ -451,6 +456,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
   (append
    '(("maketitle") ("makeindex") ("sloppy") ("protect") ("par") ("and")
      ("LaTeX") ("TeX") ("item") ("item[]") ("appendix") ("hline") ("kill")
+     ("textbar") ("textbackslash")
      ;;("rightarrow") ("Rightarrow") ("leftarrow") ("Leftarrow")
      ("onecolumn") ("twocolumn")
      ("pagebreak") ("nopagebreak") ("tableofcontents")
@@ -878,7 +884,7 @@ more features are available and they are documented in the manual.
 ;; YaTeX-mode functions
 ;;;
 (defun YaTeX-insert-begin-end (env region-mode)
-  "Insert \\begin{mode-name} and \\end{mode-name}.
+  "Insert \\begin{env-name} and \\end{env-name}.
 This works also for other defined begin/end tokens to define the structure."
   (setq YaTeX-current-completion-type 'begin)
   (let*((ccol (current-column)) beg beg2 exchange

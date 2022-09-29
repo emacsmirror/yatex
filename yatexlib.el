@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
 ;;; (c)1994-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec 26 12:47:45 2019 on firestorm
+;;; Last modified Fri Sep 23 06:43:32 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -118,6 +118,38 @@ This variable is effective when font-lock is used.
 (defvar YaTeX-parent-file nil
   "*Main LaTeX source file name used when %#! expression doesn't exist.")
 (make-variable-buffer-local 'YaTeX-parent-file)
+
+;;;
+;; Emacs 21 compensational wrapper
+;;;
+(defun YaTeX-minibuffer-begin ()
+ (if (fboundp 'field-beginning)
+     (field-beginning (point-max))
+   (point-min)))
+
+(defun YaTeX-minibuffer-end ()
+ (if (fboundp 'field-end)
+     (field-end (point-max))
+   (point-max)))
+
+(defun YaTeX-minibuffer-string ()
+  (buffer-substring (YaTeX-minibuffer-begin) (YaTeX-minibuffer-end)))
+
+(defun YaTeX-minibuffer-erase ()
+  (if (eq (selected-window) (minibuffer-window))
+      (if (fboundp 'delete-field) (delete-field) (erase-buffer))))
+
+(fset 'YaTeX-buffer-substring
+      (if (fboundp 'buffer-substring-no-properties)
+	  'buffer-substring-no-properties
+	'buffer-substring))
+(fset 'YaTeX-substring
+      (if (fboundp 'substring-no-properties)
+	  'substring-no-properties
+	'substing))
+
+(defun YaTeX-region-active-p ()
+  (and (fboundp 'region-active-p) (region-active-p)))
 
 ;---------- Define default key bindings on YaTeX mode map ----------
 ;;;###autoload
@@ -627,11 +659,14 @@ where ever it appears."
      (where-is-internal olddef keymap))))
 
 ;;;###autoload
-(defun YaTeX-match-string (n &optional m)
-  "Return (buffer-substring (match-beginning n) (match-beginning m))."
+(defun YaTeX-match-string (n &optional m str)
+  "Return (buffer-substring (match-beginning n) (match-beginning m)).
+Optional third argument STR gives substring from string STR."
   (if (match-beginning n)
-      (YaTeX-buffer-substring (match-beginning n)
-			(match-end (or m n)))))
+      (if str (YaTeX-substring
+	       str (match-beginning m) (match-end (or m n)))
+	(YaTeX-buffer-substring (match-beginning n)
+				(match-end (or m n))))))
 
 ;;;###autoload
 (defun YaTeX-minibuffer-complete ()
@@ -1383,34 +1418,6 @@ See yatex19.el for example."
       (lambda (bind)
 	(define-key (symbol-value keymap) (vector (car bind)) (cdr bind))))
      bindlist))))
-
-;;;
-;; Emacs 21 compensational wrapper
-;;;
-(defun YaTeX-minibuffer-begin ()
- (if (fboundp 'field-beginning)
-     (field-beginning (point-max))
-   (point-min)))
-
-(defun YaTeX-minibuffer-end ()
- (if (fboundp 'field-end)
-     (field-end (point-max))
-   (point-max)))
-
-(defun YaTeX-minibuffer-string ()
-  (buffer-substring (YaTeX-minibuffer-begin) (YaTeX-minibuffer-end)))
-
-(defun YaTeX-minibuffer-erase ()
-  (if (eq (selected-window) (minibuffer-window))
-      (if (fboundp 'delete-field) (delete-field) (erase-buffer))))
-
-(fset 'YaTeX-buffer-substring
-      (if (fboundp 'buffer-substring-no-properties)
-	  'buffer-substring-no-properties
-	'buffer-substring))
-
-(defun YaTeX-region-active-p ()
-  (and (fboundp 'region-active-p) (region-active-p)))
 
 ;;;
 ;; hilit19 vs. font-lock
