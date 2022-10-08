@@ -1185,7 +1185,7 @@ Not used yet.")
 (defvar yahtml-link-types-alist 
   '(("alternate") ("stylesheet") ("start") ("next") ("prev")
     ("contents") ("index") ("glossary") ("chapter") ("section")
-    ("subsection") ("appendix") ("help") ("bookmark")))
+    ("subsection") ("appendix") ("help") ("bookmark") ("manifest")))
 
 (defvar yahtml-content-types-alist
   '(("text/css") ("text/html") ("text/plain") ("text/richtext")
@@ -1620,7 +1620,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
       (concat
        (yahtml-make-optional-argument "rel" rel)
        (yahtml-make-optional-argument
-	"type" (yahtml-read-parameter "type" "text/css"))
+	"type" (yahtml-read-parameter "type"))
        (yahtml-make-optional-argument
 	"href"
 	(read-from-minibuffer-with-history
