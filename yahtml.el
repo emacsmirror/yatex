@@ -1481,7 +1481,9 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 
 (defvar yahtml-input-types
   '(("text") ("password") ("checkbox") ("radio") ("submit")
-    ("reset") ("image") ("hidden") ("file")))
+    ("reset") ("image") ("hidden") ("file")
+    ("date") ("time") ("datetime-local") ("week") ("number") ("tel")
+    ("range") ("color")))
 
 (defun yahtml:input ()
   "Add-in function for `input' form"
@@ -1502,6 +1504,13 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
      (yahtml-make-optional-argument "value" value)
      (yahtml-make-optional-argument "id" id)
      (yahtml-make-optional-argument "size" size)
+     (if (string-match "range" type)
+	 (concat (yahtml-make-optional-argument
+		  "min" (YaTeX-read-string-or-skip "min: "))
+		 (yahtml-make-optional-argument
+		  "max" (YaTeX-read-string-or-skip "max: "))
+		 (yahtml-make-optional-argument
+		  "step" (YaTeX-read-string-or-skip "step: "))))
      (yahtml-make-optional-argument "maxlength" maxlength))))
 
 (defun yahtml:datalist ()
