@@ -1,6 +1,14 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.83	== yatex ==
+	Evince-dbus連携見直し(Thanks to TeX Wiki)。
+	latex-message-kanji-code 0 でプロセスコード 'undicided にしてみた。
+	アドイン追加: wraptable, spacing, tablecolor
+	補完追加: fleqn
+	== yahtml ==
+	デフォルトテーブルHTML5
+
 1.82	== yatex ==
 	YaTeX::usepackage-alist-default を廃止し、
 	YaTeX-package-alist-default を利用するようにした。

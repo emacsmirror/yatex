@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2019 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Thu Sep 22 20:20:37 2022 on firestorm
+;;; Last modified Sun Oct 16 20:56:01 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -44,6 +44,7 @@
     ("latexsym"	(maketitle "mho" "Join" "Box" "Diamond" "leadsto"
 			   "sqsubset" "sqsupset" "lhd" "unlhd" "rhd" "unrhd"))
     ("mathrsfs"	(section "mathscr"))
+    ("fleqn"	(env "nccmath"))
     ("graphicx" (section "includegraphics"
 			 "rotatebox" "scalebox" "resizebox" "reflectbox")
      		(option . YaTeX-package-graphics-driver-alist))
