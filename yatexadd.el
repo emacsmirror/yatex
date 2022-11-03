@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Sep 22 11:41:04 2022 on firestorm
+;;; Last modified Thu Nov  3 10:36:55 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -2132,7 +2132,7 @@ This function relies on gs(ghostscript) command installed."
 	 (or (fboundp 'yahtml-get-image-info)
 	     (progn
 	       (load "yahtml" t) (featurep 'yahtml))) ;(require 'yahtml nil t)
-	 (if (string-match "\\.pdf" imgfile)
+	 (if (string-match "\\.\\(pdf\\|png\\)" imgfile)
 	     (and
 	      (setq info (YaTeX::get-boundingbox imgfilepath))
 	      (stringp info)
