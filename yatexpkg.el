@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2019 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Thu Dec  1 14:30:58 2022 on firestorm
+;;; Last modified Thu Dec  1 18:45:19 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -81,6 +81,7 @@
     ("colortbl"	(section "columncolor" "rowcolor"))
     ("booktab"	(section "toprule" "midrule" "bottomrule" "cmidrule"
 			 "addlinespace" "specialrule"))
+    ("pxbase"	(section "UI"))
     )
   "Default package vs. macro list.
 Alists contains '(PACKAGENAME . MACROLIST)
