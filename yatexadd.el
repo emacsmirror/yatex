@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Nov  3 10:42:43 2022 on firestorm
+;;; Last modified Thu Dec  1 14:40:42 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -2250,6 +2250,21 @@ This function relies on gs(ghostscript) command installed."
        ((memq c '(?t ?T)) (setq left "{\\tiny " right "}"))
        ((memq c '(?c ?C)) (setq left "{\\scriptsize " right "}")))
       (format "%s%s%s" left char right)))))
+
+
+;;; -------------------- booktab staff --------------------
+(defun YaTeX::toprule (argp)
+  (if (equal argp 1) (YaTeX:read-length "Top Rule Width: ")))
+(defun YaTeX::midrule (argp)
+  (if (equal argp 1) (YaTeX:read-length "Middle Rule Width: ")))
+(defun YaTeX::cmidrule (argp)
+  (if (equal argp 1) (YaTeX:read-length "Inter-Columns Rule Width: ")))
+(defun YaTeX::bottomrule (argp)
+  (if (equal argp 1) (YaTeX:read-length "Bottom Rule Width: ")))
+(defun YaTeX::addlinespace (argp)
+  (if (equal argp 1) (YaTeX:read-length "Additional Line space: ")))
+(defun YaTeX::specialrule (argp)
+  (if (equal argp 1) (YaTeX:read-length "Special rule: ")))
 
 ;;; -------------------- beamer stuff --------------------
 (defvar YaTeX:frame-option-alist-default
