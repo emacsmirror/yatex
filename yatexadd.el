@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec  1 14:40:42 2022 on firestorm
+;;; Last modified Thu Dec  1 18:33:08 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1855,6 +1855,7 @@ and print them to standard output."
     ("oneside") ("twoside") ("draft") ("final") ("leqno") ("fleqn") ("openbib")
     ("tombow") ("titlepage") ("notitlepage") ("dvips")
     ("mingoth")				;for jsarticle
+    ("uplatex")				;for uplatex
     ("clock")				;for slides class only
     )
     "Default options list for documentclass")
