@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
-;;; (c)2003-2019 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Thu Dec  1 18:45:19 2022 on firestorm
+;;; (c)2003-2022 by HIROSE, Yuuji [yuuji@yatex.org]
+;;; Last modified Fri Dec  2 08:22:41 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:

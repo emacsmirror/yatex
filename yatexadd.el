@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
-;;; (c)1991-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Dec  1 18:33:08 2022 on firestorm
+;;; (c)1991-2022 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Fri Dec  2 08:40:27 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -1893,7 +1893,9 @@ and print them to standard output."
 
 (defvar YaTeX:documentclasses-default
   '(("article") ("jarticle") ("report") ("jreport") ("book") ("jbook")
-    ("jsarticle") ("jsbook")
+    ("ltjsarticle") ("ltjsreport") ("ltjsbook")
+    ("ltjarticle") ("ltjreport") ("ltjbook")
+    ("jsarticle") ("jsreport") ("jsbook")
     ("j-article") ("j-report") ("j-book")
     ("letter") ("slides") ("ltxdoc") ("ltxguide") ("ltnews") ("proc"))
   "Default documentclass alist")
