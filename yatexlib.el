@@ -1,7 +1,7 @@
 ;;; yatexlib.el --- YaTeX and yahtml common libraries -*- coding: sjis -*-
 ;;; 
-;;; (c)1994-2019 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Sep 23 06:43:32 2022 on firestorm
+;;; (c)1994-2022 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Fri Dec  2 08:41:16 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:

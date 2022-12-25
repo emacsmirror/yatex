@@ -1,8 +1,8 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
-;;; (c) 1994-2019 by HIROSE Yuuji [yuuji(@)yatex.org]
+;;; (c) 1994-2022 by HIROSE Yuuji [yuuji(@)yatex.org]
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.80.1"
+(defconst yahtml-revision-number "1.83"
   "Revision number of running yahtml.el")
 
 ;;; Commentary:
@@ -1185,7 +1185,7 @@ Not used yet.")
 (defvar yahtml-link-types-alist 
   '(("alternate") ("stylesheet") ("start") ("next") ("prev")
     ("contents") ("index") ("glossary") ("chapter") ("section")
-    ("subsection") ("appendix") ("help") ("bookmark")))
+    ("subsection") ("appendix") ("help") ("bookmark") ("manifest")))
 
 (defvar yahtml-content-types-alist
   '(("text/css") ("text/html") ("text/plain") ("text/richtext")
@@ -1481,7 +1481,9 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 
 (defvar yahtml-input-types
   '(("text") ("password") ("checkbox") ("radio") ("submit")
-    ("reset") ("image") ("hidden") ("file")))
+    ("reset") ("image") ("hidden") ("file")
+    ("date") ("time") ("datetime-local") ("week") ("number") ("tel")
+    ("range") ("color")))
 
 (defun yahtml:input ()
   "Add-in function for `input' form"
@@ -1502,6 +1504,13 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
      (yahtml-make-optional-argument "value" value)
      (yahtml-make-optional-argument "id" id)
      (yahtml-make-optional-argument "size" size)
+     (if (string-match "range" type)
+	 (concat (yahtml-make-optional-argument
+		  "min" (YaTeX-read-string-or-skip "min: "))
+		 (yahtml-make-optional-argument
+		  "max" (YaTeX-read-string-or-skip "max: "))
+		 (yahtml-make-optional-argument
+		  "step" (YaTeX-read-string-or-skip "step: "))))
      (yahtml-make-optional-argument "maxlength" maxlength))))
 
 (defun yahtml:datalist ()
@@ -1620,7 +1629,7 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
       (concat
        (yahtml-make-optional-argument "rel" rel)
        (yahtml-make-optional-argument
-	"type" (yahtml-read-parameter "type" "text/css"))
+	"type" (yahtml-read-parameter "type"))
        (yahtml-make-optional-argument
 	"href"
 	(read-from-minibuffer-with-history
