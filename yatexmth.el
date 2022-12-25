@@ -1,7 +1,7 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions -*- coding: sjis -*-
 ;;; 
-;;; (c)1993-2018 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Dec 16 17:35:27 2022 on firestorm
+;;; (c)1993-2022 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Sun Dec 25 13:56:02 2022 on firestorm
 ;;; $Id$
 
 ;;; Commentary:

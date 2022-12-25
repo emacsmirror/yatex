@@ -4,6 +4,10 @@
 1.83	== yatex ==
 	Evince-dbus連携見直し(Thanks to TeX Wiki)。
 	latex-message-kanji-code 0 でプロセスコード 'undicided にしてみた。
+	LuaTeX等で直接PDFが出されたときにはdvipdfmx省略。
+	uplatex関連のものなどをいくつか追加。
+	;di で \displaystyle 補完。
+	Dbusでのevince-reverse-search実験実装。
 	アドイン追加: wraptable, spacing, tablecolor
 	補完追加: fleqn
 	== yahtml ==
