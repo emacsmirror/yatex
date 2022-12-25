@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
-;;; (c)2003-2019 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Thu Sep 22 20:20:37 2022 on firestorm
+;;; (c)2003-2022 by HIROSE, Yuuji [yuuji@yatex.org]
+;;; Last modified Fri Dec  2 08:22:41 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -28,7 +28,8 @@
     ("alltt"	(env "alltt"))
     ("misc"	(section "verbfile" "listing"))
     ("verbatim"	(section "verbatiminput"))
-    ("eclbkbox"	(env "breakbox"))
+    ("boites"	(env "breakbox"))
+    ;;("eclbkbox"	(env "breakbox"))
     ("supertabular" (env "supertabular"))
     ("tabularx" (env "tabularx"))
     ("amsmath"	(env . YaTeX-package-ams-envs)
@@ -44,6 +45,7 @@
     ("latexsym"	(maketitle "mho" "Join" "Box" "Diamond" "leadsto"
 			   "sqsubset" "sqsupset" "lhd" "unlhd" "rhd" "unrhd"))
     ("mathrsfs"	(section "mathscr"))
+    ("fleqn"	(env "nccmath"))
     ("graphicx" (section "includegraphics"
 			 "rotatebox" "scalebox" "resizebox" "reflectbox")
      		(option . YaTeX-package-graphics-driver-alist))
@@ -77,6 +79,9 @@
     ("subfigure"	(section "subfigure"))
     ("okumacro"	(section "ruby" "kenten"))
     ("colortbl"	(section "columncolor" "rowcolor"))
+    ("booktab"	(section "toprule" "midrule" "bottomrule" "cmidrule"
+			 "addlinespace" "specialrule"))
+    ("pxbase"	(section "UI"))
     )
   "Default package vs. macro list.
 Alists contains '(PACKAGENAME . MACROLIST)

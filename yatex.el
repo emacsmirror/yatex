@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
-;;; (c)1991-2020 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Sep 23 06:28:18 2022 on firestorm
+;;; (c)1991-2022 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Sun Dec 25 13:57:49 2022 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -16,7 +16,7 @@
 
 ;;; Code:
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.82.1"
+(defconst YaTeX-revision-number "1.83"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -49,7 +49,7 @@ YaTeX-current-position-register.")
 
 (defvar tex-command
   (cond
-   (YaTeX-use-LaTeX2e "platex -kanji=%k")
+   (YaTeX-use-LaTeX2e "platex -kanji=%k -synctex=1")
    (YaTeX-japan "jlatex")
    (t "latex"))
   "*Default command for typesetting LaTeX text.
@@ -362,7 +362,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
 (defvar YaTeX-ams-math-begin-alist
   '(("align") ("align*") ("multline") ("multline*") ("gather") ("gather*")
     ("alignat") ("alignat*") ("xalignat") ("xalignat*")
-    ("xxalignat") ("xxalignat*") ("flalign") ("flalign*") ("equation*")))
+    ("xxalignat") ("xxalignat*") ("flalign") ("flalign*") ("equation*")
+    ("fleqn")))
 (defvar YaTeX-ams-math-gathering-alist
   '(("matrix") ("pmatrix") ("bmatrix") ("Bmatrix") ("vmatrix") ("Vmatrix")
     ("split") ("split*") ("aligned") ("aligned*") ("alignedat") ("gathered")

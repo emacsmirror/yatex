@@ -1,7 +1,7 @@
 ;;; yatexprc.el --- YaTeX process handler -*- coding: sjis -*-
 ;;; 
 ;;; (c)1993-2022 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Thu Sep 29 09:56:02 2022 on firestorm
+;;; Last modified Thu Dec  1 19:13:20 2022 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -184,7 +184,8 @@ thus, it call bibtex only if warning messages about citation are seen.")
 		(ppprop (get 'YaTeX-typeset-process 'ppcmd))
 		(ppcmd (cdr (assq proc ppprop)))
 		(bcprop (get 'YaTeX-typeset-process 'bibcmd))
-		(bibcmd (cdr (assq proc bcprop))))
+		(bibcmd (cdr (assq proc bcprop)))
+		(useluatex (string-match "lua.*tex" thiscmd)))
 	   (put 'YaTeX-typeset-process 'ppcmd ;erase ppcmd
 		(delq (assq proc ppprop) ppprop))
 	   (put 'YaTeX-typeset-process 'bibcmd ;erase bibcmd
@@ -286,8 +287,14 @@ thus, it call bibtex only if warning messages about citation are seen.")
 		     ;; If ppcmd is set and it is a function symbol,
 		     ;; call it whenever command succeeded or not
 		     (funcall ppcmd))
-		    ((and ppcmd (string-match "finish" mes))
-		     (insert (format "=======> Success! Calling %s\n" ppcmd))
+		    ((and ppcmd (string-match "finish" mes)
+			  ;; It is bad way to detect the necessity of
+			  ;; pdf-conversion by seeing typesetter name because
+			  ;; new typesetter other than lua(la)tex might come.
+			  ;; More reasonable way is to determine by the
+			  ;; existence of PDF file.
+			  (not useluatex))
+		     (insert (format "=======>  Success! Calling %s\n" ppcmd))
 		     (setq mode-name	; set process name
 			   (concat
 			    mode-name "+"

@@ -1,7 +1,7 @@
 ;;; yatexmth.el --- YaTeX math-mode-specific functions -*- coding: sjis -*-
 ;;; 
-;;; (c)1993-2018 by HIROSE Yuuji [yuuji@yatex.org]
-;;; Last modified Tue Dec 25 20:02:12 2018 on firestorm
+;;; (c)1993-2022 by HIROSE Yuuji [yuuji@yatex.org]
+;;; Last modified Sun Dec 25 13:56:02 2022 on firestorm
 ;;; $Id$
 
 ;;; Commentary:
@@ -326,6 +326,8 @@
    ("ms"	"mathsf"	"\\mathsf{}")
    ("mc"	"mathcal"	"\\mathcal{}")
    ("mn"	"mathnormal"	"\\mathnormal{}")
+   ("di"	"displaystyle"	"\displaystyle")
+   ("ds"	"displaystyle"	"\displaystyle")
    )
  "Default LaTeX-math-command alist.")
 
