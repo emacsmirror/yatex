@@ -447,6 +447,7 @@ normal and region mode.  To customize yahtml, user should use this function."
     ;;HTML5
     ("video") ("audio") ("figure") ("iframe")
     ("header") ("footer") ("article") ("section") ("nav") ("main") ("aside")
+    ("meter") ("progress")
     ))
 
 (if yahtml-html4-strict
@@ -1726,6 +1727,26 @@ Returns list of '(WIDTH HEIGHT BYTES DEPTH COMMENTLIST)."
 
 (defun yahtml::article ()
   (setq yahtml-last-typeface-cmd "h1" yahtml-last-begend "h1"))
+
+(defun yahtml:meter ()
+  (concat
+   (yahtml-make-optional-argument
+    "min" (yahtml-read-parameter "min"))
+   (yahtml-make-optional-argument
+    "max" (yahtml-read-parameter "max"))
+   (yahtml-make-optional-argument
+    "low" (yahtml-read-parameter "low"))
+   (yahtml-make-optional-argument
+    "high" (yahtml-read-parameter "high"))
+   (yahtml-make-optional-argument
+    "value" (yahtml-read-parameter "value"))))
+
+(defun yahtml:progress ()
+  (concat
+   (yahtml-make-optional-argument
+    "max" (yahtml-read-parameter "max"))
+   (yahtml-make-optional-argument
+    "value" (yahtml-read-parameter "value"))))
 
 ;;; ---------- Simple tag ----------
 (defun yahtml-insert-tag (region-mode &optional tag)
