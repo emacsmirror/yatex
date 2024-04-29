@@ -298,13 +298,14 @@ Completing read for obsoleted attributes disabled.")
       (if (eq system-type 'ms-dos) "/c" "-c")))
 (defvar yahtml-use-highlighting (or yahtml-use-font-lock yahtml-use-hilit19))
 
-(defun yahtml-define-begend-key-normal (key env &optional map)
+(defun yahtml-define-begend-key-normal (key env &optional map func)
   "Define short cut yahtml-insert-begend key."
-  (YaTeX-define-key
-   key
-   (list 'lambda '(arg) '(interactive "P")
-	 (list 'yahtml-insert-begend 'arg env))
-   map))
+  (let ((func (or func 'yahtml-insert-begend)))
+    (YaTeX-define-key
+     key
+     (list 'lambda '(arg) '(interactive "P")
+	   (list func 'arg env))
+     map)))
 
 (defun yahtml-define-begend-region-key (key env &optional map)
   "Define short cut yahtml-insert-begend-region key."
@@ -312,12 +313,23 @@ Completing read for obsoleted attributes disabled.")
 			      (list 'yahtml-insert-begend t env)) map))
 
 (defun yahtml-define-begend-key (key env &optional map)
-  "Define short cut key for begin type completion both for
-normal and region mode.  To customize yahtml, user should use this function."
-  (yahtml-define-begend-key-normal key env map)
+  "Define short cut key for begin type completion.
+Both for normal and region mode.
+To customize yahtml, user should use this function."
+  (yahtml-define-begend-key-normal key env map 'yahtml-insert-tag)
   (if YaTeX-inhibit-prefix-letter nil
     (yahtml-define-begend-region-key
      (concat (upcase (substring key 0 1)) (substring key 1)) env map)))
+
+(defun yahtml-define-instag-key (key tag &optional map)
+  "Define short cut key for inline-tag type completion.
+Both for normal and region mode.
+To customize yahtml, user should use this function."
+  (yahtml-define-begend-key-normal key tag map 'yahtml-insert-tag)
+  (if YaTeX-inhibit-prefix-letter nil
+    (yahtml-define-begend-region-key
+     (concat (upcase (substring key 0 1)) (substring key 1)) env map
+     'yahtml-insert-tag)))
 
 (if yahtml-mode-map nil
   (setq yahtml-mode-map (make-sparse-keymap)
@@ -356,23 +368,23 @@ normal and region mode.  To customize yahtml, user should use this function."
 	  (YaTeX-define-key "b" 'yahtml-insert-begend map))
       (yahtml-define-begend-key "bh" "html" map)
       (yahtml-define-begend-key "bH" "head" map)
-      (yahtml-define-begend-key "bt" "title" map)
+      (yahtml-define-instag-key "bt" "title" map)
       (yahtml-define-begend-key "bT" "table" map)
       (yahtml-define-begend-key "bb" "body" map)
-      (yahtml-define-begend-key "bc" "center" map)
+      (yahtml-define-instag-key "bc" "code" map)
       (yahtml-define-begend-key "bd" "dl" map)
       (yahtml-define-begend-key "bD" "div" map)
       (yahtml-define-begend-key "bu" "ul" map)
       (yahtml-define-begend-key "bo" "ol" map)
-      (yahtml-define-begend-key "b1" "h1" map)
-      (yahtml-define-begend-key "b2" "h2" map)
-      (yahtml-define-begend-key "b3" "h3" map)
-      (yahtml-define-begend-key "ba" "a" map)
+      (yahtml-define-instag-key "b1" "h1" map)
+      (yahtml-define-instag-key "b2" "h2" map)
+      (yahtml-define-instag-key "b3" "h3" map)
+      (yahtml-define-instag-key "ba" "a" map)
       (yahtml-define-begend-key "bf" "form" map)
-      (yahtml-define-begend-key "bl" "label" map)
+      (yahtml-define-instag-key "bl" "label" map)
       (yahtml-define-begend-key "bs" "select" map)
       (yahtml-define-begend-key "bv" "div" map)
-      (yahtml-define-begend-key "bS" "span" map)
+      (yahtml-define-instag-key "bS" "span" map)
       (yahtml-define-begend-key "bp" "pre" map)
       (yahtml-define-begend-key "bq" "blockquote" map)
       (YaTeX-define-key "b " 'yahtml-insert-begend map)
