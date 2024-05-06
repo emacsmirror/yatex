@@ -316,7 +316,7 @@ Completing read for obsoleted attributes disabled.")
   "Define short cut key for begin type completion.
 Both for normal and region mode.
 To customize yahtml, user should use this function."
-  (yahtml-define-begend-key-normal key env map 'yahtml-insert-tag)
+  (yahtml-define-begend-key-normal key env map)
   (if YaTeX-inhibit-prefix-letter nil
     (yahtml-define-begend-region-key
      (concat (upcase (substring key 0 1)) (substring key 1)) env map)))
