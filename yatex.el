@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
 ;;; (c)1991-2022 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 25 13:57:49 2022 on firestorm
+;;; Last modified Sun Nov 24 20:47:36 2024 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -351,6 +351,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("bm")				;deined in bm
 	 ("verbfile") ("listing")	;defined in misc
 	 ("slashbox" 2) ("backslashbox" 2) ;defined in slashbox
+	 ("verbatimtabinput") ("listinginput" 2)
 	 ))
    (if YaTeX-use-AMS-LaTeX
        '(("DeclareMathOperator" 2) ("boldsymbol") ("pmb") ("eqref")
@@ -412,6 +413,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
        '(("comment")			;defined in version
 	 ("longtable")			;defined in longtable
 	 ("screen") ("boxnote") ("shadebox") ;; ("itembox") ;in ascmac
+	 ("verbatimtab") ("listing") ("listingcont") ("verbatimwrite")
+	 ("boxedverbatim")
 	 ("alltt")			;defined in alltt
 	 ("multicols")			;defined in multicol
 	 ("breakbox")))			;defined in eclbkbox
