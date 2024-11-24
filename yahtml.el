@@ -459,7 +459,7 @@ To customize yahtml, user should use this function."
     ;;HTML5
     ("video") ("audio") ("figure") ("iframe")
     ("header") ("footer") ("article") ("section") ("nav") ("main") ("aside")
-    ("meter") ("progress")
+    ("meter") ("progress") ("details") ("summary")
     ))
 
 (if yahtml-html4-strict
