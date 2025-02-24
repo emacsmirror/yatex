@@ -1,8 +1,8 @@
 ;;; yahtml.el --- Yet Another HTML mode -*- coding: sjis -*-
-;;; (c) 1994-2022 by HIROSE Yuuji [yuuji(@)yatex.org]
+;;; (c) 1994-2025 by HIROSE Yuuji [yuuji(@)yatex.org]
 ;;; $Id$
 
-(defconst yahtml-revision-number "1.83"
+(defconst yahtml-revision-number "1.84"
   "Revision number of running yahtml.el")
 
 ;;; Commentary:
