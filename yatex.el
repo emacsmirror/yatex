@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
-;;; (c)1991-2022 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Nov 24 20:47:36 2024 on firestorm
+;;; (c)1991-2025 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Feb 24 19:01:20 2025 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -16,7 +16,7 @@
 
 ;;; Code:
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.83"
+(defconst YaTeX-revision-number "1.84"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -785,7 +785,10 @@ more features are available and they are documented in the manual.
 	(or  (featurep 'xemacs)
 	     (set (make-local-variable 'font-lock-defaults)
 		  (get 'yatex-mode 'font-lock-defaults)))
-	;;(font-lock-mode 1)
+	(and (boundp 'global-font-lock-mode)
+	     global-font-lock-mode
+	     ;; Workaround for Emacs30 on which global-font-lock ignored
+	     (font-lock-mode 1))
 	))
   (use-local-map YaTeX-mode-map)
   (set-syntax-table YaTeX-mode-syntax-table)
