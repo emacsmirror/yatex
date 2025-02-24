@@ -1,7 +1,7 @@
 ;;; yatexpkg.el --- YaTeX package manager -*- coding: sjis -*-
 ;;; 
 ;;; (c)2003-2022 by HIROSE, Yuuji [yuuji@yatex.org]
-;;; Last modified Fri Dec  2 08:22:41 2022 on firestorm
+;;; Last modified Sun Nov 24 20:43:19 2024 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -28,6 +28,8 @@
     ("alltt"	(env "alltt"))
     ("misc"	(section "verbfile" "listing"))
     ("verbatim"	(section "verbatiminput"))
+    ("moreverb"	(env "verbatimtab" "listing" "listingcont")
+		(section "verbattabiminput" "listinginput"))
     ("boites"	(env "breakbox"))
     ;;("eclbkbox"	(env "breakbox"))
     ("supertabular" (env "supertabular"))
@@ -82,6 +84,8 @@
     ("booktab"	(section "toprule" "midrule" "bottomrule" "cmidrule"
 			 "addlinespace" "specialrule"))
     ("pxbase"	(section "UI"))
+    ("hyperref"	(section "hyperref" "url" "nolinkurl" "href" "hyperref")
+		(option "dvipdfmx" "luatex" "xetex" "hidelinks"))
     )
   "Default package vs. macro list.
 Alists contains '(PACKAGENAME . MACROLIST)

@@ -1,12 +1,18 @@
 	What's new in YaTeX/yahtml
 	野鳥/yahtml - 各バージョンの変更点について
 
+1.84	== yatex ==
+	verbatimtab, verbatimtabinput, listinginput補完追加
+	Emacs30でデフォルトでfont-lockが効かない対処を追加
+	== yahtml ==
+	ショートカットキー bc を <center> から <code> に変更
+	details, summary要素補完を追加
 1.83	== yatex ==
 	Evince-dbus連携見直し(Thanks to TeX Wiki)。
 	latex-message-kanji-code 0 でプロセスコード 'undicided にしてみた。
 	LuaTeX等で直接PDFが出されたときにはdvipdfmx省略。
 	uplatex関連のものなどをいくつか追加。
-	;di で \displaystyle 補完。
+	;ds で \displaystyle 補完。
 	Dbusでのevince-reverse-search実験実装。
 	アドイン追加: wraptable, spacing, tablecolor
 	補完追加: fleqn

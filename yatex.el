@@ -1,6 +1,6 @@
 ;;; yatex.el --- Yet Another tex-mode for emacs //–ì’¹// -*- coding: sjis -*-
-;;; (c)1991-2022 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Sun Dec 25 13:57:49 2022 on firestorm
+;;; (c)1991-2025 by HIROSE Yuuji.[yuuji@yatex.org]
+;;; Last modified Mon Feb 24 19:01:20 2025 on firestorm
 ;;; $Id$
 ;;; The latest version of this software is always available at;
 ;;; https://www.yatex.org/
@@ -16,7 +16,7 @@
 
 ;;; Code:
 (require 'yatexlib)
-(defconst YaTeX-revision-number "1.83"
+(defconst YaTeX-revision-number "1.84"
   "Revision number of running yatex.el")
 
 ;---------- Local variables ----------
@@ -351,6 +351,7 @@ Nil for removing only one commenting character at the beginning-of-line.")
 	 ("bm")				;deined in bm
 	 ("verbfile") ("listing")	;defined in misc
 	 ("slashbox" 2) ("backslashbox" 2) ;defined in slashbox
+	 ("verbatimtabinput") ("listinginput" 2)
 	 ))
    (if YaTeX-use-AMS-LaTeX
        '(("DeclareMathOperator" 2) ("boldsymbol") ("pmb") ("eqref")
@@ -412,6 +413,8 @@ Nil for removing only one commenting character at the beginning-of-line.")
        '(("comment")			;defined in version
 	 ("longtable")			;defined in longtable
 	 ("screen") ("boxnote") ("shadebox") ;; ("itembox") ;in ascmac
+	 ("verbatimtab") ("listing") ("listingcont") ("verbatimwrite")
+	 ("boxedverbatim")
 	 ("alltt")			;defined in alltt
 	 ("multicols")			;defined in multicol
 	 ("breakbox")))			;defined in eclbkbox
@@ -782,7 +785,10 @@ more features are available and they are documented in the manual.
 	(or  (featurep 'xemacs)
 	     (set (make-local-variable 'font-lock-defaults)
 		  (get 'yatex-mode 'font-lock-defaults)))
-	;;(font-lock-mode 1)
+	(and (boundp 'global-font-lock-mode)
+	     global-font-lock-mode
+	     ;; Workaround for Emacs30 on which global-font-lock ignored
+	     (font-lock-mode 1))
 	))
   (use-local-map YaTeX-mode-map)
   (set-syntax-table YaTeX-mode-syntax-table)

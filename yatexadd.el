@@ -1,6 +1,6 @@
 ;;; yatexadd.el --- YaTeX add-in functions -*- coding: sjis -*-
 ;;; (c)1991-2022 by HIROSE Yuuji.[yuuji@yatex.org]
-;;; Last modified Fri Dec  2 08:40:27 2022 on firestorm
+;;; Last modified Sun Nov 24 21:01:58 2024 on firestorm
 ;;; $Id$
 
 ;;; Code:
@@ -2347,6 +2347,28 @@ This function relies on gs(ghostscript) command installed."
 	(opt (YaTeX-completing-read-or-skip "columns option: " tbl)))
     (if (string< "" opt)
 	(concat "[" opt "]"))))
+
+;;; -------------------- moreverb stuff --------------------
+;;; http://xyoshiki.web.fc2.com/tex/moreverb.html
+(defun YaTeX:verbatimtab ()
+  (let ((width (YaTeX-read-string-or-skip "Tab width: ")))
+    (if (string< "" width)
+	(concat "[" width "]"))))
+(fset 'YaTeX:verbatimtabinput 'YaTeX:verbatimtab)
+(defun YaTeX::verbatimtabinput (argp)
+  (cond
+   ((= argp 1)
+    (YaTeX::include 1))))
+(defun YaTeX:listinginput()
+  (let ((interval (YaTeX-read-string-or-skip "Listing internavl: ")))
+    (if (string< "" interval)
+	(concat "[" interval "]"))))
+(defun YaTeX::listinginput (argp)
+  (cond
+   ((= argp 1)
+    (let ((int (YaTeX-read-string-or-skip "Start Line: " "1")))
+      (if (string< "" int) int "1")))
+   ((= argp 2) (YaTeX::verbatimtabinput 1))))
 
 ;;; -------------------- math-mode stuff --------------------
 (defun YaTeX::tilde (&optional pos)
